@@ -13,7 +13,9 @@
 | **SdnApiToken** | Write | String | Specifies the Software Defined Network (SDN) provider's authentication token which is required to use their SDN license. This is required by some SDN providers who will give you the required token. This parameter is only required if AllowSdnProviderForBroadcastMeeting is set to $true. ||
 | **Credential** | Required | PSCredential | Credentials of the Teams Admin ||
 
-## Description
+# TeamsMeetingBroadcastConfiguration
+
+##  Description
 
 This resource is used to configure the Teams Meeting Broadcast Settings.
 

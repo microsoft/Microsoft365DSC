@@ -17,7 +17,9 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword ||
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. ||
 
-## Description
+# EXOJournalRule
+
+### Description
 
 This resource allows to configure Journal Rules in Exchange Online.
 

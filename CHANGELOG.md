@@ -1,6 +1,34 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
+# 1.22.622.1
+
+* TeamsMessagingPolicy
+    * Removed the -force deprecated parameter on New/Set/Remove
+* MISC
+  * Modified the dependency installation functions to for the AllUsers scope.
+
+# 1.22.615.1
+
+* EXODataClassification
+  * Added example
+* EXODataEncryptionPolicy
+  * Added example
+* MISC
+  * Added cmdlet (Update-M365DSCAzureAdApplication) to create and manage a
+    custom service principal which can be used within Microsoft365DSC
+    configurations
+  * Extended the permissions in the settings.json file to include delegated,
+    application and Exchange permissions
+  * Updated Get-M365DSCCompiledPermissionList to include the new permissions in the
+    settings.json file
+  * Added cmdlet to generate the resource pages on the microsoft365dsc.com website
+  * Checked and updated the readme.md files of all resources to make them consistent
+    and usable by the new documentation cmdlet
+  * Corrected documentation issues on the microsoft365dsc.com website
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.148;
+
+# 1.22.608.1
 
 * AADConditionalAccessPolicy
   * Updated settings.json with missing permissions

@@ -8,7 +8,9 @@
 | **AllowPrivateCalling** | Required | Boolean | Designates whether guests who have been enabled for Teams can use calling functionality. If $false, guests cannot call. ||
 | **Credential** | Required | PSCredential | Credentials of the Teams Admin ||
 
-## Description
+# TeamsGuestCallingConfiguration
+
+### Description
 
 This resource is used to configure the Teams guest calling configuration.
 

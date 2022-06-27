@@ -18,4 +18,3 @@ This function does not have any input parameters.
 `Install-M365DSCDevBranch`
 
 
-

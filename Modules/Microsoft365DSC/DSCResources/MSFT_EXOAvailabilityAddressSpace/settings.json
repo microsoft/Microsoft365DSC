@@ -1,10 +1,24 @@
 ﻿{
     "resourceName": "EXOAvailabilityAddressSpace",
     "description": "",
-    "permissions": [
-        {
-            "read": [],
-            "update": []
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        },
+        "exchange": {
+            "requiredroles": [
+                "Federated Sharing",
+                "Mail Tips",
+                "Message Tracking"
+            ],
+            "requiredrolegroups": "Organization Management"
         }
-    ]
+    }
 }

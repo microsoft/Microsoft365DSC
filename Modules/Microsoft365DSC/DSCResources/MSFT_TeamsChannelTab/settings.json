@@ -1,60 +1,44 @@
 ﻿{
     "resourceName": "TeamsChannelTab",
     "description": "",
-    "permissions": [
-        {
-            "read": [
-                {
-                    "name": "Channel.ReadBasic.All"
-                },
-                {
-                    "name": "ChannelSettings.Read.All"
-                },
-                {
-                    "name": "ChannelSettings.ReadWrite.All"
-                },
-                {
-                    "name": "Directory.Read.All"
-                },
-                {
-                    "name": "Directory.ReadWrite.All"
-                },
-                {
-                    "name": "Group.Read.All"
-                },
-                {
-                    "name": "Group.ReadWrite.All"
-                }
-            ],
-            "update": [
-                {
-                    "name": "Channel.ReadBasic.All"
-                },
-                {
-                    "name": "ChannelSettings.Read.All"
-                },
-                {
-                    "name": "ChannelSettings.ReadWrite.All"
-                },
-                {
-                    "name": "Directory.Read.All"
-                },
-                {
-                    "name": "Directory.ReadWrite.All"
-                },
-                {
-                    "name": "Group.Read.All"
-                },
-                {
-                    "name": "Group.ReadWrite.All"
-                },
-                {
-                    "name": "TeamsTab.ReadWrite.All"
-                },
-                {
-                    "name": "TeamsTab.ReadWriteForTeam"
-                }
-            ]
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "ChannelSettings.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Channel.Delete.All"
+                    },
+                    {
+                        "name": "ChannelSettings.Read.All"
+                    },
+                    {
+                        "name": "TeamsTab.Read.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "ChannelSettings.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Channel.Delete.All"
+                    },
+                    {
+                        "name": "ChannelSettings.Read.All"
+                    },
+                    {
+                        "name": "TeamsTab.ReadWrite.All"
+                    }
+                ]
+            }
         }
-    ]
+    }
 }

@@ -36,7 +36,9 @@
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
 
-# SPO Sharing Settings
+# SPOSharingSettings
+
+### Description
 
 This resource allows users to configure and monitor the sharing settings for
 your SPO tenant sharing settings

@@ -134,7 +134,7 @@ function Convert-M365DscHashtableToString
             }
             elseif ($pair.Value -is [System.Collections.Hashtable])
             {
-                $str = "$($pair.Key)={$(Convert-M365DSCHashtableToString -Hashtable $pair.Value)}"
+                $str = "$($pair.Key)={$(Convert-M365DscHashtableToString -Hashtable $pair.Value)}"
             }
             elseif ($pair.Value -is [Microsoft.Management.Infrastructure.CimInstance])
             {
@@ -1051,11 +1051,18 @@ function Export-M365DSCConfiguration
     $outdatedOrMissingAssemblies = Test-M365DSCDependencies
     if ($outdatedOrMissingAssemblies)
     {
-        foreach ($dependency in $outdatedOrMissingAssemblies)
+        if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
         {
-            Write-Host "Updating dependency {$($dependency.ModuleName)} to version {$($dependency.RequiredVersion)}..." -NoNewline
-            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force | Out-Null
-            Write-Host $Global:M365DSCEmojiGreenCheckmark
+            foreach ($dependency in $outdatedOrMissingAssemblies)
+            {
+                Write-Host "Updating dependency {$($dependency.ModuleName)} to version {$($dependency.RequiredVersion)}..." -NoNewline
+                Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -Scope 'AllUsers'  | Out-Null
+                Write-Host $Global:M365DSCEmojiGreenCheckmark
+            }
+        }
+        else
+        {
+            Write-Error "Cannot update the dependencies for Microsoft365DSC. You need to run this command as a local administrator."
         }
     }
 
@@ -2001,16 +2008,23 @@ function Install-M365DSCDevBranch
     #region Install All Dependencies
     $manifest = Import-PowerShellDataFile "$extractPath\Microsoft365DSC-Dev\Modules\Microsoft365DSC\Microsoft365DSC.psd1"
     $dependencies = $manifest.RequiredModules
-    foreach ($dependency in $dependencies)
+    if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
     {
-        Write-Host "Installing {$($dependency.ModuleName)}..." -NoNewline
-        $existingModule = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
-        if ($null -eq $existingModule)
+        foreach ($dependency in $dependencies)
         {
-            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -AllowClobber | Out-Null
+            Write-Host "Installing {$($dependency.ModuleName)}..." -NoNewline
+            $existingModule = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
+            if ($null -eq $existingModule)
+            {
+                Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -AllowClobber -Scope 'AllUsers' | Out-Null
+            }
+            Import-Module $dependency.ModuleName -Force | Out-Null
+            Write-Host "Done" -ForegroundColor Green
         }
-        Import-Module $dependency.ModuleName -Force | Out-Null
-        Write-Host "Done" -ForegroundColor Green
+    }
+    else
+    {
+        Write-Error "Cannot update the dependencies for Microsoft365DSC. You need to run this command as a local administrator."
     }
     #endregion
 
@@ -2412,27 +2426,35 @@ function Update-M365DSCDependencies
     $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
     $dependencies = $manifest.Dependencies
     $i = 1
-    foreach ($dependency in $dependencies)
-    {
-        Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
-        try
-        {
-            if (-not $Force)
-            {
-                $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
-            }
 
-            if (-not $found -or $Force)
-            {
-                Write-Information -Message "Installing $($dependency.ModuleName) version {$($dependency.RequiredVersion)}"
-                Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force
-            }
-        }
-        catch
+    if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
+    {
+        foreach ($dependency in $dependencies)
         {
-            Write-Host "Could not update {$($dependency.ModuleName)}"
+            Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
+            try
+            {
+                if (-not $Force)
+                {
+                    $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
+                }
+
+                if (-not $found -or $Force)
+                {
+                    Write-Information -Message "Installing $($dependency.ModuleName) version {$($dependency.RequiredVersion)}"
+                    Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force -Scope 'AllUsers'
+                }
+            }
+            catch
+            {
+                Write-Host "Could not update {$($dependency.ModuleName)}"
+            }
+            $i++
         }
-        $i++
+    }
+    else
+    {
+        Write-Error "Cannot update the dependencies for Microsoft365DSC. You need to run this command as a local administrator."
     }
 }
 
@@ -2440,7 +2462,7 @@ function Update-M365DSCDependencies
 .Description
 This function uninstalls all previous M365DSC dependencies and older versions of the module.
 .Example
-Uninstall-M365DSCOutdatedObjects
+Uninstall-M365DSCOutdatedDependencies
 .Functionality
 Public
 #>
@@ -3291,6 +3313,7 @@ function New-M365DSCCmdletDocumentation
                 foreach ($example in $helpInfo.examples.example)
                 {
                     $null = $output.AppendLine($example.title)
+                    $null = $output.AppendLine('')
                     $null = $output.AppendLine("``$($example.code)``")
                     $null = $output.AppendLine('')
                 }
@@ -3374,7 +3397,7 @@ function Create-M365DSCResourceExample
 
     $resourceExample = Get-M365DSCExportContentForResource -ResourceName $ResourceName -ModulePath $resource.Path -Results $params -ConnectionMode Credentials -Credential $credObject
 
-    $resourceExample = $resourceExample.TrimEnd() -replace ";",""
+    $resourceExample = $resourceExample.TrimEnd() -replace ";", ""
 
     $exampleText = @"
 <#
@@ -3432,13 +3455,15 @@ function New-M365DSCMissingResourcesExample
         $path = Join-Path -Path '.\Modules\Microsoft365DSC\Examples\Resources' -ChildPath $difference.InputObject
         switch ($difference.SideIndicator)
         {
-            "<=" {
+            "<="
+            {
                 Write-Host "  - Example missing, generating!"
                 $null = New-Item -Path $path -ItemType Directory
                 $exampleFile = Join-Path -Path $path -ChildPath "1-Configure.ps1"
                 Set-Content -Path $exampleFile -Value (Create-M365DSCResourceExample -ResourceName $difference.InputObject)
             }
-            "=>" {
+            "=>"
+            {
                 Write-Host "  - No resource for existing example, removing!"
                 Remove-Item -Path $path -Force -Confirm:$false
             }
