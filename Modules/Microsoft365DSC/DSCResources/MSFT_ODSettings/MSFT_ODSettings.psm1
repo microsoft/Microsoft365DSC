@@ -568,6 +568,7 @@ function Test-TargetResource
             "ExcludedFileExtensions", `
             "DisableReportProblemDialog", `
             "GrooveBlockOption", `
+            "TenantRestrictionEnabled", `
             "DomainGuids", `
             "OneDriveStorageQuota", `
             "OrphanedPersonalSitesRetentionPeriod", `
