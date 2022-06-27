@@ -48,6 +48,10 @@ function Get-TargetResource
         $DisableReportProblemDialog,
 
         [Parameter()]
+        [System.Boolean]
+        $TenantRestrictionEnabled,
+
+        [Parameter()]
         [System.String[]]
         $DomainGuids,
 
@@ -264,6 +268,10 @@ function Set-TargetResource
         $DisableReportProblemDialog,
 
         [Parameter()]
+        [System.Boolean]
+        $TenantRestrictionEnabled,
+
+        [Parameter()]
         [System.String[]]
         $DomainGuids,
 
@@ -443,6 +451,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $DisableReportProblemDialog,
+
+        [Parameter()]
+        [System.Boolean]
+        $TenantRestrictionEnabled,
 
         [Parameter()]
         [System.String[]]
