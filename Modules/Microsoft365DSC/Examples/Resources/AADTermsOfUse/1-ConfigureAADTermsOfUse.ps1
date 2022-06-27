@@ -14,7 +14,7 @@ Configuration Example
 
     node localhost
     {
-        AADTermsOfUse 'AADTermOfUse'
+        AADTermsOfUse 'AADTermsOfUse'
         {
             DisplayName                       = "ToU general 2";
             Files                             = @(
