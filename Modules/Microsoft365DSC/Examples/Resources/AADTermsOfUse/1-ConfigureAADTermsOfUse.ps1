@@ -37,8 +37,8 @@ Configuration Example
             Id                                = "9213cf0b-afbf-4397-b7cb-000000000000";
             IsPerDeviceAcceptanceRequired     = $False;
             IsViewingBeforeAcceptanceRequired = $True;
-            Ensure                        = "Present"
-            Credential                    = $credsGlobalAdmin
+            Ensure                            = "Present"
+            Credential                        = $credsGlobalAdmin
         }
     }
 }

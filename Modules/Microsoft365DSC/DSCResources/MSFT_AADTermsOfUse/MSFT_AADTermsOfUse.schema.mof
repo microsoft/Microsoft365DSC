@@ -2,7 +2,7 @@
 class MSFT_MicrosoftGraphtermsexpiration
 {
     [Write, Description("Represents the frequency at which the terms will expire, after its first expiration as set in startDateTime.")] String Frequency;
-    [Write, Description("The DateTime when the agreement is set to expire for all users. ")] String StartDateTime;
+    [Write, Description("The DateTime when the agreement is set to expire for all users.")] String StartDateTime;
 };
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphagreementacceptance
@@ -27,9 +27,9 @@ class MSFT_MicrosoftGraphagreementfile
 {
     [Write, Description("The localized version of the terms of use agreement files attached to the agreement."), EmbeddedInstance("MSFT_MicrosoftGraphagreementfilelocalization")] String Localizations[];
     [Write, Description("The date time representing when the file was created.")] String CreatedDateTime;
-    [Write, Description("Localized display name of the policy file of an agreement. ")] String displayName;
+    [Write, Description("Localized display name of the policy file of an agreement.")] String displayName;
     [Write, Description("Name of the agreement file (for example, TOU.pdf).")] String fileName;
-    [Write, Description("If none of the languages matches the client preference, indicates whether this is the default agreement file .")] Boolean isDefault;
+    [Write, Description("If none of the languages matches the client preference, indicates whether this is the default agreement file.")] Boolean isDefault;
     [Write, Description("Indicates whether the agreement file is a major version update. Major version updates invalidate the agreement's acceptances on the corresponding language.")] Boolean isMajorVersion;
     [Write, Description("The language of the agreement file in the format 'languagecode2-country/regioncode2'.")] String language;
     [Write, Description("The identifier of the agreementFileVersion object.")] String id;
@@ -41,8 +41,8 @@ class MSFT_MicrosoftGraphagreementfilelocalization
     [Write, Description("The date time representing when the file was created.")] String CreatedDateTime;
     [Write, Description("Localized display name of the policy file of an agreement.")] String DisplayName;
     [Write, Description("Name of the agreement file (for example, TOU.pdf).")] String FileName;
-    [Write, Description("If none of the languages matches the client preference, indicates whether this is the default agreement file .")] Boolean IsDefault;
-    [Write, Description("Indicates whether the agreement file is a major version update. Major version updates invalidate the agreement's acceptances on the corresponding language. ")] Boolean IsMajorVersion;
+    [Write, Description("If none of the languages matches the client preference, indicates whether this is the default agreement file.")] Boolean IsDefault;
+    [Write, Description("Indicates whether the agreement file is a major version update. Major version updates invalidate the agreement's acceptances on the corresponding language.")] Boolean IsMajorVersion;
     [Write, Description("The language of the agreement file in the format 'languagecode2-country/regioncode2'.")] String Language;
     [Write, Description("The identifier of the agreementFileVersion object.")] String Id;
 };
@@ -53,7 +53,7 @@ class MSFT_MicrosoftGraphagreementfileversion
     [Write, Description("Localized display name of the policy file of an agreement.")] String DisplayName;
     [Write, Description("Data that represents the terms of use PDF document."), EmbeddedInstance("MSFT_MicrosoftGraphagreementfiledata")] String FileData;
     [Write, Description("Name of the agreement file (for example, TOU.pdf)")] String FileName;
-    [Write, Description("If none of the languages matches the client preference, indicates whether this is the default agreement file . ")] Boolean IsDefault;
+    [Write, Description("If none of the languages matches the client preference, indicates whether this is the default agreement file.")] Boolean IsDefault;
     [Write, Description("Indicates whether the agreement file is a major version update. Major version updates invalidate the agreement's acceptances on the corresponding language.")] Boolean IsMajorVersion;
     [Write, Description("The language of the agreement file in the format 'languagecode2-country/regioncode2'.")] String Language;
     [Write, Description("The identifier of the agreementFileVersion object.")] String Id;
@@ -67,7 +67,7 @@ class MSFT_MicrosoftGraphagreementfiledata
 [ClassVersion("1.0.0.0"), FriendlyName("AADTermsOfUse")]
 class MSFT_AADTermsOfUse : OMI_BaseResource
 {
-    [Write, Description("The identifier of the agreement.")] String Id;
+    [Key, Description("The identifier of the agreement.")] String Id;
     [Write, Description("Display name of the agreement.")] String DisplayName;
     [Write, Description("Indicates whether end users are required to accept this agreement on every device that they access it from.")] Boolean IsPerDeviceAcceptanceRequired;
     [Write, Description("Indicates whether the user has to expand the agreement before accepting.")] Boolean IsViewingBeforeAcceptanceRequired;
@@ -77,7 +77,7 @@ class MSFT_AADTermsOfUse : OMI_BaseResource
     [Write, Description("Default PDF linked to this agreement."), EmbeddedInstance("MSFT_MicrosoftGraphagreementfile")] String File;
     [Write, Description("PDFs linked to this agreement."), EmbeddedInstance("MSFT_MicrosoftGraphagreementfilelocalization")] String Files[];
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
-    [Write, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Credentials of the Azure Active Directory Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Secret of the Azure Active Directory tenant used for authentication.")] String ApplicationSecret;

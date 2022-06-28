@@ -5,7 +5,7 @@ function Get-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory=$true)]
         [System.String]
         $Id,
 
@@ -236,7 +236,7 @@ function Set-TargetResource
     (
 
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory=$true)]
         [System.String]
         $Id,
 
@@ -479,7 +479,7 @@ function Test-TargetResource
     (
 
         #region resource generator code
-                [Parameter()]
+        [Parameter(Mandatory=$true)]
         [System.String]
         $Id,
 
