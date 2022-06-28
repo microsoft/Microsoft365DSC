@@ -4,6 +4,7 @@
 
 * DEPENDENCIES
   * Updated Microsoft.Graph.* modules to version 1.10.0.
+  * Updated MSCloudLoginAssistant to version 1.0.86.
 * MISC
   * New Delta Report: removed mandatory restricitons on the OutputPath parameter.
     FIXES #2029
