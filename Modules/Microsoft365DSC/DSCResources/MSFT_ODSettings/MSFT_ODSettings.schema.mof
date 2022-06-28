@@ -11,7 +11,7 @@ class MSFT_ODSettings : OMI_BaseResource
     [Write, Description("Lets administrators set policy on access requests and requests to share in OneDrive for Business"),ValueMap{"On","Off","Unspecified"},Values{"On","Off","Unspecified"}] String ODBAccessRequests;
     [Write, Description("Block sync client on Mac")] Boolean BlockMacSync;
     [Write, Description("Disable dialog box")] Boolean DisableReportProblemDialog;
-    [Write, Description("enable/disable Safe domain List - if disabled overrides DomainGuids value")] Boolean TenantRestrictionEnabled;
+    [Write, Description("Enable/disable Safe domain List - if disabled overrides DomainGuids value")] Boolean TenantRestrictionEnabled;
     [Write, Description("Safe domain list")] String DomainGuids[];
     [Write, Description("Exclude files from being synced to OneDrive")] String ExcludedFileExtensions[];
     [Write, Description("Groove block options"),ValueMap{"OptOut","HardOptIn","SoftOptIn"},Values{"OptOut","HardOptIn","SoftOptIn"}] String GrooveBlockOption;
