@@ -432,7 +432,7 @@ function Set-TargetResource
     ## Configure Sync Client restrictions
     ## Set-SPOTenantSyncClientRestriction has different parameter sets and they cannot be combined see article:
     ## https://docs.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenantsyncclientrestriction?view=sharepoint-ps
-    Write-Verbose -Message "Setting other configuration parameters2"
+    Write-Verbose -Message "Setting other configuration parameters"
     Write-Verbose -Message ($Options | Out-String)
 
     Set-PnPTenantSyncClientRestriction @Options
