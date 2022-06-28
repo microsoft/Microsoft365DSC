@@ -1,5 +1,5 @@
 @{
-    Dependencies =@(
+    Dependencies = @(
         @{
             ModuleName      = "DSCParser"
             RequiredVersion = "1.3.0.4"
@@ -81,4 +81,4 @@
             RequiredVersion = "2.0.0.11"
         }
     )
-    }
+}
