@@ -1,18 +1,32 @@
 {
     "resourceName": "IntuneDeviceEnrollmentPlatformRestriction",
     "description": "This resource configures the Intune device platform enrollment restrictions.",
-    "permissions": [
-        {
-            "read": [
-                {
-                    "name": "DeviceManagementServiceConfig.Read.All"
-                }
-            ],
-            "update": [
-                {
-                    "name": "DeviceManagementServiceConfig.ReadWrite.All"
-                }
-            ]
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "DeviceManagementServiceConfig.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementServiceConfig.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "DeviceManagementServiceConfig.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementServiceConfig.ReadWrite.All"
+                    }
+                ]
+            }
         }
-    ]
+    }
 }
