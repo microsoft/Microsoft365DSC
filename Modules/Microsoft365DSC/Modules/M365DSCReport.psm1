@@ -836,7 +836,8 @@ function New-M365DSCDeltaReport
         Write-Warning "Make sure you specify a file that not exists, if you don't want the file to be overwritten!"
     }
 
-    if ($PSBoundParameters.ContainsKey("HeaderFilePath") -and (Test-Path -Path $HeaderFilePath) -eq $false)
+    if ($PSBoundParameters.ContainsKey("HeaderFilePath") -and -not [System.String]::IsNullOrEmpty($HeaderFilePath) -and `
+        (Test-Path -Path $HeaderFilePath) -eq $false)
     {
         Write-Error "Cannot find file specified in parameter HeaderFilePath: $HeaderFilePath. Please make sure the file exists!"
         return
