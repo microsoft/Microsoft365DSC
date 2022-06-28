@@ -2,6 +2,10 @@
 
 # UNRELEASED
 
+* EXOMalwareFilterPolicy
+  * Removed Action, EnableExternalSenderNotifications and EnableInternalSenderNotifications parameters from EXOMalwareFilterPolicy. These parameters are no longer available in EXO, only in onprem Exchange.
+  FIXES #2025
+  * Added support for FileTypeAction parameter.
 * DEPENDENCIES
   * Updated Microsoft.Graph.* modules to version 1.10.0.
 * MISC
