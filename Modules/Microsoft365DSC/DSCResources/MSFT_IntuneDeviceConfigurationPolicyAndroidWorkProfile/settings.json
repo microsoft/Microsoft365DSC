@@ -1,18 +1,32 @@
 {
     "resourceName": "IntuneDeviceConfigurationPolicyAndroidWorkProfile",
     "description": "This resource configures an Intune device configuration profile for an Android Workprofile device.",
-    "permissions": [
-        {
-            "read": [
-                {
-                    "name": "DeviceManagementConfiguration.Read.All"
-                }
-            ],
-            "update": [
-                {
-                    "name": "DeviceManagementConfiguration.ReadWrite.All"
-                }
-            ]
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "DeviceManagementConfiguration.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementConfiguration.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "DeviceManagementConfiguration.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementConfiguration.ReadWrite.All"
+                    }
+                ]
+            }
         }
-    ]
+    }
 }
