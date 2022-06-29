@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.629.1
 
 * EXOMalwareFilterPolicy
   * Parameters Action, EnableExternalSenderNotifications and EnableInternalSenderNotifications are deprecated and will be removed in future. These parameters are no longer available in EXO, only in onprem Exchange. Please remove these parameters from your configuration.
@@ -11,6 +11,7 @@
     FIXES #1921
   * Rename parameter Aliases to EmailAddresses. Aliases is now deprecated.
 * DEPENDENCIES
+  * Updated DSCParser to version 1.3.0.5
   * Updated Microsoft.Graph.* modules to version 1.10.0.
   * Updated MSCloudLoginAssistant to version 1.0.86.
     Fixes two authentication issues: #2000 and #2007
