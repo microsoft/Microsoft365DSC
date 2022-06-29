@@ -425,7 +425,7 @@ function Export-TargetResource
     try
     {
         [Array]$DataClassifications = Get-DataClassification -ErrorAction Stop
-        $dscContent = ""
+        $dscContent = [System.Text.StringBuilder]::new()
 
         if ($DataClassifications.Length -eq 0)
         {
@@ -458,13 +458,13 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
+            $dscContent.Append($currentDSCBlock) | Out-Null
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {
