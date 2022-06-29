@@ -86,6 +86,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Identity             = "Test Shared Mailbox"
                         RecipientTypeDetails = "SharedMailbox"
+                        Alias                = "test"
                         EmailAddresses       = @("smtp:user@contoso.onmicrosoft.com", "SMTP:test@contoso.onmicrosoft.com")
                         PrimarySMTPAddress   = "test@contoso.onmicrosoft.com"
                     }
@@ -131,6 +132,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Identity             = "Test Shared Mailbox"
                         RecipientTypeDetails = "SharedMailbox"
+                        Alias                = "test"
                         EmailAddresses       = @("smtp:user@contoso.onmicrosoft.com", "SMTP:test@contoso.onmicrosoft.com")
                         PrimarySMTPAddress   = "test@contoso.onmicrosoft.com"
                     }
@@ -161,6 +163,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Identity             = "Test Shared Mailbox"
                         RecipientTypeDetails = "SharedMailbox"
+                        Alias                = "test"
                         EmailAddresses       = @("smtp:user@contoso.onmicrosoft.com", "SMTP:test@contoso.onmicrosoft.com")
                         PrimarySMTPAddress   = "test@contoso.onmicrosoft.com"
                     }
@@ -182,6 +185,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Name               = "Test Shared Mailbox"
                         RecipientTypeDetails = "SharedMailbox"
+                        Alias              = "test"
                         DisplayName        = "Test Shared Mailbox"
                         PrimarySMTPAddress = "Testh@contoso.onmicrosoft.com"
                     }
