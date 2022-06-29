@@ -13,6 +13,10 @@ function Get-TargetResource
         $PrimarySMTPAddress,
 
         [Parameter()]
+        [System.String]
+        $Alias,
+
+        [Parameter()]
         [System.String[]]
         $Aliases,
 
@@ -103,9 +107,10 @@ function Get-TargetResource
         $result = @{
             DisplayName           = $DisplayName
             PrimarySMTPAddress    = $mailbox.PrimarySMTPAddress.ToString()
+            Alias                 = $mailbox.Alias
             Aliases               = $CurrentAliases
             Ensure                = "Present"
-            Credential    = $Credential
+            Credential            = $Credential
             ApplicationId         = $ApplicationId
             CertificateThumbprint = $CertificateThumbprint
             CertificatePath       = $CertificatePath
@@ -154,6 +159,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $PrimarySMTPAddress,
+
+        [Parameter()]
+        [System.String]
+        $Alias,
 
         [Parameter()]
         [System.String[]]
@@ -205,9 +214,9 @@ function Set-TargetResource
     $currentMailbox = Get-TargetResource @PSBoundParameters
 
     #region Validation
-    foreach ($alias in $Aliases)
+    foreach ($secondaryAlias in $Aliases)
     {
-        if ($alias.ToLower() -eq $PrimarySMTPAddress.ToLower())
+        if ($secondaryAlias.ToLower() -eq $PrimarySMTPAddress.ToLower())
         {
             throw "You cannot have the Aliases list contain the PrimarySMTPAddress"
         }
@@ -223,14 +232,23 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Shared Mailbox '$($DisplayName)' does not exist but it should. Creating it."
         $emails = ""
-        foreach ($alias in $Aliases)
+        foreach ($secondaryAlias in $Aliases)
         {
-            $emails += $alias + ","
+            $emails += $secondaryAlias + ","
         }
         $emails += $PrimarySMTPAddress
         $proxyAddresses = $emails -Split ','
         $CurrentParameters.Aliases = $proxyAddresses
-        New-MailBox -Name $DisplayName -PrimarySMTPAddress $PrimarySMTPAddress -Shared:$true
+        $NewMailBoxParameters = @{
+            Name                  = $DisplayName
+            PrimarySMTPAddress    = $PrimarySMTPAddress
+            Shared                = $true
+        }
+        if ($Alias)
+        {
+            $NewMailBoxParameters.Add("Alias", $Alias)
+        }
+        New-MailBox @NewMailBoxParameters
         Set-Mailbox -Identity $DisplayName -EmailAddresses @{add = $Aliases }
     }
     # CASE: Mailbox exists but it shouldn't;
@@ -256,9 +274,9 @@ function Set-TargetResource
             if ($null -ne $aliasesToAdd)
             {
                 $emailsToAdd = ''
-                foreach ($alias in $aliasesToAdd)
+                foreach ($secondaryAlias in $aliasesToAdd)
                 {
-                    $emailsToAdd += $alias.InputObject + ","
+                    $emailsToAdd += $secondaryAlias.InputObject + ","
                 }
                 $emailsToAdd += $PrimarySMTPAddress
                 $proxyAddresses = $emailsToAdd -Split ','
@@ -271,9 +289,9 @@ function Set-TargetResource
             if ($null -ne $aliasesToRemove)
             {
                 $emailsToRemoved = ''
-                foreach ($alias in $aliasesToRemove)
+                foreach ($secondaryAlias in $aliasesToRemove)
                 {
-                    $emailsToRemoved += $alias.InputObject + ","
+                    $emailsToRemoved += $secondaryAlias.InputObject + ","
                 }
                 $emailsToRemoved += $PrimarySMTPAddress
                 $proxyAddresses = $emailsToRemoved -Split ','
@@ -281,6 +299,14 @@ function Set-TargetResource
                 Write-Verbose -Message "Removing the following email aliases: $emailsToRemoved"
                 Set-Mailbox -Identity $DisplayName -EmailAddresses @{remove = $proxyAddresses }
             }
+        }
+        $current = $currentMailbox.Alias
+        $desired = $Alias
+        $diff = Compare-Object -ReferenceObject $current -DifferenceObject $desired
+        if ($diff)
+        {
+            Write-Verbose -Message "Updating Alias for the Shared Mailbox '$($DisplayName)'"
+            Set-Mailbox -Identity $DisplayName -Alias $Alias
         }
     }
 }
@@ -298,6 +324,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $PrimarySMTPAddress,
+
+        [Parameter()]
+        [System.String]
+        $Alias,
 
         [Parameter()]
         [System.String[]]
@@ -356,6 +386,7 @@ function Test-TargetResource
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("Ensure", `
             "DisplayName", `
+            "Alias", `
             "PrimarySMTPAddress",
         "Aliases")
 
@@ -434,6 +465,7 @@ function Export-TargetResource
                 $params = @{
                     Credential    = $Credential
                     DisplayName           = $mailboxName
+                    Alias                 = $mailbox.Alias
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
