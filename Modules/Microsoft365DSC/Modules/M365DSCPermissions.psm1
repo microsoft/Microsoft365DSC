@@ -70,6 +70,7 @@ function Get-M365DSCCompiledPermissionList
 
     foreach ($resourceName in $ResourceNameList)
     {
+        Write-Verbose -Message "Processing $resourceName"
         $settingsFilePath = $null
         try
         {
@@ -90,7 +91,7 @@ function Get-M365DSCCompiledPermissionList
 
             if ($null -eq $resourceSettings.permissions)
             {
-                Write-Warning "Error in reading permissions. Missing permissions node in settings.json."
+                Write-Warning "Error in reading permissions. Missing permissions node in settings.json for $resourceName."
                 continue
             }
 
@@ -130,7 +131,7 @@ function Get-M365DSCCompiledPermissionList
                     }
                     else
                     {
-                        Write-Warning "Error in reading Graph permissions. Missing graph node in settings.json."
+                        Write-Warning "Error in reading Graph permissions. Missing graph node in settings.json for $resourceName."
                         continue
                     }
                 }

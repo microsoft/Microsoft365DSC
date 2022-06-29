@@ -797,7 +797,7 @@ function New-M365DSCDeltaReport
         [System.String]
         $Destination,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $OutputPath,
 
@@ -830,13 +830,14 @@ function New-M365DSCDeltaReport
         return
     }
 
-    if ((Test-Path -Path $OutputPath) -eq $false)
+    if ($OutputPath -and (Test-Path -Path $OutputPath) -eq $false)
     {
         Write-Warning "File specified in parameter OutputPath already exists and will be overwritten: $OutputPath"
         Write-Warning "Make sure you specify a file that not exists, if you don't want the file to be overwritten!"
     }
 
-    if ($PSBoundParameters.ContainsKey("HeaderFilePath") -and (Test-Path -Path $HeaderFilePath) -eq $false)
+    if ($PSBoundParameters.ContainsKey("HeaderFilePath") -and -not [System.String]::IsNullOrEmpty($HeaderFilePath) -and `
+        (Test-Path -Path $HeaderFilePath) -eq $false)
     {
         Write-Error "Cannot find file specified in parameter HeaderFilePath: $HeaderFilePath. Please make sure the file exists!"
         return

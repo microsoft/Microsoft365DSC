@@ -48,6 +48,10 @@ function Get-TargetResource
         $DisableReportProblemDialog,
 
         [Parameter()]
+        [System.Boolean]
+        $TenantRestrictionEnabled,
+
+        [Parameter()]
         [System.String[]]
         $DomainGuids,
 
@@ -126,7 +130,7 @@ function Get-TargetResource
 
         if ($null -eq $tenantRestrictions)
         {
-            Write-Verbose -Message "Failed to get Tenant client synce settings!"
+            Write-Verbose -Message "Failed to get Tenant client sync settings!"
             return $nullReturn
         }
 
@@ -170,6 +174,7 @@ function Get-TargetResource
             IsSingleInstance                          = "Yes"
             BlockMacSync                              = $tenantRestrictions.BlockMacSync
             DisableReportProblemDialog                = $tenantRestrictions.DisableReportProblemDialog
+            TenantRestrictionEnabled                  = $tenantRestrictions.TenantRestrictionEnabled
             DomainGuids                               = $FixedAllowedDomainList
             ExcludedFileExtensions                    = $FixedExcludedFileExtensions
             GrooveBlockOption                         = $GrooveOption
@@ -264,6 +269,10 @@ function Set-TargetResource
         $DisableReportProblemDialog,
 
         [Parameter()]
+        [System.Boolean]
+        $TenantRestrictionEnabled,
+
+        [Parameter()]
         [System.String[]]
         $DomainGuids,
 
@@ -339,11 +348,58 @@ function Set-TargetResource
         $Options.Add("BlockMacSync", $CurrentParameters.BlockMacSync)
         $CurrentParameters.Remove("BlockMacSync") | Out-Null
     }
-    if ($CurrentParameters.ContainsKey("DomainGuids"))
+    # set the TenantRestrictionEnabled and DomainGuids values to avoid invalid configurations
+    if ($TenantRestrictionEnabled -eq $true)
     {
-        $Options.Add("DomainGuids", [System.Guid[]]$CurrentParameters.DomainGuids)
-        $CurrentParameters.Remove("DomainGuids") | Out-Null
+        if (!($CurrentParameters.ContainsKey("DomainGuids") -and ($CurrentParameters.DomainGuids.count -gt 0) -and ($CurrentParameters.DomainGuids[0] -ne '') ))
+        {
+            Write-Verbose -Message "Invalid configuration specified: TenantRestrictionEnabled is True but No DomainGuids Specified, this option will not be enabled"
+            $TenantRestrictionEnabled = $false
+            $DomainGuids = @()
+
+        }
+        $CurrentParameters.Remove("TenantRestrictionEnabled") | Out-Null
     }
+    else
+    {
+        if ($CurrentParameters.ContainsKey("TenantRestrictionEnabled"))
+        {
+            if ($CurrentParameters.ContainsKey("DomainGuids") -and ($CurrentParameters.DomainGuids.count -gt 0) -and ($CurrentParameters.DomainGuids[0] -ne '') )
+            {
+                Write-Verbose -Message "DomainGuids have been Specified but TenantRestrictionEnabled is set to False, DomainGuids value will be ignored"
+                $TenantRestrictionEnabled = $false
+                $DomainGuids = @()
+
+            }
+            else
+            {
+                $TenantRestrictionEnabled = $false
+                $DomainGuids = @()
+            }
+            $CurrentParameters.Remove("TenantRestrictionEnabled") | Out-Null
+        }
+        else
+        {
+            if ($CurrentParameters.ContainsKey("DomainGuids") -and ($CurrentParameters.DomainGuids.count -gt 0) -and ($CurrentParameters.DomainGuids[0] -ne '') )
+            {
+                Write-Verbose -Message "TenantRestrictionEnabled value not specified but a valid DomainGuids value is present - TenantRestrictionEnabled will be set to true"
+                $TenantRestrictionEnabled = $true
+                $DomainGuids = $CurrentParameters.DomainGuids
+            }
+            else
+            {
+                Write-Verbose -Message "TenantRestrictionEnabled value not specified - No valid DomainGuids value is present - TenantRestrictionEnabled will be set to False"
+                $TenantRestrictionEnabled = $false
+                $DomainGuids = @()
+            }
+        }
+    }
+
+    if ($CurrentParameters.ContainsKey("DomainGuids")) { $CurrentParameters.Remove("DomainGuids") | Out-Null }
+
+    $Options.Add("DomainGuids", [System.Guid[]]$DomainGuids)
+    $Options.Add("Enable", $TenantRestrictionEnabled)
+
     if ($CurrentParameters.ContainsKey("DisableReportProblemDialog"))
     {
         $Options.Add("DisableReportProblemDialog", $CurrentParameters.DisableReportProblemDialog)
@@ -379,15 +435,8 @@ function Set-TargetResource
     Write-Verbose -Message "Setting other configuration parameters"
     Write-Verbose -Message ($Options | Out-String)
 
-    if ($Options.ContainsKey("DomainGuids"))
-    {
-        Write-Verbose -Message "Updating DomainGuids"
-        Set-PnPTenantSyncClientRestriction @Options -Enable:$true
-    }
-    else
-    {
-        Set-PnPTenantSyncClientRestriction @Options
-    }
+    Set-PnPTenantSyncClientRestriction @Options
+
 }
 
 function Test-TargetResource
@@ -438,6 +487,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $DisableReportProblemDialog,
+
+        [Parameter()]
+        [System.Boolean]
+        $TenantRestrictionEnabled,
 
         [Parameter()]
         [System.String[]]
@@ -507,6 +560,7 @@ function Test-TargetResource
             "ExcludedFileExtensions", `
             "DisableReportProblemDialog", `
             "GrooveBlockOption", `
+            "TenantRestrictionEnabled", `
             "DomainGuids", `
             "OneDriveStorageQuota", `
             "OrphanedPersonalSitesRetentionPeriod", `
