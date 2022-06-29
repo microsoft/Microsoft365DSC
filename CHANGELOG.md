@@ -6,6 +6,10 @@
   * Parameters Action, EnableExternalSenderNotifications and EnableInternalSenderNotifications are deprecated and will be removed in future. These parameters are no longer available in EXO, only in onprem Exchange. Please remove these parameters from your configuration.
   FIXES #2025
   * Added support for FileTypeAction parameter.
+* EXOSharedMailbox
+  * Fix using umlauts in displayname by allowing to set alias
+    FIXES #1921
+  * Rename parameter Aliases to EmailAddresses. Aliases is now deprecated.
 * DEPENDENCIES
   * Updated Microsoft.Graph.* modules to version 1.10.0.
   * Updated MSCloudLoginAssistant to version 1.0.86.
