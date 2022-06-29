@@ -93,7 +93,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "View", "Edit")]
+        [ValidateSet("View", "Edit")]
         $DefaultLinkPermission,
 
         [Parameter()]
@@ -143,7 +143,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -156,7 +156,7 @@ function Get-TargetResource
     try
     {
         $SPOSharingSettings = Get-PnPTenant -ErrorAction Stop
-        $MySite = Get-PnPTenantSite | Where-Object{$_.Url -match "-my.sharepoint.com/"}
+        $MySite = Get-PnPTenantSite | Where-Object { $_.Url -match "-my.sharepoint.com/" }
 
         if ($null -ne $MySite)
         {
@@ -171,6 +171,14 @@ function Get-TargetResource
         if ($null -ne $SPOSharingSettings.SharingBlockedDomainList)
         {
             $blockDomains = $SPOSharingSettings.SharingBlockedDomainList.split(" ")
+        }
+
+        if ($SPOSharingSettings.DefaultLinkPermission -eq "None")
+        {
+            $DefaultLinkPermission = "Edit"
+        }
+        else {
+            $DefaultLinkPermission = $SPOSharingSettings.DefaultLinkPermission
         }
 
         return @{
@@ -194,9 +202,9 @@ function Get-TargetResource
             FileAnonymousLinkType                      = $SPOSharingSettings.FileAnonymousLinkType
             FolderAnonymousLinkType                    = $SPOSharingSettings.FolderAnonymousLinkType
             NotifyOwnersWhenItemsReshared              = $SPOSharingSettings.NotifyOwnersWhenItemsReshared
-            DefaultLinkPermission                      = $SPOSharingSettings.DefaultLinkPermission
+            DefaultLinkPermission                      = $DefaultLinkPermission
             RequireAcceptingAccountMatchInvitedAccount = $SPOSharingSettings.RequireAcceptingAccountMatchInvitedAccount
-            Credential                         = $Credential
+            Credential                                 = $Credential
             ApplicationId                              = $ApplicationId
             TenantId                                   = $TenantId
             ApplicationSecret                          = $ApplicationSecret
@@ -329,7 +337,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "View", "Edit")]
+        [ValidateSet("View", "Edit")]
         $DefaultLinkPermission,
 
         [Parameter()]
@@ -377,7 +385,7 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -399,7 +407,8 @@ function Set-TargetResource
     $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
     $CurrentParameters.Remove("ApplicationSecret") | Out-Null
     [bool]$SetMySharingCapability = $false
-    if ($null -ne $CurrentParameters["MySiteSharingCapability"]){
+    if ($null -ne $CurrentParameters["MySiteSharingCapability"])
+    {
         $SetMySharingCapability = $true
     }
     $CurrentParameters.Remove("MySiteSharingCapability") | Out-Null
@@ -477,8 +486,9 @@ function Set-TargetResource
     }
 
     Set-PnPTenant @CurrentParameters | Out-Null
-    if ($SetMySharingCapability){
-        $mysite = Get-PnPTenantSite | Where-Object{$_.Url -match "-my.sharepoint.com/"}
+    if ($SetMySharingCapability)
+    {
+        $mysite = Get-PnPTenantSite | Where-Object { $_.Url -match "-my.sharepoint.com/" }
         Set-PnPTenantSite -Identity $mysite.Url -SharingCapability $MySiteSharingCapability
     }
 }
@@ -577,7 +587,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "View", "Edit")]
+        [ValidateSet("View", "Edit")]
         $DefaultLinkPermission,
 
         [Parameter()]
@@ -623,7 +633,7 @@ function Test-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -638,6 +648,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
@@ -700,7 +711,7 @@ function Export-TargetResource
 
         #region Telemetry
         $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-        $CommandName  = $MyInvocation.MyCommand
+        $CommandName = $MyInvocation.MyCommand
         $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
             -CommandName $CommandName `
             -Parameters $PSBoundParameters
@@ -715,7 +726,7 @@ function Export-TargetResource
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
-            Credential    = $Credential
+            Credential            = $Credential
         }
 
         $Results = Get-TargetResource @Params
@@ -732,7 +743,7 @@ function Export-TargetResource
             -Credential $Credential
         $dscContent += $currentDSCBlock
         Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
+            -FileName $Global:PartialExportFileName
         Write-Host $Global:M365DSCEmojiGreenCheckmark
         return $dscContent
     }

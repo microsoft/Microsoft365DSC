@@ -1,6 +1,8 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+* SPOSharingSettings
+    * Updated code to remove None as valid value for DefaultLinkPermission. If value is set to None default to Edit.
 
 * EXOMalwareFilterPolicy
   * Parameters Action, EnableExternalSenderNotifications and EnableInternalSenderNotifications are deprecated and will be removed in future. These parameters are no longer available in EXO, only in onprem Exchange. Please remove these parameters from your configuration.
