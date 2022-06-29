@@ -149,7 +149,7 @@
             * Updated MSCloudLoginAssistant to version 1.0.86.
               Fixes two authentication issues: #2000 and #2007
           * MISC
-            * New Delta Report: removed mandatory restricitons on the OutputPath parameter.
+            * New Delta Report: removed mandatory restrictions on the OutputPath parameter.
               FIXES #2029"
 
             # Flag to indicate whether the module requires explicit user acceptance for install/update

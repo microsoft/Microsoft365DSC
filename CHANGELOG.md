@@ -16,7 +16,7 @@
   * Updated MSCloudLoginAssistant to version 1.0.86.
     Fixes two authentication issues: #2000 and #2007
 * MISC
-  * New Delta Report: removed mandatory restricitons on the OutputPath parameter.
+  * New Delta Report: removed mandatory restrictions on the OutputPath parameter.
     FIXES #2029
 
 # 1.22.622.1
