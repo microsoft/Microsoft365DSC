@@ -6,6 +6,7 @@
 | --- | --- | --- | --- | --- |
 | **DisplayName** | Key | String | The display name of the Shared Mailbox ||
 | **PrimarySMTPAddress** | Write | String | The primary email address of the Shared Mailbox ||
+| **Alias** | Write | String | The alias of the Shared Mailbox ||
 | **Aliases** | Write | StringArray[] | Aliases for the Shared Mailbox ||
 | **Ensure** | Write | String | Present ensures the group exists, absent ensures it is removed |Present, Absent|
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin ||
