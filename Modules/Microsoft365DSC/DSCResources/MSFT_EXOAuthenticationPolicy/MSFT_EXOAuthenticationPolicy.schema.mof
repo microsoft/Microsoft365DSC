@@ -14,6 +14,7 @@ class MSFT_EXOAuthenticationPolicy : OMI_BaseResource
     [write, Description("The AllowBasicAuthRpc switch specifies whether to allow Basic authentication with RPC.")] Boolean AllowBasicAuthRpc;
     [write, Description("The AllowBasicAuthSmtp switch specifies whether to allow Basic authentication with SMTP.")] Boolean AllowBasicAuthSmtp;
     [write, Description("The AllowBasicAuthWebServices switch specifies whether to allow Basic authentication with Exchange Web Services (EWS).")] Boolean AllowBasicAuthWebServices;
+    [write, Description("List of User Principal Names that are assigned the current authentication policy.")] String AssignedUsers[];
     [Write, Description("Specify if the authentication Policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

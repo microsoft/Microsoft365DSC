@@ -57,6 +57,10 @@ function Get-TargetResource
         $AllowBasicAuthWebServices,
 
         [Parameter()]
+        [System.String[]]
+        $AssignedUsers,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -131,6 +135,16 @@ function Get-TargetResource
 
         $AuthenticationPolicy = $AllAuthenticationPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
 
+        #region Find Assigned Users
+        $assignedUsersList = Get-User -ResultSize 'Unlimited' | Where-Object -FilterScript {$_.AuthenticationPolicy -eq $AuthenticationPolicy.Identity}
+
+        $assignedUsers = @()
+        foreach ($assignedUser in $assignedUsersList)
+        {
+            $assignedUsers += $assignedUser.UserPrincipalName
+        }
+        #endregion
+
         if ($null -eq $AuthenticationPolicy)
         {
             Write-Verbose -Message "Authentication Policy $($Identity) does not exist."
@@ -152,6 +166,7 @@ function Get-TargetResource
                 AllowBasicAuthRpc                   = $AuthenticationPolicy.AllowBasicAuthRpc
                 AllowBasicAuthSmtp                  = $AuthenticationPolicy.AllowBasicAuthSmtp
                 AllowBasicAuthWebServices           = $AuthenticationPolicy.AllowBasicAuthWebServices
+                AssignedUsers                       = $AssignedUsers
                 Ensure                              = 'Present'
                 Credential                          = $Credential
                 ApplicationId                       = $ApplicationId
@@ -249,6 +264,10 @@ function Set-TargetResource
         $AllowBasicAuthWebServices,
 
         [Parameter()]
+        [System.String[]]
+        $AssignedUsers,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -312,11 +331,14 @@ function Set-TargetResource
         AllowBasicAuthWebServices           = $AllowBasicAuthWebServices
     }
 
+    $NeedToCheckAssignedUsers = $false
+
     # CASE: Authentication Policy doesn't exist but should;
     if ($Ensure -eq "Present" -and $currentAuthenticationPolicyConfig.Ensure -eq "Absent")
     {
         Write-Verbose -Message "Authentication Policy '$($Identity)' does not exist but it should. Create and configure it."
         New-AuthenticationPolicy -Name $Identity @NewAuthenticationPolicyParams | Out-Null
+        $NeedToCheckAssignedUsers = $true
     }
     # CASE: Authentication Policy exists but it shouldn't;
     elseif ($Ensure -eq "Absent" -and $currentAuthenticationPolicyConfig.Ensure -eq "Present")
@@ -329,7 +351,25 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Authentication Policy '$($Identity)' exists. Updating settings."
         Set-AuthenticationPolicy -Identity $Identity @NewAuthenticationPolicyParams | Out-Null
+        $NeedToCheckAssignedUsers = $true
     }
+
+    #region Update Assigned Users
+    if ($NeedToCheckAssignedUsers)
+    {
+        $usersDifference = Compare-Object -ReferenceObject $AssignedUsers `
+            -DifferenceObject $currentAuthenticationPolicyConfig.AssignedUsers
+
+        $needToAdd = $usersDifference | Where-Object -FilterScript {$_.SideIndicator -eq '<='}
+
+        # Assign the current policy to users that don't currently have it assigned.
+        foreach ($user in $needToAdd)
+        {
+            Write-Verbose -Message "Assigning the {$Identity} authentication policy to user {$($user.InputObject)}"
+            Set-User -Identity $user.InputObject -AuthenticationPolicy $Identity | Out-Null
+        }
+    }
+    #endregion
 }
 
 function Test-TargetResource
@@ -389,6 +429,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowBasicAuthWebServices,
+
+        [Parameter()]
+        [System.String[]]
+        $AssignedUsers,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]

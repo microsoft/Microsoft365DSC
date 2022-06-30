@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOAuthenticationPolicy
+  * Added the AssignedUsers property;
+
 # 1.22.629.1
 
 * EXOMalwareFilterPolicy

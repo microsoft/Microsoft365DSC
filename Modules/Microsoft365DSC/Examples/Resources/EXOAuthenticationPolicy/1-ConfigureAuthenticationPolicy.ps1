@@ -29,6 +29,7 @@ Configuration Example
             AllowBasicAuthRpc                   = $False
             AllowBasicAuthSmtp                  = $False
             AllowBasicAuthWebServices           = $False
+            AssignedUsers                       = @("John.Smith@contoso.com", "Bob.Houle@contoso.com")
             Ensure                              = "Present"
             Credential                          = $credsGlobalAdmin
         }
