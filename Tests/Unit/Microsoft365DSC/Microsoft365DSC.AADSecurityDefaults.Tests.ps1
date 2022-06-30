@@ -81,8 +81,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $false
             }
             It 'Should create the Enable from the set method' {
-                Set-TargetResource @testParams
-                Should-Invoke -CommandName "Update-MgPolicyIdentitySecurityDefaultEnforcementPolicy" -Exactly 1
+                Set-TargetResource @testParams|
+                Should -Invoke -CommandName "Update-MgPolicyIdentitySecurityDefaultEnforcementPolicy" -Exactly 1
             }
         }
         Context -Name "The Security Defaults are already in the desired State" -Fixture {
@@ -100,7 +100,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName = "Security Defaults"
                         Id          = "000000000000"
                         Description = "Security Defaults description"
-                        IsEnabled   = $false
+                        IsEnabled   = $true
                     }
                 }
             }
@@ -116,7 +116,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the app from the set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "Update-Get-MgPolicyIdentitySecurityDefaultEnforcementPolicy" -Exactly 0
+                Should -Invoke -CommandName "Update-MgPolicyIdentitySecurityDefaultEnforcementPolicy" -Exactly 0
             }
         }
     }
