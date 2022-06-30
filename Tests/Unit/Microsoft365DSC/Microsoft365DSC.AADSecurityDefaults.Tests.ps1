@@ -56,10 +56,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The Defaults should be enabled but they are not" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName = "Security Defaults"
-                    Description = "Security Defaults description"
-                    IsEnabled   = $True
-                    Credential  = $credsGlobalAdmin
+                    IsSingleInstance = $true
+                    DisplayName      = "Security Defaults"
+                    Description      = "Security Defaults description"
+                    IsEnabled        = $True
+                    Credential       = $credsGlobalAdmin
                 }
 
                 Mock -CommandName Get-MgPolicyIdentitySecurityDefaultEnforcementPolicy -MockWith {
@@ -87,10 +88,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The Security Defaults are already in the desired State" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName = "Security Defaults"
-                    Description = "Security Defaults description"
-                    IsEnabled   = $True
-                    Credential  = $credsGlobalAdmin
+                    IsSingleInstance = $true
+                    DisplayName      = "Security Defaults"
+                    Description      = "Security Defaults description"
+                    IsEnabled        = $True
+                    Credential       = $credsGlobalAdmin
                 }
 
                 Mock -CommandName Get-MgPolicyIdentitySecurityDefaultEnforcementPolicy -MockWith {
