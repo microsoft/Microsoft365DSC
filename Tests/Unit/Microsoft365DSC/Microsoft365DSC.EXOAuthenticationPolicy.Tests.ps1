@@ -53,6 +53,9 @@ $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
 
             Mock -CommandName Remove-AuthenticationPolicy {
             }
+
+            Mock -CommandName Get-User -MockWith {
+            }
         }
 
         # Test contexts
