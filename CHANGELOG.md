@@ -1,5 +1,7 @@
 # Change log for Microsoft365DSC
-
+# UNRELEASED
+* SPOSharingSettings
+    * Updated code to remove None as valid value for DefaultLinkPermission. If value is set to None default to Edit.
 # 1.22.629.1
 
 * EXOMalwareFilterPolicy
