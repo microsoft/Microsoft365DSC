@@ -361,12 +361,20 @@ function Set-TargetResource
             -DifferenceObject $currentAuthenticationPolicyConfig.AssignedUsers
 
         $needToAdd = $usersDifference | Where-Object -FilterScript {$_.SideIndicator -eq '<='}
+        $needToRemove = $usersDifference | Where-Object -FilterScript {$_.SideIndicator -eq '=>'}
 
         # Assign the current policy to users that don't currently have it assigned.
         foreach ($user in $needToAdd)
         {
             Write-Verbose -Message "Assigning the {$Identity} authentication policy to user {$($user.InputObject)}"
             Set-User -Identity $user.InputObject -AuthenticationPolicy $Identity | Out-Null
+        }
+
+        # Assign the current policy to users that don't currently have it assigned.
+        foreach ($user in $needToRemove)
+        {
+            Write-Verbose -Message "Removing the {$Identity} authentication policy to user {$($user.InputObject)}"
+            Set-User -Identity $user.InputObject -AuthenticationPolicy $null | Out-Null
         }
     }
     #endregion
