@@ -56,7 +56,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The Defaults should be enabled but they are not" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance = $true
+                    IsSingleInstance = 'Yes'
                     DisplayName      = "Security Defaults"
                     Description      = "Security Defaults description"
                     IsEnabled        = $True
@@ -88,7 +88,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The Security Defaults are already in the desired State" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance = $true
+                    IsSingleInstance = 'Yes'
                     DisplayName      = "Security Defaults"
                     Description      = "Security Defaults description"
                     IsEnabled        = $True
