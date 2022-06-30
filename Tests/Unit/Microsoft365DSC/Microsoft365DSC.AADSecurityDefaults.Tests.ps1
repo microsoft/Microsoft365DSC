@@ -113,11 +113,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should return false from the test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
-
-            It 'Should remove the app from the set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName "Update-MgPolicyIdentitySecurityDefaultEnforcementPolicy" -Exactly 0
-            }
         }
     }
 }
