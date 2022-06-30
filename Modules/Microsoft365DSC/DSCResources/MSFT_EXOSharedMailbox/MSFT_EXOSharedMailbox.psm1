@@ -16,9 +16,14 @@ function Get-TargetResource
         [System.String]
         $Alias,
 
+        # DEPRECATED
         [Parameter()]
         [System.String[]]
         $Aliases,
+
+        [Parameter()]
+        [System.String[]]
+        $EmailAddresses,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -75,6 +80,15 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    # Warning for deprecated parameter
+    if ($PSBoundParameters.ContainsKey("Aliases"))
+    {
+        Write-Warning "Aliases is deprecated. Please use EmailAddresses instead and remove Aliases from your configuration."
+        if ($null -eq $EmailAddresses) {
+            $EmailAddresses = $Aliases
+        }
+    }
+
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
 
@@ -91,15 +105,15 @@ function Get-TargetResource
             return $nullReturn
         }
 
-        #region Email Aliases
-        $CurrentAliases = @()
+        #region EmailAddresses
+        $CurrentEmailAddresses = @()
 
         foreach ($email in $mailbox.EmailAddresses)
         {
             $emailValue = $email.Split(":")[1]
             if ($emailValue -and $emailValue -ne $mailbox.PrimarySMTPAddress)
             {
-                $CurrentAliases += $emailValue
+                $CurrentEmailAddresses += $emailValue
             }
         }
         #endregion
@@ -108,7 +122,7 @@ function Get-TargetResource
             DisplayName           = $DisplayName
             PrimarySMTPAddress    = $mailbox.PrimarySMTPAddress.ToString()
             Alias                 = $mailbox.Alias
-            Aliases               = $CurrentAliases
+            EmailAddresses        = $CurrentEmailAddresses
             Ensure                = "Present"
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -164,9 +178,14 @@ function Set-TargetResource
         [System.String]
         $Alias,
 
+        # DEPRECATED
         [Parameter()]
         [System.String[]]
         $Aliases = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $EmailAddresses = @(),
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -214,11 +233,11 @@ function Set-TargetResource
     $currentMailbox = Get-TargetResource @PSBoundParameters
 
     #region Validation
-    foreach ($secondaryAlias in $Aliases)
+    foreach ($secondaryAlias in $EmailAddresses)
     {
         if ($secondaryAlias.ToLower() -eq $PrimarySMTPAddress.ToLower())
         {
-            throw "You cannot have the Aliases list contain the PrimarySMTPAddress"
+            throw "You cannot have the EmailAddresses list contain the PrimarySMTPAddress"
         }
     }
     #endregion
@@ -227,18 +246,28 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
+    # Warning for deprecated parameter
+    if ($PSBoundParameters.ContainsKey("Aliases"))
+    {
+        Write-Warning "Aliases is deprecated. Please use EmailAddresses instead and remove Aliases from your configuration."
+        if ($null -eq $EmailAddresses)
+        {
+            $EmailAddresses = $Aliases
+        }
+    }
+
     # CASE: Mailbox doesn't exist but should;
     if ($Ensure -eq "Present" -and $currentMailbox.Ensure -eq "Absent")
     {
         Write-Verbose -Message "Shared Mailbox '$($DisplayName)' does not exist but it should. Creating it."
         $emails = ""
-        foreach ($secondaryAlias in $Aliases)
+        foreach ($secondaryAlias in $EmailAddresses)
         {
             $emails += $secondaryAlias + ","
         }
         $emails += $PrimarySMTPAddress
         $proxyAddresses = $emails -Split ','
-        $CurrentParameters.Aliases = $proxyAddresses
+        $CurrentParameters.EmailAddresses = $proxyAddresses
         $NewMailBoxParameters = @{
             Name                  = $DisplayName
             PrimarySMTPAddress    = $PrimarySMTPAddress
@@ -249,7 +278,7 @@ function Set-TargetResource
             $NewMailBoxParameters.Add("Alias", $Alias)
         }
         New-MailBox @NewMailBoxParameters
-        Set-Mailbox -Identity $DisplayName -EmailAddresses @{add = $Aliases }
+        Set-Mailbox -Identity $DisplayName -EmailAddresses @{add = $EmailAddresses }
     }
     # CASE: Mailbox exists but it shouldn't;
     elseif ($Ensure -eq "Absent" -and $currentMailbox.Ensure -eq "Present")
@@ -260,43 +289,43 @@ function Set-TargetResource
     # CASE: Mailbox exists and it should, but has different values than the desired ones
     elseif ($Ensure -eq "Present" -and $currentMailbox.Ensure -eq "Present")
     {
-        # CASE: Email Aliases need to be updated
+        # CASE: EmailAddresses need to be updated
         Write-Verbose -Message "Shared Mailbox '$($DisplayName)' already exists, but needs updating."
-        $current = $currentMailbox.Aliases
-        $desired = $Aliases
+        $current = $currentMailbox.EmailAddresses
+        $desired = $EmailAddresses
         $diff = Compare-Object -ReferenceObject $current -DifferenceObject $desired
         if ($diff)
         {
-            # Add Aliases
-            Write-Verbose -Message "Updating the list of Aliases for the Shared Mailbox '$($DisplayName)'"
+            # Add EmailAddresses
+            Write-Verbose -Message "Updating the list of EmailAddresses for the Shared Mailbox '$($DisplayName)'"
             $emails = ""
-            $aliasesToAdd = $diff | Where-Object -FilterScript { $_.SideIndicator -eq '=>' }
-            if ($null -ne $aliasesToAdd)
+            $emailAddressesToAdd = $diff | Where-Object -FilterScript { $_.SideIndicator -eq '=>' }
+            if ($null -ne $emailAddressesToAdd)
             {
                 $emailsToAdd = ''
-                foreach ($secondaryAlias in $aliasesToAdd)
+                foreach ($secondaryAlias in $emailAddressesToAdd)
                 {
                     $emailsToAdd += $secondaryAlias.InputObject + ","
                 }
                 $emailsToAdd += $PrimarySMTPAddress
                 $proxyAddresses = $emailsToAdd -Split ','
 
-                Write-Verbose -Message "Adding the following email aliases: $emailsToAdd"
+                Write-Verbose -Message "Adding the following EmailAddresses: $emailsToAdd"
                 Set-Mailbox -Identity $DisplayName -EmailAddresses @{add = $proxyAddresses }
             }
-            # Remove Aliases
-            $aliasesToRemove = $diff | Where-Object -FilterScript { $_.SideIndicator -eq '<=' }
-            if ($null -ne $aliasesToRemove)
+            # Remove EmailAddresses
+            $emailAddressesToRemove = $diff | Where-Object -FilterScript { $_.SideIndicator -eq '<=' }
+            if ($null -ne $emailAddressesToRemove)
             {
                 $emailsToRemoved = ''
-                foreach ($secondaryAlias in $aliasesToRemove)
+                foreach ($secondaryAlias in $emailAddressesToRemove)
                 {
                     $emailsToRemoved += $secondaryAlias.InputObject + ","
                 }
                 $emailsToRemoved += $PrimarySMTPAddress
                 $proxyAddresses = $emailsToRemoved -Split ','
 
-                Write-Verbose -Message "Removing the following email aliases: $emailsToRemoved"
+                Write-Verbose -Message "Removing the following EmailAddresses: $emailsToRemoved"
                 Set-Mailbox -Identity $DisplayName -EmailAddresses @{remove = $proxyAddresses }
             }
         }
@@ -329,9 +358,14 @@ function Test-TargetResource
         [System.String]
         $Alias,
 
+        # DEPRECATED
         [Parameter()]
         [System.String[]]
         $Aliases,
+
+        [Parameter()]
+        [System.String[]]
+        $EmailAddresses,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -374,6 +408,16 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    # Warning for deprecated parameter
+    if ($PSBoundParameters.ContainsKey("Aliases"))
+    {
+        Write-Warning "Aliases is deprecated. Please use EmailAddresses instead and remove Aliases from your configuration."
+        if ($null -eq $EmailAddresses)
+        {
+            $EmailAddresses = $Aliases
+        }
+    }
+
     Write-Verbose -Message "Testing configuration of Office 365 Shared Mailbox $DisplayName"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -388,7 +432,7 @@ function Test-TargetResource
             "DisplayName", `
             "Alias", `
             "PrimarySMTPAddress",
-        "Aliases")
+        "EmailAddresses")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
