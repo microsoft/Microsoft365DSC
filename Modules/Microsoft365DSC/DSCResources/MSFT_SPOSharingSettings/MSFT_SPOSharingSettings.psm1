@@ -93,7 +93,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("View", "Edit")]
+        [ValidateSet("None","View", "Edit")]
         $DefaultLinkPermission,
 
         [Parameter()]
@@ -337,7 +337,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("View", "Edit")]
+        [ValidateSet("None","View", "Edit")]
         $DefaultLinkPermission,
 
         [Parameter()]
@@ -485,6 +485,12 @@ function Set-TargetResource
         $CurrentParameters["SharingBlockedDomainList"] = $blocked.Trim()
     }
 
+    if ($DefaultLinkPermission -eq "None")
+    {
+        Write-Verbose -Message "Valid values to set are View and Edit. A value of None will be set to Edit as its the default value."
+        $CurrentParameters["DefaultLinkPermission"] = "Edit"
+    }
+
     Set-PnPTenant @CurrentParameters | Out-Null
     if ($SetMySharingCapability)
     {
@@ -587,7 +593,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("View", "Edit")]
+        [ValidateSet("None","View", "Edit")]
         $DefaultLinkPermission,
 
         [Parameter()]
@@ -655,6 +661,12 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+
+    if ($DefaultLinkPermission -eq "None")
+    {
+        Write-Verbose -Message "Valid values to set are View and Edit. A value of None will be set to Edit as its the default value."
+        $ValuesToCheck["DefaultLinkPermission"] = "Edit"
+    }
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
