@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* TeamsMeetingBroadcastConfiguration
+  * Fixing export issue where SdnApiToken is exported as a string instead of
+    a variable
+
 # 1.22.824.1
 
 * AADApplication
