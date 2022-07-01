@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* PlannerPlan
+  * Fix export issue where the export wasn't created correctly because of the
+    use of an incorrect property name.
 * TeamsMeetingBroadcastConfiguration
   * Fixing export issue where SdnApiToken is exported as a string instead of
     a variable

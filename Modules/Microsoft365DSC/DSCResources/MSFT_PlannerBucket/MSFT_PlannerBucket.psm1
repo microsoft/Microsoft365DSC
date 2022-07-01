@@ -40,7 +40,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -79,7 +79,7 @@ function Get-TargetResource
             BucketId              = $bucket[0].Id
             Ensure                = "Present"
             ApplicationId         = $ApplicationId
-            TenantID              = $TenantId
+            TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
         }
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $results)"
@@ -152,7 +152,7 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -226,7 +226,7 @@ function Test-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -275,7 +275,7 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -289,16 +289,16 @@ function Export-TargetResource
     {
         [array]$groups = Get-MgGroup -All:$true -ErrorAction Stop
 
-        $ConnectionMode = Connect-Graph -Scopes "Group.ReadWrite.All"
+        $null = Connect-Graph -Scopes "Group.ReadWrite.All"
         $i = 1
         $dscContent = ''
         Write-Host "`r`n" -NoNewline
         foreach ($group in $groups)
         {
-            Write-Host "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.ObjectID)}"
+            Write-Host "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.Id)}"
             try
             {
-                [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.ObjectId -ErrorAction 'SilentlyContinue'
+                [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.Id -ErrorAction 'SilentlyContinue'
 
                 $j = 1
                 foreach ($plan in $plans)
@@ -308,7 +308,7 @@ function Export-TargetResource
                     $k = 1
                     foreach ($bucket in $buckets)
                     {
-                        Write-Host "            [$k/$($buckets.Length)] $($bucket.Name)" -NoNewline
+                        Write-Host "            [$k/$($buckets.Length)] $($bucket.Name)"
                         $params = @{
                             Name                  = $bucket.Name
                             PlanId                = $plan.Id
