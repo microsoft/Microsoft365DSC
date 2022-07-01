@@ -675,7 +675,7 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
-    $dscContent = ''
+    $dscContent = [System.Text.StringBuilder]::new()
     $i = 1
     Write-Host "`r`n" -NoNewline
     try
@@ -716,14 +716,14 @@ function Export-TargetResource
                         -ParameterName "Permissions"
                 }
 
-                $dscContent += $currentDSCBlock
+                $dscContent.Append($currentDSCBlock) | Out-Null
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
                 Write-Host $Global:M365DSCEmojiGreenCheckMark
                 $i++
             }
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {
@@ -747,7 +747,6 @@ function Export-TargetResource
         return ""
     }
 }
-
 
 function Get-M365DSCAzureADAppPermissions
 {

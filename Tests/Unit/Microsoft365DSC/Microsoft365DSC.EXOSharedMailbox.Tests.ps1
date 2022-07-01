@@ -86,6 +86,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Identity             = "Test Shared Mailbox"
                         RecipientTypeDetails = "SharedMailbox"
+                        Alias                = "test"
                         EmailAddresses       = @("smtp:user@contoso.onmicrosoft.com", "SMTP:test@contoso.onmicrosoft.com")
                         PrimarySMTPAddress   = "test@contoso.onmicrosoft.com"
                     }
@@ -106,13 +107,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName        = "Test Shared Mailbox"
                     PrimarySMTPAddress = "Test@contoso.onmicrosoft.com"
-                    Aliases            = @("Test@contoso.onmicrosoft.com")
+                    EmailAddresses     = @("Test@contoso.onmicrosoft.com")
                     Ensure             = "Present"
                     Credential = $Credential
                 }
 
                 It "Should throw an error from the Set method" {
-                    { Set-TargetResource @testParams } | Should Throw "You cannot have the Aliases list contain the PrimarySMTPAddress"
+                    { Set-TargetResource @testParams } | Should Throw "You cannot have the EmailAddresses list contain the PrimarySMTPAddress"
                 }
             }
         }
@@ -122,7 +123,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName        = "Test Shared Mailbox"
                     PrimarySMTPAddress = "Test@contoso.onmicrosoft.com"
-                    Aliases            = @("User1@contoso.onmicrosoft.com")
+                    EmailAddresses     = @("User1@contoso.onmicrosoft.com")
                     Ensure             = "Absent"
                     Credential = $Credential
                 }
@@ -131,6 +132,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Identity             = "Test Shared Mailbox"
                         RecipientTypeDetails = "SharedMailbox"
+                        Alias                = "test"
                         EmailAddresses       = @("smtp:user@contoso.onmicrosoft.com", "SMTP:test@contoso.onmicrosoft.com")
                         PrimarySMTPAddress   = "test@contoso.onmicrosoft.com"
                     }
@@ -147,12 +149,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Aliases are specified" -Fixture {
+        Context -Name "EmailAddresses are specified" -Fixture {
             BeforeAll {
                 $testParams = @{
                     DisplayName        = "Test Shared Mailbox"
                     PrimarySMTPAddress = "Test@contoso.onmicrosoft.com"
-                    Aliases            = @("User1@contoso.onmicrosoft.com")
+                    EmailAddresses     = @("User1@contoso.onmicrosoft.com")
                     Ensure             = "Present"
                     Credential = $Credential
                 }
@@ -161,6 +163,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Identity             = "Test Shared Mailbox"
                         RecipientTypeDetails = "SharedMailbox"
+                        Alias                = "test"
                         EmailAddresses       = @("smtp:user@contoso.onmicrosoft.com", "SMTP:test@contoso.onmicrosoft.com")
                         PrimarySMTPAddress   = "test@contoso.onmicrosoft.com"
                     }
@@ -182,6 +185,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Name               = "Test Shared Mailbox"
                         RecipientTypeDetails = "SharedMailbox"
+                        Alias              = "test"
                         DisplayName        = "Test Shared Mailbox"
                         PrimarySMTPAddress = "Testh@contoso.onmicrosoft.com"
                     }
