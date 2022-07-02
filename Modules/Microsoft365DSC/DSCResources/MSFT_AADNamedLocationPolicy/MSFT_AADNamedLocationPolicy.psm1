@@ -62,7 +62,17 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of AAD Named Location"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'v1.0'
+    $context=Get-MgContext
+    if($null -eq $context)
+    {
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters -ProfileName 'beta'
+    }
+    Select-MgProfile -Name v1.0
+    #$ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+    #   -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -275,7 +285,7 @@ function Set-TargetResource
         Write-Verbose -Message "Updating AAD Named Location {$Displayname)} with attributes: $VerboseAttributes"
         $JSONValue = ConvertTo-Json $desiredValues | Out-String
         Write-Verbose -Message "JSON: $JSONValue"
-        $APIUrl = "https://graph.microsoft.com/v1.0/identity/conditionalAccess/namedLocations"
+        $APIUrl = "https://graph.microsoft.com/v1.0/identity/conditionalAccess/namedLocations/$($currentAADNamedLocation.Id)"
         Invoke-MgGraphRequest -Method PATCH `
             -Uri $APIUrl `
             -Body $JSONValue | Out-Null
@@ -410,8 +420,17 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
-
+    #$ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'v1.0'
+    $context=Get-MgContext
+    if($null -eq $context)
+    {
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters -ProfileName 'beta'
+    }
+    Select-MgProfile -Name v1.0
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 

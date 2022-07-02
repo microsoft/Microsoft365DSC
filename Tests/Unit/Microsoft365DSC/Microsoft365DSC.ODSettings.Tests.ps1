@@ -86,6 +86,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ODBAccessRequests                         = "On"
                     BlockMacSync                              = $true
                     DisableReportProblemDialog                = $true
+                    TenantRestrictionEnabled                  = $true
                     DomainGuids                               = @(New-Guid)
                     ExcludedFileExtensions                    = @(".asmx")
                     GrooveBlockOption                         = "HardOptIn"

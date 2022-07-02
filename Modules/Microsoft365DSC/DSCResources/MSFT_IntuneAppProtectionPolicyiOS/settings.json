@@ -1,18 +1,32 @@
 {
     "resourceName": "IntuneAppProtectionPolicyiOS",
     "description": "This resource configures an Intune app protection policy for an iOS Device.",
-    "permissions": [
-        {
-            "read": [
-                {
-                    "name":"DeviceManagementApps.Read.All"
-                }
-            ],
-            "update": [
-                {
-                    "name": "DeviceManagementApps.ReadWrite.All"
-                }
-            ]
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "DeviceManagementApps.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementApps.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "DeviceManagementApps.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementApps.ReadWrite.All"
+                    }
+                ]
+            }
         }
-    ]
+    }
 }

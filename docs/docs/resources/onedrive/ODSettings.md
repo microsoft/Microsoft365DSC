@@ -14,6 +14,7 @@
 | **ODBAccessRequests** | Write | String | Lets administrators set policy on access requests and requests to share in OneDrive for Business |On, Off, Unspecified|
 | **BlockMacSync** | Write | Boolean | Block sync client on Mac ||
 | **DisableReportProblemDialog** | Write | Boolean | Disable dialog box ||
+| **TenantRestrictionEnabled** | Write | Boolean | Enable/disable Safe domain List - if disabled overrides DomainGuids value ||
 | **DomainGuids** | Write | StringArray[] | Safe domain list ||
 | **ExcludedFileExtensions** | Write | StringArray[] | Exclude files from being synced to OneDrive ||
 | **GrooveBlockOption** | Write | String | Groove block options |OptOut, HardOptIn, SoftOptIn|

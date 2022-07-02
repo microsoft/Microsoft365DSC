@@ -18,7 +18,7 @@ Configuration Example
         {
             DisplayName        = "Test"
             PrimarySMTPAddress = "Test@O365DSC1.onmicrosoft.com"
-            Aliases            = @("Joufflu@o365dsc1.onmicrosoft.com", "Gilles@O365dsc1.onmicrosoft.com")
+            EmailAddresses     = @("Joufflu@o365dsc1.onmicrosoft.com", "Gilles@O365dsc1.onmicrosoft.com")
             Ensure             = "Present"
             Credential         = $credsGlobalAdmin
         }

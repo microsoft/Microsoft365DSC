@@ -2688,23 +2688,11 @@ function New-MalwareFilterPolicy
 
         [Parameter()]
         [System.Object]
-        $Action,
-
-        [Parameter()]
-        [System.Object]
         $CustomExternalBody,
 
         [Parameter()]
         [System.Object]
-        $EnableExternalSenderNotifications,
-
-        [Parameter()]
-        [System.Object]
         $CustomNotifications,
-
-        [Parameter()]
-        [System.Object]
-        $EnableInternalSenderNotifications,
 
         [Parameter()]
         [System.Object]
@@ -2717,6 +2705,10 @@ function New-MalwareFilterPolicy
         [Parameter()]
         [System.Object]
         $CustomAlertText,
+
+        [Parameter()]
+        [System.Object]
+        $FileTypeAction,
 
         [Parameter()]
         [System.Object]
@@ -7286,23 +7278,11 @@ function Set-MalwareFilterPolicy
 
         [Parameter()]
         [System.Object]
-        $Action,
-
-        [Parameter()]
-        [System.Object]
         $CustomExternalBody,
 
         [Parameter()]
         [System.Object]
-        $EnableExternalSenderNotifications,
-
-        [Parameter()]
-        [System.Object]
         $CustomNotifications,
-
-        [Parameter()]
-        [System.Object]
-        $EnableInternalSenderNotifications,
 
         [Parameter()]
         [System.Object]
@@ -7315,6 +7295,10 @@ function Set-MalwareFilterPolicy
         [Parameter()]
         [System.Object]
         $CustomAlertText,
+
+        [Parameter()]
+        [System.Object]
+        $FileTypeAction,
 
         [Parameter()]
         [System.Object]
