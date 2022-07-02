@@ -1,6 +1,6 @@
 {
     "resourceName": "IntuneASRRulesPolicyWindows10ConfigMgr",
-    "description": "This resource configures a Intune Endpoint Protection  Exploit Protection policy for a Windows 10 Device.",
+    "description": "This resource configures an Intune Endpoint Protection ASR Rules policy for a Windows 10 Device for ConfigManager.",
     "permissions": [
         {
             "read": [
