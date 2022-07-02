@@ -808,7 +808,7 @@ function Get-DeviceManagementConfigurationSettingInstanceValue
     }
     return $settingValue
 }
-function Format-M365DSCParamsToSettingInstance
+function Convert-M365DSCParamsToSettingInstance
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -1091,7 +1091,7 @@ function Format-M365DSCIntuneSettingCatalogPolicySettings
             {
                 $formatParams.Add('settingValueType',$settingDefinition.settingValueType)
             }
-            $myFormattedSetting= Format-M365DSCParamsToSettingInstance @formatParams
+            $myFormattedSetting= Convert-M365DSCParamsToSettingInstance @formatParams
 
             if(-Not [string]::IsNullOrEmpty($settingDefinition.groupSettingCollectionDefinitionId))
             {
@@ -1101,7 +1101,7 @@ function Format-M365DSCIntuneSettingCatalogPolicySettings
                     $parentSetting=@{}
                     $parentSetting.add("@odata.type","#microsoft.graph.deviceManagementConfigurationSetting")
                     $mySettingDefinition=$settingDefinitions|Where-Object -FilterScript {$_.settingDefinitionId -eq $settingDefinition.groupSettingCollectionDefinitionId}
-                    $mySettingDefinitionFormatted=Format-M365DSCParamsToSettingInstance `
+                    $mySettingDefinitionFormatted=Convert-M365DSCParamsToSettingInstance `
                         -DSCParams @{$mySettingDefinition.settingName=@{}} `
                         -SettingDefinitionId $mySettingDefinition.settingDefinitionId `
                         -SettingDefinitionType $mySettingDefinition.settingDefinitionType `
@@ -1372,4 +1372,4 @@ function Get-MgDeviceManagementConfigurationSettingDefinition
 
 }
 
-Export-ModuleMember -Function *-TargetResource
+Export-ModuleMember -Function *-TargetResource,*
