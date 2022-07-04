@@ -13,7 +13,7 @@ class MSFT_AADAuthorizationPolicy : OMI_BaseResource
     [Write, Description("Boolean Indicates whether the default user role can create security groups.")] Boolean DefaultUserRoleAllowedToCreateSecurityGroups;
     [Write, Description("Boolean Indicates whether the default user role can read other users.")] Boolean DefaultUserRoleAllowedToReadOtherUsers;
     [Write, Description("String collection Indicates if user consent to apps is allowed, and if it is, which permission to grant consent and which app consent policy (permissionGrantPolicy) govern the permission for users to grant consent. Value should be in the format managePermissionGrantsForSelf.{id}, where {id} is the id of a built-in or custom app consent policy. An empty list indicates user consent to apps is disabled.")] String PermissionGrantPolicyIdsAssignedToDefaultUserRole[];
-    [Write, Description("Specify that the Azure Authentication Policy should exist."), ValueMap{"Present"}, Values{"Present"}] String Ensure;
+    [Write, Description("Specify that the Azure Authorization Policy should exist."), ValueMap{"Present"}, Values{"Present"}] String Ensure;
     [Write, Description("Credentials for the Microsoft Graph delegated permissions."), EmbeddedInstance("MSFT_Credential")] String Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;

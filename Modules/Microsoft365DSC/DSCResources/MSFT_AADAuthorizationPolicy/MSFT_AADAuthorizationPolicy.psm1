@@ -319,7 +319,7 @@ function Set-TargetResource
     }
     if ($defaultUserRolePermissions.Keys.Count -gt 0)
     {
-        $UpdateParameters.Add('defaultUserRolePermissions', [object]::new()) # New-Object 
+        $UpdateParameters.Add('defaultUserRolePermissions', [object]::new()) # New-Object
         foreach ($key in $defaultuserRolePermissions.keys) {
             $UpdateParameters.defaultUserRolePermissions | Add-Member -MemberType NoteProperty -Name $key -Value $defaultuserRolePermissions.$key
         }
@@ -457,11 +457,11 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
     $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
