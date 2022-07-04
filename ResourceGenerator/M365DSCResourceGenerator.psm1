@@ -429,6 +429,11 @@ function New-M365DSCResource
         [System.String]
         $GraphModuleCmdLetNoun,
 
+        # CmdLet Verb
+        [Parameter()]
+        [System.String]
+        $GraphModuleCmdLetVerb = 'New',
+
         # Path to the new Resource
         [Parameter()]
         [System.String]
@@ -473,7 +478,7 @@ function New-M365DSCResource
     Import-Module $GraphModule -ErrorAction Stop
     $commandDetails = Find-MgGraphCommand -Command $GetcmdletName -ApiVersion $ApiVersion
 
-    $cmdletCommandDetails = Get-Command -Name "New-$($GraphModuleCmdLetNoun)" -Module $GraphModule
+    $cmdletCommandDetails = Get-Command -Name "$($GraphModuleCmdLetVerb)-$($GraphModuleCmdLetNoun)" -Module $GraphModule
     $defaultParameterSet = $cmdletCommandDetails.ParameterSets | Where-Object -FilterScript { $_.IsDefault -eq $true }
 
     $defaultParameterSetProperties = $defaultParameterSet.Parameters

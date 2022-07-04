@@ -286,10 +286,12 @@ function Set-TargetResource
             if ($param -like 'Permission*')
             {
                 $UpdateParameters.Add($param, $currentParameters.$param)
+                write-verbose "added '$param' to UpdateParameters"
             }
             else
             {
                 $defaultuserRolePermissions.Add(($param -replace '^DefaultUserRole'), $currentParameters.$param)
+                write-verbose "added '$param' to defaultUserRolePermissions"
             }
         }
         else
@@ -298,9 +300,11 @@ function Set-TargetResource
             {
                 # translate displayvalue to corresponding GUID
                 $guestUserRoleId = Get-GuestUserRoleIdFromName -GuestUserRole $currentParameters.$param
+                write-verbose "Translated GuestUserRole '$param' to '$guestUserRoleId'"
                 if ($guestUserRoleId -ne $currentPolicy.GuestUserRoleId)
                 {
                     $UpdateParameters.Add($param, $guestUserRoleId)
+                    write-verbose "added '$param' to UpdateParameters"
                 }
             }
             else
@@ -308,6 +312,7 @@ function Set-TargetResource
                 if ($currentParameters.$param -ne $currentPolicy.$param)
                 {
                     $UpdateParameters.Add($param, $currentParameters.$param)
+                    write-verbose "added '$param' to UpdateParameters"
                 }
             }
         }
