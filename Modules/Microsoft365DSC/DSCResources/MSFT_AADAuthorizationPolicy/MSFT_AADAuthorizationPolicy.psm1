@@ -319,9 +319,9 @@ function Set-TargetResource
     }
     if ($defaultUserRolePermissions.Keys.Count -gt 0)
     {
-        $UpdateParameters.Add('defaultUserRolePermissions', [object]::new()) # New-Object
+        $UpdateParameters.Add('defaultUserRolePermissions', @{}) # New-Object
         foreach ($key in $defaultuserRolePermissions.keys) {
-            $UpdateParameters.defaultUserRolePermissions | Add-Member -MemberType NoteProperty -Name $key -Value $defaultuserRolePermissions.$key
+            $UpdateParameters.defaultUserRolePermissions.Add($key, $defaultuserRolePermissions.$key) | Out-Null
         }
     }
     Write-Verbose -Message "Set-Targetresource: Change authorization policy"
