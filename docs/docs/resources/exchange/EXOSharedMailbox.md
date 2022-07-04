@@ -6,7 +6,9 @@
 | --- | --- | --- | --- | --- |
 | **DisplayName** | Key | String | The display name of the Shared Mailbox ||
 | **PrimarySMTPAddress** | Write | String | The primary email address of the Shared Mailbox ||
-| **Aliases** | Write | StringArray[] | Aliases for the Shared Mailbox ||
+| **Alias** | Write | String | The alias of the Shared Mailbox ||
+| **Aliases** | Write | StringArray[] | DEPRECATED ||
+| **EmailAddresses** | Write | StringArray[] | The EmailAddresses parameter specifies all the email addresses (proxy addresses) for the Shared Mailbox ||
 | **Ensure** | Write | String | Present ensures the group exists, absent ensures it is removed |Present, Absent|
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin ||
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
@@ -44,7 +46,7 @@ Configuration Example
         {
             DisplayName        = "Test"
             PrimarySMTPAddress = "Test@O365DSC1.onmicrosoft.com"
-            Aliases            = @("Joufflu@o365dsc1.onmicrosoft.com", "Gilles@O365dsc1.onmicrosoft.com")
+            EmailAddresses     = @("Joufflu@o365dsc1.onmicrosoft.com", "Gilles@O365dsc1.onmicrosoft.com")
             Ensure             = "Present"
             Credential         = $credsGlobalAdmin
         }
