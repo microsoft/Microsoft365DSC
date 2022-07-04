@@ -60,7 +60,8 @@ function Get-TargetResource
 
         [Parameter()]
         [validateset("User", "Guest", "RestrictedGuest")]
-        [System.String]$GuestUserRole,
+        [System.String]
+        $GuestUserRole,
 
         #generic
         [Parameter()]
@@ -119,9 +120,7 @@ function Get-TargetResource
     if ($null -eq $Policy)
     {
         Write-Verbose -Message "Existing Authorization Policy were not found"
-        $currentValues = $PSBoundParameters
-        $currentValues.Ensure = "Absent"
-        return $currentValues
+        throw "authorization policy was not found"
     }
     else
     {
@@ -217,7 +216,8 @@ function Set-TargetResource
 
         [Parameter()]
         [validateset("User", "Guest", "RestrictedGuest")]
-        [System.String]$GuestUserRole,
+        [System.String]
+        $GuestUserRole,
 
         #generic
         [Parameter()]
@@ -262,7 +262,7 @@ function Set-TargetResource
     Write-Verbose -Message "Set-Targetresource: Running Get-TargetResource"
     $currentPolicy = Get-TargetResource @PSBoundParameters
     Write-Verbose -Message "Set-Targetresource: Cleaning up parameters"
-    $currentParameters = $PSBoundParameters
+    $currentParameters = ([hashtable]$PSBoundParameters).Clone()
     $currentParameters.Remove("IsSingleInstance") | Out-Null
     $currentParameters.Remove("Id") | Out-Null
     $currentParameters.Remove("ApplicationId") | Out-Null
@@ -319,7 +319,7 @@ function Set-TargetResource
     }
     if ($defaultUserRolePermissions.Keys.Count -gt 0)
     {
-        $UpdateParameters.Add('defaultUserRolePermissions', [object]::new())
+        $UpdateParameters.Add('defaultUserRolePermissions', [object]::new()) # New-Object 
         foreach ($key in $defaultuserRolePermissions.keys) {
             $UpdateParameters.defaultUserRolePermissions | Add-Member -MemberType NoteProperty -Name $key -Value $defaultuserRolePermissions.$key
         }
