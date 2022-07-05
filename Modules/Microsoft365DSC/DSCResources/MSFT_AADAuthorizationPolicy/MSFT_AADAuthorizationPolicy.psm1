@@ -277,58 +277,63 @@ function Set-TargetResource
     # update policy with supplied parameters that are different from existing policy
 
     # prepare object for default user role permissions
-    $defaultuserRolePermissions = @{}
+    $defaultUserRolePermissions = @{}
 
     foreach ($param in $currentParameters.Keys)
     {
-        if ($param -match 'defaultuserrole')
+        if ($currentParameters.$param -ne $currentPolicy.$param)
         {
-            if ($param -like 'Permission*')
+            if ($param -match 'defaultuserrole')
             {
-                $UpdateParameters.Add($param, $currentParameters.$param)
-                write-verbose "added '$param' to UpdateParameters"
-            }
-            else
-            {
-                $defaultuserRolePermissions.Add(($param -replace '^DefaultUserRole'), $currentParameters.$param)
-                write-verbose "added '$param' to defaultUserRolePermissions"
-            }
-        }
-        else
-        {
-            if ($param -eq 'GuestUserRole')
-            {
-                # translate displayvalue to corresponding GUID
-                $guestUserRoleId = Get-GuestUserRoleIdFromName -GuestUserRole $currentParameters.$param
-                write-verbose "Translated GuestUserRole '$param' to '$guestUserRoleId'"
-                if ($guestUserRoleId -ne $currentPolicy.GuestUserRoleId)
+                if ($param -like 'Permission*')
                 {
-                    $UpdateParameters.Add($param, $guestUserRoleId)
+                    $UpdateParameters.Add($param, $currentParameters.$param)
                     write-verbose "added '$param' to UpdateParameters"
+                }
+                else
+                {
+                    $defaultUserRolePermissions.Add(($param -replace '^DefaultUserRole'), $currentParameters.$param)
+                    write-verbose "added '$($param -replace '^DefaultUserRole')' ($param) to defaultUserRolePermissions"
                 }
             }
             else
             {
-                if ($currentParameters.$param -ne $currentPolicy.$param)
+                if ($param -eq 'GuestUserRole')
+                {
+                    # translate displayvalue to corresponding GUID
+                    $guestUserRoleId = Get-GuestUserRoleIdFromName -GuestUserRole $currentParameters.$param
+                    write-verbose "Translated GuestUserRole '$param' to '$guestUserRoleId'"
+                    $UpdateParameters.Add($param, $guestUserRoleId)
+                    write-verbose "added '$param' to UpdateParameters"
+                }
+                else
                 {
                     $UpdateParameters.Add($param, $currentParameters.$param)
                     write-verbose "added '$param' to UpdateParameters"
                 }
             }
         }
+        else
+        {
+            write-verbose "'$param' is unchanged"
+        }
     }
+
     if ($defaultUserRolePermissions.Keys.Count -gt 0)
     {
-        $UpdateParameters.Add('defaultUserRolePermissions', @{}) # New-Object
-        foreach ($key in $defaultuserRolePermissions.keys) {
-            $UpdateParameters.defaultUserRolePermissions.Add($key, $defaultuserRolePermissions.$key) | Out-Null
+        write-verbose "Add 'DefaultUserRolePermissions' to UpdateParameters"
+        $UpdateParameters.Add('DefaultUserRolePermissions', @{}) # New-Object
+        foreach ($key in $defaultUserRolePermissions.keys) {
+            $UpdateParameters.defaultUserRolePermissions.Add($key, $defaultUserRolePermissions.$key) | Out-Null
+            write-verbose "Add '$key' to UpdateParameters.defaultUserRolePermissions"
         }
     }
     Write-Verbose -Message "Set-Targetresource: Change authorization policy"
     try
     {
-        Write-Verbose -Message "Updating existing policy with values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParameters)"
-        $response = Update-MgPolicyAuthorizationPolicy -AuthorizationPolicyId $currentpolicy.Id @updateParameters -ErrorAction Stop
+        $UpdateParameters.Add("Id", $currentPolicy.Id)
+        Write-Host "Updating existing authorization policy with values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParameters)"
+        $response = Update-MgPolicyAuthorizationPolicy -Id $currentPolicy.Id @updateParameters -ErrorAction Stop
     }
     catch
     {
@@ -524,7 +529,7 @@ function Export-TargetResource
         $dscContent = ''
 
         Write-Host "`r`n" -NoNewline
-        Write-Host "    |---[1/1] AuthrorizationPolicy" -NoNewlin
+        Write-Host "    |---[1/1] AuthorizationPolicy" -NoNewline
         $results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
             -Results $results
         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
