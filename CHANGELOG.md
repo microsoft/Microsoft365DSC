@@ -1,5 +1,9 @@
 # Change log for Microsoft365DSC
 
+# UNBRELEASED
+* TeamsVoiceRoutingPolicy
+  * Remove unsupported Confirm parameter from Remove-CsOnlineVoiceRoutingPolicy cmdlet (Confirm parameter is no longer available for MicrosoftTeams PowerShell module 4.4.1+).
+    FIXES #2055
 # 1.22.629.1
 
 * EXOMalwareFilterPolicy
