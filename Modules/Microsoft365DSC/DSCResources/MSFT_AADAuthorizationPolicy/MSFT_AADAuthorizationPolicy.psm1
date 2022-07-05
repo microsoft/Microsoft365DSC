@@ -331,8 +331,7 @@ function Set-TargetResource
     Write-Verbose -Message "Set-Targetresource: Change authorization policy"
     try
     {
-        $UpdateParameters.Add("Id", $currentPolicy.Id)
-        Write-Host "Updating existing authorization policy with values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParameters)"
+        Write-Verbose "Updating existing authorization policy with values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParameters)"
         $response = Update-MgPolicyAuthorizationPolicy -Id $currentPolicy.Id @updateParameters -ErrorAction Stop
     }
     catch
@@ -525,7 +524,7 @@ function Export-TargetResource
 
     try
     {
-        $results = Get-TargetResource @Params
+        $results = Get-TargetResource -IsSingleInstance 'Yes' @Params
         $dscContent = ''
 
         Write-Host "`r`n" -NoNewline
