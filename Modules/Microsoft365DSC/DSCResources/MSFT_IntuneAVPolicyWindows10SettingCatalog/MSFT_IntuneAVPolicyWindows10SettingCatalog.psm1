@@ -1883,6 +1883,7 @@ function Get-MgDeviceManagementConfigurationPolicyAssignments
             $configurationPolicyAssignments+=@{
                 dataType=$result."@odata.type"
                 groupId=$result.groupId
+                collectionId=$result.collectionId
                 deviceAndAppManagementAssignmentFilterType=$result.deviceAndAppManagementAssignmentFilterType
                 deviceAndAppManagementAssignmentFilterId=$result.deviceAndAppManagementAssignmentFilterId
             }
@@ -1897,6 +1898,7 @@ function Get-MgDeviceManagementConfigurationPolicyAssignments
                 $configurationPolicyAssignments+=@{
                     dataType=$result."@odata.type"
                     groupId=$result.groupId
+                    collectionId=$result.collectionId
                     deviceAndAppManagementAssignmentFilterType=$result.deviceAndAppManagementAssignmentFilterType
                     deviceAndAppManagementAssignmentFilterId=$result.deviceAndAppManagementAssignmentFilterId
                 }
@@ -1933,7 +1935,7 @@ function Update-MgDeviceManagementConfigurationPolicyAssignments
         [System.String]
         $DeviceManagementConfigurationPolicyId,
 
-        [Parameter(Mandatory = 'true')]
+        [Parameter()]
         [Array]
         $Targets
     )
@@ -1949,6 +1951,10 @@ function Update-MgDeviceManagementConfigurationPolicyAssignments
             if($target.groupId)
             {
                 $formattedTarget.Add('groupId',$target.groupId)
+            }
+            if($target.collectionId)
+            {
+                $formattedTarget.Add('collectionId',$target.collectionId)
             }
             if($target.deviceAndAppManagementAssignmentFilterType)
             {
@@ -1985,6 +1991,7 @@ function Update-MgDeviceManagementConfigurationPolicyAssignments
 
 
 }
+
 function Get-MgDeviceManagementConfigurationSettingDefinition
 {
     [CmdletBinding()]
