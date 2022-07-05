@@ -332,7 +332,7 @@ function Set-TargetResource
     try
     {
         Write-Verbose "Updating existing authorization policy with values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParameters)"
-        $response = Update-MgPolicyAuthorizationPolicy -Id $currentPolicy.Id @updateParameters -ErrorAction Stop
+        $response = Update-MgPolicyAuthorizationPolicy -AuthorizationPolicyId $currentPolicy.Id @updateParameters -ErrorAction Stop
     }
     catch
     {
