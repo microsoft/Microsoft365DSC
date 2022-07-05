@@ -118,6 +118,10 @@ function Get-TargetResource
         [System.String]
         $EnableControlledFolderAccess,
 
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+
         [Parameter(Mandatory = $True)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -197,7 +201,9 @@ function Get-TargetResource
 
         foreach ($setting in $settings)
         {
+            $addToParameters=$true
             $settingName=$setting.settingDefinitionId.Split("_")|Select-Object -Last 1
+
             switch ($setting."@odata.type")
             {
                 "#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance"
@@ -218,7 +224,7 @@ function Get-TargetResource
                         $settingName=$value.settingDefinitionId.split("_")|Select-Object -Last 1
                         $settingValue= Get-DeviceManagementConfigurationSettingInstanceValue -Setting $value
                         $returnHashtable.Add($settingName,$settingValue)
-
+                        $addToParameters=$false
                     }
                 }
                 Default
@@ -226,12 +232,15 @@ function Get-TargetResource
                     $settingValue= Get-DeviceManagementConfigurationSettingInstanceValue -Setting $setting
                 }
             }
-            if ( $setting."@odata.type" -ne "#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance" )
+            if ($addToParameters)
             {
                 $returnHashtable.Add($settingName,$settingValue)
             }
 
         }
+        $returnAssignments=@()
+        $returnAssignments+=Get-MgDeviceManagementConfigurationPolicyAssignments -DeviceManagementConfigurationPolicyId $Identity
+        $returnHashtable.Add('Assignments',$returnAssignments)
 
         Write-Verbose -Message "Found Endpoint Protection Policy {$($policy.name)}"
 
@@ -382,6 +391,10 @@ function Set-TargetResource
         [System.String]
         $EnableControlledFolderAccess,
 
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+
         [Parameter(Mandatory = $True)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -452,10 +465,13 @@ function Set-TargetResource
             -Technologies $technologies `
             -Settings $settings
 
+        $assignmentsHash=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+        Update-MgDeviceManagementConfigurationPolicyAssignments -DeviceManagementConfigurationPolicyId $policy.id -Targets $assignmentsHash
+
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating existing Endpoint Protection Policy {$currentPolicy.DisplayName}"
+        Write-Verbose -Message "Updating existing Endpoint Protection Policy {$($currentPolicy.DisplayName)}"
 
         $settings= Format-M365DSCIntuneSettingCatalogPolicySettings `
             -DSCParams ([System.Collections.Hashtable]$PSBoundParameters)
@@ -469,10 +485,13 @@ function Set-TargetResource
             -Technologies $technologies `
             -Settings $settings
 
+        $assignmentsHash=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+        Update-MgDeviceManagementConfigurationPolicyAssignments -DeviceManagementConfigurationPolicyId $currentPolicy.Identity -Targets $assignmentsHash
+
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing Endpoint Protection Policy {$currentPolicy.DisplayName}"
+        Write-Verbose -Message "Removing Endpoint Protection Policy {$($currentPolicy.DisplayName)}"
         Remove-MgDeviceManagementConfigurationPolicy -Identity $Identity
     }
 }
@@ -597,6 +616,10 @@ function Test-TargetResource
         [System.String]
         $EnableControlledFolderAccess,
 
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+
         [Parameter(Mandatory = $True)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -647,10 +670,61 @@ function Test-TargetResource
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
-    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+    $testResult=$true
+    if([Array]$Assignments.count -ne $CurrentValues.Assignments.count)
+    {
+        Write-Verbose -Message "Configuration drift:Number of assignments does not match: Source=$([Array]$Assignments.count) Target=$($CurrentValues.Assignments.count)"
+        $testResult=$false
+    }
+    if($testResult)
+    {
+        foreach($assignment in $CurrentValues.Assignments)
+        {
+            #GroupId Assignment
+            if(-not [String]::IsNullOrEmpty($assignment.groupId))
+            {
+                $source=[Array]$ValuesToCheck.Assignments|Where-Object -FilterScript {$_.groupId -eq $assignment.groupId}
+                if(-not $source)
+                {
+                    Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
+                    $testResult=$false
+                    break;
+                }
+                $sourceHash=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
+                $testResult=Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
+            }
+            #AllDevices/AllUsers assignment
+            else
+            {
+                $source=[Array]$ValuesToCheck.Assignments|Where-Object -FilterScript {$_.dataType -eq $assignment.dataType}
+                if(-not $source)
+                {
+                    Write-Verbose -Message "Configuration drift: {$($assignment.dataType)} not found"
+                    $testResult=$false
+                    break;
+                }
+                $sourceHash=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
+                $testResult=Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
+            }
+
+            if(-not $testResult)
+            {
+                $testResult=$false
+                break;
+            }
+
+        }
+
+    }
+    $ValuesToCheck.Remove('Assignments') | Out-Null
+
+    if($testResult)
+    {
+        $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $ValuesToCheck.Keys -Verbose
+    }
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -741,11 +815,35 @@ function Export-TargetResource
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
 
+                if ($Results.Assignments)
+                {
+                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Assignments) -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
+                    if ($complexTypeStringResult)
+                    {
+                        $Results.Assignments = $complexTypeStringResult
+                    }
+                    else
+                    {
+                        $Results.Remove('Assignments') | Out-Null
+                    }
+                }
+
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
+
+                if ($Results.Assignments)
+                {
+                    $isCIMArray=$false
+                    if($Results.Assignments.getType().Fullname -like "*[[\]]")
+                    {
+                        $isCIMArray=$true
+                    }
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$isCIMArray
+                }
+
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
@@ -801,7 +899,7 @@ function Get-DeviceManagementConfigurationSettingInstanceValue
         {
             $settingValue= $setting.simpleSettingValue.value
         }
-        "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+        Default
         {
             $settingValue=$setting.value
         }
@@ -912,7 +1010,6 @@ function Convert-M365DSCParamsToSettingInstance
     }
     return $results
 }
-
 function Format-M365DSCIntuneSettingCatalogPolicySettings
 {
     [CmdletBinding()]
@@ -1070,7 +1167,6 @@ function Format-M365DSCIntuneSettingCatalogPolicySettings
         $value=$DSCParams["$($settingDefinition.settingName)"]
         if($value)
         {
-            write-host $settingDefinition.settingName
             if([string]::IsNullOrEmpty($settingDefinition.groupSettingCollectionDefinitionId))
             {
                 $setting.add("@odata.type","#microsoft.graph.deviceManagementConfigurationSetting")
@@ -1311,9 +1407,145 @@ function Get-MgDeviceManagementConfigurationPolicySetting
     )
     try
     {
+        $configurationPolicySettings=@()
+
         $Uri="https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/$DeviceManagementConfigurationPolicyId/settings"
-        $configurationPolicySettings=(Invoke-MgGraphRequest -Method GET  -Uri $Uri -ErrorAction Stop).value.settingInstance
+        $results=Invoke-MgGraphRequest -Method GET  -Uri $Uri -ErrorAction Stop
+        $configurationPolicySettings+= $results.value.settingInstance
+        while($results."@odata.nextLink")
+        {
+            $Uri=$results."@odata.nextLink"
+            $results=Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
+            $configurationPolicySettings+= $results.value.settingInstance
+        }
         return $configurationPolicySettings
+    }
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            $tenantIdValue = $Credential.UserName.Split('@')[1]
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return $null
+    }
+
+
+}
+function Get-MgDeviceManagementConfigurationPolicyAssignments
+{
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceManagementConfigurationPolicyId
+    )
+    try
+    {
+        $configurationPolicyAssignments=@()
+
+        $Uri="https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/$DeviceManagementConfigurationPolicyId/assignments"
+        $results=Invoke-MgGraphRequest -Method GET  -Uri $Uri -ErrorAction Stop
+        foreach($result in $results.value.target)
+        {
+            $configurationPolicyAssignments+=@{
+                dataType=$result."@odata.type"
+                groupId=$result.groupId
+                collectionId=$result.collectionId
+                deviceAndAppManagementAssignmentFilterType=$result.deviceAndAppManagementAssignmentFilterType
+                deviceAndAppManagementAssignmentFilterId=$result.deviceAndAppManagementAssignmentFilterId
+            }
+        }
+
+        while($results."@odata.nextLink")
+        {
+            $Uri=$results."@odata.nextLink"
+            $results=Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
+            foreach($result in $results.value.target)
+            {
+                $configurationPolicyAssignments+=@{
+                    dataType=$result."@odata.type"
+                    groupId=$result.groupId
+                    collectionId=$result.collectionId
+                    deviceAndAppManagementAssignmentFilterType=$result.deviceAndAppManagementAssignmentFilterType
+                    deviceAndAppManagementAssignmentFilterId=$result.deviceAndAppManagementAssignmentFilterId
+                }
+            }
+        }
+        return $configurationPolicyAssignments
+    }
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            $tenantIdValue = $Credential.UserName.Split('@')[1]
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return $null
+    }
+
+
+}
+function Update-MgDeviceManagementConfigurationPolicyAssignments
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceManagementConfigurationPolicyId,
+
+        [Parameter()]
+        [Array]
+        $Targets
+    )
+    try
+    {
+        $configurationPolicyAssignments=@()
+
+        $Uri="https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/$DeviceManagementConfigurationPolicyId/assign"
+
+        foreach($target in $targets)
+        {
+            $formattedTarget=@{"@odata.type"=$target.dataType}
+            if($target.groupId)
+            {
+                $formattedTarget.Add('groupId',$target.groupId)
+            }
+            if($target.collectionId)
+            {
+                $formattedTarget.Add('collectionId',$target.collectionId)
+            }
+            if($target.deviceAndAppManagementAssignmentFilterType)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',$target.deviceAndAppManagementAssignmentFilterType)
+            }
+            if($target.deviceAndAppManagementAssignmentFilterId)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',$target.deviceAndAppManagementAssignmentFilterId)
+            }
+            $configurationPolicyAssignments+=@{'target'= $formattedTarget}
+        }
+        $body=@{'assignments'=$configurationPolicyAssignments}|ConvertTo-Json -Depth 20
+        #write-verbose -Message $body
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
+
     }
     catch
     {
@@ -1371,5 +1603,486 @@ function Get-MgDeviceManagementConfigurationSettingDefinition
 
 
 }
+function Get-M365DSCDRGComplexTypeToHashtable
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        $ComplexObject
+    )
 
-Export-ModuleMember -Function *-TargetResource,*
+    if($null -eq $ComplexObject)
+    {
+        return $null
+    }
+
+    if($ComplexObject.gettype().fullname -like "*[[\]]")
+    {
+        $results=@()
+
+        foreach($item in $ComplexObject)
+        {
+            if($item)
+            {
+                $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
+                $results+=$hash
+            }
+        }
+        if($results.count -eq 0)
+        {
+            return $null
+        }
+        return $results
+    }
+
+    $results = @{}
+    $keys = $ComplexObject | Get-Member | Where-Object -FilterScript {$_.MemberType -eq 'Property' -and $_.Name -ne 'AdditionalProperties'}
+
+    foreach ($key in $keys)
+    {
+        if($ComplexObject.$($key.Name))
+        {
+            $results.Add($key.Name, $ComplexObject.$($key.Name))
+        }
+    }
+    if($results.count -eq 0)
+    {
+        return $null
+    }
+    return $results
+}
+
+function Get-M365DSCDRGComplexTypeToString
+{
+    [CmdletBinding()]
+    #[OutputType([System.String])]
+    param(
+        [Parameter()]
+        $ComplexObject,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $CIMInstanceName,
+
+        [System.String]
+        $Whitespace="",
+
+        [switch]
+        $isArray=$false
+    )
+    if ($null -eq $ComplexObject)
+    {
+        return $null
+    }
+
+    #If ComplexObject  is an Array
+    if ($ComplexObject.GetType().FullName -like "*[[\]]")
+    {
+        $currentProperty=@()
+        foreach ($item in $ComplexObject)
+        {
+            $currentProperty += Get-M365DSCDRGComplexTypeToString `
+                -ComplexObject $item `
+                -isArray:$true `
+                -CIMInstanceName $CIMInstanceName `
+                -Whitespace "            "
+
+        }
+        if ([string]::IsNullOrEmpty($currentProperty))
+        {
+            return $null
+        }
+        return $currentProperty
+
+    }
+
+    #If ComplexObject is a single CIM Instance
+    if(-Not (Test-M365DSCComplexObjectHasValues -ComplexObject $ComplexObject))
+    {
+        return $null
+    }
+    $currentProperty = "MSFT_$CIMInstanceName{`r`n"
+    $keyNotNull = 0
+    foreach ($key in $ComplexObject.Keys)
+    {
+        if ($ComplexObject[$key])
+        {
+            $keyNotNull++
+
+            if ($ComplexObject[$key].GetType().FullName -like "Microsoft.Graph.PowerShell.Models.*")
+            {
+                $hashPropertyType=$ComplexObject[$key].GetType().Name.tolower()
+                $hashProperty=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key]
+
+                if (Test-M365DSCComplexObjectHasValues -ComplexObject $hashProperty)
+                {
+                    $Whitespace+="            "
+                    if(-not $isArray)
+                    {
+                        $currentProperty += "                " + $key + " = "
+                    }
+                    $currentProperty += Get-M365DSCDRGComplexTypeToString `
+                                    -ComplexObject $hashProperty `
+                                    -CIMInstanceName $hashPropertyType `
+                                    -Whitespace $Whitespace
+                }
+            }
+            else
+            {
+                $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $ComplexObject[$key]
+            }
+        }
+    }
+    $currentProperty += "            }`r`n"
+
+    if ($keyNotNull -eq 0)
+    {
+        $currentProperty = $null
+    }
+
+    return $currentProperty
+}
+
+function Test-M365DSCComplexObjectHasValues
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param(
+        [System.Collections.Hashtable]
+        [Parameter()]
+        $ComplexObject
+    )
+    if(-Not $ComplexObject)
+    {
+        return $false
+    }
+
+    $keys=$ComplexObject.keys
+    $hasValue=$false
+    foreach($key in $keys)
+    {
+        if($ComplexObject[$key])
+        {
+            if($ComplexObject[$key].GetType().FullName -like "Microsoft.Graph.PowerShell.Models.*")
+            {
+                $hash=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key]
+                if(-Not $hash)
+                {
+                    return $false
+                }
+                $hasValue=Test-M365DSCComplexObjectHasValues -ComplexObject ($hash)
+            }
+            else
+            {
+                $hasValue=$true
+                return $hasValue
+            }
+        }
+    }
+    return $hasValue
+}
+Function Get-M365DSCDRGSimpleObjectTypeToString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $Key,
+
+        [Parameter(Mandatory = 'true')]
+        $Value
+    )
+
+    $returnValue=""
+    switch -Wildcard ($Value.GetType().Fullname )
+    {
+        "*.Boolean"
+        {
+            $returnValue= "                " + $Key + " = `$" + $Value.ToString() + "`r`n"
+        }
+        "*.String"
+        {
+            $delimeter="'"
+            if($Value.startswith("MSFT_"))
+            {
+                $delimeter=""
+            }
+            $returnValue= "                " + $Key + " = $delimeter" + $Value + "$delimeter`r`n"
+        }
+        "*.DateTime"
+        {
+            $returnValue= "                " + $Key + " = '" + $Value + "'`r`n"
+        }
+        "*.Hashtable"
+        {
+            if($Value.keys.count -eq 0)
+            {
+                return ""
+            }
+
+            $returnValue= "                " + $key + " = @{`r`n"
+            $whitespace="                     "
+            $newline="`r`n"
+            foreach($k in $Value.keys)
+            {
+                switch -Wildcard ($Value[$k].GetType().Fullname )
+                {
+                    "*.String"
+                    {
+                        $returnValue += "$whitespace$k = '$($Value[$k])'$newline"
+                    }
+                    "*.DateTime"
+                    {
+                        $returnValue += "$whitespace$k = '$($Value[$k])'$newline"
+                    }
+                    Default
+                    {
+                        $returnValue += "$whitespace$k = $($Value[$k])$newline"
+                    }
+                }
+            }
+
+            $returnValue += "                }`r`n"
+        }
+        "*[[\]]"
+        {
+            $returnValue= "                " + $key + " = @("
+            $whitespace=""
+            $newline=""
+            if($Value.count -gt 1)
+            {
+                $returnValue += "`r`n"
+                $whitespace="                    "
+                $newline="`r`n"
+            }
+            foreach ($item in $Value)
+            {
+                switch -Wildcard ($item.GetType().Fullname )
+                {
+                    "*.String"
+                    {
+                        $delimeter="'"
+                        if($Value.startswith("MSFT_"))
+                        {
+                            $delimeter=""
+                        }
+                        $returnValue += "$whitespace$delimeter$item$delimeter$newline"
+                    }
+                    "*.DateTime"
+                    {
+                        $returnValue += "$whitespace'$item'$newline"
+                    }
+                    Default
+                    {
+                        $returnValue += "$whitespace$item$newline"
+                    }
+                }
+            }
+            if($Value.count -gt 1)
+            {
+                $returnValue += "                )`r`n"
+            }
+            else
+            {
+                $returnValue += ")`r`n"
+
+            }
+        }
+        Default
+        {
+            $returnValue= "                " + $Key + " = " + $Value + "`r`n"
+        }
+    }
+    return $returnValue
+}
+function Get-M365DSCAdditionalProperties
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = 'true')]
+        [System.Collections.Hashtable]
+        $Properties
+    )
+
+    $results = @{"@odata.type" = "#microsoft.graph.agreement" }
+    foreach ($property in $properties.Keys)
+    {
+        if ($property -ne 'Verbose')
+        {
+            $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
+            $propertyValue = $properties.$property
+            $results.Add($propertyName, $propertyValue)
+        }
+    }
+    return $results
+}
+function Compare-M365DSCComplexObject
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param(
+        [Parameter()]
+        $Source,
+
+        [Parameter()]
+        $Target
+    )
+
+    if (($null -eq $Source) -and ($null -eq $Target))
+    {
+        return $true
+    }
+
+    $keys= $Source.Keys|Where-Object -FilterScript {$_ -ne "PSComputerName"}
+    foreach ($key in $keys)
+    {
+        #Marking Target[key] to null if empty complex object or array
+        if($null -ne $Target[$key])
+        {
+            switch -Wildcard ($Target[$key].getType().Fullname )
+            {
+                "Microsoft.Graph.PowerShell.Models.*"
+                {
+                    $hashProperty=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Target[$key]
+                    if(-not (Test-M365DSCComplexObjectHasValues -ComplexObject $hashProperty))
+                    {
+                        $Target[$key]=$null
+                    }
+                }
+                "*[[\]]"
+                {
+                    if($Target[$key].count -eq 0)
+                    {
+                        $Target[$key]=$null
+                    }
+                }
+                "*DateTime"
+                {
+                    $Target[$key]=$Target[$key].tostring("MM/dd/yyyy HH:mm:ss")
+                }
+            }
+        }
+
+        #One of the item is null
+        if (($null -eq $Source[$key]) -xor ($null -eq $Target[$key]))
+        {
+            if($null -eq $Target[$key])
+            {
+                $nullKey="Source={$($Source[$key]|out-string)} Target={null}"
+            }
+            if($null -eq $Source[$key])
+            {
+                $nullKey="Source={null} Target={$($Target[$key]|out-string)}"
+            }
+            Write-Verbose -Message "Configuration drift key: $key - one of the object null and not the other: $nullKey"
+
+            return $false
+        }
+        #Both source and target aren't null or empty
+        if(($null -ne $Source[$key]) -and ($null -ne $Target[$key]))
+        {
+            if($Source[$key].getType().FullName -like "*CimInstance*")
+            {
+                #Recursive call for complex object
+                $itemSource=@()
+                $itemSource+= $Source[$key]
+                $itemTarget= @()
+                $itemTarget+= $Target[$key]
+
+                $i=0
+                foreach($item in $itemSource)
+                {
+                    if(-not ($itemSource[$i].getType().Fullname -like "*.Hashtable"))
+                    {
+                        $itemSource[$i]=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $itemSource[$i]
+                    }
+                    if(-not ($itemTarget[$i].getType().Fullname -like "*.Hashtable"))
+                    {
+                        $itemTarget[$i]=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $itemTarget[$i]
+                    }
+
+                    #Recursive call for complex object
+                    $compareResult= Compare-M365DSCComplexObject `
+                        -Source ($itemSource[$i]) `
+                        -Target ($itemTarget[$i])
+
+
+                    if(-not $compareResult)
+                    {
+                        Write-Verbose -Message "Complex Object drift key: $key - Source $($itemSource[$i]|out-string)"
+                        Write-Verbose -Message "Complex Object drift key: $key - Target $($itemTarget[$i]|out-string)"
+                        return $false
+                    }
+                    $i++
+                }
+            }
+            else
+            {
+                #Simple object comparison
+                $referenceObject=$Target[$key]
+                $differenceObject=$Source[$key]
+
+                $compareResult = Compare-Object `
+                    -ReferenceObject ($referenceObject) `
+                    -DifferenceObject ($differenceObject)
+
+                if ($null -ne $compareResult)
+                {
+                    Write-Verbose -Message "Simple Object drift key: $key - Source $($referenceObject|out-string)"
+                    Write-Verbose -Message "Simple Object drift key: $key - Target $($differenceObject|out-string)"
+                    return $false
+                }
+
+            }
+        }
+    }
+
+    return $true
+}
+
+function Convert-M365DSCDRGComplexTypeToHashtable
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = 'true')]
+        $ComplexObject
+    )
+
+    if($ComplexObject.getType().Fullname -like "*[[\]]")
+    {
+        $results=@()
+        foreach($item in $ComplexObject)
+        {
+            $hash=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
+            if(Test-M365DSCComplexObjectHasValues -ComplexObject $hash)
+            {
+                $results+=$hash
+            }
+        }
+        if($results.count -eq 0)
+        {
+            return $null
+        }
+        return $Results
+    }
+    $hashComplexObject = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject
+    $results=$hashComplexObject.clone()
+    $keys=$hashComplexObject.Keys|Where-Object -FilterScript {$_ -ne 'PSComputerName'}
+    foreach ($key in $keys)
+    {
+        if(($null -ne $hashComplexObject[$key]) -and ($hashComplexObject[$key].getType().Fullname -like "*CimInstance*"))
+        {
+            $results[$key]=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $hashComplexObject[$key]
+        }
+        if($null -eq $results[$key])
+        {
+            $results.remove($key)|out-null
+        }
+
+    }
+    return $results
+}
+
+Export-ModuleMember -Function *-TargetResource
