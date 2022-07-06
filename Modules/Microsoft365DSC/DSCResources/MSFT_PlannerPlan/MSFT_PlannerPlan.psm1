@@ -17,17 +17,9 @@ function Get-TargetResource
         [ValidateSet("Present", "Absent")]
         $Ensure = 'Present',
 
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $Credential
     )
     Write-Verbose -Message "Getting configuration of Planner Plan {$Title}"
 
@@ -36,7 +28,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -45,6 +37,7 @@ function Get-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
+
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
     try
@@ -72,22 +65,19 @@ function Get-TargetResource
             Write-Verbose -Message "Multiple Groups with name {$OwnerGroup} found."
         }
 
-        Write-Verbose -Message "Connecting to the Microsoft Graph"
-        $ConnectionMode = Connect-Graph -Scopes "Group.ReadWrite.All"
-
         $plan = $null
         foreach ($group in $AllGroups)
         {
             try
             {
                 Write-Verbose -Message "Scanning Group {$($group.DisplayName)} for plan {$Title}"
-                $plan = Get-MgGroupPlannerPlan -GroupId $group.ObjectId | Where-Object -FilterScript { $_.Title -eq $Title }
+                $plan = Get-MgGroupPlannerPlan -GroupId $group.Id | Where-Object -FilterScript { $_.Title -eq $Title }
                 if ($null -ne $plan)
                 {
                     Write-Verbose -Message "Found Plan."
                     if ($UsedID)
                     {
-                        $OwnerGroupValue = $group.ObjectId
+                        $OwnerGroupValue = $group.Id
                     }
                     else
                     {
@@ -130,12 +120,10 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Plan found, returning Ensure = Present"
             $results = @{
-                Title                 = $Title
-                OwnerGroup            = $OwnerGroupValue
-                Ensure                = 'Present'
-                CertificateThumbprint = $CertificateThumbprint
-                ApplicationId         = $ApplicationId
-                TenantID              = $TenantId
+                Title      = $Title
+                OwnerGroup = $OwnerGroupValue
+                Ensure     = 'Present'
+                Credential = $Credential
             }
         }
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $results)"
@@ -185,17 +173,9 @@ function Set-TargetResource
         [ValidateSet("Present", "Absent")]
         $Ensure = 'Present',
 
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $Credential
     )
     Write-Verbose -Message "Setting configuration of Planner Plan {$Title}"
 
@@ -204,20 +184,19 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Connect-Graph -Scopes "Group.ReadWrite.All" | Out-Null
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
 
     $SetParams = $PSBoundParameters
     $currentValues = Get-TargetResource @PSBoundParameters
-    $SetParams.Remove("ApplicationId") | Out-Null
-    $SetParams.Remove("TenantId") | Out-Null
-    $SetParams.Remove("CertificateThumbprint") | Out-Null
+    $SetParams.Remove("Credential") | Out-Null
     $SetParams.Remove("Ensure") | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
@@ -235,9 +214,9 @@ function Set-TargetResource
         {
             [Array]$AllGroups = Get-MgGroup -Search $OwnerGroup
         }
-        $plan = Get-MgGroupPlannerPlan -GroupId $AllGroups[0].ObjectId | Where-Object -FilterScript { $_.Title -eq $Title }
+        $plan = Get-MgGroupPlannerPlan -GroupId $AllGroups[0].Id | Where-Object -FilterScript { $_.Title -eq $Title }
         $SetParams.Add("PlannerPlanId", $plan.Id)
-        $SetParams.Add("Owner", $AllGroups[0].ObjectId)
+        $SetParams.Add("Owner", $AllGroups[0].Id)
         $SetParams.Remove("OwnerGroup") | Out-Null
         Update-MgPlannerPlan @SetParams
     }
@@ -266,24 +245,16 @@ function Test-TargetResource
         [ValidateSet("Present", "Absent")]
         $Ensure = 'Present',
 
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $Credential
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -296,9 +267,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
@@ -315,28 +283,16 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter()]
-        [System.String]
-        $Filter,
-
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $TenantId,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CertificateThumbprint
+        [System.Management.Automation.PSCredential]
+        $Credential
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -350,68 +306,36 @@ function Export-TargetResource
     {
         [array]$groups = Get-MgGroup -All:$true -ErrorAction Stop
 
-        $ConnectionMode = Connect-Graph -Scopes "Group.ReadWrite.All"
         $i = 1
         $dscContent = ''
+        Write-Host "`r`n" -NoNewline
         foreach ($group in $groups)
         {
-            Write-Host "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.ObjectID)}"
+            Write-Host "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.Id)}"
             try
             {
-                [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.ObjectId -ErrorAction 'SilentlyContinue' -All:$true -Filter $Filter
+                [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.Id -ErrorAction 'SilentlyContinue'
 
                 $j = 1
                 foreach ($plan in $plans)
-                {
-                    $params = @{
-                        Title                 = $plan.Title
-                        OwnerGroup            = $group.ObjectId
-                        ApplicationId         = $ApplicationId
-                        TenantId              = $TenantId
-                        CertificateThumbprint = $CertificateThumbprint
-                    }
-                    Write-Host "        [$j/$($plans.Length)] $($plan.Title)"
-                    $results = Get-TargetResource @params
-                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                        -Results $Results
-                    $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                        -ConnectionMode $ConnectionMode `
-                        -ModulePath $PSScriptRoot `
-                        -Results $Results `
-                        -Credential $Credential
-                    $dscContent += $currentDSCBlock
+                Write-Host "        |---[$j/$($plans.Length)] $($plle)"
+                Credential = $Credential
+            }
+            $results = Get-TargetResource @params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
+            $dscContent += $currentDSCBlock
 
-                    Save-M365DSCPartialExport -Content $currentDSCBlock `
-                        -FileName $Global:PartialExportFileName
-                    $j++
-                }
-                $i++
-            }
-            catch
-            {
-                try
-                {
-                    Write-Verbose -Message $_
-                    $tenantIdValue = ""
-                    if (-not [System.String]::IsNullOrEmpty($TenantId))
-                    {
-                        $tenantIdValue = $TenantId
-                    }
-                    elseif ($null -ne $Credential)
-                    {
-                        $tenantIdValue = $Credential.UserName.Split('@')[1]
-                    }
-                    Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                        -TenantId $tenantIdValue
-                }
-                catch
-                {
-                    Write-Verbose -Message $_
-                }
-            }
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+            $j++
         }
-        return $dscContent
+        $i++
     }
     catch
     {
@@ -432,6 +356,40 @@ function Export-TargetResource
                 -TenantId $tenantIdValue
         }
         catch
+        {
+            Write-Verbose -Message $_
+        }
+    }
+}
+return $dscContent
+}
+catch
+{
+    try
+    {
+        Write-Verbose -Message $_
+        $tenantIdValue = ""
+        if (-not [System.String]::IsNullOrEmpty($TenantId))
+        {
+            $tenantIdValue = $TenantId
+        }
+        elseif ($null -ne $Credential)
+        {
+            $tenantIdValue = $Credential.UserName.Split('@')[1]
+        }
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $tenantIdValue
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+    }
+    return ""
+}
+}
+
+Export-ModuleMember -Function *-TargetResource
         {
             Write-Verbose -Message $_
         }

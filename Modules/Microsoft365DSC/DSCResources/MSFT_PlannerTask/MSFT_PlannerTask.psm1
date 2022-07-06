@@ -70,11 +70,7 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $Credential,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId
+        $Credential
     )
     Write-Verbose -Message "Getting configuration of Planner Task {$Title}"
 
@@ -83,7 +79,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -95,6 +91,9 @@ function Get-TargetResource
 
     try
     {
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
+
         # If no TaskId were passed, automatically assume that this is a new task;
         if ([System.String]::IsNullOrEmpty($TaskId))
         {
@@ -115,7 +114,7 @@ function Get-TargetResource
         }
         $task = [PlannerTaskObject]::new()
         Write-Verbose -Message "Populating task {$taskId} from the Get method"
-        $task.PopulateById($Credential, $ApplicationId, $TaskId)
+        $task.PopulateById($Credential, $TaskId)
 
         if ($null -eq $task)
         {
@@ -128,8 +127,6 @@ function Get-TargetResource
             #region Task Assignment
             if ($task.Assignments.Length -gt 0)
             {
-                $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-                    -InboundParameters $PSBoundParameters
                 $assignedValues = @()
                 foreach ($assignee in $task.Assignments)
                 {
@@ -173,8 +170,7 @@ function Get-TargetResource
                 DueDateTime          = $DueDateTimeValue
                 Notes                = $NotesValue
                 Ensure               = "Present"
-                ApplicationId        = $ApplicationId
-                Credential   = $Credential
+                Credential           = $Credential
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $results)"
             return $results
@@ -277,11 +273,7 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $Credential,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId
+        $Credential
     )
     Write-Verbose -Message "Setting configuration of Planner Task {$Title}"
 
@@ -290,14 +282,15 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Connect-Graph -Scopes "Group.ReadWrite.All" | Out-Null
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
 
     $currentValues = Get-TargetResource @PSBoundParameters
 
@@ -318,7 +311,7 @@ function Set-TargetResource
     if (-not [System.String]::IsNullOrEmpty($TaskId))
     {
         Write-Verbose -Message "Populating Task {$TaskId} from the Set method"
-        $task.PopulateById($Credential, $ApplicationId, $TaskId)
+        $task.PopulateById($Credential, $TaskId)
     }
 
     $task.BucketId = $Bucket
@@ -333,15 +326,13 @@ function Set-TargetResource
     #region Assignments
     if ($AssignedUsers.Length -gt 0)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
         $AssignmentsValue = @()
         foreach ($userName in $AssignedUsers)
         {
-            $user = Get-MgUser -Search $userName
+            $user = Get-MgUser -UserId $userName
             if ($null -ne $user)
             {
-                $AssignmentsValue += $user.ObjectId
+                $AssignmentsValue += $user.Id
             }
         }
         $task.Assignments = $AssignmentsValue
@@ -396,20 +387,20 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Planner Task {$Title} doesn't already exist. Creating it."
-        $task.Create($Credential, $ApplicationId)
+        $task.Create($Credential)
     }
     elseif ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Planner Task {$Title} already exists, but is not in the `
             Desired State. Updating it."
-        $task.Update($Credential, $ApplicationId)
+        $task.Update($Credential)
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Planner Task {$Title} exists, but is should not. `
             Removing it."
-        $task.Delete($Credential, $ApplicationId, $TaskId)
+        $task.Delete($Credential, $TaskId)
     }
 }
 
@@ -485,18 +476,14 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $Credential,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId
+        $Credential
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -509,8 +496,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('Credential') | Out-Null
 
     # If the Task is currently assigned to a bucket and the Bucket property is null,
     # assume that we are trying to remove the given task from the bucket and therefore
@@ -547,18 +532,14 @@ function Export-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $Credential,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId
+        $Credential
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -574,41 +555,39 @@ function Export-TargetResource
 
         $i = 1
         $dscContent = ''
+        Write-Host "`r`n" -NoNewline
         foreach ($group in $groups)
         {
-            Write-Host "    |---[$i/$($groups.Length)] $($group.DisplayName) - {$($group.ObjectID)}"
+            Write-Host "    |---[$i/$($groups.Length)] $($group.DisplayName) - {$($group.Id)}"
             try
             {
-                [Array]$plans = Get-M365DSCPlannerPlansFromGroup -GroupId $group.ObjectId `
-                    -Credential $Credential `
-                    -ApplicationId $ApplicationId
+                [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.Id -ErrorAction 'SilentlyContinue'
+                #                [Array]$plans = Get-M365DSCPlannerPlansFromGroup -GroupId $group.Id `
+                #                    -Credential $Credential
 
                 $j = 1
                 foreach ($plan in $plans)
                 {
                     Write-Host "        |---[$j/$($plans.Length)] $($plan.Title)"
 
-                    [Array]$tasks = Get-M365DSCPlannerTasksFromPlan -PlanId $plan.Id `
-                        -Credential $Credential `
-                        -ApplicationId $ApplicationId
+                    [Array]$tasks = Get-MgGroupPlannerPlanTask -GroupId $group.Id -PlannerPlanId $plan.Id -ErrorAction 'SilentlyContinue'
+                    #                    [Array]$tasks = Get-M365DSCPlannerTasksFromPlan -PlanId  `
+                    #                        -Credential $Credential
                     $k = 1
                     foreach ($task in $tasks)
                     {
-                        Write-Host "            [$k/$($tasks.Length)] $($task.Title)" -NoNewline
+                        Write-Host "            |---[$k/$($tasks.Length)] $($task.Title)" -NoNewline
+                        $currentDSCBlock = ""
+
                         $params = @{
-                            TaskId             = $task.Id
-                            PlanId             = $plan.Id
-                            Title              = $task.Title
-                            ApplicationId      = $ApplicationId
+                            TaskId     = $task.Id
+                            PlanId     = $plan.Id
+                            Title      = $task.Title
                             Credential = $Credential
                         }
 
                         $result = Get-TargetResource @params
 
-                        if ([System.String]::IsNullOrEmpty($result.ApplicationId))
-                        {
-                            $result.Remove("ApplicationId") | Out-Null
-                        }
                         if ($result.AssignedUsers.Count -eq 0)
                         {
                             $result.Remove("AssignedUsers") | Out-Null
@@ -642,7 +621,7 @@ function Export-TargetResource
                         $currentDSCBlock += "        PlannerTask " + (New-Guid).ToString() + "`r`n"
                         $currentDSCBlock += "        {`r`n"
                         $content = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-                        $content = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                        $content = Convert-DSCStringParamToVariable -DSCBlock $content `
                             -ParameterName "Credential"
                         if ($result.Attachments.Length -gt 0)
                         {
@@ -658,14 +637,6 @@ function Export-TargetResource
                         }
                         $currentDSCBlock += $content
                         $currentDSCBlock += "        }`r`n"
-                        $dscContent += $currentDSCBlock
-                        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                            -Results $Results
-                        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                            -ConnectionMode $ConnectionMode `
-                            -ModulePath $PSScriptRoot `
-                            -Results $Results `
-                            -Credential $Credential
                         $dscContent += $currentDSCBlock
 
                         Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -825,16 +796,11 @@ function Get-M365DSCPlannerPlansFromGroup
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $Credential,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $ApplicationId
+        $Credential
     )
     $results = @()
     $uri = "https://graph.microsoft.com/v1.0/groups/$GroupId/planner/plans"
     $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $Credential `
-        -ApplicationId $ApplicationId `
         -Uri $uri `
         -Method Get
     foreach ($plan in $taskResponse.value)
@@ -858,16 +824,11 @@ function Get-M365DSCPlannerTasksFromPlan
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $Credential,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $ApplicationId
+        $Credential
     )
     $results = @()
     $uri = "https://graph.microsoft.com/v1.0/planner/plans/$PlanId/tasks"
-    $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $Credential `
-        -ApplicationId $ApplicationId `
+    $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -Credential $Credential `
         -Uri $uri `
         -Method Get
     foreach ($task in $taskResponse.value)

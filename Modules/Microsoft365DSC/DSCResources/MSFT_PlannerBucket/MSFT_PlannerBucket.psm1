@@ -21,17 +21,9 @@ function Get-TargetResource
         [ValidateSet("Present", "Absent")]
         $Ensure = 'Present',
 
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $Credential
     )
     Write-Verbose -Message "Getting configuration of Planner Bucket {$Name}"
 
@@ -47,12 +39,13 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
+
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
     try
     {
-        Connect-Graph -Scopes "Group.ReadWrite.All" | Out-Null
-
         if (-not [System.String]::IsNullOrEmpty($BucketId))
         {
             [Array]$bucket = Get-MgPlannerPlanBucket -PlannerPlanId $PlanId | Where-Object -FilterScript { $_.Id -eq $BucketId }
@@ -74,13 +67,11 @@ function Get-TargetResource
         }
 
         $results = @{
-            Name                  = $Name
-            PlanId                = $PlanId
-            BucketId              = $bucket[0].Id
-            Ensure                = "Present"
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
+            Name       = $Name
+            PlanId     = $PlanId
+            BucketId   = $bucket[0].Id
+            Ensure     = "Present"
+            Credential = $Credential
         }
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $results)"
         return $results
@@ -133,17 +124,9 @@ function Set-TargetResource
         [ValidateSet("Present", "Absent")]
         $Ensure = 'Present',
 
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $Credential
     )
     Write-Verbose -Message "Setting configuration of Planner Bucket {$Name}"
 
@@ -159,13 +142,12 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Connect-Graph -Scopes "Group.ReadWrite.All" | Out-Null
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
 
     $SetParams = $PSBoundParameters
     $currentValues = Get-TargetResource @PSBoundParameters
-    $SetParams.Remove("ApplicationId") | Out-Null
-    $SetParams.Remove("TenantId") | Out-Null
-    $SetParams.Remove("CertificateThumbprint") | Out-Null
+    $SetParams.Remove("Credential") | Out-Null
     $SetParams.Remove("Ensure") | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
@@ -209,17 +191,9 @@ function Test-TargetResource
         [ValidateSet("Present", "Absent")]
         $Ensure = 'Present',
 
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $Credential
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -239,9 +213,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
@@ -259,16 +230,8 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $TenantId,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CertificateThumbprint
+        [System.Management.Automation.PSCredential]
+        $Credential
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -289,7 +252,6 @@ function Export-TargetResource
     {
         [array]$groups = Get-MgGroup -All:$true -ErrorAction Stop
 
-        $null = Connect-Graph -Scopes "Group.ReadWrite.All"
         $i = 1
         $dscContent = ''
         Write-Host "`r`n" -NoNewline
@@ -303,19 +265,17 @@ function Export-TargetResource
                 $j = 1
                 foreach ($plan in $plans)
                 {
-                    Write-Host "        [$j/$($plans.Length)] $($plan.Title)"
+                    Write-Host "        |---[$j/$($plans.Length)] $($plan.Title)"
                     $buckets = Get-MgPlannerPlanBucket -PlannerPlanId $plan.Id
                     $k = 1
                     foreach ($bucket in $buckets)
                     {
-                        Write-Host "            [$k/$($buckets.Length)] $($bucket.Name)"
+                        Write-Host "            |---[$k/$($buckets.Length)] $($bucket.Name)" -NoNewline
                         $params = @{
-                            Name                  = $bucket.Name
-                            PlanId                = $plan.Id
-                            BucketId              = $Bucket.Id
-                            ApplicationId         = $ApplicationId
-                            TenantId              = $TenantId
-                            CertificateThumbprint = $CertificateThumbprint
+                            Name       = $bucket.Name
+                            PlanId     = $plan.Id
+                            BucketId   = $Bucket.Id
+                            Credential = $Credential
                         }
                         $results = Get-TargetResource @params
                         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
