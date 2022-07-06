@@ -1,5 +1,13 @@
 # Change log for Microsoft365DSC
 
+# 1.22.706.1
+
+* AADSecurityDefaults
+  * Initial release.
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 4.5.0.
+  * Updated Pnp.PowerShell to version 1.11.0.
+
 # 1.22.629.1
 
 * EXOMalwareFilterPolicy
