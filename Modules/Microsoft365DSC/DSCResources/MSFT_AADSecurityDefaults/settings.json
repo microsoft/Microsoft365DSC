@@ -1,0 +1,38 @@
+﻿{
+    "resourceName": "AADServicePrincipal",
+    "description": "This resource configures an Azure Active Directory ServicePrincipal.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Policy.ReadWrite.ConditionalAccess"
+                    },
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Policy.ReadWrite.ConditionalAccess"
+                    },
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ]
+            }
+        }
+    }
+}
