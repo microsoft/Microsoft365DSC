@@ -10,6 +10,14 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
+        [System.String[]]
+        $AllowDomains,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockedDomains,
+
+        [Parameter()]
         [System.Boolean]
         $AllowFederatedUsers,
 
@@ -53,6 +61,8 @@ function Get-TargetResource
 
         return @{
             Identity                  = $Identity
+            AllowedDomains            = $config.AllowedDomains
+            BlockedDomains            = $config.BlockedDomains
             AllowFederatedUsers       = $config.AllowFederatedUsers
             AllowPublicUsers          = $config.AllowPublicUsers
             AllowTeamsConsumer        = $config.AllowTeamsConsumer
@@ -95,6 +105,14 @@ function Set-TargetResource
         [System.String]
         [ValidateSet('Global')]
         $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $AllowDomains,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockedDomains,
 
         [Parameter()]
         [System.Boolean]
@@ -150,6 +168,14 @@ function Test-TargetResource
         [System.String]
         [ValidateSet('Global')]
         $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $AllowDomains,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockedDomains,
 
         [Parameter()]
         [System.Boolean]
