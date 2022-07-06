@@ -11,7 +11,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $AllowDomains,
+        $AllowedDomains,
 
         [Parameter()]
         [System.String[]]
@@ -61,8 +61,8 @@ function Get-TargetResource
 
         return @{
             Identity                  = $Identity
-            AllowedDomains            = $config.AllowedDomains
-            BlockedDomains            = $config.BlockedDomains
+            AllowedDomains            = [System.String[]]$config.AllowedDomains
+            BlockedDomains            = [System.String[]]$config.BlockedDomains
             AllowFederatedUsers       = $config.AllowFederatedUsers
             AllowPublicUsers          = $config.AllowPublicUsers
             AllowTeamsConsumer        = $config.AllowTeamsConsumer
@@ -108,7 +108,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $AllowDomains,
+        $AllowedDomains,
 
         [Parameter()]
         [System.String[]]
@@ -155,6 +155,10 @@ function Set-TargetResource
     $SetParams = $PSBoundParameters
     $SetParams.Remove("Credential")
 
+    $SetParams.Remove("AllowedDomains") | Out-Null
+    $SetParams.Add("AllowedDomainsAsAList", $AllowedDomains)
+
+    Write-Verbose -Message "SetParams: $(Convert-M365DscHashtableToString -Hashtable $SetParams)"
     Set-CsTenantFederationConfiguration @SetParams
 }
 
@@ -171,7 +175,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $AllowDomains,
+        $AllowedDomains,
 
         [Parameter()]
         [System.String[]]
