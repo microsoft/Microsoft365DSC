@@ -6,6 +6,9 @@
   * Initial release.
 * TeamsFederationConfiguration
   * Added support for the AllowedDomains and BlockedDomains properties.
+* TeamsVoiceRoutingPolicy
+  * Remove unsupported Confirm parameter from Remove-CsOnlineVoiceRoutingPolicy cmdlet (Confirm parameter is no longer available for MicrosoftTeams PowerShell module 4.4.1+).
+    FIXES #2055
 * DEPENDENCIES
   * Updated MicrosoftTeams to version 4.5.0.
   * Updated Pnp.PowerShell to version 1.11.0.

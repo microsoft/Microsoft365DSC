@@ -175,7 +175,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing existing Voice Routing Policy {$Identity}"
-        Remove-CsOnlineVoiceRoutingPolicy -Identity $Identity -Confirm:$false
+        Remove-CsOnlineVoiceRoutingPolicy -Identity $Identity
     }
 }
 
