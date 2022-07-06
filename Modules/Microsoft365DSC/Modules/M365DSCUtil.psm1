@@ -193,7 +193,7 @@ function Convert-M365DscArrayToString
         if ($item -is [System.Collections.Hashtable])
         {
             $str += "{"
-            $str += Convert-M365DSCHashtableToString -Hashtable $item
+            $str += Convert-M365DscHashtableToString -Hashtable $item
             $str += "}"
         }
         elseif ($Array[$i] -is [Microsoft.Management.Infrastructure.CimInstance])
@@ -1041,11 +1041,76 @@ function Export-M365DSCConfiguration
         [System.String]
         $CertificatePath
     )
+
+    # LaunchWebUI specified, launching that now
+    if ($LaunchWebUI)
+    {
+        Write-Output -InputObject "Launching web page 'https://export.microsoft365dsc.com'"
+        explorer "https://export.microsoft365dsc.com"
+        return
+    }
+
     # Suppress Progress overlays
     $Global:ProgressPreference = 'SilentlyContinue'
 
     # Suppress Warnings
     $Global:WarningPreference = 'SilentlyContinue'
+
+    ##### FIRST CHECK AUTH PARAMETERS
+    if ($PSBoundParameters.ContainsKey("CertificatePath") -eq $true -and `
+            $PSBoundParameters.ContainsKey("CertificatePassword") -eq $false)
+    {
+        Write-Host -Object "[ERROR] You have to specify CertificatePassword when you specify CertificatePath" -ForegroundColor Red
+        return
+    }
+
+    if ($PSBoundParameters.ContainsKey("CertificatePassword") -eq $true -and `
+            $PSBoundParameters.ContainsKey("CertificatePath") -eq $false)
+    {
+        Write-Host -Object "[ERROR] You have to specify CertificatePath when you specify CertificatePassword" -ForegroundColor Red
+        return
+    }
+
+    if ($PSBoundParameters.ContainsKey("ApplicationId") -eq $true -and `
+            $PSBoundParameters.ContainsKey("TenantId") -eq $false)
+    {
+        Write-Host -Object "[ERROR] You have to specify TenantId when you specify ApplicationId" -ForegroundColor Red
+        return
+    }
+
+    if ($PSBoundParameters.ContainsKey("ApplicationId") -eq $false -and `
+            $PSBoundParameters.ContainsKey("TenantId") -eq $true)
+    {
+        Write-Host -Object "[ERROR] You have to specify ApplicationId when you specify TenantId" -ForegroundColor Red
+        return
+    }
+
+    if ($PSBoundParameters.ContainsKey("ApplicationId") -eq $true -and `
+            $PSBoundParameters.ContainsKey("TenantId") -eq $true -and `
+        ($PSBoundParameters.ContainsKey("CertificateThumbprint") -eq $false -and `
+                $PSBoundParameters.ContainsKey("ApplicationSecret") -eq $false -and `
+                $PSBoundParameters.ContainsKey("CertificatePath") -eq $false))
+    {
+        Write-Host -Object "[ERROR] You have to specify ApplicationSecret, CertificateThumbprint or CertificatePath when you specify ApplicationId/TenantId" -ForegroundColor Red
+        return
+    }
+
+    if (($PSBoundParameters.ContainsKey("ApplicationId") -eq $false -or `
+                $PSBoundParameters.ContainsKey("TenantId") -eq $false) -and `
+        ($PSBoundParameters.ContainsKey("CertificateThumbprint") -eq $true -or `
+                $PSBoundParameters.ContainsKey("ApplicationSecret") -eq $true -or `
+                $PSBoundParameters.ContainsKey("CertificatePath") -eq $true))
+    {
+        Write-Host -Message "[ERROR] You have to specify ApplicationId and TenantId when you specify ApplicationSecret, CertificateThumbprint or CertificatePath" -ForegroundColor Red
+        return
+    }
+
+    # Default to Credential if no authentication mechanism were provided
+    if ($PSBoundParameters.ContainsKey("Credential") -eq $false -and `
+            $PSBoundParameters.ContainsKey("ApplicationId") -eq $false)
+    {
+        $Credential = Get-Credential
+    }
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -1087,90 +1152,79 @@ function Export-M365DSCConfiguration
     # Make sure we are not connected to Microsoft Graph on another tenant
     try
     {
-        Disconnect-MgGraph -ErrorAction SilentlyContinue | Out-Null
+        $global:MsCloudLoginConnectionProfile.MicrosoftGraph.Connected = $false
     }
-    catch
-    {
-        Write-Verbose -Message "No existing connections to Microsoft Graph"
-    }
+}
+catch
+{
+}
 
-    # Default to Credential if no authentication mechanism were provided
-    if (-not $Credential -and (-not $ApplicationId -or -not $TenantId -or (-not $ApplicationSecret -and -not $CertificateThumbprint)) -and -not $LaunchWebUI)
+if (-not [System.String]::IsNullOrEmpty($TenantId))
+{
+    $data.Add("Tenant", $TenantId)
+}
+else
+{
+    if ($Credential)
     {
-        $Credential = Get-Credential
+        $tenant = $Credential.UserName.Split('@')[1]
+        $data.Add("Tenant", $tenant)
     }
+}
 
-    if (-not [System.String]::IsNullOrEmpty($TenantId))
-    {
-        $data.Add("Tenant", $TenantId)
-    }
-    else
-    {
-        if ($Credential)
-        {
-            $tenant = $Credential.UserName.Split('@')[1]
-            $data.Add("Tenant", $tenant)
-        }
-    }
-
-    Add-M365DSCTelemetryEvent -Data $data
-    if ($LaunchWebUI)
-    {
-        explorer "https://export.microsoft365dsc.com"
-    }
-    else
-    {
-        if ($null -ne $Workloads)
-        {
-            Start-M365DSCConfigurationExtract -Credential $Credential `
-                -Workloads $Workloads `
-                -Mode $Mode `
-                -Path $Path -FileName $FileName `
-                -MaxProcesses $MaxProcesses `
-                -ConfigurationName $ConfigurationName `
-                -ApplicationId $ApplicationId `
-                -ApplicationSecret $ApplicationSecret `
-                -TenantId $TenantId `
-                -CertificateThumbprint $CertificateThumbprint `
-                -CertificatePath $CertificatePath `
-                -CertificatePassword $CertificatePassword `
-                -GenerateInfo $GenerateInfo `
-                -Filters $Filters
-        }
-        elseif ($null -ne $Components)
-        {
-            Start-M365DSCConfigurationExtract -Credential $Credential `
-                -Components $Components `
-                -Path $Path -FileName $FileName `
-                -MaxProcesses $MaxProcesses `
-                -ConfigurationName $ConfigurationName `
-                -ApplicationId $ApplicationId `
-                -ApplicationSecret $ApplicationSecret `
-                -TenantId $TenantId `
-                -CertificateThumbprint $CertificateThumbprint `
-                -CertificatePath $CertificatePath `
-                -CertificatePassword $CertificatePassword `
-                -GenerateInfo $GenerateInfo `
-                -Filters $Filters
-        }
-        elseif ($null -ne $Mode)
-        {
-            Start-M365DSCConfigurationExtract -Credential $Credential `
-                -Mode $Mode `
-                -Path $Path -FileName $FileName `
-                -MaxProcesses $MaxProcesses `
-                -ConfigurationName $ConfigurationName `
-                -ApplicationId $ApplicationId `
-                -ApplicationSecret $ApplicationSecret `
-                -TenantId $TenantId `
-                -CertificateThumbprint $CertificateThumbprint `
-                -CertificatePath $CertificatePath `
-                -CertificatePassword $CertificatePassword `
-                -GenerateInfo $GenerateInfo `
-                -AllComponents `
-                -Filters $Filters
-        }
-    }
+Add-M365DSCTelemetryEvent -Data $data
+if ($null -ne $Workloads)
+{
+    Write-Output -InputObject "Exporting Microsoft 365 configuration for Workloads: $($Workloads -join ", ")"
+    Start-M365DSCConfigurationExtract -Credential $Credential `
+        -Workloads $Workloads `
+        -Mode $Mode `
+        -Path $Path -FileName $FileName `
+        -MaxProcesses $MaxProcesses `
+        -ConfigurationName $ConfigurationName `
+        -ApplicationId $ApplicationId `
+        -ApplicationSecret $ApplicationSecret `
+        -TenantId $TenantId `
+        -CertificateThumbprint $CertificateThumbprint `
+        -CertificatePath $CertificatePath `
+        -CertificatePassword $CertificatePassword `
+        -GenerateInfo $GenerateInfo
+}
+elseif ($null -ne $Components)
+{
+    Write-Output -InputObject "Exporting Microsoft 365 configuration for Components: $($Components -join ", ")"
+    Start-M365DSCConfigurationExtract -Credential $Credential `
+        -Components $Components `
+        -Path $Path -FileName $FileName `
+        -MaxProcesses $MaxProcesses `
+        -ConfigurationName $ConfigurationName `
+        -ApplicationId $ApplicationId `
+        -ApplicationSecret $ApplicationSecret `
+        -TenantId $TenantId `
+        -CertificateThumbprint $CertificateThumbprint `
+        -CertificatePath $CertificatePath `
+        -CertificatePassword $CertificatePassword `
+        -GenerateInfo $GenerateInfo `
+        -Filters $Filters
+}
+elseif ($null -ne $Mode)
+{
+    Write-Output -InputObject "Exporting Microsoft 365 configuration for Mode: $Mode"
+    Start-M365DSCConfigurationExtract -Credential $Credential `
+        -Mode $Mode `
+        -Path $Path -FileName $FileName `
+        -MaxProcesses $MaxProcesses `
+        -ConfigurationName $ConfigurationName `
+        -ApplicationId $ApplicationId `
+        -ApplicationSecret $ApplicationSecret `
+        -TenantId $TenantId `
+        -CertificateThumbprint $CertificateThumbprint `
+        -CertificatePath $CertificatePath `
+        -CertificatePassword $CertificatePassword `
+        -GenerateInfo $GenerateInfo `
+        -AllComponents `
+        -Filters $Filters
+}
 }
 
 $Script:M365DSCDependenciesValidated = $false
@@ -1208,11 +1262,6 @@ function Confirm-M365DSCDependencies
         else
         {
             Write-Verbose -Message "Dependencies were all successfully validated."
-
-            #region Remove invalid versions of depencendies from session
-            Remove-M365DSCInvalidDependenciesFromSession
-            #endregion
-
             $Script:M365DSCDependenciesValidated = $true
         }
     }
@@ -1243,51 +1292,7 @@ function Import-M365DSCDependencies
 
     foreach ($dependency in $dependencies)
     {
-        Import-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force
-    }
-}
-
-<#
-.Description
-This function removes all versions of dependencies that are not specified in the manifest from the current PowerShell session.
-
-.Example
-Remove-M365DSCInvalidDependenciesFromSession
-
-.Functionality
-Private
-#>
-function Remove-M365DSCInvalidDependenciesFromSession
-{
-    [CmdletBinding()]
-    param()
-
-    $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
-    $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
-    $dependencies = $manifest.Dependencies
-
-    foreach ($dependency in $dependencies)
-    {
-        $loadedModuleInstances = Get-Module $dependency.ModuleName
-
-        $incorrectModuleVersions = $null
-        if ($loadedModuleInstances)
-        {
-            $incorrectModuleVersions = $loadedModuleInstances | Where-Object -FilterScript {$_.Version -ne $dependency.RequiredVersion}
-
-            if ($incorrectModuleVersions)
-            {
-                foreach ($incorrectVersion in $incorrectModuleVersions)
-                {
-                    $FQN = @{
-                        ModuleName    = $incorrectVersion.Name
-                        ModuleVersion = $incorrectVersion.Version
-                    }
-                    Write-Verbose -Message "Removing Module {$($incorrectVersion.Name)} version {$($incorrectVersion.Version)} from the current PowerShell session"
-                    Remove-Module -FullyQualifiedName $FQN -Force -ErrorAction SilentlyContinue
-                }
-            }
-        }
+        Import-Module $dependency.ModuleName -Force
     }
 }
 
@@ -2357,12 +2362,6 @@ function Assert-M365DSCBlueprint
                 $ResourcesInBluePrint += $resource.ResourceName
             }
         }
-
-        if (!$ResourcesInBluePrint) {
-            Write-Host "Malformed BluePrint, aborting"
-            break
-        }
-
         Write-Host "Selected BluePrint contains ($($ResourcesInBluePrint.Length)) components to assess."
 
         # Call the Export-M365DSCConfiguration cmdlet to extract only the resource
@@ -3071,6 +3070,81 @@ function Get-M365DSCComponentsForAuthenticationType
 
 <#
 .Description
+This function gets all resources that support the specified authentication method and
+determines the most secure authentication method supported by the resource.
+
+.Functionality
+Internal
+#>
+function Get-M365DSCComponentsWithMostSecureAuthenticationType
+{
+    [CmdletBinding()]
+    [OutputType([System.String[]])]
+    param(
+        [Parameter()]
+        [System.String[]]
+        [ValidateSet('ApplicationWithSecret', 'CertificateThumbprint', 'CertificatePath', 'Credentials')]
+        $AuthenticationMethod
+    )
+
+    $modules = Get-ChildItem -Path ($PSScriptRoot + "\..\DSCResources\") -Recurse -Filter '*.psm1'
+    $Components = @()
+    foreach ($resource in $modules)
+    {
+        Import-Module $resource.FullName -Force
+        $parameters = (Get-Command 'Set-TargetResource').Parameters.Keys
+
+        #Case - Resource supports CertificateThumbprint
+        if ($AuthenticationMethod.Contains("CertificateThumbprint") -and `
+                $parameters.Contains('ApplicationId') -and `
+                $parameters.Contains('CertificateThumbprint') -and `
+                $parameters.Contains('TenantId'))
+        {
+            $Components += @{
+                Resource   = $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
+                AuthMethod = "CertificateThumbprint"
+            }
+        }
+
+        # Case - Resource supports CertificatePath
+        elseif ($AuthenticationMethod.Contains("CertificatePath") -and `
+                $parameters.Contains('ApplicationId') -and `
+                $parameters.Contains('CertificatePath') -and `
+                $parameters.Contains('TenantId'))
+        {
+            $Components += @{
+                Resource   = $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
+                AuthMethod = "CertificatePath"
+            }
+        }
+
+        # Case - Resource supports ApplicationSecret
+        elseif ($AuthenticationMethod.Contains("ApplicationWithSecret") -and `
+                $parameters.Contains('ApplicationId') -and `
+                $parameters.Contains('ApplicationSecret') -and `
+                $parameters.Contains('TenantId'))
+        {
+            $Components += @{
+                Resource   = $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
+                AuthMethod = "ApplicationSecret"
+            }
+        }
+
+        # Case - Resource supports Credential
+        elseif ($AuthenticationMethod.Contains("Credentials") -and `
+                $parameters.Contains('Credential'))
+        {
+            $Components += @{
+                Resource   = $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
+                AuthMethod = "Credentials"
+            }
+        }
+    }
+    return $Components
+}
+
+<#
+.Description
 This function gets all available M365DSC resources in the module
 
 .Example
@@ -3516,6 +3590,65 @@ $resourceExample
 
 <#
 .Description
+    }
+
+    if ($params.ContainsKey("ApplicationSecret"))
+    {
+        $params.Remove("ApplicationSecret")
+    }
+
+    if ($params.ContainsKey("CertificateThumbprint"))
+    {
+        $params.Remove("CertificateThumbprint")
+    }
+
+    if ($params.ContainsKey("CertificatePath"))
+    {
+        $params.Remove("CertificatePath")
+    }
+
+    if ($params.ContainsKey("CertificatePassword"))
+    {
+        $params.Remove("CertificatePassword")
+    }
+
+    [string]$userName = 'admin@contoso.onmicrosoft.com'
+    [string]$userPassword = 'dummypassword'
+    [securestring]$secStringPassword = ConvertTo-SecureString $userPassword -AsPlainText -Force
+    [pscredential]$credObject = New-Object System.Management.Automation.PSCredential ($userName, $secStringPassword)
+
+    $resourceExample = Get-M365DSCExportContentForResource -ResourceName $ResourceName -ModulePath $resource.Path -Results $params -ConnectionMode Credentials -Credential $credObject
+
+    $resourceExample = $resourceExample.TrimEnd() -replace ";", ""
+
+    $exampleText = @"
+<#
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+#>
+
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = `$true)]
+        [PSCredential]
+        `$credsGlobalAdmin
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+$resourceExample
+    }
+}
+"@
+
+    return $exampleText
+}
+
+<#
+.Description
 This function creates an example from the resource schema, using ReverseDSC code.
 
 .Parameter ResourceName
@@ -3609,6 +3742,7 @@ Export-ModuleMember -Function @(
     'Get-M365DSCAllResources',
     'Get-M365DSCAuthenticationMode',
     'Get-M365DSCComponentsForAuthenticationType',
+    'Get-M365DSCComponentsWithMostSecureAuthenticationType',
     'Get-M365DSCExportContentForResource',
     'Get-M365DSCOrganization',
     'Get-M365DSCTenantDomain',

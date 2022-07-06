@@ -2,12 +2,27 @@
 
 # UNRELEASED
 
+* PlannerBucket
+  * Changed authentication method to Credentials only, since the Planner Graph API
+    does not support anything else
 * PlannerPlan
   * Fix export issue where the export wasn't created correctly because of the
     use of an incorrect property name.
+  * Changed authentication method to Credentials only, since the Planner Graph API
+    does not support anything else
+* PlannerTask
+  * Changed authentication method to Credentials only, since the Planner Graph API
+    does not support anything else
 * TeamsMeetingBroadcastConfiguration
   * Fixing export issue where SdnApiToken is exported as a string instead of
     a variable
+* MISC
+  * Updated Export functionality to only export the LCM settings when the
+    executed as Administrator
+  * Added support for multiple authentication methods to the Export functionality.
+    The code now uses the most secure method that is provided in the command line
+    and that supported by the specified resources in the following order:
+    Certificate Thumbprint, Certificate Path, Application Secret, Credential
 
 # 1.22.824.1
 
