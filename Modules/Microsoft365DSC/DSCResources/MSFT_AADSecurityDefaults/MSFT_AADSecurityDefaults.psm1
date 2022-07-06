@@ -171,12 +171,12 @@ function Set-TargetResource
 
     if ($CurrentValues.DisplayName -ne $DisplayName)
     {
-        Write-Warning -Message "The DisplayName property for the AADSecurityDefaults resource is read-only and cannot be changed."
+        Write-Verbose -Message "The DisplayName property for the AADSecurityDefaults resource is read-only and cannot be changed."
     }
 
     if ($CurrentValues.Description -ne $Description)
     {
-        Write-Warning -Message "The Description property for the AADSecurityDefaults resource is read-only and cannot be changed."
+        Write-Verbose -Message "The Description property for the AADSecurityDefaults resource is read-only and cannot be changed."
     }
 
     $UpdateParameters = @{
@@ -254,9 +254,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
