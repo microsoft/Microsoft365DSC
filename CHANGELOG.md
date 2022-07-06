@@ -4,6 +4,8 @@
 
 * AADSecurityDefaults
   * Initial release.
+* TeamsFederationConfiguration
+  * Added support for the AllowedDomains and BlockedDomains properties.
 * TeamsVoiceRoutingPolicy
   * Remove unsupported Confirm parameter from Remove-CsOnlineVoiceRoutingPolicy cmdlet (Confirm parameter is no longer available for MicrosoftTeams PowerShell module 4.4.1+).
     FIXES #2055
