@@ -4,6 +4,8 @@
 
 * AADSecurityDefaults
   * Initial release.
+* TeamsFederationConfiguration
+  * Added support for the AllowedDomains and BlockedDomains properties.
 * DEPENDENCIES
   * Updated MicrosoftTeams to version 4.5.0.
   * Updated Pnp.PowerShell to version 1.11.0.
