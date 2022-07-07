@@ -423,10 +423,10 @@ function New-M365DSCReportFromConfiguration
 
 <#
 .Description
-This function compares two provided DSC configuration to determine the delta
+This function compares two provided DSC configuration to determine the delta.
 
 .Functionality
-Internal, Hidden
+Public
 #>
 function Compare-M365DSCConfigurations
 {
@@ -1049,6 +1049,7 @@ function New-M365DSCDeltaReport
 }
 
 Export-ModuleMember -Function @(
+    'Compare-M365DSCConfigurations',
     'New-M365DSCDeltaReport',
     'New-M365DSCReportFromConfiguration'
 )
