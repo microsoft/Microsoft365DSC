@@ -385,7 +385,6 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove("FilePlanProperty") | Out-Null
 
     $TestFilePlanProperties = Test-SCFilePlanProperties -CurrentProperty $CurrentValues `
         -DesiredProperty $PSBoundParameters
@@ -395,6 +394,7 @@ function Test-TargetResource
         return $false
     }
 
+    $ValuesToCheck.Remove("FilePlanProperty") | Out-Null
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
@@ -582,12 +582,16 @@ function Test-SCFilePlanProperties
         [Parameter(Mandatory = $true)] $DesiredProperty
     )
 
-    if ($CurrentProperty.FilePlanPropertyDepartment -ne $DesiredProperty.FilePlanPropertyDepartment -or `
-            $CurrentProperty.FilePlanPropertyCategory -ne $DesiredProperty.FilePlanPropertyCategory -or `
-            $CurrentProperty.FilePlanPropertySubcategory -ne $DesiredProperty.FilePlanPropertySubcategory -or `
-            $CurrentProperty.FilePlanPropertyCitation -ne $DesiredProperty.FilePlanPropertyCitation -or `
-            $CurrentProperty.FilePlanPropertyReferenceId -ne $DesiredProperty.FilePlanPropertyReferenceId -or `
-            $CurrentProperty.FilePlanPropertyAuthority -ne $DesiredProperty.FilePlanPropertyAuthority)
+    Write-Verbose -Message "Comparing File Plan properties."
+    Write-Verbose -Message "Current: $(Convert-M365DscHashtableToString -Hashtable $CurrentProperty)"
+    Write-Verbose -Message "Desired: $(Convert-M365DscHashtableToString -Hashtable $DesiredProperty)"
+
+    if ($CurrentProperty.FilePlanProperty.FilePlanPropertyDepartment -ne $DesiredProperty.FilePlanProperty.FilePlanPropertyDepartment -or `
+            $CurrentProperty.FilePlanProperty.FilePlanPropertyCategory -ne $DesiredProperty.FilePlanProperty.FilePlanPropertyCategory -or `
+            $CurrentProperty.FilePlanProperty.FilePlanPropertySubcategory -ne $DesiredProperty.FilePlanProperty.FilePlanPropertySubcategory -or `
+            $CurrentProperty.FilePlanProperty.FilePlanPropertyCitation -ne $DesiredProperty.FilePlanProperty.FilePlanPropertyCitation -or `
+            $CurrentProperty.FilePlanProperty.FilePlanPropertyReferenceId -ne $DesiredProperty.FilePlanProperty.FilePlanPropertyReferenceId -or `
+            $CurrentProperty.FilePlanProperty.FilePlanPropertyAuthority -ne $DesiredProperty.FilePlanProperty.FilePlanPropertyAuthority)
     {
         return $false
     }
