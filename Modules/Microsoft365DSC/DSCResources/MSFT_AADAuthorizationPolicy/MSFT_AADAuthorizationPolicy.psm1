@@ -570,7 +570,7 @@ function Export-TargetResource
 }
 <#
 .Description
-This function returns a hashtable correlating GUIDs and GuestUserRoleIds
+This function returns a hashtable correlating GUIDs and GuestUserRole names
 
 .Link
 https://docs.microsoft.com/en-us/graph/api/resources/authorizationpolicy?view=graph-rest-beta#properties
