@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* SCComplianceTag
+  * Fixed issue where FilePlanProperty was not properly applied unless another child property was also modified.
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.150.
   * Updated MSCloudLoginAssistant to version 1.0.87.
