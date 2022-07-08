@@ -144,6 +144,10 @@ function Get-TargetResource
         [System.String[]]
         $ExcludedGroups,
 
+        [Parameter()]
+        [System.String]
+        $CustomBrowserProtocol,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -267,6 +271,7 @@ function Get-TargetResource
             AppDataEncryptionType                   = $policy.AppDataEncryptionType
             Assignments                             = $assignmentsArray
             ExcludedGroups                          = $exclusionArray
+            CustomBrowserProtocol                   = $policy.CustomBrowserProtocol
             Apps                                    = $appsArray
             Ensure                                  = "Present"
             Credential                              = $Credential
@@ -438,6 +443,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $ExcludedGroups,
+
+        [Parameter()]
+        [System.String]
+        $CustomBrowserProtocol,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -668,6 +677,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $ExcludedGroups,
+
+        [Parameter()]
+        [System.String]
+        $CustomBrowserProtocol,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -938,11 +951,39 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
         "simplePinBlocked": $($Parameters.SimplePinBlocked.ToString().ToLower()),
         "minimumPinLength": $($Parameters.MinimumPinLength),
         "managedBrowser": "$($Parameters.ManagedBrowser)",
+"@
+    if ($Parameters.MinimumWarningAppVersion)
+    {
+        $JsonContent += @"
         "minimumRequiredAppVersion": "$($Parameters.MinimumWarningAppVersion)",
+"@
+    }
+    if ($Parameters.MinimumRequiredOsVersion)
+    {
+        $JsonContent += @"
         "minimumRequiredOsVersion": "$($Parameters.MinimumRequiredOsVersion)",
+"@
+    }
+    if ($Parameters.MinimumRequiredSdkVersion)
+    {
+        $JsonContent += @"
         "minimumRequiredSdkVersion": "$($Parameters.MinimumRequiredSdkVersion)",
+"@
+    }
+    if ($Parameters.MinimumWarningAppVersion)
+    {
+        $JsonContent += @"
         "minimumWarningAppVersion": "$($Parameters.MinimumWarningAppVersion)",
+"@
+    }
+    if ($Parameters.MinimumWarningOsVersion)
+    {
+        $JsonContent += @"
         "minimumWarningOsVersion": "$($Parameters.MinimumWarningOsVersion)",
+"@
+    }
+
+    $JSONContent += @"
         "pinCharacterSet": "$($Parameters.PinCharacterSet)",
         "contactSyncBlocked": $($Parameters.ContactSyncBlocked.ToString().ToLower()),
         "periodBeforePinReset": "$($Parameters.PeriodBeforePinReset)",
