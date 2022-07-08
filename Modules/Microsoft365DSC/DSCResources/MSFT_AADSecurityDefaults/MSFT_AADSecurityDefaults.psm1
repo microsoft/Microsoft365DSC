@@ -6,69 +6,83 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Global')]
-        $Identity,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
-        [System.String[]]
-        $AllowedDomains,
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
-        [System.String[]]
-        $BlockedDomains,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowFederatedUsers,
+        [System.String]
+        $Description,
 
         [Parameter()]
         [System.Boolean]
-        $AllowPublicUsers,
+        $IsEnabled,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowTeamsConsumer,
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
-        [System.Boolean]
-        $AllowTeamsConsumerInbound,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Getting configuration of Teams Federation"
-
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
-        -InboundParameters $PSBoundParameters
+    Write-Verbose -Message "Getting configuration for Azure AD Security Defaults"
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'v1.0'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName = $MyInvocation.MyCommand
+    $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $nullReturn = $PSBoundParameters
     try
     {
-        $config = Get-CsTenantFederationConfiguration -ErrorAction Stop
+        $defaults = Get-MgPolicyIdentitySecurityDefaultEnforcementPolicy
 
-        return @{
-            Identity                  = $Identity
-            AllowedDomains            = [System.String[]]$config.AllowedDomains
-            BlockedDomains            = [System.String[]]$config.BlockedDomains
-            AllowFederatedUsers       = $config.AllowFederatedUsers
-            AllowPublicUsers          = $config.AllowPublicUsers
-            AllowTeamsConsumer        = $config.AllowTeamsConsumer
-            AllowTeamsConsumerInbound = $config.AllowTeamsConsumerInbound
-            Credential                = $Credential
+        $result = @{
+            IsSingleInstance      = 'Yes'
+            DisplayName           = $defaults.DisplayName
+            Description           = $defaults.Description
+            IsEnabled             = $defaults.IsEnabled
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            Credential            = $Credential
         }
+
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+        return $result
     }
     catch
     {
@@ -80,10 +94,6 @@ function Get-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
                 -TenantId $tenantIdValue
@@ -92,7 +102,7 @@ function Get-TargetResource
         {
             Write-Verbose -Message $_
         }
-        throw $_
+        return $nullReturn
     }
 }
 
@@ -103,63 +113,77 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Global')]
-        $Identity,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
-        [System.String[]]
-        $AllowedDomains,
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
-        [System.String[]]
-        $BlockedDomains,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowFederatedUsers,
+        [System.String]
+        $Description,
 
         [Parameter()]
         [System.Boolean]
-        $AllowPublicUsers,
+        $IsEnabled,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowTeamsConsumer,
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
-        [System.Boolean]
-        $AllowTeamsConsumerInbound,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Setting configuration of Teams Federation"
+    Write-Verbose -Message "Setting configuration for Azure AD Security Defaults"
+    $CurrentValues = Get-TargetResource @PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName = $MyInvocation.MyCommand
+    $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
-        -InboundParameters $PSBoundParameters
+    if ($CurrentValues.DisplayName -ne $DisplayName)
+    {
+        Write-Verbose -Message "The DisplayName property for the AADSecurityDefaults resource is read-only and cannot be changed."
+    }
 
-    $SetParams = $PSBoundParameters
-    $SetParams.Remove("Credential")
+    if ($CurrentValues.Description -ne $Description)
+    {
+        Write-Verbose -Message "The Description property for the AADSecurityDefaults resource is read-only and cannot be changed."
+    }
 
-    $SetParams.Remove("AllowedDomains") | Out-Null
-    $SetParams.Add("AllowedDomainsAsAList", $AllowedDomains)
-
-    Write-Verbose -Message "SetParams: $(Convert-M365DscHashtableToString -Hashtable $SetParams)"
-    Set-CsTenantFederationConfiguration @SetParams
+    $UpdateParameters = @{
+        Id          = $DisplayName
+        IsEnabled   = $IsEnabled
+    }
+    Update-MgPolicyIdentitySecurityDefaultEnforcementPolicy @UpdateParameters | Out-Null
 }
 
 function Test-TargetResource
@@ -170,58 +194,67 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Global')]
-        $Identity,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
-        [System.String[]]
-        $AllowedDomains,
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
-        [System.String[]]
-        $BlockedDomains,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowFederatedUsers,
+        [System.String]
+        $Description,
 
         [Parameter()]
         [System.Boolean]
-        $AllowPublicUsers,
+        $IsEnabled,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowTeamsConsumer,
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
-        [System.Boolean]
-        $AllowTeamsConsumerInbound,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName = $MyInvocation.MyCommand
+    $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Teams Federation"
+    Write-Verbose -Message "Testing configuration of the Azure AD Security Defaults"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
+
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
@@ -238,20 +271,37 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
-        -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'v1.0'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName = $MyInvocation.MyCommand
+    $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -260,11 +310,15 @@ function Export-TargetResource
 
     try
     {
-        $dscContent = ''
-        $params = @{
-            Identity   = "Global"
-            Credential = $Credential
+        $Params = @{
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            IsSingleInstance      = 'Yes'
+            ApplicationSecret     = $ApplicationSecret
+            Credential            = $Credential
         }
+        $dscContent = ''
         $Results = Get-TargetResource @Params
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
             -Results $Results
@@ -289,10 +343,6 @@ function Export-TargetResource
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `

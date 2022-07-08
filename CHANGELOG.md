@@ -2,6 +2,27 @@
 # UNRELEASED
 * SPOSharingSettings
     * Updated code to remove None as valid value for DefaultLinkPermission. If value is set to None default to Edit.
+* SCComplianceTag
+  * Fixed issue where FilePlanProperty was not properly applied unless another child property was also modified.
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.150.
+  * Updated MSCloudLoginAssistant to version 1.0.87.
+* MISC
+  * Made the Compare-M365DSCConfigurations cmdlet public.
+
+# 1.22.706.1
+
+* AADSecurityDefaults
+  * Initial release.
+* TeamsFederationConfiguration
+  * Added support for the AllowedDomains and BlockedDomains properties.
+* TeamsVoiceRoutingPolicy
+  * Remove unsupported Confirm parameter from Remove-CsOnlineVoiceRoutingPolicy cmdlet (Confirm parameter is no longer available for MicrosoftTeams PowerShell module 4.4.1+).
+    FIXES #2055
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 4.5.0.
+  * Updated Pnp.PowerShell to version 1.11.0.
+
 # 1.22.629.1
 
 * EXOMalwareFilterPolicy
