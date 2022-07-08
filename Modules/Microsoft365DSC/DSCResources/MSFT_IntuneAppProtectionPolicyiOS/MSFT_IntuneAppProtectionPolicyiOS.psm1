@@ -951,11 +951,39 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
         "simplePinBlocked": $($Parameters.SimplePinBlocked.ToString().ToLower()),
         "minimumPinLength": $($Parameters.MinimumPinLength),
         "managedBrowser": "$($Parameters.ManagedBrowser)",
+"@
+    if ($Parameters.MinimumWarningAppVersion)
+    {
+        $JsonContent += @"
         "minimumRequiredAppVersion": "$($Parameters.MinimumWarningAppVersion)",
+"@
+    }
+    if ($Parameters.MinimumRequiredOsVersion)
+    {
+        $JsonContent += @"
         "minimumRequiredOsVersion": "$($Parameters.MinimumRequiredOsVersion)",
+"@
+    }
+    if ($Parameters.MinimumRequiredSdkVersion)
+    {
+        $JsonContent += @"
         "minimumRequiredSdkVersion": "$($Parameters.MinimumRequiredSdkVersion)",
+"@
+    }
+    if ($Parameters.MinimumWarningAppVersion)
+    {
+        $JsonContent += @"
         "minimumWarningAppVersion": "$($Parameters.MinimumWarningAppVersion)",
+"@
+    }
+    if ($Parameters.MinimumWarningOsVersion)
+    {
+        $JsonContent += @"
         "minimumWarningOsVersion": "$($Parameters.MinimumWarningOsVersion)",
+"@
+    }
+
+    $JSONContent += @"
         "pinCharacterSet": "$($Parameters.PinCharacterSet)",
         "contactSyncBlocked": $($Parameters.ContactSyncBlocked.ToString().ToLower()),
         "periodBeforePinReset": "$($Parameters.PeriodBeforePinReset)",
