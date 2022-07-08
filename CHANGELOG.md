@@ -2,6 +2,10 @@
 
 # UNRELEASED
 
+* IntuneAppProtectionPolicyiOS
+   * Fixed issue with creation a new policies where it was complaining about invalid minimum versions.
+   * Added the CustomBrowserProtocol paramters.
+     FIXES [#2009](https://github.com/microsoft/Microsoft365DSC/issues/2009)
 * SCComplianceTag
   * Fixed issue where FilePlanProperty was not properly applied unless another child property was also modified.
 * DEPENDENCIES
