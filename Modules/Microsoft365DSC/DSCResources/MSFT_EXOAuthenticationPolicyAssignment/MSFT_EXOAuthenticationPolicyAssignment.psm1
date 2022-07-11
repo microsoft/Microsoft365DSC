@@ -6,55 +6,11 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        $UserName,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthActiveSync,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthAutodiscover,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthImap,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthMapi,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthOfflineAddressBook,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthOutlookService,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthPop,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthPowerShell,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthReportingWebServices,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthRpc,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthSmtp,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthWebServices,
+        [System.String]
+        $AuthenticationPolicyName,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -118,52 +74,27 @@ function Get-TargetResource
     {
         try
         {
-            $AllAuthenticationPolicies = Get-AuthenticationPolicy -ErrorAction Stop
+            $user = Get-User -Identity $UserName -ErrorAction Stop
         }
         catch
         {
-            if ($_.Exception -like "The operation couldn't be performed because object*")
-            {
-                Write-Verbose "Could not obtain Authentication Policies for Tenant"
-                return $nullReturn
-            }
-        }
-
-        $AuthenticationPolicy = $AllAuthenticationPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
-
-        if ($null -eq $AuthenticationPolicy)
-        {
-            Write-Verbose -Message "Authentication Policy $($Identity) does not exist."
+            Write-Verbose -Message "Could not find user {$UserName}."
             return $nullReturn
         }
-        else
-        {
-            $result = @{
-                Identity                            = $AuthenticationPolicy.Identity
-                AllowBasicAuthActiveSync            = $AuthenticationPolicy.AllowBasicAuthActiveSync
-                AllowBasicAuthAutodiscover          = $AuthenticationPolicy.AllowBasicAuthAutodiscover
-                AllowBasicAuthImap                  = $AuthenticationPolicy.AllowBasicAuthImap
-                AllowBasicAuthMapi                  = $AuthenticationPolicy.AllowBasicAuthMapi
-                AllowBasicAuthOfflineAddressBook    = $AuthenticationPolicy.AllowBasicAuthOfflineAddressBook
-                AllowBasicAuthOutlookService        = $AuthenticationPolicy.AllowBasicAuthOutlookService
-                AllowBasicAuthPop                   = $AuthenticationPolicy.AllowBasicAuthPop
-                AllowBasicAuthPowerShell            = $AuthenticationPolicy.AllowBasicAuthPowerShell
-                AllowBasicAuthReportingWebServices  = $AuthenticationPolicy.AllowBasicAuthReportingWebServices
-                AllowBasicAuthRpc                   = $AuthenticationPolicy.AllowBasicAuthRpc
-                AllowBasicAuthSmtp                  = $AuthenticationPolicy.AllowBasicAuthSmtp
-                AllowBasicAuthWebServices           = $AuthenticationPolicy.AllowBasicAuthWebServices
-                Ensure                              = 'Present'
-                Credential                          = $Credential
-                ApplicationId                       = $ApplicationId
-                CertificateThumbprint               = $CertificateThumbprint
-                CertificatePath                     = $CertificatePath
-                CertificatePassword                 = $CertificatePassword
-                TenantId                            = $TenantId
-            }
 
-            Write-Verbose -Message "Found Authentication Policy $($Identity)"
-            return $result
+        $result = @{
+            UserName                 = $UserName
+            AuthenticationPolicyName = $user.AuthenticationPolicy
+            Ensure                   = 'Present'
+            Credential               = $Credential
+            ApplicationId            = $ApplicationId
+            CertificateThumbprint    = $CertificateThumbprint
+            CertificatePath          = $CertificatePath
+            CertificatePassword      = $CertificatePassword
+            TenantId                 = $TenantId
         }
+
+        return $result
     }
     catch
     {
@@ -198,55 +129,11 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        $UserName,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthActiveSync,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthAutodiscover,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthImap,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthMapi,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthOfflineAddressBook,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthOutlookService,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthPop,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthPowerShell,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthReportingWebServices,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthRpc,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthSmtp,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthWebServices,
+        [System.String]
+        $AuthenticationPolicyName,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -278,9 +165,9 @@ function Set-TargetResource
         $CertificatePassword
     )
 
-    Write-Verbose -Message "Setting Authentication Policy configuration for $Identity"
+    Write-Verbose -Message "Setting Authentication Policy assignment for $UserName"
 
-    $currentAuthenticationPolicyConfig = Get-TargetResource @PSBoundParameters
+    $currentPolicyAssignment= Get-TargetResource @PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -297,38 +184,17 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $NewAuthenticationPolicyParams = @{
-        AllowBasicAuthActiveSync            = $AllowBasicAuthActiveSync
-        AllowBasicAuthAutodiscover          = $AllowBasicAuthAutodiscover
-        AllowBasicAuthImap                  = $AllowBasicAuthImap
-        AllowBasicAuthMapi                  = $AllowBasicAuthMapi
-        AllowBasicAuthOfflineAddressBook    = $AllowBasicAuthOfflineAddressBook
-        AllowBasicAuthOutlookService        = $AllowBasicAuthOutlookService
-        AllowBasicAuthPop                   = $AllowBasicAuthPop
-        AllowBasicAuthPowerShell            = $AllowBasicAuthPowerShell
-        AllowBasicAuthReportingWebServices  = $AllowBasicAuthReportingWebServices
-        AllowBasicAuthRpc                   = $AllowBasicAuthRpc
-        AllowBasicAuthSmtp                  = $AllowBasicAuthSmtp
-        AllowBasicAuthWebServices           = $AllowBasicAuthWebServices
-    }
-
     # CASE: Authentication Policy doesn't exist but should;
-    if ($Ensure -eq "Present" -and $currentAuthenticationPolicyConfig.Ensure -eq "Absent")
+    if ($Ensure -eq "Present")
     {
-        Write-Verbose -Message "Authentication Policy '$($Identity)' does not exist but it should. Create and configure it."
-        New-AuthenticationPolicy -Name $Identity @NewAuthenticationPolicyParams | Out-Null
+        Write-Verbose -Message "Assigning authentication policy {$AuthenticationPolicyName} to {$UserName}."
+        Set-User -Identity $UserName -AuthenticationPolicy $AuthenticationPolicyName | Out-Null
     }
     # CASE: Authentication Policy exists but it shouldn't;
-    elseif ($Ensure -eq "Absent" -and $currentAuthenticationPolicyConfig.Ensure -eq "Present")
+    elseif ($Ensure -eq "Absent" -and $currentPolicyAssignment.Ensure -eq "Present")
     {
-        Write-Verbose -Message "Authentication Policy '$($Identity)' exists but it shouldn't. Remove it."
-        Remove-AuthenticationPolicy -Identity $Identity -Confirm:$false
-    }
-    # CASE: Authentication Policy exists and it should, but has different values than the desired one
-    elseif ($Ensure -eq "Present" -and $currentAuthenticationPolicyConfig.Ensure -eq "Present")
-    {
-        Write-Verbose -Message "Authentication Policy '$($Identity)' exists. Updating settings."
-        Set-AuthenticationPolicy -Identity $Identity @NewAuthenticationPolicyParams | Out-Null
+        Write-Verbose -Message "Removing authentication policy assignment {$AuthenticationPolicyName} for {$UserName}."
+        Set-User -Identity $UserName -AuthenticationPolicy $null | Out-Null
     }
 }
 
@@ -340,55 +206,11 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        $UserName,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthActiveSync,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthAutodiscover,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthImap,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthMapi,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthOfflineAddressBook,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthOutlookService,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthPop,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthPowerShell,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthReportingWebServices,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthRpc,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthSmtp,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBasicAuthWebServices,
+        [System.String]
+        $AuthenticationPolicyName,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -439,13 +261,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('CertificatePath') | Out-Null
-    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
@@ -528,31 +343,40 @@ function Export-TargetResource
             Write-Host "`r`n" -NoNewline
         }
         $i = 1
+        $allUsers = $null
         foreach ($AuthenticationPolicy in $AllAuthenticationPolicies)
         {
             Write-Host "    |---[$i/$($AllAuthenticationPolicies.Count)] $($AuthenticationPolicy.Identity)" -NoNewline
-
-            $Params = @{
-                Identity              = $AuthenticationPolicy.Identity
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
+            if (-not $allUsers)
+            {
+                $allUsers = Get-User -ResultSize 'Unlimited'
             }
-            $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -Credential $Credential
+            $assignedUsers = $allUsers | Where-Object -FilterScript {$_.AuthenticationPolicy -eq $AuthenticationPolicy.Identity}
 
-            $dscContent += $currentDSCBlock
-            Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
+            foreach ($user in $assignedUsers)
+            {
+                $Params = @{
+                    UserName              = $user.Name
+                    Credential            = $Credential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    CertificatePassword   = $CertificatePassword
+                    CertificatePath       = $CertificatePath
+                }
+                $Results = Get-TargetResource @Params
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -Credential $Credential
+
+                $dscContent += $currentDSCBlock
+                Save-M365DSCPartialExport -Content $currentDSCBlock `
+                    -FileName $Global:PartialExportFileName
+            }
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }

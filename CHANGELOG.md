@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* EXOAuthenticationPolicyAssignment
+  * Initial release.
 * EXOCASMailboxSettings
   * New resource to configure Exchange Online CAS Mailbox settings.
 * IntuneAppProtectionPolicyiOS

@@ -1,5 +1,5 @@
-# EXOAuthenticationPolicy
+# EXOAuthenticationPolicyAssignment
 
 ## Description
 
-This resource configures Authentication Policies in Exchange Online.
+This resource assigns Exchange Online Authentication Policies to users.
