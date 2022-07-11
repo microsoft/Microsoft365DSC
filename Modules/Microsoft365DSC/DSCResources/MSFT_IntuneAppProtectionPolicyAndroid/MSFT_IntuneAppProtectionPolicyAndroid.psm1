@@ -101,11 +101,6 @@ function Get-TargetResource
         $FingerprintBlocked,
 
         [Parameter()]
-        [ValidateSet('allApps', 'allMicrosoftApps', 'allCoreMicrosoftApps', 'selectedPublicApps' )]
-        [System.String]
-        $AppGroupType,
-
-        [Parameter()]
         [System.String[]]
         $Apps,
 
@@ -213,51 +208,31 @@ function Get-TargetResource
                 }
             }
         }
+        $Allparams = get-InputParameters
+        $policy = @{}
 
-        return @{
-            DisplayName                             = $policyInfo.DisplayName
-            Description                             = $policy.Description
-            PeriodOfflineBeforeAccessCheck          = $policy.PeriodOfflineBeforeAccessCheck
-            PeriodOnlineBeforeAccessCheck           = $policy.PeriodOnlineBeforeAccessCheck
-            AllowedInboundDataTransferSources       = $policy.AllowedInboundDataTransferSources
-            AllowedOutboundDataTransferDestinations = $policy.AllowedOutboundDataTransferDestinations
-            OrganizationalCredentialsRequired       = $policy.OrganizationalCredentialsRequired
-            AllowedOutboundClipboardSharingLevel    = $policy.AllowedOutboundClipboardSharingLevel
-            DataBackupBlocked                       = $policy.DataBackupBlocked
-            DeviceComplianceRequired                = $policy.DeviceComplianceRequired
-            IsAssigned                              = $policy.IsAssigned
-            ManagedBrowser                          = $policy.ManagedBrowser
-            MinimumRequiredAppVersion               = $policy.MinimumRequiredAppVersion
-            MinimumRequiredOSVersion                = $policy.MinimumRequiredOSVersion
-            MinimumWarningAppVersion                = $policy.MinimumWarningAppVersion
-            MinimumWarningOSVersion                 = $policy.MinimumWarningOSVersion
-            ManagedBrowserToOpenLinksRequired       = $policy.ManagedBrowserToOpenLinksRequired
-            SaveAsBlocked                           = $policy.SaveAsBlocked
-            PeriodOfflineBeforeWipeIsEnforced       = $policy.PeriodOfflineBeforeWipeIsEnforced
-            PinRequired                             = $policy.PinRequired
-            DisableAppPinIfDevicePinIsSet           = $policy.disableAppPinIfDevicePinIsSet
-            MaximumPinRetries                       = $policy.MaximumPinRetries
-            SimplePinBlocked                        = $policy.SimplePinBlocked
-            MinimumPinLength                        = $policy.MinimumPinLength
-            PinCharacterSet                         = $policy.PinCharacterSet
-            AllowedDataStorageLocations             = $policy.AllowedDataStorageLocations
-            ContactSyncBlocked                      = $policy.ContactSyncBlocked
-            PeriodBeforePinReset                    = $policy.PeriodBeforePinReset
-            PrintBlocked                            = $policy.PrintBlocked
-            FingerprintBlocked                      = $policy.FingerprintBlocked
-            Assignments                             = $assignmentsArray
-            ExcludedGroups                          = $exclusionArray
-            Apps                                    = $appsArray
-            Ensure                                  = "Present"
-            Credential                              = $Credential
-            ApplicationId                           = $ApplicationId
-            ApplicationSecret                       = $ApplicationSecret
-            TenantId                                = $TenantId
-            CertificateThumbprint                   = $CertificateThumbprint
+        #loop regular parameters and add from $polycyinfo
+        foreach ($param in ($Allparams.keys | Where-Object {$allparams.$_ -eq 'Parameter'}) )
+        {
+            $policy.add{$_, $policyInfo.$_}
         }
+        # loop credential parameters and add them from input params
+        foreach ($param in ($Allparams.keys | Where-Object {$allparams.$_ -eq 'Credential'}) )
+        {
+            $policy.add{$_, get-variable $_}
+        }
+        # add complex parameters manually as they all have different requirements - potential to change in future
+        $policy.add('Ensure','Present')
+        $policy.add('Apps', $appsArray)
+        $policy.add('Assignments', $assignmentsArray)
+        $policy.add('ExcludedGroups', $exclusionArray)
+
+
+        return $policy
     }
     catch
     {
+        write-Verbose -message "ERROR on get-targetresource for $displayName"
         try
         {
             Write-Verbose -Message $_
@@ -374,11 +349,6 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $FingerprintBlocked,
-
-        [Parameter()]
-        [ValidateSet('allApps', 'allMicrosoftApps', 'allCoreMicrosoftApps', 'selectedPublicApps' )]
-        [System.String]
-        $AppGroupType,
 
         [Parameter()]
         [System.String[]]
@@ -587,11 +557,6 @@ function Test-TargetResource
         $FingerprintBlocked,
 
         [Parameter()]
-        [ValidateSet('allApps', 'allMicrosoftApps', 'allCoreMicrosoftApps', 'selectedPublicApps' )]
-        [System.String]
-        $AppGroupType,
-
-        [Parameter()]
         [System.String[]]
         $Apps,
 
@@ -776,33 +741,6 @@ function Export-TargetResource
         }
         return ""
     }
-}
-
-function Get-M365DSCIntuneAppProtectionPolicyAndroid
-{
-    [CmdletBinding()]
-    [OutputType([PSCustomObject])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $PolicyId
-    )
-    try
-    {
-        $Url = "https://graph.microsoft.com/beta/deviceAppManagement/AndroidManagedAppProtections('$PolicyId')/`?expand=apps,assignments"
-        $response = Invoke-MgGraphRequest -Method Get `
-            -Uri $Url
-        return $response
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-        $tenantIdValue = $Credential.UserName.Split('@')[1]
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $tenantIdValue
-    }
-    return $null
 }
 
 function Get-M365DSCIntuneAppProtectionPolicyAndroidJSON
@@ -1120,8 +1058,7 @@ function get-InputParameters
         PeriodBeforePinReset                    = 'Parameter'
         PrintBlocked                            = 'Parameter'
         FingerprintBlocked                      = 'Parameter'
-        Ensure                                  = 'Parameter'
-        AppGroupType                            = 'ComplexParameter'
+        Ensure                                  = 'ComplexParameter'
         Apps                                    = 'ComplexParameter'
         Assignments                             = 'ComplexParameter'
         ExcludedGroups                          = 'ComplexParameter'
