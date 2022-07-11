@@ -28,6 +28,7 @@ function Get-TargetResource
         [System.String[]]
         $DoNotRewriteUrls = @(),
 
+        #DEPRECATED
         [Parameter()]
         [Boolean]
         $DoNotTrackUserClicks = $true,
@@ -144,7 +145,8 @@ function Get-TargetResource
                 DeliverMessageAfterScan       = $SafeLinksPolicy.DeliverMessageAfterScan
                 DoNotAllowClickThrough        = $SafeLinksPolicy.DoNotAllowClickThrough
                 DoNotRewriteUrls              = $SafeLinksPolicy.DoNotRewriteUrls
-                DoNotTrackUserClicks          = $SafeLinksPolicy.DoNotTrackUserClicks
+                #Deprecated
+                #DoNotTrackUserClicks          = $SafeLinksPolicy.DoNotTrackUserClicks
                 EnableForInternalSenders      = $SafeLinksPolicy.EnableForInternalSenders
                 EnableOrganizationBranding    = $SafeLinksPolicy.EnableOrganizationBranding
                 EnableSafeLinksForTeams       = $SafeLinksPolicy.EnableSafeLinksForTeams
@@ -152,7 +154,7 @@ function Get-TargetResource
                 ScanUrls                      = $SafeLinksPolicy.ScanUrls
                 UseTranslatedNotificationText = $SafeLinksPolicy.UseTranslatedNotificationText
                 Ensure                        = 'Present'
-                Credential            = $Credential
+                Credential                    = $Credential
                 ApplicationId                 = $ApplicationId
                 CertificateThumbprint         = $CertificateThumbprint
                 CertificatePath               = $CertificatePath
@@ -220,6 +222,7 @@ function Set-TargetResource
         [System.String[]]
         $DoNotRewriteUrls = @(),
 
+        #DEPRECATED
         [Parameter()]
         [Boolean]
         $DoNotTrackUserClicks = $true,
@@ -318,6 +321,8 @@ function Set-TargetResource
     elseif (('Present' -eq $Ensure ) -and ($null -ne $SafeLinksPolicy))
     {
         Write-Verbose -Message "Setting SafeLinksPolicy $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $SafeLinksPolicyParams)"
+        Write-Verbose -Message "Property DoNotTrackUserClicks is deprecated and will be ignored."
+        $SafeLinksPolicyParams.Remove("DoNotTrackUserClicks") | Out-Null
         Set-SafeLinksPolicy @SafeLinksPolicyParams -Confirm:$false
     }
     elseif (('Absent' -eq $Ensure ) -and ($null -ne $SafeLinksPolicy))
@@ -357,6 +362,7 @@ function Test-TargetResource
         [System.String[]]
         $DoNotRewriteUrls = @(),
 
+        #DEPRECATED
         [Parameter()]
         [Boolean]
         $DoNotTrackUserClicks = $true,
