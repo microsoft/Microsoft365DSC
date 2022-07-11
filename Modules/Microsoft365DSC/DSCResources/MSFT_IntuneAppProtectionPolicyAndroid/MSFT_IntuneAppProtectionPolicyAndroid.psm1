@@ -46,30 +46,6 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $IsAssigned,
-
-        [Parameter()]
-        [System.String]
-        $ManagedBrowser,
-
-        [Parameter()]
-        [System.String]
-        $MinimumRequiredAppVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumWarningAppVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumRequiredOSVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumWarningOSVersion,
-
-        [Parameter()]
-        [System.Boolean]
         $ManagedBrowserToOpenLinksRequired,
 
         [Parameter()]
@@ -125,6 +101,11 @@ function Get-TargetResource
         $FingerprintBlocked,
 
         [Parameter()]
+        [ValidateSet('allApps', 'allMicrosoftApps', 'allCoreMicrosoftApps', 'selectedPublicApps' )]
+        [System.String]
+        $AppGroupType,
+
+        [Parameter()]
         [System.String[]]
         $Apps,
 
@@ -162,7 +143,7 @@ function Get-TargetResource
         $CertificateThumbprint
     )
     Write-Verbose -Message "Checking for the Intune Android App Protection Policy {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -ProfileName beta `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -201,40 +182,38 @@ function Get-TargetResource
             throw "Multiple Policies with same displayname identified - Module currently only functions with unique names"
         }
 
-        # It may be possible to remove this once basic functionality is in place - output types differ to the graph module object though so implementing basic functionality first
-        $policy = Get-M365DSCIntuneAppProtectionPolicyAndroid -PolicyId $policyInfo.Id
         Write-Verbose -Message "Found Android App Protection Policy {$DisplayName}"
 
         $appsArray = @()
-        if ($null -ne $policy.Apps)
+        if ($null -ne $policyInfo.Apps)
         {
-            foreach ($app in $policy.Apps)
+            foreach ($app in $policyInfo.Apps)
             {
-                $appsArray += $app.mobileAppIdentifier.packageId
+                $appsArray += $app.MobileAppIdentifier.AdditionalProperties.packageId
             }
         }
 
         $assignmentsArray = @()
-        if ($null -ne $policy.Assignments)
-        {
-            $allAssignments = $policy.Assignments.target | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.groupAssignmentTarget' }
-
-            foreach ($assignment in $allAssignments)
-            {
-                $assignmentsArray += $assignment.groupId
-            }
-        }
-
         $exclusionArray = @()
-        if ($null -ne $policy.Assignments)
+        if ($null -ne $policyInfo.Assignments)
         {
-            $allExclusions = $policy.Assignments.target | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.exclusionGroupAssignmentTarget' }
-
-            foreach ($exclusion in $allExclusions)
+            foreach ($assignment in $policyInfo.Assignments)
             {
-                $exclusionArray += $exclusion.groupId
+                switch ($assignment.Target.AdditionalProperties.'@odata.type')
+                {
+                    '#microsoft.graph.groupAssignmentTarget'
+                    {
+                        $assignmentsArray += $assignment.Target.AdditionalProperties.groupId
+                    }
+
+                    '#microsoft.graph.exclusionGroupAssignmentTarget'
+                    {
+                        $exclusionArray += $assignment.Target.AdditionalProperties.groupId
+                    }
+                }
             }
         }
+
         return @{
             DisplayName                             = $policyInfo.DisplayName
             Description                             = $policy.Description
@@ -342,30 +321,6 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $IsAssigned,
-
-        [Parameter()]
-        [System.String]
-        $ManagedBrowser,
-
-        [Parameter()]
-        [System.String]
-        $MinimumRequiredAppVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumWarningAppVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumRequiredOSVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumWarningOSVersion,
-
-        [Parameter()]
-        [System.Boolean]
         $ManagedBrowserToOpenLinksRequired,
 
         [Parameter()]
@@ -419,6 +374,11 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $FingerprintBlocked,
+
+        [Parameter()]
+        [ValidateSet('allApps', 'allMicrosoftApps', 'allCoreMicrosoftApps', 'selectedPublicApps' )]
+        [System.String]
+        $AppGroupType,
 
         [Parameter()]
         [System.String[]]
@@ -572,30 +532,6 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $IsAssigned,
-
-        [Parameter()]
-        [System.String]
-        $ManagedBrowser,
-
-        [Parameter()]
-        [System.String]
-        $MinimumRequiredAppVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumWarningAppVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumRequiredOSVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumWarningOSVersion,
-
-        [Parameter()]
-        [System.Boolean]
         $ManagedBrowserToOpenLinksRequired,
 
         [Parameter()]
@@ -649,6 +585,11 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $FingerprintBlocked,
+
+        [Parameter()]
+        [ValidateSet('allApps', 'allMicrosoftApps', 'allCoreMicrosoftApps', 'selectedPublicApps' )]
+        [System.String]
+        $AppGroupType,
 
         [Parameter()]
         [System.String[]]
@@ -1149,6 +1090,46 @@ function Set-M365DSCIntuneAppProtectionPolicyAndroidAssignment
         Add-M365DSCEvent -Message $_ -EntryType 'Error' `
             -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $tenantIdValue
+    }
+}
+
+function get-InputParameters
+{
+    return @{
+        DisplayName                             = 'Parameter'
+        Description                             = 'Parameter'
+        PeriodOfflineBeforeAccessCheck          = 'Parameter'
+        PeriodOnlineBeforeAccessCheck           = 'Parameter'
+        AllowedInboundDataTransferSources       = 'Parameter'
+        AllowedOutboundDataTransferDestinations = 'Parameter'
+        OrganizationalCredentialsRequired       = 'Parameter'
+        AllowedOutboundClipboardSharingLevel    = 'Parameter'
+        DataBackupBlocked                       = 'Parameter'
+        DeviceComplianceRequired                = 'Parameter'
+        ManagedBrowserToOpenLinksRequired       = 'Parameter'
+        SaveAsBlocked                           = 'Parameter'
+        PeriodOfflineBeforeWipeIsEnforced       = 'Parameter'
+        PinRequired                             = 'Parameter'
+        DisableAppPinIfDevicePinIsSet           = 'Parameter'
+        MaximumPinRetries                       = 'Parameter'
+        SimplePinBlocked                        = 'Parameter'
+        MinimumPinLength                        = 'Parameter'
+        PinCharacterSet                         = 'Parameter'
+        AllowedDataStorageLocations             = 'Parameter'
+        ContactSyncBlocked                      = 'Parameter'
+        PeriodBeforePinReset                    = 'Parameter'
+        PrintBlocked                            = 'Parameter'
+        FingerprintBlocked                      = 'Parameter'
+        Ensure                                  = 'Parameter'
+        AppGroupType                            = 'ComplexParameter'
+        Apps                                    = 'ComplexParameter'
+        Assignments                             = 'ComplexParameter'
+        ExcludedGroups                          = 'ComplexParameter'
+        Credential                              = 'Credential'
+        ApplicationId                           = 'Credential'
+        TenantId                                = 'Credential'
+        ApplicationSecret                       = 'Credential'
+        CertificateThumbprint                   = 'Credential'
     }
 }
 
