@@ -214,12 +214,12 @@ function Get-TargetResource
         #loop regular parameters and add from $polycyinfo
         foreach ($param in ($Allparams.keys | Where-Object {$allparams.$_ -eq 'Parameter'}) )
         {
-            $policy.add{$_, $policyInfo.$_}
+            $policy.add($param, $policyInfo.$param)
         }
         # loop credential parameters and add them from input params
         foreach ($param in ($Allparams.keys | Where-Object {$allparams.$_ -eq 'Credential'}) )
         {
-            $policy.add{$_, get-variable $_}
+            $policy.add($param, (get-variable -name $param).value)
         }
         # add complex parameters manually as they all have different requirements - potential to change in future
         $policy.add('Ensure','Present')
