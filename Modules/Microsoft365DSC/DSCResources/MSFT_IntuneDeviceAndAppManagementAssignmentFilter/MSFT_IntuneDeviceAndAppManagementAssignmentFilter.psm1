@@ -6,11 +6,11 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $True)]
         [System.String]
-        $Identity,
+        $DisplayName,
 
         [Parameter()]
         [System.String]
-        $DisplayName,
+        $Identity,
 
         [Parameter()]
         [System.String]
@@ -66,6 +66,7 @@ function Get-TargetResource
 
     Write-Verbose -Message "Select-MgProfile"
     Select-MgProfile -Name 'beta'
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -83,26 +84,33 @@ function Get-TargetResource
 
     try
     {
-        #Retrieve policy general settings
-        $assignmentFilter = Get-MgDeviceAndAppManagementAssignmentFilter -Identity $Identity -ErrorAction Stop
-
-        if ($null -eq $assignmentFilter)
+        if (-not [System.String]::IsNullOrEmpty($Identity))
         {
-            Write-Verbose -Message "No assignment filter {$Identity} was found"
-            return $nullResult
+            $assignmentFilter = Get-MgDeviceManagementAssignmentFilter -DeviceAndAppManagementAssignmentFilterId $Identity -ErrorAction Stop
+        }
+        elseif ($null -eq $assignmentFilter)
+        {
+            Write-Verbose -Message "No assignment filter with Identity {$Identity} was found."
+
+            [array]$assignmentFilter = Get-MgDeviceManagementAssignmentFilter -All | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+            if ($assignmentFilter.Length -gt 2)
+            {
+                Write-Error -Message "More than one Assignment Filter found with name {$DisplayName}"
+            }
+            elseif($assignmentFilter.Length -eq 0)
+            {
+                Write-Verbose -Message "No assignment filter with name {$DisplayName} was found."
+                return $nullResult
+            }
         }
 
-        $returnHashtable=@{}
-        $returnHashtable.Add("Identity",$Identity)
+        Write-Verbose -Message "Found assignment filter {$($assignmentFilter.displayName)}"
+        $returnHashtable = @{}
+        $returnHashtable.Add("Identity",$assignmentFilter.Id)
         $returnHashtable.Add("DisplayName",$assignmentFilter.displayName)
         $returnHashtable.Add("Description",$assignmentFilter.description)
-        $returnHashtable.Add("Platform",$assignmentFilter.platform)
+        $returnHashtable.Add("Platform",$assignmentFilter.platform.ToString())
         $returnHashtable.Add("Rule",$assignmentFilter.rule)
-
-
-
-        Write-Verbose -Message "Found assignment filter {$($assignmentFilter.displayName)}"
-
         $returnHashtable.Add("Ensure","Present")
         $returnHashtable.Add("Credential",$Credential)
         $returnHashtable.Add("ApplicationId",$ApplicationId)
@@ -138,11 +146,11 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $True)]
         [System.String]
-        $Identity,
+        $DisplayName,
 
         [Parameter()]
         [System.String]
-        $DisplayName,
+        $Identity,
 
         [Parameter()]
         [System.String]
@@ -183,7 +191,6 @@ function Set-TargetResource
         $CertificateThumbprint
     )
 
-
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
@@ -202,18 +209,12 @@ function Set-TargetResource
     #endregion
 
     $currentPolicy = Get-TargetResource @PSBoundParameters
-    $PSBoundParameters.Remove("Ensure") | Out-Null
-    $PSBoundParameters.Remove("Credential") | Out-Null
-    $PSBoundParameters.Remove("ApplicationId") | Out-Null
-    $PSBoundParameters.Remove("TenantId") | Out-Null
-    $PSBoundParameters.Remove("ApplicationSecret") | Out-Null
-    $PSBoundParameters.Remove("CertificateThumbprint") | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new assignment filter {$DisplayName}"
 
-        New-MgDeviceAndAppManagementAssignmentFilter `
+        New-MgDeviceManagementAssignmentFilter `
             -DisplayName $DisplayName `
             -Description $Description `
             -Platform $Platform `
@@ -224,18 +225,17 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating existing assignment filter {$DisplayName}"
 
-        Update-MgDeviceAndAppManagementAssignmentFilter `
-            -Identity $Identity `
+        Update-MgDeviceManagementAssignmentFilter `
+            -DeviceAndAppManagementAssignmentFilterId $currentPolicy.Identity `
             -DisplayName $DisplayName `
             -Description $Description `
-            -Platform $Platform `
             -Rule $Rule
 
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing assignment filter {$DisplayName}"
-        Remove-MgDeviceAndAppManagementAssignmentFilter -Identity $Identity
+        Remove-MgDeviceManagementAssignmentFilter -DeviceAndAppManagementAssignmentFilterId $currentPolicy.Identity
     }
 }
 
@@ -247,11 +247,11 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $True)]
         [System.String]
-        $Identity,
+        $DisplayName,
 
         [Parameter()]
         [System.String]
-        $DisplayName,
+        $Identity,
 
         [Parameter()]
         [System.String]
@@ -353,7 +353,6 @@ function Export-TargetResource
         $CertificateThumbprint
     )
 
-
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload:$true
@@ -376,7 +375,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$assignmentFilters = Get-MgDeviceAndAppManagementAssignmentFilter -ErrorAction Stop
+        [array]$assignmentFilters = Get-MgDeviceManagementAssignmentFilter -All -ErrorAction Stop
 
         if ($policies.Length -eq 0)
         {
@@ -391,13 +390,13 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($assignmentFilters.Count)] $($assignmentFilter.displayName)" -NoNewline
 
             $params = @{
-                Identity                            = $assignmentFilter.id
-                Ensure                              = 'Present'
-                Credential                          = $Credential
-                ApplicationId                       = $ApplicationId
-                TenantId                            = $TenantId
-                ApplicationSecret                   = $ApplicationSecret
-                CertificateThumbprint               = $CertificateThumbprint
+                DisplayName           = $assignmentFilter.DisplayName
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
             }
 
             $Results = Get-TargetResource @params
@@ -443,148 +442,6 @@ function Export-TargetResource
         }
         return ""
     }
-}
-
-
-function Get-MgDeviceAndAppManagementAssignmentFilter
-{
-    [CmdletBinding()]
-    param (
-        [Parameter()]
-        [System.String]
-        $Identity
-    )
-    try
-    {
-        $assignmentFilters=@()
-        $Uri="https://graph.microsoft.com/beta/deviceManagement/assignmentFilters"
-        if(-not [String]::IsNullOrEmpty($Identity))
-        {
-            $Uri+="/$Identity"
-        }
-        Write-Verbose -Message $Uri
-        $results=Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
-        if($results.id)
-        {
-            return $results
-        }
-        $assignmentFilters+= $results.value
-        while($results."@odata.nextLink")
-        {
-            $Uri=$results."@odata.nextLink"
-            $results=Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
-            $assignmentFilters+= $results.value
-        }
-        return $assignmentFilters
-    }
-    catch
-    {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
-
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return $null
-    }
-}
-
-function New-MgDeviceAndAppManagementAssignmentFilter
-{
-    [CmdletBinding()]
-    param (
-
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $Platform,
-
-        [Parameter()]
-        [System.String]
-        $Rule
-    )
-
-    $Uri="https://graph.microsoft.com/beta/deviceManagement/assignmentFilters"
-    $policy=[ordered]@{
-        "@odata.type"= "#microsoft.graph.deviceAndAppManagementAssignmentFilter"
-        "displayName"=$DisplayName
-        "description"=$Description
-        "platform"=$Platform
-        "rule"=$Rule
-    }
-    #write-verbose (($policy|ConvertTo-Json -Depth 20))
-    Invoke-MgGraphRequest -Method POST `
-        -Uri $Uri `
-        -ContentType "application/json" `
-        -Body ($policy|ConvertTo-Json -Depth 20)
-}
-
-function Update-MgDeviceAndAppManagementAssignmentFilter
-{
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $Platform,
-
-        [Parameter()]
-        [System.String]
-        $Rule
-    )
-
-    $Uri="https://graph.microsoft.com/beta/deviceManagement/assignmentFilters/$Identity"
-    $policy=[ordered]@{
-        "@odata.type"= "#microsoft.graph.deviceAndAppManagementAssignmentFilter"
-        "displayName"=$DisplayName
-        "description"=$Description
-        "rule"=$Rule
-    }
-
-    #write-verbose (($policy|ConvertTo-Json -Depth 20))
-
-    Invoke-MgGraphRequest -Method PATCH `
-        -Uri $Uri `
-        -ContentType "application/json" `
-        -Body ($policy|ConvertTo-Json -Depth 20)
-}
-
-function Remove-MgDeviceAndAppManagementAssignmentFilter
-{
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $Identity
-    )
-
-    $Uri="https://graph.microsoft.com/beta/deviceManagement/assignmentFilters/$Identity"
-    Invoke-MgGraphRequest -Method DELETE -Uri $Uri
 }
 
 Export-ModuleMember -Function *-TargetResource,*

@@ -8,6 +8,8 @@
      FIXES [#2019](https://github.com/microsoft/Microsoft365DSC/issues/2019)
    * Added the CustomBrowserProtocol paramters.
      FIXES [#2009](https://github.com/microsoft/Microsoft365DSC/issues/2009)
+* IntuneDeviceAndAppManagementAssignmentFilter
+  * Initial release.
 * SCComplianceTag
   * Fixed issue where FilePlanProperty was not properly applied unless another child property was also modified.
 * DEPENDENCIES
