@@ -144,6 +144,10 @@ function Get-TargetResource
         [System.String[]]
         $ExcludedGroups,
 
+        [Parameter()]
+        [System.String]
+        $CustomBrowserProtocol,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -267,6 +271,7 @@ function Get-TargetResource
             AppDataEncryptionType                   = $policy.AppDataEncryptionType
             Assignments                             = $assignmentsArray
             ExcludedGroups                          = $exclusionArray
+            CustomBrowserProtocol                   = $policy.CustomBrowserProtocol
             Apps                                    = $appsArray
             Ensure                                  = "Present"
             Credential                              = $Credential
@@ -439,6 +444,10 @@ function Set-TargetResource
         [System.String[]]
         $ExcludedGroups,
 
+        [Parameter()]
+        [System.String]
+        $CustomBrowserProtocol,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -492,11 +501,26 @@ function Set-TargetResource
 
         $policyInfo = Get-MgDeviceAppManagementiosManagedAppProtection -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
-        $assignmentJSON = Get-M365DSCIntuneAppProtectionPolicyiOSAssignmentJson -Assignments $Assignments `
-            -Exclusions $ExcludedGroups
 
-        Set-M365DSCIntuneAppProtectionPolicyiOSAssignment -JsonContent $assignmentJSON `
-            -PolicyId $policyInfo.Id
+        $counter = 1
+        while($policyInfo.ID -eq $null -and $counter -le 10)
+        {
+            Write-Verbose -Message "Waiting $counter second for the policy {$DisplayName} to get created."
+            Start-Sleep -Seconds 1
+            $policyInfo = Get-MgDeviceAppManagementiosManagedAppProtection -Filter "displayName eq '$DisplayName'" `
+                -ErrorAction Stop
+            $counter++
+        }
+        Write-Verbose -Message "Found Policy with Id {$($policyInfo.Id)}"
+
+        if ($Assignments.Length -gt 0)
+        {
+            $assignmentJSON = Get-M365DSCIntuneAppProtectionPolicyiOSAssignmentJson -Assignments $Assignments `
+                -Exclusions $ExcludedGroups
+
+            Set-M365DSCIntuneAppProtectionPolicyiOSAssignment -JsonContent $assignmentJSON `
+                -PolicyId $policyInfo.Id
+        }
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
@@ -669,6 +693,10 @@ function Test-TargetResource
         [System.String[]]
         $ExcludedGroups,
 
+        [Parameter()]
+        [System.String]
+        $CustomBrowserProtocol,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -713,10 +741,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -878,6 +902,8 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
         $IncludeApps = $true
     )
 
+    $JsonContent = "{`r`n    `"@odata.type`": `"#microsoft.graph.iosManagedAppProtection`",`r`n"
+
     #region AllowedDataStorageLocations
     $allowedDataStorageLocations = "["
     $foundOne = $false
@@ -891,6 +917,11 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
         $allowedDataStorageLocations = $allowedDataStorageLocations.TrimEnd(',') + " `r`n"
     }
     $allowedDataStorageLocations += "],"
+
+    if ($foundOne)
+    {
+        $JsonContent += "    `"allowedDataStorageLocations`": $allowedDataStorageLocations`r`n"
+    }
     #endregion
 
     #region Apps
@@ -916,46 +947,17 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
     }
     $appsValue += "]"
     #endregion
-    $JsonContent = @"
-    {
-        "@odata.type": "#microsoft.graph.iosManagedAppProtection",
-        "displayName": "$($Parameters.DisplayName)",
-        "description": "$($Parameters.Description)",
-        "periodOfflineBeforeAccessCheck": "$($Parameters.PeriodOfflineBeforeAccessCheck)",
-        "periodOnlineBeforeAccessCheck": "$($Parameters.PeriodOnlineBeforeAccessCheck)",
-        "allowedInboundDataTransferSources": "$($Parameters.AllowedInboundDataTransferSources)",
-        "allowedOutboundDataTransferDestinations": "$($Parameters.AllowedOutboundDataTransferDestinations)",
-        "organizationalCredentialsRequired": $($Parameters.OrganizationalCredentialsRequired.ToString().ToLower()),
-        "allowedOutboundClipboardSharingLevel": "$($Parameters.AllowedOutboundClipboardSharingLevel)",
-        "dataBackupBlocked": $($Parameters.DataBackupBlocked.ToString().ToLower()),
-        "deviceComplianceRequired": $($Parameters.DeviceComplianceRequired.ToString().ToLower()),
-        "managedBrowserToOpenLinksRequired": $($Parameters.ManagedBrowserToOpenLinksRequired.ToString().ToLower()),
-        "saveAsBlocked": $($Parameters.SaveAsBlocked.ToString().ToLower()),
-        "periodOfflineBeforeWipeIsEnforced": "$($Parameters.PeriodOfflineBeforeWipeIsEnforced)",
-        "pinRequired": $($Parameters.PinRequired.ToString().ToLower()),
-        "disableAppPinIfDevicePinIsSet": $($Parameters.DisableAppPinIfDevicePinIsSet.ToString().ToLower()),
-        "maximumPinRetries": $($Parameters.MaximumPinRetries),
-        "simplePinBlocked": $($Parameters.SimplePinBlocked.ToString().ToLower()),
-        "minimumPinLength": $($Parameters.MinimumPinLength),
-        "managedBrowser": "$($Parameters.ManagedBrowser)",
-        "minimumRequiredAppVersion": "$($Parameters.MinimumWarningAppVersion)",
-        "minimumRequiredOsVersion": "$($Parameters.MinimumRequiredOsVersion)",
-        "minimumRequiredSdkVersion": "$($Parameters.MinimumRequiredSdkVersion)",
-        "minimumWarningAppVersion": "$($Parameters.MinimumWarningAppVersion)",
-        "minimumWarningOsVersion": "$($Parameters.MinimumWarningOsVersion)",
-        "pinCharacterSet": "$($Parameters.PinCharacterSet)",
-        "contactSyncBlocked": $($Parameters.ContactSyncBlocked.ToString().ToLower()),
-        "periodBeforePinReset": "$($Parameters.PeriodBeforePinReset)",
-        "faceIdBlocked": $($Parameters.FaceIdBlocked.ToString().ToLower()),
-        "printBlocked": $($Parameters.PrintBlocked.ToString().ToLower()),
-        "fingerprintBlocked": $($Parameters.FingerprintBlocked.ToString().ToLower()),
-        "appDataEncryptionType": "$($Parameters.AppDataEncryptionType)",
-        "allowedDataStorageLocations": $allowedDataStorageLocations
-"@
 
+    foreach ($key in $Parameters.Keys)
+    {
+        if ($Parameters.$key -and $key -notin @('Assignments', 'AllowedDataStorageLocations'))
+        {
+            $JsonContent += "    `"$($key.substring(0,1).ToLower() + $key.substring(1))`": `"$($Parameters.$key.ToString())`",`r`n"
+        }
+    }
     if ($IncludeApps)
     {
-        $JSOnContent += "`"apps`":$appsValue`r`n"
+        $JsonContent += "`"apps`":$appsValue`r`n"
     }
     $JsonContent += "}"
     return $JsonContent
