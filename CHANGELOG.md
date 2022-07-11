@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* EXOCASMailboxSettings
+  * New resource to configure Exchange Online CAS Mailbox settings.
 * IntuneAppProtectionPolicyiOS
    * Fixed issue with creation a new policies where it was complaining about invalid minimum versions.
    * Fixed issues where creating new policies threw an error complaining about an invalid duration format.
