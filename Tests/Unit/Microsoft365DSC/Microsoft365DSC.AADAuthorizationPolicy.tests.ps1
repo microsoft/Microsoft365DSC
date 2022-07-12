@@ -57,7 +57,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance = 'Yes'
-                    Id = "authorizationPolicy"
                     DisplayName = 'Authorization Policy'
                     Description = 'something'
                     allowedToSignUpEmailBasedSubscriptions = $true
@@ -113,7 +112,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance = 'Yes'
-                    Id = 'authorizationPolicy'
                     DisplayName = 'Authorization Policy'
                     Description = 'something'
                     allowedToSignUpEmailBasedSubscriptions = $False
@@ -189,7 +187,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgPolicyAuthorizationPolicy -MockWith {
                     $AADAuthPol = [pscustomobject]@{
-                        Id = "authorizationPolicy"
                         DisplayName = 'Authorization Policy'
                         Description = 'something'
                         allowedToSignUpEmailBasedSubscriptions = $true

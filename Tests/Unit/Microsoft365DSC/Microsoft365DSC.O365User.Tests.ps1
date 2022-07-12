@@ -107,7 +107,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         UserPrincipalName    = "JohnSmith@contoso.onmicrosoft.com"
                         DisplayName          = "John Smith"
                         GivenName            = "John"
-                        Surname             = "Smith"
+                        Surname              = "Smith"
                         UsageLocation        = "US"
                         PasswordPolicies     = "NONE"
                         Ensure               = "Present"
