@@ -39,6 +39,7 @@
 | **Apps** | Write | StringArray[] | List of IDs representing the iOS apps controlled by this protection policy. ||
 | **Assignments** | Write | StringArray[] | List of IDs of the groups assigned to this iOS Protection Policy. ||
 | **ExcludedGroups** | Write | StringArray[] | List of IDs of the groups that are excluded from this iOS Protection Policy. ||
+| **CustomBrowserProtocol** | Write | String | A custom browser protocol to open weblink on iOS. ||
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. |Present, Absent|
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin. ||
 | **ApplicationId** | Write | String | ID of the Azure Active Directory application to authenticate with. ||
