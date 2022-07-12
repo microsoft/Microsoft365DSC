@@ -2,6 +2,14 @@
 
 # UNRELEASED
 
+<<<<<<< Updated upstream
+=======
+* AADConditionalAccessPolicy
+  * Fixed issue for Included and Excluded properties where the last instance couldn't be removed.
+    FIXES [#2058](https://github.com/microsoft/Microsoft365DSC/issues/2058) & [#2079](https://github.com/microsoft/Microsoft365DSC/issues/2079)
+* AADAuthorizationPolicy
+  * Initial release.
+>>>>>>> Stashed changes
 * EXOATPPolicyForO365
   * Deprecated properties AllowClickThrough, EnableSafeLinksForO365Clients & TrackClicks.
 * EXOAuthenticationPolicyAssignment
