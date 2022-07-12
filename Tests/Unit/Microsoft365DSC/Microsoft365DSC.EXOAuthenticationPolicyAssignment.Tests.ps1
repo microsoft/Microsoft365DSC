@@ -76,8 +76,8 @@ $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
                 Should -Invoke -CommandName 'Set-User' -Exactly 1
             }
 
-            It "Should return Absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Absent"
+            It "Should return Present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
             }
         }
 
