@@ -5,47 +5,15 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Yes')]
-        [String]
-        $IsSingleInstance,
+        [System.String]
+        $UserName,
 
         [Parameter()]
         [System.String]
-        $Identity = 'Default',
-
-        #DEPRECATED
-        [Parameter()]
-        [Boolean]
-        $AllowClickThrough = $true,
+        $AuthenticationPolicyName,
 
         [Parameter()]
-        [Boolean]
-        $AllowSafeDocsOpen = $false,
-
-        [Parameter()]
-        [System.String[]]
-        $BlockUrls = @(),
-
-        [Parameter()]
-        [Boolean]
-        $EnableATPForSPOTeamsODB = $false,
-
-        [Parameter()]
-        [Boolean]
-        $EnableSafeDocs = $false,
-
-        #DEPRECATED
-        [Parameter()]
-        [Boolean]
-        $EnableSafeLinksForO365Clients = $true,
-
-        #DEPRECATED
-        [Parameter()]
-        [Boolean]
-        $TrackClicks = $true,
-
-        [Parameter()]
-        [ValidateSet('Present')]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
 
@@ -74,8 +42,7 @@ function Get-TargetResource
         $CertificatePassword
     )
 
-    Write-Verbose -Message "Getting configuration of AtpPolicyForO365 for $Identity"
-
+    Write-Verbose -Message "Getting Authentication Policy configuration for $Identity"
     if ($Global:CurrentModeIsExport)
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -101,44 +68,33 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
+    $nullReturn.Ensure = "Absent"
+
     try
     {
-        $AtpPolicies = Get-AtpPolicyForO365 -ErrorAction Stop
-
-        $AtpPolicyForO365 = $AtpPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
-        if (-not $AtpPolicyForO365)
+        try
         {
-            Write-Verbose -Message "AtpPolicyForO365 $($Identity) does not exist."
+            $user = Get-User -Identity $UserName -ErrorAction Stop
+        }
+        catch
+        {
+            Write-Verbose -Message "Could not find user {$UserName}."
             return $nullReturn
         }
-        else
-        {
-            $result = @{
-                IsSingleInstance              = "Yes"
-                Identity                      = $AtpPolicyForO365.Identity
-                #DEPRECATED
-                #AllowClickThrough             = $AtpPolicyForO365.AllowClickThrough
-                AllowSafeDocsOpen             = $AtpPolicyForO365.AllowSafeDocsOpen
-                BlockUrls                     = $AtpPolicyForO365.BlockUrls
-                EnableATPForSPOTeamsODB       = $AtpPolicyForO365.EnableATPForSPOTeamsODB
-                EnableSafeDocs                = $AtpPolicyForO365.EnableSafeDocs
-                #DEPRECATED
-                #EnableSafeLinksForO365Clients = $AtpPolicyForO365.EnableSafeLinksForO365Clients
-                #DEPRECATED
-                #TrackClicks                   = $AtpPolicyForO365.TrackClicks
-                Ensure                        = 'Present'
-                ApplicationId                 = $ApplicationId
-                CertificateThumbprint         = $CertificateThumbprint
-                CertificatePath               = $CertificatePath
-                CertificatePassword           = $CertificatePassword
-                TenantId                      = $TenantId
-            }
 
-            Write-Verbose -Message "Found AtpPolicyForO365 $($Identity)"
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-            return $result
+        $result = @{
+            UserName                 = $UserName
+            AuthenticationPolicyName = $user.AuthenticationPolicy
+            Ensure                   = 'Present'
+            Credential               = $Credential
+            ApplicationId            = $ApplicationId
+            CertificateThumbprint    = $CertificateThumbprint
+            CertificatePath          = $CertificatePath
+            CertificatePassword      = $CertificatePassword
+            TenantId                 = $TenantId
         }
+
+        return $result
     }
     catch
     {
@@ -172,47 +128,15 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Yes')]
-        [String]
-        $IsSingleInstance,
+        [System.String]
+        $UserName,
 
         [Parameter()]
         [System.String]
-        $Identity = 'Default',
-
-        #DEPRECATED
-        [Parameter()]
-        [Boolean]
-        $AllowClickThrough = $true,
+        $AuthenticationPolicyName,
 
         [Parameter()]
-        [Boolean]
-        $AllowSafeDocsOpen = $false,
-
-        [Parameter()]
-        [System.String[]]
-        $BlockUrls = @(),
-
-        [Parameter()]
-        [Boolean]
-        $EnableATPForSPOTeamsODB = $false,
-
-        [Parameter()]
-        [Boolean]
-        $EnableSafeDocs = $false,
-
-        #DEPRECATED
-        [Parameter()]
-        [Boolean]
-        $EnableSafeLinksForO365Clients = $true,
-
-        #DEPRECATED
-        [Parameter()]
-        [Boolean]
-        $TrackClicks = $true,
-
-        [Parameter()]
-        [ValidateSet('Present')]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
 
@@ -241,7 +165,9 @@ function Set-TargetResource
         $CertificatePassword
     )
 
-    Write-Verbose -Message "Setting configuration of AtpPolicyForO365 for $Identity"
+    Write-Verbose -Message "Setting Authentication Policy assignment for $UserName"
+
+    $currentPolicyAssignment= Get-TargetResource @PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -255,38 +181,21 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    if ('Default' -ne $Identity)
-    {
-        throw "EXOAtpPolicyForO365 configurations MUST specify Identity value of 'Default'"
-    }
-
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $AtpPolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $AtpPolicyParams.Remove('Ensure') | Out-Null
-    $AtpPolicyParams.Remove('Credential') | Out-Null
-    $AtpPolicyParams.Remove('IsSingleInstance') | Out-Null
-    $AtpPolicyParams.Remove('ApplicationId') | Out-Null
-    $AtpPolicyParams.Remove('TenantId') | Out-Null
-    $AtpPolicyParams.Remove('CertificateThumbprint') | Out-Null
-    $AtpPolicyParams.Remove('CertificatePath') | Out-Null
-    $AtpPolicyParams.Remove('CertificatePassword') | Out-Null
-    Write-Verbose -Message "Setting AtpPolicyForO365 $Identity with values: $(Convert-M365DscHashtableToString -Hashtable $AtpPolicyParams)"
-
-    #Deprecated
-    Write-Verbose -Message "Property AllowClickThrough is deprecated."
-    $AtpPolicyParams.Remove('AllowClickThrough') | Out-Null
-
-    #Deprecated
-    Write-Verbose -Message "Property EnableSafeLinksForO365Clients is deprecated."
-    $AtpPolicyParams.Remove('EnableSafeLinksForO365Clients') | Out-Null
-
-    #Deprecated
-    Write-Verbose -Message "Property EnableSafeLinksForO365Clients is deprecated."
-    $AtpPolicyParams.Remove('TrackClicks') | Out-Null
-
-    Set-AtpPolicyForO365 @AtpPolicyParams
+    # CASE: Authentication Policy doesn't exist but should;
+    if ($Ensure -eq "Present")
+    {
+        Write-Verbose -Message "Assigning authentication policy {$AuthenticationPolicyName} to {$UserName}."
+        Set-User -Identity $UserName -AuthenticationPolicy $AuthenticationPolicyName | Out-Null
+    }
+    # CASE: Authentication Policy exists but it shouldn't;
+    elseif ($Ensure -eq "Absent" -and $currentPolicyAssignment.Ensure -eq "Present")
+    {
+        Write-Verbose -Message "Removing authentication policy assignment {$AuthenticationPolicyName} for {$UserName}."
+        Set-User -Identity $UserName -AuthenticationPolicy $null | Out-Null
+    }
 }
 
 function Test-TargetResource
@@ -296,47 +205,15 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Yes')]
-        [String]
-        $IsSingleInstance,
+        [System.String]
+        $UserName,
 
         [Parameter()]
         [System.String]
-        $Identity = 'Default',
-
-        #DEPRECATED
-        [Parameter()]
-        [Boolean]
-        $AllowClickThrough = $true,
+        $AuthenticationPolicyName,
 
         [Parameter()]
-        [Boolean]
-        $AllowSafeDocsOpen = $false,
-
-        [Parameter()]
-        [System.String[]]
-        $BlockUrls = @(),
-
-        [Parameter()]
-        [Boolean]
-        $EnableATPForSPOTeamsODB = $false,
-
-        [Parameter()]
-        [Boolean]
-        $EnableSafeDocs = $false,
-
-        #DEPRECATED
-        [Parameter()]
-        [Boolean]
-        $EnableSafeLinksForO365Clients = $true,
-
-        #DEPRECATED
-        [Parameter()]
-        [Boolean]
-        $TrackClicks = $true,
-
-        [Parameter()]
-        [ValidateSet('Present')]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
 
@@ -376,7 +253,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of AtpPolicyForO365 for $Identity"
+    Write-Verbose -Message "Testing Authentication Policy configuration for $Identity"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -384,20 +261,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
-    $ValuesToCheck.Remove('Verbose') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('CertificatePath') | Out-Null
-    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-
-    #DEPRECATED
-    $ValuesToCheck.Remove('AllowClickThrough') | Out-Null
-    $ValuesToCheck.Remove('EnableSafeLinksForO365Clients') | Out-Null
-    $ValuesToCheck.Remove('TrackClicks') | Out-Null
-
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
@@ -456,25 +319,44 @@ function Export-TargetResource
 
     try
     {
-        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-AtpPolicyForO365)
+        try
         {
-            [array]$ATPPolicies = Get-AtpPolicyForO365 -ErrorAction Stop
-            $dscContent = ""
+            [array]$AllAuthenticationPolicies = Get-AuthenticationPolicy -ErrorAction SilentlyContinue
+        }
+        catch
+        {
+            if ($_.Exception -like "*The operation couldn't be performed because object*")
+            {
+                Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for Authentication Policies"
+                return ""
+            }
+            throw $_
+        }
 
-            if ($ATPPolicies.Length -eq 0)
+        $dscContent = ""
+        if ($AllAuthenticationPolicies.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
+        $i = 1
+        $allUsers = $null
+        foreach ($AuthenticationPolicy in $AllAuthenticationPolicies)
+        {
+            Write-Host "    |---[$i/$($AllAuthenticationPolicies.Count)] $($AuthenticationPolicy.Identity)" -NoNewline
+            if (-not $allUsers)
             {
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                $allUsers = Get-User -ResultSize 'Unlimited'
             }
-            else
-            {
-                Write-Host "`r`n" -NoNewline
-            }
-            $i = 1
-            foreach ($atpPolicy in $ATPPolicies)
+            $assignedUsers = $allUsers | Where-Object -FilterScript {$_.AuthenticationPolicy -eq $AuthenticationPolicy.Identity}
+
+            foreach ($user in $assignedUsers)
             {
                 $Params = @{
-                    IsSingleInstance      = 'Yes'
-                    Identity              = $atpPolicy.Identity
+                    UserName              = $user.Name
                     Credential            = $Credential
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
@@ -482,30 +364,21 @@ function Export-TargetResource
                     CertificatePassword   = $CertificatePassword
                     CertificatePath       = $CertificatePath
                 }
-                Write-Host "    |---[$i/$($ATPPolicies.Length)] $($atpPolicy.Identity)" -NoNewline
                 $Results = Get-TargetResource @Params
-                if ($Results.Ensure -eq "Present")
-                {
-                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                        -Results $Results
-                    $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                        -ConnectionMode $ConnectionMode `
-                        -ModulePath $PSScriptRoot `
-                        -Results $Results `
-                        -Credential $Credential
-                    $dscContent += $currentDSCBlock
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -Credential $Credential
 
-
-                    Save-M365DSCPartialExport -Content $currentDSCBlock `
-                        -FileName $Global:PartialExportFileName
-                }
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
-                $i++
+                $dscContent += $currentDSCBlock
+                Save-M365DSCPartialExport -Content $currentDSCBlock `
+                    -FileName $Global:PartialExportFileName
             }
-        }
-        else
-        {
-            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for ATP Policies"
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
         }
         return $dscContent
     }

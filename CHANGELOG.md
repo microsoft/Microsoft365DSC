@@ -2,12 +2,24 @@
 
 # UNRELEASED
 
+* AADAuthorizationPolicy
+  * Initial release.
+* EXOATPPolicyForO365
+  * Deprecated properties AllowClickThrough, EnableSafeLinksForO365Clients & TrackClicks.
+* EXOAuthenticationPolicyAssignment
+  * Initial release.
+* EXOCASMailboxSettings
+  * New resource to configure Exchange Online CAS Mailbox settings.
+* EXOSafeLinksPolicy
+  * Deprecated properties DoNotAllowClickThrough, DoNotTrackUserClicks & IsEnabled.
 * IntuneAppProtectionPolicyiOS
    * Fixed issue with creation a new policies where it was complaining about invalid minimum versions.
    * Fixed issues where creating new policies threw an error complaining about an invalid duration format.
      FIXES [#2019](https://github.com/microsoft/Microsoft365DSC/issues/2019)
    * Added the CustomBrowserProtocol paramters.
      FIXES [#2009](https://github.com/microsoft/Microsoft365DSC/issues/2009)
+* IntuneDeviceAndAppManagementAssignmentFilter
+  * Initial release.
 * SCComplianceTag
   * Fixed issue where FilePlanProperty was not properly applied unless another child property was also modified.
 * DEPENDENCIES
@@ -36,7 +48,7 @@
   FIXES #2025
   * Added support for FileTypeAction parameter.
 * EXOSharedMailbox
-  * Fix using umlauts in displayname by allowing to set alias
+  * Fix using umlauts in displayname by allowing to set alias.
     FIXES #1921
   * Rename parameter Aliases to EmailAddresses. Aliases is now deprecated.
 * DEPENDENCIES
