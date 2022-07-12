@@ -132,7 +132,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-
                 Mock -CommandName Get-MgPolicyAuthorizationPolicy -MockWith {
                     $AADAuthPol = [pscustomobject]@{
                         Id = "authorizationPolicy"
