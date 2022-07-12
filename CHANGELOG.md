@@ -2,11 +2,11 @@
 
 # UNRELEASED
 
+* AADAuthorizationPolicy
+  * Initial release.
 * AADConditionalAccessPolicy
   * Fixed issue for Included and Excluded properties where the last instance couldn't be removed.
     FIXES [#2058](https://github.com/microsoft/Microsoft365DSC/issues/2058) & [#2079](https://github.com/microsoft/Microsoft365DSC/issues/2079)
-* AADAuthorizationPolicy
-  * Initial release.
 * EXOATPPolicyForO365
   * Deprecated properties AllowClickThrough, EnableSafeLinksForO365Clients & TrackClicks.
 * EXOAuthenticationPolicyAssignment
@@ -51,7 +51,7 @@
   FIXES #2025
   * Added support for FileTypeAction parameter.
 * EXOSharedMailbox
-  * Fix using umlauts in displayname by allowing to set alias
+  * Fix using umlauts in displayname by allowing to set alias.
     FIXES #1921
   * Rename parameter Aliases to EmailAddresses. Aliases is now deprecated.
 * DEPENDENCIES

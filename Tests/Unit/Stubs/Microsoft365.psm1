@@ -10920,6 +10920,9680 @@ function Set-User
 }
 #endregion
 #region
+function Get-MgApplication
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IApplicationsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.String]
+        $ConsistencyLevel,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgApplicationOwner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgServicePrincipal
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IApplicationsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $ServicePrincipalId,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.String]
+        $ConsistencyLevel,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgServicePrincipalAppRoleAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IApplicationsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $ServicePrincipalId,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.String]
+        $AppRoleAssignmentId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function New-MgApplication
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Oauth2RequirePostResponse,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAddIn[]]
+        $AddIns,
+
+        [Parameter()]
+        [System.String]
+        $SignInAudience,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationTemplateId,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphVerifiedPublisher]
+        $VerifiedPublisher,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject]
+        $CreatedOnBehalfOf,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String[]]
+        $IdentifierUris,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphParentalControlSettings]
+        $ParentalControlSettings,
+
+        [Parameter()]
+        [System.String]
+        $DisabledByMicrosoftStatus,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenLifetimePolicy[]]
+        $TokenLifetimePolicies,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphKeyCredential[]]
+        $KeyCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphApiApplication]
+        $Api,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRequiredResourceAccess[]]
+        $RequiredResourceAccess,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphHomeRealmDiscoveryPolicy[]]
+        $HomeRealmDiscoveryPolicies,
+
+        [Parameter()]
+        [System.String]
+        $GroupMembershipClaims,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWebApplication]
+        $Web,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCertification]
+        $Certification,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOptionalClaims]
+        $OptionalClaims,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphInformationalUrl]
+        $Info,
+
+        [Parameter()]
+        [System.String]
+        $ServiceManagementReference,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsDeviceOnlyAuthSupported,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSpaApplication]
+        $Spa,
+
+        [Parameter()]
+        [System.String]
+        $TokenEncryptionKeyId,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $Owners,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphApplication1]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphExtensionProperty[]]
+        $ExtensionProperties,
+
+        [Parameter()]
+        [System.String]
+        $LogoInputFile,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPublicClientApplication]
+        $PublicClient,
+
+        [Parameter()]
+        [System.String[]]
+        $Tags,
+
+        [Parameter()]
+        [System.DateTime]
+        $DeletedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPasswordCredential[]]
+        $PasswordCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenIssuancePolicy[]]
+        $TokenIssuancePolicies,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsFallbackPublicClient,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String]
+        $PublisherDomain,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRole[]]
+        $AppRoles,
+
+        [Parameter()]
+        [System.String]
+        $AppId
+    )
+}
+function New-MgServicePrincipal
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $ServicePrincipalNames,
+
+        [Parameter()]
+        [System.String[]]
+        $AlternativeNames,
+
+        [Parameter()]
+        [System.String]
+        $AppDescription,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphHomeRealmDiscoveryPolicy[]]
+        $HomeRealmDiscoveryPolicies,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPermissionScope[]]
+        $Oauth2PermissionScopes,
+
+        [Parameter()]
+        [System.String[]]
+        $Tags,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRoleAssignment[]]
+        $AppRoleAssignments,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationTemplateId,
+
+        [Parameter()]
+        [System.String]
+        $SignInAudience,
+
+        [Parameter()]
+        [System.String[]]
+        $NotificationEmailAddresses,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphClaimsMappingPolicy[]]
+        $ClaimsMappingPolicies,
+
+        [Parameter()]
+        [System.String]
+        $TokenEncryptionKeyId,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenIssuancePolicy[]]
+        $TokenIssuancePolicies,
+
+        [Parameter()]
+        [System.String]
+        $PreferredTokenSigningKeyThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $AppDisplayName,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRoleAssignment[]]
+        $AppRoleAssignedTo,
+
+        [Parameter()]
+        [System.String]
+        $ServicePrincipalType,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSamlSingleSignOnSettings]
+        $SamlSingleSignOnSettings,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $Owners,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $OwnedObjects,
+
+        [Parameter()]
+        [System.String]
+        $LoginUrl,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenLifetimePolicy[]]
+        $TokenLifetimePolicies,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $CreatedObjects,
+
+        [Parameter()]
+        [System.String]
+        $DisabledByMicrosoftStatus,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDelegatedPermissionClassification[]]
+        $DelegatedPermissionClassifications,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPasswordCredential[]]
+        $PasswordCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $MemberOf,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEndpoint[]]
+        $Endpoints,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAddIn[]]
+        $AddIns,
+
+        [Parameter()]
+        [System.DateTime]
+        $DeletedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $AppOwnerOrganizationId,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $TransitiveMemberOf,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRole[]]
+        $AppRoles,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String[]]
+        $ReplyUrls,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AppRoleAssignmentRequired,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphKeyCredential[]]
+        $KeyCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphResourceSpecificPermission[]]
+        $ResourceSpecificApplicationPermissions,
+
+        [Parameter()]
+        [System.String]
+        $LogoutUrl,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphInformationalUrl]
+        $Info,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AccountEnabled,
+
+        [Parameter()]
+        [System.String]
+        $PreferredSingleSignOnMode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOAuth2PermissionGrant[]]
+        $Oauth2PermissionGrants,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphServicePrincipal]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $AppId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String]
+        $Homepage
+    )
+}
+function Remove-MgApplication
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IApplicationsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgServicePrincipal
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IApplicationsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $ServicePrincipalId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Update-MgApplication
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Oauth2RequirePostResponse,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAddIn[]]
+        $AddIns,
+
+        [Parameter()]
+        [System.String]
+        $SignInAudience,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationTemplateId,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphVerifiedPublisher]
+        $VerifiedPublisher,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRequiredResourceAccess[]]
+        $RequiredResourceAccess,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IApplicationsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWebApplication]
+        $Web,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphParentalControlSettings]
+        $ParentalControlSettings,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOptionalClaims]
+        $OptionalClaims,
+
+        [Parameter()]
+        [System.String]
+        $DisabledByMicrosoftStatus,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenLifetimePolicy[]]
+        $TokenLifetimePolicies,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphKeyCredential[]]
+        $KeyCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphHomeRealmDiscoveryPolicy[]]
+        $HomeRealmDiscoveryPolicies,
+
+        [Parameter()]
+        [System.String]
+        $GroupMembershipClaims,
+
+        [Parameter()]
+        [System.String[]]
+        $IdentifierUris,
+
+        [Parameter()]
+        [System.String]
+        $PublisherDomain,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphInformationalUrl]
+        $Info,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsFallbackPublicClient,
+
+        [Parameter()]
+        [System.String]
+        $ServiceManagementReference,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphApiApplication]
+        $Api,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsDeviceOnlyAuthSupported,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSpaApplication]
+        $Spa,
+
+        [Parameter()]
+        [System.String]
+        $TokenEncryptionKeyId,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $Owners,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphApplication1]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphExtensionProperty[]]
+        $ExtensionProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPublicClientApplication]
+        $PublicClient,
+
+        [Parameter()]
+        [System.String[]]
+        $Tags,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject]
+        $CreatedOnBehalfOf,
+
+        [Parameter()]
+        [System.String]
+        $LogoInputFile,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenIssuancePolicy[]]
+        $TokenIssuancePolicies,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPasswordCredential[]]
+        $PasswordCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCertification]
+        $Certification,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.DateTime]
+        $DeletedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRole[]]
+        $AppRoles,
+
+        [Parameter()]
+        [System.String]
+        $AppId
+    )
+}
+function Update-MgServicePrincipal
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $ServicePrincipalNames,
+
+        [Parameter()]
+        [System.String[]]
+        $AlternativeNames,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IApplicationsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.String]
+        $AppDescription,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphHomeRealmDiscoveryPolicy[]]
+        $HomeRealmDiscoveryPolicies,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPermissionScope[]]
+        $Oauth2PermissionScopes,
+
+        [Parameter()]
+        [System.String[]]
+        $Tags,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRoleAssignment[]]
+        $AppRoleAssignments,
+
+        [Parameter()]
+        [System.String]
+        $ServicePrincipalId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationTemplateId,
+
+        [Parameter()]
+        [System.String]
+        $SignInAudience,
+
+        [Parameter()]
+        [System.String[]]
+        $NotificationEmailAddresses,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphClaimsMappingPolicy[]]
+        $ClaimsMappingPolicies,
+
+        [Parameter()]
+        [System.String]
+        $TokenEncryptionKeyId,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenIssuancePolicy[]]
+        $TokenIssuancePolicies,
+
+        [Parameter()]
+        [System.String]
+        $PreferredTokenSigningKeyThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $AppDisplayName,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRoleAssignment[]]
+        $AppRoleAssignedTo,
+
+        [Parameter()]
+        [System.String]
+        $Homepage,
+
+        [Parameter()]
+        [System.String]
+        $ServicePrincipalType,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSamlSingleSignOnSettings]
+        $SamlSingleSignOnSettings,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $Owners,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $OwnedObjects,
+
+        [Parameter()]
+        [System.String]
+        $LoginUrl,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenLifetimePolicy[]]
+        $TokenLifetimePolicies,
+
+        [Parameter()]
+        [System.String]
+        $DisabledByMicrosoftStatus,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDelegatedPermissionClassification[]]
+        $DelegatedPermissionClassifications,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPasswordCredential[]]
+        $PasswordCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $MemberOf,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAddIn[]]
+        $AddIns,
+
+        [Parameter()]
+        [System.DateTime]
+        $DeletedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $AppOwnerOrganizationId,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $TransitiveMemberOf,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRole[]]
+        $AppRoles,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $AppId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String[]]
+        $ReplyUrls,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AppRoleAssignmentRequired,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphKeyCredential[]]
+        $KeyCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOAuth2PermissionGrant[]]
+        $Oauth2PermissionGrants,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphResourceSpecificPermission[]]
+        $ResourceSpecificApplicationPermissions,
+
+        [Parameter()]
+        [System.String]
+        $LogoutUrl,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphInformationalUrl]
+        $Info,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AccountEnabled,
+
+        [Parameter()]
+        [System.String]
+        $PreferredSingleSignOnMode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEndpoint[]]
+        $Endpoints,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphServicePrincipal]
+        $BodyParameter,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $CreatedObjects,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+#endregion
+#region
+function Get-MgContext
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Invoke-MgGraphRequest
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $InputFilePath,
+
+        [Parameter()]
+        [System.String]
+        $StatusCodeVariable,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Authentication.Models.OutputType]
+        $OutputType,
+
+        [Parameter()]
+        [System.Security.SecureString]
+        $Token,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipHttpErrorCheck,
+
+        [Parameter()]
+        [System.String]
+        $UserAgent,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Authentication.Models.GraphRequestAuthenticationType]
+        $Authentication,
+
+        [Parameter()]
+        [System.Uri]
+        $Uri,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Authentication.Helpers.GraphRequestSession]
+        $GraphRequestSession,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $InferOutputFileName,
+
+        [Parameter()]
+        [System.String]
+        $OutputFilePath,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Authentication.Models.GraphRequestMethod]
+        $Method,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Object]
+        $Body,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipHeaderValidation,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String]
+        $SessionVariable,
+
+        [Parameter()]
+        [System.String]
+        $ContentType,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers
+    )
+}
+function Select-MgProfile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+function Connect-Graph
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UseDeviceAuthentication,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Security.Cryptography.X509Certificates.X509Certificate2]
+        $Certificate,
+
+        [Parameter()]
+        [System.String[]]
+        $Scopes,
+
+        [Parameter()]
+        [System.String]
+        $ClientId,
+
+        [Parameter()]
+        [System.String]
+        $AccessToken,
+
+        [Parameter()]
+        [System.Double]
+        $ClientTimeout,
+
+        [Parameter()]
+        [System.String]
+        $CertificateName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceRefresh,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String]
+        $Environment,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Authentication.ContextScope]
+        $ContextScope
+    )
+}
+#endregion
+#region
+function Get-MgDeviceManagement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Get-MgDeviceManagementDeviceCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.String]
+        $DeviceCategoryId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgDeviceManagementDeviceCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.String]
+        $DeviceCompliancePolicyId
+    )
+}
+function Get-MgDeviceManagementDeviceConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $DeviceConfigurationId,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function New-MgDeviceManagementDeviceCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceCategory]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function New-MgDeviceManagementDeviceCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceComplianceUserStatus[]]
+        $UserStatuses,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceCompliancePolicyAssignment[]]
+        $Assignments,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceComplianceDeviceOverview]
+        $DeviceStatusOverview,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceComplianceUserOverview]
+        $UserStatusOverview,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Version,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceComplianceDeviceStatus[]]
+        $DeviceStatuses,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceComplianceScheduledActionForRule[]]
+        $ScheduledActionsForRule,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceCompliancePolicy]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSettingStateDeviceSummary[]]
+        $DeviceSettingStateSummaries,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function New-MgDeviceManagementDeviceConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationUserStatus[]]
+        $UserStatuses,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationAssignment[]]
+        $Assignments,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationDeviceOverview]
+        $DeviceStatusOverview,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationUserOverview]
+        $UserStatusOverview,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Version,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationDeviceStatus[]]
+        $DeviceStatuses,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfiguration]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSettingStateDeviceSummary[]]
+        $DeviceSettingStateSummaries,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgDeviceManagementDeviceCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DeviceCategoryId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Remove-MgDeviceManagementDeviceCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $DeviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgDeviceManagementDeviceConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $DeviceConfigurationId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgDeviceManagement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceCategory[]]
+        $DeviceCategories,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphApplePushNotificationCertificate]
+        $ApplePushNotificationCertificate,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementPartner[]]
+        $DeviceManagementPartners,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTelecomExpenseManagementPartner[]]
+        $TelecomExpenseManagementPartners,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTermsAndConditions1[]]
+        $TermsAndConditions,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementSettings]
+        $Settings,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionNetworkLearningSummary[]]
+        $WindowsInformationProtectionNetworkLearningSummaries,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Support.DeviceManagementSubscriptionState]
+        $SubscriptionState,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceCompliancePolicyDeviceStateSummary]
+        $DeviceCompliancePolicyDeviceStateSummary,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphIntuneBrand]
+        $IntuneBrand,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementTroubleshootingEvent[]]
+        $TroubleshootingEvents,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationDeviceStateSummary]
+        $DeviceConfigurationDeviceStateSummaries,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRoleDefinition[]]
+        $RoleDefinitions,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphComplianceManagementPartner[]]
+        $ComplianceManagementPartners,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedDeviceOverview]
+        $ManagedDeviceOverview,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSoftwareUpdateStatusSummary]
+        $SoftwareUpdateStatusSummary,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedDevice[]]
+        $ManagedDevices,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphNotificationMessageTemplate[]]
+        $NotificationMessageTemplates,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementReports]
+        $Reports,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDetectedApp[]]
+        $DetectedApps,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsAutopilotDeviceIdentity[]]
+        $WindowsAutopilotDeviceIdentities,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceAndAppManagementRoleAssignment[]]
+        $RoleAssignments,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceCompliancePolicySettingStateSummary[]]
+        $DeviceCompliancePolicySettingStateSummaries,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceCompliancePolicy[]]
+        $DeviceCompliancePolicies,
+
+        [Parameter()]
+        [System.String]
+        $IntuneAccountId,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionAppLearningSummary[]]
+        $WindowsInformationProtectionAppLearningSummaries,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagement1]
+        $BodyParameter,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRemoteAssistancePartner[]]
+        $RemoteAssistancePartners,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementExchangeConnector[]]
+        $ExchangeConnectors,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphIosUpdateDeviceStatus[]]
+        $IosUpdateStatuses,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMobileThreatDefenseConnector[]]
+        $MobileThreatDefenseConnectors,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnPremisesConditionalAccessSettings]
+        $ConditionalAccessSettings,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfiguration[]]
+        $DeviceConfigurations,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphImportedWindowsAutopilotDeviceIdentity[]]
+        $ImportedWindowsAutopilotDeviceIdentities,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceEnrollmentConfiguration[]]
+        $DeviceEnrollmentConfigurations,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphResourceOperation[]]
+        $ResourceOperations
+    )
+}
+function Update-MgDeviceManagementDeviceCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $DeviceCategoryId,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceCategory]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgDeviceManagementDeviceCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceComplianceUserStatus[]]
+        $UserStatuses,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceCompliancePolicyAssignment[]]
+        $Assignments,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $DeviceCompliancePolicyId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceComplianceDeviceOverview]
+        $DeviceStatusOverview,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceComplianceUserOverview]
+        $UserStatusOverview,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Version,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceComplianceDeviceStatus[]]
+        $DeviceStatuses,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceComplianceScheduledActionForRule[]]
+        $ScheduledActionsForRule,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceCompliancePolicy]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSettingStateDeviceSummary[]]
+        $DeviceSettingStateSummaries,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgDeviceManagementDeviceConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationUserStatus[]]
+        $UserStatuses,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationAssignment[]]
+        $Assignments,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationDeviceStatus[]]
+        $DeviceStatuses,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationDeviceOverview]
+        $DeviceStatusOverview,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationUserOverview]
+        $UserStatusOverview,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Version,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSettingStateDeviceSummary[]]
+        $DeviceSettingStateSummaries,
+
+        [Parameter()]
+        [System.String]
+        $DeviceConfigurationId,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfiguration]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+#endregion
+#region
+#endregion
+#region
+function Get-MgDeviceManagementDeviceEnrollmentConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDeviceManagementEnrolmentIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.String]
+        $DeviceEnrollmentConfigurationId,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgRoleManagement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Get-MgRoleManagementDirectory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Get-MgRoleManagementDirectoryRoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDeviceManagementEnrolmentIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [System.String]
+        $UnifiedRoleDefinitionId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function New-MgDeviceManagementDeviceEnrollmentConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEnrollmentConfigurationAssignment[]]
+        $Assignments,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $Priority,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Version,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceEnrollmentConfiguration1]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function New-MgRoleManagementDirectoryRoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $ResourceScopes,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $TemplateId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $Version,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsBuiltIn,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleDefinition1]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleDefinition1[]]
+        $InheritsPermissionsFrom,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRolePermission[]]
+        $RolePermissions,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsEnabled,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgDeviceManagementDeviceEnrollmentConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDeviceManagementEnrolmentIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $DeviceEnrollmentConfigurationId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgRoleManagementDirectory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgRoleManagementDirectoryRoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $UnifiedRoleDefinitionId,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDeviceManagementEnrolmentIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgDeviceManagementDeviceEnrollmentConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEnrollmentConfigurationAssignment[]]
+        $Assignments,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDeviceManagementEnrolmentIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $Priority,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Version,
+
+        [Parameter()]
+        [System.String]
+        $DeviceEnrollmentConfigurationId,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceEnrollmentConfiguration1]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgRoleManagement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRoleManagement]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRbacApplication1]
+        $EntitlementManagement,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRbacApplication1]
+        $Directory,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgRoleManagementDirectory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleAssignmentScheduleRequest[]]
+        $RoleAssignmentScheduleRequests,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleEligibilitySchedule[]]
+        $RoleEligibilitySchedules,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleDefinition1[]]
+        $RoleDefinitions,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleEligibilityScheduleRequest[]]
+        $RoleEligibilityScheduleRequests,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleAssignmentSchedule[]]
+        $RoleAssignmentSchedules,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleAssignment[]]
+        $RoleAssignments,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRbacApplication1]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleEligibilityScheduleInstance[]]
+        $RoleEligibilityScheduleInstances,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleAssignmentScheduleInstance[]]
+        $RoleAssignmentScheduleInstances,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgRoleManagementDirectoryRoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $ResourceScopes,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDeviceManagementEnrolmentIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $UnifiedRoleDefinitionId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $Version,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsBuiltIn,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleDefinition1]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleDefinition1[]]
+        $InheritsPermissionsFrom,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRolePermission[]]
+        $RolePermissions,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $TemplateId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+#endregion
+#region
+function Get-MgDeviceAppManagement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Get-MgDeviceAppManagementAndroidManagedAppProtection
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $AndroidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgDeviceAppManagementiOSManagedAppProtection
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $IosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgDeviceAppManagementTargetedManagedAppConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.String]
+        $TargetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function New-MgDeviceAppManagementTargetedManagedAppConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $DeployedAppCount,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTargetedManagedAppPolicyAssignment1[]]
+        $Assignments,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsAssigned,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $Version,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppPolicyDeploymentSummary]
+        $DeploymentSummary,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphKeyValuePair[]]
+        $CustomSettings,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTargetedManagedAppConfiguration1]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedMobileApp[]]
+        $Apps,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgDeviceAppManagementAndroidManagedAppProtection
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [System.String]
+        $AndroidManagedAppProtectionId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgDeviceAppManagementiOSManagedAppProtection
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.String]
+        $IosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgDeviceAppManagementTargetedManagedAppConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TargetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Update-MgDeviceAppManagement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTime]
+        $MicrosoftStoreForBusinessLastSuccessfulSyncDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTargetedManagedAppConfiguration1[]]
+        $TargetedManagedAppConfigurations,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedEBook1[]]
+        $ManagedEBooks,
+
+        [Parameter()]
+        [System.String]
+        $MicrosoftStoreForBusinessLanguage,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppPolicy1[]]
+        $ManagedAppPolicies,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppStatus[]]
+        $ManagedAppStatuses,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppRegistration1[]]
+        $ManagedAppRegistrations,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDefaultManagedAppProtection1[]]
+        $DefaultManagedAppProtections,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsEnabledForMicrosoftStoreForBusiness,
+
+        [Parameter()]
+        [System.DateTime]
+        $MicrosoftStoreForBusinessLastCompletedApplicationSyncTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphIosManagedAppProtection1[]]
+        $IosManagedAppProtections,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceAppManagement1]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMobileAppCategory[]]
+        $MobileAppCategories,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphVppToken1[]]
+        $VppTokens,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionPolicy1[]]
+        $WindowsInformationProtectionPolicies,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAndroidManagedAppProtection1[]]
+        $AndroidManagedAppProtections,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMobileApp1[]]
+        $MobileApps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMdmWindowsInformationProtectionPolicy1[]]
+        $MdmWindowsInformationProtectionPolicies,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedDeviceMobileAppConfiguration1[]]
+        $MobileAppConfigurations,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgDeviceAppManagementTargetedManagedAppConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppPolicyDeploymentSummary]
+        $DeploymentSummary,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTargetedManagedAppPolicyAssignment1[]]
+        $Assignments,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsAssigned,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $Version,
+
+        [Parameter()]
+        [System.Int32]
+        $DeployedAppCount,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphKeyValuePair[]]
+        $CustomSettings,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTargetedManagedAppConfiguration1]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedMobileApp[]]
+        $Apps,
+
+        [Parameter()]
+        [System.String]
+        $TargetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+#endregion
+#region
+function Get-MgGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.String]
+        $GroupId,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.String]
+        $ConsistencyLevel,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgGroupLifecyclePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $GroupLifecyclePolicyId,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgGroupMember
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.String]
+        $GroupId,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgGroupOwner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.String]
+        $GroupId,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function New-MgGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Mail,
+
+        [Parameter()]
+        [System.String]
+        $Visibility,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphResourceSpecificPermissionGrant[]]
+        $PermissionGrants,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSite1[]]
+        $Sites,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRoleAssignment[]]
+        $AppRoleAssignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SecurityEnabled,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCalendar]
+        $Calendar,
+
+        [Parameter()]
+        [System.String]
+        $SecurityIdentifier,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAssignedLicense[]]
+        $AssignedLicenses,
+
+        [Parameter()]
+        [System.DateTime]
+        $RenewedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $RejectedSenders,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphExtension[]]
+        $Extensions,
+
+        [Parameter()]
+        [System.Int32]
+        $UnseenCount,
+
+        [Parameter()]
+        [System.String]
+        $Classification,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AutoSubscribeNewMembers,
+
+        [Parameter()]
+        [System.String[]]
+        $ProxyAddresses,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesNetBiosName,
+
+        [Parameter()]
+        [System.DateTime]
+        $ExpirationDateTime,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnPremisesProvisioningError[]]
+        $OnPremisesProvisioningErrors,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesSecurityIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $PreferredLanguage,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $TransitiveMembers,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $HideFromAddressLists,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerGroup]
+        $Planner,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.DateTime]
+        $OnPremisesLastSyncDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $Owners,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroupLifecyclePolicy[]]
+        $GroupLifecyclePolicies,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphLicenseProcessingState]
+        $LicenseProcessingState,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesDomainName,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroupSetting[]]
+        $Settings,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAssignedLabel[]]
+        $AssignedLabels,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $AcceptedSenders,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnenote]
+        $Onenote,
+
+        [Parameter()]
+        [System.String]
+        $MembershipRuleProcessingState,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $MemberOf,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $MailEnabled,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDrive1[]]
+        $Drives,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AllowExternalSenders,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProfilePhoto]
+        $Photo,
+
+        [Parameter()]
+        [System.String]
+        $Theme,
+
+        [Parameter()]
+        [System.DateTime]
+        $DeletedDateTime,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $HasMembersWithLicenseErrors,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $TransitiveMemberOf,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OnPremisesSyncEnabled,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsArchived,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDrive1]
+        $Drive,
+
+        [Parameter()]
+        [System.String]
+        $MailNickname,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEvent1[]]
+        $CalendarView,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProfilePhoto[]]
+        $Photos,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsAssignableToRole,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject]
+        $CreatedOnBehalfOf,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $HideFromOutlookClients,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsSubscribedByMail,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEvent1[]]
+        $Events,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConversationThread[]]
+        $Threads,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTeam1]
+        $Team,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $Members,
+
+        [Parameter()]
+        [System.String[]]
+        $GroupTypes,
+
+        [Parameter()]
+        [System.String]
+        $MembershipRule,
+
+        [Parameter()]
+        [System.String]
+        $PreferredDataLocation,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesSamAccountName,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConversation[]]
+        $Conversations,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $MembersWithLicenseErrors,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroup]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function New-MgGroupLifecyclePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroupLifecyclePolicy]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $AlternateNotificationEmails,
+
+        [Parameter()]
+        [System.String]
+        $ManagedGroupTypes,
+
+        [Parameter()]
+        [System.Int32]
+        $GroupLifetimeInDays,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function New-MgGroupMember
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $GroupId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $DirectoryObjectId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function New-MgGroupOwnerByRef
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $GroupId,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Remove-MgGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $GroupId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Remove-MgGroupLifecyclePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $GroupLifecyclePolicyId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Theme,
+
+        [Parameter()]
+        [System.String]
+        $Visibility,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphResourceSpecificPermissionGrant[]]
+        $PermissionGrants,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSite1[]]
+        $Sites,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRoleAssignment[]]
+        $AppRoleAssignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SecurityEnabled,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCalendar]
+        $Calendar,
+
+        [Parameter()]
+        [System.String]
+        $SecurityIdentifier,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAssignedLicense[]]
+        $AssignedLicenses,
+
+        [Parameter()]
+        [System.DateTime]
+        $RenewedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $RejectedSenders,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphExtension[]]
+        $Extensions,
+
+        [Parameter()]
+        [System.Int32]
+        $UnseenCount,
+
+        [Parameter()]
+        [System.String]
+        $Classification,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AutoSubscribeNewMembers,
+
+        [Parameter()]
+        [System.String[]]
+        $ProxyAddresses,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesNetBiosName,
+
+        [Parameter()]
+        [System.DateTime]
+        $ExpirationDateTime,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnPremisesProvisioningError[]]
+        $OnPremisesProvisioningErrors,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesSecurityIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $PreferredLanguage,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $TransitiveMembers,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $HideFromAddressLists,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerGroup]
+        $Planner,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.DateTime]
+        $OnPremisesLastSyncDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $Owners,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroupLifecyclePolicy[]]
+        $GroupLifecyclePolicies,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphLicenseProcessingState]
+        $LicenseProcessingState,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesDomainName,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroupSetting[]]
+        $Settings,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAssignedLabel[]]
+        $AssignedLabels,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $AcceptedSenders,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnenote]
+        $Onenote,
+
+        [Parameter()]
+        [System.String]
+        $MembershipRuleProcessingState,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $MemberOf,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $MailEnabled,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDrive1[]]
+        $Drives,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AllowExternalSenders,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProfilePhoto]
+        $Photo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.DateTime]
+        $DeletedDateTime,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $HasMembersWithLicenseErrors,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $TransitiveMemberOf,
+
+        [Parameter()]
+        [System.String]
+        $GroupId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OnPremisesSyncEnabled,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsArchived,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDrive1]
+        $Drive,
+
+        [Parameter()]
+        [System.String]
+        $MailNickname,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEvent1[]]
+        $CalendarView,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProfilePhoto[]]
+        $Photos,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsAssignableToRole,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject]
+        $CreatedOnBehalfOf,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $HideFromOutlookClients,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsSubscribedByMail,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEvent1[]]
+        $Events,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConversationThread[]]
+        $Threads,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTeam1]
+        $Team,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $Members,
+
+        [Parameter()]
+        [System.String[]]
+        $GroupTypes,
+
+        [Parameter()]
+        [System.String]
+        $MembershipRule,
+
+        [Parameter()]
+        [System.String]
+        $PreferredDataLocation,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesSamAccountName,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConversation[]]
+        $Conversations,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $MembersWithLicenseErrors,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroup]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String]
+        $Mail
+    )
+}
+function Update-MgGroupLifecyclePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $GroupLifetimeInDays,
+
+        [Parameter()]
+        [System.String]
+        $AlternateNotificationEmails,
+
+        [Parameter()]
+        [System.String]
+        $GroupLifecyclePolicyId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $ManagedGroupTypes,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroupLifecyclePolicy]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+#endregion
+#region
+function Get-MgDevice
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $DeviceId,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.String]
+        $ConsistencyLevel,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgDirectory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Get-MgDirectoryRole
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.String]
+        $DirectoryRoleId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgDirectoryRoleTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.String]
+        $DirectoryRoleTemplateId,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgOrganization
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String]
+        $OrganizationId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgSubscribedSku
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String]
+        $SubscribedSkuId,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.String]
+        $Search
+    )
+}
+function New-MgDevice
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $DeviceVersion,
+
+        [Parameter()]
+        [System.DateTime]
+        $ComplianceExpirationDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAlternativeSecurityId[]]
+        $AlternativeSecurityIds,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $DeviceId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $RegisteredUsers,
+
+        [Parameter()]
+        [System.String]
+        $ProfileType,
+
+        [Parameter()]
+        [System.DateTime]
+        $ApproximateLastSignInDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $TransitiveMemberOf,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $OperatingSystem,
+
+        [Parameter()]
+        [System.String[]]
+        $PhysicalIds,
+
+        [Parameter()]
+        [System.String]
+        $TrustType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsManaged,
+
+        [Parameter()]
+        [System.String]
+        $OperatingSystemVersion,
+
+        [Parameter()]
+        [System.String[]]
+        $SystemLabels,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AccountEnabled,
+
+        [Parameter()]
+        [System.DateTime]
+        $OnPremisesLastSyncDateTime,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDevice1]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $MemberOf,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphExtension[]]
+        $Extensions,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $DeviceMetadata,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsCompliant,
+
+        [Parameter()]
+        [System.DateTime]
+        $DeletedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $RegisteredOwners,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OnPremisesSyncEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.String]
+        $MdmAppId
+    )
+}
+function Remove-MgDevice
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $DeviceId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgDevice
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $DeviceVersion,
+
+        [Parameter()]
+        [System.DateTime]
+        $ComplianceExpirationDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAlternativeSecurityId[]]
+        $AlternativeSecurityIds,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $DeviceId1,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $DeviceId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $RegisteredUsers,
+
+        [Parameter()]
+        [System.String]
+        $ProfileType,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $TransitiveMemberOf,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $OperatingSystem,
+
+        [Parameter()]
+        [System.String[]]
+        $PhysicalIds,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphExtension[]]
+        $Extensions,
+
+        [Parameter()]
+        [System.String]
+        $TrustType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsManaged,
+
+        [Parameter()]
+        [System.String]
+        $OperatingSystemVersion,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.String[]]
+        $SystemLabels,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AccountEnabled,
+
+        [Parameter()]
+        [System.DateTime]
+        $OnPremisesLastSyncDateTime,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDevice1]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $MemberOf,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.DateTime]
+        $ApproximateLastSignInDateTime,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $DeviceMetadata,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsCompliant,
+
+        [Parameter()]
+        [System.DateTime]
+        $DeletedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $RegisteredOwners,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OnPremisesSyncEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.String]
+        $MdmAppId
+    )
+}
+function Update-MgDirectory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectory1]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphIdentityProviderBase[]]
+        $FederationConfigurations,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAdministrativeUnit[]]
+        $AdministrativeUnits,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $DeletedItems
+    )
+}
+function Update-MgOrganization
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $PostalCode,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphVerifiedDomain[]]
+        $VerifiedDomains,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.String[]]
+        $TechnicalNotificationMails,
+
+        [Parameter()]
+        [System.String[]]
+        $BusinessPhones,
+
+        [Parameter()]
+        [System.String]
+        $Street,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $PreferredLanguage,
+
+        [Parameter()]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [System.String]
+        $City,
+
+        [Parameter()]
+        [System.String[]]
+        $MarketingNotificationEmails,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAssignedPlan[]]
+        $AssignedPlans,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Support.MdmAuthority]
+        $MobileDeviceManagementAuthority,
+
+        [Parameter()]
+        [System.String]
+        $Country,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOrganization1]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String[]]
+        $SecurityComplianceNotificationMails,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $TenantType,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPrivacyProfile]
+        $PrivacyProfile,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphExtension[]]
+        $Extensions,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProvisionedPlan[]]
+        $ProvisionedPlans,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCertificateBasedAuthConfiguration[]]
+        $CertificateBasedAuthConfiguration,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOrganizationalBranding]
+        $Branding,
+
+        [Parameter()]
+        [System.DateTime]
+        $DeletedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $CountryLetterCode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OnPremisesSyncEnabled,
+
+        [Parameter()]
+        [System.String]
+        $OrganizationId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String[]]
+        $SecurityComplianceNotificationPhones,
+
+        [Parameter()]
+        [System.DateTime]
+        $OnPremisesLastSyncDateTime
+    )
+}
+#endregion
+#region
+function Get-MgAgreement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IIdentityGovernanceIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [System.String]
+        $AgreementId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+#endregion
+#region
+function Get-MgIdentityConditionalAccessNamedLocation
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $NamedLocationId,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgIdentityConditionalAccessPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalAccessPolicyId,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgOauth2PermissionGrant
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.String]
+        $OAuth2PermissionGrantId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgPolicyAuthorizationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Get-MgPolicyIdentitySecurityDefaultEnforcementPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Get-MgPolicyTokenLifetimePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $TokenLifetimePolicyId,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function New-MgIdentityConditionalAccessPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.DateTime]
+        $ModifiedDateTime,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConditionalAccessSessionControls]
+        $SessionControls,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConditionalAccessConditionSet]
+        $Conditions,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConditionalAccessPolicy]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConditionalAccessGrantControls]
+        $GrantControls,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function New-MgPolicyTokenLifetimePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Definition,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsOrganizationDefault,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.DateTime]
+        $DeletedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $AppliesTo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgIdentityConditionalAccessNamedLocation
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.String]
+        $NamedLocationId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgIdentityConditionalAccessPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalAccessPolicyId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgPolicyTokenLifetimePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $TokenLifetimePolicyId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgIdentityConditionalAccessPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.DateTime]
+        $ModifiedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConditionalAccessSessionControls]
+        $SessionControls,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConditionalAccessConditionSet]
+        $Conditions,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalAccessPolicyId,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConditionalAccessPolicy]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConditionalAccessGrantControls]
+        $GrantControls,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgPolicyAuthorizationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $BlockMsolPowerShell,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AllowedToUseSspr,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $GuestUserRoleId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AllowedToSignUpEmailBasedSubscriptions,
+
+        [Parameter()]
+        [System.String]
+        $AllowInvitesFrom,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAuthorizationPolicy]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AllowEmailVerifiedUsersToJoinOrganization,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.DateTime]
+        $DeletedDateTime,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDefaultUserRolePermissions]
+        $DefaultUserRolePermissions,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgPolicyIdentitySecurityDefaultEnforcementPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphIdentitySecurityDefaultsEnforcementPolicy]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.DateTime]
+        $DeletedDateTime,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsEnabled,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgPolicyTokenLifetimePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Definition,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $TokenLifetimePolicyId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsOrganizationDefault,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $AppliesTo,
+
+        [Parameter()]
+        [System.DateTime]
+        $DeletedDateTime,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+#endregion
+#region
+function Get-MgGroupPlanner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IPlannerIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.String]
+        $GroupId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Get-MgGroupPlannerPlan
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IPlannerIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.String]
+        $GroupId,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String]
+        $PlannerPlanId,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgPlanner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Get-MgPlannerPlan
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IPlannerIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String]
+        $PlannerPlanId,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgPlannerPlanBucket
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String]
+        $PlannerPlanId,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function New-MgPlannerBucket
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $OrderHint,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $PlanId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerTask[]]
+        $Tasks,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerBucket]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function New-MgPlannerPlan
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerBucket[]]
+        $Buckets,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerTask[]]
+        $Tasks,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerPlanContainer]
+        $Container,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphIdentitySet]
+        $CreatedBy,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerPlan]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerPlanDetails]
+        $Details,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgPlanner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlanner1]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerBucket[]]
+        $Buckets,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerTask[]]
+        $Tasks,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerPlan[]]
+        $Plans,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Update-MgPlannerPlan
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $PlannerPlanId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerBucket[]]
+        $Buckets,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IPlannerIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerTask[]]
+        $Tasks,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerPlanContainer]
+        $Container,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphIdentitySet]
+        $CreatedBy,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerPlan]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerPlanDetails]
+        $Details,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+#endregion
+#region
+function Get-MgTeam
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.ITeamsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.String]
+        $TeamId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Get-MgTeamChannel
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.ITeamsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [System.String]
+        $ChannelId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.String]
+        $TeamId,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgTeamChannelTab
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.ITeamsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [System.String]
+        $ChannelId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.String]
+        $TeamId,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.String]
+        $TeamsTabId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgTeam
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.ITeamsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $TeamId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgTeamChannel
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.ITeamsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $ChannelId,
+
+        [Parameter()]
+        [System.String]
+        $TeamId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgTeamChannelTab
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.ITeamsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $ChannelId,
+
+        [Parameter()]
+        [System.String]
+        $TeamsTabId,
+
+        [Parameter()]
+        [System.String]
+        $TeamId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+#endregion
+#region
+function Get-MgUser
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $UserId,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IUsersIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.String]
+        $ConsistencyLevel,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgUserLicenseDetail
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $UserId,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IUsersIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.String]
+        $LicenseDetailsId,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function New-MgUser
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Mail,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPresence1]
+        $Presence,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ShowInAddressList,
+
+        [Parameter()]
+        [System.String]
+        $Department,
+
+        [Parameter()]
+        [System.String[]]
+        $ImAddresses,
+
+        [Parameter()]
+        [System.String[]]
+        $Responsibilities,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementTroubleshootingEvent1[]]
+        $DeviceManagementTroubleshootingEvents,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphLicenseDetails[]]
+        $LicenseDetails,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProvisionedPlan[]]
+        $ProvisionedPlans,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCalendar1]
+        $Calendar,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTeam1[]]
+        $JoinedTeams,
+
+        [Parameter()]
+        [System.String[]]
+        $BusinessPhones,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAssignedLicense[]]
+        $AssignedLicenses,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphInferenceClassification]
+        $InferenceClassification,
+
+        [Parameter()]
+        [System.String[]]
+        $Interests,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnPremisesProvisioningError[]]
+        $OnPremisesProvisioningErrors,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphExtension[]]
+        $Extensions,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnPremisesExtensionAttributes]
+        $OnPremisesExtensionAttributes,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppRegistration1[]]
+        $ManagedAppRegistrations,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserTeamwork1]
+        $Teamwork,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $DirectReports,
+
+        [Parameter()]
+        [System.String]
+        $EmployeeType,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTodo1]
+        $Todo,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $CreatedObjects,
+
+        [Parameter()]
+        [System.String]
+        $UserType,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String]
+        $GivenName,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesSecurityIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $PreferredLanguage,
+
+        [Parameter()]
+        [System.String]
+        $AboutMe,
+
+        [Parameter()]
+        [System.String]
+        $CompanyName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsResourceAccount,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerUser1]
+        $Planner,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $PreferredName,
+
+        [Parameter()]
+        [System.String]
+        $OfficeLocation,
+
+        [Parameter()]
+        [System.DateTime]
+        $OnPremisesLastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPerson1[]]
+        $People,
+
+        [Parameter()]
+        [System.String]
+        $CreationType,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOutlookUser1]
+        $Outlook,
+
+        [Parameter()]
+        [System.String]
+        $ConsentProvidedForMinor,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPasswordProfile]
+        $PasswordProfile,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesDomainName,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserSettings1]
+        $Settings,
+
+        [Parameter()]
+        [System.String]
+        $PasswordPolicies,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnenote1]
+        $Onenote,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $OwnedObjects,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphChat1[]]
+        $Chats,
+
+        [Parameter()]
+        [System.String]
+        $Country,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $MemberOf,
+
+        [Parameter()]
+        [System.String]
+        $ExternalUserState,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastPasswordChangeDateTime,
+
+        [Parameter()]
+        [System.String[]]
+        $PastProjects,
+
+        [Parameter()]
+        [System.String]
+        $FaxNumber,
+
+        [Parameter()]
+        [System.String]
+        $MySite,
+
+        [Parameter()]
+        [System.DateTime]
+        $HireDate,
+
+        [Parameter()]
+        [System.String]
+        $AgeGroup,
+
+        [Parameter()]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [System.String]
+        $PostalCode,
+
+        [Parameter()]
+        [System.DateTime]
+        $SignInSessionsValidFromDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCalendar1[]]
+        $Calendars,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject]
+        $Manager,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRoleAssignment1[]]
+        $AppRoleAssignments,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $RegisteredDevices,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAssignedPlan[]]
+        $AssignedPlans,
+
+        [Parameter()]
+        [System.Int32]
+        $DeviceEnrollmentLimit,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProfilePhoto]
+        $Photo,
+
+        [Parameter()]
+        [System.String[]]
+        $ProxyAddresses,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMailFolder1[]]
+        $MailFolders,
+
+        [Parameter()]
+        [System.DateTime]
+        $DeletedDateTime,
+
+        [Parameter()]
+        [System.DateTime]
+        $EmployeeHireDate,
+
+        [Parameter()]
+        [System.String[]]
+        $Schools,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAuthentication1]
+        $Authentication,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $StreetAddress,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $TransitiveMemberOf,
+
+        [Parameter()]
+        [System.String[]]
+        $OtherMails,
+
+        [Parameter()]
+        [System.String]
+        $UserPrincipalName,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDrive1[]]
+        $Drives,
+
+        [Parameter()]
+        [System.DateTime]
+        $Birthday,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String[]]
+        $Skills,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserActivity1[]]
+        $Activities,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphLicenseAssignmentState[]]
+        $LicenseAssignmentStates,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMessage1[]]
+        $Messages,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDrive1]
+        $Drive,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $OwnedDevices,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphContact1[]]
+        $Contacts,
+
+        [Parameter()]
+        [System.String]
+        $MailNickname,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEvent1[]]
+        $CalendarView,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProfilePhoto[]]
+        $Photos,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSite1[]]
+        $FollowedSites,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMailboxSettings1]
+        $MailboxSettings,
+
+        [Parameter()]
+        [System.String]
+        $LegalAgeGroupClassification,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesImmutableId,
+
+        [Parameter()]
+        [System.String]
+        $City,
+
+        [Parameter()]
+        [System.String]
+        $Surname,
+
+        [Parameter()]
+        [System.DateTime]
+        $ExternalUserStateChangeDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEvent1[]]
+        $Events,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCalendarGroup1[]]
+        $CalendarGroups,
+
+        [Parameter()]
+        [System.String]
+        $JobTitle,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesUserPrincipalName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OnPremisesSyncEnabled,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAgreementAcceptance[]]
+        $AgreementAcceptances,
+
+        [Parameter()]
+        [System.String]
+        $PreferredDataLocation,
+
+        [Parameter()]
+        [System.String]
+        $MobilePhone,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphObjectIdentity[]]
+        $Identities,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AccountEnabled,
+
+        [Parameter()]
+        [System.String]
+        $UsageLocation,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedDevice1[]]
+        $ManagedDevices,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphContactFolder1[]]
+        $ContactFolders,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesDistinguishedName,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesSamAccountName,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEmployeeOrgData]
+        $EmployeeOrgData,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOAuth2PermissionGrant1[]]
+        $Oauth2PermissionGrants,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUser]
+        $BodyParameter,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphScopedRoleMembership[]]
+        $ScopedRoleMemberOf,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOfficeGraphInsights]
+        $Insights,
+
+        [Parameter()]
+        [System.String]
+        $EmployeeId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnlineMeeting1[]]
+        $OnlineMeetings
+    )
+}
+function Remove-MgUser
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IUsersIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $UserId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgUser
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTodo1]
+        $Todo,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOfficeGraphInsights]
+        $Insights,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnlineMeeting1[]]
+        $OnlineMeetings,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IUsersIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAssignedPlan[]]
+        $AssignedPlans,
+
+        [Parameter()]
+        [System.String]
+        $ExternalUserState,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUser]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.DateTime]
+        $EmployeeHireDate,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesImmutableId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $RegisteredDevices,
+
+        [Parameter()]
+        [System.String]
+        $PreferredName,
+
+        [Parameter()]
+        [System.DateTime]
+        $ExternalUserStateChangeDateTime,
+
+        [Parameter()]
+        [System.String[]]
+        $ImAddresses,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesDomainName,
+
+        [Parameter()]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [System.DateTime]
+        $SignInSessionsValidFromDateTime,
+
+        [Parameter()]
+        [System.DateTime]
+        $Birthday,
+
+        [Parameter()]
+        [System.String]
+        $Mail,
+
+        [Parameter()]
+        [System.DateTime]
+        $HireDate,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphChat1[]]
+        $Chats,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEmployeeOrgData]
+        $EmployeeOrgData,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsResourceAccount,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastPasswordChangeDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject]
+        $Manager,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphInferenceClassification]
+        $InferenceClassification,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCalendarGroup1[]]
+        $CalendarGroups,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMailFolder1[]]
+        $MailFolders,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphScopedRoleMembership[]]
+        $ScopedRoleMemberOf,
+
+        [Parameter()]
+        [System.String]
+        $ConsentProvidedForMinor,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAgreementAcceptance[]]
+        $AgreementAcceptances,
+
+        [Parameter()]
+        [System.String]
+        $EmployeeType,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $OwnedObjects,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProfilePhoto[]]
+        $Photos,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOAuth2PermissionGrant1[]]
+        $Oauth2PermissionGrants,
+
+        [Parameter()]
+        [System.String]
+        $PreferredDataLocation,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMailboxSettings1]
+        $MailboxSettings,
+
+        [Parameter()]
+        [System.String]
+        $Country,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesDistinguishedName,
+
+        [Parameter()]
+        [System.String[]]
+        $Skills,
+
+        [Parameter()]
+        [System.String]
+        $MobilePhone,
+
+        [Parameter()]
+        [System.String]
+        $FaxNumber,
+
+        [Parameter()]
+        [System.DateTime]
+        $DeletedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserSettings1]
+        $Settings,
+
+        [Parameter()]
+        [System.Int32]
+        $DeviceEnrollmentLimit,
+
+        [Parameter()]
+        [System.String]
+        $AboutMe,
+
+        [Parameter()]
+        [System.String]
+        $GivenName,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphContactFolder1[]]
+        $ContactFolders,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPerson1[]]
+        $People,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRoleAssignment1[]]
+        $AppRoleAssignments,
+
+        [Parameter()]
+        [System.String[]]
+        $OtherMails,
+
+        [Parameter()]
+        [System.String]
+        $PasswordPolicies,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $DirectReports,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesUserPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $PreferredLanguage,
+
+        [Parameter()]
+        [System.DateTime]
+        $OnPremisesLastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $AgeGroup,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerUser1]
+        $Planner,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphContact1[]]
+        $Contacts,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCalendar1[]]
+        $Calendars,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDrive1]
+        $Drive,
+
+        [Parameter()]
+        [System.String]
+        $UsageLocation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ShowInAddressList,
+
+        [Parameter()]
+        [System.String]
+        $JobTitle,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AccountEnabled,
+
+        [Parameter()]
+        [System.String[]]
+        $Schools,
+
+        [Parameter()]
+        [System.String]
+        $CreationType,
+
+        [Parameter()]
+        [System.String]
+        $City,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserTeamwork1]
+        $Teamwork,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppRegistration1[]]
+        $ManagedAppRegistrations,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMessage1[]]
+        $Messages,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphExtension[]]
+        $Extensions,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphObjectIdentity[]]
+        $Identities,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTeam1[]]
+        $JoinedTeams,
+
+        [Parameter()]
+        [System.String]
+        $MySite,
+
+        [Parameter()]
+        [System.String[]]
+        $BusinessPhones,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String[]]
+        $ProxyAddresses,
+
+        [Parameter()]
+        [System.String]
+        $OfficeLocation,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPresence1]
+        $Presence,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPasswordProfile]
+        $PasswordProfile,
+
+        [Parameter()]
+        [System.String]
+        $UserType,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $TransitiveMemberOf,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedDevice1[]]
+        $ManagedDevices,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $CreatedObjects,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProfilePhoto]
+        $Photo,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphLicenseDetails[]]
+        $LicenseDetails,
+
+        [Parameter()]
+        [System.String]
+        $StreetAddress,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEvent1[]]
+        $CalendarView,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnenote1]
+        $Onenote,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $OwnedDevices,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSite1[]]
+        $FollowedSites,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDrive1[]]
+        $Drives,
+
+        [Parameter()]
+        [System.String[]]
+        $Interests,
+
+        [Parameter()]
+        [System.String]
+        $LegalAgeGroupClassification,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesSecurityIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $UserId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCalendar1]
+        $Calendar,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OnPremisesSyncEnabled,
+
+        [Parameter()]
+        [System.String]
+        $Department,
+
+        [Parameter()]
+        [System.String]
+        $CompanyName,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $MemberOf,
+
+        [Parameter()]
+        [System.String]
+        $EmployeeId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAssignedLicense[]]
+        $AssignedLicenses,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEvent1[]]
+        $Events,
+
+        [Parameter()]
+        [System.String]
+        $UserPrincipalName,
+
+        [Parameter()]
+        [System.String[]]
+        $Responsibilities,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProvisionedPlan[]]
+        $ProvisionedPlans,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnPremisesProvisioningError[]]
+        $OnPremisesProvisioningErrors,
+
+        [Parameter()]
+        [System.String]
+        $MailNickname,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnPremisesExtensionAttributes]
+        $OnPremisesExtensionAttributes,
+
+        [Parameter()]
+        [System.String[]]
+        $PastProjects,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAuthentication1]
+        $Authentication,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphLicenseAssignmentState[]]
+        $LicenseAssignmentStates,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserActivity1[]]
+        $Activities,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOutlookUser1]
+        $Outlook,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementTroubleshootingEvent1[]]
+        $DeviceManagementTroubleshootingEvents,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesSamAccountName,
+
+        [Parameter()]
+        [System.String]
+        $Surname,
+
+        [Parameter()]
+        [System.String]
+        $PostalCode
+    )
+}
+#endregion
+#region
 function Get-AdminAuditLogConfig
 {
     [CmdletBinding()]
@@ -21347,3 +31021,4 @@ function Set-CsTenantFederationConfiguration
     )
 }
 #endregion
+
