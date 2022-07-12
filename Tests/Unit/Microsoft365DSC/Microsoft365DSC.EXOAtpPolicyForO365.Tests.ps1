@@ -67,8 +67,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsSingleInstance              = 'Yes'
                     Ensure                        = 'Present'
                     Identity                      = 'Default'
-                    Credential            = $Credential
-                    AllowClickThrough             = $false
+                    Credential                    = $Credential
                     AllowSafeDocsOpen             = $false
                     BlockUrls                     = @()
                     EnableATPForSPOTeamsODB       = $true
@@ -81,8 +80,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IsSingleInstance              = 'Yes'
                         Ensure                        = 'Present'
                         Identity                      = 'Default'
-                        Credential            = $Credential
-                        AllowClickThrough             = $false
+                        Credential                    = $Credential
                         AllowSafeDocsOpen             = $false
                         BlockUrls                     = @()
                         EnableATPForSPOTeamsODB       = $true
@@ -103,8 +101,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsSingleInstance              = 'Yes'
                     Ensure                        = 'Present'
                     Identity                      = 'Default'
-                    Credential            = $Credential
-                    AllowClickThrough             = $false
+                    Credential                    = $Credential
                     AllowSafeDocsOpen             = $false
                     BlockUrls                     = @()
                     EnableATPForSPOTeamsODB       = $true
@@ -116,8 +113,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IsSingleInstance              = 'Yes'
                         Ensure                        = 'Present'
                         Identity                      = 'Default'
-                        Credential            = $Credential
-                        AllowClickThrough             = $true
+                        Credential                    = $Credential
                         AllowSafeDocsOpen             = $true
                         BlockUrls                     = @()
                         EnableATPForSPOTeamsODB       = $false
@@ -142,8 +138,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsSingleInstance              = 'Yes'
                     Ensure                        = 'Present'
                     Identity                      = 'Invalid'
-                    Credential            = $Credential
-                    AllowClickThrough             = $false
+                    Credential                    = $Credential
                     AllowSafeDocsOpen             = $false
                     BlockUrls                     = @()
                     EnableATPForSPOTeamsODB       = $true
@@ -154,7 +149,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Ensure                        = 'Present'
                         Identity                      = 'Default2' # Drift
-                        AllowClickThrough             = $false
                         AllowSafeDocsOpen             = $false
                         BlockUrls                     = @()
                         EnableATPForSPOTeamsODB       = $false
@@ -186,7 +180,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-AtpPolicyForO365 -MockWith {
                     return @{
                         Identity                      = 'Default'
-                        AllowClickThrough             = $false
                         AllowSafeDocsOpen             = $false
                         BlockUrls                     = @()
                         EnableATPForSPOTeamsODB       = $false

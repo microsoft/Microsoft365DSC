@@ -20,6 +20,7 @@ function Get-TargetResource
         [Boolean]
         $DeliverMessageAfterScan = $false,
 
+        #DEPRECATED
         [Parameter()]
         [Boolean]
         $DoNotAllowClickThrough = $true,
@@ -45,6 +46,7 @@ function Get-TargetResource
         [Boolean]
         $EnableSafeLinksForTeams = $false,
 
+        #DEPRECATED
         [Parameter()]
         [Boolean]
         $IsEnabled,
@@ -143,14 +145,16 @@ function Get-TargetResource
                 AdminDisplayName              = $SafeLinksPolicy.AdminDisplayName
                 CustomNotificationText        = $SafeLinksPolicy.CustomNotificationText
                 DeliverMessageAfterScan       = $SafeLinksPolicy.DeliverMessageAfterScan
-                DoNotAllowClickThrough        = $SafeLinksPolicy.DoNotAllowClickThrough
+                #Deprecated
+                #DoNotAllowClickThrough        = $SafeLinksPolicy.DoNotAllowClickThrough
                 DoNotRewriteUrls              = $SafeLinksPolicy.DoNotRewriteUrls
                 #Deprecated
                 #DoNotTrackUserClicks          = $SafeLinksPolicy.DoNotTrackUserClicks
                 EnableForInternalSenders      = $SafeLinksPolicy.EnableForInternalSenders
                 EnableOrganizationBranding    = $SafeLinksPolicy.EnableOrganizationBranding
                 EnableSafeLinksForTeams       = $SafeLinksPolicy.EnableSafeLinksForTeams
-                IsEnabled                     = $SafeLinksPolicy.IsEnabled
+                #Deprecated
+                #IsEnabled                     = $SafeLinksPolicy.IsEnabled
                 ScanUrls                      = $SafeLinksPolicy.ScanUrls
                 UseTranslatedNotificationText = $SafeLinksPolicy.UseTranslatedNotificationText
                 Ensure                        = 'Present'
@@ -214,6 +218,7 @@ function Set-TargetResource
         [Boolean]
         $DeliverMessageAfterScan = $false,
 
+        #DEPRECATED
         [Parameter()]
         [Boolean]
         $DoNotAllowClickThrough = $true,
@@ -239,6 +244,7 @@ function Set-TargetResource
         [Boolean]
         $EnableSafeLinksForTeams = $false,
 
+        #DEPRECATED
         [Parameter()]
         [Boolean]
         $IsEnabled,
@@ -316,13 +322,31 @@ function Set-TargetResource
         }
         $SafeLinksPolicyParams.Remove('Identity') | Out-Null
         Write-Verbose -Message "Creating SafeLinksPolicy $($Identity)"
+
+        Write-Verbose -Message "Property DoNotTrackUserClicks is deprecated and will be ignored."
+        $SafeLinksPolicyParams.Remove("DoNotTrackUserClicks") | Out-Null
+
+        Write-Verbose -Message "Property DoNotAllowClickThrough is deprecated and will be ignored."
+        $SafeLinksPolicyParams.Remove("DoNotAllowClickThrough") | Out-Null
+
+        Write-Verbose -Message "Property IsEnabled is deprecated and will be ignored."
+        $SafeLinksPolicyParams.Remove("IsEnabled") | Out-Null
+
         New-SafeLinksPolicy @SafeLinksPolicyParams
     }
     elseif (('Present' -eq $Ensure ) -and ($null -ne $SafeLinksPolicy))
     {
         Write-Verbose -Message "Setting SafeLinksPolicy $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $SafeLinksPolicyParams)"
+
         Write-Verbose -Message "Property DoNotTrackUserClicks is deprecated and will be ignored."
         $SafeLinksPolicyParams.Remove("DoNotTrackUserClicks") | Out-Null
+
+        Write-Verbose -Message "Property DoNotAllowClickThrough is deprecated and will be ignored."
+        $SafeLinksPolicyParams.Remove("DoNotAllowClickThrough") | Out-Null
+
+        Write-Verbose -Message "Property IsEnabled is deprecated and will be ignored."
+        $SafeLinksPolicyParams.Remove("IsEnabled") | Out-Null
+
         Set-SafeLinksPolicy @SafeLinksPolicyParams -Confirm:$false
     }
     elseif (('Absent' -eq $Ensure ) -and ($null -ne $SafeLinksPolicy))
@@ -354,6 +378,7 @@ function Test-TargetResource
         [Boolean]
         $DeliverMessageAfterScan = $false,
 
+        #DEPRECATED
         [Parameter()]
         [Boolean]
         $DoNotAllowClickThrough = $true,
@@ -379,6 +404,7 @@ function Test-TargetResource
         [Boolean]
         $EnableSafeLinksForTeams = $false,
 
+        #DEPRECATED
         [Parameter()]
         [Boolean]
         $IsEnabled,
