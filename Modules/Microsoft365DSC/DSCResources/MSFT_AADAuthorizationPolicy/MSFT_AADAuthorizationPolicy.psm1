@@ -11,10 +11,6 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.String]
         $DisplayName,
 
         [Parameter()]
@@ -128,7 +124,6 @@ function Get-TargetResource
 
         $result = @{
             IsSingleInstance                                  = 'Yes'
-            Id                                                = $Policy.Id
             DisplayName                                       = $Policy.DisplayName
             Description                                       = $Policy.Description
             AllowedToSignUpEmailBasedSubscriptions            = $Policy.AllowedToSignUpEmailBasedSubscriptions
@@ -164,10 +159,6 @@ function Set-TargetResource
         [System.String]
         [ValidateSet('Yes')]
         $IsSingleInstance,
-
-        [Parameter()]
-        [System.String]
-        $Id,
 
         [Parameter()]
         [System.String]
@@ -261,10 +252,10 @@ function Set-TargetResource
 
     Write-Verbose -Message "Set-Targetresource: Running Get-TargetResource"
     $currentPolicy = Get-TargetResource @PSBoundParameters
+
     Write-Verbose -Message "Set-Targetresource: Cleaning up parameters"
     $currentParameters = ([hashtable]$PSBoundParameters).Clone()
     $currentParameters.Remove("IsSingleInstance") | Out-Null
-    $currentParameters.Remove("Id") | Out-Null
     $currentParameters.Remove("ApplicationId") | Out-Null
     $currentParameters.Remove("TenantId") | Out-Null
     $currentParameters.Remove("CertificateThumbprint") | Out-Null
@@ -288,12 +279,12 @@ function Set-TargetResource
                 if ($param -like 'Permission*')
                 {
                     $UpdateParameters.Add($param, $currentParameters.$param)
-                    write-verbose "added '$param' to UpdateParameters"
+                    Write-Verbose -Message "Added '$param' to UpdateParameters"
                 }
                 else
                 {
                     $defaultUserRolePermissions.Add(($param -replace '^DefaultUserRole'), $currentParameters.$param)
-                    write-verbose "added '$($param -replace '^DefaultUserRole')' ($param) to defaultUserRolePermissions"
+                    Write-Verbose -Message "Added '$($param -replace '^DefaultUserRole')' ($param) to defaultUserRolePermissions"
                 }
             }
             else
@@ -302,37 +293,37 @@ function Set-TargetResource
                 {
                     # translate displayvalue to corresponding GUID
                     $guestUserRoleId = Get-GuestUserRoleIdFromName -GuestUserRole $currentParameters.$param
-                    write-verbose "Translated GuestUserRole '$param' to '$guestUserRoleId'"
+                    Write-Verbose -Message "Translated GuestUserRole '$param' to '$guestUserRoleId'"
                     $UpdateParameters.Add($param, $guestUserRoleId)
-                    write-verbose "added '$param' to UpdateParameters"
+                    Write-Verbose -Message "Added '$param' to UpdateParameters"
                 }
                 else
                 {
                     $UpdateParameters.Add($param, $currentParameters.$param)
-                    write-verbose "added '$param' to UpdateParameters"
+                    Write-Verbose -Message "added '$param' to UpdateParameters"
                 }
             }
         }
         else
         {
-            write-verbose "'$param' is unchanged"
+            Write-Verbose -Message "'$param' is unchanged"
         }
     }
 
     if ($defaultUserRolePermissions.Keys.Count -gt 0)
     {
-        write-verbose "Add 'DefaultUserRolePermissions' to UpdateParameters"
+        Write-Verbose -Message "Add 'DefaultUserRolePermissions' to UpdateParameters"
         $UpdateParameters.Add('DefaultUserRolePermissions', @{}) # New-Object
         foreach ($key in $defaultUserRolePermissions.keys) {
             $UpdateParameters.defaultUserRolePermissions.Add($key, $defaultUserRolePermissions.$key) | Out-Null
-            write-verbose "Add '$key' to UpdateParameters.defaultUserRolePermissions"
+            Write-Verbose -Message "Add '$key' to UpdateParameters.defaultUserRolePermissions"
         }
     }
-    Write-Verbose -Message "Set-Targetresource: Change authorization policy"
+
     try
     {
-        Write-Verbose "Updating existing authorization policy with values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParameters)"
-        $response = Update-MgPolicyAuthorizationPolicy -AuthorizationPolicyId $currentPolicy.Id @updateParameters -ErrorAction Stop
+        Write-Verbose -Message "Updating existing authorization policy with values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParameters)"
+        $response = Update-MgPolicyAuthorizationPolicy @updateParameters -ErrorAction Stop
     }
     catch
     {
@@ -373,10 +364,6 @@ function Test-TargetResource
         [System.String]
         [ValidateSet('Yes')]
         $IsSingleInstance,
-
-        [Parameter()]
-        [System.String]
-        $Id,
 
         [Parameter()]
         [System.String]
@@ -462,10 +449,6 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-    $ValuesToCheck.Remove('Credential') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -524,11 +507,11 @@ function Export-TargetResource
 
     try
     {
-        $results = Get-TargetResource -IsSingleInstance 'Yes' @Params
+        $results = Get-TargetResource -IsSingleInstance 'Yes' @PSBoundParameters
         $dscContent = ''
 
         Write-Host "`r`n" -NoNewline
-        Write-Host "    |---[1/1] AuthorizationPolicy" -NoNewline
+        Write-Host "    |---[1/1] $($results.DisplayName)" -NoNewline
         $results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
             -Results $results
         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
