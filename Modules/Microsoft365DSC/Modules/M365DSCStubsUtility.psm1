@@ -42,11 +42,11 @@ function New-M365DSCStubFiles
     $folderPath = Join-Path $PSScriptRoot -ChildPath "../DSCResources"
     Write-Host $FolderPath
     $workloads = @(
-        @{Name = 'ExchangeOnline';           ModuleName = "ExchangeOnlineManagement"},
-        @{Name = 'SecurityComplianceCenter'; ModuleName = "ExchangeOnlineManagement"},
-        @{Name = 'PnP';                      ModuleName = 'PnP.PowerShell'},
-        @{Name = 'PowerPlatforms';           ModuleName = 'Microsoft.PowerApps.Administration.PowerShell'},
-        @{Name = 'MicrosoftTeams';           ModuleName = "MicrosoftTeams"}
+        @{Name = 'ExchangeOnline';           ModuleName = "ExchangeOnlineManagement";                      CommandName = "Get-Mailbox"},
+        @{Name = 'SecurityComplianceCenter'; ModuleName = "ExchangeOnlineManagement";                      CommandName = "Get-Label"},
+        @{Name = 'PnP';                      ModuleName = 'PnP.PowerShell';},
+        @{Name = 'PowerPlatforms';           ModuleName = 'Microsoft.PowerApps.Administration.PowerShell';},
+        @{Name = 'MicrosoftTeams';           ModuleName = "MicrosoftTeams";}
     )
     foreach ($Module in $workloads)
     {
@@ -56,9 +56,11 @@ function New-M365DSCStubFiles
 
         Write-Host "Generating Stubs for {$($Module.Name)}..."
         $CurrentModuleName = $Module.ModuleName
-        if ($null -eq $CurrentModuleName)
+
+        if ($null -eq $CurrentModuleName -or $Module.CommandName)
         {
-            $foundModule = Get-Module | Where-Object -FilterScript { $_.ExportedCommands.Values.Name -ccontains $Module.RandomCmdlet }
+            Write-Host "Loading proxy for $($Module.ModuleName)"
+            $foundModule = Get-Module | Where-Object -FilterScript { $_.ExportedCommands.Values.Name -ccontains $Module.CommandName }
             $CurrentModuleName = $foundModule.Name
             Import-Module $CurrentModuleName -Force -Global -ErrorAction SilentlyContinue
         }
