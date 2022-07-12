@@ -5,7 +5,6 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **IsSingleInstance** | Key | String | Only valid value is 'Yes'. |Yes|
-| **Id** | Write | String | ID of the authorization policy. ||
 | **DisplayName** | Write | String | Display name for this policy. ||
 | **Description** | Write | String | Description of this policy. ||
 | **AllowedToSignUpEmailBasedSubscriptions** | Write | Boolean | Boolean Indicates whether users can sign up for email based subscriptions. ||
