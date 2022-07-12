@@ -3,7 +3,7 @@
 # UNRELEASED
 
 * EXOATPPolicyForO365
-  * Deprecated properties AllowClickThrough & EnableSafeLinksForO365Clients.
+  * Deprecated properties AllowClickThrough, EnableSafeLinksForO365Clients & TrackClicks.
 * EXOAuthenticationPolicyAssignment
   * Initial release.
 * EXOCASMailboxSettings

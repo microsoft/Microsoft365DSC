@@ -39,6 +39,7 @@ function Get-TargetResource
         [Boolean]
         $EnableSafeLinksForO365Clients = $true,
 
+        #DEPRECATED
         [Parameter()]
         [Boolean]
         $TrackClicks = $true,
@@ -124,7 +125,8 @@ function Get-TargetResource
                 EnableSafeDocs                = $AtpPolicyForO365.EnableSafeDocs
                 #DEPRECATED
                 #EnableSafeLinksForO365Clients = $AtpPolicyForO365.EnableSafeLinksForO365Clients
-                TrackClicks                   = $AtpPolicyForO365.TrackClicks
+                #DEPRECATED
+                #TrackClicks                   = $AtpPolicyForO365.TrackClicks
                 Ensure                        = 'Present'
                 ApplicationId                 = $ApplicationId
                 CertificateThumbprint         = $CertificateThumbprint
@@ -204,6 +206,7 @@ function Set-TargetResource
         [Boolean]
         $EnableSafeLinksForO365Clients = $true,
 
+        #DEPRECATED
         [Parameter()]
         [Boolean]
         $TrackClicks = $true,
@@ -279,6 +282,10 @@ function Set-TargetResource
     Write-Verbose -Message "Property EnableSafeLinksForO365Clients is deprecated."
     $AtpPolicyParams.Remove('EnableSafeLinksForO365Clients') | Out-Null
 
+    #Deprecated
+    Write-Verbose -Message "Property EnableSafeLinksForO365Clients is deprecated."
+    $AtpPolicyParams.Remove('TrackClicks') | Out-Null
+
     Set-AtpPolicyForO365 @AtpPolicyParams
 }
 
@@ -323,6 +330,7 @@ function Test-TargetResource
         [Boolean]
         $EnableSafeLinksForO365Clients = $true,
 
+        #DEPRECATED
         [Parameter()]
         [Boolean]
         $TrackClicks = $true,
@@ -388,6 +396,7 @@ function Test-TargetResource
     #DEPRECATED
     $ValuesToCheck.Remove('AllowClickThrough') | Out-Null
     $ValuesToCheck.Remove('EnableSafeLinksForO365Clients') | Out-Null
+    $ValuesToCheck.Remove('TrackClicks') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
