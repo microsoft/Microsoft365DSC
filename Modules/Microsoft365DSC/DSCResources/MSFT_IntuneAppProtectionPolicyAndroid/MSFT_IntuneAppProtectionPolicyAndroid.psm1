@@ -146,9 +146,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    write-host 'resourcename:' $ResourceName
     $CommandName  = $MyInvocation.MyCommand
-    write-host 'commandname:' $commandname
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -212,12 +210,35 @@ function Get-TargetResource
         $policy = @{}
 
         #loop regular parameters and add from $polycyinfo
-        foreach ($param in ($Allparams.keys | Where-Object {$allparams.$_ -eq 'Parameter'}) )
+        foreach ($param in ($Allparams.keys | Where-Object {$allparams.$_.Type -eq 'Parameter'}) )
         {
-            $policy.add($param, $policyInfo.$param)
+            # we need to process this because reverseDSC doesn't handle certain object types
+            switch ($Allparams.$param.ExportFileType)
+            {
+                'String'
+                {
+                    $policy.add($param, $policyInfo.$param.tostring())
+                }
+
+                'Array'
+                {
+                    $tmparray = @()
+                    $policyInfo.$param | foreach { $tmparray += $_.tostring() }
+                    $policy.add($param, $tmparray)
+                }
+
+                # This is required because the function to add/amend requires a duration and not a timespan
+                'Duration'
+                {
+                    $policy.add($param, [System.Xml.XmlConvert]::ToString($policyInfo.$param))
+                }
+
+                DEFAULT
+                {$policy.add($param, $policyInfo.$param)}
+            }
         }
         # loop credential parameters and add them from input params
-        foreach ($param in ($Allparams.keys | Where-Object {$allparams.$_ -eq 'Credential'}) )
+        foreach ($param in ($Allparams.keys | Where-Object {$allparams.$_.Type -eq 'Credential'}) )
         {
             $policy.add($param, (get-variable -name $param).value)
         }
@@ -1033,6 +1054,7 @@ function Set-M365DSCIntuneAppProtectionPolicyAndroidAssignment
 
 function get-InputParameters
 {
+    <#
     return @{
         DisplayName                             = 'Parameter'
         Description                             = 'Parameter'
@@ -1068,6 +1090,43 @@ function get-InputParameters
         ApplicationSecret                       = 'Credential'
         CertificateThumbprint                   = 'Credential'
     }
+    #>
+    return @{
+       AllowedOutboundDataTransferDestinations  = @{Name = "AllowedOutboundDataTransferDestinations" ; Type = "Parameter"        ; ExportFileType = "String"; };
+       PeriodOfflineBeforeAccessCheck           = @{Name = "PeriodOfflineBeforeAccessCheck"          ; Type = "Parameter"        ; ExportFileType = "Duration"; };
+       PeriodOnlineBeforeAccessCheck            = @{Name = "PeriodOnlineBeforeAccessCheck"           ; Type = "Parameter"        ; ExportFileType = "Duration"; };
+       SaveAsBlocked                            = @{Name = "SaveAsBlocked"                           ; Type = "Parameter"        ; ExportFileType = "NA"; };
+       ApplicationId                            = @{Name = "ApplicationId"                           ; Type = "Credential"       ; ExportFileType = "NA"; };
+       DisplayName                              = @{Name = "DisplayName"                             ; Type = "Parameter"        ; ExportFileType = "NA"; };
+       Description                              = @{Name = "Description"                             ; Type = "Parameter"        ; ExportFileType = "NA"; };
+       Assignments                              = @{Name = "Assignments"                             ; Type = "ComplexParameter" ; ExportFileType = "NA"; };
+       DeviceComplianceRequired                 = @{Name = "DeviceComplianceRequired"                ; Type = "Parameter"        ; ExportFileType = "NA"; };
+       MinimumPinLength                         = @{Name = "MinimumPinLength"                        ; Type = "Parameter"        ; ExportFileType = "NA"; };
+       PrintBlocked                             = @{Name = "PrintBlocked"                            ; Type = "Parameter"        ; ExportFileType = "NA"; };
+       PinCharacterSet                          = @{Name = "PinCharacterSet"                         ; Type = "Parameter"        ; ExportFileType = "String"; };
+       Apps                                     = @{Name = "Apps"                                    ; Type = "ComplexParameter" ; ExportFileType = "NA"; };
+       CertificateThumbprint                    = @{Name = "CertificateThumbprint"                   ; Type = "Credential"       ; ExportFileType = "NA"; };
+       ContactSyncBlocked                       = @{Name = "ContactSyncBlocked"                      ; Type = "Parameter"        ; ExportFileType = "NA"; };
+       PeriodBeforePinReset                     = @{Name = "PeriodBeforePinReset"                    ; Type = "Parameter"        ; ExportFileType = "Duration"; };
+       MaximumPinRetries                        = @{Name = "MaximumPinRetries"                       ; Type = "Parameter"        ; ExportFileType = "NA"; };
+       SimplePinBlocked                         = @{Name = "SimplePinBlocked"                        ; Type = "Parameter"        ; ExportFileType = "NA"; };
+       FingerprintBlocked                       = @{Name = "FingerprintBlocked"                      ; Type = "Parameter"        ; ExportFileType = "NA"; };
+       ManagedBrowserToOpenLinksRequired        = @{Name = "ManagedBrowserToOpenLinksRequired"       ; Type = "Parameter"        ; ExportFileType = "NA"; };
+       DataBackupBlocked                        = @{Name = "DataBackupBlocked"                       ; Type = "Parameter"        ; ExportFileType = "NA"; };
+       Credential                               = @{Name = "Credential"                              ; Type = "Credential"       ; ExportFileType = "NA"; };
+       OrganizationalCredentialsRequired        = @{Name = "OrganizationalCredentialsRequired"       ; Type = "Parameter"        ; ExportFileType = "NA"; };
+       PinRequired                              = @{Name = "PinRequired"                             ; Type = "Parameter"        ; ExportFileType = "NA"; };
+       PeriodOfflineBeforeWipeIsEnforced        = @{Name = "PeriodOfflineBeforeWipeIsEnforced"       ; Type = "Parameter"        ; ExportFileType = "Duration"; };
+       ExcludedGroups                           = @{Name = "ExcludedGroups"                          ; Type = "ComplexParameter" ; ExportFileType = "NA"; };
+       TenantId                                 = @{Name = "TenantId"                                ; Type = "Credential"       ; ExportFileType = "NA"; };
+       AllowedOutboundClipboardSharingLevel     = @{Name = "AllowedOutboundClipboardSharingLevel"    ; Type = "Parameter"        ; ExportFileType = "String"; };
+       ApplicationSecret                        = @{Name = "ApplicationSecret"                       ; Type = "Credential"       ; ExportFileType = "NA"; };
+       Ensure                                   = @{Name = "Ensure"                                  ; Type = "ComplexParameter" ; ExportFileType = "NA"; };
+       DisableAppPinIfDevicePinIsSet            = @{Name = "DisableAppPinIfDevicePinIsSet"           ; Type = "Parameter"        ; ExportFileType = "NA"; };
+       AllowedInboundDataTransferSources        = @{Name = "AllowedInboundDataTransferSources"       ; Type = "Parameter"        ; ExportFileType = "String"; };
+       AllowedDataStorageLocations              = @{Name = "AllowedDataStorageLocations"             ; Type = "Parameter"        ; ExportFileType = "Array"; }
+
+     }
 }
 
 Export-ModuleMember -Function *-TargetResource
