@@ -43,6 +43,19 @@ function New-M365DSCStubFiles
     Write-Host $FolderPath
     $workloads = @(
         @{Name = 'ExchangeOnline';           ModuleName = "ExchangeOnlineManagement";                      CommandName = "Get-Mailbox"},
+        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.Applications";},
+        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.Authentication";},
+        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.DeviceManagement";},
+        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.DeviceManagement.Administration";},
+        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.DeviceManagement.Enrolment";},
+        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.Devices.CorporateManagement";},
+        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.Groups";},
+        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.Identity.DirectoryManagement";},
+        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.Identity.Governance";},
+        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.Identity.Signins";},
+        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.Planner";},
+        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.Teams";},
+        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.Users";},
         @{Name = 'SecurityComplianceCenter'; ModuleName = "ExchangeOnlineManagement";                      CommandName = "Get-Label"},
         @{Name = 'PnP';                      ModuleName = 'PnP.PowerShell';},
         @{Name = 'PowerPlatforms';           ModuleName = 'Microsoft.PowerApps.Administration.PowerShell';},
@@ -54,7 +67,7 @@ function New-M365DSCStubFiles
         $ConnectionMode = New-M365DSCConnection -Workload ($Module.Name) `
             -InboundParameters $PSBoundParameters
 
-        Write-Host "Generating Stubs for {$($Module.Name)}..."
+        Write-Host "Generating Stubs for {$($Module.ModuleName)}..."
         $CurrentModuleName = $Module.ModuleName
 
         if ($null -eq $CurrentModuleName -or $Module.CommandName)
@@ -105,17 +118,17 @@ function New-M365DSCStubFiles
         $i = 1
         foreach ($cmdlet in $cmdlets)
         {
+            Write-Progress -Activity "Generating Stubs" -Status $cmdlet.Name -PercentComplete (($i / $cmdlets.Length) * 100)
             $foundInFiles = Get-ChildItem -Path $folderPath `
                 -Recurse | Select-String -Pattern $cmdlet.Name
 
             if ($null -eq $foundInFiles)
             {
-                Write-Host "No references found for $($cmdlet.Name)"
+                Write-Verbose -Message "No references found for $($cmdlet.Name)"
             }
             else
             {
                 Write-Host $cmdlet
-                Write-Progress -Activity "Generating Stubs" -Status $cmdlet.Name -PercentComplete (($i / $cmdlets.Length) * 100)
 
                 try
                 {
@@ -157,7 +170,7 @@ function New-M365DSCStubFiles
                 $foundParamNames = @()
                 foreach ($param in $parameters.Values)
                 {
-                    Write-Host "    --> $($param.Name)"
+                    Write-Verbose -Message "    --> $($param.Name)"
                     if ($foundParamNames -notcontains $param.Name)
                     {
                         $foundParamNames += $param.Name
@@ -198,7 +211,7 @@ function New-M365DSCStubFiles
         }
         Write-Progress -Activity "Generating Stubs" -Completed
 
-        $Content += "#region $($Module.Platform)`r`n"
+        $Content += "#region $($Module.Name)`r`n"
 
         $TypesToConvert = @('Microsoft.Online.SharePoint.PowerShell.SpoHubSitePipeBind', `
                 'Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind'
@@ -210,7 +223,7 @@ function New-M365DSCStubFiles
         }
         $Content += $StubContent
         $Content += "#endregion`r`n"
-        Write-Host "Done" -ForegroundColor Green
+        $i++
     }
     $Content | Out-File $DestinationFilePath -Encoding utf8
 }
