@@ -2,7 +2,6 @@
 class MSFT_AADAuthorizationPolicy : OMI_BaseResource
 {
     [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
-    [Write, Description("ID of the authorization policy.")] String Id;
     [Write, Description("Display name for this policy.")] String DisplayName;
     [Write, Description("Description of this policy.")] String Description;
     [Write, Description("Boolean Indicates whether users can sign up for email based subscriptions.")] Boolean AllowedToSignUpEmailBasedSubscriptions;

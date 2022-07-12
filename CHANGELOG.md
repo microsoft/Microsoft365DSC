@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADAuthorizationPolicy
+  * Initial release.
 * EXOATPPolicyForO365
   * Deprecated properties AllowClickThrough, EnableSafeLinksForO365Clients & TrackClicks.
 * EXOAuthenticationPolicyAssignment
