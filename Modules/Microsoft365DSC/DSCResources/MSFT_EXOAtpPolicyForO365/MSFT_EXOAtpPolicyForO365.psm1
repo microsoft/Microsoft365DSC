@@ -34,6 +34,7 @@ function Get-TargetResource
         [Boolean]
         $EnableSafeDocs = $false,
 
+        #DEPRECATED
         [Parameter()]
         [Boolean]
         $EnableSafeLinksForO365Clients = $true,
@@ -121,7 +122,8 @@ function Get-TargetResource
                 BlockUrls                     = $AtpPolicyForO365.BlockUrls
                 EnableATPForSPOTeamsODB       = $AtpPolicyForO365.EnableATPForSPOTeamsODB
                 EnableSafeDocs                = $AtpPolicyForO365.EnableSafeDocs
-                EnableSafeLinksForO365Clients = $AtpPolicyForO365.EnableSafeLinksForO365Clients
+                #DEPRECATED
+                #EnableSafeLinksForO365Clients = $AtpPolicyForO365.EnableSafeLinksForO365Clients
                 TrackClicks                   = $AtpPolicyForO365.TrackClicks
                 Ensure                        = 'Present'
                 ApplicationId                 = $ApplicationId
@@ -197,6 +199,7 @@ function Set-TargetResource
         [Boolean]
         $EnableSafeDocs = $false,
 
+        #DEPRECATED
         [Parameter()]
         [Boolean]
         $EnableSafeLinksForO365Clients = $true,
@@ -272,6 +275,10 @@ function Set-TargetResource
     Write-Verbose -Message "Property AllowClickThrough is deprecated."
     $AtpPolicyParams.Remove('AllowClickThrough') | Out-Null
 
+    #Deprecated
+    Write-Verbose -Message "Property EnableSafeLinksForO365Clients is deprecated."
+    $AtpPolicyParams.Remove('EnableSafeLinksForO365Clients') | Out-Null
+
     Set-AtpPolicyForO365 @AtpPolicyParams
 }
 
@@ -311,6 +318,7 @@ function Test-TargetResource
         [Boolean]
         $EnableSafeDocs = $false,
 
+        #DEPRECATED
         [Parameter()]
         [Boolean]
         $EnableSafeLinksForO365Clients = $true,
@@ -376,6 +384,10 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+
+    #DEPRECATED
+    $ValuesToCheck.Remove('AllowClickThrough') | Out-Null
+    $ValuesToCheck.Remove('EnableSafeLinksForO365Clients') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

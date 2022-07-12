@@ -475,6 +475,11 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
 
+    #DEPRECATED
+    $ValuesToCheck.Remove('DoNotAllowClickThrough') | Out-Null
+    $ValuesToCheck.Remove('DoNotTrackUserClicks') | Out-Null
+    $ValuesToCheck.Remove('IsEnabled') | Out-Null
+
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `

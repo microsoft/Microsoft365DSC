@@ -71,7 +71,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowSafeDocsOpen             = $false
                     BlockUrls                     = @()
                     EnableATPForSPOTeamsODB       = $true
-                    EnableSafeLinksForO365Clients = $true
                     TrackClicks                   = $true
                 }
 
@@ -84,7 +83,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowSafeDocsOpen             = $false
                         BlockUrls                     = @()
                         EnableATPForSPOTeamsODB       = $true
-                        EnableSafeLinksForO365Clients = $true
                         TrackClicks                   = $true
                     }
                 }
@@ -105,7 +103,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowSafeDocsOpen             = $false
                     BlockUrls                     = @()
                     EnableATPForSPOTeamsODB       = $true
-                    EnableSafeLinksForO365Clients = $true
                     TrackClicks                   = $true
                 }
                 Mock -CommandName Get-AtpPolicyForO365 -MockWith {
@@ -117,7 +114,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowSafeDocsOpen             = $true
                         BlockUrls                     = @()
                         EnableATPForSPOTeamsODB       = $false
-                        EnableSafeLinksForO365Clients = $false
                         TrackClicks                   = $false
                     }
                 }
@@ -142,7 +138,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowSafeDocsOpen             = $false
                     BlockUrls                     = @()
                     EnableATPForSPOTeamsODB       = $true
-                    EnableSafeLinksForO365Clients = $true
                     TrackClicks                   = $true
                 }
                 Mock -CommandName Get-AtpPolicyForO365 -MockWith {
@@ -152,7 +147,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowSafeDocsOpen             = $false
                         BlockUrls                     = @()
                         EnableATPForSPOTeamsODB       = $false
-                        EnableSafeLinksForO365Clients = $false
                         TrackClicks                   = $false
                     }
                 }
@@ -183,7 +177,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowSafeDocsOpen             = $false
                         BlockUrls                     = @()
                         EnableATPForSPOTeamsODB       = $false
-                        EnableSafeLinksForO365Clients = $false
                         TrackClicks                   = $false
                     }
                 }

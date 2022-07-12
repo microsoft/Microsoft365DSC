@@ -58,11 +58,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential            = $Credential
                     AdminDisplayName              = 'Test SafeLinks Policy'
                     CustomNotificationText        = ''
-                    DoNotAllowClickThrough        = $true
                     DoNotRewriteUrls              = @('test.contoso.com', 'test.fabrikam.org')
                     EnableForInternalSenders      = $false
                     EnableOrganizationBranding    = $false
-                    IsEnabled                     = $false
                     ScanUrls                      = $false
                     UseTranslatedNotificationText = $false
                 }
@@ -91,11 +89,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential            = $Credential
                     AdminDisplayName              = 'Test SafeLinks Policy'
                     CustomNotificationText        = ''
-                    DoNotAllowClickThrough        = $true
                     DoNotRewriteUrls              = @('test.contoso.com', 'test.fabrikam.org')
                     EnableForInternalSenders      = $false
                     EnableOrganizationBranding    = $false
-                    IsEnabled                     = $false
                     ScanUrls                      = $false
                     UseTranslatedNotificationText = $false
                 }
@@ -105,11 +101,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Identity                      = 'TestSafeLinksPolicy'
                         AdminDisplayName              = 'Test SafeLinks Policy'
                         CustomNotificationText        = ''
-                        DoNotAllowClickThrough        = $true
                         DoNotRewriteUrls              = @('test.contoso.com', 'test.fabrikam.org')
                         EnableForInternalSenders      = $false
                         EnableOrganizationBranding    = $false
-                        IsEnabled                     = $false
                         ScanUrls                      = $false
                         UseTranslatedNotificationText = $false
                     }
@@ -129,11 +123,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential            = $Credential
                     AdminDisplayName              = 'Test SafeLinks Policy'
                     CustomNotificationText        = ''
-                    DoNotAllowClickThrough        = $true
                     DoNotRewriteUrls              = @('test.contoso.com', 'test.fabrikam.org')
                     EnableForInternalSenders      = $false
                     EnableOrganizationBranding    = $false
-                    IsEnabled                     = $false
                     ScanUrls                      = $false
                     UseTranslatedNotificationText = $false
                 }
@@ -145,11 +137,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Credential            = $Credential
                         AdminDisplayName              = 'Test SafeLinks Policy'
                         CustomNotificationText        = 'This is a custom notification text'
-                        DoNotAllowClickThrough        = $true
                         DoNotRewriteUrls              = @('test1.contoso.com', 'test.fabrikam.org')
                         EnableForInternalSenders      = $true
                         EnableOrganizationBranding    = $true
-                        IsEnabled                     = $true
                         ScanUrls                      = $true
                         UseTranslatedNotificationText = $true
                     }
@@ -178,11 +168,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential            = $Credential
                     AdminDisplayName              = 'Test SafeLinks Policy'
                     CustomNotificationText        = ''
-                    DoNotAllowClickThrough        = $true
                     DoNotRewriteUrls              = @('test.contoso.com', 'test.fabrikam.org')
                     EnableForInternalSenders      = $false
                     EnableOrganizationBranding    = $false
-                    IsEnabled                     = $false
                     ScanUrls                      = $false
                     UseTranslatedNotificationText = $false
                 }
@@ -220,11 +208,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Identity                      = 'TestSafeLinksPolicy'
                         AdminDisplayName              = 'Test SafeLinks Policy'
                         CustomNotificationText        = ''
-                        DoNotAllowClickThrough        = $true
                         DoNotRewriteUrls              = @('test.contoso.com', 'test.fabrikam.org')
                         EnableForInternalSenders      = $false
                         EnableOrganizationBranding    = $false
-                        IsEnabled                     = $false
                         ScanUrls                      = $false
                         UseTranslatedNotificationText = $false
                     }
