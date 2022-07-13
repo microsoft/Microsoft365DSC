@@ -1054,78 +1054,40 @@ function Set-M365DSCIntuneAppProtectionPolicyAndroidAssignment
 
 function get-InputParameters
 {
-    <#
     return @{
-        DisplayName                             = 'Parameter'
-        Description                             = 'Parameter'
-        PeriodOfflineBeforeAccessCheck          = 'Parameter'
-        PeriodOnlineBeforeAccessCheck           = 'Parameter'
-        AllowedInboundDataTransferSources       = 'Parameter'
-        AllowedOutboundDataTransferDestinations = 'Parameter'
-        OrganizationalCredentialsRequired       = 'Parameter'
-        AllowedOutboundClipboardSharingLevel    = 'Parameter'
-        DataBackupBlocked                       = 'Parameter'
-        DeviceComplianceRequired                = 'Parameter'
-        ManagedBrowserToOpenLinksRequired       = 'Parameter'
-        SaveAsBlocked                           = 'Parameter'
-        PeriodOfflineBeforeWipeIsEnforced       = 'Parameter'
-        PinRequired                             = 'Parameter'
-        DisableAppPinIfDevicePinIsSet           = 'Parameter'
-        MaximumPinRetries                       = 'Parameter'
-        SimplePinBlocked                        = 'Parameter'
-        MinimumPinLength                        = 'Parameter'
-        PinCharacterSet                         = 'Parameter'
-        AllowedDataStorageLocations             = 'Parameter'
-        ContactSyncBlocked                      = 'Parameter'
-        PeriodBeforePinReset                    = 'Parameter'
-        PrintBlocked                            = 'Parameter'
-        FingerprintBlocked                      = 'Parameter'
-        Ensure                                  = 'ComplexParameter'
-        Apps                                    = 'ComplexParameter'
-        Assignments                             = 'ComplexParameter'
-        ExcludedGroups                          = 'ComplexParameter'
-        Credential                              = 'Credential'
-        ApplicationId                           = 'Credential'
-        TenantId                                = 'Credential'
-        ApplicationSecret                       = 'Credential'
-        CertificateThumbprint                   = 'Credential'
-    }
-    #>
-    return @{
-       AllowedOutboundDataTransferDestinations  = @{Name = "AllowedOutboundDataTransferDestinations" ; Type = "Parameter"        ; ExportFileType = "String"; };
-       PeriodOfflineBeforeAccessCheck           = @{Name = "PeriodOfflineBeforeAccessCheck"          ; Type = "Parameter"        ; ExportFileType = "Duration"; };
-       PeriodOnlineBeforeAccessCheck            = @{Name = "PeriodOnlineBeforeAccessCheck"           ; Type = "Parameter"        ; ExportFileType = "Duration"; };
-       SaveAsBlocked                            = @{Name = "SaveAsBlocked"                           ; Type = "Parameter"        ; ExportFileType = "NA"; };
-       ApplicationId                            = @{Name = "ApplicationId"                           ; Type = "Credential"       ; ExportFileType = "NA"; };
-       DisplayName                              = @{Name = "DisplayName"                             ; Type = "Parameter"        ; ExportFileType = "NA"; };
-       Description                              = @{Name = "Description"                             ; Type = "Parameter"        ; ExportFileType = "NA"; };
-       Assignments                              = @{Name = "Assignments"                             ; Type = "ComplexParameter" ; ExportFileType = "NA"; };
-       DeviceComplianceRequired                 = @{Name = "DeviceComplianceRequired"                ; Type = "Parameter"        ; ExportFileType = "NA"; };
-       MinimumPinLength                         = @{Name = "MinimumPinLength"                        ; Type = "Parameter"        ; ExportFileType = "NA"; };
-       PrintBlocked                             = @{Name = "PrintBlocked"                            ; Type = "Parameter"        ; ExportFileType = "NA"; };
-       PinCharacterSet                          = @{Name = "PinCharacterSet"                         ; Type = "Parameter"        ; ExportFileType = "String"; };
-       Apps                                     = @{Name = "Apps"                                    ; Type = "ComplexParameter" ; ExportFileType = "NA"; };
-       CertificateThumbprint                    = @{Name = "CertificateThumbprint"                   ; Type = "Credential"       ; ExportFileType = "NA"; };
-       ContactSyncBlocked                       = @{Name = "ContactSyncBlocked"                      ; Type = "Parameter"        ; ExportFileType = "NA"; };
-       PeriodBeforePinReset                     = @{Name = "PeriodBeforePinReset"                    ; Type = "Parameter"        ; ExportFileType = "Duration"; };
-       MaximumPinRetries                        = @{Name = "MaximumPinRetries"                       ; Type = "Parameter"        ; ExportFileType = "NA"; };
-       SimplePinBlocked                         = @{Name = "SimplePinBlocked"                        ; Type = "Parameter"        ; ExportFileType = "NA"; };
-       FingerprintBlocked                       = @{Name = "FingerprintBlocked"                      ; Type = "Parameter"        ; ExportFileType = "NA"; };
-       ManagedBrowserToOpenLinksRequired        = @{Name = "ManagedBrowserToOpenLinksRequired"       ; Type = "Parameter"        ; ExportFileType = "NA"; };
-       DataBackupBlocked                        = @{Name = "DataBackupBlocked"                       ; Type = "Parameter"        ; ExportFileType = "NA"; };
-       Credential                               = @{Name = "Credential"                              ; Type = "Credential"       ; ExportFileType = "NA"; };
-       OrganizationalCredentialsRequired        = @{Name = "OrganizationalCredentialsRequired"       ; Type = "Parameter"        ; ExportFileType = "NA"; };
-       PinRequired                              = @{Name = "PinRequired"                             ; Type = "Parameter"        ; ExportFileType = "NA"; };
-       PeriodOfflineBeforeWipeIsEnforced        = @{Name = "PeriodOfflineBeforeWipeIsEnforced"       ; Type = "Parameter"        ; ExportFileType = "Duration"; };
-       ExcludedGroups                           = @{Name = "ExcludedGroups"                          ; Type = "ComplexParameter" ; ExportFileType = "NA"; };
-       TenantId                                 = @{Name = "TenantId"                                ; Type = "Credential"       ; ExportFileType = "NA"; };
-       AllowedOutboundClipboardSharingLevel     = @{Name = "AllowedOutboundClipboardSharingLevel"    ; Type = "Parameter"        ; ExportFileType = "String"; };
-       ApplicationSecret                        = @{Name = "ApplicationSecret"                       ; Type = "Credential"       ; ExportFileType = "NA"; };
-       Ensure                                   = @{Name = "Ensure"                                  ; Type = "ComplexParameter" ; ExportFileType = "NA"; };
-       DisableAppPinIfDevicePinIsSet            = @{Name = "DisableAppPinIfDevicePinIsSet"           ; Type = "Parameter"        ; ExportFileType = "NA"; };
-       AllowedInboundDataTransferSources        = @{Name = "AllowedInboundDataTransferSources"       ; Type = "Parameter"        ; ExportFileType = "String"; };
-       AllowedDataStorageLocations              = @{Name = "AllowedDataStorageLocations"             ; Type = "Parameter"        ; ExportFileType = "Array"; }
-
+        AllowedDataStorageLocations              = @{Type = "Parameter"        ; ExportFileType = "Array"; };
+        AllowedInboundDataTransferSources        = @{Type = "Parameter"        ; ExportFileType = "String"; };
+        AllowedOutboundClipboardSharingLevel     = @{Type = "Parameter"        ; ExportFileType = "String"; };
+        AllowedOutboundDataTransferDestinations  = @{Type = "Parameter"        ; ExportFileType = "String"; };
+        ApplicationId                            = @{Type = "Credential"       ; ExportFileType = "NA"; };
+        ApplicationSecret                        = @{Type = "Credential"       ; ExportFileType = "NA"; };
+        Apps                                     = @{Type = "ComplexParameter" ; ExportFileType = "NA"; };
+        Assignments                              = @{Type = "ComplexParameter" ; ExportFileType = "NA"; };
+        CertificateThumbprint                    = @{Type = "Credential"       ; ExportFileType = "NA"; };
+        ContactSyncBlocked                       = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        Credential                               = @{Type = "Credential"       ; ExportFileType = "NA"; };
+        DataBackupBlocked                        = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        Description                              = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        DeviceComplianceRequired                 = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        DisableAppPinIfDevicePinIsSet            = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        DisplayName                              = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        Ensure                                   = @{Type = "ComplexParameter" ; ExportFileType = "NA"; };
+        ExcludedGroups                           = @{Type = "ComplexParameter" ; ExportFileType = "NA"; };
+        FingerprintBlocked                       = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        ManagedBrowserToOpenLinksRequired        = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        MaximumPinRetries                        = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        MinimumPinLength                         = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        OrganizationalCredentialsRequired        = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        PeriodBeforePinReset                     = @{Type = "Parameter"        ; ExportFileType = "Duration"; };
+        PeriodOfflineBeforeAccessCheck           = @{Type = "Parameter"        ; ExportFileType = "Duration"; };
+        PeriodOfflineBeforeWipeIsEnforced        = @{Type = "Parameter"        ; ExportFileType = "Duration"; };
+        PeriodOnlineBeforeAccessCheck            = @{Type = "Parameter"        ; ExportFileType = "Duration"; };
+        PinCharacterSet                          = @{Type = "Parameter"        ; ExportFileType = "String"; };
+        PinRequired                              = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        PrintBlocked                             = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        SaveAsBlocked                            = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        SimplePinBlocked                         = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        TenantId                                 = @{Type = "Credential"       ; ExportFileType = "NA"; }
      }
 }
 
