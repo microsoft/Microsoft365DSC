@@ -112,6 +112,39 @@ function Get-TargetResource
         [System.String[]]
         $ExcludedGroups,
 
+        [Parameter()]
+        [System.String]
+        [ValidateSet("notConfigured","microsoftEdge")]
+        $ManagedBrowser,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredOSVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningOSVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsAssigned,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -383,6 +416,39 @@ function Set-TargetResource
         [System.String[]]
         $ExcludedGroups,
 
+        [Parameter()]
+        [System.String]
+        [ValidateSet("notConfigured","microsoftEdge")]
+        $ManagedBrowser,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredOSVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningOSVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsAssigned,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -463,6 +529,12 @@ function Set-TargetResource
 
         $appJSON = Get-M365DSCIntuneAppProtectionPolicyAndroidAppsJSON -Parameters $PSBoundParameters
         Set-M365DSCIntuneAppProtectionPolicyAndroidApps -JSONContent $appJSON `
+            -PolicyId $policyInfo.Id
+
+        $assignmentJSON = Get-M365DSCIntuneAppProtectionPolicyAndroidAssignmentJson -Assignments $Assignments `
+            -Exclusions $ExcludedGroups
+
+        Set-M365DSCIntuneAppProtectionPolicyAndroidAssignment -JsonContent $assignmentJSON `
             -PolicyId $policyInfo.Id
 
     }
@@ -589,6 +661,39 @@ function Test-TargetResource
         [System.String[]]
         $ExcludedGroups,
 
+        [Parameter()]
+        [System.String]
+        [ValidateSet("notConfigured","microsoftEdge")]
+        $ManagedBrowser,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredOSVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningOSVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsAssigned,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -634,6 +739,17 @@ function Test-TargetResource
 
         Throw 'Error when searching for current policy details - Please check verbose output for further detail'
 
+    }
+
+    #force isassigned values or incorrect values could cause test to report drift where there is none
+    if (($Assignments -eq $null) -or ($Assignments.count -eq 0) -or ($Assignments[0] -eq ''))
+    {
+        $IsAssigned = $false
+        $PSBoundParameters.IsAssigned = $false
+    }
+    else {
+            $IsAssigned = $true
+            $PSBoundParameters.IsAssigned = $true
     }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
@@ -790,7 +906,7 @@ function Get-M365DSCIntuneAppProtectionPolicyAndroidJSON
     {
         $allowedDataStorageLocations = $allowedDataStorageLocations.TrimEnd(',') + " `r`n"
     }
-    $allowedDataStorageLocations += "],"
+    $allowedDataStorageLocations += "]"
     #endregion
 
     #region Apps
@@ -842,7 +958,15 @@ function Get-M365DSCIntuneAppProtectionPolicyAndroidJSON
         "periodBeforePinReset": "$($Parameters.PeriodBeforePinReset)",
         "printBlocked": $($Parameters.PrintBlocked.ToString().ToLower()),
         "fingerprintBlocked": $($Parameters.FingerprintBlocked.ToString().ToLower()),
-        "allowedDataStorageLocations": $allowedDataStorageLocations
+        "allowedDataStorageLocations": $allowedDataStorageLocations,
+        "managedBrowser": "$($Parameters.ManagedBrowser)",
+        "minimumRequiredPatchVersion": "$($Parameters.MinimumRequiredPatchVersion)",
+        "minimumWarningPatchVersion": "$($Parameters.MinimumWarningPatchVersion)",
+        "minimumRequiredAppVersion": "$($Parameters.MinimumRequiredAppVersion)",
+        "minimumWarningAppVersion": "$($Parameters.MinimumWarningAppVersion)",
+        "minimumRequiredOsVersion": "$($Parameters.MinimumRequiredOSVersion)",
+        "minimumWarningOsVersion": "$($Parameters.MinimumWarningOSVersion)",
+        "isAssigned": $($Parameters.IsAssigned.ToString().ToLower()),
 "@
 
     if ($IncludeApps)
@@ -900,7 +1024,7 @@ function Get-M365DSCIntuneAppProtectionPolicyAndroidAssignmentJSON
     [CmdletBinding()]
     [OutputType([System.String])]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false)]
         [System.String[]]
         $Assignments,
 
@@ -1074,9 +1198,17 @@ function get-InputParameters
         Ensure                                   = @{Type = "ComplexParameter" ; ExportFileType = "NA"; };
         ExcludedGroups                           = @{Type = "ComplexParameter" ; ExportFileType = "NA"; };
         FingerprintBlocked                       = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        IsAssigned                               = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        ManagedBrowser                           = @{Type = "Parameter"        ; ExportFileType = "String"; };
         ManagedBrowserToOpenLinksRequired        = @{Type = "Parameter"        ; ExportFileType = "NA"; };
         MaximumPinRetries                        = @{Type = "Parameter"        ; ExportFileType = "NA"; };
         MinimumPinLength                         = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        MinimumRequiredAppVersion                = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        MinimumRequiredOSVersion                 = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        MinimumRequiredPatchVersion              = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        MinimumWarningAppVersion                 = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        MinimumWarningOSVersion                  = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        MinimumWarningPatchVersion               = @{Type = "Parameter"        ; ExportFileType = "NA"; };
         OrganizationalCredentialsRequired        = @{Type = "Parameter"        ; ExportFileType = "NA"; };
         PeriodBeforePinReset                     = @{Type = "Parameter"        ; ExportFileType = "Duration"; };
         PeriodOfflineBeforeAccessCheck           = @{Type = "Parameter"        ; ExportFileType = "Duration"; };

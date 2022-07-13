@@ -86,6 +86,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrintBlocked                            = $False;
                     SaveAsBlocked                           = $True;
                     SimplePinBlocked                        = $False;
+                    ManagedBrowser                          = "notConfigured";
+                    MinimumRequiredAppVersion               = "1.2";
+                    MinimumRequiredOSVersion                = "1.1";
+                    MinimumRequiredPatchVersion             = "2020-07-13";
+                    MinimumWarningAppVersion                = "1.5";
+                    MinimumWarningOSVersion                 = "1.5";
+                    MinimumWarningPatchVersion              = "2021-07-13";
+                    IsAssigned                              = $true;
                 }
                 $Global:Count = 0
                 Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
@@ -152,6 +160,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrintBlocked                            = $False;
                     SaveAsBlocked                           = $True;
                     SimplePinBlocked                        = $False;
+                    ManagedBrowser                          = "notConfigured";
+                    MinimumRequiredAppVersion               = "1.2";
+                    MinimumRequiredOSVersion                = "1.1";
+                    MinimumRequiredPatchVersion             = "2020-07-13";
+                    MinimumWarningAppVersion                = "1.5";
+                    MinimumWarningOSVersion                 = "1.5";
+                    MinimumWarningPatchVersion              = "2021-07-13";
+                    IsAssigned                              = $true;
                 }
 
                 Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
@@ -231,6 +247,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PrintBlocked                            = $False;
                         SaveAsBlocked                           = $True;
                         SimplePinBlocked                        = $False;
+                        ManagedBrowser                          = "notConfigured";
+                        MinimumRequiredAppVersion               = "1.2";
+                        MinimumRequiredOSVersion                = "1.1";
+                        MinimumRequiredPatchVersion             = "2020-07-13";
+                        MinimumWarningAppVersion                = "1.5";
+                        MinimumWarningOSVersion                 = "1.5";
+                        MinimumWarningPatchVersion              = "2021-07-13";
+                        IsAssigned                              = $true;
                     }
                 }
             }
@@ -281,6 +305,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrintBlocked                            = $False;
                     SaveAsBlocked                           = $True;
                     SimplePinBlocked                        = $False;
+                    ManagedBrowser                          = "notConfigured";
+                    MinimumRequiredAppVersion               = "1.2";
+                    MinimumRequiredOSVersion                = "1.1";
+                    MinimumRequiredPatchVersion             = "2020-07-13";
+                    MinimumWarningAppVersion                = "1.5";
+                    MinimumWarningOSVersion                 = "1.5";
+                    MinimumWarningPatchVersion              = "2021-07-13";
+                    IsAssigned                              = $true;
                 }
 
                 Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
@@ -360,6 +392,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PrintBlocked                            = $False;
                         SaveAsBlocked                           = $True;
                         SimplePinBlocked                        = $False;
+                        ManagedBrowser                          = "notConfigured";
+                        MinimumRequiredAppVersion               = "1.2";
+                        MinimumRequiredOSVersion                = "1.1";
+                        MinimumRequiredPatchVersion             = "2020-07-13";
+                        MinimumWarningAppVersion                = "1.5";
+                        MinimumWarningOSVersion                 = "1.5";
+                        MinimumWarningPatchVersion              = "2021-07-13";
+                        IsAssigned                              = $true;
                     }
                 }
             }
@@ -401,6 +441,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrintBlocked                            = $False;
                     SaveAsBlocked                           = $True;
                     SimplePinBlocked                        = $False;
+                    ManagedBrowser                          = "notConfigured";
+                    MinimumRequiredAppVersion               = "1.2";
+                    MinimumRequiredOSVersion                = "1.1";
+                    MinimumRequiredPatchVersion             = "2020-07-13";
+                    MinimumWarningAppVersion                = "1.5";
+                    MinimumWarningOSVersion                 = "1.5";
+                    MinimumWarningPatchVersion              = "2021-07-13";
+                    IsAssigned                              = $true;
                 }
 
                 Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
@@ -480,6 +528,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PrintBlocked                            = $False;
                         SaveAsBlocked                           = $True;
                         SimplePinBlocked                        = $False;
+                        ManagedBrowser                          = "notConfigured";
+                        MinimumRequiredAppVersion               = "1.2";
+                        MinimumRequiredOSVersion                = "1.1";
+                        MinimumRequiredPatchVersion             = "2020-07-13";
+                        MinimumWarningAppVersion                = "1.5";
+                        MinimumWarningOSVersion                 = "1.5";
+                        MinimumWarningPatchVersion              = "2021-07-13";
+                        IsAssigned                              = $true;
                     }
                 }
             }
@@ -582,6 +638,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PrintBlocked                            = $False;
                         SaveAsBlocked                           = $True;
                         SimplePinBlocked                        = $False;
+                        ManagedBrowser                          = "notConfigured";
+                        MinimumRequiredAppVersion               = "1.2";
+                        MinimumRequiredOSVersion                = "1.1";
+                        MinimumRequiredPatchVersion             = "2020-07-13";
+                        MinimumWarningAppVersion                = "1.5";
+                        MinimumWarningOSVersion                 = "1.5";
+                        MinimumWarningPatchVersion              = "2021-07-13";
+                        IsAssigned                              = $true;
                     }
                 }
             }
