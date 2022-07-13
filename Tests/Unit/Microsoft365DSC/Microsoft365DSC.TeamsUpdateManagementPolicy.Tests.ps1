@@ -61,7 +61,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity             = "Tag:TestPolicy";
                     UpdateDayOfWeek      = 1;
                     UpdateTime           = "18:00";
-                    UpdateTimeOfDay      = "2022-05-06T18:00:00";
+                    UpdateTimeOfDay      = "18:00:00";
                     Ensure               = 'Present'
                     Credential           = $Credential
                 }
@@ -95,7 +95,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity             = "TestPolicy";
                     UpdateDayOfWeek      = 1;
                     UpdateTime           = "18:00";
-                    UpdateTimeOfDay      = "2022-05-06T18:00:00";
+                    UpdateTimeOfDay      = "18:00:00";
                     Ensure               = 'Present'
                     Credential           = $Credential
                 }
@@ -139,7 +139,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity             = "Tag:TestPolicy";
                     UpdateDayOfWeek      = 1;
                     UpdateTime           = "18:00";
-                    UpdateTimeOfDay      = "2022-05-06T18:00:00";
+                    UpdateTimeOfDay      = "18:00:00";
                     Ensure               = 'Present'
                     Credential           = $Credential
                 }

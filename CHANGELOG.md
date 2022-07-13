@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* TeamsUpdateManagementPolicy
+  * Changed the format of the UpdateTimeOfDay parameter to not include date as part of an export.
+    FIXES [#2062](https://github.com/microsoft/Microsoft365DSC/issues/2062)
+
 # 1.22.713.1
 
 * AADAuthorizationPolicy
