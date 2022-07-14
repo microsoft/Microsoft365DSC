@@ -210,13 +210,12 @@ $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
                 Mock -CommandName Get-AuthenticationPolicy -MockWith {
                     return @{
                         Identity                            = "Contoso Auth Policy"
-                        Ensure                              = 'Present'
                     }
                 }
             }
 
             It "Should return Present from the Get method" {
-                (Get-AuthenticationPolicy @testParams).Ensure | Should -Be 'Present'
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
             It "Should return false from the Test method" {

@@ -49,8 +49,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName New-M365DSCIntuneAppProtectionPolicyiOS -MockWith {
             }
-            Mock -CommandName Remove-IntuneAppProtectionPolicy -MockWith {
-            }
             Mock -CommandName Remove-MgDeviceAppManagementiosManagedAppProtection -MockWith {
             }
         }

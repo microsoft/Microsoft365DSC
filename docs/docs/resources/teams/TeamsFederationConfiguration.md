@@ -6,6 +6,8 @@
 | --- | --- | --- | --- | --- |
 | **Identity** | Key | String | The only valid input is Global - the tenant wide configuration |Global|
 | **AllowFederatedUsers** | Write | Boolean | When set to True users will be potentially allowed to communicate with users from other domains. ||
+| **AllowedDomains** | Write | StringArray[] | List of federated domains to allow. ||
+| **BlockedDomains** | Write | StringArray[] | List of federated domains to block. ||
 | **AllowPublicUsers** | Write | Boolean | When set to True users will be potentially allowed to communicate with users who have accounts on public IM and presence providers. ||
 | **AllowTeamsConsumer** | Write | Boolean | Allows federation with people using Teams with an account that's not managed by an organization. ||
 | **AllowTeamsConsumerInbound** | Write | Boolean | Allows people using Teams with an account that's not managed by an organization, to discover and start communication with users in your organization. ||
