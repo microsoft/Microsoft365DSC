@@ -1,0 +1,21 @@
+{
+    "resourceName": "AADAuthorizationPolicy",
+    "description": "This resource configures the Azure Active Directory Authorization Policy.",
+    "permissions": [
+        {
+            "read": [
+                {
+                    "name": "Policy.Read.All"
+                }
+            ],
+            "update": [
+                {
+                    "name": "Policy.Read.All"
+                },
+                {
+                    "name": "Policy.ReadWrite.Authorization"
+                }
+            ]
+        }
+    ]
+}

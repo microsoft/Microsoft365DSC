@@ -2,8 +2,25 @@
 
 # UNRELEASED
 
+* TeamsUpdateManagementPolicy
+  * Changed the format of the UpdateTimeOfDay parameter to not include date as part of an export.
+    FIXES [#2062](https://github.com/microsoft/Microsoft365DSC/issues/2062)
+
+# 1.22.713.1
+
+* AADAuthorizationPolicy
+  * Initial release.
+* AADConditionalAccessPolicy
+  * Fixed issue for Included and Excluded properties where the last instance couldn't be removed.
+    FIXES [#2058](https://github.com/microsoft/Microsoft365DSC/issues/2058) & [#2079](https://github.com/microsoft/Microsoft365DSC/issues/2079)
+* EXOATPPolicyForO365
+  * Deprecated properties AllowClickThrough, EnableSafeLinksForO365Clients & TrackClicks.
+* EXOAuthenticationPolicyAssignment
+  * Initial release.
 * EXOCASMailboxSettings
   * New resource to configure Exchange Online CAS Mailbox settings.
+* EXOSafeLinksPolicy
+  * Deprecated properties DoNotAllowClickThrough, DoNotTrackUserClicks & IsEnabled.
 * IntuneAppProtectionPolicyiOS
    * Fixed issue with creation a new policies where it was complaining about invalid minimum versions.
    * Fixed issues where creating new policies threw an error complaining about an invalid duration format.
@@ -14,6 +31,8 @@
   * Initial release.
 * SCComplianceTag
   * Fixed issue where FilePlanProperty was not properly applied unless another child property was also modified.
+* SPOSharingSettings
+    * Updated code to remove None as valid value for DefaultLinkPermission. If value is set to None default to Edit.
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.150.
   * Updated MSCloudLoginAssistant to version 1.0.87.
@@ -40,7 +59,7 @@
   FIXES #2025
   * Added support for FileTypeAction parameter.
 * EXOSharedMailbox
-  * Fix using umlauts in displayname by allowing to set alias
+  * Fix using umlauts in displayname by allowing to set alias.
     FIXES #1921
   * Rename parameter Aliases to EmailAddresses. Aliases is now deprecated.
 * DEPENDENCIES
