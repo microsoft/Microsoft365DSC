@@ -947,10 +947,7 @@ function Set-TargetResource
 
         #create and provision User Condition object
         Write-Verbose -Message "Set-Targetresource: process includeusers"
-        if ($IncludeUsers)
-        {
-            $conditions.Users.Add("IncludeUsers", @())
-        }
+        $conditions.Users.Add("IncludeUsers", @())
         foreach ($includeuser in $IncludeUsers)
         {
             #translate user UPNs to GUID, except id value is GuestsOrExternalUsers, None or All
@@ -1024,10 +1021,7 @@ function Set-TargetResource
         }
         Write-Verbose -Message "Set-Targetresource: process excludeusers"
 
-        if ($ExcludeUsers.Length -gt 0 -and -not ($ExcludeUsers.Length -eq 1 -and [System.String]::IsNullOrEmpty($ExcludeUsers[0])))
-        {
-            $conditions.Users.Add("ExcludeUsers", @())
-        }
+        $conditions.Users.Add("ExcludeUsers", @())
         foreach ($excludeuser in $ExcludeUsers)
         {
             #translate user UPNs to GUID, except id value is GuestsOrExternalUsers, None or All
@@ -1100,10 +1094,7 @@ function Set-TargetResource
             }
         }
         Write-Verbose -Message "Set-Targetresource: process includegroups"
-        if ($IncludeGroups.Length -gt 0 -and -not ($IncludeGroups.Length -eq 1 -and [System.String]::IsNullOrEmpty($IncludeGroups[0])))
-        {
-            $conditions.Users.Add("IncludeGroups", @())
-        }
+        $conditions.Users.Add("IncludeGroups", @())
         foreach ($includegroup in $IncludeGroups)
         {
             #translate user Group names to GUID
@@ -1196,10 +1187,8 @@ function Set-TargetResource
                 }
             }
         }
-        if ($ExcludeGroups.Length -gt 0 -and -not ($ExcludeGroups.Length -eq 1 -and [System.String]::IsNullOrEmpty($ExcludeGroups[0])))
-        {
-            $conditions.Users.Add("ExcludeGroups", @())
-        }
+
+        $conditions.Users.Add("ExcludeGroups", @())
         Write-Verbose -Message "Set-Targetresource: process excludegroups"
         foreach ($ExcludeGroup in $ExcludeGroups)
         {
@@ -1294,10 +1283,7 @@ function Set-TargetResource
             }
         }
         Write-Verbose -Message "Set-Targetresource: process includeroles"
-        if ($IncludeRoles.Length -gt 0 -and -not ($IncludeRoles.Length -eq 1 -and [System.String]::IsNullOrEmpty($IncludeRoles[0])))
-        {
-            $conditions.Users.Add("IncludeRoles", @())
-        }
+        $conditions.Users.Add("IncludeRoles", @())
         if ($IncludeRoles)
         {
             #translate role names to template guid if defined
@@ -1341,10 +1327,7 @@ function Set-TargetResource
             }
         }
         Write-Verbose -Message "Set-Targetresource: process excluderoles"
-        if ($ExcludeRoles.Length -gt 0 -and -not ($ExcludeRoles.Length -eq 1 -and [System.String]::IsNullOrEmpty($ExcludeRoles[0])))
-        {
-            $conditions.Users.Add("ExcludeRoles", @())
-        }
+        $conditions.Users.Add("ExcludeRoles", @())
         if ($ExcludeRoles)
         {
             #translate role names to template guid if defined

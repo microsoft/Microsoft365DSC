@@ -1,18 +1,32 @@
 {
     "resourceName": "IntuneDeviceCompliancePolicyMacOS",
     "description": "This resource configures the settings of MacOS compliance policies in your cloud-based organization.",
-    "permissions": [
-        {
-            "read": [
-                {
-                    "name": "DeviceManagementConfiguration.Read.All"
-                }
-            ],
-            "update": [
-                {
-                    "name": "DeviceManagementConfiguration.ReadWrite.All"
-                }
-            ]
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "DeviceManagementConfiguration.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementConfiguration.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "DeviceManagementConfiguration.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementConfiguration.ReadWrite.All"
+                    }
+                ]
+            }
         }
-    ]
+    }
 }

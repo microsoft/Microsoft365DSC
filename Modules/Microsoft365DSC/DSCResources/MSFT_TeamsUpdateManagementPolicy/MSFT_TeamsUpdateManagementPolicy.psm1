@@ -86,7 +86,7 @@ function Get-TargetResource
             AllowPublicPreview  = $policy.AllowPublicPreview
             UpdateDayOfWeek     = $policy.UpdateDayOfWeek
             UpdateTime          = $policy.UpdateTime
-            UpdateTimeOfDay     = $policy.UpdateTimeOfDay
+            UpdateTimeOfDay     = $policy.UpdateTimeOfDay.Split('T')[1].Replace('Z', '')
             Ensure              = 'Present'
             Credential          = $Credential
         }
