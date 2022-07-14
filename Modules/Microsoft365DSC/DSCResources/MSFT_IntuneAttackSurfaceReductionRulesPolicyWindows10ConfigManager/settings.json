@@ -1,5 +1,5 @@
 {
-    "resourceName": "IntuneASRRulesPolicyWindows10ConfigMgr",
+    "resourceName": "IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager",
     "description": "This resource configures an Intune Endpoint Protection ASR Rules policy for a Windows 10 Device for ConfigManager.",
     "permissions": [
         {
