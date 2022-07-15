@@ -4,6 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
+| **DisabledPlans** | Write | StringArray[] | A collection of the unique identifiers for plans that have been disabled. ||
+| **SkuId** | Write | String | The unique identifier for the SKU. ||
 | **DisplayName** | Key | String | DisplayName of the Azure Active Directory Group ||
 | **MailNickname** | Key | String | Specifies a mail nickname for the group. ||
 | **Description** | Write | String | Specifies a description for the group. ||
@@ -15,6 +17,7 @@
 | **MailEnabled** | Write | Boolean | Specifies whether this group is mail enabled. Currently, you cannot create mail enabled groups in Azure AD. ||
 | **IsAssignableToRole** | Write | Boolean | Specifies whether this group can be assigned a role. Only available when creating a group and can't be modified after group is created. ||
 | **Visibility** | Write | String | This parameter determines the visibility of the group's content and members list. |Public, Private, HiddenMembership|
+| **AssignedLicenses** | Write | InstanceArray[] | List of Licenses assigned to the group. ||
 | **Ensure** | Write | String | Specify if the Azure AD Group should exist or not. |Present, Absent|
 | **Credential** | Write | PSCredential | Credentials for the Microsoft Graph delegated permissions. ||
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
