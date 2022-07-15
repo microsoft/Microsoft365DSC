@@ -570,7 +570,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     # Check Licenses
-    if ($PSBoundParameters.ContainsKey("AssignedLicenses"))
+    if (-not ($AssignedLicenses -eq $null -and $CurrentValues.AssignedLicenses -eq $null))
     {
         try
         {
@@ -625,7 +625,6 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('Id') | Out-Null
     $ValuesToCheck.Remove('GroupTypes') | Out-Null
-    $ValuesToCheck.Remove('AssignedLicenses') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
