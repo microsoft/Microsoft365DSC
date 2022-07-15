@@ -570,53 +570,56 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     # Check Licenses
-    try
+    if ($PSBoundParameters.ContainsKey("AssignedLicenses"))
     {
-        $licensesDiff = Compare-Object -ReferenceObject ($CurrentValues.AssignedLicenses.SkuId) -DifferenceObject ($AssignedLicenses.SkuId)
-        if ($null -ne $licensesDiff)
+        try
         {
-            Write-Verbose -Message "AssignedLicenses differ: $($licensesDiff | Out-String)"
+            $licensesDiff = Compare-Object -ReferenceObject ($CurrentValues.AssignedLicenses.SkuId) -DifferenceObject ($AssignedLicenses.SkuId)
+            if ($null -ne $licensesDiff)
+            {
+                Write-Verbose -Message "AssignedLicenses differ: $($licensesDiff | Out-String)"
+                Write-Verbose -Message "Test-TargetResource returned $false"
+                $EventMessage = "Assigned Licenses for Azure AD Group {$DisplayName} were not in the desired state.`r`n" + `
+                    "They should contain {$($AssignedLicenses.SkuId)} but instead contained {$($CurrentValues.AssignedLicenses.SkuId)}"
+                Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+                    -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+                return $false
+            }
+            else
+            {
+                Write-Verbose -Message "AssignedLicenses for Azure AD Group are the same"
+            }
+        }
+        catch
+        {
             Write-Verbose -Message "Test-TargetResource returned $false"
-            $EventMessage = "Assigned Licenses for Azure AD Group {$DisplayName} were not in the desired state.`r`n" + `
-                "They should contain {$($AssignedLicenses.SkuId)} but instead contained {$($CurrentValues.AssignedLicenses.SkuId)}"
-            Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
             return $false
         }
-        else
-        {
-            Write-Verbose -Message "AssignedLicenses for Azure AD Group are the same"
-        }
-    }
-    catch
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
 
-    #Check DisabledPlans
-    try
-    {
-        $licensesDiff = Compare-Object -ReferenceObject ($CurrentValues.AssignedLicenses.DisabledPlans) -DifferenceObject ($AssignedLicenses.DisabledPlans)
-        if ($null -ne $licensesDiff)
+        #Check DisabledPlans
+        try
         {
-            Write-Verbose -Message "DisabledPlans differ: $($licensesDiff | Out-String)"
+            $licensesDiff = Compare-Object -ReferenceObject ($CurrentValues.AssignedLicenses.DisabledPlans) -DifferenceObject ($AssignedLicenses.DisabledPlans)
+            if ($null -ne $licensesDiff)
+            {
+                Write-Verbose -Message "DisabledPlans differ: $($licensesDiff | Out-String)"
+                Write-Verbose -Message "Test-TargetResource returned $false"
+                $EventMessage = "Disabled Plans for Azure AD Group Licenses {$DisplayName} were not in the desired state.`r`n" + `
+                    "They should contain {$($AssignedLicenses.DisabledPlans)} but instead contained {$($CurrentValues.AssignedLicenses.DisabledPlans)}"
+                Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+                    -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+                return $false
+            }
+            else
+            {
+                Write-Verbose -Message "DisabledPlans for Azure AD Group Licensing are the same"
+            }
+        }
+        catch
+        {
             Write-Verbose -Message "Test-TargetResource returned $false"
-            $EventMessage = "Disabled Plans for Azure AD Group Licenses {$DisplayName} were not in the desired state.`r`n" + `
-                "They should contain {$($AssignedLicenses.DisabledPlans)} but instead contained {$($CurrentValues.AssignedLicenses.DisabledPlans)}"
-            Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
             return $false
         }
-        else
-        {
-            Write-Verbose -Message "DisabledPlans for Azure AD Group Licensing are the same"
-        }
-    }
-    catch
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
     }
 
     $ValuesToCheck = $PSBoundParameters
