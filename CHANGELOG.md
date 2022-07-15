@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADGroup
+  * Added support for Group Licensing by adding the AssignedLicenses property.
 * TeamsTenantDialPlan
   * Fixed an issue where the Normalization Rules strings were not properly exited.
     FIXES [#2096](https://github.com/microsoft/Microsoft365DSC/issues/2096)
