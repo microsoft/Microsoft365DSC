@@ -1,6 +1,19 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+* IntuneAppProtectionPolicyAndroid
+  * Added Configuration Parameters:
+    ManagedBrowser
+    MinimumRequiredAppVersion
+    MinimumRequiredOSVersion
+    MinimumRequiredPatchVersion
+    MinimumWarningAppVersion
+    MinimumWarningOSVersion
+    MinimumWarningPatchVersion
+    IsAssigned
+    FIXES [#1955](https://github.com/microsoft/Microsoft365DSC/issues/1955)
+  * Removed function Get-M365DSCIntuneAppProtectionPolicyAndroid as data already gathered by Get-MgDeviceAppManagementAndroidManagedAppProtection
+  * Assignments are now set correctly when policy is amended
 
 * TeamsUpdateManagementPolicy
   * Changed the format of the UpdateTimeOfDay parameter to not include date as part of an export.
