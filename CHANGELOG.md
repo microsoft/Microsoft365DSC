@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADGroup
+  * Added support for Group Licensing by adding the AssignedLicenses property.
 * TeamsUpdateManagementPolicy
   * Changed the format of the UpdateTimeOfDay parameter to not include date as part of an export.
     FIXES [#2062](https://github.com/microsoft/Microsoft365DSC/issues/2062)
