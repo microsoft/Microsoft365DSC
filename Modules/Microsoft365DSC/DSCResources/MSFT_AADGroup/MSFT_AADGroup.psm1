@@ -17,6 +17,14 @@ function Get-TargetResource
         $Id,
 
         [Parameter()]
+        [System.String[]]
+        $Owners,
+
+        [Parameter()]
+        [System.String[]]
+        $Members,
+
+        [Parameter()]
         [System.String]
         $Description,
 
@@ -133,9 +141,27 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Found existing AzureAD Group"
 
+            # Owners
+            $owners = Get-MgGroupOwner -GroupId $Group.Id -All:$true
+            $OwnersValues = @()
+            foreach ($owner in $owners)
+            {
+                $OwnersValues += $owner.AdditionalProperties.userPrincipalName
+            }
+
+            # Members
+            $members = Get-MgGroupMember -GroupId $Group.Id -All:$true
+            $MembersValues = @()
+            foreach ($member in $members)
+            {
+                $MembersValues += $member.AdditionalProperties.userPrincipalName
+            }
+
             $result = @{
                 DisplayName                   = $Group.DisplayName
                 Id                            = $Group.Id
+                Owners                        = $OwnersValues
+                Members                       = $MembersValues
                 Description                   = $Group.Description
                 GroupTypes                    = [System.String[]]$Group.GroupTypes
                 MembershipRule                = $Group.MembershipRule
@@ -194,6 +220,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Id,
+
+        [Parameter()]
+        [System.String[]]
+        $Owners,
+
+        [Parameter()]
+        [System.String[]]
+        $Members,
 
         [Parameter()]
         [System.String]
@@ -360,6 +394,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Id,
+
+        [Parameter()]
+        [System.String[]]
+        $Owners,
+
+        [Parameter()]
+        [System.String[]]
+        $Members,
 
         [Parameter()]
         [System.String]
