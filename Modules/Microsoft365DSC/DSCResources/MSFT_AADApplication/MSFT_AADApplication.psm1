@@ -584,7 +584,7 @@ function Test-TargetResource
             Write-Verbose -Message "Permissions differ: $($permissionsDiff | Out-String)"
             Write-Verbose -Message "Test-TargetResource returned $false"
             $EventMessage = "Permissions for Azure AD Application {$DisplayName} were not in the desired state.`r`n" + `
-                "The should contain {$($Permissions.Name)} but instead contained {$($CurrentValues.Permissions.Name)}"
+                "They should contain {$($Permissions.Name)} but instead contained {$($CurrentValues.Permissions.Name)}"
             Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source)
             return $false
@@ -601,7 +601,7 @@ function Test-TargetResource
             Write-Verbose -Message "No Permissions exist for the current Azure AD App, but permissions were specified for desired state"
             Write-Verbose -Message "Test-TargetResource returned $false"
             $EventMessage = "Permissions for Azure AD Application {$DisplayName} were not in the desired state.`r`n" + `
-                "The should contain {$($Permissions.Name)} but instead contained {`$null}"
+                "They should contain {$($Permissions.Name)} but instead contained {`$null}"
             Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source)
             return $false

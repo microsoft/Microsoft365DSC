@@ -141,7 +141,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GroupTypes                    = @("Unified")
                     Visibility                    = "Private"
                     Ensure                        = "Present"
-                    Credential            = $Credential;
+                    Credential                    = $Credential;
                 }
 
 

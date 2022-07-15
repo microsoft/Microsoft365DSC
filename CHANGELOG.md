@@ -2,6 +2,11 @@
 
 # UNRELEASED
 
+* AADGroup
+  * Added support for Group Licensing by adding the AssignedLicenses property.
+* TeamsTenantDialPlan
+  * Fixed an issue where the Normalization Rules strings were not properly exited.
+    FIXES [#2096](https://github.com/microsoft/Microsoft365DSC/issues/2096)
 * TeamsUpdateManagementPolicy
   * Changed the format of the UpdateTimeOfDay parameter to not include date as part of an export.
     FIXES [#2062](https://github.com/microsoft/Microsoft365DSC/issues/2062)
