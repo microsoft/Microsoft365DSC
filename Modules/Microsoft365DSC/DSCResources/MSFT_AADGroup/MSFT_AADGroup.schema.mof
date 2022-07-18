@@ -12,6 +12,8 @@ class MSFT_AADGroup : OMI_BaseResource
     [Key, Description("Specifies a mail nickname for the group.")] String MailNickname;
     [Write, Description("Specifies a description for the group.")] String Description;
     [Write, Description("Specifies an ID for the group.")] String Id;
+    [Write, Description("User Service Principal values for the group's owners.")] String Owners[];
+    [Write, Description("User Service Principal values for the group's members.")] String Members[];
     [Write, Description("Specifies that the group is a dynamic group. To create a dynamic group, specify a value of DynamicMembership.")] String GroupTypes[];
     [Write, Description("Specifies the membership rule for a dynamic group.")] String MembershipRule;
     [Write, Description("Specifies the rule processing state. The acceptable values for this parameter are: On. Process the group rule or Paused. Stop processing the group rule."), ValueMap{"On","Paused"}, Values{"On","Paused"}] String MembershipRuleProcessingState;
