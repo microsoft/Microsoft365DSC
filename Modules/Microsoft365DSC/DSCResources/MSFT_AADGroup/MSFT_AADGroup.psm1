@@ -145,21 +145,26 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Found existing AzureAD Group"
 
-
             # Owners
-            $owners = Get-MgGroupOwner -GroupId $Group.Id -All:$true
+            [Array]$owners = Get-MgGroupOwner -GroupId $Group.Id -All:$true
             $OwnersValues = @()
             foreach ($owner in $owners)
             {
-                $OwnersValues += $owner.AdditionalProperties.userPrincipalName
+                if ($owner.AdditionalProperties.userPrincipalName -ne $null)
+                {
+                    $OwnersValues += $owner.AdditionalProperties.userPrincipalName
+                }
             }
 
             # Members
-            $members = Get-MgGroupMember -GroupId $Group.Id -All:$true
+            [Array]$members = Get-MgGroupMember -GroupId $Group.Id -All:$true
             $MembersValues = @()
             foreach ($member in $members)
             {
-                $MembersValues += $member.AdditionalProperties.userPrincipalName
+                if ($member.AdditionalProperties.userPrincipalName -ne $null)
+                {
+                    $MembersValues += $member.AdditionalProperties.userPrincipalName
+                }
             }
 
             # Licenses
@@ -331,6 +336,10 @@ function Set-TargetResource
     $currentParameters.Remove("ApplicationSecret") | Out-Null
     $currentParameters.Remove("Ensure") | Out-Null
     $currentParameters.Remove("Credential") | Out-Null
+    $backCurrentOwners = $currentGroup.Owners
+    $backCurrentMembers = $currentGroup.Members
+    $currentParameters.Remove("Owners") | Out-Null
+    $currentParameters.Remove("Members") | Out-Null
 
     if ($Ensure -eq 'Present' -and `
         ($null -ne $GroupTypes -and $GroupTypes.Contains("Unified")) -and `
@@ -438,6 +447,7 @@ function Set-TargetResource
                 Write-Verbose -Message "Cannot set IsAssignableToRole once group is created."
                 $currentParameters.Remove("IsAssignableToRole") | Out-Null
             }
+
             if ($false -eq $currentParameters.ContainsKey("Id"))
             {
                 Update-MgGroup @currentParameters -GroupId $currentGroup.Id | Out-Null
@@ -479,12 +489,12 @@ function Set-TargetResource
         try
         {
             Write-Verbose -Message "Creating Group with Values: $(Convert-M365DscHashtableToString -Hashtable $currentParameters)"
-            $group = New-MgGroup @currentParameters
+            $currentGroup = New-MgGroup @currentParameters
 
-            Write-Verbose -Message "Created Group $($group.id)"
+            Write-Verbose -Message "Created Group $($currentGroup.id)"
             if ($assignedLicensesGUIDs.Length -gt 0)
             {
-                Set-MgGroupLicense -GroupId $group.Id -AddLicenses $licensesToAdd -RemoveLicenses @()
+                Set-MgGroupLicense -GroupId $currentGroup.Id -AddLicenses $licensesToAdd -RemoveLicenses @()
             }
         }
         catch
@@ -502,6 +512,71 @@ function Set-TargetResource
         catch
         {
             New-M365DSCLogEntry -Error $_ -Message "Couldn't delete group $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+        }
+    }
+
+    if ($Ensure -ne 'Absent')
+    {
+        #Owners
+        $currentOwnersValue = @()
+        if ($currentParameters.Owners.Length -gt 0)
+        {
+            $currentOwnersValue = $backCurrentOwners
+        }
+        $desiredOwnersValue = @()
+        if ($Owners.Length -gt 0)
+        {
+            $desiredOwnersValue = $Owners
+        }
+        $ownersDiff = Compare-Object -ReferenceObject $backCurrentOwners -DifferenceObject $desiredOwnersValue
+        foreach ($diff in $ownersDiff)
+        {
+            $user = Get-MgUser -UserId $diff.InputObject
+
+            if ($diff.SideIndicator -eq '=>')
+            {
+                Write-Verbose -Message "Adding new owner {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
+                $ownerObject = @{
+                    "@odata.id"= "https://graph.microsoft.com/v1.0/users/{$($user.Id)}"
+                }
+                New-MgGroupOwnerByRef -GroupId ($currentGroup.Id) -BodyParameter $ownerObject | Out-Null
+            }
+            elseif ($diff.SideIndicator -eq '<=')
+            {
+                Write-Verbose -Message "Removing new owner {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
+                Remove-MgGroupOwnerByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($user.Id) | Out-Null
+            }
+        }
+
+        #Members
+        $currentMembersValue = @()
+        if ($currentParameters.Members.Length -ne 0)
+        {
+            $currentMembersValue = $backCurrentMembers
+        }
+        $desiredMembersValue = @()
+        if ($Members.Length -ne 0)
+        {
+            $desiredMembersValue = $Members
+        }
+        $membersDiff = Compare-Object -ReferenceObject $backCurrentMembers -DifferenceObject $desiredMembersValue
+        foreach ($diff in $membersDiff)
+        {
+            $user = Get-MgUser -UserId $diff.InputObject
+
+            if ($diff.SideIndicator -eq '=>')
+            {
+                Write-Verbose -Message "Adding new member {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
+                $memberObject = @{
+                    "@odata.id"= "https://graph.microsoft.com/v1.0/users/{$($user.Id)}"
+                }
+                New-MgGroupMemberByRef -GroupId ($currentGroup.Id) -BodyParameter $memberObject | Out-Null
+            }
+            elseif ($diff.SideIndicator -eq '<=')
+            {
+                Write-Verbose -Message "Removing new member {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
+                Remove-MgGroupMemberByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($user.Id) | Out-Null
+            }
         }
     }
 }
@@ -670,6 +745,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('Id') | Out-Null
     $ValuesToCheck.Remove('GroupTypes') | Out-Null
+    $ValuesToCheck.Remove('AssignedLicenses') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -811,7 +887,6 @@ function Get-M365DSCAzureADGroupLicenses
         {
             if ($allServicePlans.Length -eq 0 -or -not $allServicePlans.ServicePlanName.Contains($servicePlan.ServicePlanName))
             {
-                Write-Verbose -Message "$($servicePlan.ServicePlanId) :: $($serviceplan.ServicePlanName)"
                 $allServicePlans += @{
                     ServicePlanId   = $serviceplan.ServicePlanId
                     ServicePlanName = $serviceplan.ServicePlanName

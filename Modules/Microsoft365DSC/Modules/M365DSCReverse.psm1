@@ -466,7 +466,7 @@ function Start-M365DSCConfigurationExtract
                 if ($GenerateInfo)
                 {
                     $exportString.Append("`r`n        # For information on how to use this resource, please refer to:`r`n") | Out-Null
-                    $exportString.Append("        # https://github.com/microsoft/Microsoft365DSC/wiki/$($resource.NAme.Split('.')[0] -replace 'MSFT_', '')`r`n") | Out-Null
+                    $exportString.Append("        # https://github.com/microsoft/Microsoft365DSC/wiki/$($resource.Name.Split('.')[0] -replace 'MSFT_', '')`r`n") | Out-Null
                 }
                 $exportString.Append((Export-TargetResource @parameters)) | Out-Null
                 $i++
