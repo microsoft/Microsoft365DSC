@@ -6,6 +6,12 @@
   * Added support for Group Licensing by adding the AssignedLicenses property.
   * Added support for members and owners.
   FIXES [#1066](https://github.com/microsoft/Microsoft365DSC/issues/1066)
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Initial release.
+* IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager
+  * Initial release.
+* IntuneExploitProtectionPolicyWindows10SettingCatalog
+  * Initial release.
 * TeamsTenantDialPlan
   * Fixed an issue where the Normalization Rules strings were not properly exited.
     FIXES [#2096](https://github.com/microsoft/Microsoft365DSC/issues/2096)
