@@ -528,6 +528,10 @@ function Set-TargetResource
         {
             $desiredOwnersValue = $Owners
         }
+        if ($backCurrentOwners -eq $null)
+        {
+            $backCurrentOwners = @()
+        }
         $ownersDiff = Compare-Object -ReferenceObject $backCurrentOwners -DifferenceObject $desiredOwnersValue
         foreach ($diff in $ownersDiff)
         {
@@ -558,6 +562,10 @@ function Set-TargetResource
         if ($Members.Length -ne 0)
         {
             $desiredMembersValue = $Members
+        }
+        if ($backCurrentMembers -eq $null)
+        {
+            $backCurrentMembers = @()
         }
         $membersDiff = Compare-Object -ReferenceObject $backCurrentMembers -DifferenceObject $desiredMembersValue
         foreach ($diff in $membersDiff)
