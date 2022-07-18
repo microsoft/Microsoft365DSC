@@ -10,6 +10,8 @@
 | **MailNickname** | Key | String | Specifies a mail nickname for the group. ||
 | **Description** | Write | String | Specifies a description for the group. ||
 | **Id** | Write | String | Specifies an ID for the group. ||
+| **Owners** | Write | StringArray[] | User Service Principal values for the group's owners. ||
+| **Members** | Write | StringArray[] | User Service Principal values for the group's members. ||
 | **GroupTypes** | Write | StringArray[] | Specifies that the group is a dynamic group. To create a dynamic group, specify a value of DynamicMembership. ||
 | **MembershipRule** | Write | String | Specifies the membership rule for a dynamic group. ||
 | **MembershipRuleProcessingState** | Write | String | Specifies the rule processing state. The acceptable values for this parameter are: On. Process the group rule or Paused. Stop processing the group rule. |On, Paused|
