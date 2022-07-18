@@ -170,9 +170,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    write-host 'resourcename:' $ResourceName
     $CommandName  = $MyInvocation.MyCommand
-    write-host 'commandname:' $commandname
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
