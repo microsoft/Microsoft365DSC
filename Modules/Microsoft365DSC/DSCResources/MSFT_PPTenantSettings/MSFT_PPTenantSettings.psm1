@@ -235,8 +235,7 @@ function Set-TargetResource
     -InboundParameters $PSBoundParameters
 
   $SetParameters = $PSBoundParameters
-  $RequestBody = Get-M365DSCPowerPlatformTenantSettingsJSON -Parameters $SetParameters
-
+  $RequestBody = Get-M365DSCPowerPlatformTenantSettings -Parameters $SetParameters
   Set-TenantSettings -RequestBody $RequestBody | Out-Null
 }
 
@@ -316,33 +315,33 @@ function Test-TargetResource
     $Credential
   )
       #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
+      Confirm-M365DSCDependencies
 
-    #region Telemetry
-  $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-  $CommandName  = $MyInvocation.MyCommand
-  $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-      -CommandName $CommandName `
-      -Parameters $PSBoundParameters
-  Add-M365DSCTelemetryEvent -Data $data
-  #endregion
+      #region Telemetry
+      $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+      $CommandName  = $MyInvocation.MyCommand
+      $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+          -CommandName $CommandName `
+          -Parameters $PSBoundParameters
+      Add-M365DSCTelemetryEvent -Data $data
+      #endregion
 
-  Write-Verbose -Message 'Testing configuration for Power Platform Tenant Settings'
-  $CurrentValues = Get-TargetResource @PSBoundParameters
+      Write-Verbose -Message 'Testing configuration for Power Platform Tenant Settings'
+      $CurrentValues = Get-TargetResource @PSBoundParameters
 
-  Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-  Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+      Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+      Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-  $ValuesToCheck = $PSBoundParameters
-  $ValuesToCheck.Remove('Credential') | Out-Null
-  $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-    -Source $($MyInvocation.MyCommand.Source) `
-    -DesiredValues $PSBoundParameters `
-    -ValuesToCheck $ValuesToCheck.Keys
+      $ValuesToCheck = $PSBoundParameters
+      $ValuesToCheck.Remove('Credential') | Out-Null
+      $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
-  Write-Verbose -Message "Test-TargetResource returned $TestResult"
+      Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
-  return $TestResult
+      return $TestResult
 }
 
 function Export-TargetResource
@@ -450,7 +449,7 @@ function Export-TargetResource
   }
 }
 
-function Get-M365DSCPowerPlatformTenantSettingsJSON
+function Get-M365DSCPowerPlatformTenantSettings
 {
   [CmdletBinding()]
   [OutputType([System.String])]
@@ -461,35 +460,33 @@ function Get-M365DSCPowerPlatformTenantSettingsJSON
     $Parameters
   )
 
-  $JsonContent = @"
-    {
-        "walkMeOptOut" : $($Parameters.WalkMeOptOut),
-        "disableNPSCommentsReachout" : $($Parameters.DisableNPSCommentsReachout),
-        "disableNewsletterSendout" : $($Parameters.DisableNewsletterSendout),
-        "disableEnvironmentCreationByNonAdminUsers" : $($Parameters.DisableEnvironmentCreationByNonAdminUsers),
-        "disablePortalsCreationByNonAdminUsers" : $($Parameters.DisablePortalsCreationByNonAdminUsers),
-        "disableSurveyFeedback" : $($Parameters.DisableSurveyFeedback),
-        "disableTrialEnvironmentCreationByNonAdminUsers" : $($Parameters.DisableTrialEnvironmentCreationByNonAdminUsers),
-        "disableCapacityAllocationByEnvironmentAdmins" : $($Parameters.DisableCapacityAllocationByEnvironmentAdmins),
-        "disableSupportTicketsVisibleByAllUsers" : $($Parameters.DisableSupportTicketsVisibleByAllUsers),
-
-        "powerPlatform": {
-          "search:{
-            "disableDocsSearch" : $($Parameters.DisableDocsSearch),
-            "disableCommunitySearch" : $($Parameters.DisableCommunitySearch),
-            "disableBingVideoSearch" : $($Parameters.DisableBingVideoSearch)
-          },
-          "powerApps": {
-            "disableShareWithEveryone" : $($Parameters.DisableShareWithEveryone),
-            "enableGuestsToMake" : $($Parameters.EnableGuestsToMake)
-          },
-          "teamsIntegration": {
-            "shareWithColleaguesUserLimit": $($Parameters.ShareWithColleaguesUserLimit)
+  $result = @{
+        walkMeOptOut = $Parameters.WalkMeOptOut
+        disableNPSCommentsReachout = $Parameters.DisableNPSCommentsReachout
+        disableNewsletterSendout = $Parameters.DisableNewsletterSendout
+        disableEnvironmentCreationByNonAdminUsers = $Parameters.DisableEnvironmentCreationByNonAdminUsers
+        disablePortalsCreationByNonAdminUsers = $Parameters.DisablePortalsCreationByNonAdminUsers
+        disableSurveyFeedback = $Parameters.DisableSurveyFeedback
+        disableTrialEnvironmentCreationByNonAdminUsers = $Parameters.DisableTrialEnvironmentCreationByNonAdminUsers
+        disableCapacityAllocationByEnvironmentAdmins = $Parameters.DisableCapacityAllocationByEnvironmentAdmins
+        disableSupportTicketsVisibleByAllUsers = $Parameters.DisableSupportTicketsVisibleByAllUsers
+        powerPlatform = @{
+          search = @{
+            disableDocsSearch = $Parameters.DisableDocsSearch
+            disableCommunitySearch = $Parameters.DisableCommunitySearch
+            disableBingVideoSearch = $Parameters.DisableBingVideoSearch
+          }
+          powerApps = @{
+            disableShareWithEveryone = $Parameters.DisableShareWithEveryone
+            enableGuestsToMake = $Parameters.EnableGuestsToMake
+          }
+          teamsIntegration = @{
+            shareWithColleaguesUserLimit = $Parameters.ShareWithColleaguesUserLimit
           }
         }
     }
-"@
-  return $JsonContent
+
+  return $result
 }
 
 Export-ModuleMember -Function *-TargetResource

@@ -20,6 +20,12 @@
   FIXES [#1479](https://github.com/microsoft/Microsoft365DSC/issues/1479)
 * IntuneExploitProtectionPolicyWindows10SettingCatalog
   * Initial release.
+* O365OrgCustomizationSetting
+  * Added a warning to let users know the changes can take up to 24 hours to be reflected
+  FIXES [#1599](https://github.com/microsoft/Microsoft365DSC/issues/1599)
+* PPTenantSettings
+  * Fixed the way parameters are passed to the Set-TenantSettings cmdlet.
+  FIXES [#1914](https://github.com/microsoft/Microsoft365DSC/issues/1914)
 * TeamsTenantDialPlan
   * Fixed an issue where the Normalization Rules strings were not properly exited.
     FIXES [#2096](https://github.com/microsoft/Microsoft365DSC/issues/2096)
