@@ -2961,6 +2961,16 @@ function Test-TargetResource
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
+    # Check DefenderDetectedMalwareActions
+    if ($CurrentValues.DefenderDetectedMalwareActions.LowSeverity -ne $DefenderDetectedMalwareActions.LowSeverity -or
+        $CurrentValues.DefenderDetectedMalwareActions.ModerateSeverity -ne $DefenderDetectedMalwareActions.ModerateSeverity -or
+        $CurrentValues.DefenderDetectedMalwareActions.HighSeverity -ne $DefenderDetectedMalwareActions.HighSeverity -or
+        $CurrentValues.DefenderDetectedMalwareActions.SevereSeverity -ne $DefenderDetectedMalwareActions.SevereSeverity)
+    {
+        Write-Verbose -Message "Test-TargetResource returned $false"
+        return $false
+    }
+    $ValuesToCheck.Remove("DefenderDetectedMalwareActions") | Out-Null
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
