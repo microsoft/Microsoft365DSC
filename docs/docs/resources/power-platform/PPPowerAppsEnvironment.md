@@ -9,9 +9,6 @@
 | **EnvironmentSKU** | Required | String | Environment type. |Production, Standard, Trial, Sandbox, SubscriptionBasedTrial, Teams|
 | **Ensure** | Write | String | Only accepted value is 'Present'. |Present, Absent|
 | **Credential** | Write | PSCredential | Credentials of the Power Platform Admin ||
-| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
-| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||
-| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
 
 # PPPowerAppsEnvironment
