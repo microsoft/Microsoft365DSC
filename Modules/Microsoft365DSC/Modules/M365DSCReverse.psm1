@@ -139,7 +139,38 @@ function Start-M365DSCConfigurationExtract
         {
             $AuthMethods += "ApplicationWithSecret"
         }
-        $allSupportedResources = Get-M365DSCComponentsForAuthenticationType -AuthenticationMethod $AuthMethods
+
+        $ResourcesPath = Join-Path -Path $PSScriptRoot `
+        -ChildPath "..\DSCResources\" `
+        -Resolve
+        $AllResources = Get-ChildItem $ResourcesPath -Recurse | Where-Object { $_.Name -like 'MSFT_*.psm1' }
+
+        $i = 1
+        $ResourcesToExport = @()
+        $ResourcesPath = @()
+        foreach ($ResourceModule in $AllResources)
+        {
+            try
+            {
+                $resourceName = $ResourceModule.Name.Split('.')[0] -replace 'MSFT_', ''
+
+                if ((($Components -and ($Components -contains $resourceName)) -or $AllComponents -or `
+                        (-not $Components -and $null -eq $Workloads)) -and `
+                    ($ComponentsSpecified -or ($ComponentsToSkip -notcontains $resourceName)) -and `
+                        $resourcesNotSupported -notcontains $resourceName)
+                {
+                    $ResourcesToExport += $ResourceName
+                    $ResourcesPath += $ResourceModule
+                }
+            }
+            catch
+            {
+                New-M365DSCLogEntry -Error $_ -Message $ResourceModule.Name -Source "[M365DSCReverse]$($ResourceModule.Name)"
+            }
+        }
+
+        $allSupportedResources = Get-M365DSCComponentsForAuthenticationType -AuthenticationMethod $AuthMethods `
+            -ResourcesToExport $ResourcesToExport
 
         # If some resources are not supported based on the Authentication parameters
         # received, write a warning.
@@ -352,35 +383,6 @@ function Start-M365DSCConfigurationExtract
         else
         {
             Save-Credentials -UserName "certificatepassword"
-        }
-
-        $ResourcesPath = Join-Path -Path $PSScriptRoot `
-            -ChildPath "..\DSCResources\" `
-            -Resolve
-        $AllResources = Get-ChildItem $ResourcesPath -Recurse | Where-Object { $_.Name -like 'MSFT_*.psm1' }
-
-        $i = 1
-        $ResourcesToExport = @()
-        $ResourcesPath = @()
-        foreach ($ResourceModule in $AllResources)
-        {
-            try
-            {
-                $resourceName = $ResourceModule.Name.Split('.')[0] -replace 'MSFT_', ''
-
-                if ((($Components -and ($Components -contains $resourceName)) -or $AllComponents -or `
-                        (-not $Components -and $null -eq $Workloads)) -and `
-                    ($ComponentsSpecified -or ($ComponentsToSkip -notcontains $resourceName)) -and `
-                        $resourcesNotSupported -notcontains $resourceName)
-                {
-                    $ResourcesToExport += $ResourceName
-                    $ResourcesPath += $ResourceModule
-                }
-            }
-            catch
-            {
-                New-M365DSCLogEntry -Error $_ -Message $ResourceModule.Name -Source "[M365DSCReverse]$($ResourceModule.Name)"
-            }
         }
 
         # Retrieve the list of Workloads represented by the resources to export and pre-authenticate to each one;
