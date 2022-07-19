@@ -9,6 +9,8 @@
 * EXODistributionGroup
   * Initial release.
   FIXES [#1802](https://github.com/microsoft/Microsoft365DSC/issues/1802)
+* EXOMalwareFilterPolicy
+  * DEPRECATED parameter CustomAlertText.
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Initial release.
 * IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager
