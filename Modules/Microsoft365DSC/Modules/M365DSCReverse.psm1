@@ -192,7 +192,15 @@ function Start-M365DSCConfigurationExtract
 
         try
         {
-            $compareResourcesResult = Compare-Object -ReferenceObject $allSupportedResources `
+            if ($allSupportedResources.Length -eq 0)
+            {
+                $allSupportedResources = @()
+            }
+            if ($selectedResources.Length -eq 0)
+            {
+                $selectedResources = @()
+            }
+            [Array]$compareResourcesResult = Compare-Object -ReferenceObject $allSupportedResources `
                 -DifferenceObject $selectedResources | Where-Object -FilterScript { $_.SideIndicator -eq '=>' }
         }
         catch
@@ -216,6 +224,12 @@ function Start-M365DSCConfigurationExtract
             Write-Host "[WARNING]" -NoNewline -ForegroundColor Yellow
             Write-Host " Based on the provided Authentication parameters, the following resources cannot be extracted: " -ForegroundColor Gray
             Write-Host "$resourcesNotSupported" -ForegroundColor Gray
+
+            # If all selected resources are not valid based on the authentication method used, simply return.
+            if ($ComponentsToSkip.Length -eq $selectedResources.Length)
+            {
+                return
+            }
         }
 
         # Get Tenant Info

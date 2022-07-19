@@ -38,6 +38,8 @@
 * MISC
   * PowerPlatform: Standardized authentication on Credential and dropped support for Service Principal across resources.
   FIXES [#1979](https://github.com/microsoft/Microsoft365DSC/issues/1979)
+  * EXPORT: Changed the way resources' modules are imported to improve startup performance.
+  FIXES [#1745](https://github.com/microsoft/Microsoft365DSC/issues/1745)
 
 # 1.22.713.1
 
