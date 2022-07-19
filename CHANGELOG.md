@@ -15,6 +15,9 @@
   * Initial release.
 * IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager
   * Initial release.
+* IntuneDeviceCompliancePolicyWindows10
+  * Switched to using the beta profile in order to aapture all parameters.
+  FIXES [#1998](https://github.com/microsoft/Microsoft365DSC/issues/1998)
 * IntuneDeviceConfigurationPolicyWindows10
   * Fixed issue where the value for the DefenderDetectedMalwareActions property wasn't properly handled.
   FIXES [#1479](https://github.com/microsoft/Microsoft365DSC/issues/1479)
