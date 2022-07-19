@@ -9,6 +9,12 @@
 * EXODistributionGroup
   * Initial release.
   FIXES [#1802](https://github.com/microsoft/Microsoft365DSC/issues/1802)
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Initial release.
+* IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager
+  * Initial release.
+* IntuneExploitProtectionPolicyWindows10SettingCatalog
+  * Initial release.
 * TeamsTenantDialPlan
   * Fixed an issue where the Normalization Rules strings were not properly exited.
     FIXES [#2096](https://github.com/microsoft/Microsoft365DSC/issues/2096)
