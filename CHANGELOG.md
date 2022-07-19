@@ -15,6 +15,9 @@
   * Initial release.
 * IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager
   * Initial release.
+* IntuneDeviceConfigurationPolicyWindows10
+  * Fixed issue where the value for the DefenderDetectedMalwareActions property wasn't properly handled.
+  FIXES [#1479](https://github.com/microsoft/Microsoft365DSC/issues/1479)
 * IntuneExploitProtectionPolicyWindows10SettingCatalog
   * Initial release.
 * TeamsTenantDialPlan
