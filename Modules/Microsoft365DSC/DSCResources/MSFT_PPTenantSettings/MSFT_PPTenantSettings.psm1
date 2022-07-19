@@ -113,7 +113,7 @@ function Get-TargetResource
       DisableShareWithEveryone                       = $PPTenantSettings.powerPlatform.powerApps.disableShareWithEveryone
       EnableGuestsToMake                             = $PPTenantSettings.powerPlatform.powerApps.enableGuestsToMake
       ShareWithColleaguesUserLimit                   = $PPTenantSettings.powerPlatform.teamsIntegration.shareWithColleaguesUserLimit
-      Credential                             = $Credential
+      Credential                                     = $Credential
     }
   }
   catch
@@ -352,19 +352,7 @@ function Export-TargetResource
   (
     [Parameter()]
     [System.Management.Automation.PSCredential]
-    $Credential,
-
-    [Parameter()]
-    [System.String]
-    $ApplicationId,
-
-    [Parameter()]
-    [System.String]
-    $TenantId,
-
-    [Parameter()]
-    [System.String]
-    $CertificateThumbprint
+    $Credential
   )
   $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatforms' `
     -InboundParameters $PSBoundParameters
@@ -387,23 +375,8 @@ function Export-TargetResource
     $dscContent = ''
 
     $Params = @{
-      IsSingleInstance                               = 'Yes'
-      WalkMeOptOut                                   = $settings.walkMeOptOut
-      DisableNPSCommentsReachout                     = $settings.disableNPSCommentsReachout
-      DisableNewsletterSendout                       = $settings.disableNewsletterSendout
-      DisableEnvironmentCreationByNonAdminUsers      = $settings.disableEnvironmentCreationByNonAdminUsers
-      DisablePortalsCreationByNonAdminUsers          = $settings.disablePortalsCreationByNonAdminUsers
-      DisableSurveyFeedback                          = $settings.disableSurveyFeedback
-      DisableTrialEnvironmentCreationByNonAdminUsers = $settings.disableTrialEnvironmentCreationByNonAdminUsers
-      DisableCapacityAllocationByEnvironmentAdmins   = $settings.disableCapacityAllocationByEnvironmentAdmins
-      DisableSupportTicketsVisibleByAllUsers         = $settings.disableSupportTicketsVisibleByAllUsers
-      DisableDocsSearch                              = $settings.powerPlatform.search.disableDocsSearch
-      DisableCommunitySearch                         = $settings.powerPlatform.search.disableCommunitySearch
-      DisableBingVideoSearch                         = $settings.powerPlatform.search.disableBingVideoSearch
-      DisableShareWithEveryone                       = $settings.powerPlatform.powerApps.disableShareWithEveryone
-      EnableGuestsToMake                             = $settings.powerPlatform.powerApps.enableGuestsToMake
-      ShareWithColleaguesUserLimit                   = $settings.powerPlatform.teamsIntegration.shareWithColleaguesUserLimit
-      Credential                             = $Credential
+      IsSingleInstance      = 'Yes'
+      Credential            = $Credential
     }
     $Results = Get-TargetResource @Params
     $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

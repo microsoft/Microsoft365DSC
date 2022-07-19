@@ -15,6 +15,9 @@
   * Initial release.
 * IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager
   * Initial release.
+* IntuneDeviceCompliancePolicyWindows10
+  * Switched to using the beta profile in order to aapture all parameters.
+  FIXES [#1998](https://github.com/microsoft/Microsoft365DSC/issues/1998)
 * IntuneDeviceConfigurationPolicyWindows10
   * Fixed issue where the value for the DefenderDetectedMalwareActions property wasn't properly handled.
   FIXES [#1479](https://github.com/microsoft/Microsoft365DSC/issues/1479)
@@ -32,6 +35,9 @@
 * TeamsUpdateManagementPolicy
   * Changed the format of the UpdateTimeOfDay parameter to not include date as part of an export.
     FIXES [#2062](https://github.com/microsoft/Microsoft365DSC/issues/2062)
+* MISC
+  * PowerPlatform: Standardized authentication on Credential and dropped support for Service Principal across resources.
+  FIXES [#1979](https://github.com/microsoft/Microsoft365DSC/issues/1979)
 
 # 1.22.713.1
 
