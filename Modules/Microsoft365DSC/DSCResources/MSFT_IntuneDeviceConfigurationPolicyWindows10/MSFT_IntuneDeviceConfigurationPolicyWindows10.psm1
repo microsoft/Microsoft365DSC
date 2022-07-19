@@ -283,7 +283,7 @@ function Get-TargetResource
         $DefenderProcessesToExclude,
 
         [Parameter()]
-        [System.String[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $DefenderDetectedMalwareActions,
 
         [Parameter()]
@@ -896,6 +896,20 @@ function Get-TargetResource
             return $nullResult
         }
 
+        $DefenderDetectedMalwareActionsValues = $null
+        if (-not [System.String]::IsNullOrEmpty($policy.AdditionalProperties.defenderDetectedMalwareActions.lowSeverity) -or
+            -not [System.String]::IsNullOrEmpty($policy.AdditionalProperties.defenderDetectedMalwareActions.moderateSeverity) -or
+            -not [System.String]::IsNullOrEmpty($policy.AdditionalProperties.defenderDetectedMalwareActions.highSeverity) -or
+            -not [System.String]::IsNullOrEmpty($policy.AdditionalProperties.defenderDetectedMalwareActions.severeSeverity))
+        {
+            $DefenderDetectedMalwareActionsValues = @{
+                LowSeverity      = $policy.AdditionalProperties.defenderDetectedMalwareActions.lowSeverity
+                ModerateSeverity = $policy.AdditionalProperties.defenderDetectedMalwareActions.moderateSeverity
+                HighSeverity     = $policy.AdditionalProperties.defenderDetectedMalwareActions.highSeverity
+                SevereSeverity   = $policy.AdditionalProperties.defenderDetectedMalwareActions.severeSeverity
+            }
+        }
+
         Write-Verbose -Message "Found Device Configuration Policy {$DisplayName}"
         return @{
             Description                                             = $policy.Description
@@ -963,7 +977,7 @@ function Get-TargetResource
             DefenderScanType                                        = $policy.AdditionalProperties.defenderScanType
             DefenderSystemScanSchedule                              = $policy.AdditionalProperties.defenderSystemScanSchedule
             DefenderScheduledScanTime                               = $policy.AdditionalProperties.defenderScheduledScanTime
-            DefenderDetectedMalwareActions                          = $policy.AdditionalProperties.defenderDetectedMalwareActions
+            DefenderDetectedMalwareActions                          = $DefenderDetectedMalwareActionsValues
             DefenderFileExtensionsToExclude                         = $policy.AdditionalProperties.defenderFileExtensionsToExclude
             DefenderFilesAndFoldersToExclude                        = $policy.AdditionalProperties.defenderFilesAndFoldersToExclude
             DefenderProcessesToExclude                              = $policy.AdditionalProperties.defenderProcessesToExclude
@@ -1412,7 +1426,7 @@ function Set-TargetResource
         $DefenderProcessesToExclude,
 
         [Parameter()]
-        [System.String[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $DefenderDetectedMalwareActions,
 
         [Parameter()]
@@ -2022,6 +2036,7 @@ function Set-TargetResource
         $PSBoundParameters.Remove('DisplayName') | Out-Null
         $PSBoundParameters.Remove('Description') | Out-Null
         $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationPolicyWindowsAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        $AdditionalProperties.DefenderDetectedMalwareActions.Add("@odata.type", "#microsoft.graph.defenderDetectedMalwareActions")
         New-MGDeviceManagementDeviceConfiguration -DisplayName $DisplayName `
             -Description $Description `
             -AdditionalProperties $AdditionalProperties
@@ -2037,6 +2052,7 @@ function Set-TargetResource
         $PSBoundParameters.Remove('DisplayName') | Out-Null
         $PSBoundParameters.Remove('Description') | Out-Null
         $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationPolicyWindowsAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        $AdditionalProperties.DefenderDetectedMalwareActions.Add("@odata.type", "#microsoft.graph.defenderDetectedMalwareActions")
         Update-MGDeviceManagementDeviceConfiguration -AdditionalProperties $AdditionalProperties `
             -Description $Description `
             -DeviceConfigurationId $configDevicePolicy.Id
@@ -2338,7 +2354,7 @@ function Test-TargetResource
         $DefenderProcessesToExclude,
 
         [Parameter()]
-        [System.String[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $DefenderDetectedMalwareActions,
 
         [Parameter()]
@@ -3018,7 +3034,7 @@ function Export-TargetResource
             $params = @{
                 DisplayName           = $policy.DisplayName
                 Ensure                = 'Present'
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
@@ -3027,11 +3043,31 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
+
+            if ($Results.DefenderDetectedMalwareActions)
+            {
+                $StringContent = [System.Text.StringBuilder]::new()
+                $StringContent.AppendLine("MSFT_IntuneDefenderDetectedMalwareActions {") | Out-Null
+                $StringContent.AppendLine("                LowSeverity       = '" + $Results.DefenderDetectedMalwareActions.LowSeverity + "'") | Out-Null
+                $StringContent.AppendLine("                ModerateSeverity  = '" + $Results.DefenderDetectedMalwareActions.ModerateSeverity + "'") | Out-Null
+                $StringContent.AppendLine("                HighSeverity      = '" + $Results.DefenderDetectedMalwareActions.HighSeverity + "'") | Out-Null
+                $StringContent.AppendLine("                SevereSeverity    = '" + $Results.DefenderDetectedMalwareActions.SevereSeverity + "'") | Out-Null
+                $StringContent.AppendLine("            }") | Out-Null
+                $Results.DefenderDetectedMalwareActions = $StringContent.ToString()
+            }
+
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
+
+            if ($Results.DefenderDetectedMalwareActions)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                    -ParameterName "DefenderDetectedMalwareActions"
+            }
+
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -3080,7 +3116,19 @@ function Get-M365DSCIntuneDeviceConfigurationPolicyWindowsAdditionalProperties
         if ($property -ne 'Verbose')
         {
             $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
-            $propertyValue = $properties.$property
+            if ($propertyName -eq 'defenderDetectedMalwareActions')
+            {
+                $propertyValue = @{
+                    LowSeverity      = $properties.$property.lowSeverity
+                    ModerateSeverity = $properties.$property.moderateSeverity
+                    HighSeverity     = $properties.$property.highSeverity
+                    SevereSeverity   = $properties.$property.severeSeverity
+                }
+            }
+            else
+            {
+                $propertyValue = $properties.$property
+            }
             $results.Add($propertyName, $propertyValue)
         }
     }
