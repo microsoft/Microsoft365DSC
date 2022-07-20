@@ -2931,53 +2931,60 @@ function Get-M365DSCComponentsForAuthenticationType
         [Parameter()]
         [System.String[]]
         [ValidateSet('Application', 'ApplicationWithSecret', 'Certificate', 'Credentials')]
-        $AuthenticationMethod
+        $AuthenticationMethod,
+
+        [Parameter()]
+        [System.String[]]
+        $ResourcesToExport
     )
 
     $modules = Get-ChildItem -Path ($PSScriptRoot + "\..\DSCResources\") -Recurse -Filter '*.psm1'
     $Components = @()
     foreach ($resource in $modules)
     {
-        Import-Module $resource.FullName -Force
-        $parameters = (Get-Command 'Set-TargetResource').Parameters.Keys
-
-        # Case - Resource only supports AppID & GlobalAdmin
-        if ($AuthenticationMethod.Contains("Application") -and `
-                $AuthenticationMethod.Contains("Credentials") -and `
-            ($parameters.Contains("ApplicationId") -and `
-                    $parameters.Contains("Credential") -and `
-                    -not $parameters.Contains('CertificateThumbprint') -and `
-                    -not $parameters.Contains('CertificatePath') -and `
-                    -not $parameters.Contains('CertificatePassword') -and `
-                    -not $parameters.Contains('TenantId')))
+        if ($ResourcesToExport.Contains($resource.Name.Replace("MSFT_", "").Split('.')[0]))
         {
-            $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
-        }
+            Import-Module $resource.FullName -Force
+            $parameters = (Get-Command 'Set-TargetResource').Parameters.Keys
 
-        #Case - Resource certificate info and TenantId
-        elseif ($AuthenticationMethod.Contains("Certificate") -and `
-            ($parameters.Contains('CertificateThumbprint') -or `
-                    $parameters.Contains('CertificatePath') -or `
-                    $parameters.Contains('CertificatePassword')) -and `
-                $parameters.Contains('TenantId'))
-        {
-            $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
-        }
+            # Case - Resource only supports AppID & GlobalAdmin
+            if ($AuthenticationMethod.Contains("Application") -and `
+                    $AuthenticationMethod.Contains("Credentials") -and `
+                ($parameters.Contains("ApplicationId") -and `
+                        $parameters.Contains("Credential") -and `
+                        -not $parameters.Contains('CertificateThumbprint') -and `
+                        -not $parameters.Contains('CertificatePath') -and `
+                        -not $parameters.Contains('CertificatePassword') -and `
+                        -not $parameters.Contains('TenantId')))
+            {
+                $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
+            }
 
-        # Case - Resource contains ApplicationSecret
-        elseif ($AuthenticationMethod.Contains("ApplicationWithSecret") -and `
-                $parameters.Contains('ApplicationId') -and `
-                $parameters.Contains('ApplicationSecret') -and `
-                $parameters.Contains('TenantId'))
-        {
-            $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
-        }
+            #Case - Resource certificate info and TenantId
+            elseif ($AuthenticationMethod.Contains("Certificate") -and `
+                ($parameters.Contains('CertificateThumbprint') -or `
+                        $parameters.Contains('CertificatePath') -or `
+                        $parameters.Contains('CertificatePassword')) -and `
+                    $parameters.Contains('TenantId'))
+            {
+                $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
+            }
 
-        # Case - Resource contains Credential
-        elseif ($AuthenticationMethod.Contains("Credentials") -and `
-                $parameters.Contains('Credential'))
-        {
-            $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
+            # Case - Resource contains ApplicationSecret
+            elseif ($AuthenticationMethod.Contains("ApplicationWithSecret") -and `
+                    $parameters.Contains('ApplicationId') -and `
+                    $parameters.Contains('ApplicationSecret') -and `
+                    $parameters.Contains('TenantId'))
+            {
+                $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
+            }
+
+            # Case - Resource contains Credential
+            elseif ($AuthenticationMethod.Contains("Credentials") -and `
+                    $parameters.Contains('Credential'))
+            {
+                $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
+            }
         }
     }
     return $Components

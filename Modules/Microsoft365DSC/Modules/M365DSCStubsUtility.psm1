@@ -90,7 +90,7 @@ function New-M365DSCStubFiles
             $cmdlets += Get-Command -CommandType 'Function' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
         }
 
-        if ($CurrentModuleName -eq 'Intune')
+        if ($CurrentModuleName -eq 'MicrosoftGraph')
         {
             $MaximumFunctionCount = 32000
             Select-MgProfile -Name beta | Out-Null
