@@ -89,7 +89,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of AzureAD Authorization Policy"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -ProfileName 'v1.0'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -134,7 +134,10 @@ function Get-TargetResource
             DefaultUserRoleAllowedToCreateApps                = $Policy.DefaultUserRolePermissions.AllowedToCreateApps
             DefaultUserRoleAllowedToCreateSecurityGroups      = $Policy.DefaultUserRolePermissions.AllowedToCreateSecurityGroups
             DefaultUserRoleAllowedToReadOtherUsers            = $Policy.DefaultUserRolePermissions.AllowedToReadOtherUsers
-            PermissionGrantPolicyIdsAssignedToDefaultUserRole = $Policy.PermissionGrantPolicyIdsAssignedToDefaultUserRole
+            #v1.0 profile
+            PermissionGrantPolicyIdsAssignedToDefaultUserRole = $Policy.DefaultUserRolePermissions.PermissionGrantPoliciesAssigned
+            #beta-profile
+            #PermissionGrantPolicyIdsAssignedToDefaultUserRole = $Policy.PermissionGrantPolicyIdsAssignedToDefaultUserRole
             GuestUserRole                                     = Get-GuestUserRoleNameFromId -GuestUserRoleId $Policy.GuestUserRoleId
             #Standard part
             Ensure                                            = "Present"
@@ -278,8 +281,12 @@ function Set-TargetResource
             {
                 if ($param -like 'Permission*')
                 {
-                    $UpdateParameters.Add($param, $currentParameters.$param)
-                    Write-Verbose -Message "Added '$param' to UpdateParameters"
+                    #beta profile
+                    #$UpdateParameters.Add($param, $currentParameters.$param)
+                    #Write-Verbose -Message "Added '$param' to UpdateParameters"
+                    #v1.0 profile
+                    $defaultUserRolePermissions.Add('PermissionGrantPoliciesAssigned', $currentParameters.$param)
+                    Write-Verbose -Message "Added 'PermissionGrantPoliciesAssigned' ($param) to defaultUserRolePermissions"
                 }
                 else
                 {
@@ -313,11 +320,7 @@ function Set-TargetResource
     if ($defaultUserRolePermissions.Keys.Count -gt 0)
     {
         Write-Verbose -Message "Add 'DefaultUserRolePermissions' to UpdateParameters"
-        $UpdateParameters.Add('DefaultUserRolePermissions', @{}) # New-Object
-        foreach ($key in $defaultUserRolePermissions.keys) {
-            $UpdateParameters.defaultUserRolePermissions.Add($key, $defaultUserRolePermissions.$key) | Out-Null
-            Write-Verbose -Message "Add '$key' to UpdateParameters.defaultUserRolePermissions"
-        }
+        $UpdateParameters.Add('DefaultUserRolePermissions', $defaultUserRolePermissions.Clone())
     }
 
     try

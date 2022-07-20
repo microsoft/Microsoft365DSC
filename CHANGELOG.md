@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* EXOCASMailboxSettings
+  * Fixed issue if there are mailboxes with the same name
+  FIXES [#2117](https://github.com/microsoft/Microsoft365DSC/issues/2117)
 * AADGroup
   * Added support for Group Licensing by adding the AssignedLicenses property.
   * Added support for members and owners.

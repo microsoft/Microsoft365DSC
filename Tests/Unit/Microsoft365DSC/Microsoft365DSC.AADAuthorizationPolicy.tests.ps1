@@ -14,9 +14,6 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
 
-# appears required in order to get Pester to mock the correct version of Graph-cmdlets. If missing, Pester'll base mocks on the v1.0 cmdlets.
-Select-MgProfile -Name beta
-
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
     -DscResource "AADAuthorizationPolicy" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
@@ -67,7 +64,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DefaultuserRoleAllowedToCreateApps = $true
                     DefaultUserRoleAllowedToCreateSecurityGroups = $true
                     DefaultUserRoleAllowedToReadOtherUsers = $true
-                    PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
+                    PermissionGrantPolicyIdsAssignedToDefaultUserRole = [string[]]@()
                     GuestUserRole    = 'Guest'
                     Ensure           = "Present"
                     Credential       = $Credential
@@ -90,8 +87,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 allowedToCreateApps = $true
                                 allowedToCreateSecurityGroups = $true
                                 allowedToReadOtherUsers = $true
+                                PermissionGrantPoliciesAssigned = [string[]]@()
                             }
-                        PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
                         GuestUserRoleId = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
                     }
                     return $AADAuthPol
@@ -122,7 +119,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DefaultuserRoleAllowedToCreateApps = $true
                     DefaultUserRoleAllowedToCreateSecurityGroups = $true
                     DefaultUserRoleAllowedToReadOtherUsers = $true
-                    PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
+                    PermissionGrantPolicyIdsAssignedToDefaultUserRole = [string[]]@()
                     GuestUserRole = 'RestrictedGuest'
                     Ensure          = "Present"
                     Credential      = $Credential
@@ -146,8 +143,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 allowedToCreateApps = $true
                                 allowedToCreateSecurityGroups = $true
                                 allowedToReadOtherUsers = $true
+                                PermissionGrantPoliciesAssigned = [string[]]@()
                             }
-                        PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
                         GuestUserRoleId = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
                     }
                     return $AADAuthPol
@@ -197,8 +194,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 allowedToCreateApps = $true
                                 allowedToCreateSecurityGroups = $true
                                 allowedToReadOtherUsers = $true
+                                PermissionGrantPoliciesAssigned = [string[]]@()
                             }
-                        PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
                         GuestUserRoleId = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
                     }
                     return $AADAuthPol
