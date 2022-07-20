@@ -31,6 +31,8 @@
 | **Apps** | Write | StringArray[] | List of IDs representing the Android apps controlled by this protection policy. ||
 | **Assignments** | Write | StringArray[] | List of IDs of the groups assigned to this Android Protection Policy. ||
 | **ExcludedGroups** | Write | StringArray[] | List of IDs of the groups that are excluded from this Android Protection Policy. ||
+| **IsAssigned** | Write | Boolean | Defines whether or not the policy is assigned. ||
+| **ManagedBrowser** | Write | String | Specifies how browsers should be managed by the policy. ||
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. |Present, Absent|
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin ||
 | **ApplicationId** | Write | String | ID of the Azure Active Directory application to authenticate with. ||
