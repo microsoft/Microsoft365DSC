@@ -1,0 +1,23 @@
+﻿{
+    "resourceName": "EXOAddressList",
+    "description": "",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        },
+        "exchange": {
+            "requiredroles": [
+                "Organization Management",
+                "Recipient Management"
+            ],
+            "requiredrolegroups": []
+        }
+    }
+}

@@ -2279,8 +2279,11 @@ function Assert-M365DSCBlueprint
         # Parse the content of the BluePrint into an array of PowerShell Objects
         $fileContent = Get-Content $LocalBluePrintPath -Raw
         $startPosition = $fileContent.IndexOf(" -ModuleVersion")
-        $endPosition = $fileContent.IndexOf("`r", $startPosition)
-        $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
+        if ($startPosition -gt 0)
+        {
+            $endPosition = $fileContent.IndexOf("`r", $startPosition)
+            $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
+        }
         $parsedBluePrint = ConvertTo-DSCObject -Content $fileContent
 
         # Generate an Array of Resource Types contained in the BluePrint
@@ -2338,6 +2341,7 @@ function Test-M365DSCDependenciesForNewVersions
     $dependencies = $manifest.Dependencies
     $i = 1
     Import-Module PowerShellGet -Force
+
     foreach ($dependency in $dependencies)
     {
         Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
@@ -2474,14 +2478,18 @@ function Uninstall-M365DSCOutdatedDependencies
 
     $InformationPreference = 'Continue'
 
-    $microsoft365DscModules = Get-Module Microsoft365DSC -ListAvailable
+    [array]$microsoft365DscModules = Get-Module Microsoft365DSC -ListAvailable
     $outdatedMicrosoft365DscModules = $microsoft365DscModules | Sort-Object Version | Select-Object -SkipLast 1
 
     foreach ($module in $outdatedMicrosoft365DscModules)
     {
         try
         {
-            Uninstall-Module -Name "$($module.Name)" -RequiredVersion "$($module.Version)"
+            Write-Information -Message "Uninstalling $($module.Name) Version {$($module.Version)}"
+            if (Test-Path -Path $($module.Path))
+            {
+                Remove-Item $($module.Path) -Force -Recurse
+            }
         }
         catch
         {
@@ -2490,7 +2498,7 @@ function Uninstall-M365DSCOutdatedDependencies
     }
 
     $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
-    $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
+    $manifest = Import-PowerShellDataFile "$currentPath\Dependencies\Manifest.psd1"
 
     $allDependenciesExceptAuth = $manifest.Dependencies | Where-Object { $_.ModuleName -ne "Microsoft.Graph.Authentication" }
 
@@ -2505,8 +2513,11 @@ function Uninstall-M365DSCOutdatedDependencies
             {
                 try
                 {
-                    Write-Information -Message "Uninstalling $($foundModule.Name) version {$($foundModule.Version)}"
-                    Uninstall-Module -Name "$($foundModule.Name)" -RequiredVersion "$($foundModule.Version)"
+                    Write-Information -Message "Uninstalling $($foundModule.Name) Version {$($foundModule.Version)}"
+                    if (Test-Path -Path $($foundModule.Path))
+                    {
+                        Remove-Item $($foundModule.ModuleBase) -Force -Recurse
+                    }
                 }
                 catch
                 {
@@ -2531,7 +2542,10 @@ function Uninstall-M365DSCOutdatedDependencies
             try
             {
                 Write-Information -Message "Uninstalling $($foundModule.Name) version {$($foundModule.Version)}"
-                Uninstall-Module -Name "$($foundModule.Name)" -RequiredVersion "$($foundModule.Version)" -Force
+                if (Test-Path -Path $($foundModule.Path))
+                {
+                    Remove-Item $($foundModule.ModuleBase) -Force -Recurse
+                }
             }
             catch
             {
@@ -2928,53 +2942,60 @@ function Get-M365DSCComponentsForAuthenticationType
         [Parameter()]
         [System.String[]]
         [ValidateSet('Application', 'ApplicationWithSecret', 'Certificate', 'Credentials')]
-        $AuthenticationMethod
+        $AuthenticationMethod,
+
+        [Parameter()]
+        [System.String[]]
+        $ResourcesToExport
     )
 
     $modules = Get-ChildItem -Path ($PSScriptRoot + "\..\DSCResources\") -Recurse -Filter '*.psm1'
     $Components = @()
     foreach ($resource in $modules)
     {
-        Import-Module $resource.FullName -Force
-        $parameters = (Get-Command 'Set-TargetResource').Parameters.Keys
-
-        # Case - Resource only supports AppID & GlobalAdmin
-        if ($AuthenticationMethod.Contains("Application") -and `
-                $AuthenticationMethod.Contains("Credentials") -and `
-            ($parameters.Contains("ApplicationId") -and `
-                    $parameters.Contains("Credential") -and `
-                    -not $parameters.Contains('CertificateThumbprint') -and `
-                    -not $parameters.Contains('CertificatePath') -and `
-                    -not $parameters.Contains('CertificatePassword') -and `
-                    -not $parameters.Contains('TenantId')))
+        if ($ResourcesToExport.Contains($resource.Name.Replace("MSFT_", "").Split('.')[0]))
         {
-            $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
-        }
+            Import-Module $resource.FullName -Force
+            $parameters = (Get-Command 'Set-TargetResource').Parameters.Keys
 
-        #Case - Resource certificate info and TenantId
-        elseif ($AuthenticationMethod.Contains("Certificate") -and `
-            ($parameters.Contains('CertificateThumbprint') -or `
-                    $parameters.Contains('CertificatePath') -or `
-                    $parameters.Contains('CertificatePassword')) -and `
-                $parameters.Contains('TenantId'))
-        {
-            $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
-        }
+            # Case - Resource only supports AppID & GlobalAdmin
+            if ($AuthenticationMethod.Contains("Application") -and `
+                    $AuthenticationMethod.Contains("Credentials") -and `
+                ($parameters.Contains("ApplicationId") -and `
+                        $parameters.Contains("Credential") -and `
+                        -not $parameters.Contains('CertificateThumbprint') -and `
+                        -not $parameters.Contains('CertificatePath') -and `
+                        -not $parameters.Contains('CertificatePassword') -and `
+                        -not $parameters.Contains('TenantId')))
+            {
+                $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
+            }
 
-        # Case - Resource contains ApplicationSecret
-        elseif ($AuthenticationMethod.Contains("ApplicationWithSecret") -and `
-                $parameters.Contains('ApplicationId') -and `
-                $parameters.Contains('ApplicationSecret') -and `
-                $parameters.Contains('TenantId'))
-        {
-            $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
-        }
+            #Case - Resource certificate info and TenantId
+            elseif ($AuthenticationMethod.Contains("Certificate") -and `
+                ($parameters.Contains('CertificateThumbprint') -or `
+                        $parameters.Contains('CertificatePath') -or `
+                        $parameters.Contains('CertificatePassword')) -and `
+                    $parameters.Contains('TenantId'))
+            {
+                $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
+            }
 
-        # Case - Resource contains Credential
-        elseif ($AuthenticationMethod.Contains("Credentials") -and `
-                $parameters.Contains('Credential'))
-        {
-            $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
+            # Case - Resource contains ApplicationSecret
+            elseif ($AuthenticationMethod.Contains("ApplicationWithSecret") -and `
+                    $parameters.Contains('ApplicationId') -and `
+                    $parameters.Contains('ApplicationSecret') -and `
+                    $parameters.Contains('TenantId'))
+            {
+                $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
+            }
+
+            # Case - Resource contains Credential
+            elseif ($AuthenticationMethod.Contains("Credentials") -and `
+                    $parameters.Contains('Credential'))
+            {
+                $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
+            }
         }
     }
     return $Components
@@ -3472,6 +3493,51 @@ function New-M365DSCMissingResourcesExample
     }
 }
 
+
+
+
+<#
+.Description
+This function validates there are no updates to the module or it's dependencies and no multiple versions are present on the local system.
+
+.Parameter Force
+Specifies that all dependencies should be forcefully imported again.
+
+.Example
+Test-M365DSCModuleValidity
+
+.Example
+Test-M365DSCModuleValidity -Force
+
+.Functionality
+Public
+#>
+function Test-M365DSCModuleValidity
+{
+    [CmdletBinding()]
+    param(
+    )
+    $InformationPreference = 'Continue'
+
+    # validate only one installation of the module is present (and it's the latest version available from the psgallery)
+    $latestVersion = (Find-Module -Name 'Microsoft365DSC').Version
+    $localVersion = (Get-Module -Name 'Microsoft365DSC').Version
+
+    if ($latestVersion -gt $localVersion)
+    {
+        Write-Host "There is a newer version of the 'Microsoft365DSC' module available on the gallery."
+        Write-Host "To update the module and it's dependencies, run the following commands:"
+        Write-Host "Update-Module -Name 'Microsoft365DSC' -Force`nUpdate-M365DSCDependencies -Force`nUninstall-M365DSCOutdatedDependencies" -ForegroundColor Blue
+        # if(!( $UpdateConsent = Read-Host -Prompt "Do you wish to update the M365DSC module and it's dependencies? (Y/N) [Default: 'Y']")) { $UpdateConsent = 'Y' }
+        # if(!( $UpdateConsent -eq 'Y' -or $UpdateConsent -eq 'y' )) { return }
+        # Write-Host "Updating the M365DSC module..." -ForegroundColor Yellow
+        # Update-Module -Name 'Microsoft365DSC' -Force
+        # Write-Host "Updating dependencies..." -ForegroundColor Yellow
+        #Update-M365DSCDependencies -Force
+        # Write-Host "uninstalling outdated installations..." -ForegroundColor Yellow
+        # Uninstall-M365DSCOutdatedDependencies
+    }
+}
 Export-ModuleMember -Function @(
     'Assert-M365DSCBlueprint',
     'Confirm-ImportedCmdletIsAvailable',
@@ -3509,5 +3575,6 @@ Export-ModuleMember -Function @(
     'Test-M365DSCParameterState',
     'Uninstall-M365DSCOutdatedDependencies',
     'Update-M365DSCDependencies',
-    'Update-M365DSCExportAuthenticationResults'
+    'Update-M365DSCExportAuthenticationResults',
+    'Test-M365DSCModuleValidity'
 )
