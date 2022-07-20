@@ -41,5 +41,6 @@ class MSFT_IntuneAppProtectionPolicyAndroid : OMI_BaseResource
     [Write, Description("Versions less than the specified version will result in warning message on the managed app")] String MinimumWarningAppVersion;
     [Write, Description("Versions less than the specified version will result in warning message on the managed app")] String MinimumWarningOSVersion;
     [Write, Description("Versions less than the specified version will result in warning message on the managed app")] String MinimumWarningPatchVersion;
+    [Write, Description("The apps controlled by this protection policy, overrides any values in Apps unless this value is 'selectedPublicApps'."),ValueMap{"allApps", "allMicrosoftApps", "allCoreMicrosoftApps", "selectedPublicApps"}, Values{"allApps", "allMicrosoftApps", "allCoreMicrosoftApps", "selectedPublicApps"}] String AppGroupType;
     [Write, Description("Indicates if the policy is deployed to any inclusion groups or not. Inherited from targetedManagedAppProtection.")] Boolean IsAssigned;
 };

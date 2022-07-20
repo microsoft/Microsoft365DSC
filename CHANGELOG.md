@@ -10,10 +10,13 @@
     MinimumWarningAppVersion
     MinimumWarningOSVersion
     MinimumWarningPatchVersion
+    AppGroupType
     IsAssigned
     FIXES [#1955](https://github.com/microsoft/Microsoft365DSC/issues/1955)
-  * Removed function Get-M365DSCIntuneAppProtectionPolicyAndroid as data already gathered by Get-MgDeviceAppManagementAndroidManagedAppProtection
+  * Removed functions Get-M365DSCIntuneAppProtectionPolicyAndroid, Set-M365DSCIntuneAppProtectionPolicyAndroidAssignment, Set-M365DSCIntuneAppProtectionPolicyAndroidApps, Set-M365DSCIntuneAppProtectionPolicyAndroid, New-M365DSCIntuneAppProtectionPolicyAndroid, Get-M365DSCIntuneAppProtectionPolicyAndroidAssignmentJSON, Get-M365DSCIntuneAppProtectionPolicyAndroidAppsJSON, Get-M365DSCIntuneAppProtectionPolicyAndroidJSON
+  Replaced by New-MgDeviceAppMgtAndroidManagedAppProtection, Update-MgDeviceAppMgtAndroidManagedAppProtection, set-MgDeviceAppMgtTargetedManagedAppConfiguration, Invoke-MgTargetDeviceAppMgtTargetedManagedAppConfigurationApp, set-AppsHash, set-Timespan, set-JSONstring
   * Assignments are now set correctly when policy is amended
+  * Timespan parameters can be entered in config document as either iso8601 duration, timespan string, or set-timespan
 
 * TeamsUpdateManagementPolicy
   * Changed the format of the UpdateTimeOfDay parameter to not include date as part of an export.

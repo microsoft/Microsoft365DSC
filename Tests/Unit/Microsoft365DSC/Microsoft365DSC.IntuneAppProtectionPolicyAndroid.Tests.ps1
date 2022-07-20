@@ -35,6 +35,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowedInboundDataTransferSources       = "managedApps";
                     AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                     AllowedOutboundDataTransferDestinations = "managedApps";
+                    AppGroupType                            = "selectedPublicApps";
                     Apps                                    = @("com.cisco.im.intune", "com.penlink.penpoint", "com.slack.intune");
                     Assignments                             = @("6ee86c9f-2b3c-471d-ad38-ff4673ed723e");
                     ContactSyncBlocked                      = $False;
@@ -85,6 +86,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowedInboundDataTransferSources       = "managedApps";
                     AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                     AllowedOutboundDataTransferDestinations = "managedApps";
+                    AppGroupType                            = "selectedPublicApps";
                     Apps                                    = @(
                         [pscustomobject]@{
                             id                  = "com.cisco.im.intune.android"
@@ -180,14 +182,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            Mock -CommandName Set-M365DSCIntuneAppProtectionPolicyAndroid -MockWith {
+            Mock -CommandName New-MgDeviceAppMgtAndroidManagedAppProtection -MockWith {
             }
-            Mock -CommandName Set-M365DSCIntuneAppProtectionPolicyAndroidAssignment -MockWith {
+
+            Mock -CommandName Update-MgDeviceAppMgtAndroidManagedAppProtection -MockWith {
             }
-            Mock -CommandName Set-M365DSCIntuneAppProtectionPolicyAndroidApps -MockWith {
+
+            Mock -CommandName Invoke-MgTargetDeviceAppMgtTargetedManagedAppConfigurationApp -MockWith {
             }
-            Mock -CommandName New-M365DSCIntuneAppProtectionPolicyAndroid -MockWith {
+
+            Mock -CommandName set-MgDeviceAppMgtTargetedManagedAppConfiguration -MockWith {
             }
+
             Mock -CommandName Remove-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
             }
         }
@@ -208,6 +214,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         return Get-DefaultReturnObj
                     }
                 }
+                Mock -CommandName New-MgDeviceAppMgtAndroidManagedAppProtection -MockWith {
+                    return Get-DefaultReturnObj
+                }
             }
 
             It "Should return absent from the Get method" {
@@ -222,7 +231,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It "Should create the Policy from the Set method" {
                 $Global:Count = 0
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-M365DSCIntuneAppProtectionPolicyAndroid" -Exactly 1
+                Should -Invoke -CommandName "New-MgDeviceAppMgtAndroidManagedAppProtection" -Exactly 1
             }
         }
 
@@ -247,7 +256,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should update the App Configuration Policy from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-M365DSCIntuneAppProtectionPolicyAndroid -Exactly 1
+                Should -Invoke -CommandName Update-MgDeviceAppMgtAndroidManagedAppProtection -Exactly 1
             }
         }
 
