@@ -14,9 +14,6 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
 
-# appears required in order to get Pester to mock the correct version of Graph-cmdlets. If missing, Pester'll base mocks on the v1.0 cmdlets.
-Select-MgProfile -Name beta
-
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
     -DscResource "AADAuthorizationPolicy" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
