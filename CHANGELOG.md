@@ -15,14 +15,31 @@
   * Initial release.
 * IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager
   * Initial release.
+* IntuneDeviceCompliancePolicyWindows10
+  * Switched to using the beta profile in order to aapture all parameters.
+  FIXES [#1998](https://github.com/microsoft/Microsoft365DSC/issues/1998)
+* IntuneDeviceConfigurationPolicyWindows10
+  * Fixed issue where the value for the DefenderDetectedMalwareActions property wasn't properly handled.
+  FIXES [#1479](https://github.com/microsoft/Microsoft365DSC/issues/1479)
 * IntuneExploitProtectionPolicyWindows10SettingCatalog
   * Initial release.
+* O365OrgCustomizationSetting
+  * Added a warning to let users know the changes can take up to 24 hours to be reflected
+  FIXES [#1599](https://github.com/microsoft/Microsoft365DSC/issues/1599)
+* PPTenantSettings
+  * Fixed the way parameters are passed to the Set-TenantSettings cmdlet.
+  FIXES [#1914](https://github.com/microsoft/Microsoft365DSC/issues/1914)
 * TeamsTenantDialPlan
   * Fixed an issue where the Normalization Rules strings were not properly exited.
     FIXES [#2096](https://github.com/microsoft/Microsoft365DSC/issues/2096)
 * TeamsUpdateManagementPolicy
   * Changed the format of the UpdateTimeOfDay parameter to not include date as part of an export.
     FIXES [#2062](https://github.com/microsoft/Microsoft365DSC/issues/2062)
+* MISC
+  * PowerPlatform: Standardized authentication on Credential and dropped support for Service Principal across resources.
+  FIXES [#1979](https://github.com/microsoft/Microsoft365DSC/issues/1979)
+  * EXPORT: Changed the way resources' modules are imported to improve startup performance.
+  FIXES [#1745](https://github.com/microsoft/Microsoft365DSC/issues/1745)
 
 # 1.22.713.1
 
