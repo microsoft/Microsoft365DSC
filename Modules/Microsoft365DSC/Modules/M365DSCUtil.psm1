@@ -2516,7 +2516,7 @@ function Uninstall-M365DSCOutdatedDependencies
                     Write-Information -Message "Uninstalling $($foundModule.Name) Version {$($foundModule.Version)}"
                     if (Test-Path -Path $($foundModule.Path))
                     {
-                        Remove-Item $($foundModule.Path) -Force -Recurse
+                        Remove-Item $($foundModule.ModuleBase) -Force -Recurse
                     }
                 }
                 catch
@@ -2544,7 +2544,7 @@ function Uninstall-M365DSCOutdatedDependencies
                 Write-Information -Message "Uninstalling $($foundModule.Name) version {$($foundModule.Version)}"
                 if (Test-Path -Path $($foundModule.Path))
                 {
-                    Remove-Item $($foundModule.Path) -Force -Recurse
+                    Remove-Item $($foundModule.ModuleBase) -Force -Recurse
                 }
             }
             catch
