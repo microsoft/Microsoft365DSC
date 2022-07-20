@@ -459,6 +459,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -498,7 +502,7 @@ function Export-TargetResource
     {
         $i = 1
         Write-Host "`r`n" -NoNewline
-        $AADServicePrincipals = Get-MgServicePrincipal -All:$true
+        $AADServicePrincipals = Get-MgServicePrincipal -All:$true -Filter $Filter -ErrorAction Stop
         foreach ($AADServicePrincipal in $AADServicePrincipals)
         {
             Write-Host "    |---[$i/$($AADServicePrincipals.Count)] $($AADServicePrincipal.DisplayName)" -NoNewline

@@ -750,6 +750,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -796,7 +800,7 @@ function Export-TargetResource
     try
     {
         [array]$policies = Get-MGDeviceManagementDeviceConfiguration `
-            -ErrorAction Stop | Where-Object `
+            -ErrorAction Stop -All:$true -Filter $Filter | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' }
         $i = 1
         $dscContent = ''

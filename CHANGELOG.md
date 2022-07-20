@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* MISC
+  * Added support for filtering resources instances at extraction time.
+  FIXES [#1691](https://github.com/microsoft/Microsoft365DSC/issues/1691)
+
 # 1.22.720.1
 
 * AADAuthorizationPolicy

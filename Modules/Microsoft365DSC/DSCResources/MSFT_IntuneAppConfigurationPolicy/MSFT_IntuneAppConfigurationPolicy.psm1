@@ -311,6 +311,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -347,7 +351,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$configPolicies = Get-MgDeviceAppManagementTargetedManagedAppConfiguration -ErrorAction Stop
+        [array]$configPolicies = Get-MgDeviceAppManagementTargetedManagedAppConfiguration -All:$true -Filter $Filter -ErrorAction Stop
         $i = 1
         $dscContent = ''
         if ($configPolicies.Length -eq 0)

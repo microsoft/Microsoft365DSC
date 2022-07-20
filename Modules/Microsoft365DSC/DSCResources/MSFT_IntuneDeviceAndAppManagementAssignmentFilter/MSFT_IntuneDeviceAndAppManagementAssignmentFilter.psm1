@@ -333,6 +333,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -375,7 +379,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$assignmentFilters = Get-MgDeviceManagementAssignmentFilter -All -ErrorAction Stop
+        [array]$assignmentFilters = Get-MgDeviceManagementAssignmentFilter -All:$true -Filter $Filter -ErrorAction Stop
 
         if ($policies.Length -eq 0)
         {
