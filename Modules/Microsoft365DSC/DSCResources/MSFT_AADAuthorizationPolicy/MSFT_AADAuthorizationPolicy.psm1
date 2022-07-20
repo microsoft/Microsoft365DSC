@@ -135,7 +135,7 @@ function Get-TargetResource
             DefaultUserRoleAllowedToCreateSecurityGroups      = $Policy.DefaultUserRolePermissions.AllowedToCreateSecurityGroups
             DefaultUserRoleAllowedToReadOtherUsers            = $Policy.DefaultUserRolePermissions.AllowedToReadOtherUsers
             #v1.0 profile
-            PermissionGrantPolicyIdsAssignedToDefaultUserRole = $Policy.DefaultUserRolePermissions.PermissionGrantPolicyIdsAssigned
+            PermissionGrantPolicyIdsAssignedToDefaultUserRole = $Policy.DefaultUserRolePermissions.PermissionGrantPoliciesAssigned
             #beta-profile
             #PermissionGrantPolicyIdsAssignedToDefaultUserRole = $Policy.PermissionGrantPolicyIdsAssignedToDefaultUserRole
             GuestUserRole                                     = Get-GuestUserRoleNameFromId -GuestUserRoleId $Policy.GuestUserRoleId
@@ -320,11 +320,7 @@ function Set-TargetResource
     if ($defaultUserRolePermissions.Keys.Count -gt 0)
     {
         Write-Verbose -Message "Add 'DefaultUserRolePermissions' to UpdateParameters"
-        $UpdateParameters.Add('DefaultUserRolePermissions', @{}) # New-Object
-        foreach ($key in $defaultUserRolePermissions.keys) {
-            $UpdateParameters.defaultUserRolePermissions.Add($key, $defaultUserRolePermissions.$key) | Out-Null
-            Write-Verbose -Message "Add '$key' to UpdateParameters.defaultUserRolePermissions"
-        }
+        $UpdateParameters.Add('DefaultUserRolePermissions', $defaultUserRolePermissions.Clone())
     }
 
     try
