@@ -3526,14 +3526,16 @@ function Test-M365DSCModuleValidity
     if ($latestVersion -gt $localVersion)
     {
         Write-Host "There is a newer version of the 'Microsoft365DSC' module available on the gallery."
-        if(!( $UpdateConsent = Read-Host -Prompt "Do you wish to update the M365DSC module and it's dependencies? (Y/N) [Default: 'Y']")) { $UpdateConsent = 'Y' }
-        if(!( $UpdateConsent -eq 'Y' -or $UpdateConsent -eq 'y' )) { return }
-        Write-Host "Updating the M365DSC module..." -ForegroundColor Yellow
-        Update-Module -Name 'Microsoft365DSC' -Force
-        Write-Host "Updating dependencies..." -ForegroundColor Yellow
-        Update-M365DSCDependencies -Force
-        Write-Host "uninstalling outdated installations..." -ForegroundColor Yellow
-        Uninstall-M365DSCOutdatedDependencies
+        Write-Host "To update the module and it's dependencies, run the following commands:"
+        Write-Host "Update-Module -Name 'Microsoft365DSC' -Force`nUpdate-M365DSCDependencies -Force`nUninstall-M365DSCOutdatedDependencies" -ForegroundColor Blue
+        # if(!( $UpdateConsent = Read-Host -Prompt "Do you wish to update the M365DSC module and it's dependencies? (Y/N) [Default: 'Y']")) { $UpdateConsent = 'Y' }
+        # if(!( $UpdateConsent -eq 'Y' -or $UpdateConsent -eq 'y' )) { return }
+        # Write-Host "Updating the M365DSC module..." -ForegroundColor Yellow
+        # Update-Module -Name 'Microsoft365DSC' -Force
+        # Write-Host "Updating dependencies..." -ForegroundColor Yellow
+        #Update-M365DSCDependencies -Force
+        # Write-Host "uninstalling outdated installations..." -ForegroundColor Yellow
+        # Uninstall-M365DSCOutdatedDependencies
     }
 }
 Export-ModuleMember -Function @(
