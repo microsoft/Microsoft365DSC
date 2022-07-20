@@ -502,7 +502,7 @@ function Start-M365DSCConfigurationExtract
                     }
                     else
                     {
-                        Write-Warning -Message "You specified a filter for resource {$resourceName} but it doesn't support filters. Filter will be ignored and all instances of the resource will be captured."
+                        Write-Host "    `r`n$($Global:M365DSCEmojiYellowCircle) You specified a filter for resource {$resourceName} but it doesn't support filters. Filter will be ignored and all instances of the resource will be captured."
                     }
                 }
 
