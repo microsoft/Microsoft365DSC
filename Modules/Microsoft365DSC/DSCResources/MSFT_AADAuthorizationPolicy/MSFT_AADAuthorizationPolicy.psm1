@@ -285,8 +285,8 @@ function Set-TargetResource
                     #$UpdateParameters.Add($param, $currentParameters.$param)
                     #Write-Verbose -Message "Added '$param' to UpdateParameters"
                     #v1.0 profile
-                    $defaultUserRolePermissions.Add(($param -replace 'ToDefaultUserRole$'), $currentParameters.$param)
-                    Write-Verbose -Message "Added '$($param -replace 'ToDefaultUserRole$')' ($param) to defaultUserRolePermissions"
+                    $defaultUserRolePermissions.Add('PermissionGrantPoliciesAssigned', $currentParameters.$param)
+                    Write-Verbose -Message "Added ''PermissionGrantPoliciesAssigned' ($param) to defaultUserRolePermissions"
                 }
                 else
                 {
