@@ -135,7 +135,7 @@ function Get-TargetResource
             DefaultUserRoleAllowedToCreateSecurityGroups      = $Policy.DefaultUserRolePermissions.AllowedToCreateSecurityGroups
             DefaultUserRoleAllowedToReadOtherUsers            = $Policy.DefaultUserRolePermissions.AllowedToReadOtherUsers
             #v1.0 profile
-            PermissionGrantPolicyIdsAssignedToDefaultUserRole = $Policy.DefaultUserRolePermissions.PermissionGrantPoliciesAssigned
+            PermissionGrantPolicyIdsAssignedToDefaultUserRole = $Policy.DefaultUserRolePermissions.PermissionGrantPolicyIdsAssigned
             #beta-profile
             #PermissionGrantPolicyIdsAssignedToDefaultUserRole = $Policy.PermissionGrantPolicyIdsAssignedToDefaultUserRole
             GuestUserRole                                     = Get-GuestUserRoleNameFromId -GuestUserRoleId $Policy.GuestUserRoleId
