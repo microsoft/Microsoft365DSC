@@ -64,7 +64,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DefaultuserRoleAllowedToCreateApps = $true
                     DefaultUserRoleAllowedToCreateSecurityGroups = $true
                     DefaultUserRoleAllowedToReadOtherUsers = $true
-                    PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
+                    PermissionGrantPolicyIdsAssignedToDefaultUserRole = [string[]]@()
                     GuestUserRole    = 'Guest'
                     Ensure           = "Present"
                     Credential       = $Credential
@@ -87,7 +87,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 allowedToCreateApps = $true
                                 allowedToCreateSecurityGroups = $true
                                 allowedToReadOtherUsers = $true
-                                PermissionGrantPolicyIdsAssigned = @()
+                                PermissionGrantPolicyIdsAssigned = [string[]]@()
                             }
                         GuestUserRoleId = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
                     }
@@ -119,7 +119,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DefaultuserRoleAllowedToCreateApps = $true
                     DefaultUserRoleAllowedToCreateSecurityGroups = $true
                     DefaultUserRoleAllowedToReadOtherUsers = $true
-                    PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
+                    PermissionGrantPolicyIdsAssignedToDefaultUserRole = [string[]]@()
                     GuestUserRole = 'RestrictedGuest'
                     Ensure          = "Present"
                     Credential      = $Credential
@@ -143,7 +143,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 allowedToCreateApps = $true
                                 allowedToCreateSecurityGroups = $true
                                 allowedToReadOtherUsers = $true
-                                PermissionGrantPolicyIdsAssigned = @()
+                                PermissionGrantPolicyIdsAssigned = [string[]]@()
                             }
                         GuestUserRoleId = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
                     }
@@ -194,7 +194,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 allowedToCreateApps = $true
                                 allowedToCreateSecurityGroups = $true
                                 allowedToReadOtherUsers = $true
-                                PermissionGrantPolicyIdsAssigned = @()
+                                PermissionGrantPolicyIdsAssigned = [string[]]@()
                             }
                         GuestUserRoleId = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
                     }
