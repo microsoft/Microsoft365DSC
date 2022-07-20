@@ -87,8 +87,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 allowedToCreateApps = $true
                                 allowedToCreateSecurityGroups = $true
                                 allowedToReadOtherUsers = $true
+                                PermissionGrantPolicyIdsAssigned = @()
                             }
-                        PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
                         GuestUserRoleId = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
                     }
                     return $AADAuthPol
@@ -143,8 +143,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 allowedToCreateApps = $true
                                 allowedToCreateSecurityGroups = $true
                                 allowedToReadOtherUsers = $true
+                                PermissionGrantPolicyIdsAssigned = @()
                             }
-                        PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
                         GuestUserRoleId = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
                     }
                     return $AADAuthPol
@@ -194,8 +194,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 allowedToCreateApps = $true
                                 allowedToCreateSecurityGroups = $true
                                 allowedToReadOtherUsers = $true
+                                PermissionGrantPolicyIdsAssigned = @()
                             }
-                        PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
                         GuestUserRoleId = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
                     }
                     return $AADAuthPol
