@@ -2342,7 +2342,6 @@ function Test-M365DSCDependenciesForNewVersions
     $i = 1
     Import-Module PowerShellGet -Force
 
-    $OutdatedModules = [System.Collections.ArrayList]@()
     foreach ($dependency in $dependencies)
     {
         Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
@@ -2358,11 +2357,6 @@ function Test-M365DSCDependenciesForNewVersions
             if (-not $modules -or [Version]($moduleInGallery.Version) -gt [Version]($moduleInstalled[0].Version))
             {
                 Write-Host "New version of {$($dependency.ModuleName)} is available {$($moduleInGallery.Version)}"
-                $DependencyObject = [PSCustomObject]@{
-                    ModuleName    = $($dependency.ModuleName)
-                    ModuleVersion = $($moduleInGallery.Version)
-                }
-                $OutdatedModules.Add($DependencyObject)
             }
         }
         catch
@@ -2372,7 +2366,6 @@ function Test-M365DSCDependenciesForNewVersions
         }
         $i++
     }
-    return $OutdatedModules
 }
 
 <#
@@ -2485,14 +2478,18 @@ function Uninstall-M365DSCOutdatedDependencies
 
     $InformationPreference = 'Continue'
 
-    $microsoft365DscModules = Get-Module Microsoft365DSC -ListAvailable
+    [array]$microsoft365DscModules = Get-Module Microsoft365DSC -ListAvailable
     $outdatedMicrosoft365DscModules = $microsoft365DscModules | Sort-Object Version | Select-Object -SkipLast 1
 
     foreach ($module in $outdatedMicrosoft365DscModules)
     {
         try
         {
-            Uninstall-Module -Name "$($module.Name)" -RequiredVersion "$($module.Version)"
+            Write-Information -Message "Uninstalling $($module.Name) Version {$($module.Version)}"
+            if (Test-Path -Path $($module.Path))
+            {
+                Remove-Item $($module.Path) -Force -Recurse
+            }
         }
         catch
         {
@@ -2501,7 +2498,7 @@ function Uninstall-M365DSCOutdatedDependencies
     }
 
     $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
-    $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
+    $manifest = Import-PowerShellDataFile "$currentPath\Dependencies\Manifest.psd1"
 
     $allDependenciesExceptAuth = $manifest.Dependencies | Where-Object { $_.ModuleName -ne "Microsoft.Graph.Authentication" }
 
@@ -2516,8 +2513,11 @@ function Uninstall-M365DSCOutdatedDependencies
             {
                 try
                 {
-                    Write-Information -Message "Uninstalling $($foundModule.Name) version {$($foundModule.Version)}"
-                    Uninstall-Module -Name "$($foundModule.Name)" -RequiredVersion "$($foundModule.Version)"
+                    Write-Information -Message "Uninstalling $($foundModule.Name) Version {$($foundModule.Version)}"
+                    if (Test-Path -Path $($foundModule.Path))
+                    {
+                        Remove-Item $($foundModule.Path) -Force -Recurse
+                    }
                 }
                 catch
                 {
@@ -2542,7 +2542,10 @@ function Uninstall-M365DSCOutdatedDependencies
             try
             {
                 Write-Information -Message "Uninstalling $($foundModule.Name) version {$($foundModule.Version)}"
-                Uninstall-Module -Name "$($foundModule.Name)" -RequiredVersion "$($foundModule.Version)" -Force
+                if (Test-Path -Path $($foundModule.Path))
+                {
+                    Remove-Item $($foundModule.Path) -Force -Recurse
+                }
             }
             catch
             {
@@ -3513,36 +3516,25 @@ function Test-M365DSCModuleValidity
 {
     [CmdletBinding()]
     param(
-        [parameter()]
-        [Switch]
-        $Force
     )
     $InformationPreference = 'Continue'
 
     # validate only one installation of the module is present (and it's the latest version available from the psgallery)
     $latestVersion = (Find-Module -Name 'Microsoft365DSC').Version
-    Install-Module -Name 'Microsoft365DSC' -Force -AllowClobber -RequiredVersion $latestVersion
+    $localVersion = (Get-Module -Name 'Microsoft365DSC').Version
 
-    [array]$modules = Get-Module -Name 'Microsoft365DSC' -List | Sort-Object Version -Descending
-
-    if ($null -ne $modules[1]) {
-        # multiple installations of the module are present on the system
-        Write-Verbose "Removing outdated installations of the Microsoft365DSC module" 
-        for ($i = 1; $i -lt $array.Count; $i++) { # skip the first element
-            if (Test-Path -Path $module[$i].Path)
-            {
-                Remove-Item $module[$i].Path -Force -Recurse -ErrorAction SilentlyContinue
-            }
-        }
-    }
-    
-    # validate dependencies are up to date
-    $OutdatedDependencies = Test-M365DSCDependenciesForNewVersions
-    if ($OutdatedDependencies.Count -gt 0) {
+    if ($latestVersion -gt $localVersion)
+    {
+        Write-Host "There is a newer version of the 'Microsoft365DSC' module available on the gallery."
+        if(!( $UpdateConsent = Read-Host -Prompt "Do you wish to update the M365DSC module and it's dependencies? (Y/N) [Default: 'Y']")) { $UpdateConsent = 'Y' }
+        if(!( $UpdateConsent -eq 'Y' -or $UpdateConsent -eq 'y' )) { return }
+        Write-Host "Updating the M365DSC module..." -ForegroundColor Yellow
+        Update-Module -Name 'Microsoft365DSC' -Force
+        Write-Host "Updating dependencies..." -ForegroundColor Yellow
         Update-M365DSCDependencies -Force
+        Write-Host "uninstalling outdated installations..." -ForegroundColor Yellow
+        Uninstall-M365DSCOutdatedDependencies
     }
-
-    Uninstall-M365DSCOutdatedDependencies
 }
 Export-ModuleMember -Function @(
     'Assert-M365DSCBlueprint',
@@ -3581,5 +3573,6 @@ Export-ModuleMember -Function @(
     'Test-M365DSCParameterState',
     'Uninstall-M365DSCOutdatedDependencies',
     'Update-M365DSCDependencies',
-    'Update-M365DSCExportAuthenticationResults'
+    'Update-M365DSCExportAuthenticationResults',
+    'Test-M365DSCModuleValidity'
 )
