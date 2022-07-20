@@ -2341,6 +2341,8 @@ function Test-M365DSCDependenciesForNewVersions
     $dependencies = $manifest.Dependencies
     $i = 1
     Import-Module PowerShellGet -Force
+
+    $OutdatedModules = [System.Collections.ArrayList]@()
     foreach ($dependency in $dependencies)
     {
         Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
@@ -2356,6 +2358,11 @@ function Test-M365DSCDependenciesForNewVersions
             if (-not $modules -or [Version]($moduleInGallery.Version) -gt [Version]($moduleInstalled[0].Version))
             {
                 Write-Host "New version of {$($dependency.ModuleName)} is available {$($moduleInGallery.Version)}"
+                $DependencyObject = [PSCustomObject]@{
+                    ModuleName    = $($dependency.ModuleName)
+                    ModuleVersion = $($moduleInGallery.Version)
+                }
+                $OutdatedModules.Add($DependencyObject)
             }
         }
         catch
@@ -2365,6 +2372,7 @@ function Test-M365DSCDependenciesForNewVersions
         }
         $i++
     }
+    return $OutdatedModules
 }
 
 <#
@@ -3482,6 +3490,60 @@ function New-M365DSCMissingResourcesExample
     }
 }
 
+
+
+
+<#
+.Description
+This function validates there are no updates to the module or it's dependencies and no multiple versions are present on the local system.
+
+.Parameter Force
+Specifies that all dependencies should be forcefully imported again.
+
+.Example
+Test-M365DSCModuleValidity
+
+.Example
+Test-M365DSCModuleValidity -Force
+
+.Functionality
+Public
+#>
+function Test-M365DSCModuleValidity
+{
+    [CmdletBinding()]
+    param(
+        [parameter()]
+        [Switch]
+        $Force
+    )
+    $InformationPreference = 'Continue'
+
+    # validate only one installation of the module is present (and it's the latest version available from the psgallery)
+    $latestVersion = (Find-Module -Name 'Microsoft365DSC').Version
+    Install-Module -Name 'Microsoft365DSC' -Force -AllowClobber -RequiredVersion $latestVersion
+
+    [array]$modules = Get-Module -Name 'Microsoft365DSC' -List | Sort-Object Version -Descending
+
+    if ($null -ne $modules[1]) {
+        # multiple installations of the module are present on the system
+        Write-Verbose "Removing outdated installations of the Microsoft365DSC module" 
+        for ($i = 1; $i -lt $array.Count; $i++) { # skip the first element
+            if (Test-Path -Path $module[$i].Path)
+            {
+                Remove-Item $module[$i].Path -Force -Recurse -ErrorAction SilentlyContinue
+            }
+        }
+    }
+    
+    # validate dependencies are up to date
+    $OutdatedDependencies = Test-M365DSCDependenciesForNewVersions
+    if ($OutdatedDependencies.Count -gt 0) {
+        Update-M365DSCDependencies -Force
+    }
+
+    Uninstall-M365DSCOutdatedDependencies
+}
 Export-ModuleMember -Function @(
     'Assert-M365DSCBlueprint',
     'Confirm-ImportedCmdletIsAvailable',
