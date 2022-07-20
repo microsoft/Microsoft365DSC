@@ -752,12 +752,12 @@ function Export-TargetResource
     foreach ($mailbox in $mailboxes)
     {
         Write-Host "    |---[$i/$($mailboxes.Length)] $($mailbox.Name)" -NoNewline
-        $mailboxName = $mailbox.Name
+        $mailboxName = $mailbox.UserPrincipalName
         if (![System.String]::IsNullOrEmpty($mailboxName))
         {
             $Params = @{
                 Credential            = $Credential
-                Identity              = $mailbox.Name
+                Identity              = $mailboxName
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
