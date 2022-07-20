@@ -1,14 +1,16 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.720.1
 
-* EXOCASMailboxSettings
-  * Fixed issue if there are mailboxes with the same name
-  FIXES [#2117](https://github.com/microsoft/Microsoft365DSC/issues/2117)
+* AADAuthorizationPolicy
+  * Fixed issue with the DefaultUserRolePermissionGrantPoliciesAssigned property.
 * AADGroup
   * Added support for Group Licensing by adding the AssignedLicenses property.
   * Added support for members and owners.
   FIXES [#1066](https://github.com/microsoft/Microsoft365DSC/issues/1066)
+* EXOCASMailboxSettings
+  * Fixed issue if there are mailboxes with the same name
+  FIXES [#2117](https://github.com/microsoft/Microsoft365DSC/issues/2117)
 * EXODistributionGroup
   * Initial release.
   FIXES [#1802](https://github.com/microsoft/Microsoft365DSC/issues/1802)
@@ -43,6 +45,8 @@
   FIXES [#1979](https://github.com/microsoft/Microsoft365DSC/issues/1979)
   * EXPORT: Changed the way resources' modules are imported to improve startup performance.
   FIXES [#1745](https://github.com/microsoft/Microsoft365DSC/issues/1745)
+  * Added a new Test-M365DSCModuleValidity cmdlet.
+  * Updated the Uninstall-M365DSCOutdatedDependencies cmdlet to delete module files.
 
 # 1.22.713.1
 
