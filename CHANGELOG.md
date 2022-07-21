@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* EXOTransportRule
+  * Fixed issue where the MessageContainsDataClassifications property was not properly extracted due to single quote exiting.
+  FIXES [#1820](https://github.com/microsoft/Microsoft365DSC/issues/1820)
 * IntuneDeviceConfigurationPolicyWindows10
   * Fixed issue where the edgeSearchEngine value was not properly retrieved.
   FIXES [#1783](https://github.com/microsoft/Microsoft365DSC/issues/1783)
