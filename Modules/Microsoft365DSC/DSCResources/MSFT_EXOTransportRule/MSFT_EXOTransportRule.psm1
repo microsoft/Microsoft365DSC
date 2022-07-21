@@ -888,7 +888,7 @@ function Get-TargetResource
             ManagerAddresses                              = $TransportRule.ManagerAddresses
             ManagerForEvaluatedUser                       = $TransportRule.ManagerForEvaluatedUser
             MessageContainsAllDataClassifications         = $TransportRule.MessageContainsAllDataClassifications
-            MessageContainsDataClassifications            = $TransportRule.MessageContainsDataClassifications
+            MessageContainsDataClassifications            = $TransportRule.MessageContainsDataClassifications.Replace('"', "'")
             MessageSizeOver                               = $TransportRule.MessageSizeOver
             MessageTypeMatches                            = $TransportRule.MessageTypeMatches
             Mode                                          = $TransportRule.Mode
