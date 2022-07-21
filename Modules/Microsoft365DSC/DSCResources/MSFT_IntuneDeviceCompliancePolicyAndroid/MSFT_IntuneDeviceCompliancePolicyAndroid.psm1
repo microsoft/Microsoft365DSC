@@ -676,6 +676,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -714,7 +718,7 @@ function Export-TargetResource
     try
     {
         [array]$configDeviceAndroidPolicies = Get-MGDeviceManagementDeviceCompliancePolicy `
-            -ErrorAction Stop | Where-Object `
+            -ErrorAction Stop -All:$true -Filter $Filter | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidCompliancePolicy' }
         $i = 1
         $dscContent = ''

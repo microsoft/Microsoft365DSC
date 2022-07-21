@@ -759,6 +759,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -795,7 +799,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$policies = Get-MgDeviceAppManagementiosManagedAppProtection -ErrorAction Stop
+        [array]$policies = Get-MgDeviceAppManagementiosManagedAppProtection -All:$true -Filter $Filter -ErrorAction Stop
         $i = 1
         $dscContent = ''
         if ($policies.Length -eq 0)

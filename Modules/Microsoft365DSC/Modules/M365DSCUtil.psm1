@@ -1004,6 +1004,10 @@ function Export-M365DSCConfiguration
         $GenerateInfo = $false,
 
         [Parameter()]
+        [System.Collections.Hashtable]
+        $Filters,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -1124,7 +1128,8 @@ function Export-M365DSCConfiguration
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
-                -GenerateInfo $GenerateInfo
+                -GenerateInfo $GenerateInfo `
+                -Filters $Filters
         }
         elseif ($null -ne $Components)
         {
@@ -1139,7 +1144,8 @@ function Export-M365DSCConfiguration
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
-                -GenerateInfo $GenerateInfo
+                -GenerateInfo $GenerateInfo `
+                -Filters $Filters
         }
         elseif ($null -ne $Mode)
         {
@@ -1155,7 +1161,8 @@ function Export-M365DSCConfiguration
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
                 -GenerateInfo $GenerateInfo `
-                -AllComponents
+                -AllComponents `
+                -Filters $Filters
         }
     }
 }
