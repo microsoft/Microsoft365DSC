@@ -949,6 +949,9 @@ Specifies the password of the PFX file which is used for authentication.
 .Parameter CertificatePath
 Specifies the path of the PFX file which is used for authentication.
 
+.Parameter Filters
+Specifies resource level filters to apply in order to reduce the number of instances exported.
+
 .Example
 Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential
 
@@ -957,6 +960,9 @@ Export-M365DSCConfiguration -Mode 'Default' -ApplicationId '2560bb7c-bc85-415f-a
 
 .Example
 Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential -Path 'C:\DSC\Config.ps1'
+
+.Example
+Export-M365DSCConfiguration -Credential $Credential -Filters @{AADApplication = "DisplayName eq 'MyApp'"}'
 
 .Functionality
 Public
