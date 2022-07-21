@@ -766,6 +766,11 @@ function Get-TargetResource
     }
     else
     {
+        $MessageContainsDataClassificationsValue = $null
+        if ($null -ne $TransportRule.MessageContainsDataClassifications)
+        {
+            $MessageContainsDataClassificationsValue = $TransportRule.MessageContainsDataClassifications.Replace('"', "'")
+        }
         $result = @{
             Name                                          = $TransportRule.Name
             ADComparisonAttribute                         = $TransportRule.ADComparisonAttribute
@@ -888,7 +893,7 @@ function Get-TargetResource
             ManagerAddresses                              = $TransportRule.ManagerAddresses
             ManagerForEvaluatedUser                       = $TransportRule.ManagerForEvaluatedUser
             MessageContainsAllDataClassifications         = $TransportRule.MessageContainsAllDataClassifications
-            MessageContainsDataClassifications            = $TransportRule.MessageContainsDataClassifications.Replace('"', "'")
+            MessageContainsDataClassifications            = $MessageContainsDataClassificationsValue
             MessageSizeOver                               = $TransportRule.MessageSizeOver
             MessageTypeMatches                            = $TransportRule.MessageTypeMatches
             Mode                                          = $TransportRule.Mode
