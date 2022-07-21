@@ -1069,7 +1069,7 @@ function Get-TargetResource
             EdgeRequireSmartScreen                                  = $policy.AdditionalProperties.edgeRequireSmartScreen
             EdgeEnterpriseModeSiteListLocation                      = $policy.AdditionalProperties.edgeEnterpriseModeSiteListLocation
             EdgeFirstRunUrl                                         = $policy.AdditionalProperties.edgeFirstRunUrl
-            EdgeSearchEngine                                        = $policy.AdditionalProperties.edgeSearchEngine
+            EdgeSearchEngine                                        = $policy.AdditionalProperties.edgeSearchEngine.edgeSearchEngineType
             EdgeHomepageUrls                                        = $policy.AdditionalProperties.edgeHomepageUrls
             EdgeBlockAccessToAboutFlags                             = $policy.AdditionalProperties.edgeBlockAccessToAboutFlags
             SmartScreenBlockPromptOverride                          = $policy.AdditionalProperties.smartScreenBlockPromptOverride
