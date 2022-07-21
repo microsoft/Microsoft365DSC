@@ -125,11 +125,18 @@ This allows you to specify how you wish the resulting file to be named. Specify 
 Omitting to specify this parameter will name the resulting file as M365TenantConfig.ps1
 
 ### Filters
-This allows you to specify a filter at the resource level to reduce the overall instances that are being extracted. As an example, if you are only interested in extracting Azure AD Groups that have the word 'Microsoft' in their display names, you could specify the following filters:
+This allows you to specify a filter at the resource level to reduce the overall instances that are being extracted. As an example, if you are only interested in extracting Azure AD Groups that have their display name start with the word 'Microsoft', you could specify the following filters:
 
 ```
-
+$Filters = @{
+    AADGroup = "startsWith(displayName, 'Microsoft')"
+}
 ```
+
+<figure markdown>
+  ![Example of using Filters to export resources](../../Images/FilteringExport.png)
+  <figcaption>Example of using Filters to export resources</figcaption>
+</figure>
 
 ### GenerateInfo
 This parameter allows users to specify whether or not comments should be added as part of the exported file to provide additional information about the various types of components captured.
