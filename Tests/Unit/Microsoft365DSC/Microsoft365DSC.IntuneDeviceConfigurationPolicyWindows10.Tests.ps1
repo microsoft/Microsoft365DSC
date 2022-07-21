@@ -602,7 +602,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         storageRestrictAppDataToSystemVolume = $true
                         storageRestrictAppInstallToSystemVolume = $true
                         gameDvrBlocked = $true
-                        edgeSearchEngine = "bing"
+                        edgeSearchEngine = @{edgeSearchEngineType="bing"}
                         experienceBlockDeviceDiscovery = $true
                         experienceBlockErrorDialogWhenNoSIM = $true
                         experienceBlockTaskSwitcher = $true
@@ -983,7 +983,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             storageRestrictAppDataToSystemVolume = $true
                             storageRestrictAppInstallToSystemVolume = $true
                             gameDvrBlocked = $true
-                            edgeSearchEngine = "bing"
+                            edgeSearchEngine = @{edgeSearchEngineType="bing"}
                             experienceBlockDeviceDiscovery = $true
                             experienceBlockErrorDialogWhenNoSIM = $true
                             experienceBlockTaskSwitcher = $true
@@ -1180,7 +1180,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         storageRestrictAppDataToSystemVolume = $true
                         storageRestrictAppInstallToSystemVolume = $true
                         gameDvrBlocked = $true
-                        edgeSearchEngine = "bing"
+                        edgeSearchEngine = @{edgeSearchEngineType="bing"}
                         experienceBlockDeviceDiscovery = $true
                         experienceBlockErrorDialogWhenNoSIM = $true
                         experienceBlockTaskSwitcher = $true
@@ -1385,7 +1385,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         storageRestrictAppDataToSystemVolume = $true
                         storageRestrictAppInstallToSystemVolume = $true
                         gameDvrBlocked = $true
-                        edgeSearchEngine = "bing"
+                        edgeSearchEngine = @{edgeSearchEngineType="bing"}
                         experienceBlockDeviceDiscovery = $true
                         experienceBlockErrorDialogWhenNoSIM = $true
                         experienceBlockTaskSwitcher = $true

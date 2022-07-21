@@ -500,7 +500,7 @@ function Start-M365DSCConfigurationExtract
                     {
                         $parameters.Add("Filter", $resourceFilter)
                     }
-                    else
+                    elseif ($null -ne $resourceFilter)
                     {
                         Write-Host "    `r`n$($Global:M365DSCEmojiYellowCircle) You specified a filter for resource {$resourceName} but it doesn't support filters. Filter will be ignored and all instances of the resource will be captured."
                     }
