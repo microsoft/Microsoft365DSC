@@ -307,6 +307,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -344,7 +348,7 @@ function Export-TargetResource
     $i = 1
     try
     {
-        [array]$AADPolicies = Get-MgPolicyTokenLifetimePolicy -ErrorAction Stop
+        [array]$AADPolicies = Get-MgPolicyTokenLifetimePolicy -All:$true -Filter $Filter -ErrorAction Stop
 
         if ($AADPolicies.Length -eq 0)
         {

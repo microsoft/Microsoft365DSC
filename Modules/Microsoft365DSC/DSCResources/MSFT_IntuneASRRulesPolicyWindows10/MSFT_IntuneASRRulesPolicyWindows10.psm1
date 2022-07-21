@@ -619,6 +619,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -638,7 +642,6 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
@@ -665,7 +668,9 @@ function Export-TargetResource
         $policyTemplateID='0e237410-1367-4844-bd7f-15fb0f08943b'
         [array]$policies = Get-MgDeviceManagementIntent `
             -ErrorAction Stop `
-            -Filter "TemplateId eq '$policyTemplateID'"
+            -All:$true `
+            -Filter $Filter `
+            | Where-Object -FilterScript {$_.TemplateId -eq $policyTemplateID}
 
         if ($policies.Length -eq 0)
         {

@@ -264,6 +264,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -300,7 +304,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$categories = Get-MgDeviceManagementDeviceCategory -ErrorAction Stop
+        [array]$categories = Get-MgDeviceManagementDeviceCategory -All:$true -Filter $Filter -ErrorAction Stop
         $i = 1
         $dscContent = ''
         if ($categories.Length -eq 0)

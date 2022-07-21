@@ -283,6 +283,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -319,7 +323,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$configs = Get-MgDeviceManagementDeviceEnrollmentConfiguration -ErrorAction Stop `
+        [array]$configs = Get-MgDeviceManagementDeviceEnrollmentConfiguration -All:$true -Filter $Filter -ErrorAction Stop `
             | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
         $i = 1
         $dscContent = ''
