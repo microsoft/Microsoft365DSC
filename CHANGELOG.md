@@ -11,6 +11,8 @@
 * MISC
   * Added support for filtering resources instances at extraction time.
   FIXES [#1691](https://github.com/microsoft/Microsoft365DSC/issues/1691)
+  * REPORT: Fixed an issue where if the ModuleVersion was not specified, that the file would fail to properly get parsed.
+  FIXES [#1970](https://github.com/microsoft/Microsoft365DSC/issues/1970)
 
 # 1.22.720.1
 
