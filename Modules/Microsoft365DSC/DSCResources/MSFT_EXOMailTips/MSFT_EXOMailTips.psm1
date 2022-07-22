@@ -174,7 +174,7 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
-        $Ensure,
+        $Ensure = $true,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -286,7 +286,7 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
-        $Ensure,
+        $Ensure = $true,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]

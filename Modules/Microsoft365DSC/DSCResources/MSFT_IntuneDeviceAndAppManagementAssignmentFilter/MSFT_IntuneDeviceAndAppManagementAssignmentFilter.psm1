@@ -28,7 +28,7 @@ function Get-TargetResource
         [Parameter(Mandatory = $True)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure,
+        $Ensure = $true,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -168,7 +168,7 @@ function Set-TargetResource
         [Parameter(Mandatory = $True)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure,
+        $Ensure = $true,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -269,7 +269,7 @@ function Test-TargetResource
         [Parameter(Mandatory = $True)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure,
+        $Ensure = $true,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]

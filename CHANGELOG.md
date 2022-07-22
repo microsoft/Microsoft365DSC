@@ -19,6 +19,8 @@
   FIXES [#1691](https://github.com/microsoft/Microsoft365DSC/issues/1691)
   * REPORT: Fixed an issue where if the ModuleVersion was not specified, that the file would fail to properly get parsed.
   FIXES [#1970](https://github.com/microsoft/Microsoft365DSC/issues/1970)
+  * Resources implementing the Ensure parameter now defaults its value to $true.
+  FIXES [#1738](https://github.com/microsoft/Microsoft365DSC/issues/1738)
 
 # 1.22.720.1
 
