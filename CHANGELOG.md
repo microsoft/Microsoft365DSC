@@ -8,6 +8,9 @@
 * IntuneDeviceConfigurationPolicyWindows10
   * Fixed issue where the edgeSearchEngine value was not properly retrieved.
   FIXES [#1783](https://github.com/microsoft/Microsoft365DSC/issues/1783)
+* SCSensitivityLabel
+  * Fixed an issue where '$' in the custom wordmark test would cause issue.
+  FIXES [#2067](https://github.com/microsoft/Microsoft365DSC/issues/2067)
 * TeamsUser
   * Fixed the extraction process and removed the multi-threading from the resource.
   FIXES #1883

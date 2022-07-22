@@ -264,6 +264,25 @@ function Get-TargetResource
                 $EncryptionRightsDefinitionsValue = Convert-EncryptionRightDefinition -RightsDefinition $label.EncryptionRightsDefinitions
             }
             Write-Verbose "Found existing Sensitivity Label $($Name)"
+
+            $ApplyContentMarkingFooterTextValue = $null
+            if ($null -ne $label.ApplyContentMarkingFooterText)
+            {
+                $ApplyContentMarkingFooterTextValue = $label.ApplyContentMarkingFooterText.Replace('$', '`$')
+            }
+
+            $ApplyContentMarkingHeaderTextValue = $null
+            if ($null -ne $label.ApplyContentMarkingHeaderText)
+            {
+                $ApplyContentMarkingHeaderTextValue = $label.ApplyContentMarkingHeaderText.Replace('$', '`$')
+            }
+
+            $ApplyWaterMarkingTextValue = $null
+            if ($null -ne $label.ApplyWaterMarkingText)
+            {
+                $ApplyWaterMarkingTextValue = $label.ApplyWaterMarkingText.Replace('$', '`$')
+            }
+
             $result = @{
                 Name                                           = $label.Name
                 Comment                                        = $label.Comment
@@ -282,20 +301,20 @@ function Get-TargetResource
                 ApplyContentMarkingFooterFontName              = $label.ApplyContentMarkingFooterFontName
                 ApplyContentMarkingFooterFontSize              = $label.ApplyContentMarkingFooterFontSize
                 ApplyContentMarkingFooterMargin                = $label.ApplyContentMarkingFooterMargin
-                ApplyContentMarkingFooterText                  = $label.ApplyContentMarkingFooterText
+                ApplyContentMarkingFooterText                  = $ApplyContentMarkingFooterTextValue
                 ApplyContentMarkingHeaderAlignment             = $label.ApplyContentMarkingHeaderAlignment
                 ApplyContentMarkingHeaderEnabled               = $label.ApplyContentMarkingHeaderEnabled
                 ApplyContentMarkingHeaderFontColor             = $label.ApplyContentMarkingHeaderFontColor
                 ApplyContentMarkingHeaderFontName              = $label.ApplyContentMarkingHeaderFontName
                 ApplyContentMarkingHeaderFontSize              = $label.ApplyContentMarkingHeaderFontSize
                 ApplyContentMarkingHeaderMargin                = $label.ApplyContentMarkingHeaderMargin
-                ApplyContentMarkingHeaderText                  = $label.ApplyContentMarkingHeaderText
+                ApplyContentMarkingHeaderText                  = $ApplyContentMarkingHeaderTextValue
                 ApplyWaterMarkingEnabled                       = $label.ApplyWaterMarkingEnabled
                 ApplyWaterMarkingFontColor                     = $label.ApplyWaterMarkingFontColor
                 ApplyWaterMarkingFontName                      = $label.ApplyWaterMarkingFontName
                 ApplyWaterMarkingFontSize                      = $label.ApplyWaterMarkingFontSize
                 ApplyWaterMarkingLayout                        = $label.ApplyWaterMarkingLayout
-                ApplyWaterMarkingText                          = $label.ApplyWaterMarkingText
+                ApplyWaterMarkingText                          = $ApplyWaterMarkingTextValue
                 EncryptionAipTemplateScopes                    = $label.EncryptionAipTemplateScopes
                 EncryptionContentExpiredOnDateInDaysOrNever    = $label.EncryptionContentExpiredOnDateInDaysOrNever
                 EncryptionDoNotForward                         = $label.EncryptionDoNotForward
