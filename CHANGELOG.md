@@ -8,6 +8,9 @@
 * IntuneDeviceConfigurationPolicyWindows10
   * Fixed issue where the edgeSearchEngine value was not properly retrieved.
   FIXES [#1783](https://github.com/microsoft/Microsoft365DSC/issues/1783)
+* TeamsUser
+  * Fixed the extraction process and removed the multi-threading from the resource.
+  FIXES #1883
 * MISC
   * Added support for filtering resources instances at extraction time.
   FIXES [#1691](https://github.com/microsoft/Microsoft365DSC/issues/1691)

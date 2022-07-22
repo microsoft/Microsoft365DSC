@@ -295,10 +295,6 @@ function Export-TargetResource
     param
     (
         [Parameter()]
-        [ValidateRange(1, 100)]
-        $MaxProcesses,
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -314,6 +310,9 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    $InformationPreference = 'Continue'
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' -InboundParameters $PSBoundParameters
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -326,236 +325,69 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $result = ""
-
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' -InboundParameters $PSBoundParameters
-    if ($ConnectionMode -eq 'ServicePrincipal')
-    {
-        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
-    }
-    else
-    {
-        $organization = $Credential.UserName.Split('@')[1]
-    }
     try
     {
         [array]$instances = Get-Team
-        if ($instances.Length -ge $MaxProcesses)
+        if ($instances.Length -eq 0)
         {
-            [array]$instances = Split-ArrayByParts -Array $instances -Parts $MaxProcesses
-            $batchSize = $instances[0].Length
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
         else
         {
-            try
+            Write-Host "`r`n" -NoNewLine
+        }
+        $dscContent = [System.Text.StringBuilder]::new()
+        $j = 1
+        foreach ($item in $instances)
+        {
+            foreach ($team in $item)
             {
-                $MaxProcesses = $instances.Length
-            }
-            catch
-            {
-                if ($MaxProcesses -eq 0 -or $null -eq $MaxProcesses)
-                {
-                    $MaxProcesses = 1
-                }
-            }
-
-            $batchSize = 1
-        }
-
-        # For each batch of items, start and asynchronous background PowerShell job. Each
-        # job will be given the name of the current resource followed by its ID;
-        $i = 1
-        foreach ($batch in $instances)
-        {
-            Start-Job -Name "TeamsUser$i" -ScriptBlock {
-                Param(
-                    [Parameter(Mandatory = $true)]
-                    [System.Object[]]
-                    $Instances,
-
-                    [Parameter(Mandatory = $true)]
-                    [System.String]
-                    $ScriptRoot,
-
-                    [Parameter()]
-                    [System.Management.Automation.PSCredential]
-                    $Credential,
-
-                    [Parameter()]
-                    [System.String]
-                    $ApplicationId,
-
-                    [Parameter()]
-                    [System.String]
-                    $TenantId,
-
-                    [Parameter()]
-                    [System.String]
-                    $CertificateThumbprint,
-
-                    [Parameter()]
-                    [System.String]
-                    $OrganizationName
-                )
-                $WarningPreference = 'SilentlyContinue'
-
-                Import-Module ($ScriptRoot + "\..\..\Modules\M365DSCUtil.psm1") -Force | Out-Null
-
-                # Invoke the logic that extracts the all the Property Bag values of the current site using the
-                # the invokation wrapper that handles throttling;
-                $returnValue = ""
-                $returnValue += Invoke-M365DSCCommand -Arguments $PSBoundParameters -InvokationPath $ScriptRoot -ScriptBlock {
-                    $WarningPreference = 'SilentlyContinue'
-                    $params = $args[0]
-                    $dscContent = ""
-                    $j = 1
-                    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' -InboundParameters $PSBoundParameters
-
-                    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-                    if ($params.OrganizationName.IndexOf(".") -gt 0)
-                    {
-                        $principal = $params.OrganizationName.Split(".")[0]
-                    }
-                    foreach ($item in $params.Instances)
-                    {
-                        foreach ($team in $item)
-                        {
-                            try
-                            {
-                                $users = Get-TeamUser -GroupId $team.GroupId
-                                $i = 1
-                                $totalCount = $item.Count
-                                if ($null -eq $totalCount)
-                                {
-                                    $totalCount = 1
-                                }
-                                Write-Verbose -Message "    > [$j/$totalCount] Team {$($team.DisplayName)}"
-                                foreach ($user in $users)
-                                {
-                                    Write-Verbose -Message "        - [$i/$($users.Length)] $($user.User)"
-
-                                    if ($ConnectionMode -eq 'Credential')
-                                    {
-                                        $getParams = @{
-                                            TeamName           = $team.DisplayName
-                                            User               = $user.User
-                                            Credential = $params.Credential
-                                        }
-                                    }
-                                    else
-                                    {
-                                        $getParams = @{
-                                            TeamName              = $team.DisplayName
-                                            User                  = $user.User
-                                            ApplicationId         = $ApplicationId
-                                            TenantId              = $TenantId
-                                            CertificateThumbprint = $CertificateThumbprint
-                                        }
-                                    }
-                                    $CurrentModulePath = $params.ScriptRoot + "\MSFT_TeamsUser.psm1"
-                                    Import-Module $CurrentModulePath -Force | Out-Null
-                                    Import-Module ($params.ScriptRoot + "\..\..\Modules\M365DSCTelemetryEngine.psm1") -Force | Out-Null
-                                    $result = Get-TargetResource @getParams
-                                    if ($ConnectionMode -eq 'Credential')
-                                    {
-                                        $result = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                                            -Results $Result
-                                        $result.Remove("ApplicationId") | Out-Null
-                                        $result.Remove("TenantId") | Out-Null
-                                        $result.Remove("CertificateThumbprint") | Out-Null
-                                    }
-                                    else
-                                    {
-                                        $result.Remove("Credential") | Out-Null
-                                    }
-                                    $currentDSCBlock = "        TeamsUser " + (New-Guid).ToString() + "`r`n"
-                                    $currentDSCBlock += "        {`r`n"
-                                    $content = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
-                                    if ($ConnectionMode -eq 'Credential')
-                                    {
-                                        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "Credential"
-                                    }
-                                    else
-                                    {
-                                        $partialContent = $content
-                                    }
-                                    $partialContent += "        }`r`n"
-                                    if ($partialContent.ToLower().Contains($params.OrganizationName.ToLower()))
-                                    {
-                                        $partialContent = $partialContent -ireplace [regex]::Escape($params.OrganizationName), "`$OrganizationName"
-                                    }
-                                    $currentDSCBlock += $partialContent
-                                    $dscContent += $currentDSCBlock
-                                    Save-M365DSCPartialExport -Content $currentDSCBlock `
-                                        -FileName $Global:PartialExportFileName
-                                    $i++
-                                }
-                            }
-                            catch
-                            {
-                                Write-Verbose -Message $_
-                                Write-Verbose -Message "The current User doesn't have the required permissions to extract Users for Team {$($team.DisplayName)}."
-                            }
-                            $j++
-                        }
-                    }
-                    return $dscContent
-                }
-                return $returnValue
-            } -ArgumentList @($batch, $PSScriptRoot, $Credential, $ApplicationId, $TenantId, $CertificateThumbprint, $organization) | Out-Null
-            $i++
-        }
-
-        try
-        {
-            Write-Host "    `r`nBroke extraction process down into {$MaxProcesses} jobs of {$($instances[0].Length)} item(s) each" -NoNewline
-        }
-        catch
-        {
-            Write-Verbose $_
-        }
-
-        $totalJobs = $MaxProcesses
-        $jobsCompleted = 0
-        $status = "Running..."
-        $elapsedTime = 0
-        do
-        {
-            $jobs = Get-Job | Where-Object -FilterScript { $_.Name -like '*TeamsUser*' }
-            $count = $jobs.Length
-            foreach ($job in $jobs)
-            {
-                if ($job.JobStateInfo.State -eq "Complete")
-                {
-                    $partialResult = Receive-Job -Name $job.name
-                    $result += $partialResult
-                    Remove-Job -Name $job.name | Out-Null
-                    $jobsCompleted++
-                }
-                elseif ($job.JobStateInfo.State -eq 'Failed')
-                {
-                    Remove-Job -Name $job.name | Out-Null
-                    Write-Warning "{$($job.name)} failed"
-                    break
-                }
-
-                $status = "Completed $jobsCompleted/$totalJobs jobs in $elapsedTime seconds"
-                $percentCompleted = $jobsCompleted / $totalJobs * 100
                 try
                 {
-                    Write-Progress -Activity "TeamsUser Extraction" -PercentComplete $percentCompleted -Status $status
+                    [Array]$users = Get-TeamUser -GroupId $team.GroupId
+                    $k = 1
+                    $totalCount = $instances.Length
+                    if ($null -eq $totalCount)
+                    {
+                        $totalCount = 1
+                    }
+                    Write-Host "    > [$j/$totalCount] Team {$($team.DisplayName)}"
+                    foreach ($user in $users)
+                    {
+                        Write-Host "        - [$k/$($users.Length)] $($user.User)" -NoNewline
+
+                        $getParams = @{
+                                TeamName              = $team.DisplayName
+                                User                  = $user.User
+                                Credential            = $Credential
+                                ApplicationId         = $ApplicationId
+                                TenantId              = $TenantId
+                                CertificateThumbprint = $CertificateThumbprint
+                        }
+                        $results = Get-TargetResource @getParams
+                        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                            -Results $Results
+                        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                            -ConnectionMode $ConnectionMode `
+                            -ModulePath $PSScriptRoot `
+                            -Results $Results `
+                            -Credential $Credential
+                        $dscContent.Append($currentDSCBlock) | Out-Null
+                        Save-M365DSCPartialExport -Content $currentDSCBlock `
+                            -FileName $Global:PartialExportFileName
+                        Write-Host $Global:M365DSCEmojiGreenCheckMark
+                        $k++
+                    }
                 }
                 catch
                 {
-                    Write-Verbose $_
+                    Write-Verbose -Message $_
+                    Write-Verbose -Message "The current User doesn't have the required permissions to extract Users for Team {$($team.DisplayName)}."
                 }
+                $j++
             }
-            $elapsedTime ++
-            Start-Sleep -Seconds 1
-        } while ($count -ne 0)
-        Write-Progress -Activity "TeamsUser Extraction" -PercentComplete 100 -Status "Completed" -Completed
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        return $result
+        }
+        return $dscContent.ToString()
     }
     catch
     {
