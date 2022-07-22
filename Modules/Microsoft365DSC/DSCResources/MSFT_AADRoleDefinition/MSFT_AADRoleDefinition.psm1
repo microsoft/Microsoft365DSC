@@ -360,6 +360,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -401,7 +405,7 @@ function Export-TargetResource
     $i = 1
     try
     {
-        [array]$AADRoleDefinitions = Get-MgRoleManagementDirectoryRoleDefinition -ErrorAction Stop
+        [array]$AADRoleDefinitions = Get-MgRoleManagementDirectoryRoleDefinition -Filter $Filter -All:$true -ErrorAction Stop
         if ($AADRoleDefinitions.Length -gt 0)
         {
             Write-Host "`r`n" -NoNewLine

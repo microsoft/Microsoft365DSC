@@ -95,6 +95,11 @@ function Get-TargetResource
         {
             Write-Verbose "Found existing RetentionComplianceRule $($Name)"
             $AssociatedPolicy = Get-RetentionCompliancePolicy $RuleObject.Policy
+            $RetentionComplianceActionValue = $null
+            if (-not [System.String]::IsNullOrEmpty($ruleObject.RetentionComplianceAction))
+            {
+                $RetentionComplianceActionValue = $RuleObject.RetentionComplianceAction
+            }
             $result = @{
                 Name                         = $RuleObject.Name
                 Comment                      = $RuleObject.Comment
@@ -104,8 +109,8 @@ function Get-TargetResource
                 RetentionDurationDisplayHint = $RuleObject.RetentionDurationDisplayHint
                 ContentMatchQuery            = $RuleObject.ContentMatchQuery
                 ExpirationDateOption         = $RuleObject.ExpirationDateOption
-                RetentionComplianceAction    = $RuleObject.RetentionComplianceAction
-                Credential           = $Credential
+                RetentionComplianceAction    = $RetentionComplianceActionValue
+                Credential                   = $Credential
                 Ensure                       = 'Present'
             }
 

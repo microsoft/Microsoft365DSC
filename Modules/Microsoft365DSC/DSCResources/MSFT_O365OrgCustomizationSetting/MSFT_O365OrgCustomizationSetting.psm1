@@ -71,7 +71,7 @@ function Get-TargetResource
             return @{
                 IsSingleInstance      = "Yes"
                 Ensure                = "Present"
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
@@ -161,7 +161,8 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    Enable-OrganizationCustomization
+    Write-Verbose -Message "Configuration changes can take up to 24 hours to be applied."
+    Enable-OrganizationCustomization | Out-Null
 }
 
 function Test-TargetResource

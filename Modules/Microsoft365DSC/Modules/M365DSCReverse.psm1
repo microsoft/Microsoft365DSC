@@ -54,6 +54,10 @@ function Start-M365DSCConfigurationExtract
         $GenerateInfo = $false,
 
         [Parameter()]
+        [System.Collections.Hashtable]
+        $Filters,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -139,7 +143,38 @@ function Start-M365DSCConfigurationExtract
         {
             $AuthMethods += "ApplicationWithSecret"
         }
-        $allSupportedResources = Get-M365DSCComponentsForAuthenticationType -AuthenticationMethod $AuthMethods
+
+        $ResourcesPath = Join-Path -Path $PSScriptRoot `
+        -ChildPath "..\DSCResources\" `
+        -Resolve
+        $AllResources = Get-ChildItem $ResourcesPath -Recurse | Where-Object { $_.Name -like 'MSFT_*.psm1' }
+
+        $i = 1
+        $ResourcesToExport = @()
+        $ResourcesPath = @()
+        foreach ($ResourceModule in $AllResources)
+        {
+            try
+            {
+                $resourceName = $ResourceModule.Name.Split('.')[0] -replace 'MSFT_', ''
+
+                if ((($Components -and ($Components -contains $resourceName)) -or $AllComponents -or `
+                        (-not $Components -and $null -eq $Workloads)) -and `
+                    ($ComponentsSpecified -or ($ComponentsToSkip -notcontains $resourceName)) -and `
+                        $resourcesNotSupported -notcontains $resourceName)
+                {
+                    $ResourcesToExport += $ResourceName
+                    $ResourcesPath += $ResourceModule
+                }
+            }
+            catch
+            {
+                New-M365DSCLogEntry -Error $_ -Message $ResourceModule.Name -Source "[M365DSCReverse]$($ResourceModule.Name)"
+            }
+        }
+
+        $allSupportedResources = Get-M365DSCComponentsForAuthenticationType -AuthenticationMethod $AuthMethods `
+            -ResourcesToExport $ResourcesToExport
 
         # If some resources are not supported based on the Authentication parameters
         # received, write a warning.
@@ -161,7 +196,15 @@ function Start-M365DSCConfigurationExtract
 
         try
         {
-            $compareResourcesResult = Compare-Object -ReferenceObject $allSupportedResources `
+            if ($allSupportedResources.Length -eq 0)
+            {
+                $allSupportedResources = @()
+            }
+            if ($selectedResources.Length -eq 0)
+            {
+                $selectedResources = @()
+            }
+            [Array]$compareResourcesResult = Compare-Object -ReferenceObject $allSupportedResources `
                 -DifferenceObject $selectedResources | Where-Object -FilterScript { $_.SideIndicator -eq '=>' }
         }
         catch
@@ -185,6 +228,12 @@ function Start-M365DSCConfigurationExtract
             Write-Host "[WARNING]" -NoNewline -ForegroundColor Yellow
             Write-Host " Based on the provided Authentication parameters, the following resources cannot be extracted: " -ForegroundColor Gray
             Write-Host "$resourcesNotSupported" -ForegroundColor Gray
+
+            # If all selected resources are not valid based on the authentication method used, simply return.
+            if ($ComponentsToSkip.Length -eq $selectedResources.Length)
+            {
+                return
+            }
         }
 
         # Get Tenant Info
@@ -354,35 +403,6 @@ function Start-M365DSCConfigurationExtract
             Save-Credentials -UserName "certificatepassword"
         }
 
-        $ResourcesPath = Join-Path -Path $PSScriptRoot `
-            -ChildPath "..\DSCResources\" `
-            -Resolve
-        $AllResources = Get-ChildItem $ResourcesPath -Recurse | Where-Object { $_.Name -like 'MSFT_*.psm1' }
-
-        $i = 1
-        $ResourcesToExport = @()
-        $ResourcesPath = @()
-        foreach ($ResourceModule in $AllResources)
-        {
-            try
-            {
-                $resourceName = $ResourceModule.Name.Split('.')[0] -replace 'MSFT_', ''
-
-                if ((($Components -and ($Components -contains $resourceName)) -or $AllComponents -or `
-                        (-not $Components -and $null -eq $Workloads)) -and `
-                    ($ComponentsSpecified -or ($ComponentsToSkip -notcontains $resourceName)) -and `
-                        $resourcesNotSupported -notcontains $resourceName)
-                {
-                    $ResourcesToExport += $ResourceName
-                    $ResourcesPath += $ResourceModule
-                }
-            }
-            catch
-            {
-                New-M365DSCLogEntry -Error $_ -Message $ResourceModule.Name -Source "[M365DSCReverse]$($ResourceModule.Name)"
-            }
-        }
-
         # Retrieve the list of Workloads represented by the resources to export and pre-authenticate to each one;
         if ($ResourcesToExport.Length -gt 0)
         {
@@ -425,6 +445,7 @@ function Start-M365DSCConfigurationExtract
             $CredentialExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("Credential")
             $CertPathExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("CertificatePath")
             $CertPasswordExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("CertificatePassword")
+            $FilterExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("Filter")
 
             $parameters = @{}
             if ($CredentialExists -and -not [System.String]::IsNullOrEmpty($Credential))
@@ -466,8 +487,25 @@ function Start-M365DSCConfigurationExtract
                 if ($GenerateInfo)
                 {
                     $exportString.Append("`r`n        # For information on how to use this resource, please refer to:`r`n") | Out-Null
-                    $exportString.Append("        # https://github.com/microsoft/Microsoft365DSC/wiki/$($resource.NAme.Split('.')[0] -replace 'MSFT_', '')`r`n") | Out-Null
+                    $exportString.Append("        # https://github.com/microsoft/Microsoft365DSC/wiki/$($resource.Name.Split('.')[0] -replace 'MSFT_', '')`r`n") | Out-Null
                 }
+
+                # Check if filters for the current resource were specified.
+                $resourceFilter = $null
+                $resourceName = $resource.Name.Split('.')[0] -replace 'MSFT_', ''
+                if ($filters -ne $null -and $filters.Keys.Contains($resourceName))
+                {
+                    $resourceFilter = $Filters.($resource.Name.Split('.')[0] -replace 'MSFT_', '')
+                    if ($FilterExists)
+                    {
+                        $parameters.Add("Filter", $resourceFilter)
+                    }
+                    elseif ($null -ne $resourceFilter)
+                    {
+                        Write-Host "    `r`n$($Global:M365DSCEmojiYellowCircle) You specified a filter for resource {$resourceName} but it doesn't support filters. Filter will be ignored and all instances of the resource will be captured."
+                    }
+                }
+
                 $exportString.Append((Export-TargetResource @parameters)) | Out-Null
                 $i++
             }

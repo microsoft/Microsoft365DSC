@@ -1972,6 +1972,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -2012,7 +2016,7 @@ function Export-TargetResource
 
     try
     {
-        [array] $Policies = Get-MgIdentityConditionalAccessPolicy
+        [array] $Policies = Get-MgIdentityConditionalAccessPolicy -Filter $Filter -All:$true -ErrorAction Stop
         $i = 1
         $dscContent = ''
 

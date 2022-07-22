@@ -77,7 +77,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     defenderScanType = 'quick'   #quick,full,userDefined
                     defenderSystemScanSchedule  = 'monday'  #days of week
                     defenderScheduledScanTime =  '11:00:00.0000000'
-                    defenderDetectedMalwareActions = @("lowSeverity=clean","moderateSeverity=quarantine","highSeverity=remove","severeSeverity=block")
+                    defenderDetectedMalwareActions = (New-CimInstance -ClassName MSFT_IntuneDefenderDetectedMalwareActions -Property @{
+                        lowSeverity      = 'clean'
+                        moderateSeverity = 'quarantine'
+                        highSeverity     = 'remove'
+                        severeSeverity   = 'block'
+                    } -ClientOnly)
                     defenderFileExtensionsToExclude = "[`"csv,jpg,docx`"]"
                     defenderFilesAndFoldersToExclude = "[`"c:\\2,C:\\1`"]"
                     defenderProcessesToExclude = "[`"notepad.exe,c:\\Windows\\myprocess.exe`"]"
@@ -274,7 +279,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     defenderScanType = 'quick'   #quick,full,userDefined
                     defenderSystemScanSchedule  = 'monday'  #days of week
                     defenderScheduledScanTime =  '11:00:00.0000000'
-                    defenderDetectedMalwareActions = @("lowSeverity=clean","moderateSeverity=quarantine","highSeverity=remove","severeSeverity=block")
+                    defenderDetectedMalwareActions = (New-CimInstance -ClassName MSFT_IntuneDefenderDetectedMalwareActions -Property @{
+                        lowSeverity      = 'clean'
+                        moderateSeverity = 'quarantine'
+                        highSeverity     = 'remove'
+                        severeSeverity   = 'block'
+                    } -ClientOnly)
                     defenderFileExtensionsToExclude = "[`"csv,jpg,docx`"]"
                     defenderFilesAndFoldersToExclude = "[`"c:\\2,C:\\1`"]"
                     defenderProcessesToExclude = "[`"notepad.exe,c:\\Windows\\myprocess.exe`"]"
@@ -454,7 +464,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         defenderScanType = 'quick'   #quick,full,userDefined
                         defenderSystemScanSchedule  = 'monday'  #days of week
                         defenderScheduledScanTime =  '11:00:00.0000000'
-                        defenderDetectedMalwareActions = @("lowSeverity=clean","moderateSeverity=quarantine","highSeverity=remove","severeSeverity=block")
+                        defenderDetectedMalwareActions = (New-CimInstance -ClassName MSFT_IntuneDefenderDetectedMalwareActions -Property @{
+                            lowSeverity      = 'clean'
+                            moderateSeverity = 'quarantine'
+                            highSeverity     = 'remove'
+                            severeSeverity   = 'block'
+                        } -ClientOnly)
                         defenderFileExtensionsToExclude = "[`"csv,jpg,docx`"]"
                         defenderFilesAndFoldersToExclude = "[`"c:\\2,C:\\1`"]"
                         defenderProcessesToExclude = "[`"notepad.exe,c:\\Windows\\myprocess.exe`"]"
@@ -587,7 +602,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         storageRestrictAppDataToSystemVolume = $true
                         storageRestrictAppInstallToSystemVolume = $true
                         gameDvrBlocked = $true
-                        edgeSearchEngine = "bing"
+                        edgeSearchEngine = @{edgeSearchEngineType="bing"}
                         experienceBlockDeviceDiscovery = $true
                         experienceBlockErrorDialogWhenNoSIM = $true
                         experienceBlockTaskSwitcher = $true
@@ -646,7 +661,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     defenderScanType = 'quick'   #quick,full,userDefined
                     defenderSystemScanSchedule  = 'monday'  #days of week
                     defenderScheduledScanTime =  '11:00:00.0000000'
-                    defenderDetectedMalwareActions = @("lowSeverity=clean","moderateSeverity=quarantine","highSeverity=remove","severeSeverity=block")
+                    defenderDetectedMalwareActions = (New-CimInstance -ClassName MSFT_IntuneDefenderDetectedMalwareActions -Property @{
+                        lowSeverity      = 'clean'
+                        moderateSeverity = 'quarantine'
+                        highSeverity     = 'remove'
+                        severeSeverity   = 'block'
+                    } -ClientOnly)
                     defenderFileExtensionsToExclude = "[`"csv,jpg,docx`"]"
                     defenderFilesAndFoldersToExclude = "[`"c:\\2,C:\\1`"]"
                     defenderProcessesToExclude = "[`"notepad.exe,c:\\Windows\\myprocess.exe`"]"
@@ -825,7 +845,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             defenderScanType = 'quick'   #quick,full,userDefined
                             defenderSystemScanSchedule  = 'monday'  #days of week
                             defenderScheduledScanTime =  '11:00:00.0000000'
-                            defenderDetectedMalwareActions = @("lowSeverity=clean","moderateSeverity=quarantine","highSeverity=remove","severeSeverity=block")
+                            defenderDetectedMalwareActions = @{
+                                lowSeverity='clean'
+                                moderateSeverity = 'quarantine'
+                                highSeverity = 'remove'
+                                severeSeverity='block'
+                            }
                             defenderFileExtensionsToExclude = "[`"csv,jpg,docx`"]"
                             defenderFilesAndFoldersToExclude = "[`"c:\\2,C:\\1`"]"
                             defenderProcessesToExclude = "[`"notepad.exe,c:\\Windows\\myprocess.exe`"]"
@@ -958,7 +983,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             storageRestrictAppDataToSystemVolume = $true
                             storageRestrictAppInstallToSystemVolume = $true
                             gameDvrBlocked = $true
-                            edgeSearchEngine = "bing"
+                            edgeSearchEngine = @{edgeSearchEngineType="bing"}
                             experienceBlockDeviceDiscovery = $true
                             experienceBlockErrorDialogWhenNoSIM = $true
                             experienceBlockTaskSwitcher = $true
@@ -1017,7 +1042,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         defenderScanType = 'quick'   #quick,full,userDefined
                         defenderSystemScanSchedule  = 'monday'  #days of week
                         defenderScheduledScanTime =  '11:00:00.0000000'
-                        defenderDetectedMalwareActions = @("lowSeverity=clean","moderateSeverity=quarantine","highSeverity=remove","severeSeverity=block")
+                        defenderDetectedMalwareActions = (New-CimInstance -ClassName MSFT_IntuneDefenderDetectedMalwareActions -Property @{
+                            lowSeverity      = 'clean'
+                            moderateSeverity = 'quarantine'
+                            highSeverity     = 'remove'
+                            severeSeverity   = 'block'
+                        } -ClientOnly)
                         defenderFileExtensionsToExclude = "[`"csv,jpg,docx`"]"
                         defenderFilesAndFoldersToExclude = "[`"c:\\2,C:\\1`"]"
                         defenderProcessesToExclude = "[`"notepad.exe,c:\\Windows\\myprocess.exe`"]"
@@ -1150,7 +1180,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         storageRestrictAppDataToSystemVolume = $true
                         storageRestrictAppInstallToSystemVolume = $true
                         gameDvrBlocked = $true
-                        edgeSearchEngine = "bing"
+                        edgeSearchEngine = @{edgeSearchEngineType="bing"}
                         experienceBlockDeviceDiscovery = $true
                         experienceBlockErrorDialogWhenNoSIM = $true
                         experienceBlockTaskSwitcher = $true
@@ -1217,7 +1247,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         defenderScanType = 'quick'   #quick,full,userDefined
                         defenderSystemScanSchedule  = 'monday'  #days of week
                         defenderScheduledScanTime =  '11:00:00.0000000'
-                        defenderDetectedMalwareActions = @("lowSeverity=clean","moderateSeverity=quarantine","highSeverity=remove","severeSeverity=block")
+                        defenderDetectedMalwareActions = @{
+                            lowSeverity='clean'
+                            moderateSeverity = 'quarantine'
+                            highSeverity = 'remove'
+                            severeSeverity='block'
+                        }
                         defenderFileExtensionsToExclude = "[`"csv,jpg,docx`"]"
                         defenderFilesAndFoldersToExclude = "[`"c:\\2,C:\\1`"]"
                         defenderProcessesToExclude = "[`"notepad.exe,c:\\Windows\\myprocess.exe`"]"
@@ -1350,7 +1385,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         storageRestrictAppDataToSystemVolume = $true
                         storageRestrictAppInstallToSystemVolume = $true
                         gameDvrBlocked = $true
-                        edgeSearchEngine = "bing"
+                        edgeSearchEngine = @{edgeSearchEngineType="bing"}
                         experienceBlockDeviceDiscovery = $true
                         experienceBlockErrorDialogWhenNoSIM = $true
                         experienceBlockTaskSwitcher = $true

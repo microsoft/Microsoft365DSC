@@ -95,9 +95,10 @@ function Get-TargetResource
         }
 
         return @{
-            IsSingleInstance = 'Yes'
-            Enabled          = ($tenantIsolationPolicy.properties.isDisabled -eq $false)
-            Rules            = $allowedTenants
+            IsSingleInstance      = 'Yes'
+            Enabled               = ($tenantIsolationPolicy.properties.isDisabled -eq $false)
+            Rules                 = $allowedTenants
+            Credential            = $Credential
         }
     }
     catch
@@ -593,8 +594,8 @@ function Export-TargetResource
         $dscContent = ''
 
         $Params = @{
-            IsSingleInstance = 'Yes'
-            Credential       = $Credential
+            IsSingleInstance      = 'Yes'
+            Credential            = $Credential
         }
 
         $Results = Get-TargetResource @Params
