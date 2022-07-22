@@ -11,6 +11,9 @@
 * SCSensitivityLabel
   * Fixed an issue where '$' in the custom wordmark test would cause issue.
   FIXES [#2067](https://github.com/microsoft/Microsoft365DSC/issues/2067)
+* SPOSite
+  * Fixed owner value for root site.
+  FIXES [#2035](https://github.com/microsoft/Microsoft365DSC/issues/2035)
 * TeamsUser
   * Fixed the extraction process and removed the multi-threading from the resource.
   FIXES #1883
