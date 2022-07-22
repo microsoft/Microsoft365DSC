@@ -472,16 +472,28 @@ function Compare-M365DSCConfigurations
     {
         $fileContent = Get-Content $Source -Raw
         $startPosition = $fileContent.IndexOf(" -ModuleVersion")
-        $endPosition = $fileContent.IndexOf("`r", $startPosition)
-        $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
+        if ($startPosition -ge 0)
+        {
+            $endPosition = $fileContent.IndexOf("`r", $startPosition)
+            if ($endPosition -gt $startPosition)
+            {
+                $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
+            }
+        }
         [Array] $SourceObject = ConvertTo-DSCObject -Content $fileContent
     }
     if (-not $DestinationObject)
     {
         $fileContent = Get-Content $Destination -Raw
         $startPosition = $fileContent.IndexOf(" -ModuleVersion")
-        $endPosition = $fileContent.IndexOf("`r", $startPosition)
-        $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
+        if ($startPosition -ge 0)
+        {
+            $endPosition = $fileContent.IndexOf("`r", $startPosition)
+            if ($endPosition -gt $startPosition)
+            {
+                $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
+            }
+        }
         [Array] $DestinationObject = ConvertTo-DSCObject -Content $FileContent
     }
 
