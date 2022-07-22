@@ -855,7 +855,17 @@ function New-M365DSCDeltaReport
     Write-Verbose -Message 'Obtaining Delta between the source and destination configurations'
     if (-not $Delta)
     {
-        $Delta = Compare-M365DSCConfigurations -Source $Source -Destination $Destination -CaptureTelemetry $false
+        if ($IsBlueprintAssessment) {
+            # Parse the blueprint file, pass to Compare-M365DSCConfigurations as object (including comments aka metadata)
+            $fileContent = Get-Content $Destination -Raw
+            $startPosition = $fileContent.IndexOf(" -ModuleVersion")
+            $endPosition = $fileContent.IndexOf("`r", $startPosition)
+            $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
+            [Array] $ParsedBlueprintWithMetadata = ConvertTo-DSCObject -Content $FileContent -IncludeComments:$True
+            $Delta = Compare-M365DSCConfigurations -Source $Source -DestinationObject $ParsedBlueprintWithMetadata -CaptureTelemetry $false
+        } Else {
+            $Delta = Compare-M365DSCConfigurations -Source $Source -Destination $Destination -CaptureTelemetry $false
+        }
     }
 
     $reportSB = [System.Text.StringBuilder]::new()
