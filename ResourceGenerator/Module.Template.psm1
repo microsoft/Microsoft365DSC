@@ -6,8 +6,8 @@ function Get-TargetResource
     (<#ResourceGenerator
         #region resource generator code
 <ParameterBlock>
-        #endregion
-        ResourceGenerator#>
+<AssignmentsParam>
+        #endregion ResourceGenerator#>
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -112,6 +112,7 @@ function Get-TargetResource
             CertificateThumbprint = $CertificateThumbprint
         }
 <#ComplexTypeContent#>
+<#AssignmentsGet#>
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -148,8 +149,8 @@ function Set-TargetResource
         <#ResourceGenerator
         #region resource generator code
 <ParameterBlock>
-        #endregion
-        ResourceGenerator#>
+<AssignmentsParam>
+        #endregion ResourceGenerator#>
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -220,7 +221,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating {$DisplayName}"
-
+<#AssignmentsRemove#>
         $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
         foreach($key in $AdditionalProperties.keys)
         {
@@ -249,14 +250,15 @@ function Set-TargetResource
 
         <#ResourceGenerator
         #region resource generator code
-        <NewCmdLetName> @CreateParameters
+        $policy=<NewCmdLetName> @CreateParameters
+<#AssignmentsNew#>
         #endregion
         ResourceGenerator#>
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating {$DisplayName}"
-
+<#AssignmentsRemove#>
         $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
         foreach($key in $AdditionalProperties.keys)
         {
@@ -287,6 +289,7 @@ function Set-TargetResource
         #region resource generator code
         <UpdateCmdLetName> @UpdateParameters `
             -<#UpdateKeyIdentifier#> $currentInstance.Id
+<#AssignmentsUpdate#>
         #endregion
         ResourceGenerator#>
     }
@@ -316,8 +319,8 @@ function Test-TargetResource
         <#ResourceGenerator
         #region resource generator code
 <ParameterBlock>
-        #endregion
-        ResourceGenerator#>
+<AssignmentsParam>
+        #endregion ResourceGenerator#>
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -378,7 +381,12 @@ function Test-TargetResource
             $CIMArrayTarget=@()
             $CIMArraySource+=$PSBoundParameters[$key]
             $CIMArrayTarget+=$CurrentValues.$key
-
+            if($CIMArraySource.count -ne $CIMArrayTarget.count)
+            {
+                Write-Verbose -Message "Configuration drift:Number of items does not match: Source=$($CIMArraySource.count) Target=$($CIMArrayTarget.count)"
+                $testResult=$false
+                break
+            }
             $i=0
             foreach($item in $CIMArraySource )
             {
@@ -530,6 +538,7 @@ function Export-TargetResource
                 -Results $Results
 
 <#ConvertComplexToString#>
+<#AssignmentsConvertComplexToString#>
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
@@ -538,6 +547,8 @@ function Export-TargetResource
                 -Credential $Credential
 
 <#ConvertComplexToVariable#>
+<#AssignmentsConvertComplexToVariable#>
+
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -635,9 +646,11 @@ function Get-M365DSCDRGComplexTypeToString
         [System.String]
         $CIMInstanceName,
 
+        [Parameter()]
         [System.String]
         $Whitespace="",
 
+        [Parameter()]
         [switch]
         $isArray=$false
     )
@@ -656,7 +669,7 @@ function Get-M365DSCDRGComplexTypeToString
                 -ComplexObject $item `
                 -isArray:$true `
                 -CIMInstanceName $CIMInstanceName `
-                -Whitespace "            "
+                -Whitespace "                "
 
         }
         if ([string]::IsNullOrEmpty($currentProperty))
@@ -672,7 +685,12 @@ function Get-M365DSCDRGComplexTypeToString
     {
         return $null
     }
-    $currentProperty = "MSFT_$CIMInstanceName{`r`n"
+    $currentProperty=""
+    if($isArray)
+    {
+        $currentProperty += "`r`n"
+    }
+    $currentProperty += "$whitespace`MSFT_$CIMInstanceName{`r`n"
     $keyNotNull = 0
     foreach ($key in $ComplexObject.Keys)
     {
@@ -700,11 +718,11 @@ function Get-M365DSCDRGComplexTypeToString
             }
             else
             {
-                $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $ComplexObject[$key]
+                $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $ComplexObject[$key] -Space ($Whitespace+"    ")
             }
         }
     }
-    $currentProperty += "            }`r`n"
+    $currentProperty += "            }"
 
     if ($keyNotNull -eq 0)
     {
@@ -713,7 +731,6 @@ function Get-M365DSCDRGComplexTypeToString
 
     return $currentProperty
 }
-
 function Test-M365DSCComplexObjectHasValues
 {
     [CmdletBinding()]
@@ -757,7 +774,12 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
         $Key,
 
         [Parameter(Mandatory = 'true')]
-        $Value
+        $Value,
+
+        [Parameter()]
+        [System.String]
+        $Space="                "
+
     )
 
     $returnValue=""
@@ -765,25 +787,25 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
     {
         "*.Boolean"
         {
-            $returnValue= "                " + $Key + " = `$" + $Value.ToString() + "`r`n"
+            $returnValue= $Space + $Key + " = `$" + $Value.ToString() + "`r`n"
         }
         "*.String"
         {
-            $returnValue= "                " + $Key + " = '" + $Value + "'`r`n"
+            $returnValue= $Space + $Key + " = '" + $Value + "'`r`n"
         }
         "*.DateTime"
         {
-            $returnValue= "                " + $Key + " = '" + $Value + "'`r`n"
+            $returnValue= $Space + $Key + " = '" + $Value + "'`r`n"
         }
         "*[[\]]"
         {
-            $returnValue= "                " + $key + " = @("
+            $returnValue= $Space + $key + " = @("
             $whitespace=""
             $newline=""
             if($Value.count -gt 1)
             {
                 $returnValue += "`r`n"
-                $whitespace="                    "
+                $whitespace=$Space+"    "
                 $newline="`r`n"
             }
             foreach ($item in $Value)
@@ -806,7 +828,7 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
             }
             if($Value.count -gt 1)
             {
-                $returnValue += "                )`r`n"
+                $returnValue += "$Space)`r`n"
             }
             else
             {
@@ -816,7 +838,7 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
         }
         Default
         {
-            $returnValue= "                " + $Key + " = " + $Value + "`r`n"
+            $returnValue= $Space + $Key + " = " + $Value + "`r`n"
         }
     }
     return $returnValue
@@ -838,11 +860,35 @@ function Get-M365DSCAdditionalProperties
     $cloneProperties=$Properties.clone()
     foreach ($property in $cloneProperties.Keys)
     {
-        if ($property -in ($additionalProperties))
+        if ($property -in ($additionalProperties) )
         {
             $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
-            $propertyValue = $properties.$property
+            if($properties.$property -and $properties.$property.getType().FullName -like "*CIMInstance*")
+            {
+                if($properties.$property.getType().FullName -like "*[[\]]")
+                {
+                    $array=@()
+                    foreach($item in $properties.$property)
+                    {
+                        $array+=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
+
+                    }
+                    $propertyValue=$array
+                }
+                else
+                {
+                    $propertyValue=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $properties.$property
+                }
+
+            }
+            else
+            {
+                $propertyValue = $properties.$property
+            }
+
+
             $results.Add($propertyName, $propertyValue)
+
         }
     }
     if($results.Count -eq 1)
@@ -958,20 +1004,24 @@ function Convert-M365DSCDRGComplexTypeToHashtable
         return $Results
     }
     $hashComplexObject = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject
-    $results=$hashComplexObject.clone()
-    $keys=$hashComplexObject.Keys|Where-Object -FilterScript {$_ -ne 'PSComputerName'}
-    foreach ($key in $keys)
+    if($hashComplexObject)
     {
-        if(($null -ne $hashComplexObject[$key]) -and ($hashComplexObject[$key].getType().Fullname -like "*CimInstance*"))
+        $results=$hashComplexObject.clone()
+        $keys=$hashComplexObject.Keys|Where-Object -FilterScript {$_ -ne 'PSComputerName'}
+        foreach ($key in $keys)
         {
-            $results[$key]=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $hashComplexObject[$key]
-        }
-        if($null -eq $results[$key])
-        {
-            $results.remove($key)|out-null
-        }
+            if(($null -ne $hashComplexObject[$key]) -and ($hashComplexObject[$key].getType().Fullname -like "*CimInstance*"))
+            {
+                $results[$key]=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $hashComplexObject[$key]
+            }
+            if($null -eq $results[$key])
+            {
+                $results.remove($key)|out-null
+            }
 
+        }
     }
     return $results
 }
+<#AssignmentsFunctions#>
 Export-ModuleMember -Function *-TargetResource
