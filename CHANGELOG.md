@@ -27,6 +27,9 @@
 * IntuneDeviceConfigurationPolicyWindows10
   * Fixed issue where the edgeSearchEngine value was not properly retrieved.
   FIXES [#1783](https://github.com/microsoft/Microsoft365DSC/issues/1783)
+* SCSensitivityLabel
+  * Fixed an issue where '$' in the custom wordmark test would cause issue.
+  FIXES [#2067](https://github.com/microsoft/Microsoft365DSC/issues/2067)
 * SPOSite
   * Fixed owner value for root site.
   FIXES [#2035](https://github.com/microsoft/Microsoft365DSC/issues/2035)
