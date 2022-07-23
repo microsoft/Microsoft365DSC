@@ -772,6 +772,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -808,7 +812,7 @@ function Export-TargetResource
 
     try
     {
-        [array] $groups = Get-MgGroup -All -ErrorAction Stop
+        [array] $groups = Get-MgGroup -Filter $Filter -All:$true -ErrorAction Stop
         $i = 1
         $dscContent = ''
         Write-Host "`r`n" -NoNewline

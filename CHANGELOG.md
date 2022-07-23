@@ -2,13 +2,40 @@
 
 # UNRELEASED
 
-* EXOCASMailboxSettings
-  * Fixed issue if there are mailboxes with the same name
-  FIXES [#2117](https://github.com/microsoft/Microsoft365DSC/issues/2117)
+* EXOTransportRule
+  * Fixed issue where the MessageContainsDataClassifications property was not properly extracted due to single quote exiting.
+  FIXES [#1820](https://github.com/microsoft/Microsoft365DSC/issues/1820)
+* IntuneDeviceConfigurationPolicyWindows10
+  * Fixed issue where the edgeSearchEngine value was not properly retrieved.
+  FIXES [#1783](https://github.com/microsoft/Microsoft365DSC/issues/1783)
+* SCSensitivityLabel
+  * Fixed an issue where '$' in the custom wordmark test would cause issue.
+  FIXES [#2067](https://github.com/microsoft/Microsoft365DSC/issues/2067)
+* SPOSite
+  * Fixed owner value for root site.
+  FIXES [#2035](https://github.com/microsoft/Microsoft365DSC/issues/2035)
+* TeamsUser
+  * Fixed the extraction process and removed the multi-threading from the resource.
+  FIXES #1883
+* MISC
+  * Added support for filtering resources instances at extraction time.
+  FIXES [#1691](https://github.com/microsoft/Microsoft365DSC/issues/1691)
+  * REPORT: Fixed an issue where if the ModuleVersion was not specified, that the file would fail to properly get parsed.
+  FIXES [#1970](https://github.com/microsoft/Microsoft365DSC/issues/1970)
+  * Resources implementing the Ensure parameter now defaults its value to $true.
+  FIXES [#1738](https://github.com/microsoft/Microsoft365DSC/issues/1738)
+
+# 1.22.720.1
+
+* AADAuthorizationPolicy
+  * Fixed issue with the DefaultUserRolePermissionGrantPoliciesAssigned property.
 * AADGroup
   * Added support for Group Licensing by adding the AssignedLicenses property.
   * Added support for members and owners.
   FIXES [#1066](https://github.com/microsoft/Microsoft365DSC/issues/1066)
+* EXOCASMailboxSettings
+  * Fixed issue if there are mailboxes with the same name
+  FIXES [#2117](https://github.com/microsoft/Microsoft365DSC/issues/2117)
 * EXODistributionGroup
   * Initial release.
   FIXES [#1802](https://github.com/microsoft/Microsoft365DSC/issues/1802)
@@ -43,6 +70,8 @@
   FIXES [#1979](https://github.com/microsoft/Microsoft365DSC/issues/1979)
   * EXPORT: Changed the way resources' modules are imported to improve startup performance.
   FIXES [#1745](https://github.com/microsoft/Microsoft365DSC/issues/1745)
+  * Added a new Test-M365DSCModuleValidity cmdlet.
+  * Updated the Uninstall-M365DSCOutdatedDependencies cmdlet to delete module files.
 
 # 1.22.713.1
 

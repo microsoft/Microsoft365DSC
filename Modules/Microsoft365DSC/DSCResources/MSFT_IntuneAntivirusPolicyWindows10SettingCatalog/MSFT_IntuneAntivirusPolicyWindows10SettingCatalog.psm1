@@ -212,7 +212,7 @@ function Get-TargetResource
         [Parameter(Mandatory = $True)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure,
+        $Ensure = $true,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -571,7 +571,7 @@ function Set-TargetResource
         [Parameter(Mandatory = $True)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure,
+        $Ensure = $true,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -883,7 +883,7 @@ function Test-TargetResource
         [Parameter(Mandatory = $True)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure,
+        $Ensure = $true,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -997,6 +997,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -1016,7 +1020,6 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
@@ -1042,6 +1045,8 @@ function Export-TargetResource
     {
         $policyTemplateID='804339ad-1553-4478-a742-138fb5807418_1'
         [array]$policies = Get-MgDeviceManagementConfigurationPolicy `
+            -All:$true `
+            -Filter $Filter `
             -ErrorAction Stop `
             -TemplateId $policyTemplateID
 

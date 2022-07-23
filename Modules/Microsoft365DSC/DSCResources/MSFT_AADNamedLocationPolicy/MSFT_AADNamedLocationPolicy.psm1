@@ -401,6 +401,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -449,7 +453,7 @@ function Export-TargetResource
     try
     {
 
-        $AADNamedLocations = Get-MgIdentityConditionalAccessNamedLocation -ErrorAction Stop
+        $AADNamedLocations = Get-MgIdentityConditionalAccessNamedLocation -Filter $Filter -All:$true -ErrorAction Stop
         if ($AADNamedLocations.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark

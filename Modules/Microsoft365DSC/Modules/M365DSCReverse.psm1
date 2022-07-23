@@ -54,6 +54,10 @@ function Start-M365DSCConfigurationExtract
         $GenerateInfo = $false,
 
         [Parameter()]
+        [System.Collections.Hashtable]
+        $Filters,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -441,6 +445,7 @@ function Start-M365DSCConfigurationExtract
             $CredentialExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("Credential")
             $CertPathExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("CertificatePath")
             $CertPasswordExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("CertificatePassword")
+            $FilterExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("Filter")
 
             $parameters = @{}
             if ($CredentialExists -and -not [System.String]::IsNullOrEmpty($Credential))
@@ -484,6 +489,23 @@ function Start-M365DSCConfigurationExtract
                     $exportString.Append("`r`n        # For information on how to use this resource, please refer to:`r`n") | Out-Null
                     $exportString.Append("        # https://github.com/microsoft/Microsoft365DSC/wiki/$($resource.Name.Split('.')[0] -replace 'MSFT_', '')`r`n") | Out-Null
                 }
+
+                # Check if filters for the current resource were specified.
+                $resourceFilter = $null
+                $resourceName = $resource.Name.Split('.')[0] -replace 'MSFT_', ''
+                if ($filters -ne $null -and $filters.Keys.Contains($resourceName))
+                {
+                    $resourceFilter = $Filters.($resource.Name.Split('.')[0] -replace 'MSFT_', '')
+                    if ($FilterExists)
+                    {
+                        $parameters.Add("Filter", $resourceFilter)
+                    }
+                    elseif ($null -ne $resourceFilter)
+                    {
+                        Write-Host "    `r`n$($Global:M365DSCEmojiYellowCircle) You specified a filter for resource {$resourceName} but it doesn't support filters. Filter will be ignored and all instances of the resource will be captured."
+                    }
+                }
+
                 $exportString.Append((Export-TargetResource @parameters)) | Out-Null
                 $i++
             }

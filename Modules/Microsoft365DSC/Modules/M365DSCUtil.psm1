@@ -949,6 +949,9 @@ Specifies the password of the PFX file which is used for authentication.
 .Parameter CertificatePath
 Specifies the path of the PFX file which is used for authentication.
 
+.Parameter Filters
+Specifies resource level filters to apply in order to reduce the number of instances exported.
+
 .Example
 Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential
 
@@ -957,6 +960,9 @@ Export-M365DSCConfiguration -Mode 'Default' -ApplicationId '2560bb7c-bc85-415f-a
 
 .Example
 Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential -Path 'C:\DSC\Config.ps1'
+
+.Example
+Export-M365DSCConfiguration -Credential $Credential -Filters @{AADApplication = "DisplayName eq 'MyApp'"}'
 
 .Functionality
 Public
@@ -1002,6 +1008,10 @@ function Export-M365DSCConfiguration
         [Parameter()]
         [System.Boolean]
         $GenerateInfo = $false,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Filters,
 
         [Parameter()]
         [System.String]
@@ -1124,7 +1134,8 @@ function Export-M365DSCConfiguration
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
-                -GenerateInfo $GenerateInfo
+                -GenerateInfo $GenerateInfo `
+                -Filters $Filters
         }
         elseif ($null -ne $Components)
         {
@@ -1139,7 +1150,8 @@ function Export-M365DSCConfiguration
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
-                -GenerateInfo $GenerateInfo
+                -GenerateInfo $GenerateInfo `
+                -Filters $Filters
         }
         elseif ($null -ne $Mode)
         {
@@ -1155,7 +1167,8 @@ function Export-M365DSCConfiguration
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
                 -GenerateInfo $GenerateInfo `
-                -AllComponents
+                -AllComponents `
+                -Filters $Filters
         }
     }
 }
@@ -2516,7 +2529,7 @@ function Uninstall-M365DSCOutdatedDependencies
                     Write-Information -Message "Uninstalling $($foundModule.Name) Version {$($foundModule.Version)}"
                     if (Test-Path -Path $($foundModule.Path))
                     {
-                        Remove-Item $($foundModule.Path) -Force -Recurse
+                        Remove-Item $($foundModule.ModuleBase) -Force -Recurse
                     }
                 }
                 catch
@@ -2544,7 +2557,7 @@ function Uninstall-M365DSCOutdatedDependencies
                 Write-Information -Message "Uninstalling $($foundModule.Name) version {$($foundModule.Version)}"
                 if (Test-Path -Path $($foundModule.Path))
                 {
-                    Remove-Item $($foundModule.Path) -Force -Recurse
+                    Remove-Item $($foundModule.ModuleBase) -Force -Recurse
                 }
             }
             catch

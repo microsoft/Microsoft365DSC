@@ -95,7 +95,7 @@ function Get-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure,
+        $Ensure = $true,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -292,7 +292,7 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure,
+        $Ensure = $true,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -466,7 +466,7 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure,
+        $Ensure = $true,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -529,6 +529,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -565,7 +569,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$configs = Get-MgDeviceManagementDeviceEnrollmentConfiguration -ErrorAction Stop `
+        [array]$configs = Get-MgDeviceManagementDeviceEnrollmentConfiguration -All:$true -Filter $Filter -ErrorAction Stop `
             | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration' }
         $i = 1
         $dscContent = ''

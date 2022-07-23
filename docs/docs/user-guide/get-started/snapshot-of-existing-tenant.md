@@ -96,15 +96,13 @@ As mentioned above, the moment this switch is present when calling the **Export-
 Export-M365DSCConfiguration -LaunchWebUI
 ```
 
-### FileName
-This allows you to specify how you wish the resulting file to be named. Specify the name of the file, including the extension (e.g. .ps1).
+### Components
+This parameter accepts an array containing the names of the components you want to capture as part of your snapshot. Omitting this parameter will default the capture process to capture all components that are part of the default components list (see parameter **Mode**).
 
 <figure markdown>
-  ![Example of specifying a custom file name](../../Images/CustomExportFilename.png)
-  <figcaption>Example of specifying a custom file name</figcaption>
+  ![Example of specifying resources to be exported](../../Images/SelectExportedComponents.png)
+  <figcaption>Example of specifying resources to be exported</figcaption>
 </figure>
-
-Omitting to specify this parameter will name the resulting file as M365TenantConfig.ps1
 
 ### ConfigurationName
 This parameter allows you to specify how the DSC configuration object, inside of the exported configuration file will be named.
@@ -116,20 +114,75 @@ This parameter allows you to specify how the DSC configuration object, inside of
 
 Omitting to specify this parameter will result in the configuration object to be named as the file’s name (e.g. M365TenantConfig).
 
+### FileName
+This allows you to specify how you wish the resulting file to be named. Specify the name of the file, including the extension (e.g. .ps1).
+
+<figure markdown>
+  ![Example of specifying a custom file name](../../Images/CustomExportFilename.png)
+  <figcaption>Example of specifying a custom file name</figcaption>
+</figure>
+
+Omitting to specify this parameter will name the resulting file as M365TenantConfig.ps1
+
+### Filters
+This allows you to specify a filter at the resource level to reduce the overall instances that are being extracted. As an example, if you are only interested in extracting Azure AD Groups that have their display name start with the word 'Microsoft', you could specify the following filters:
+
+```
+$Filters = @{
+    AADGroup = "startsWith(displayName, 'Microsoft')"
+}
+```
+
+<figure markdown>
+  ![Example of using Filters to export resources](../../Images/FilteringExport.png)
+  <figcaption>Example of using Filters to export resources</figcaption>
+</figure>
+
+### GenerateInfo
+This parameter allows users to specify whether or not comments should be added as part of the exported file to provide additional information about the various types of components captured.
+<figure markdown>
+  ![Example of specifying whether to generate additional information](../../Images/ExportGenerateInfo.png)
+  <figcaption>Example of specifying whether to generate additional information</figcaption>
+</figure>
+
+### MaxProcesses
+There are a few components inside of Microsoft365DSC for which parallelism has been implemented as part of their snapshot process to improve speed. This parameter allows user to specify how many parallel threads should be created during the capture process. Components leveraging parallelism are: SPOPropertyBag, SPOUserProfileProperty and TeamsUser. The specified value for this parameter has to be between **1** and **100**. Instances of the components will be equally divided amongst the various threads.
+
+<figure markdown>
+  ![Example of specifying a maximum number of processes (max 17)](../../Images/ExportMaxProcesses17.png)
+  <figcaption>Example of specifying a maximum number of 17 processes</figcaption>
+</figure>
+
+<figure markdown>
+  ![Example of specifying a maximum number of processes (max 6)](../../Images/ExportMaxProcesses6.png)
+  <figcaption>Example of specifying a maximum number of 6 processes</figcaption>
+</figure>
+
+While there are advantages to implementing multithreading for the snapshot process, there are many disadvantages as well such as not being able to properly view ongoing progress inside threads and added complexity to the design of the resources. After weighting in the pros can cons of implementing this approach across all components to speed up the entire capture process, we’ve opted to keep the design of the resources simpler (no use parallelism) for maintenance purposes and to ensure users have a consistent way of view progress during the snapshot process.
+
+### Mode
+This parameter allows users to specify what set of components they wish to capture as part of their snapshot process. By default, Microsoft365DSC will exclude some components from the capture process either because these are likely to take a very long time to export (e.g. SPOPropertyBag) or that they are more related to data than actual configuration settings (e.g. Planner Tasks, SPOUserProfileProperty, etc.). Available modes are:
+
+- Lite
+- Default
+- Full
+
+Omitting this parameter will default to the **Default** mode.
+To keep track of what resources are available in what mode, Microsoft365DSC defines two global variables which contain the list of resources unique to this extraction mode: **$Global:DefaultComponents** and **$Global:FullComponents**
+
+<figure markdown>
+  ![Example of the default Export modes](../../Images/ExportComponentSets.png)
+  <figcaption>Example of the default Export modes</figcaption>
+</figure>
+
+This means that the **Lite** extraction mode will contain all resources with the exception of those listed in Default and Full. The **Default** mode will include all resources from the Lite mode, plus the SPOApp and SPOSiteDesign components, and **Full** will include every resource available in the project.
+
 ### Path
 This parameter allows you to specify the location where the resulting file will be stored. Omitting to specify this parameter will prompt the user to provide the destination path at the end of the capture process.
 
 <figure markdown>
   ![Example of specifying a custom export path](../../Images/CustomPath.png)
   <figcaption>Example of specifying a custom export path</figcaption>
-</figure>
-
-### Components
-This parameter accepts an array containing the names of the components you want to capture as part of your snapshot. Omitting this parameter will default the capture process to capture all components that are part of the default components list (see parameter **Mode**).
-
-<figure markdown>
-  ![Example of specifying resources to be exported](../../Images/SelectExportedComponents.png)
-  <figcaption>Example of specifying resources to be exported</figcaption>
 </figure>
 
 ### Workloads
@@ -152,42 +205,3 @@ This parameter accepts an array containing the names of various workloads you wi
 </figure>
 
 By default, specifying a workload will only export components that are part of the default component list (see **Mode**). If you want to capture every component available for a given workload, you will need to combine this parameter with **-Mode Full**.
-
-### Mode
-This parameter allows users to specify what set of components they wish to capture as part of their snapshot process. By default, Microsoft365DSC will exclude some components from the capture process either because these are likely to take a very long time to export (e.g. SPOPropertyBag) or that they are more related to data than actual configuration settings (e.g. Planner Tasks, SPOUserProfileProperty, etc.). Available modes are:
-
-- Lite
-- Default
-- Full
-
-Omitting this parameter will default to the **Default** mode.
-To keep track of what resources are available in what mode, Microsoft365DSC defines two global variables which contain the list of resources unique to this extraction mode: **$Global:DefaultComponents** and **$Global:FullComponents**
-
-<figure markdown>
-  ![Example of the default Export modes](../../Images/ExportComponentSets.png)
-  <figcaption>Example of the default Export modes</figcaption>
-</figure>
-
-This means that the **Lite** extraction mode will contain all resources with the exception of those listed in Default and Full. The **Default** mode will include all resources from the Lite mode, plus the SPOApp and SPOSiteDesign components, and **Full** will include every resource available in the project.
-
-### MaxProcesses
-There are a few components inside of Microsoft365DSC for which parallelism has been implemented as part of their snapshot process to improve speed. This parameter allows user to specify how many parallel threads should be created during the capture process. Components leveraging parallelism are: SPOPropertyBag, SPOUserProfileProperty and TeamsUser. The specified value for this parameter has to be between **1** and **100**. Instances of the components will be equally divided amongst the various threads.
-
-<figure markdown>
-  ![Example of specifying a maximum number of processes (max 17)](../../Images/ExportMaxProcesses17.png)
-  <figcaption>Example of specifying a maximum number of 17 processes</figcaption>
-</figure>
-
-<figure markdown>
-  ![Example of specifying a maximum number of processes (max 6)](../../Images/ExportMaxProcesses6.png)
-  <figcaption>Example of specifying a maximum number of 6 processes</figcaption>
-</figure>
-
-While there are advantages to implementing multithreading for the snapshot process, there are many disadvantages as well such as not being able to properly view ongoing progress inside threads and added complexity to the design of the resources. After weighting in the pros can cons of implementing this approach across all components to speed up the entire capture process, we’ve opted to keep the design of the resources simpler (no use parallelism) for maintenance purposes and to ensure users have a consistent way of view progress during the snapshot process.
-
-### GenerateInfo
-This parameter allows users to specify whether or not comments should be added as part of the exported file to provide additional information about the various types of components captured.
-<figure markdown>
-  ![Example of specifying whether to generate additional information](../../Images/ExportGenerateInfo.png)
-  <figcaption>Example of specifying whether to generate additional information</figcaption>
-</figure>
