@@ -106,7 +106,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ClassroomAppBlockRemoteScreenObservation = $True
                         SoftwareUpdateMinorOSDeferredInstallDelayInDays = 25
                         ITunesBlockFileSharing = $True
-                        PasswordRequiredType = "deviceDefault"
                         GameCenterBlocked = $True
                         ICloudBlockDocumentSync = $True
                         PasswordMinimumCharacterSetCount = 25
@@ -254,7 +253,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ClassroomAppBlockRemoteScreenObservation = $True
                         SoftwareUpdateMinorOSDeferredInstallDelayInDays = 25
                         ITunesBlockFileSharing = $True
-                        PasswordRequiredType = "deviceDefault"
                         GameCenterBlocked = $True
                         ICloudBlockDocumentSync = $True
                         PasswordMinimumCharacterSetCount = 25
@@ -333,7 +331,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ClassroomAppBlockRemoteScreenObservation = $True
                         SoftwareUpdateMinorOSDeferredInstallDelayInDays = 25
                         ITunesBlockFileSharing = $True
-                        PasswordRequiredType = "deviceDefault"
                         GameCenterBlocked = $True
                         ICloudBlockDocumentSync = $True
                         PasswordMinimumCharacterSetCount = 25
@@ -399,7 +396,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ClassroomAppBlockRemoteScreenObservation = $True
                         SoftwareUpdateMinorOSDeferredInstallDelayInDays = 25
                         ITunesBlockFileSharing = $True
-                        PasswordRequiredType = "deviceDefault"
                         GameCenterBlocked = $True
                         ICloudBlockDocumentSync = $True
                         PasswordMinimumCharacterSetCount = 25
@@ -475,7 +471,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ClassroomAppBlockRemoteScreenObservation = $True
                         SoftwareUpdateMinorOSDeferredInstallDelayInDays = 25
                         ITunesBlockFileSharing = $True
-                        PasswordRequiredType = "deviceDefault"
                         GameCenterBlocked = $True
                         ICloudBlockDocumentSync = $True
                         PasswordMinimumCharacterSetCount = 25
@@ -541,7 +536,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ClassroomAppBlockRemoteScreenObservation = $False
                         SoftwareUpdateMinorOSDeferredInstallDelayInDays = 7
                         ITunesBlockFileSharing = $False
-                        PasswordRequiredType = "deviceDefault"
                         GameCenterBlocked = $False
                         ICloudBlockDocumentSync = $False
                         PasswordMinimumCharacterSetCount = 7
@@ -626,7 +620,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ClassroomAppBlockRemoteScreenObservation = $True
                         SoftwareUpdateMinorOSDeferredInstallDelayInDays = 25
                         ITunesBlockFileSharing = $True
-                        PasswordRequiredType = "deviceDefault"
                         GameCenterBlocked = $True
                         ICloudBlockDocumentSync = $True
                         PasswordMinimumCharacterSetCount = 25
