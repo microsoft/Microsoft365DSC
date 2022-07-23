@@ -1,5 +1,24 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+* IntuneAppProtectionPolicyAndroid
+  * Added Configuration Parameters:
+    ManagedBrowser
+    MinimumRequiredAppVersion
+    MinimumRequiredOSVersion
+    MinimumRequiredPatchVersion
+    MinimumWarningAppVersion
+    MinimumWarningOSVersion
+    MinimumWarningPatchVersion
+    AppGroupType
+    IsAssigned
+    FIXES [#1955](https://github.com/microsoft/Microsoft365DSC/issues/1955)
+  * Removed functions Get-M365DSCIntuneAppProtectionPolicyAndroid, Set-M365DSCIntuneAppProtectionPolicyAndroidAssignment, Set-M365DSCIntuneAppProtectionPolicyAndroidApps, Set-M365DSCIntuneAppProtectionPolicyAndroid, New-M365DSCIntuneAppProtectionPolicyAndroid, Get-M365DSCIntuneAppProtectionPolicyAndroidAssignmentJSON, Get-M365DSCIntuneAppProtectionPolicyAndroidAppsJSON, Get-M365DSCIntuneAppProtectionPolicyAndroidJSON
+  Replaced by New-MgDeviceAppMgtAndroidManagedAppProtection, Update-MgDeviceAppMgtAndroidManagedAppProtection, set-MgDeviceAppMgtTargetedManagedAppConfiguration, Invoke-MgTargetDeviceAppMgtTargetedManagedAppConfigurationApp, set-AppsHash, set-Timespan, set-JSONstring
+  * Assignments are now set correctly when policy is amended
+  * Configuration will complete even if some parameters missing from config (existing values retained for updates)
+  * Timespan parameters can be entered in config document as either iso8601 duration, timespan string, or set-timespan
+
 # 1.22.720.1
 
 * EXOTransportRule

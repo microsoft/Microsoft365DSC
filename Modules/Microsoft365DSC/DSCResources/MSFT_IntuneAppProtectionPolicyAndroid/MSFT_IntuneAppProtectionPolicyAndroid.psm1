@@ -265,13 +265,6 @@ function Get-TargetResource
                     $policy.add($param, $tmparray)
                 }
 
-                # This is required because the function to add/amend requires a duration and not a timespan
-                <#'Duration'
-                {
-                    $policy.add($param, [System.Xml.XmlConvert]::ToString($policyInfo.$param))
-                }
-                #>
-
                 DEFAULT
                 {$policy.add($param, $policyInfo.$param)}
             }
@@ -549,7 +542,7 @@ function Set-TargetResource
             }
             else
             {
-                write-host 'value' $param 'not specified'
+                #write-host 'value' $param 'not specified'
             }
     }
 
@@ -876,7 +869,7 @@ function Test-TargetResource
     $AppsHash = set-AppsHash -AppGroupType $AppGroupType -apps $apps
     $targetvalues.add('Apps', $AppsHash.Apps)
     $targetvalues.add('AppGroupType', $AppsHash.AppGroupType)
-    # wipe out the current apps value for if AppGroupType is anything but selectedpublicapps to match the appshash values
+    # wipe out the current apps value if AppGroupType is anything but selectedpublicapps to match the appshash values
     if ($CurrentValues.AppGroupType -ne 'selectedPublicApps') { $CurrentValues.Apps = @()}
 
 
