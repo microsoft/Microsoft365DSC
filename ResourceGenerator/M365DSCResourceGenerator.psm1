@@ -273,9 +273,9 @@ function Get-ParameterBlockInformation
                         }
                         catch
                         {
-                            $typeDefinition=@{'FullName'="Microsoft.Graph.PowerShell.Models.IMicrosoftGraph$typeName[]"}
+                            $typeDefinition=@{'FullName'="Microsoft.Graph.PowerShell.Models.IMicrosoftGraph$typeName"}
                         }
-                        $type=$typeDefinition.Fullname
+                        $type=$typeDefinition.Fullname +"[]"
                     }
                 }
                 "EnumType"
@@ -291,7 +291,7 @@ function Get-ParameterBlockInformation
                     }
                     catch
                     {
-                        $typeDefinition=@{'FullName'="Microsoft.Graph.PowerShell.Models.IMicrosoftGraph$typeName"}
+                        $typeDefinition=@{'FullName'="Microsoft.Graph.PowerShell.Models.IMicrosoftGraph$typeName[]"}
                     }
                     $type=$typeDefinition.Fullname
                 }
@@ -966,6 +966,7 @@ function Get-M365DSCDRGCimInstances
             write-host -Object ($cimInstance.name +": "+$cimInstance.type) -ForegroundColor DarkYellow
 
             $complexTypeName=$cimInstance.Type.replace("microsoft.graph.powershell.models.imicrosoftgraph","")
+            $complexTypeName=$complexTypeName.replace("[]","")
             $declaredProperties = Get-ComplexTypeDefinition `
                                             -CmdletDefinition $CmdletDefinition `
                                             -ComplexTypeName $complexTypeName
