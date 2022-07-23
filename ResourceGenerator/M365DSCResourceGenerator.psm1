@@ -84,7 +84,7 @@ function New-M365DSCResourceForGraphCmdLet
     }
 }
 
-function Get-DerivedType
+function Get-CmdletDefinition
 {
     param (
         [Parameter(Mandatory = $true)]
@@ -105,6 +105,7 @@ function Get-DerivedType
     {
         $Version = "cleanbeta"
     }
+
     $rawJson = Invoke-RestMethod -Method Get -Uri "https://metadataexplorerstorage.blob.core.windows.net/`$web/$($Version).js#search:$($Entity)"
     # Clean JSON
     $cleanJsonString = $rawJson.TrimStart("const json = ")
@@ -112,17 +113,77 @@ function Get-DerivedType
     $cleanJsonString = $CleanJsonString -replace ": ]", ": []"
     $targetIndex = $cleanJsonString.IndexOf(";")
     $cleanJsonString = $cleanJsonString.Remove($targetIndex)
-    $entityRelationships = $cleanJsonString | ConvertFrom-Json
+    $cmdletDefinition = $cleanJsonString | ConvertFrom-Json
 
-    $returnValue = $entityRelationships | Where-Object -FilterScript { $_.BaseType -eq $Entity }
+    return $cmdletDefinition
+}
+function Get-DerivedType
+{
+    param (
+        [Parameter(Mandatory = $true)]
+        $CmdletDefinition,
+
+        [Parameter(Mandatory = $true)]
+        [string]
+        $Entity
+    )
+
+    $enumTypes= $CmdletDefinition | Where-Object -FilterScript { $_.ItemType -eq 'EnumType' }
+    $complexTypes= $CmdletDefinition | Where-Object -FilterScript { $_.ItemType -eq 'complexType' }
+
+    $returnValue = $CmdletDefinition | Where-Object -FilterScript { $_.BaseType -eq $Entity }
     # Multiple Result
 
     if ($null -eq $returnValue)
     {
-        $returnValue = $entityRelationships | Where-Object -FilterScript { $_.Name -eq $Entity }
+        $returnValue = $CmdletDefinition | Where-Object -FilterScript { $_.Name -eq $Entity }
         # One Result
     }
+
+    #Retrieve enumType details for each parameters
+    foreach($property in $returnValue.Properties)
+    {
+        if ($property.type -in $enumTypes.Name)
+        {
+            $enumType=$enumTypes|where-object -FilterScript {$_.Name -eq $property.Type}
+            Add-Member -InputObject $property -MemberType NoteProperty -Name "Members" -Value $enumType.Members
+            $property.Type="EnumType"
+        }
+        if ($property.type -in $complexTypes.Name)
+        {
+            $complexType=$complexTypes|where-object -FilterScript {$_.Name -eq $property.Type}
+            Add-Member -InputObject $property -MemberType NoteProperty -Name "Properties" -Value $complexType.Properties
+            $property.Type="ComplexType"
+        }
+    }
+
     return $returnValue
+}
+
+function Get-ComplexTypeDefinition
+{
+    param (
+        [Parameter(Mandatory = $true)]
+        $CmdletDefinition,
+
+        [Parameter(Mandatory = $true)]
+        [string]
+        $ComplexTypeName
+    )
+
+
+
+    $complexTypeDefinition= $CmdletDefinition | Where-Object -FilterScript { $_.ItemType -eq 'ComplexType' -and $_.Name -eq $ComplexTypeName }
+    $result=@()
+    foreach($property in $complexTypeDefinition.Properties)
+    {
+        $result+=@{
+            'Name'=$property.Name
+            'PropertyType'= Get-M365DSCDRGParameterType -Type $property.Type
+        }
+    }
+
+    return $result
 }
 
 function Get-ParameterBlockInformation
@@ -142,6 +203,7 @@ function Get-ParameterBlockInformation
 
     $Properties | ForEach-Object -Process {
         $property = $_
+        #$property.Name
         $isMandatory = $false
         # Replace this one with the proper mandatory key value
         $cmdletParameter = $DefaultParameterSetProperties | Where-Object -FilterScript { $_.Name -eq $property.Name }
@@ -156,13 +218,14 @@ function Get-ParameterBlockInformation
             $parameterAttribute = "[Parameter()]"
         }
 
-        if ($null -ne $cmdletParameter) {
+        <#if ($null -ne $cmdletParameter) {
             $parameterType = Get-M365DSCDRGParameterType -Type $cmdletParameter.ParameterType.ToString()
         }
         else
-        {
-            <#
+        {#>
+            #write-host ($property|out-string)
             $type = $property.Type
+
             switch -Wildcard ($type)
             {
                 "Edm.*"
@@ -170,22 +233,60 @@ function Get-ParameterBlockInformation
                     $type = $type.Replace('Edm','System')
                 }
                 "C(*)"
+                #Default
                 {
                     $typeName=$type.replace("C(","").replace(")","")
-                    $typeDefinition=(Invoke-Expression "[Microsoft.Graph.PowerShell.Models.IMicrosoftGraph$typeName]" -ErrorAction SilentlyContinue)
-                    $type=$null
-                    if($typeDefinition)
+
+                    if($typeName -like 'edm.*')
                     {
+                        $type = (Get-M365DSCDRGParameterType -Type $typeName) +"[]"
+                    }
+                    else
+                    {
+                        try
+                        {
+                            $typeDefinition=(Invoke-Expression "[Microsoft.Graph.PowerShell.Models.IMicrosoftGraph$typeName]" -ErrorAction Stop)
+                        }
+                        catch
+                        {
+                            $typeDefinition=@{'FullName'="Microsoft.Graph.PowerShell.Models.IMicrosoftGraph$typeName"}
+                        }
                         $type=$typeDefinition.Fullname
                     }
+
+
+
+
                 }
-            }#>
+                "EnumType"
+                {
+                    $type = 'System.String'
+                }
+                "ComplexType"
+                {
+                    $typeName=$property.Name
+                    try
+                    {
+                        $typeDefinition=(Invoke-Expression "[Microsoft.Graph.PowerShell.Models.IMicrosoftGraph$typeName]" -ErrorAction Stop)
+                    }
+                    catch
+                    {
+                        $typeDefinition=@{'FullName'="Microsoft.Graph.PowerShell.Models.IMicrosoftGraph$typeName"}
+                    }
+                    $type=$typeDefinition.Fullname
+                }
+                Default
+                {
+                    write-host ($property|out-string)
+
+                }
+            }
             $parameterType=$null
-            <#if($type)
+            if($type)
             {
                 $parameterType = Get-M365DSCDRGParameterType -Type $type
-            }#>
-        }
+            }
+        #}
 
         $parameterName = $property.Name
         $parameterNameFirstLetter = $property.Name.Substring(0, 1)
@@ -195,12 +296,22 @@ function Get-ParameterBlockInformation
 
         if($parameterType)
         {
-            $parameterBlock.Add(@{
+            $myParam=@{
                     IsMandatory = $isMandatory
                     Attribute   = $parameterAttribute
                     Type        = $parameterType
                     Name        = $parameterName
-                })| Out-Null
+                }
+            if($null -ne $property.Members -and $property.Members.count -gt 0)
+            {
+                $myParam.add('Members',$property.Members)
+            }
+            if($null -ne $property.Properties -and $property.Properties.count -gt 0)
+            {
+                $myParam.add('Properties',$property.Properties)
+            }
+
+            $parameterBlock.Add($myParam)| Out-Null
         }
     }
     return $parameterBlock
@@ -214,35 +325,57 @@ function Get-M365DSCDRGParameterType
         $Type
     )
     $parameterType = ""
-    switch ($Type.ToLower())
+    switch -Wildcard ($Type.ToLower())
     {
         "system.string"
         {
             $parameterType = "System.String"
+            break;
         }
         "system.datetime"
         {
             $parameterType = "System.String"
+            break;
         }
         "system.boolean"
         {
             $parameterType = "System.Boolean"
+            break;
         }
         "system.management.automation.switchparameter"
         {
             $parameterType = "System.Boolean"
+            break;
         }
         "system.int32"
         {
             $parameterType = "System.Int32"
+            break;
         }
         "system.int64"
         {
             $parameterType = "System.Int64"
+            break;
         }
-        "system.string[]"
+        "system.string[[\]]"
         {
             $parameterType = "System.String[]"
+            break;
+        }
+        "system.*"
+        {
+            $parameterType = $_
+            break;
+        }
+        "edm.*"
+        {
+            $parameterType= $Type.replace("Edm","System")
+            break;
+        }
+        "Microsoft.Graph.PowerShell.*"
+        {
+            $parameterType = $_
+            break;
         }
         Default
         {
@@ -284,6 +417,7 @@ function Get-M365DSCDRGParameterTypeForSchema
         }
         Default
         {
+            #write-host -ForegroundColor cyan -object $Type
             $parameterType = "String"
         }
     }
@@ -455,6 +589,14 @@ function New-M365DSCResource
         $APIVersion = 'v1.0',
 
         [Parameter()]
+        [System.String[]]
+        $ParametersToSkip=@(),
+
+        [Parameter()]
+        [System.String]
+        $AdditionalPropertiesType,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential
     )
@@ -511,37 +653,54 @@ function New-M365DSCResource
 
     $actualType = $outputType.Replace("IMicrosoftGraph", "")
 
-    $typeInformation = Get-DerivedType -Entity $actualType `
-        -APIVersion $ApiVersion
+    $cmdletDefinition=Get-CmdletDefinition -Entity $actualType `
+            -APIVersion $ApiVersion
+
+    $typeInformation = Get-DerivedType -CmdletDefinition $cmdletDefinition -Entity $actualType
+
+    #write-host ($typeInformation|out-string)
     if ($typeInformation.GetType().BaseType.Name -eq "Array")
     {
-        $typeInformationChoices = @()
-        for ($i = 0; $i -lt $typeInformation.Count; $i++)
+        if([String]::IsNullOrEmpty($AdditionalPropertiesType))
         {
-            $typeInformationChoices += [System.Management.Automation.Host.ChoiceDescription]("$($typeInformation[$i].Name)")
-        }
-        $typeChoice = $host.UI.PromptForChoice("Additional Type Information", "Please select an addtional type", $typeInformationChoices, 0) + 1
+            $typeInformationChoices = @()
+            for ($i = 0; $i -lt $typeInformation.Count; $i++)
+            {
+                $typeInformationChoices += [System.Management.Automation.Host.ChoiceDescription]("$($typeInformation[$i].Name)")
+            }
+            $typeChoice = $host.UI.PromptForChoice("Additional Type Information", "Please select an addtional type", $typeInformationChoices, 0) + 1
 
-        $selectedODataType = $typeInformation[$typeChoice - 1]
-        $isAdditionalProperty = $false
+
+            $selectedODataType = $typeInformation[$typeChoice - 1]
+        }
+        else
+        {
+            $selectedODataType = $typeInformation|Where-Object -FilterScript {$_.Name -eq $AdditionalPropertiesType}
+        }
+
+        #write-host ($selectedODataType | out-string)
+        $isAdditionalProperty = $true
     }
     else
     {
         $selectedODataType = $typeInformation
         $isAdditionalProperty = $false
     }
-
-    $typeProperties = $selectedODataType.Properties
-
+    #$selectedODataType.Properties|fl *
+    $typeProperties = $selectedODataType.Properties|Where-Object -FilterScript {$_.Name -notin $ParametersToSkip}
+    #$typeProperties
     $null = New-M365DSCResourceFolder -ResourceName $ResourceName -Path $Path
     $moduleFilePath = New-M365DSCModuleFile -ResourceName $ResourceName -Path $Path
     $unitTestPath = New-M365DSCUnitTest -ResourceName $ResourceName -Path $UnitTestPath
+    #$defaultParameterSetProperties.name
 
     $parameterInformation = Get-ParameterBlockInformation -Properties $typeProperties -DefaultParameterSetProperties $defaultParameterSetProperties
+    #write-host ($parameterInformation|out-string)
 
     $script:DiscoveredComplexTypes=@()
     $CimInstances = Get-M365DSCDRGCimInstances -ResourceName $ResourceName `
         -Properties $parameterInformation `
+        -CmdletDefinition $CmdletDefinition `
         -Workload $Workload
 
     $script:DiscoveredComplexTypes=$null
@@ -585,6 +744,8 @@ function New-M365DSCResource
     Write-TokenReplacement -Token "<UpdateCmdLetName>" -Value "Update-$($GraphModuleCmdLetNoun)" -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<RemoveCmdLetName>" -Value "Remove-$($GraphModuleCmdLetNoun)" -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<ODataType>" -Value $selectedODataType.Name -FilePath $moduleFilePath
+    Write-TokenReplacement -Token "<additionalProperties>" -Value $hashtableResults.addtionalProperties -FilePath $moduleFilePath
+
 
     Write-TokenReplacement -Token "<FilterScript>" -Value "DisplayName" -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<FilterScriptShort>" -Value "`$_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.$($selectedODataType.Name)' " -FilePath $moduleFilePath
@@ -679,7 +840,19 @@ function Get-M365DSCDRGCimInstancesSchemaStringContent
                 elseif (-not $property.Type.StartsWith("microsoft.graph.powershell.models."))
                 {
                     $propertyType = Get-M365DSCDRGParameterTypeForSchema -Type $property.Type
-                    $stringResult += "    [Write, Description(`"`")] $($propertyType) $($property.Name)"
+                    $propertySet=""
+                    if($null -ne $property.Members)
+                    {
+                        $mySet=""
+                        foreach($member in $property.Members)
+                        {
+                            $mySet+="`""+$member+"`","
+                        }
+                        $mySet = $mySet.Substring(0,$mySet.Length-1)
+                        $propertySet=", ValueMap{$mySet}, Values{$mySet}"
+                    }
+
+                    $stringResult += "    [Write, Description(`"`")$propertySet] $($propertyType) $($property.Name)"
                     if ($property.IsArray)
                     {
                         $stringResult += "[]"
@@ -715,6 +888,9 @@ function Get-M365DSCDRGCimInstances
         $Properties,
 
         [Parameter()]
+        $CmdletDefinition,
+
+        [Parameter()]
         [System.String[]]
         $DiscoveredComplexTypes = @()
     )
@@ -729,8 +905,8 @@ function Get-M365DSCDRGCimInstances
         $IsArray = $false
         $currentInstance = @{}
         $originalType = $cimInstance.Type
-        $cimInstanceName = $cimInstance.Type -replace "Microsoft.Graph.PowerShell.Models.", ""
-        $cimInstanceName = $cimInstanceName -replace "IMicrosoftGraph", ""
+        $cimInstanceName = $cimInstance.Type -replace "Microsoft.Graph.PowerShell.Models.IMicrosoftGraph", ""
+        #$cimInstanceName = $cimInstanceName -replace "IMicrosoftGraph", ""
         if ($cimInstanceName.EndsWith("[]"))
         {
             $IsArray = $true
@@ -748,26 +924,87 @@ function Get-M365DSCDRGCimInstances
         $cimInstanceName = $Workload + $cimInstanceName
         $currentInstance.Add("Name", $cimInstanceName)
 
-        $objectInstance = Invoke-Expression "[$originalType]"
-        $inheritedInstance=$objectInstance.ImplementedInterfaces|Where-Object -FilterScript {$_.Fullname -like "Microsoft.Graph.PowerShell.Models.*"}
-        $declaredProperties =@()
-        $declaredProperties += $objectInstance.DeclaredProperties
-        $declaredProperties +=$inheritedInstance.DeclaredProperties
+        try
+        {
+            $objectInstance = Invoke-Expression "[$originalType]" -ErrorAction Stop
+        }
+        catch
+        {
+            $objectInstance = $null
+        }
+
+        if($objectInstance)
+        {
+            #write-host -ForegroundColor yellow -Object $objectInstance.name
+            $inheritedInstance=$objectInstance.ImplementedInterfaces|Where-Object -FilterScript {$_.Fullname -like "Microsoft.Graph.PowerShell.Models.*"}
+            $declaredProperties =@()
+            $declaredProperties += $objectInstance.DeclaredProperties
+            $declaredProperties +=$inheritedInstance.DeclaredProperties
+        }
+        else
+        {
+            #write-host -Object ($cimInstance.name +": "+$cimInstance.type) -ForegroundColor DarkYellow
+
+            $complexTypeName=$cimInstance.Type.replace("microsoft.graph.powershell.models.imicrosoftgraph","")
+            $declaredProperties = Get-ComplexTypeDefinition `
+                                            -CmdletDefinition $CmdletDefinition `
+                                            -ComplexTypeName $complexTypeName
+            if($cimInstance.Properties)
+            {
+                foreach($property in $cimInstance.Properties)
+                {
+                    $complexProperty=$CmdletDefinition|Where-Object {($_.ItemType -in ('enumType','complexType')) -and $_.Name -eq $property.Type}
+                    if($complexProperty)
+                    {
+                        $dProp=$declaredProperties|Where-Object -FilterScript{$_.Name -eq $property.Name}
+                        if($complexProperty.ItemType -eq 'enumType')
+                        {
+                            $dProp.add('Members',$complexProperty.Members)
+                        }
+                        else
+                        {
+                            $dProp.PropertyType="microsoft.graph.powershell.models.imicrosoftgraph$($property.Type)"
+                        }
+                    }
+
+                }
+            }
+        }
+
 
         $propertiesValues = @()
         foreach ($declaredProperty in $declaredProperties)
         {
             if(-not [String]::IsNullOrEmpty($declaredProperty.Name))
             {
+
                 $propertyIsArray = $false
                 $currentProperty = @{}
                 $currentProperty.Add("Name", $declaredProperty.Name)
+
+                if($declaredProperty.propertyType -like 'C(*)')
+                {
+                    $declaredProperty.propertyType=$declaredProperty.propertyType.Replace("c(","").replace(")","")
+                    $declaredProperty.propertyType = Get-M365DSCDRGParameterType -Type $declaredProperty.propertyType
+                    if($declaredProperty.propertyType -notlike "System.*")
+                    {
+                        $declaredProperty.propertyType="microsoft.graph.powershell.models.imicrosoftgraph$($declaredProperty.propertyType)"
+                    }
+                    $declaredProperty.propertyType = $declaredProperty.propertyType +"[]"
+                    #write-host -Object ($declaredProperty.name +": "+$declaredProperty.propertyType) -ForegroundColor Red
+                }
 
                 if ($declaredProperty.PropertyType.ToString().EndsWith("[]"))
                 {
                     $propertyIsArray = $true
                 }
                 $currentProperty.Add("IsArray", $propertyIsArray)
+
+                if($declaredProperty.Members)
+                {
+                    $currentProperty.Add("Members", $declaredProperty.Members)
+                }
+
                 $propertyType = $declaredProperty.PropertyType -replace 'System.Nullable`1',''
                 $propertyType = $propertyType -replace [regex]::escape('['), ''
                 $propertyType = $propertyType -replace [regex]::escape(']'), ''
@@ -781,6 +1018,7 @@ function Get-M365DSCDRGCimInstances
                         $subResult = Get-M365DSCDRGCimInstances -Workload $Workload `
                                         -ResourceName $ResourceName `
                                         -Properties $subProperties `
+                                        -CmdletDefinition $CmdletDefinition `
                                         -DiscoveredComplexTypes $DiscoveredComplexTypes
                         $currentProperty.Add("NestedCIM", $subResult)
                     }
@@ -826,7 +1064,18 @@ function New-M365SchemaPropertySet
             else
             {
                 $propertyType = Get-M365DSCDRGParameterTypeForSchema -Type $_.Type
-                $schemaProperties += "    [Write, Description(`"`")] $($propertyType) $($_.Name)"
+                $propertySet=""
+                if($null -ne $_.Members)
+                {
+                    $mySet=""
+                    foreach($member in $_.Members)
+                    {
+                        $mySet+="`""+$member+"`","
+                    }
+                    $mySet = $mySet.Substring(0,$mySet.Length-1)
+                    $propertySet=", ValueMap{$mySet}, Values{$mySet}"
+                }
+                $schemaProperties += "    [Write, Description(`"`")$propertySet] $($propertyType) $($_.Name)"
                 if ($_.Type.EndsWith("[]"))
                 {
                     $schemaProperties += "[]"
@@ -1012,6 +1261,7 @@ function New-M365HashTableMapping
     $complexTypeContent = ""
     $convertToString = ""
     $convertToVariable = ""
+    $addtionalProperties=""
     foreach ($property in $properties)
     {
         $cmdletParameter = $DefaultParameterSetProperties | Where-Object -FilterScript { $_.Name -eq $property.Name }
@@ -1067,6 +1317,7 @@ function New-M365HashTableMapping
                     $propertyNameCamelCaseString = $propertyName.Substring(1)
                     $propertyName = "$($propertyNameFirstLetter)$($propertyNameCamelCaseString)"
                     $hashtable += "            $($parameterName) = `$getValue.AdditionalProperties.$($propertyName) `r`n"
+                    $addtionalProperties+="        `"$($property.Name)`"`r`n"
                 }
                 else
                 {
@@ -1077,6 +1328,7 @@ function New-M365HashTableMapping
     }
 
     $results.Add("ConvertToVariable", $convertToVariable)
+    $results.Add("addtionalProperties", $addtionalProperties)
     $results.Add("ConvertToString", $convertToString)
     $results.Add("StringContent", $hashtable)
     $results.Add("ComplexTypeContent", $complexTypeContent)
@@ -1096,6 +1348,17 @@ function Get-ParameterBlockStringForModule
         if ($_.Name -ne 'LastModifiedDateTime' -and $_.Name -ne 'CreatedDateTime')
         {
             $parameterBlockOutput += "        $($_.Attribute)`r`n"
+            if($null -ne $_.Members)
+            {
+                $validateSet="[ValidateSet("
+                foreach($member in $_.Members)
+                {
+                    $validateSet+="'"+$member+"',"
+                }
+                $validateSet=$validateSet.substring(0,$validateSet.length-1)
+                $validateSet+=")]"
+                $parameterBlockOutput += "        $($ValidateSet)`r`n"
+            }
             $propertyType = $_.Type.ToString()
             if ($propertyType.StartsWith("microsoft.graph.powershell.models."))
             {
@@ -1121,4 +1384,4 @@ function Get-ParameterBlockStringForModule
     return $parameterBlockOutput
 }
 
-Export-ModuleMember -Function Get-MgGraphModuleCmdLetDifference, New-M365DSCResourceForGraphCmdLet, New-M365DSCResource
+Export-ModuleMember -Function Get-MgGraphModuleCmdLetDifference, New-M365DSCResourceForGraphCmdLet, New-M365DSCResource,*

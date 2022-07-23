@@ -147,7 +147,7 @@ function Set-TargetResource
     (
         <#ResourceGenerator
         #region resource generator code
-        <ParameterBlock>
+<ParameterBlock>
         #endregion
         ResourceGenerator#>
 
@@ -220,6 +220,16 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating {$DisplayName}"
+
+        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        foreach($key in $AdditionalProperties.keys)
+        {
+            if($key -ne '@odata.type')
+            {
+                $PSBoundParameters.remove($key)
+            }
+        }
+
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters.Remove("Id") | Out-Null
         $CreateParameters.Remove("Verbose") | Out-Null
@@ -232,7 +242,11 @@ function Set-TargetResource
             }
         }
 
-        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        if($AdditionalProperties)
+        {
+            $UpdateParameters.add('AdditionalProperties',$AdditionalProperties)
+        }
+
         <#ResourceGenerator
         #region resource generator code
         <NewCmdLetName> @CreateParameters
@@ -242,6 +256,16 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating {$DisplayName}"
+
+        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        foreach($key in $AdditionalProperties.keys)
+        {
+            if($key -ne '@odata.type')
+            {
+                $PSBoundParameters.remove($key)
+            }
+        }
+
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
         $UpdateParameters.Remove("Id") | Out-Null
         $UpdateParameters.Remove("Verbose") | Out-Null
@@ -253,6 +277,12 @@ function Set-TargetResource
                 $UpdateParameters[$key]=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters[$key]
             }
         }
+
+        if($AdditionalProperties)
+        {
+            $UpdateParameters.add('AdditionalProperties',$AdditionalProperties)
+        }
+
         <#ResourceGenerator
         #region resource generator code
         <UpdateCmdLetName> @UpdateParameters `
@@ -285,7 +315,7 @@ function Test-TargetResource
     (
         <#ResourceGenerator
         #region resource generator code
-        <ParameterBlock>
+<ParameterBlock>
         #endregion
         ResourceGenerator#>
 
@@ -378,8 +408,8 @@ function Test-TargetResource
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+    #Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    #Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
     #Convert any DateTime to String
     foreach ($key in $ValuesToCheck.Keys)
@@ -499,7 +529,7 @@ function Export-TargetResource
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
 
-            <#ConvertComplexToString#>
+<#ConvertComplexToString#>
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
@@ -507,7 +537,7 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential
 
-            <#ConvertComplexToVariable#>
+<#ConvertComplexToVariable#>
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -801,15 +831,23 @@ function Get-M365DSCAdditionalProperties
         $Properties
     )
 
+    $additionalProperties=@(
+<additionalProperties>
+    )
     $results = @{"@odata.type" = "#microsoft.graph.<ODataType>" }
-    foreach ($property in $properties.Keys)
+    $cloneProperties=$Properties.clone()
+    foreach ($property in $cloneProperties.Keys)
     {
-        if ($property -ne 'Verbose')
+        if ($property -in ($additionalProperties))
         {
             $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
             $propertyValue = $properties.$property
             $results.Add($propertyName, $propertyValue)
         }
+    }
+    if($results.Count -eq 1)
+    {
+        return $null
     }
     return $results
 }
