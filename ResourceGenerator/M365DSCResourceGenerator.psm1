@@ -171,8 +171,6 @@ function Get-ComplexTypeDefinition
         $ComplexTypeName
     )
 
-
-
     $complexTypeDefinition= $CmdletDefinition | Where-Object -FilterScript { $_.ItemType -eq 'ComplexType' -and $_.Name -eq $ComplexTypeName }
     $result=@()
     foreach($property in $complexTypeDefinition.Properties)
@@ -180,6 +178,32 @@ function Get-ComplexTypeDefinition
         $result+=@{
             'Name'=$property.Name
             'PropertyType'= Get-M365DSCDRGParameterType -Type $property.Type
+        }
+    }
+
+    return $result
+}
+
+function Get-EnumTypeDefinition
+{
+    param (
+        [Parameter(Mandatory = $true)]
+        $CmdletDefinition,
+
+        [Parameter(Mandatory = $true)]
+        [string]
+        $ComplexTypeName
+    )
+
+    $enumTypes= $CmdletDefinition | Where-Object -FilterScript { $_.ItemType -eq 'EnumType' }
+
+    $enumType=$enumTypes|where-object -FilterScript {$_.Name -eq $ComplexTypeName}
+    if($enumType)
+    {
+        $result=@{
+            'Name'=$property.Name
+            'PropertyType'= "EnumType"
+            'Members'=$enumType.Members
         }
     }
 
@@ -253,10 +277,6 @@ function Get-ParameterBlockInformation
                         }
                         $type=$typeDefinition.Fullname
                     }
-
-
-
-
                 }
                 "EnumType"
                 {
@@ -943,14 +963,19 @@ function Get-M365DSCDRGCimInstances
         }
         else
         {
-            #write-host -Object ($cimInstance.name +": "+$cimInstance.type) -ForegroundColor DarkYellow
+            write-host -Object ($cimInstance.name +": "+$cimInstance.type) -ForegroundColor DarkYellow
 
             $complexTypeName=$cimInstance.Type.replace("microsoft.graph.powershell.models.imicrosoftgraph","")
             $declaredProperties = Get-ComplexTypeDefinition `
                                             -CmdletDefinition $CmdletDefinition `
                                             -ComplexTypeName $complexTypeName
+
+            write-host -Object ($declaredProperties|out-string) -ForegroundColor cyan
+
             if($cimInstance.Properties)
             {
+                write-host -Object ($cimInstance.name +": "+$cimInstance.type) -ForegroundColor DarkGreen
+
                 foreach($property in $cimInstance.Properties)
                 {
                     $complexProperty=$CmdletDefinition|Where-Object {($_.ItemType -in ('enumType','complexType')) -and $_.Name -eq $property.Type}
@@ -994,6 +1019,15 @@ function Get-M365DSCDRGCimInstances
                     #write-host -Object ($declaredProperty.name +": "+$declaredProperty.propertyType) -ForegroundColor Red
                 }
 
+                if($declaredProperty.propertyType -notlike 'System.*' -and $declaredProperty.propertyType -notlike "microsoft.graph.powershell.models.*")
+                {
+                        $enum=Get-EnumTypeDefinition -CmdletDefinition $CmdletDefinition -ComplexTypeName $declaredProperty.propertyType
+                        if($enum)
+                        {
+                            $declaredProperty.add('Members',$enum.Members)
+                        }
+                }
+
                 if ($declaredProperty.PropertyType.ToString().EndsWith("[]"))
                 {
                     $propertyIsArray = $true
@@ -1015,6 +1049,8 @@ function Get-M365DSCDRGCimInstances
                     if ($script:DiscoveredComplexTypes -notcontains $propertyType)
                     {
                         $subProperties = @{Type = $propertyType}
+                        $subProperties.add('Name', $declaredProperty.Name)
+
                         $subResult = Get-M365DSCDRGCimInstances -Workload $Workload `
                                         -ResourceName $ResourceName `
                                         -Properties $subProperties `
