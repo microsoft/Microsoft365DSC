@@ -69,7 +69,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SpotlightBlockInternetResults = $True
                         SafariBlockAutofill = $True
                         PasswordBlockAutoFill = $True
-                        CompliantAppListType = "FakeStringValue"
+                        PasswordRequiredType = "deviceDefault"
                         PasswordMaximumAttemptCount = 25
                         ClassroomForceAutomaticallyJoinClasses = $True
                         ICloudPrivateRelayBlocked = $True
@@ -86,7 +86,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SoftwareUpdateMajorOSDeferredInstallDelayInDays = 25
                         ContentCachingBlocked = $True
                         ICloudDesktopAndDocumentsBlocked = $True
-                        UpdateDelayPolicy = "FakeStringValue"
+                        UpdateDelayPolicy = "delayMajorOsUpdateVisibility"
                         PasswordPreviousPasswordBlockCount = 25
                         AddingGameCenterFriendsBlocked = $True
                         Id = "FakeStringValue"
@@ -151,7 +151,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SpotlightBlockInternetResults = $True
                         SafariBlockAutofill = $True
                         PasswordBlockAutoFill = $True
-                        CompliantAppListType = "FakeStringValue"
+                        CompliantAppListType = "appsNotInListCompliant"
                         PasswordMaximumAttemptCount = 25
                         ClassroomForceAutomaticallyJoinClasses = $True
                         ICloudPrivateRelayBlocked = $True
@@ -168,7 +168,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SoftwareUpdateMajorOSDeferredInstallDelayInDays = 25
                         ContentCachingBlocked = $True
                         ICloudDesktopAndDocumentsBlocked = $True
-                        UpdateDelayPolicy = "FakeStringValue"
+                        UpdateDelayPolicy = "delayMajorOsUpdateVisibility"
                         PasswordPreviousPasswordBlockCount = 25
                         AddingGameCenterFriendsBlocked = $True
                         Id = "FakeStringValue"
@@ -217,7 +217,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SpotlightBlockInternetResults = $True
                         SafariBlockAutofill = $True
                         PasswordBlockAutoFill = $True
-                        CompliantAppListType = "FakeStringValue"
+                        PasswordRequiredType = "deviceDefault"
                         PasswordMaximumAttemptCount = 25
                         ClassroomForceAutomaticallyJoinClasses = $True
                         ICloudPrivateRelayBlocked = $True
@@ -234,7 +234,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SoftwareUpdateMajorOSDeferredInstallDelayInDays = 25
                         ContentCachingBlocked = $True
                         ICloudDesktopAndDocumentsBlocked = $True
-                        UpdateDelayPolicy = "FakeStringValue"
+                        UpdateDelayPolicy = "delayMajorOsUpdateVisibility"
                         PasswordPreviousPasswordBlockCount = 25
                         AddingGameCenterFriendsBlocked = $True
                         Id = "FakeStringValue"
@@ -296,7 +296,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SpotlightBlockInternetResults = $True
                         SafariBlockAutofill = $True
                         PasswordBlockAutoFill = $True
-                        CompliantAppListType = "FakeStringValue"
+                        PasswordRequiredType = "deviceDefault"
                         PasswordMaximumAttemptCount = 25
                         ClassroomForceAutomaticallyJoinClasses = $True
                         ICloudPrivateRelayBlocked = $True
@@ -313,7 +313,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SoftwareUpdateMajorOSDeferredInstallDelayInDays = 25
                         ContentCachingBlocked = $True
                         ICloudDesktopAndDocumentsBlocked = $True
-                        UpdateDelayPolicy = "FakeStringValue"
+                        UpdateDelayPolicy = "delayMajorOsUpdateVisibility"
                         PasswordPreviousPasswordBlockCount = 25
                         AddingGameCenterFriendsBlocked = $True
                         Id = "FakeStringValue"
@@ -362,7 +362,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SpotlightBlockInternetResults = $True
                         SafariBlockAutofill = $True
                         PasswordBlockAutoFill = $True
-                        CompliantAppListType = "FakeStringValue"
+                        PasswordRequiredType = "deviceDefault"
                         PasswordMaximumAttemptCount = 25
                         ClassroomForceAutomaticallyJoinClasses = $True
                         ICloudPrivateRelayBlocked = $True
@@ -379,7 +379,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SoftwareUpdateMajorOSDeferredInstallDelayInDays = 25
                         ContentCachingBlocked = $True
                         ICloudDesktopAndDocumentsBlocked = $True
-                        UpdateDelayPolicy = "FakeStringValue"
+                        UpdateDelayPolicy = "delayMajorOsUpdateVisibility"
                         PasswordPreviousPasswordBlockCount = 25
                         AddingGameCenterFriendsBlocked = $True
                         Id = "FakeStringValue"
@@ -438,7 +438,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SpotlightBlockInternetResults = $True
                         SafariBlockAutofill = $True
                         PasswordBlockAutoFill = $True
-                        CompliantAppListType = "FakeStringValue"
+                        PasswordRequiredType = "deviceDefault"
                         PasswordMaximumAttemptCount = 25
                         ClassroomForceAutomaticallyJoinClasses = $True
                         ICloudPrivateRelayBlocked = $True
@@ -455,7 +455,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SoftwareUpdateMajorOSDeferredInstallDelayInDays = 25
                         ContentCachingBlocked = $True
                         ICloudDesktopAndDocumentsBlocked = $True
-                        UpdateDelayPolicy = "FakeStringValue"
+                        UpdateDelayPolicy = "delayMajorOsUpdateVisibility"
                         PasswordPreviousPasswordBlockCount = 25
                         AddingGameCenterFriendsBlocked = $True
                         Id = "FakeStringValue"
@@ -504,7 +504,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SpotlightBlockInternetResults = $False
                         SafariBlockAutofill = $False
                         PasswordBlockAutoFill = $False
-                        CompliantAppListType = "FakeStringValue"
+                        PasswordRequiredType = "deviceDefault"
                         PasswordMaximumAttemptCount = 7
                         ClassroomForceAutomaticallyJoinClasses = $False
                         ICloudPrivateRelayBlocked = $False
@@ -521,7 +521,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SoftwareUpdateMajorOSDeferredInstallDelayInDays = 7
                         ContentCachingBlocked = $False
                         ICloudDesktopAndDocumentsBlocked = $False
-                        UpdateDelayPolicy = "FakeStringValue"
+                        UpdateDelayPolicy = "delayMajorOsUpdateVisibility"
                         PasswordPreviousPasswordBlockCount = 7
                         AddingGameCenterFriendsBlocked = $False
                         Id = "FakeStringValue"
@@ -589,7 +589,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SpotlightBlockInternetResults = $True
                         SafariBlockAutofill = $True
                         PasswordBlockAutoFill = $True
-                        CompliantAppListType = "FakeStringValue"
+                        PasswordRequiredType = "deviceDefault"
                         PasswordMaximumAttemptCount = 25
                         ClassroomForceAutomaticallyJoinClasses = $True
                         ICloudPrivateRelayBlocked = $True
@@ -606,7 +606,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SoftwareUpdateMajorOSDeferredInstallDelayInDays = 25
                         ContentCachingBlocked = $True
                         ICloudDesktopAndDocumentsBlocked = $True
-                        UpdateDelayPolicy = "FakeStringValue"
+                        UpdateDelayPolicy = "delayMajorOsUpdateVisibility"
                         PasswordPreviousPasswordBlockCount = 25
                         AddingGameCenterFriendsBlocked = $True
                         Id = "FakeStringValue"
