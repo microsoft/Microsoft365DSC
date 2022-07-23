@@ -273,7 +273,7 @@ function Get-ParameterBlockInformation
                         }
                         catch
                         {
-                            $typeDefinition=@{'FullName'="Microsoft.Graph.PowerShell.Models.IMicrosoftGraph$typeName"}
+                            $typeDefinition=@{'FullName'="Microsoft.Graph.PowerShell.Models.IMicrosoftGraph$typeName[]"}
                         }
                         $type=$typeDefinition.Fullname
                     }

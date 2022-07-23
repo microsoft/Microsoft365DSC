@@ -244,7 +244,7 @@ function Set-TargetResource
 
         if($AdditionalProperties)
         {
-            $UpdateParameters.add('AdditionalProperties',$AdditionalProperties)
+            $CreateParameters.add('AdditionalProperties',$AdditionalProperties)
         }
 
         <#ResourceGenerator
@@ -578,7 +578,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = 'true')]
+        [Parameter()]
         $ComplexObject
     )
 
@@ -628,7 +628,7 @@ function Get-M365DSCDRGComplexTypeToString
     [CmdletBinding()]
     #[OutputType([System.String])]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         $ComplexObject,
 
         [Parameter(Mandatory = $true)]
@@ -856,10 +856,10 @@ function Compare-M365DSCComplexObject
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param(
-        [Parameter(Mandatory = 'true')]
+        [Parameter()]
         [System.Collections.Hashtable]
         $Source,
-        [Parameter(Mandatory = 'true')]
+        [Parameter()]
         [System.Collections.Hashtable]
         $Target
     )
