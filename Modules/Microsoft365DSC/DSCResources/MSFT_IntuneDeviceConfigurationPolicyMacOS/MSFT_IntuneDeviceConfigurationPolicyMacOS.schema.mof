@@ -1,0 +1,131 @@
+[ClassVersion("1.0.0.0")]
+class MSFT_DeviceManagementConfigurationPolicyAssignments
+{
+    [Write, Description("The type of the target assignment."), ValueMap{"#microsoft.graph.groupAssignmentTarget","#microsoft.graph.allLicensedUsersAssignmentTarget","#microsoft.graph.allDevicesAssignmentTarget","#microsoft.graph.exclusionGroupAssignmentTarget","#microsoft.graph.configurationManagerCollectionAssignmentTarget"}, Values{"#microsoft.graph.groupAssignmentTarget","#microsoft.graph.allLicensedUsersAssignmentTarget","#microsoft.graph.allDevicesAssignmentTarget","#microsoft.graph.exclusionGroupAssignmentTarget","#microsoft.graph.configurationManagerCollectionAssignmentTarget"}] String dataType;
+    [Write, Description("The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude."), ValueMap{"none","include","exclude"}, Values{"none","include","exclude"}] String deviceAndAppManagementAssignmentFilterType;
+    [Write, Description("The Id of the filter for the target assignment.")] String deviceAndAppManagementAssignmentFilterId;
+    [Write, Description("The group Id that is the target of the assignment.")] String groupId;
+    [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
+};
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphapplistitem
+{
+    [Write, Description("")] String appId;
+    [Write, Description("")] String appStoreUrl;
+    [Write, Description("")] String name;
+    [Write, Description("")] String publisher;
+};
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphmacosprivacyaccesscontrolitem
+{
+    [Write, Description(""), ValueMap{"notConfigured","enabled","disabled"}, Values{"notConfigured","enabled","disabled"}] String accessibility;
+    [Write, Description(""), ValueMap{"notConfigured","enabled","disabled"}, Values{"notConfigured","enabled","disabled"}] String addressBook;
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphmacosappleeventreceiver")] String appleEventsAllowedReceivers[];
+    [Write, Description("")] Boolean blockCamera;
+    [Write, Description("")] Boolean blockListenEvent;
+    [Write, Description("")] Boolean blockMicrophone;
+    [Write, Description("")] Boolean blockScreenCapture;
+    [Write, Description(""), ValueMap{"notConfigured","enabled","disabled"}, Values{"notConfigured","enabled","disabled"}] String calendar;
+    [Write, Description("")] String codeRequirement;
+    [Write, Description("")] String displayName;
+    [Write, Description(""), ValueMap{"notConfigured","enabled","disabled"}, Values{"notConfigured","enabled","disabled"}] String fileProviderPresence;
+    [Write, Description("")] String identifier;
+    [Write, Description(""), ValueMap{"bundleID","path"}, Values{"bundleID","path"}] String identifierType;
+    [Write, Description(""), ValueMap{"notConfigured","enabled","disabled"}, Values{"notConfigured","enabled","disabled"}] String mediaLibrary;
+    [Write, Description(""), ValueMap{"notConfigured","enabled","disabled"}, Values{"notConfigured","enabled","disabled"}] String photos;
+    [Write, Description(""), ValueMap{"notConfigured","enabled","disabled"}, Values{"notConfigured","enabled","disabled"}] String postEvent;
+    [Write, Description(""), ValueMap{"notConfigured","enabled","disabled"}, Values{"notConfigured","enabled","disabled"}] String reminders;
+    [Write, Description(""), ValueMap{"notConfigured","enabled","disabled"}, Values{"notConfigured","enabled","disabled"}] String speechRecognition;
+    [Write, Description("")] Boolean staticCodeValidation;
+    [Write, Description(""), ValueMap{"notConfigured","enabled","disabled"}, Values{"notConfigured","enabled","disabled"}] String systemPolicyAllFiles;
+    [Write, Description(""), ValueMap{"notConfigured","enabled","disabled"}, Values{"notConfigured","enabled","disabled"}] String systemPolicyDesktopFolder;
+    [Write, Description(""), ValueMap{"notConfigured","enabled","disabled"}, Values{"notConfigured","enabled","disabled"}] String systemPolicyDocumentsFolder;
+    [Write, Description(""), ValueMap{"notConfigured","enabled","disabled"}, Values{"notConfigured","enabled","disabled"}] String systemPolicyDownloadsFolder;
+    [Write, Description(""), ValueMap{"notConfigured","enabled","disabled"}, Values{"notConfigured","enabled","disabled"}] String systemPolicyNetworkVolumes;
+    [Write, Description(""), ValueMap{"notConfigured","enabled","disabled"}, Values{"notConfigured","enabled","disabled"}] String systemPolicyRemovableVolumes;
+    [Write, Description(""), ValueMap{"notConfigured","enabled","disabled"}, Values{"notConfigured","enabled","disabled"}] String systemPolicySystemAdminFiles;
+};
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphmacosappleeventreceiver
+{
+    [Write, Description("")] Boolean allowed;
+    [Write, Description("")] String codeRequirement;
+    [Write, Description("")] String identifier;
+    [Write, Description(""), ValueMap{"bundleID","path"}, Values{"bundleID","path"}] String identifierType;
+};
+
+[ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceConfigurationPolicyMacOS")]
+class MSFT_IntuneDeviceConfigurationPolicyMacOS : OMI_BaseResource
+{
+    [Write, Description("")] String Id;
+    [Write, Description("")] String Description;
+    [Write, Description("")] String DisplayName;
+    [Write, Description("")] Boolean AddingGameCenterFriendsBlocked;
+    [Write, Description("")] Boolean AirDropBlocked;
+    [Write, Description("")] Boolean AppleWatchBlockAutoUnlock;
+    [Write, Description("")] Boolean CameraBlocked;
+    [Write, Description("")] Boolean ClassroomAppBlockRemoteScreenObservation;
+    [Write, Description("")] Boolean ClassroomAppForceUnpromptedScreenObservation;
+    [Write, Description("")] Boolean ClassroomForceAutomaticallyJoinClasses;
+    [Write, Description("")] Boolean ClassroomForceRequestPermissionToLeaveClasses;
+    [Write, Description("")] Boolean ClassroomForceUnpromptedAppAndDeviceLock;
+    [Write, Description(""), ValueMap{"none","appsInListCompliant","appsNotInListCompliant"}, Values{"none","appsInListCompliant","appsNotInListCompliant"}] String CompliantAppListType;
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphapplistitem")] String CompliantAppsList[];
+    [Write, Description("")] Boolean ContentCachingBlocked;
+    [Write, Description("")] Boolean DefinitionLookupBlocked;
+    [Write, Description("")] String EmailInDomainSuffixes[];
+    [Write, Description("")] Boolean EraseContentAndSettingsBlocked;
+    [Write, Description("")] Boolean GameCenterBlocked;
+    [Write, Description("")] Boolean ICloudBlockActivityContinuation;
+    [Write, Description("")] Boolean ICloudBlockAddressBook;
+    [Write, Description("")] Boolean ICloudBlockBookmarks;
+    [Write, Description("")] Boolean ICloudBlockCalendar;
+    [Write, Description("")] Boolean ICloudBlockDocumentSync;
+    [Write, Description("")] Boolean ICloudBlockMail;
+    [Write, Description("")] Boolean ICloudBlockNotes;
+    [Write, Description("")] Boolean ICloudBlockPhotoLibrary;
+    [Write, Description("")] Boolean ICloudBlockReminders;
+    [Write, Description("")] Boolean ICloudDesktopAndDocumentsBlocked;
+    [Write, Description("")] Boolean ICloudPrivateRelayBlocked;
+    [Write, Description("")] Boolean ITunesBlockFileSharing;
+    [Write, Description("")] Boolean ITunesBlockMusicService;
+    [Write, Description("")] Boolean KeyboardBlockDictation;
+    [Write, Description("")] Boolean KeychainBlockCloudSync;
+    [Write, Description("")] Boolean MultiplayerGamingBlocked;
+    [Write, Description("")] Boolean PasswordBlockAirDropSharing;
+    [Write, Description("")] Boolean PasswordBlockAutoFill;
+    [Write, Description("")] Boolean PasswordBlockFingerprintUnlock;
+    [Write, Description("")] Boolean PasswordBlockModification;
+    [Write, Description("")] Boolean PasswordBlockProximityRequests;
+    [Write, Description("")] Boolean PasswordBlockSimple;
+    [Write, Description("")] UInt32 PasswordExpirationDays;
+    [Write, Description("")] UInt32 PasswordMaximumAttemptCount;
+    [Write, Description("")] UInt32 PasswordMinimumCharacterSetCount;
+    [Write, Description("")] UInt32 PasswordMinimumLength;
+    [Write, Description("")] UInt32 PasswordMinutesOfInactivityBeforeLock;
+    [Write, Description("")] UInt32 PasswordMinutesOfInactivityBeforeScreenTimeout;
+    [Write, Description("")] UInt32 PasswordMinutesUntilFailedLoginReset;
+    [Write, Description("")] UInt32 PasswordPreviousPasswordBlockCount;
+    [Write, Description("")] Boolean PasswordRequired;
+    [Write, Description(""), ValueMap{"deviceDefault","alphanumeric","numeric"}, Values{"deviceDefault","alphanumeric","numeric"}] String PasswordRequiredType;
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphmacosprivacyaccesscontrolitem")] String PrivacyAccessControls[];
+    [Write, Description("")] Boolean SafariBlockAutofill;
+    [Write, Description("")] Boolean ScreenCaptureBlocked;
+    [Write, Description("")] UInt32 SoftwareUpdateMajorOSDeferredInstallDelayInDays;
+    [Write, Description("")] UInt32 SoftwareUpdateMinorOSDeferredInstallDelayInDays;
+    [Write, Description("")] UInt32 SoftwareUpdateNonOSDeferredInstallDelayInDays;
+    [Write, Description("")] UInt32 SoftwareUpdatesEnforcedDelayInDays;
+    [Write, Description("")] Boolean SpotlightBlockInternetResults;
+    [Write, Description("")] UInt32 TouchIdTimeoutInHours;
+    [Write, Description(""), ValueMap{"none","delayOSUpdateVisibility","delayAppUpdateVisibility","unknownFutureValue","delayMajorOsUpdateVisibility"}, Values{"none","delayOSUpdateVisibility","delayAppUpdateVisibility","unknownFutureValue","delayMajorOsUpdateVisibility"}] String UpdateDelayPolicy;
+    [Write, Description("")] Boolean WallpaperModificationBlocked;
+
+    [Write, Description("Represents the assignment to the Intune policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];
+
+    [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
+    [Write, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Secret of the Azure Active Directory tenant used for authentication.")] String ApplicationSecret;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+};
