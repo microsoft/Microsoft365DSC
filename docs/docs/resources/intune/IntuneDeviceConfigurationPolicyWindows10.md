@@ -4,6 +4,10 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
+| **LowSeverity** | Write | String | Specifies the action to take when a low severity malware is detected. |deviceDefault, clean, quarantine, remove, allow, userDefined, block|
+| **ModerateSeverity** | Write | String | Specifies the action to take when a moderate severity malware is detected. |deviceDefault, clean, quarantine, remove, allow, userDefined, block|
+| **HighSeverity** | Write | String | Specifies the action to take when a high severity malware is detected. |deviceDefault, clean, quarantine, remove, allow, userDefined, block|
+| **SevereSeverity** | Write | String | Specifies the action to take when a severe malware is detected. |deviceDefault, clean, quarantine, remove, allow, userDefined, block|
 | **DisplayName** | Key | String | Description of the device configuration policy for Windows 10. ||
 | **Description** | Write | String | Display name of the device configuration policy for Windows 10. ||
 | **EnterpriseCloudPrintDiscoveryEndPoint** | Write | String | Endpoint for discovering cloud printers. ||
@@ -69,7 +73,7 @@
 | **DefenderScanType** | Write | String | The defender system scan type. Possible values are: userDefined, disabled, quick, full. ||
 | **DefenderSystemScanSchedule** | Write | String | Defender day of the week for the system scan. Possible values are: userDefined, everyday, sunday, monday, tuesday, wednesday, thursday, friday, saturday. ||
 | **DefenderScheduledScanTime** | Write | String | The defender time for the system scan. ||
-| **DefenderDetectedMalwareActions** | Write | StringArray[] | Gets or sets Defenders actions to take on detected Malware per threat level. ||
+| **DefenderDetectedMalwareActions** | Write | Instance | Gets or sets Defenders actions to take on detected Malware per threat level. ||
 | **DefenderFileExtensionsToExclude** | Write | StringArray[] | File extensions to exclude from scans and real time protection. ||
 | **DefenderFilesAndFoldersToExclude** | Write | StringArray[] | Files and folder to exclude from scans and real time protection. ||
 | **DefenderProcessesToExclude** | Write | StringArray[] | Processes to exclude from scans and real time protection. ||
