@@ -60,6 +60,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     CustomNotificationText        = ''
                     DoNotRewriteUrls              = @('test.contoso.com', 'test.fabrikam.org')
                     EnableForInternalSenders      = $false
+                    EnableSafeLinksForEmail       = $false
+                    EnableSafeLinksForTeams       = $false
+                    EnableSafeLinksForOffice      = $false
                     EnableOrganizationBranding    = $false
                     ScanUrls                      = $false
                     UseTranslatedNotificationText = $false
@@ -91,6 +94,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     CustomNotificationText        = ''
                     DoNotRewriteUrls              = @('test.contoso.com', 'test.fabrikam.org')
                     EnableForInternalSenders      = $false
+                    EnableSafeLinksForEmail       = $false
+                    EnableSafeLinksForTeams       = $false
+                    EnableSafeLinksForOffice      = $false
                     EnableOrganizationBranding    = $false
                     ScanUrls                      = $false
                     UseTranslatedNotificationText = $false
@@ -103,6 +109,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         CustomNotificationText        = ''
                         DoNotRewriteUrls              = @('test.contoso.com', 'test.fabrikam.org')
                         EnableForInternalSenders      = $false
+                        EnableSafeLinksForEmail       = $false
+                        EnableSafeLinksForTeams       = $false
+                        EnableSafeLinksForOffice      = $false
                         EnableOrganizationBranding    = $false
                         ScanUrls                      = $false
                         UseTranslatedNotificationText = $false
@@ -125,6 +134,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     CustomNotificationText        = ''
                     DoNotRewriteUrls              = @('test.contoso.com', 'test.fabrikam.org')
                     EnableForInternalSenders      = $false
+                    EnableSafeLinksForEmail       = $false
+                    EnableSafeLinksForTeams       = $false
+                    EnableSafeLinksForOffice      = $false
                     EnableOrganizationBranding    = $false
                     ScanUrls                      = $false
                     UseTranslatedNotificationText = $false
@@ -139,6 +151,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         CustomNotificationText        = 'This is a custom notification text'
                         DoNotRewriteUrls              = @('test1.contoso.com', 'test.fabrikam.org')
                         EnableForInternalSenders      = $true
+                        EnableSafeLinksForEmail       = $true
+                        EnableSafeLinksForTeams       = $true
+                        EnableSafeLinksForOffice      = $true
                         EnableOrganizationBranding    = $true
                         ScanUrls                      = $true
                         UseTranslatedNotificationText = $true
@@ -170,6 +185,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     CustomNotificationText        = ''
                     DoNotRewriteUrls              = @('test.contoso.com', 'test.fabrikam.org')
                     EnableForInternalSenders      = $false
+                    EnableSafeLinksForEmail       = $false
+                    EnableSafeLinksForTeams       = $false
+                    EnableSafeLinksForOffice      = $false
                     EnableOrganizationBranding    = $false
                     ScanUrls                      = $false
                     UseTranslatedNotificationText = $false
@@ -210,6 +228,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         CustomNotificationText        = ''
                         DoNotRewriteUrls              = @('test.contoso.com', 'test.fabrikam.org')
                         EnableForInternalSenders      = $false
+                        EnableSafeLinksForEmail       = $false
+                        EnableSafeLinksForTeams       = $false
+                        EnableSafeLinksForOffice      = $false
                         EnableOrganizationBranding    = $false
                         ScanUrls                      = $false
                         UseTranslatedNotificationText = $false
