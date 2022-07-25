@@ -536,8 +536,11 @@ function Set-TargetResource
             $SetParameters.Remove('AllowAnonymousUsersToDialOut') | Out-Null
         }
 
-        # TEMPORARLY REMOVING
-        $SetParams.Remove("AllowIPVideo") | Out-Null
+        # TEMPORARLY REMOVINGif ($SetParameters.ContainsKey('AllowAnonymousUsersToDialOut'))
+        if (if ($SetParameters.ContainsKey('AllowIPVideo'))
+        {
+            $SetParams.Remove("AllowIPVideo") | Out-Null
+        }
 
         New-CsTeamsMeetingPolicy @SetParameters
     }
