@@ -28,8 +28,6 @@ class MSFT_IntuneAppProtectionPolicyAndroid : OMI_BaseResource
     [Write, Description("List of IDs representing the Android apps controlled by this protection policy.")] String Apps[];
     [Write, Description("List of IDs of the groups assigned to this Android Protection Policy.")] String Assignments[];
     [Write, Description("List of IDs of the groups that are excluded from this Android Protection Policy.")] String ExcludedGroups[];
-    [Write, Description("Defines whether or not the policy is assigned.")] Boolean IsAssigned;
-    [Write, Description("Specifies how browsers should be managed by the policy.")] String ManagedBrowser;
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
     [Write, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("ID of the Azure Active Directory application to authenticate with.")] String ApplicationId;
