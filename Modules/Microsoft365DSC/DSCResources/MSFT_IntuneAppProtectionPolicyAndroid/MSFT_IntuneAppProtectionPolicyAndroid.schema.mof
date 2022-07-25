@@ -36,4 +36,13 @@ class MSFT_IntuneAppProtectionPolicyAndroid : OMI_BaseResource
     [Write, Description("ID of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Secret of the Azure Active Directory tenant used for authentication.")] String ApplicationSecret;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Indicates in which managed browser(s) that internet links should be opened. When this property is configured, ManagedBrowserToOpenLinksRequired should be true. Possible values are: notConfigured, microsoftEdge."), ValueMap{"notConfigured","microsoftEdge"}, Values{"notConfigured","microsoftEdge"}] String ManagedBrowser;
+    [Write, Description("Versions less than the specified version will block the managed app from accessing company data.")] String MinimumRequiredAppVersion;
+    [Write, Description("Versions less than the specified version will block the managed app from accessing company data.")] String MinimumRequiredOSVersion;
+    [Write, Description("Versions less than the specified version will block the managed app from accessing company data.")] String MinimumRequiredPatchVersion;
+    [Write, Description("Versions less than the specified version will result in warning message on the managed app")] String MinimumWarningAppVersion;
+    [Write, Description("Versions less than the specified version will result in warning message on the managed app")] String MinimumWarningOSVersion;
+    [Write, Description("Versions less than the specified version will result in warning message on the managed app")] String MinimumWarningPatchVersion;
+    [Write, Description("The apps controlled by this protection policy, overrides any values in Apps unless this value is 'selectedPublicApps'."),ValueMap{"allApps", "allMicrosoftApps", "allCoreMicrosoftApps", "selectedPublicApps"}, Values{"allApps", "allMicrosoftApps", "allCoreMicrosoftApps", "selectedPublicApps"}] String AppGroupType;
+    [Write, Description("Indicates if the policy is deployed to any inclusion groups or not. Inherited from targetedManagedAppProtection.")] Boolean IsAssigned;
 };
