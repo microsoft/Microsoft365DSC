@@ -535,6 +535,10 @@ function Set-TargetResource
         {
             $SetParameters.Remove('AllowAnonymousUsersToDialOut') | Out-Null
         }
+
+        # TEMPORARLY REMOVING
+        $SetParams.Remove("AllowIPVideo") | Out-Null
+
         New-CsTeamsMeetingPolicy @SetParameters
     }
     elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
@@ -787,6 +791,9 @@ function Test-TargetResource
     # The AllowAnonymousUsersToDialOut is temporarly disabled. Therefore
     # we can't create or update a policy with it and it needs to be removed;
     $ValuesToCheck.Remove('AllowAnonymousUsersToDialOut') | Out-Null
+
+    # The AllowIPVideo is temporarly not working, therefore we won't check the value.
+    $ValuesToCheck.Remove("AllowIPVideo") | Out-Null
 
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
