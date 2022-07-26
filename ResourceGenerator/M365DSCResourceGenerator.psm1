@@ -1455,7 +1455,7 @@ function Get-M365DSCDRGCimInstances
 
                     $propertyTypeName=$declaredProperty.propertyType.Replace("[]","")
                     $enum=Get-EnumTypeDefinition -CmdletDefinition $CmdletDefinition -ComplexTypeName $propertyTypeName
-                    if($enum)
+                    if($enum -and -not $declaredProperty.Members)
                     {
                         $declaredProperty.add('Members',$enum.Members)
                     }
