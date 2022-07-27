@@ -52,10 +52,6 @@ function Get-TargetResource
 
         [Parameter()]
         [Boolean]
-        $EnableSafeLinksForOffice = $false,
-
-        [Parameter()]
-        [Boolean]
         $DisableUrlRewrite = $false,
 
         #DEPRECATED
@@ -265,10 +261,6 @@ function Set-TargetResource
 
         [Parameter()]
         [Boolean]
-        $EnableSafeLinksForOffice = $false,
-
-        [Parameter()]
-        [Boolean]
         $DisableUrlRewrite = $false,
 
         #DEPRECATED
@@ -440,10 +432,6 @@ function Test-TargetResource
         [Parameter()]
         [Boolean]
         $EnableSafeLinksForEmail = $false,
-
-        [Parameter()]
-        [Boolean]
-        $EnableSafeLinksForOffice = $false,
 
         [Parameter()]
         [Boolean]
