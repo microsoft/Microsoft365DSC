@@ -162,7 +162,6 @@ function Get-TargetResource
                 EnableOrganizationBranding    = $SafeLinksPolicy.EnableOrganizationBranding
                 EnableSafeLinksForTeams       = $SafeLinksPolicy.EnableSafeLinksForTeams
                 EnableSafeLinksForEmail       = $SafeLinksPolicy.EnableSafeLinksForEmail
-                EnableSafeLinksForOffice      = $SafeLinksPolicy.EnableSafeLinksForOffice
                 DisableUrlRewrite             = $SafeLinksPolicy.DisableUrlRewrite
                 #Deprecated
                 #IsEnabled                     = $SafeLinksPolicy.IsEnabled
@@ -351,9 +350,6 @@ function Set-TargetResource
         Write-Verbose -Message "Property IsEnabled is deprecated and will be ignored."
         $SafeLinksPolicyParams.Remove("IsEnabled") | Out-Null
 
-        #25.07.2022 -EnableSafeLinksForOffice documented but not present
-        $SafeLinksPolicyParams.Remove("EnableSafeLinksForOffice") | Out-Null
-
         New-SafeLinksPolicy @SafeLinksPolicyParams
     }
     elseif (('Present' -eq $Ensure ) -and ($null -ne $SafeLinksPolicy))
@@ -368,9 +364,6 @@ function Set-TargetResource
 
         Write-Verbose -Message "Property IsEnabled is deprecated and will be ignored."
         $SafeLinksPolicyParams.Remove("IsEnabled") | Out-Null
-
-        #25.07.2022 -EnableSafeLinksForOffice documented but not present
-        $SafeLinksPolicyParams.Remove("EnableSafeLinksForOffice") | Out-Null
 
         Set-SafeLinksPolicy @SafeLinksPolicyParams -Confirm:$false
     }
