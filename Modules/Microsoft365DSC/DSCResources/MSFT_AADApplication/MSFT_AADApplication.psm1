@@ -640,6 +640,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -680,7 +684,7 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewline
     try
     {
-        $AADApplications = Get-MgApplication -All -ErrorAction Stop
+        $AADApplications = Get-MgApplication -Filter $Filter -All -ErrorAction Stop
         foreach ($AADApp in $AADApplications)
         {
             Write-Host "    |---[$i/$($AADApplications.Count)] $($AADApp.DisplayName)" -NoNewline

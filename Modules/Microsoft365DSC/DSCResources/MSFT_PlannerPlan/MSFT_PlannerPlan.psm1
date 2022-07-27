@@ -315,6 +315,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $ApplicationId,
@@ -354,7 +358,7 @@ function Export-TargetResource
             Write-Host "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.ObjectID)}"
             try
             {
-                [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.ObjectId -ErrorAction 'SilentlyContinue'
+                [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.ObjectId -ErrorAction 'SilentlyContinue' -All:$true -Filter $Filter
 
                 $j = 1
                 foreach ($plan in $plans)

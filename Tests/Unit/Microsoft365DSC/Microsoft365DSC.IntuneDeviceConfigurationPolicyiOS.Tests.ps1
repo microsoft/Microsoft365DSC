@@ -98,7 +98,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GameCenterBlocked                              = $False;
                     GamingBlockGameCenterFriends                   = $True;
                     GamingBlockMultiplayer                         = $False;
-                    Credential                             = $Credential;
+                    Credential                                     = $Credential;
                     HostPairingBlocked                             = $False;
                     iBooksStoreBlocked                             = $False;
                     iBooksStoreBlockErotica                        = $False;

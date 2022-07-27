@@ -259,7 +259,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Credential = $Credential
-                    MaxProcesses       = 16
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {

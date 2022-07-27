@@ -37,6 +37,15 @@
 | **TenantId** | Write | String | ID of the Azure Active Directory tenant used for authentication. ||
 | **ApplicationSecret** | Write | String | Secret of the Azure Active Directory tenant used for authentication. ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
+| **ManagedBrowser** | Write | String | Indicates in which managed browser(s) that internet links should be opened. When this property is configured, ManagedBrowserToOpenLinksRequired should be true. Possible values are: notConfigured, microsoftEdge. |notConfigured, microsoftEdge|
+| **MinimumRequiredAppVersion** | Write | String | Versions less than the specified version will block the managed app from accessing company data. ||
+| **MinimumRequiredOSVersion** | Write | String | Versions less than the specified version will block the managed app from accessing company data. ||
+| **MinimumRequiredPatchVersion** | Write | String | Versions less than the specified version will block the managed app from accessing company data. ||
+| **MinimumWarningAppVersion** | Write | String | Versions less than the specified version will result in warning message on the managed app ||
+| **MinimumWarningOSVersion** | Write | String | Versions less than the specified version will result in warning message on the managed app ||
+| **MinimumWarningPatchVersion** | Write | String | Versions less than the specified version will result in warning message on the managed app ||
+| **AppGroupType** | Write | String | The apps controlled by this protection policy, overrides any values in Apps unless this value is 'selectedPublicApps'. |allApps, allMicrosoftApps, allCoreMicrosoftApps, selectedPublicApps|
+| **IsAssigned** | Write | Boolean | Indicates if the policy is deployed to any inclusion groups or not. Inherited from targetedManagedAppProtection. ||
 
 
 # IntuneAppProtectionPolicyAndroid

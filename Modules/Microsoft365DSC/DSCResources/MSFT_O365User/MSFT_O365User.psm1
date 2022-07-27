@@ -154,7 +154,8 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
-        $user = Get-MgUser -UserId $UserPrincipalName -ErrorAction SilentlyContinue
+        $propertiesToRetrieve = @("UserPrincipalName", "DisplayName", "GivenName", "Surname", "UsageLocation", "City", "Country", "Department", "FacsimileTelephoneNumber", "Mobile", "OfficeLocation", "TelephoneNumber", "PostalCode", "PreferredLanguage", "State", "StreetAddress", "JobTitle", "UserType")
+        $user = Get-MgUser -UserId $UserPrincipalName -Property $propertiesToRetrieve -ErrorAction SilentlyContinue
         if ($null -eq $user)
         {
             Write-Verbose -Message "The specified User doesn't already exist."
@@ -671,6 +672,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -707,7 +712,7 @@ function Export-TargetResource
 
     try
     {
-        $users = Get-MgUser -All -ErrorAction Stop
+        $users = Get-MgUser -Filter $Filter -All:$true -ErrorAction Stop
         $dscContent = ""
         $i = 1
         Write-Host "`r`n" -NoNewline

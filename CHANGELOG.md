@@ -1,5 +1,67 @@
 # Change log for Microsoft365DSC
 
+# 1.22.727.1
+
+* EXOTransportRule
+  * Fixed issue where the MessageContainsDataClassifications property was not properly extracted due to single quote exiting.
+  FIXES [#1820](https://github.com/microsoft/Microsoft365DSC/issues/1820)
+* IntuneAppProtectionPolicyAndroid
+  * Added Configuration Parameters:
+    ManagedBrowser
+    MinimumRequiredAppVersion
+    MinimumRequiredOSVersion
+    MinimumRequiredPatchVersion
+    MinimumWarningAppVersion
+    MinimumWarningOSVersion
+    MinimumWarningPatchVersion
+    AppGroupType
+    IsAssigned
+    FIXES [#1955](https://github.com/microsoft/Microsoft365DSC/issues/1955)
+* IntuneDeviceConfigurationPolicyWindows10
+  * Fixed issue where the edgeSearchEngine value was not properly retrieved.
+  FIXES [#1783](https://github.com/microsoft/Microsoft365DSC/issues/1783)
+* SCSensitivityLabel
+  * Fixed an issue where '$' in the custom wordmark test would cause issue.
+  FIXES [#2067](https://github.com/microsoft/Microsoft365DSC/issues/2067)
+* SPOSite
+  * Fixed owner value for root site.
+  FIXES [#2035](https://github.com/microsoft/Microsoft365DSC/issues/2035)
+* TeamsUser
+  * Fixed the extraction process and removed the multi-threading from the resource.
+  FIXES #1883
+* MISC
+  * Added support for filtering resources instances at extraction time.
+  FIXES [#1691](https://github.com/microsoft/Microsoft365DSC/issues/1691)
+  * REPORT: Fixed an issue where if the ModuleVersion was not specified, that the file would fail to properly get parsed.
+  FIXES [#1970](https://github.com/microsoft/Microsoft365DSC/issues/1970)
+  * Resources implementing the Ensure parameter now defaults its value to $true.
+  FIXES [#1738](https://github.com/microsoft/Microsoft365DSC/issues/1738)
+
+# 1.22.720.1
+
+* EXOTransportRule
+  * Fixed issue where the MessageContainsDataClassifications property was not properly extracted due to single quote exiting.
+  FIXES [#1820](https://github.com/microsoft/Microsoft365DSC/issues/1820)
+* IntuneDeviceConfigurationPolicyWindows10
+  * Fixed issue where the edgeSearchEngine value was not properly retrieved.
+  FIXES [#1783](https://github.com/microsoft/Microsoft365DSC/issues/1783)
+* SCSensitivityLabel
+  * Fixed an issue where '$' in the custom wordmark test would cause issue.
+  FIXES [#2067](https://github.com/microsoft/Microsoft365DSC/issues/2067)
+* SPOSite
+  * Fixed owner value for root site.
+  FIXES [#2035](https://github.com/microsoft/Microsoft365DSC/issues/2035)
+* TeamsUser
+  * Fixed the extraction process and removed the multi-threading from the resource.
+  FIXES #1883
+* MISC
+  * Added support for filtering resources instances at extraction time.
+  FIXES [#1691](https://github.com/microsoft/Microsoft365DSC/issues/1691)
+  * REPORT: Fixed an issue where if the ModuleVersion was not specified, that the file would fail to properly get parsed.
+  FIXES [#1970](https://github.com/microsoft/Microsoft365DSC/issues/1970)
+  * Resources implementing the Ensure parameter now defaults its value to $true.
+  FIXES [#1738](https://github.com/microsoft/Microsoft365DSC/issues/1738)
+
 # 1.22.720.1
 
 * AADAuthorizationPolicy
