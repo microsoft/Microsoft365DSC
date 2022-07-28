@@ -949,6 +949,9 @@ Specifies the password of the PFX file which is used for authentication.
 .Parameter CertificatePath
 Specifies the path of the PFX file which is used for authentication.
 
+.Parameter Filters
+Specifies resource level filters to apply in order to reduce the number of instances exported.
+
 .Example
 Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential
 
@@ -957,6 +960,9 @@ Export-M365DSCConfiguration -Mode 'Default' -ApplicationId '2560bb7c-bc85-415f-a
 
 .Example
 Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential -Path 'C:\DSC\Config.ps1'
+
+.Example
+Export-M365DSCConfiguration -Credential $Credential -Filters @{AADApplication = "DisplayName eq 'MyApp'"}'
 
 .Functionality
 Public
@@ -3535,14 +3541,6 @@ function Test-M365DSCModuleValidity
         Write-Host "There is a newer version of the 'Microsoft365DSC' module available on the gallery."
         Write-Host "To update the module and it's dependencies, run the following commands:"
         Write-Host "Update-Module -Name 'Microsoft365DSC' -Force`nUpdate-M365DSCDependencies -Force`nUninstall-M365DSCOutdatedDependencies" -ForegroundColor Blue
-        # if(!( $UpdateConsent = Read-Host -Prompt "Do you wish to update the M365DSC module and it's dependencies? (Y/N) [Default: 'Y']")) { $UpdateConsent = 'Y' }
-        # if(!( $UpdateConsent -eq 'Y' -or $UpdateConsent -eq 'y' )) { return }
-        # Write-Host "Updating the M365DSC module..." -ForegroundColor Yellow
-        # Update-Module -Name 'Microsoft365DSC' -Force
-        # Write-Host "Updating dependencies..." -ForegroundColor Yellow
-        #Update-M365DSCDependencies -Force
-        # Write-Host "uninstalling outdated installations..." -ForegroundColor Yellow
-        # Uninstall-M365DSCOutdatedDependencies
     }
 }
 Export-ModuleMember -Function @(

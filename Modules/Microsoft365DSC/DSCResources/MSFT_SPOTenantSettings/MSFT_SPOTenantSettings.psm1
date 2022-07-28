@@ -93,6 +93,10 @@ function Get-TargetResource
         $DisabledWebPartIds,
 
         [Parameter()]
+        [System.Boolean]
+        $IsFluidEnabled,
+
+        [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",

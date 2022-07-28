@@ -132,7 +132,7 @@ function Get-TargetResource
                 $tenantName = $TenantId.Split(".")[0]
             }
 
-            foreach ($orgAsset in $orgAssets.OrgAssetsLibraries)
+            foreach ($orgAsset in $orgAssets)
             {
                 $orgLibraryUrl = "https://$tenantName.sharepoint.com/$($orgAsset.libraryurl.DecodedUrl)"
 

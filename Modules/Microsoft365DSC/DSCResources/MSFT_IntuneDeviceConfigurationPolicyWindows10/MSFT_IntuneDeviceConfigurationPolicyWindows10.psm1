@@ -843,7 +843,7 @@ function Get-TargetResource
         [Parameter(Mandatory = $True)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure,
+        $Ensure = $true,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -1069,7 +1069,7 @@ function Get-TargetResource
             EdgeRequireSmartScreen                                  = $policy.AdditionalProperties.edgeRequireSmartScreen
             EdgeEnterpriseModeSiteListLocation                      = $policy.AdditionalProperties.edgeEnterpriseModeSiteListLocation
             EdgeFirstRunUrl                                         = $policy.AdditionalProperties.edgeFirstRunUrl
-            EdgeSearchEngine                                        = $policy.AdditionalProperties.edgeSearchEngine
+            EdgeSearchEngine                                        = $policy.AdditionalProperties.edgeSearchEngine.edgeSearchEngineType
             EdgeHomepageUrls                                        = $policy.AdditionalProperties.edgeHomepageUrls
             EdgeBlockAccessToAboutFlags                             = $policy.AdditionalProperties.edgeBlockAccessToAboutFlags
             SmartScreenBlockPromptOverride                          = $policy.AdditionalProperties.smartScreenBlockPromptOverride
@@ -1986,7 +1986,7 @@ function Set-TargetResource
         [Parameter(Mandatory = $True)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure,
+        $Ensure = $true,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -2914,7 +2914,7 @@ function Test-TargetResource
         [Parameter(Mandatory = $True)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure,
+        $Ensure = $true,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]

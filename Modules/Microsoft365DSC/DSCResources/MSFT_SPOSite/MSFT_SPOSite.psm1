@@ -210,31 +210,11 @@ function Get-TargetResource
         }
 
         $siteOwnerEmail = $site.OwnerEmail
-        if ([System.String]::IsNullOrEmpty($siteOwnerEmail))
+        if ($null -eq $siteOwnerEmail)
         {
-            if ($null -ne $Credential)
-            {
-                $siteOwnerEmail = $Credential.UserName
-            }
-            else
-            {
-                try
-                {
-                    New-M365DSCConnection -Workload "MicrosoftGraph" `
-                        -InboundParameters $PSBoundParameters | Out-Null
-                    $app = Get-MgApplication -Filter "AppId eq '$ApplicationID'"
-                    $owner = (Get-MgApplicationOwner -ApplicationId $app.ObjectId)
-                    $siteOwnerEmail = $owner.UserPrincipalName
-                }
-                catch
-                {
-                    New-M365DSCLogEntry -Error $_ `
-                        -Message "Could not obtain owner for SPOSite {$Url}" `
-                        -Source $MyInvocation.MyCommand.ModuleName
-                    Write-Verbose -Message "Could not obtain owner for SPOSite {$Url}"
-                }
-            }
+            $siteOwnerEmail = $site.Owner
         }
+
         return @{
             Url                                         = $Url
             Title                                       = $site.Title
@@ -267,7 +247,7 @@ function Get-TargetResource
             AnonymousLinkExpirationInDays               = $AnonymousLinkExpirationInDays
             OverrideTenantAnonymousLinkExpirationPolicy = $OverrideTenantAnonymousLinkExpirationPolicy
             Ensure                                      = 'Present'
-            Credential                          = $Credential
+            Credential                                  = $Credential
             ApplicationId                               = $ApplicationId
             TenantId                                    = $TenantId
             ApplicationSecret                           = $ApplicationSecret
