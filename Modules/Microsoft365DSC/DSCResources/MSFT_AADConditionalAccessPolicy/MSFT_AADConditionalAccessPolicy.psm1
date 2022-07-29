@@ -74,10 +74,12 @@ function Get-TargetResource
         $ExcludeLocations,
 
         #ConditionalAccessDevicesCondition
+        #DEPRECATED
         [Parameter()]
         [System.String[]]
         $IncludeDevices,
 
+        #DEPRECATED
         [Parameter()]
         [System.String[]]
         $ExcludeDevices,
@@ -663,9 +665,10 @@ function Get-TargetResource
             #no translation needed, return empty string array if undefined
             IncludeLocations                         = $IncludeLocations
             ExcludeLocations                         = $ExcludeLocations
+
             IncludeDevices                           = [System.String[]](@() + $Policy.Conditions.Devices.IncludeDevices)
-            #no translation needed, return empty string array if undefined
             ExcludeDevices                           = [System.String[]](@() + $Policy.Conditions.Devices.ExcludeDevices)
+
             #no translation needed, return empty string array if undefined
             DeviceFilterMode                         = [System.String]$Policy.Conditions.Devices.DeviceFilter.Mode
             #no translation or conversion needed
@@ -786,10 +789,12 @@ function Set-TargetResource
         $ExcludeLocations,
 
         #ConditionalAccessDevicesCondition
+        #DEPRECATED
         [Parameter()]
         [System.String[]]
         $IncludeDevices,
 
+        #DEPRECATED
         [Parameter()]
         [System.String[]]
         $ExcludeDevices,
@@ -1494,27 +1499,12 @@ function Set-TargetResource
             }
         }
 
-        Write-Verbose -Message "Set-Targetresource: process device states"
+        #DEPRECATED
         if ($IncludeDevices -or $ExcludeDevices)
         {
-            #create and provision Device condition object if used
-            if (-not $conditions.Contains("Devices"))
-            {
-                $conditions.Add("Devices", @{
-                        ExcludeDevices = @()
-                        IncludeDevices = @()
-                    })
-            }
-            else
-            {
-                $conditions.Devices.Add("ExcludeDevices", @())
-                $conditions.Devices.Add("IndludeDevices", @())
-            }
-            $conditions.Devices.IncludeDevices = $IncludeDevices
-            #no translation or conversion needed
-            $conditions.Devices.ExcludeDevices = $ExcludeDevices
-            #no translation or conversion needed
+            Write-Verbose -Message "IncludeDevices and ExcludeDevices parameters are deprecated. These settings will not be applied. Instead, use the DeviceFilterMode and DeviceFilterRule parameters."
         }
+
         Write-Verbose -Message "Set-Targetresource: process device filter"
         if ($DeviceFilterMode -and $DeviceFilterRule)
         {
@@ -1837,10 +1827,12 @@ function Test-TargetResource
         $ExcludeLocations,
 
         #ConditionalAccessDevicesCondition
+        #DEPRECATED
         [Parameter()]
         [System.String[]]
         $IncludeDevices,
 
+        #DEPRECATED
         [Parameter()]
         [System.String[]]
         $ExcludeDevices,
@@ -2040,6 +2032,19 @@ function Export-TargetResource
                     Credential            = $Credential
                 }
                 $Results = Get-TargetResource @Params
+
+                #DEPRECATED
+                if ($Results.IncludeDevices.Length -gt 0)
+                {
+                    Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The Include Devices parameter is deprecated. Instead use the Device Filter Mode and Device Filter Rule parameters in the portal."
+                    $Results.Remove("IncludeDevices") | Out-Null
+                }
+                #DEPRECATED
+                if ($Results.ExcludeDevices.Length -gt 0)
+                {
+                    Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The Exclude Devices parameter is deprecated. Instead use the Device Filter Mode and Device Filter Rule parameters in the portal."
+                    $Results.Remove("ExcludeDevices") | Out-Null
+                }
 
                 if ([System.String]::IsNullOrEmpty($Results.DeviceFilterMode))
                 {
