@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADConditionalAccessPolicy
+  * DEPRECATED then IncludeDevices and ExcludeDevices parameters.
+
 # 1.22.727.1
 
 * EXOTransportRule
