@@ -2308,6 +2308,12 @@ function Assert-M365DSCBlueprint
                 $ResourcesInBluePrint += $resource.ResourceName
             }
         }
+
+        if (!$ResourcesInBluePrint) {
+            Write-Host "Malformed BluePrint, aborting"
+            break
+        }
+
         Write-Host "Selected BluePrint contains ($($ResourcesInBluePrint.Length)) components to assess."
 
         # Call the Export-M365DSCConfiguration cmdlet to extract only the resource
