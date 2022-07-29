@@ -154,7 +154,8 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
-        $user = Get-MgUser -UserId $UserPrincipalName -ErrorAction SilentlyContinue
+        $propertiesToRetrieve = @("UserPrincipalName", "DisplayName", "GivenName", "Surname", "UsageLocation", "City", "Country", "Department", "FacsimileTelephoneNumber", "Mobile", "OfficeLocation", "TelephoneNumber", "PostalCode", "PreferredLanguage", "State", "StreetAddress", "JobTitle", "UserType")
+        $user = Get-MgUser -UserId $UserPrincipalName -Property $propertiesToRetrieve -ErrorAction SilentlyContinue
         if ($null -eq $user)
         {
             Write-Verbose -Message "The specified User doesn't already exist."

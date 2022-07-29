@@ -1,18 +1,32 @@
 {
     "resourceName": "IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager",
     "description": "This resource configures an Intune Endpoint Protection ASR Rules policy for a Windows 10 Device for ConfigManager.",
-    "permissions": [
-        {
-            "read": [
-                {
-                    "name": "DeviceManagementConfiguration.Read.All"
-                }
-            ],
-            "update": [
-                {
-                    "name": "DeviceManagementConfiguration.ReadWrite.All"
-                }
-            ]
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "DeviceManagementConfiguration.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementConfiguration.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "DeviceManagementConfiguration.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementConfiguration.ReadWrite.All"
+                    }
+                ]
+            }
         }
-    ]
+    }
 }

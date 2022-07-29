@@ -394,6 +394,9 @@ function New-M365DSCReportFromConfiguration
         $OutputPath
     )
 
+    # Validate that the latest version of the module is installed.
+    Test-M365DSCModuleValidity
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -829,6 +832,9 @@ function New-M365DSCDeltaReport
         [Array]
         $Delta
     )
+
+    # Validate that the latest version of the module is installed.
+    Test-M365DSCModuleValidity
 
     if ((Test-Path -Path $Source) -eq $false)
     {

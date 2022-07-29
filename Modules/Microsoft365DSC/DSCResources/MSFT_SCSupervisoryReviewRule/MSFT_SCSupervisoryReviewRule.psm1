@@ -61,7 +61,7 @@ function Get-TargetResource
     $nullReturn.Ensure = 'Absent'
     try
     {
-        $RuleObject = Get-SupervisoryReviewRule -Identity $Name -ErrorAction Stop
+        $RuleObject = Get-SupervisoryReviewRule -Identity $Name -ErrorAction SilentlyContinue
 
         if ($null -eq $RuleObject)
         {
@@ -74,12 +74,12 @@ function Get-TargetResource
             $PolicyName = (Get-SupervisoryReviewPolicyV2 -Identity $RuleObject.Policy).Name
 
             $result = @{
-                Name               = $RuleObject.Name
-                Policy             = $PolicyName
-                Condition          = $RuleObject.Condition
-                SamplingRate       = $RuleObject.SamplingRate
-                Ensure             = 'Present'
-                Credential = $Credential
+                Name         = $RuleObject.Name
+                Policy       = $PolicyName
+                Condition    = $RuleObject.Condition
+                SamplingRate = $RuleObject.SamplingRate
+                Ensure       = 'Present'
+                Credential   = $Credential
             }
 
             Write-Verbose -Message "Found SupervisoryReviewRule $($Name)"

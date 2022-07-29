@@ -143,17 +143,46 @@ function Get-DerivedType
     #Retrieve enumType details for each parameters
     foreach($property in $returnValue.Properties)
     {
-        if ($property.type -in $enumTypes.Name)
+        $propertyType=$property.type.replace("C(","").replace(")","")
+        if ($propertytype -in $enumTypes.Name)
         {
-            $enumType=$enumTypes|where-object -FilterScript {$_.Name -eq $property.Type}
+            $enumType=$enumTypes|where-object -FilterScript {$_.Name -eq $propertyType}
             Add-Member -InputObject $property -MemberType NoteProperty -Name "Members" -Value $enumType.Members
-            $property.Type="EnumType"
+            #$property.Type="EnumType"
         }
-        if ($property.type -in $complexTypes.Name)
+        if ($propertyType -in $complexTypes.Name)
         {
-            $complexType=$complexTypes|where-object -FilterScript {$_.Name -eq $property.Type}
-            Add-Member -InputObject $property -MemberType NoteProperty -Name "Properties" -Value $complexType.Properties
-            $property.Type="ComplexType"
+            $complexType=$complexTypes|where-object -FilterScript {$_.Name -eq $propertyType}
+            $derivedComplexTypes= $CmdletDefinition | Where-Object -FilterScript { $_.BaseType -eq $propertyType }
+            $properties=@()
+            if($derivedComplexTypes)
+            {
+                foreach($derivedComplexType in $derivedComplexTypes)
+                {
+                    if('odataType' -notin $properties.Name)
+                    {
+                        $typeProperty=@{
+                            'Name'='odataType'
+                            'Type'='Edm.String'
+                            'Members'=@("#microsoft.graph."+$derivedComplexType.Name)
+                        }
+                        $properties+=$typeProperty
+                    }
+                    else
+                    {
+                        ($properties|Where-Object -FilterScript{$_.Name -eq 'odataType'}).Members+="#microsoft.graph."+$derivedComplexType.Name
+
+                    }
+                    $properties+=$derivedComplexTypes.Properties|Where-Object -FilterScript {$_.Name -notin $properties.Name}
+                }
+            }
+            $properties+=$complexType.Properties|Where-Object -FilterScript {$_.Name -notin $properties.Name}
+            <#if($propertyType -eq 'androidDeviceOwnerGlobalProxy')
+            {
+                write-host ($propertyType+"`r`n"+($properties|out-string))
+            }#>
+            Add-Member -InputObject $property -MemberType NoteProperty -Name "Properties" -Value $properties
+            #$property.Type="ComplexType"
         }
     }
 
@@ -172,13 +201,42 @@ function Get-ComplexTypeDefinition
     )
 
     $complexTypeDefinition= $CmdletDefinition | Where-Object -FilterScript { $_.ItemType -eq 'ComplexType' -and $_.Name -eq $ComplexTypeName }
-    $result=@()
-    foreach($property in $complexTypeDefinition.Properties)
+    $derivedComplexTypes= $CmdletDefinition | Where-Object -FilterScript { $_.BaseType -eq $ComplexTypeName }
+    $properties=@()
+    if($derivedComplexTypes)
     {
-        $result+=@{
+        foreach($derivedComplexType in $derivedComplexTypes)
+                {
+                    if('odataType' -notin $properties.Name)
+                    {
+                        $typeProperty=@{
+                            'Name'='odataType'
+                            'Type'='Edm.String'
+                            'Members'=@("#microsoft.graph."+$derivedComplexType.Name)
+                        }
+                        $properties+=$typeProperty
+                    }
+                    else
+                    {
+                        ($properties|Where-Object -FilterScript{$_.Name -eq 'odataType'}).Members+="#microsoft.graph."+$derivedComplexType.Name
+                    }
+                    $properties+=$derivedComplexTypes.Properties|Where-Object -FilterScript {$_.Name -notin $properties.Name}
+                }
+    }
+    $properties+=$complexTypeDefinition.Properties|Where-Object -FilterScript {$_.Name -notin $properties.Name}
+
+    $result=@()
+    foreach($property in $properties)
+    {
+        $hashProperty=@{
             'Name'=$property.Name
             'PropertyType'= Get-M365DSCDRGParameterType -Type $property.Type
         }
+        if($property.Members)
+        {
+            $hashProperty.add('Members',$property.Members)
+        }
+        $result+=$hashProperty
     }
 
     return $result
@@ -265,6 +323,11 @@ function Get-ParameterBlockInformation
                     {
                         $type = (Get-M365DSCDRGParameterType -Type $typeName) +"[]"
                     }
+                    elseif($property.Members)
+                    {
+                        $type = 'System.String[]'
+
+                    }
                     else
                     {
                         try
@@ -291,13 +354,38 @@ function Get-ParameterBlockInformation
                     }
                     catch
                     {
-                        $typeDefinition=@{'FullName'="Microsoft.Graph.PowerShell.Models.IMicrosoftGraph$typeName[]"}
+                        $typeDefinition=@{'FullName'="Microsoft.Graph.PowerShell.Models.IMicrosoftGraph$typeName"}
                     }
                     $type=$typeDefinition.Fullname
                 }
                 Default
                 {
-                    write-host ($property|out-string)
+                    #write-host ($property|out-string)
+                    if($property.Members)
+                    {
+                        $type = 'System.String'
+
+                    }
+                    elseif($property.Properties)
+                    {
+                        #write-host ($property|out-string) -f Green
+
+                        try
+                        {
+                            $typeDefinition=(Invoke-Expression "[Microsoft.Graph.PowerShell.Models.IMicrosoftGraph$type]" -ErrorAction Stop)
+                        }
+                        catch
+                        {
+                            $typeDefinition=@{'FullName'="Microsoft.Graph.PowerShell.Models.IMicrosoftGraph$type"}
+                        }
+                        $type=$typeDefinition.Fullname
+
+                    }
+                    #Temporary for debugging
+                    else
+                    {
+                        write-host ($property|out-string)
+                    }
 
                 }
             }
@@ -390,6 +478,12 @@ function Get-M365DSCDRGParameterType
         "edm.*"
         {
             $parameterType= $Type.replace("Edm","System")
+            break;
+        }
+        "C(*)"
+        {
+            $typeName=  $Type.replace("C(","").replace(")","")
+            $parameterType= (Get-M365DSCDRGParameterType -Type $typeName)+"[]"
             break;
         }
         "Microsoft.Graph.PowerShell.*"
@@ -857,11 +951,6 @@ function Get-MgDeviceManagementPolicyAssignments
     )
     try
     {
-        if(`$Repository -eq 'deviceConfigurations')
-        {
-            `$APIVersion='v1.0'
-        }
-
         `$deviceManagementPolicyAssignments=@()
 
         `$Uri="https://graph.microsoft.com/`$APIVersion/deviceManagement/`$Repository/`$DeviceManagementPolicyId/assignments"
@@ -939,11 +1028,6 @@ function Update-MgDeviceManagementPolicyAssignments
     )
     try
     {
-        if(`$Repository -eq 'deviceConfigurations')
-        {
-            `$APIVersion='v1.0'
-        }
-
         `$deviceManagementPolicyAssignments=@()
 
         `$Uri="https://graph.microsoft.com/`$APIVersion/deviceManagement/`$Repository/`$DeviceManagementPolicyId/assign"
@@ -1275,6 +1359,7 @@ function Get-M365DSCDRGCimInstances
                 $currentProperty = @{}
                 $currentProperty.Add("Name", $declaredProperty.Name)
 
+                #Renaming Collection type {C(typeName)} to typeName[]
                 if($declaredProperty.propertyType -like 'C(*)')
                 {
                     $declaredProperty.propertyType=$declaredProperty.propertyType.Replace("c(","").replace(")","")
@@ -1284,16 +1369,31 @@ function Get-M365DSCDRGCimInstances
                         $declaredProperty.propertyType="microsoft.graph.powershell.models.imicrosoftgraph$($declaredProperty.propertyType)"
                     }
                     $declaredProperty.propertyType = $declaredProperty.propertyType +"[]"
-                    #write-host -Object ($declaredProperty.name +": "+$declaredProperty.propertyType) -ForegroundColor Red
+                    write-host -Object ($declaredProperty.name +": "+$declaredProperty.propertyType) -ForegroundColor Red
                 }
 
+                #Retrieve Enum members or format Complextype and retrieve  properties from CmdletDefinition
                 if($declaredProperty.propertyType -notlike 'System.*' -and $declaredProperty.propertyType -notlike "microsoft.graph.powershell.models.*")
                 {
-                        $enum=Get-EnumTypeDefinition -CmdletDefinition $CmdletDefinition -ComplexTypeName $declaredProperty.propertyType
-                        if($enum)
-                        {
-                            $declaredProperty.add('Members',$enum.Members)
-                        }
+
+                    $propertyTypeName=$declaredProperty.propertyType.Replace("[]","")
+                    $enum=Get-EnumTypeDefinition -CmdletDefinition $CmdletDefinition -ComplexTypeName $propertyTypeName
+                    if($enum)
+                    {
+                        $declaredProperty.add('Members',$enum.Members)
+                    }
+                    #write-host -object ($propertyTypeName|out-string ) -f Green
+
+                    $complex = Get-ComplexTypeDefinition `
+                        -CmdletDefinition $CmdletDefinition `
+                        -ComplexTypeName $propertyTypeName
+                    if($complex)
+                    {
+                        $declaredProperty.propertyType=$declaredProperty.propertyType.replace($propertyTypeName,"microsoft.graph.powershell.models.imicrosoftgraph$propertyTypeName")
+                        $declaredProperty.add('Properties',$complex)
+                    }
+                    #write-host -object ($complex|out-string ) -f Yellow
+                    #write-host -object ($declaredProperty|out-string ) -f Red
                 }
 
                 if ($declaredProperty.PropertyType.ToString().EndsWith("[]"))
