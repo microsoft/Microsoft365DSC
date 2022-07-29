@@ -506,9 +506,7 @@ function Export-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
-
-    Select-MgProfile -Name 'beta'
+        -ProfileName 'v1.0'
 
     try
     {
