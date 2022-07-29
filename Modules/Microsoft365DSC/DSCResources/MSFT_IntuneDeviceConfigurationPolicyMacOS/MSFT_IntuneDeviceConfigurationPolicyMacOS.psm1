@@ -802,24 +802,27 @@ function Set-TargetResource
         Write-Verbose -Message "Creating {$DisplayName}"
         $PSBoundParameters.Remove("Assignments") | Out-Null
 
-        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
+        $CreateParameters=Rename-M365DSCCimInstanceODataParameter -Properties $CreateParameters
+
+        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($CreateParameters)
         foreach($key in $AdditionalProperties.keys)
         {
             if($key -ne '@odata.type')
             {
-                $PSBoundParameters.remove($key)
+                $keyName=$key.substring(0,1).ToUpper()+$key.substring(1,$key.length-1)
+                $CreateParameters.remove($keyName)
             }
         }
 
-        $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters.Remove("Id") | Out-Null
         $CreateParameters.Remove("Verbose") | Out-Null
 
-        foreach($key in $PSBoundParameters.Keys)
+        foreach($key in ($CreateParameters.clone()).Keys)
         {
-            if($PSBoundParameters[$key].getType().Fullname -like "*CimInstance*")
+            if($CreateParameters[$key].getType().Fullname -like "*CimInstance*")
             {
-                $CreateParameters[$key]=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters[$key]
+                $CreateParameters[$key]=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
             }
         }
 
@@ -848,24 +851,27 @@ function Set-TargetResource
         Write-Verbose -Message "Updating {$DisplayName}"
         $PSBoundParameters.Remove("Assignments") | Out-Null
 
-        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
+        $UpdateParameters=Rename-M365DSCCimInstanceODataParameter -Properties $UpdateParameters
+
+        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($UpdateParameters)
         foreach($key in $AdditionalProperties.keys)
         {
             if($key -ne '@odata.type')
             {
-                $PSBoundParameters.remove($key)
+                $keyName=$key.substring(0,1).ToUpper()+$key.substring(1,$key.length-1)
+                $UpdateParameters.remove($keyName)
             }
         }
 
-        $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
         $UpdateParameters.Remove("Id") | Out-Null
         $UpdateParameters.Remove("Verbose") | Out-Null
 
-        foreach($key in $PSBoundParameters.Keys)
+        foreach($key in ($UpdateParameters.clone()).Keys)
         {
-            if($PSBoundParameters[$key].getType().Fullname -like "*CimInstance*")
+            if($UpdateParameters[$key].getType().Fullname -like "*CimInstance*")
             {
-                $UpdateParameters[$key]=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters[$key]
+                $UpdateParameters[$key]=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters[$key]
             }
         }
 
@@ -1628,6 +1634,10 @@ function Get-M365DSCDRGComplexTypeToString
             }
             else
             {
+                if(-not $isArray)
+                {
+                    $Whitespace= "            "
+                }
                 $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $ComplexObject[$key] -Space ($Whitespace+"    ")
             }
         }
@@ -1701,6 +1711,10 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
         }
         "*.String"
         {
+            if($key -eq '@odata.type')
+            {
+                $key='odataType'
+            }
             $returnValue= $Space + $Key + " = '" + $Value + "'`r`n"
         }
         "*.DateTime"
@@ -1752,6 +1766,48 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
         }
     }
     return $returnValue
+}
+function Rename-M365DSCCimInstanceODataParameter
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = 'true')]
+        [System.Collections.Hashtable]
+        $Properties
+    )
+        $CIMparameters=$Properties.getEnumerator()|Where-Object -FilterScript {$_.value.GetType().Fullname -like '*CimInstance*'}
+        foreach($CIMParam in $CIMparameters)
+        {
+            if($CIMParam.value.GetType().Fullname -like '*[[\]]')
+            {
+                $CIMvalues=@()
+                foreach($item in $CIMParam.value)
+                {
+                    $CIMHash= Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
+                    $keys=($CIMHash.clone()).keys
+                    if($keys -contains 'odataType')
+                    {
+                        $CIMHash.add('@odata.type',$CIMHash.odataType)
+                        $CIMHash.remove('odataType')
+                    }
+                    $CIMvalues+=$CIMHash
+                }
+                $Properties.($CIMParam.key)=$CIMvalues
+            }
+            else
+            {
+                $CIMHash= Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $CIMParam.value
+                $keys=($CIMHash.clone()).keys
+                if($keys -contains 'odataType')
+                {
+                    $CIMHash.add('@odata.type',$CIMHash.odataType)
+                    $CIMHash.remove('odataType')
+                    $Properties.($CIMParam.key)=$CIMHash
+                }
+            }
+        }
+        return $Properties
 }
 function Get-M365DSCAdditionalProperties
 {
@@ -1882,6 +1938,13 @@ function Compare-M365DSCComplexObject
     $keys= $Source.Keys|Where-Object -FilterScript {$_ -ne "PSComputerName"}
     foreach ($key in $keys)
     {
+        write-verbose -message "Comparing key: {$key}"
+        $skey=$key
+        if($key -eq 'odataType')
+        {
+            $skey='@odata.type'
+        }
+
         #Marking Target[key] to null if empty complex object or array
         if($null -ne $Target[$key])
         {
@@ -1904,24 +1967,36 @@ function Compare-M365DSCComplexObject
                 }
             }
         }
-
+        $sourceValue=$Source[$key]
+        $targetValue=$Target[$key]
         #One of the item is null
-        if (($null -eq $Source[$key]) -xor ($null -eq $Target[$key]))
+        if (($null -eq $Source[$skey]) -xor ($null -eq $Target[$key]))
         {
+            if($null -eq $Source[$skey])
+            {
+                $sourceValue="null"
+            }
+
+            if($null -eq $Target[$key])
+            {
+                $targetValue="null"
+            }
+            Write-Verbose -Message "Configuration drift - key: $key Source{$sourceValue} Target{$targetValue}"
             return $false
         }
         #Both source and target aren't null or empty
-        if(($null -ne $Source[$key]) -and ($null -ne $Target[$key]))
+        if(($null -ne $Source[$skey]) -and ($null -ne $Target[$key]))
         {
-            if($Source[$key].getType().FullName -like "*CimInstance*")
+            if($Source[$skey].getType().FullName -like "*CimInstance*")
             {
                 #Recursive call for complex object
                 $compareResult= Compare-M365DSCComplexObject `
-                    -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Source[$key]) `
+                    -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Source[$skey]) `
                     -Target (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Target[$key])
 
                 if(-not $compareResult)
                 {
+                    Write-Verbose -Message "Configuration drift - key: $key Source{$sourceValue} Target{$targetValue}"
                     return $false
                 }
             }
@@ -1929,7 +2004,7 @@ function Compare-M365DSCComplexObject
             {
                 #Simple object comparison
                 $referenceObject=$Target[$key]
-                $differenceObject=$Source[$key]
+                $differenceObject=$Source[$skey]
 
                 $compareResult = Compare-Object `
                     -ReferenceObject ($referenceObject) `
@@ -1937,6 +2012,7 @@ function Compare-M365DSCComplexObject
 
                 if ($null -ne $compareResult)
                 {
+                    Write-Verbose -Message "Configuration drift - key: $key Source{$sourceValue} Target{$targetValue}"
                     return $false
                 }
 
@@ -2012,11 +2088,6 @@ function Get-MgDeviceManagementPolicyAssignments
     )
     try
     {
-        if($Repository -eq 'deviceConfigurations')
-        {
-            $APIVersion='v1.0'
-        }
-
         $deviceManagementPolicyAssignments=@()
 
         $Uri="https://graph.microsoft.com/$APIVersion/deviceManagement/$Repository/$DeviceManagementPolicyId/assignments"
@@ -2094,11 +2165,6 @@ function Update-MgDeviceManagementPolicyAssignments
     )
     try
     {
-        if($Repository -eq 'deviceConfigurations')
-        {
-            $APIVersion='v1.0'
-        }
-
         $deviceManagementPolicyAssignments=@()
 
         $Uri="https://graph.microsoft.com/$APIVersion/deviceManagement/$Repository/$DeviceManagementPolicyId/assign"
