@@ -420,7 +420,7 @@ function Get-ParameterBlockInformation
         $parameterNameFirstLetter = $parameterNameFirstLetter.ToUpper()
         $parameterNameCamelCaseString = $parameterName.Substring(1)
         $parameterName = "$($parameterNameFirstLetter)$($parameterNameCamelCaseString)"
-        $parameterDescription=($PropertiesDefinitions | Where-Object -FilterScript{$_.id -like "*$parameterName*"}).description
+        $parameterDescription=($PropertiesDefinitions | Where-Object -FilterScript{$_.id -like "*$parameterName"}).description
         if(-not [String]::IsNullOrEmpty($parameterDescription))
         {
 
