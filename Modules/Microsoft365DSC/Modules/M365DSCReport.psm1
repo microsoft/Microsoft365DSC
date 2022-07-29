@@ -1069,7 +1069,7 @@ function Initialize-M365DSCReporting
         Write-Verbose "Error trying to remove Module Version"
     }
 
-    if ($IncludeComment)
+    if ($IncludeComments)
     {
         $parsedContent = ConvertTo-DSCObject -Content $fileContent -IncludeComments:$True
     }
