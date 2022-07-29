@@ -115,13 +115,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-PNPOrgAssetsLibrary -MockWith {
                     return @{
-                        OrgAssetsLibraries = @{
                             LibraryUrl = @{
                                 decodedurl = "sites/m365dsc/Branding"
                             }
                         }
                         CdnType            = "Public"
-                    }
                 }
             }
 
@@ -162,13 +160,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-PNPOrgAssetsLibrary -MockWith {
                     return @{
-                        OrgAssetsLibraries = @{
                             LibraryUrl = @{
                                 decodedurl = "sites/m365dsc/Branding"
                             }
                         }
                         CdnType            = "Public"
-                    }
                 }
             }
 
@@ -197,11 +193,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-PNPOrgAssetsLibrary -MockWith {
                     return @{
-                        OrgAssetsLibraries = @{
                             LibraryUrl = @{
                                 decodedurl = "sites/m365dsc/Missing"
                             }
-                        }
+                        
                         CdnType            = "Public"
                         Credential         = $Credential;
                         Ensure             = "Present"

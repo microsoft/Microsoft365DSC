@@ -275,9 +275,11 @@ function Set-TargetResource
 
     foreach ($param in $currentParameters.Keys)
     {
-        if ($currentParameters.$param -ne $currentPolicy.$param)
+        if ($currentParameters.$param -ne $currentPolicy.$param -or
+            ($null -eq $currentParementers.$param -and $null -ne $currentPolicy.$param) -or
+            ($null -ne $currentParementers.$param -and $null -eq $currentPolicy.$param))
         {
-            if ($param -match 'defaultuserrole')
+            if ($param.ToLower() -match 'defaultuserrole')
             {
                 if ($param -like 'Permission*')
                 {
@@ -504,9 +506,7 @@ function Export-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
-
-    Select-MgProfile -Name 'beta'
+        -ProfileName 'v1.0'
 
     try
     {

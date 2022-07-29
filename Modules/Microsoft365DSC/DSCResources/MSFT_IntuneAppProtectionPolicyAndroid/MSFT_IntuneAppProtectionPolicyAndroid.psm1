@@ -46,30 +46,6 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $IsAssigned,
-
-        [Parameter()]
-        [System.String]
-        $ManagedBrowser,
-
-        [Parameter()]
-        [System.String]
-        $MinimumRequiredAppVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumWarningAppVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumRequiredOSVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumWarningOSVersion,
-
-        [Parameter()]
-        [System.Boolean]
         $ManagedBrowserToOpenLinksRequired,
 
         [Parameter()]
@@ -129,12 +105,50 @@ function Get-TargetResource
         $Apps,
 
         [Parameter()]
+        [ValidateSet('allApps', 'allMicrosoftApps', 'allCoreMicrosoftApps', 'selectedPublicApps' )]
+        [System.String]
+        $AppGroupType,
+
+        [Parameter()]
         [System.String[]]
         $Assignments,
 
         [Parameter()]
         [System.String[]]
         $ExcludedGroups,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("notConfigured","microsoftEdge")]
+        $ManagedBrowser,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredOSVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningOSVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsAssigned,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -162,7 +176,7 @@ function Get-TargetResource
         $CertificateThumbprint
     )
     Write-Verbose -Message "Checking for the Intune Android App Protection Policy {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -ProfileName beta `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -199,84 +213,82 @@ function Get-TargetResource
             throw "Multiple Policies with same displayname identified - Module currently only functions with unique names"
         }
 
-        # It may be possible to remove this once basic functionality is in place - output types differ to the graph module object though so implementing basic functionality first
-        $policy = Get-M365DSCIntuneAppProtectionPolicyAndroid -PolicyId $policyInfo.Id
         Write-Verbose -Message "Found Android App Protection Policy {$DisplayName}"
 
         $appsArray = @()
-        if ($null -ne $policy.Apps)
+        if ($null -ne $policyInfo.Apps)
         {
-            foreach ($app in $policy.Apps)
+            foreach ($app in $policyInfo.Apps)
             {
-                $appsArray += $app.mobileAppIdentifier.packageId
+                $appsArray += $app.MobileAppIdentifier.AdditionalProperties.packageId
             }
         }
 
         $assignmentsArray = @()
-        if ($null -ne $policy.Assignments)
-        {
-            $allAssignments = $policy.Assignments.target | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.groupAssignmentTarget' }
-
-            foreach ($assignment in $allAssignments)
-            {
-                $assignmentsArray += $assignment.groupId
-            }
-        }
-
         $exclusionArray = @()
-        if ($null -ne $policy.Assignments)
+        if ($null -ne $policyInfo.Assignments)
         {
-            $allExclusions = $policy.Assignments.target | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.exclusionGroupAssignmentTarget' }
-
-            foreach ($exclusion in $allExclusions)
+            foreach ($assignment in $policyInfo.Assignments)
             {
-                $exclusionArray += $exclusion.groupId
+                switch ($assignment.Target.AdditionalProperties.'@odata.type')
+                {
+                    '#microsoft.graph.groupAssignmentTarget'
+                    {
+                        $assignmentsArray += $assignment.Target.AdditionalProperties.groupId
+                    }
+
+                    '#microsoft.graph.exclusionGroupAssignmentTarget'
+                    {
+                        $exclusionArray += $assignment.Target.AdditionalProperties.groupId
+                    }
+                }
             }
         }
-        return @{
-            DisplayName                             = $policyInfo.DisplayName
-            Description                             = $policy.Description
-            PeriodOfflineBeforeAccessCheck          = $policy.PeriodOfflineBeforeAccessCheck
-            PeriodOnlineBeforeAccessCheck           = $policy.PeriodOnlineBeforeAccessCheck
-            AllowedInboundDataTransferSources       = $policy.AllowedInboundDataTransferSources
-            AllowedOutboundDataTransferDestinations = $policy.AllowedOutboundDataTransferDestinations
-            OrganizationalCredentialsRequired       = $policy.OrganizationalCredentialsRequired
-            AllowedOutboundClipboardSharingLevel    = $policy.AllowedOutboundClipboardSharingLevel
-            DataBackupBlocked                       = $policy.DataBackupBlocked
-            DeviceComplianceRequired                = $policy.DeviceComplianceRequired
-            IsAssigned                              = $policy.IsAssigned
-            ManagedBrowser                          = $policy.ManagedBrowser
-            MinimumRequiredAppVersion               = $policy.MinimumRequiredAppVersion
-            MinimumRequiredOSVersion                = $policy.MinimumRequiredOSVersion
-            MinimumWarningAppVersion                = $policy.MinimumWarningAppVersion
-            MinimumWarningOSVersion                 = $policy.MinimumWarningOSVersion
-            ManagedBrowserToOpenLinksRequired       = $policy.ManagedBrowserToOpenLinksRequired
-            SaveAsBlocked                           = $policy.SaveAsBlocked
-            PeriodOfflineBeforeWipeIsEnforced       = $policy.PeriodOfflineBeforeWipeIsEnforced
-            PinRequired                             = $policy.PinRequired
-            DisableAppPinIfDevicePinIsSet           = $policy.disableAppPinIfDevicePinIsSet
-            MaximumPinRetries                       = $policy.MaximumPinRetries
-            SimplePinBlocked                        = $policy.SimplePinBlocked
-            MinimumPinLength                        = $policy.MinimumPinLength
-            PinCharacterSet                         = $policy.PinCharacterSet
-            AllowedDataStorageLocations             = $policy.AllowedDataStorageLocations
-            ContactSyncBlocked                      = $policy.ContactSyncBlocked
-            PeriodBeforePinReset                    = $policy.PeriodBeforePinReset
-            PrintBlocked                            = $policy.PrintBlocked
-            FingerprintBlocked                      = $policy.FingerprintBlocked
-            Assignments                             = $assignmentsArray
-            ExcludedGroups                          = $exclusionArray
-            Apps                                    = $appsArray
-            Ensure                                  = "Present"
-            Credential                              = $Credential
-            ApplicationId                           = $ApplicationId
-            ApplicationSecret                       = $ApplicationSecret
-            TenantId                                = $TenantId
-            CertificateThumbprint                   = $CertificateThumbprint
+        $Allparams = get-InputParameters
+        $policy = @{}
+
+        #loop regular parameters and add from $polycyinfo
+        foreach ($param in ($Allparams.keys | Where-Object {$allparams.$_.Type -eq 'Parameter'}) )
+        {
+            # we need to process this because reverseDSC doesn't handle certain object types
+            switch ($Allparams.$param.ExportFileType)
+            {
+                'String'
+                {
+                    $policy.add($param, $policyInfo.$param.tostring())
+                }
+
+                'Array'
+                {
+                    $tmparray = @()
+                    $policyInfo.$param | foreach { $tmparray += $_.tostring() }
+                    $policy.add($param, $tmparray)
+                }
+
+                DEFAULT
+                {$policy.add($param, $policyInfo.$param)}
+            }
         }
+        # loop credential parameters and add them from input params
+        foreach ($param in ($Allparams.keys | Where-Object {$allparams.$_.Type -eq 'Credential'}) )
+        {
+            $policy.add($param, (get-variable -name $param).value)
+        }
+        # add complex parameters manually as they all have different requirements - potential to change in future
+        $policy.add('Ensure','Present')
+        $policy.add('Apps', $appsArray)
+        $policy.add('Assignments', $assignmentsArray)
+        $policy.add('ExcludedGroups', $exclusionArray)
+        $policy.add('AppGroupType', $policyInfo.AppGroupType)
+        # add Id for use in set function
+        $policy.add('Id', $policyInfo.Id)
+
+
+        return $policy
     }
     catch
     {
+        write-Verbose -message "ERROR on get-targetresource for $displayName"
         try
         {
             Write-Verbose -Message $_
@@ -340,30 +352,6 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $IsAssigned,
-
-        [Parameter()]
-        [System.String]
-        $ManagedBrowser,
-
-        [Parameter()]
-        [System.String]
-        $MinimumRequiredAppVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumWarningAppVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumRequiredOSVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumWarningOSVersion,
-
-        [Parameter()]
-        [System.Boolean]
         $ManagedBrowserToOpenLinksRequired,
 
         [Parameter()]
@@ -423,12 +411,50 @@ function Set-TargetResource
         $Apps,
 
         [Parameter()]
+        [ValidateSet('allApps', 'allMicrosoftApps', 'allCoreMicrosoftApps', 'selectedPublicApps' )]
+        [System.String]
+        $AppGroupType,
+
+        [Parameter()]
         [System.String[]]
         $Assignments,
 
         [Parameter()]
         [System.String[]]
         $ExcludedGroups,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("notConfigured","microsoftEdge")]
+        $ManagedBrowser,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredOSVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningOSVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsAssigned,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -478,48 +504,99 @@ function Set-TargetResource
         Throw 'Error when searching for current policy details - Please check verbose output for further detail'
 
     }
-
-    $setParams = $PSBoundParameters
-    $setParams.Remove("Ensure") | Out-Null
-    $setParams.Remove("Credential") | Out-Null
-    if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
-    {
-        Write-Verbose -Message "Creating new Android App Protection Policy {$DisplayName}"
-        $JsonContent = Get-M365DSCIntuneAppProtectionPolicyAndroidJSON -Parameters $PSBoundParameters
-        Write-Verbose -Message "JSON: $JsonContent"
-        New-M365DSCIntuneAppProtectionPolicyAndroid -JSONContent $JsonContent
-
-        $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'" `
-            -ErrorAction Stop
-        $assignmentJSON = Get-M365DSCIntuneAppProtectionPolicyAndroidAssignmentJson -Assignments $Assignments `
-            -Exclusions $ExcludedGroups
-
-        Set-M365DSCIntuneAppProtectionPolicyAndroidAssignment -JsonContent $assignmentJSON `
-            -PolicyId $policyInfo.Id
-    }
-    elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
-    {
-        Write-Verbose -Message "Updating existing Android App Protection Policy {$DisplayName}"
-        $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'" `
-            -ErrorAction Stop
-
-        $JsonContent = Get-M365DSCIntuneAppProtectionPolicyAndroidJSON -Parameters $PSBoundParameters `
-            -IncludeApps $false
-        Set-M365DSCIntuneAppProtectionPolicyAndroid -JSONContent $JsonContent `
-            -PolicyId ($policyInfo.id)
-
-        $appJSON = Get-M365DSCIntuneAppProtectionPolicyAndroidAppsJSON -Parameters $PSBoundParameters
-        Set-M365DSCIntuneAppProtectionPolicyAndroidApps -JSONContent $appJSON `
-            -PolicyId $policyInfo.Id
-
-    }
-    elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
+    if (($Ensure -eq 'Absent') -and ($currentPolicy.Ensure -eq 'Present'))
     {
         Write-Verbose -Message "Removing Android App Protection Policy {$DisplayName}"
-        $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'" `
-            -ErrorAction Stop
-        Remove-MgDeviceAppManagementAndroidManagedAppProtection -AndroidManagedAppProtectionId $policyInfo.id
+        Remove-MgDeviceAppManagementAndroidManagedAppProtection -AndroidManagedAppProtectionId $currentPolicy.id
+        # then exit
+        return $true
     }
+
+    $setParams = @{}
+    $assignmentsArray = @()
+    $appsarray = @()
+
+    $configstring = "`r`nConfiguration To Be Applied:`r`n"
+
+    $Allparams = get-InputParameters
+
+    # loop through regular parameters
+    foreach ($param in ($Allparams.keys | Where-Object {$allparams.$_.Type -eq 'Parameter'}) )
+    {
+            if($PSBoundParameters.keys -contains $param )
+            {
+                switch ($Allparams.$param.ExportFileType)
+                {
+                    'Duration'
+                    {
+                        $setParams.add($param, (set-TimeSpan -duration $PSBoundParameters.$param))
+                        $configstring += ($param + ':' + ($setParams.$param.tostring()) + "`r`n")
+                    }
+
+                    default
+                    {
+                        $setParams.add($param, $psboundparameters.$param)
+                        $configstring += ($param + ':' + $setParams.$param + "`r`n")
+                    }
+                }
+            }
+            else
+            {
+                #write-host 'value' $param 'not specified'
+            }
+    }
+
+    # handle complex parameters - manually for now
+    if($PSBoundParameters.keys -contains 'Assignments' )
+    {
+        $PSBoundParameters.Assignments | foreach {
+            if ($_ -ne $null) {$assignmentsArray+= set-JSONstring -id $_ -type 'Assignments'}
+        }
+        $configstring += ( 'Assignments' + ":`r`n" +($PSBoundParameters.Assignments | out-string) + "`r`n" )
+    }
+    if($PSBoundParameters.keys -contains 'ExcludedGroups' )
+    {
+        $PSBoundParameters.ExcludedGroups | foreach {
+            if ($_ -ne $null) {$assignmentsArray+= set-JSONstring -id $_ -type 'ExcludedGroups'}
+        }
+        $configstring += ( 'ExcludedGroups' + ":`r`n" +($PSBoundParameters.ExcludedGroups | out-string) + "`r`n" )
+
+    }
+    # set the apps values
+    $AppsHash = set-AppsHash -AppGroupType $AppGroupType -apps $apps
+    $appshash.Apps | foreach {
+        if ($_ -ne $null) {$appsarray+= set-JSONstring -id $_ -type 'Apps'}
+    }
+    $configstring += ('AppGroupType:' + $appshash.AppGroupType + "`r`n")
+    $configstring += ('Apps' + ":`r`n" +($appshash.Apps | out-string) + "`r`n" )
+
+
+
+
+
+    write-verbose -message $configstring
+
+    if (($Ensure -eq 'Present') -and ($currentPolicy.Ensure -eq 'Absent'))
+    {
+        Write-Verbose -Message "Creating new Android App Protection Policy {$DisplayName}"
+        $setParams.add('Assignments', $assignmentsArray)
+        $newpolicy = New-MgDeviceAppMgtAndroidManagedAppProtection @setParams
+        $setParams.add('AndroidManagedAppProtectionId', $newpolicy.Id)
+
+    }
+    elseif (($Ensure -eq 'Present') -and ($currentPolicy.Ensure -eq 'Present'))
+    {
+        Write-Verbose -Message "Updating existing Android App Protection Policy {$DisplayName}"
+        $setParams.add('AndroidManagedAppProtectionId', $currentPolicy.id)
+        Update-MgDeviceAppMgtAndroidManagedAppProtection @setParams
+
+        Write-Verbose -Message 'Setting Group Assignments...'
+        set-MgDeviceAppMgtTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Assignments $assignmentsArray
+
+    }
+    # now we need to set up the apps
+    write-verbose -message ("Setting Application values of type: " + $AppsHash.AppGroupType)
+    Invoke-MgTargetDeviceAppMgtTargetedManagedAppConfigurationApp -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Apps $appsarray -AppGroupType $AppsHash.AppGroupType
 }
 
 function Test-TargetResource
@@ -570,30 +647,6 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $IsAssigned,
-
-        [Parameter()]
-        [System.String]
-        $ManagedBrowser,
-
-        [Parameter()]
-        [System.String]
-        $MinimumRequiredAppVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumWarningAppVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumRequiredOSVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumWarningOSVersion,
-
-        [Parameter()]
-        [System.Boolean]
         $ManagedBrowserToOpenLinksRequired,
 
         [Parameter()]
@@ -653,12 +706,50 @@ function Test-TargetResource
         $Apps,
 
         [Parameter()]
+        [ValidateSet('allApps', 'allMicrosoftApps', 'allCoreMicrosoftApps', 'selectedPublicApps' )]
+        [System.String]
+        $AppGroupType,
+
+        [Parameter()]
         [System.String[]]
         $Assignments,
 
         [Parameter()]
         [System.String[]]
         $ExcludedGroups,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("notConfigured","microsoftEdge")]
+        $ManagedBrowser,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredOSVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningOSVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsAssigned,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -707,19 +798,89 @@ function Test-TargetResource
 
     }
 
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+    if ($Ensure -eq 'Absent')
+    {
+        if ($currentvalues.Ensure -eq 'Present')
+        {
+            Write-Verbose -Message "Existing Policy {$DisplayName} will be removed"
+            return $False
+        }
+        else
+        {
+            Write-Verbose -Message "Policy {$DisplayName} already removed"
+            return $True
+        }
+    }
 
-    $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $targetvalues = @{}
+
+    $Allparams = get-InputParameters
+
+    ($Allparams.keys | Where-Object {$allparams.$_.Type -eq 'Credential'}) | foreach {
+        $CurrentValues.Remove($_) | out-null
+    }
+
+    # loop through regular parameters
+    foreach ($param in ($Allparams.keys | Where-Object {$allparams.$_.Type -eq 'Parameter'}) )
+    {
+            if($PSBoundParameters.keys -contains $param )
+            {
+                switch ($Allparams.$param.ExportFileType)
+                {
+                    'Duration'
+                    {
+                        $targetvalues.add($param, (set-TimeSpan -duration $PSBoundParameters.$param))
+                    }
+
+                    default
+                    {
+                        $targetvalues.add($param, $psboundparameters.$param)
+                    }
+                }
+            }
+            else
+            {
+                write-verbose -message ("Unspecified Parameter in Config: " + $param + "  Current Value Will be retained: " + $CurrentValues.$param)
+            }
+    }
+
+    # handle complex parameters - manually for now
+    if($PSBoundParameters.keys -contains 'Assignments' )
+    {
+        $targetvalues.add('Assignments', $psboundparameters.Assignments)
+    }
+    else
+    {
+        write-host 'Unspecified Parameter in Config: Assignments - Current Value is:' $CurrentValues.Assignments `
+                "`r`nNOTE: Assignments interacts with other values - not specifying may lead to unexpected output"
+    }
+
+    if($PSBoundParameters.keys -contains 'ExcludedGroups' )
+    {
+        $targetvalues.add('ExcludedGroups', $psboundparameters.ExcludedGroups)
+    }
+    else
+    {
+        write-host 'Unspecified Parameter in Config: ExcludedGroups - Current Value is:' $CurrentValues.ExcludedGroups `
+                "`r`nNOTE: ExcludedGroups interacts with other values - not specifying may lead to unexpected output"
+    }
+
+    # set the apps values
+    $AppsHash = set-AppsHash -AppGroupType $AppGroupType -apps $apps
+    $targetvalues.add('Apps', $AppsHash.Apps)
+    $targetvalues.add('AppGroupType', $AppsHash.AppGroupType)
+    # wipe out the current apps value if AppGroupType is anything but selectedpublicapps to match the appshash values
+    if ($CurrentValues.AppGroupType -ne 'selectedPublicApps') { $CurrentValues.Apps = @()}
+
+
+    Write-Verbose -Message "Current Values: $((Convert-M365DscHashtableToString -Hashtable $CurrentValues) -replace ';', "`r`n")"
+    Write-Verbose -Message "Target Values: $((Convert-M365DscHashtableToString -Hashtable $targetvalues) -replace ';', "`r`n")"
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+        -DesiredValues $targetvalues `
+        -ValuesToCheck $targetvalues.Keys
+        #-verbose
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -797,6 +958,8 @@ function Export-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
             }
             $Results = Get-TargetResource @Params
+            #remove the Id value
+            $Results.remove('Id') | out-null
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -839,319 +1002,158 @@ function Export-TargetResource
     }
 }
 
-function Get-M365DSCIntuneAppProtectionPolicyAndroid
+function set-JSONstring
 {
-    [CmdletBinding()]
-    [OutputType([PSCustomObject])]
     param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $PolicyId
-    )
-    try
-    {
-        $Url = "https://graph.microsoft.com/beta/deviceAppManagement/AndroidManagedAppProtections('$PolicyId')/`?expand=apps,assignments"
-        $response = Invoke-MgGraphRequest -Method Get `
-            -Uri $Url
-        return $response
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-        $tenantIdValue = $Credential.UserName.Split('@')[1]
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $tenantIdValue
-    }
-    return $null
-}
-
-function Get-M365DSCIntuneAppProtectionPolicyAndroidJSON
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Collections.Hashtable]
-        $Parameters,
-
-        [Parameter()]
-        [System.Boolean]
-        $IncludeApps = $true
+        [string]$id,
+        [string]$type
     )
 
-    #region AllowedDataStorageLocations
-    $allowedDataStorageLocations = "["
-    $foundOne = $false
-    foreach ($allowedLocation in $Parameters.AllowedDataStorageLocations)
-    {
-        $foundOne = $true
-        $allowedDataStorageLocations += "`r`n`"$allowedLocation`","
-    }
-    if ($foundOne)
-    {
-        $allowedDataStorageLocations = $allowedDataStorageLocations.TrimEnd(',') + " `r`n"
-    }
-    $allowedDataStorageLocations += "],"
-    #endregion
+    $JsonContent = ''
 
-    #region Apps
-    $appsValue = "["
-    $foundOne = $false
-    foreach ($app in $Parameters.Apps)
+    switch ($type)
     {
-        $foundOne = $true
 
-        $appsValue += @"
-            `r`n{
-                "id":"$($app)",
-                "mobileAppIdentifier": {
-                    "@odata.type": "#microsoft.graph.androidMobileAppIdentifier",
-                    "packageId": "$app"
+        'Apps'
+        {
+            $JsonContent = @"
+                    {
+                    "id":"$($id)",
+                    "mobileAppIdentifier": {
+                        "@odata.type": "#microsoft.graph.AndroidMobileAppIdentifier",
+                        "packageId": "$id"
+                    }
                 }
-            },
-"@
-    }
-    if ($foundOne)
-    {
-        $appsValue = $appsValue.TrimEnd(',') + " `r`n"
-    }
-    $appsValue += "]"
-    #endregion
-    $JsonContent = @"
-    {
-        "@odata.type": "#microsoft.graph.androidManagedAppProtection",
-        "displayName": "$($Parameters.DisplayName)",
-        "description": "$($Parameters.Description)",
-        "periodOfflineBeforeAccessCheck": "$($Parameters.PeriodOfflineBeforeAccessCheck)",
-        "periodOnlineBeforeAccessCheck": "$($Parameters.PeriodOnlineBeforeAccessCheck)",
-        "allowedInboundDataTransferSources": "$($Parameters.AllowedInboundDataTransferSources)",
-        "allowedOutboundDataTransferDestinations": "$($Parameters.AllowedOutboundDataTransferDestinations)",
-        "organizationalCredentialsRequired": $($Parameters.OrganizationalCredentialsRequired.ToString().ToLower()),
-        "allowedOutboundClipboardSharingLevel": "$($Parameters.AllowedOutboundClipboardSharingLevel)",
-        "dataBackupBlocked": $($Parameters.DataBackupBlocked.ToString().ToLower()),
-        "deviceComplianceRequired": $($Parameters.DeviceComplianceRequired.ToString().ToLower()),
-        "managedBrowserToOpenLinksRequired": $($Parameters.ManagedBrowserToOpenLinksRequired.ToString().ToLower()),
-        "saveAsBlocked": $($Parameters.SaveAsBlocked.ToString().ToLower()),
-        "periodOfflineBeforeWipeIsEnforced": "$($Parameters.PeriodOfflineBeforeWipeIsEnforced)",
-        "pinRequired": $($Parameters.PinRequired.ToString().ToLower()),
-        "disableAppPinIfDevicePinIsSet": $($Parameters.DisableAppPinIfDevicePinIsSet.ToString().ToLower()),
-        "maximumPinRetries": $($Parameters.MaximumPinRetries),
-        "simplePinBlocked": $($Parameters.SimplePinBlocked.ToString().ToLower()),
-        "minimumPinLength": $($Parameters.MinimumPinLength),
-        "pinCharacterSet": "$($Parameters.PinCharacterSet)",
-        "contactSyncBlocked": $($Parameters.ContactSyncBlocked.ToString().ToLower()),
-        "periodBeforePinReset": "$($Parameters.PeriodBeforePinReset)",
-        "printBlocked": $($Parameters.PrintBlocked.ToString().ToLower()),
-        "fingerprintBlocked": $($Parameters.FingerprintBlocked.ToString().ToLower()),
-        "allowedDataStorageLocations": $allowedDataStorageLocations
 "@
 
-    if ($IncludeApps)
-    {
-        $JSOnContent += "`"apps`":$appsValue`r`n"
-    }
-    $JsonContent += "}"
-    return $JsonContent
-}
-
-function Get-M365DSCIntuneAppProtectionPolicyAndroidAppsJSON
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Collections.Hashtable]
-        $Parameters
-    )
-
-    #region Apps
-    $appsValue = "["
-    $foundOne = $false
-    foreach ($app in $Parameters.Apps)
-    {
-        $foundOne = $true
-
-        $appsValue += @"
-            `r`n{
-                "id":"$($app)",
-                "mobileAppIdentifier": {
-                    "@odata.type": "#microsoft.graph.AndroidMobileAppIdentifier",
-                    "packageId": "$app"
-                }
-            },
+        }
+        'Assignments'
+        {
+            $JsonContent = @"
+            {
+            "id":"$($id)_incl",
+            "target": {
+                        "@odata.type": "#microsoft.graph.groupAssignmentTarget",
+                        "groupId": "$($id)"
+                    }
+            }
 "@
-    }
-    if ($foundOne)
-    {
-        $appsValue = $appsValue.TrimEnd(',') + " `r`n"
-    }
-    $appsValue += "]"
-    #endregion
-
-    $JsonContent = @"
-    {
-        "apps": $appsValue
-    }
+        }
+        'ExcludedGroups'
+        {
+            $JsonContent = @"
+            {
+            "id":"$($id)_excl",
+            "target": {
+                        "@odata.type": "#microsoft.graph.exclusionGroupAssignmentTarget",
+                        "groupId": "$($id)"
+                    }
+            }
 "@
-    return $JsonContent
-}
 
-function Get-M365DSCIntuneAppProtectionPolicyAndroidAssignmentJSON
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.String[]]
-        $Assignments,
-
-        [Parameter(Mandatory = $false)]
-        [System.String[]]
-        $Exclusions
-    )
-
-    $JsonContent = "{`r`n"
-    $JsonContent += "`"assignments`":[`r`n"
-    foreach ($assignment in $Assignments)
-    {
-        $JsonContent += "    {`"target`":{`r`n"
-        $JsonContent += "        `"groupId`":`"$assignment`",`r`n"
-        $JsonContent += "        `"@odata.type`":`"#microsoft.graph.groupAssignmentTarget`"`r`n"
-        $JsonContent += "    }},"
+        }
     }
-    foreach ($exclusion in $Exclusions)
-    {
-        $JsonContent += "    {`"target`":{`r`n"
-        $JsonContent += "        `"groupId`":`"$exclusion`",`r`n"
-        $JsonContent += "        `"@odata.type`":`"#microsoft.graph.exclusionGroupAssignmentTarget`"`r`n"
-        $JsonContent += "    }},"
-    }
-    $JsonContent = $JsonContent.TrimEnd(',')
-    $JsonContent += "]`r`n"
-    $JsonContent += "`r`n}"
 
     return $JsonContent
+
 }
 
-function New-M365DSCIntuneAppProtectionPolicyAndroid
+function set-Timespan
 {
-    [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $JSONContent
+        [string]$duration
     )
     try
     {
-        $Url = 'https://graph.microsoft.com/beta/deviceAppManagement/managedAppPolicies'
-        Write-Verbose -Message "Creating new Android App Protection policy with JSON payload: `r`n$JSONContent"
-        Invoke-MgGraphRequest -Method POST `
-            -Uri $Url `
-            -Body $JSONContent `
-            -Headers @{"Content-Type" = "application/json" } | Out-Null
+        if ($duration.startswith('P'))
+        {
+            $timespan = [System.Xml.XmlConvert]::ToTimeSpan($duration)
+        }
+        else
+        {
+            $timespan = [TimeSpan]$duration
+        }
     }
     catch
     {
-        Write-Verbose -Message $_
-        $tenantIdValue = $Credential.UserName.Split('@')[1]
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $tenantIdValue
+        throw "Problem converting input to a timespan - If configuration document is using iso8601 string (e.g. PT15M) try using new-timespan (e.g. new-timespan -minutes 15)"
     }
+    return $timespan
+}
+function set-AppsHash
+{
+    param (
+        [string]$AppGroupType,
+        [array]$Apps
+    )
+
+   if ($AppGroupType -eq '')
+    {
+        if ($apps.count -eq 0 ) { $AppGroupType = 'allApps' }
+        else { $AppGroupType = 'selectedPublicApps' }
+        write-verbose -message "setting AppGroupType to $AppGroupType"
+    }
+
+    $appsarray = @()
+    if ($AppGroupType -eq 'selectedPublicApps' )
+    {
+        $appsarray = $apps
+    }
+
+    $AppsHash = @{
+        'AppGroupType' = $AppGroupType;
+        'Apps' = $appsarray
+    }
+
+    return $AppsHash
 }
 
-function Set-M365DSCIntuneAppProtectionPolicyAndroid
+function get-InputParameters
 {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $JSONContent,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $PolicyId
-    )
-    try
-    {
-        $Url = "https://graph.microsoft.com/beta/deviceAppManagement/androidManagedAppProtections('$PolicyId')/"
-        Write-Verbose -Message "Updating Android App Protection policy with JSON payload: `r`n$JSONContent"
-        Invoke-MgGraphRequest -Method PATCH `
-            -Uri $Url `
-            -Body $JSONContent `
-            -Headers @{"Content-Type" = "application/json" } | Out-Null
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-        $tenantIdValue = $Credential.UserName.Split('@')[1]
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $tenantIdValue
-    }
-}
-
-function Set-M365DSCIntuneAppProtectionPolicyAndroidApps
-{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $JSONContent,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $PolicyId
-    )
-    try
-    {
-        $Url = "https://graph.microsoft.com/beta/deviceAppManagement/managedAppPolicies/$PolicyId/targetApps"
-        Write-Verbose -Message "Updating Apps for Android App Protection policy with JSON payload: `r`n$JSONContent"
-        Invoke-MgGraphRequest -Method POST `
-            -Uri $Url `
-            -Body $JSONContent `
-            -Headers @{"Content-Type" = "application/json" } | Out-Null
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-        $tenantIdValue = $Credential.UserName.Split('@')[1]
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $tenantIdValue
-    }
-}
-
-function Set-M365DSCIntuneAppProtectionPolicyAndroidAssignment
-{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $JSONContent,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $PolicyId
-    )
-    try
-    {
-        $Url = "https://graph.microsoft.com/beta/deviceAppManagement/androidManagedAppProtections('$PolicyId')/assign"
-        Write-Verbose -Message "Group Assignment for Android App Protection policy with JSON payload: `r`n$JSONContent"
-        Invoke-MgGraphRequest -Method POST `
-            -Uri $Url `
-            -Body $JSONContent `
-            -Headers @{"Content-Type" = "application/json" } | Out-Null
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-        $tenantIdValue = $Credential.UserName.Split('@')[1]
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $tenantIdValue
-    }
+    return @{
+        AllowedDataStorageLocations              = @{Type = "Parameter"        ; ExportFileType = "Array"; };
+        AllowedInboundDataTransferSources        = @{Type = "Parameter"        ; ExportFileType = "String"; };
+        AllowedOutboundClipboardSharingLevel     = @{Type = "Parameter"        ; ExportFileType = "String"; };
+        AllowedOutboundDataTransferDestinations  = @{Type = "Parameter"        ; ExportFileType = "String"; };
+        ApplicationId                            = @{Type = "Credential"       ; ExportFileType = "NA"; };
+        ApplicationSecret                        = @{Type = "Credential"       ; ExportFileType = "NA"; };
+        AppGroupType                             = @{Type = "ComplexParameter" ; ExportFileType = "NA"; };
+        Apps                                     = @{Type = "ComplexParameter" ; ExportFileType = "NA"; };
+        Assignments                              = @{Type = "ComplexParameter" ; ExportFileType = "NA"; };
+        CertificateThumbprint                    = @{Type = "Credential"       ; ExportFileType = "NA"; };
+        ContactSyncBlocked                       = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        Credential                               = @{Type = "Credential"       ; ExportFileType = "NA"; };
+        DataBackupBlocked                        = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        Description                              = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        DeviceComplianceRequired                 = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        DisableAppPinIfDevicePinIsSet            = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        DisplayName                              = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        Ensure                                   = @{Type = "ComplexParameter" ; ExportFileType = "NA"; };
+        ExcludedGroups                           = @{Type = "ComplexParameter" ; ExportFileType = "NA"; };
+        FingerprintBlocked                       = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        IsAssigned                               = @{Type = "ComplexParameter" ; ExportFileType = "NA"; };
+        ManagedBrowser                           = @{Type = "Parameter"        ; ExportFileType = "String"; };
+        ManagedBrowserToOpenLinksRequired        = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        MaximumPinRetries                        = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        MinimumPinLength                         = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        MinimumRequiredAppVersion                = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        MinimumRequiredOSVersion                 = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        MinimumRequiredPatchVersion              = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        MinimumWarningAppVersion                 = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        MinimumWarningOSVersion                  = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        MinimumWarningPatchVersion               = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        OrganizationalCredentialsRequired        = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        PeriodBeforePinReset                     = @{Type = "Parameter"        ; ExportFileType = "Duration"; };
+        PeriodOfflineBeforeAccessCheck           = @{Type = "Parameter"        ; ExportFileType = "Duration"; };
+        PeriodOfflineBeforeWipeIsEnforced        = @{Type = "Parameter"        ; ExportFileType = "Duration"; };
+        PeriodOnlineBeforeAccessCheck            = @{Type = "Parameter"        ; ExportFileType = "Duration"; };
+        PinCharacterSet                          = @{Type = "Parameter"        ; ExportFileType = "String"; };
+        PinRequired                              = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        PrintBlocked                             = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        SaveAsBlocked                            = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        SimplePinBlocked                         = @{Type = "Parameter"        ; ExportFileType = "NA"; };
+        TenantId                                 = @{Type = "Credential"       ; ExportFileType = "NA"; }
+     }
 }
 
 Export-ModuleMember -Function *-TargetResource
