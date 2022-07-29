@@ -253,7 +253,7 @@ function Get-TargetResource
                     $IncludeUser = $null
                     try
                     {
-                        $IncludeUser = (Get-MgUser -UserId $IncludeUserGUID).userprincipalname
+                        $IncludeUser = (Get-MgUser -UserId $IncludeUserGUID -ErrorAction Stop).userprincipalname
                     }
                     catch
                     {
@@ -302,7 +302,7 @@ function Get-TargetResource
                     $ExcludeUser = $null
                     try
                     {
-                        $ExcludeUser = (Get-MgUser -UserId $ExcludeUserGUID).userprincipalname
+                        $ExcludeUser = (Get-MgUser -UserId $ExcludeUserGUID -ErrorAction Stop).userprincipalname
                     }
                     catch
                     {
@@ -2034,13 +2034,13 @@ function Export-TargetResource
                 $Results = Get-TargetResource @Params
 
                 #DEPRECATED
-                if ($Results.IncludeDevices.Length -gt 0)
+                if ($Results.IncludeDevices)
                 {
                     Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The Include Devices parameter is deprecated. Instead use the Device Filter Mode and Device Filter Rule parameters in the portal."
                     $Results.Remove("IncludeDevices") | Out-Null
                 }
                 #DEPRECATED
-                if ($Results.ExcludeDevices.Length -gt 0)
+                if ($Results.ExcludeDevices)
                 {
                     Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The Exclude Devices parameter is deprecated. Instead use the Device Filter Mode and Device Filter Rule parameters in the portal."
                     $Results.Remove("ExcludeDevices") | Out-Null
