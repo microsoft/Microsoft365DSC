@@ -71,7 +71,7 @@ function Get-TargetResource
                 Comment            = $PolicyObject.Comment
                 Reviewers          = $PolicyObject.Reviewers
                 Ensure             = 'Present'
-                Credential = $Credential
+                Credential         = $Credential
             }
 
             Write-Verbose -Message "Found SupervisoryReviewPolicy $($Name)"
@@ -166,6 +166,37 @@ function Set-TargetResource
         $CreationParams.Remove("Ensure")
         $CreationParams.Remove("Name")
         $CreationParams.Add("Identity", $Name)
+
+        # Reviewers
+        $currentReviewers = $CurrentPolicy.Reviewers
+        $desiredReviewers = $Reviewers
+
+        $diff = Compare-Object -ReferenceObject $currentReviewers -DifferenceObject $desiredReviewers
+
+        $reviewersToAdd = @()
+        $reviewersToRemove = @()
+        foreach ($difference in $diff)
+        {
+            if ($difference.SideIndicator -eq '=>')
+            {
+                $reviewersToAdd += $difference.InputObject
+            }
+            else
+            {
+                $reviewersToRemove += $difference.InputObject
+            }
+        }
+
+        $CreationParams.Remove("Reviewers") | Out-Null
+        if ($reviewersToAdd.Length -gt 0)
+        {
+            $CreationParams.Add("AddReviewers", $reviewersToAdd)
+        }
+        if ($reviewersToRemove.Length -gt 0)
+        {
+            $CreationParams.Add("RemoveReviewers", $reviewersToRemove)
+        }
+
         Set-SupervisoryReviewPolicyV2 @CreationParams
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
