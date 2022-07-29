@@ -1061,8 +1061,11 @@ function Initialize-M365DSCReporting
     try
     {
         $startPosition = $fileContent.IndexOf(" -ModuleVersion")
-        $endPosition = $fileContent.IndexOf("`r", $startPosition)
-        $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
+        if ($startPosition -gt 0)
+        {
+            $endPosition = $fileContent.IndexOf("`r", $startPosition)
+            $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
+        }
     }
     catch
     {
