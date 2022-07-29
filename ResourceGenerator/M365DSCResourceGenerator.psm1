@@ -833,7 +833,8 @@ function New-M365DSCResource
     $cmdletDefinition=Get-CmdletDefinition -Entity $actualType `
             -APIVersion $ApiVersion
 
-    $propertiesDefinitions=Get-PropertiesDefinition -APIVersion $ApiVersion
+    $propertiesDefinitions=@()
+
 
     $typeInformation = Get-DerivedType -CmdletDefinition $cmdletDefinition -Entity $actualType
 
@@ -887,6 +888,7 @@ function New-M365DSCResource
             'DeviceConfiguration'
             {
                 $repository='deviceConfigurations'
+                $propertiesDefinitions=Get-PropertiesDefinition -APIVersion $ApiVersion
             }
         }
 
