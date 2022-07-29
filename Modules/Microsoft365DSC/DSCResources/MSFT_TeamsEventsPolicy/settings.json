@@ -1,0 +1,16 @@
+﻿{
+    "resourceName": "TeamsEventsPolicy",
+    "description": "",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        }
+    }
+}
