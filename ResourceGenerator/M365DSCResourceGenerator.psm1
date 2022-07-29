@@ -674,7 +674,7 @@ function Get-M365DSCHashAsString
         $Values
     )
     $sb = [System.Text.StringBuilder]::New()
-    foreach ($key in $Values.Keys)
+    foreach ($key in ($Values.Keys|Sort-Object -Property $_))
     {
         switch ($Values.$key.GetType().Name)
         {
@@ -987,9 +987,13 @@ function New-M365DSCResource
         $AssignmentsNew+="        {`r`n"
         $AssignmentsNew+="            `$assignmentsHash+=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject `$Assignment`r`n"
         $AssignmentsNew+="        }`r`n"
-        $AssignmentsNew+="        Update-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId `$policy.id ```r`n"
-        $AssignmentsNew+="            -Targets `$assignmentsHash ```r`n"
-        $AssignmentsNew+="            -Repository $repository`r`n"
+        $AssignmentsNew+="`r`n"
+        $AssignmentsNew+="        if(`$policy.id)"
+        $AssignmentsNew+="        {`r`n"
+        $AssignmentsNew+="            Update-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId `$policy.id ```r`n"
+        $AssignmentsNew+="                -Targets `$assignmentsHash ```r`n"
+        $AssignmentsNew+="                -Repository $repository`r`n"
+        $AssignmentsNew+="        }`r`n"
 
         $AssignmentsUpdate+="        `$assignmentsHash=@()`r`n"
         $AssignmentsUpdate+="        foreach(`$assignment in `$Assignments)`r`n"
