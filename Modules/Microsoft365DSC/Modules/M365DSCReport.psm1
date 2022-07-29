@@ -11,10 +11,6 @@ function New-M365DSCConfigurationToHTML
     [OutputType([System.String])]
     Param(
         [Parameter()]
-        [System.String]
-        $ConfigurationPath,
-
-        [Parameter()]
         [Array]
         $ParsedContent,
 
@@ -23,29 +19,15 @@ function New-M365DSCConfigurationToHTML
         $OutputPath,
 
         [Parameter()]
+        [System.String]
+        $TemplateName,
+
+        [Parameter()]
         [Switch]
         $SortProperties
     )
 
-    if ([System.String]::IsNullOrEmpty($ParsedContent))
-    {
-        Write-Output "Loading file '$ConfigurationPath'"
-        $TemplateFile = Get-Item $ConfigurationPath
-        $fileContent = Get-Content $ConfigurationPath -Raw
-        try
-        {
-            $startPosition = $fileContent.IndexOf(" -ModuleVersion")
-            $endPosition = $fileContent.IndexOf("`r", $startPosition)
-            $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
-        }
-        catch
-        {
-            Write-Verbose "Error trying to remove Module Version"
-        }
-        $ParsedContent = ConvertTo-DSCObject -Content $fileContent
-        $TemplateName = $TemplateFile.Name.Split('.')[0]
-    }
-    else
+    if ([System.String]::IsNullOrEmpty($TemplateName))
     {
         $TemplateName = "Configuration Report"
     }
@@ -162,22 +144,14 @@ function New-M365DSCConfigurationToJSON
 {
     [CmdletBinding()]
     Param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $ConfigurationPath,
+        [Parameter()]
+        [Array]
+        $ParsedContent,
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $OutputPath
     )
-
-    $fileContent = Get-Content $ConfigurationPath -Raw
-
-    $startPosition = $fileContent.IndexOf(" -ModuleVersion")
-    $endPosition = $fileContent.IndexOf("`r", $startPosition)
-
-    $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
-    $ParsedContent = ConvertTo-DSCObject -Content $fileContent
 
     $jsonContent = $ParsedContent | ConvertTo-Json
     $jsonContent | Out-File -FilePath $OutputPath
@@ -247,9 +221,9 @@ function New-M365DSCConfigurationToExcel
 {
     [CmdletBinding()]
     Param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $ConfigurationPath,
+        [Parameter()]
+        [Array]
+        $ParsedContent,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -273,11 +247,8 @@ function New-M365DSCConfigurationToExcel
     $report.Range("A1:C1").Borders.Weight = -4138
     $row = 2
 
-    $fileContent = Get-Content $ConfigurationPath -Raw
-    $startPosition = $fileContent.IndexOf(" -ModuleVersion")
-    $endPosition = $fileContent.IndexOf("`r", $startPosition)
-    $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
-    $ParsedContent = ConvertTo-DSCObject -Content $fileContent
+    $parsedContent = Initialize-M365DSCReporting -ConfigurationPath $ConfigurationPath
+
     foreach ($resource in $parsedContent)
     {
         $beginRow = $row
@@ -365,13 +336,13 @@ The path to the exported DSC configuration that the report should be created for
 The output path of the report.
 
 .Example
-New-M365DSCReportFromConfiguration -Type 'HTML' -ConfigurationPath 'C:\DSC\' -OutputPath 'C:\Dsc\M365Report.html'
+New-M365DSCReportFromConfiguration -Type 'HTML' -ConfigurationPath 'C:\DSC\ConfigName.ps1' -OutputPath 'C:\Dsc\M365Report.html'
 
 .Example
-New-M365DSCReportFromConfiguration -Type 'Excel' -ConfigurationPath 'C:\DSC\' -OutputPath 'C:\Dsc\M365Report.xlsx'
+New-M365DSCReportFromConfiguration -Type 'Excel' -ConfigurationPath 'C:\DSC\ConfigName.ps1' -OutputPath 'C:\Dsc\M365Report.xlsx'
 
 .Example
-New-M365DSCReportFromConfiguration -Type 'JSON' -ConfigurationPath 'C:\DSC\' -OutputPath 'C:\Dsc\M365Report.json'
+New-M365DSCReportFromConfiguration -Type 'JSON' -ConfigurationPath 'C:\DSC\ConfigName.ps1' -OutputPath 'C:\Dsc\M365Report.json'
 
 .Functionality
 Public
@@ -407,19 +378,23 @@ function New-M365DSCReportFromConfiguration
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    [Array] $parsedContent = Initialize-M365DSCReporting -ConfigurationPath $ConfigurationPath
+
     switch ($Type)
     {
         "Excel"
         {
-            New-M365DSCConfigurationToExcel -ConfigurationPath $ConfigurationPath -OutputPath $OutputPath
+            New-M365DSCConfigurationToExcel -ParsedContent $parsedContent -OutputPath $OutputPath
         }
         "HTML"
         {
-            New-M365DSCConfigurationToHTML -ConfigurationPath $ConfigurationPath -OutputPath $OutputPath
+            $templateName = Get-Item $ConfigurationPath
+            $templateName = $TemplateFile.Name.Split('.')[0]
+            New-M365DSCConfigurationToHTML -ParsedContent $parsedContent -OutputPath $OutputPath -TemplateName $templateName
         }
         "JSON"
         {
-            New-M365DSCConfigurationToJSON -ConfigurationPath $ConfigurationPath -OutputPath $OutputPath
+            New-M365DSCConfigurationToJSON -ParsedContent $parsedContent -OutputPath $OutputPath
         }
     }
 }
@@ -473,31 +448,11 @@ function Compare-M365DSCConfigurations
 
     if (-not $SourceObject)
     {
-        $fileContent = Get-Content $Source -Raw
-        $startPosition = $fileContent.IndexOf(" -ModuleVersion")
-        if ($startPosition -ge 0)
-        {
-            $endPosition = $fileContent.IndexOf("`r", $startPosition)
-            if ($endPosition -gt $startPosition)
-            {
-                $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
-            }
-        }
-        [Array] $SourceObject = ConvertTo-DSCObject -Content $fileContent
+        [Array] $SourceObject = Initialize-M365DSCReporting -ConfigurationPath $Source
     }
     if (-not $DestinationObject)
     {
-        $fileContent = Get-Content $Destination -Raw
-        $startPosition = $fileContent.IndexOf(" -ModuleVersion")
-        if ($startPosition -ge 0)
-        {
-            $endPosition = $fileContent.IndexOf("`r", $startPosition)
-            if ($endPosition -gt $startPosition)
-            {
-                $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
-            }
-        }
-        [Array] $DestinationObject = ConvertTo-DSCObject -Content $FileContent
+        [Array] $DestinationObject = Initialize-M365DSCReporting -ConfigurationPath $Destination
     }
 
     # Loop through all items in the source array
@@ -873,15 +828,14 @@ function New-M365DSCDeltaReport
     Write-Verbose -Message 'Obtaining Delta between the source and destination configurations'
     if (-not $Delta)
     {
-        if ($IsBlueprintAssessment) {
+        if ($IsBlueprintAssessment)
+        {
             # Parse the blueprint file, pass to Compare-M365DSCConfigurations as object (including comments aka metadata)
-            $fileContent = Get-Content $Destination -Raw
-            $startPosition = $fileContent.IndexOf(" -ModuleVersion")
-            $endPosition = $fileContent.IndexOf("`r", $startPosition)
-            $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
-            [Array] $ParsedBlueprintWithMetadata = ConvertTo-DSCObject -Content $FileContent -IncludeComments:$True
+            [Array] $ParsedBlueprintWithMetadata = Initialize-M365DSCReporting -ConfigurationPath $Destination -IncludeComments:$true
             $Delta = Compare-M365DSCConfigurations -Source $Source -DestinationObject $ParsedBlueprintWithMetadata -CaptureTelemetry $false
-        } Else {
+        }
+        Else
+        {
             $Delta = Compare-M365DSCConfigurations -Source $Source -Destination $Destination -CaptureTelemetry $false
         }
     }
@@ -1074,6 +1028,58 @@ function New-M365DSCDeltaReport
     {
         return $reportSB.ToString()
     }
+}
+
+<#
+.Description
+This function prepares the configuration for further parsing of the data
+
+.Functionality
+Internal, Hidden
+#>
+function Initialize-M365DSCReporting
+{
+    param (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ConfigurationPath,
+
+        [Parameter()]
+        [Switch]
+        $IncludeComments
+    )
+
+    if ((Test-Path -Path $ConfigurationPath) -eq $false)
+    {
+        Write-Error "Cannot find file specified in parameter Source: $ConfigurationPath. Please make sure the file exists!"
+        return
+    }
+
+    Write-Output "Loading file '$ConfigurationPath'"
+
+    $fileContent = Get-Content $ConfigurationPath -Raw
+    try
+    {
+        $startPosition = $fileContent.IndexOf(" -ModuleVersion")
+        $endPosition = $fileContent.IndexOf("`r", $startPosition)
+        $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
+    }
+    catch
+    {
+        Write-Verbose "Error trying to remove Module Version"
+    }
+
+    if ($IncludeComment)
+    {
+        $parsedContent = ConvertTo-DSCObject -Content $fileContent -IncludeComments:$True
+    }
+    else
+    {
+        $parsedContent = ConvertTo-DSCObject -Content $fileContent
+    }
+
+    return $parsedContent
+
 }
 
 Export-ModuleMember -Function @(
