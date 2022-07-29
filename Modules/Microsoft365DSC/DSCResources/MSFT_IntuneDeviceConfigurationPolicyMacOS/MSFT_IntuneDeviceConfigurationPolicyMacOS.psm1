@@ -261,7 +261,7 @@ function Get-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
-        #endregion 
+        #endregion
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -324,7 +324,7 @@ function Get-TargetResource
     try
     {
         $getValue=$null
-        
+
         #region resource generator code
         if(-Not [string]::IsNullOrEmpty($DisplayName))
         {
@@ -344,7 +344,7 @@ function Get-TargetResource
             }
         }
         #endregion
-        
+
 
         if ($null -eq $getValue)
         {
@@ -354,70 +354,70 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found something with id {$id}"
         $results = @{
-            
-            #region resource generator code
-            Id = $getValue.Id 
-            Description = $getValue.Description 
-            DisplayName = $getValue.DisplayName 
-            AddingGameCenterFriendsBlocked = $getValue.AdditionalProperties.addingGameCenterFriendsBlocked 
-            AirDropBlocked = $getValue.AdditionalProperties.airDropBlocked 
-            AppleWatchBlockAutoUnlock = $getValue.AdditionalProperties.appleWatchBlockAutoUnlock 
-            CameraBlocked = $getValue.AdditionalProperties.cameraBlocked 
-            ClassroomAppBlockRemoteScreenObservation = $getValue.AdditionalProperties.classroomAppBlockRemoteScreenObservation 
-            ClassroomAppForceUnpromptedScreenObservation = $getValue.AdditionalProperties.classroomAppForceUnpromptedScreenObservation 
-            ClassroomForceAutomaticallyJoinClasses = $getValue.AdditionalProperties.classroomForceAutomaticallyJoinClasses 
-            ClassroomForceRequestPermissionToLeaveClasses = $getValue.AdditionalProperties.classroomForceRequestPermissionToLeaveClasses 
-            ClassroomForceUnpromptedAppAndDeviceLock = $getValue.AdditionalProperties.classroomForceUnpromptedAppAndDeviceLock 
-            CompliantAppListType = $getValue.AdditionalProperties.compliantAppListType 
-            ContentCachingBlocked = $getValue.AdditionalProperties.contentCachingBlocked 
-            DefinitionLookupBlocked = $getValue.AdditionalProperties.definitionLookupBlocked 
-            EmailInDomainSuffixes = $getValue.AdditionalProperties.emailInDomainSuffixes 
-            EraseContentAndSettingsBlocked = $getValue.AdditionalProperties.eraseContentAndSettingsBlocked 
-            GameCenterBlocked = $getValue.AdditionalProperties.gameCenterBlocked 
-            ICloudBlockActivityContinuation = $getValue.AdditionalProperties.iCloudBlockActivityContinuation 
-            ICloudBlockAddressBook = $getValue.AdditionalProperties.iCloudBlockAddressBook 
-            ICloudBlockBookmarks = $getValue.AdditionalProperties.iCloudBlockBookmarks 
-            ICloudBlockCalendar = $getValue.AdditionalProperties.iCloudBlockCalendar 
-            ICloudBlockDocumentSync = $getValue.AdditionalProperties.iCloudBlockDocumentSync 
-            ICloudBlockMail = $getValue.AdditionalProperties.iCloudBlockMail 
-            ICloudBlockNotes = $getValue.AdditionalProperties.iCloudBlockNotes 
-            ICloudBlockPhotoLibrary = $getValue.AdditionalProperties.iCloudBlockPhotoLibrary 
-            ICloudBlockReminders = $getValue.AdditionalProperties.iCloudBlockReminders 
-            ICloudDesktopAndDocumentsBlocked = $getValue.AdditionalProperties.iCloudDesktopAndDocumentsBlocked 
-            ICloudPrivateRelayBlocked = $getValue.AdditionalProperties.iCloudPrivateRelayBlocked 
-            ITunesBlockFileSharing = $getValue.AdditionalProperties.iTunesBlockFileSharing 
-            ITunesBlockMusicService = $getValue.AdditionalProperties.iTunesBlockMusicService 
-            KeyboardBlockDictation = $getValue.AdditionalProperties.keyboardBlockDictation 
-            KeychainBlockCloudSync = $getValue.AdditionalProperties.keychainBlockCloudSync 
-            MultiplayerGamingBlocked = $getValue.AdditionalProperties.multiplayerGamingBlocked 
-            PasswordBlockAirDropSharing = $getValue.AdditionalProperties.passwordBlockAirDropSharing 
-            PasswordBlockAutoFill = $getValue.AdditionalProperties.passwordBlockAutoFill 
-            PasswordBlockFingerprintUnlock = $getValue.AdditionalProperties.passwordBlockFingerprintUnlock 
-            PasswordBlockModification = $getValue.AdditionalProperties.passwordBlockModification 
-            PasswordBlockProximityRequests = $getValue.AdditionalProperties.passwordBlockProximityRequests 
-            PasswordBlockSimple = $getValue.AdditionalProperties.passwordBlockSimple 
-            PasswordExpirationDays = $getValue.AdditionalProperties.passwordExpirationDays 
-            PasswordMaximumAttemptCount = $getValue.AdditionalProperties.passwordMaximumAttemptCount 
-            PasswordMinimumCharacterSetCount = $getValue.AdditionalProperties.passwordMinimumCharacterSetCount 
-            PasswordMinimumLength = $getValue.AdditionalProperties.passwordMinimumLength 
-            PasswordMinutesOfInactivityBeforeLock = $getValue.AdditionalProperties.passwordMinutesOfInactivityBeforeLock 
-            PasswordMinutesOfInactivityBeforeScreenTimeout = $getValue.AdditionalProperties.passwordMinutesOfInactivityBeforeScreenTimeout 
-            PasswordMinutesUntilFailedLoginReset = $getValue.AdditionalProperties.passwordMinutesUntilFailedLoginReset 
-            PasswordPreviousPasswordBlockCount = $getValue.AdditionalProperties.passwordPreviousPasswordBlockCount 
-            PasswordRequired = $getValue.AdditionalProperties.passwordRequired 
-            PasswordRequiredType = $getValue.AdditionalProperties.passwordRequiredType 
-            SafariBlockAutofill = $getValue.AdditionalProperties.safariBlockAutofill 
-            ScreenCaptureBlocked = $getValue.AdditionalProperties.screenCaptureBlocked 
-            SoftwareUpdateMajorOSDeferredInstallDelayInDays = $getValue.AdditionalProperties.softwareUpdateMajorOSDeferredInstallDelayInDays 
-            SoftwareUpdateMinorOSDeferredInstallDelayInDays = $getValue.AdditionalProperties.softwareUpdateMinorOSDeferredInstallDelayInDays 
-            SoftwareUpdateNonOSDeferredInstallDelayInDays = $getValue.AdditionalProperties.softwareUpdateNonOSDeferredInstallDelayInDays 
-            SoftwareUpdatesEnforcedDelayInDays = $getValue.AdditionalProperties.softwareUpdatesEnforcedDelayInDays 
-            SpotlightBlockInternetResults = $getValue.AdditionalProperties.spotlightBlockInternetResults 
-            TouchIdTimeoutInHours = $getValue.AdditionalProperties.touchIdTimeoutInHours 
-            UpdateDelayPolicy = $getValue.AdditionalProperties.updateDelayPolicy 
-            WallpaperModificationBlocked = $getValue.AdditionalProperties.wallpaperModificationBlocked 
 
-            
+            #region resource generator code
+            Id = $getValue.Id
+            Description = $getValue.Description
+            DisplayName = $getValue.DisplayName
+            AddingGameCenterFriendsBlocked = $getValue.AdditionalProperties.addingGameCenterFriendsBlocked
+            AirDropBlocked = $getValue.AdditionalProperties.airDropBlocked
+            AppleWatchBlockAutoUnlock = $getValue.AdditionalProperties.appleWatchBlockAutoUnlock
+            CameraBlocked = $getValue.AdditionalProperties.cameraBlocked
+            ClassroomAppBlockRemoteScreenObservation = $getValue.AdditionalProperties.classroomAppBlockRemoteScreenObservation
+            ClassroomAppForceUnpromptedScreenObservation = $getValue.AdditionalProperties.classroomAppForceUnpromptedScreenObservation
+            ClassroomForceAutomaticallyJoinClasses = $getValue.AdditionalProperties.classroomForceAutomaticallyJoinClasses
+            ClassroomForceRequestPermissionToLeaveClasses = $getValue.AdditionalProperties.classroomForceRequestPermissionToLeaveClasses
+            ClassroomForceUnpromptedAppAndDeviceLock = $getValue.AdditionalProperties.classroomForceUnpromptedAppAndDeviceLock
+            CompliantAppListType = $getValue.AdditionalProperties.compliantAppListType
+            ContentCachingBlocked = $getValue.AdditionalProperties.contentCachingBlocked
+            DefinitionLookupBlocked = $getValue.AdditionalProperties.definitionLookupBlocked
+            EmailInDomainSuffixes = $getValue.AdditionalProperties.emailInDomainSuffixes
+            EraseContentAndSettingsBlocked = $getValue.AdditionalProperties.eraseContentAndSettingsBlocked
+            GameCenterBlocked = $getValue.AdditionalProperties.gameCenterBlocked
+            ICloudBlockActivityContinuation = $getValue.AdditionalProperties.iCloudBlockActivityContinuation
+            ICloudBlockAddressBook = $getValue.AdditionalProperties.iCloudBlockAddressBook
+            ICloudBlockBookmarks = $getValue.AdditionalProperties.iCloudBlockBookmarks
+            ICloudBlockCalendar = $getValue.AdditionalProperties.iCloudBlockCalendar
+            ICloudBlockDocumentSync = $getValue.AdditionalProperties.iCloudBlockDocumentSync
+            ICloudBlockMail = $getValue.AdditionalProperties.iCloudBlockMail
+            ICloudBlockNotes = $getValue.AdditionalProperties.iCloudBlockNotes
+            ICloudBlockPhotoLibrary = $getValue.AdditionalProperties.iCloudBlockPhotoLibrary
+            ICloudBlockReminders = $getValue.AdditionalProperties.iCloudBlockReminders
+            ICloudDesktopAndDocumentsBlocked = $getValue.AdditionalProperties.iCloudDesktopAndDocumentsBlocked
+            ICloudPrivateRelayBlocked = $getValue.AdditionalProperties.iCloudPrivateRelayBlocked
+            ITunesBlockFileSharing = $getValue.AdditionalProperties.iTunesBlockFileSharing
+            ITunesBlockMusicService = $getValue.AdditionalProperties.iTunesBlockMusicService
+            KeyboardBlockDictation = $getValue.AdditionalProperties.keyboardBlockDictation
+            KeychainBlockCloudSync = $getValue.AdditionalProperties.keychainBlockCloudSync
+            MultiplayerGamingBlocked = $getValue.AdditionalProperties.multiplayerGamingBlocked
+            PasswordBlockAirDropSharing = $getValue.AdditionalProperties.passwordBlockAirDropSharing
+            PasswordBlockAutoFill = $getValue.AdditionalProperties.passwordBlockAutoFill
+            PasswordBlockFingerprintUnlock = $getValue.AdditionalProperties.passwordBlockFingerprintUnlock
+            PasswordBlockModification = $getValue.AdditionalProperties.passwordBlockModification
+            PasswordBlockProximityRequests = $getValue.AdditionalProperties.passwordBlockProximityRequests
+            PasswordBlockSimple = $getValue.AdditionalProperties.passwordBlockSimple
+            PasswordExpirationDays = $getValue.AdditionalProperties.passwordExpirationDays
+            PasswordMaximumAttemptCount = $getValue.AdditionalProperties.passwordMaximumAttemptCount
+            PasswordMinimumCharacterSetCount = $getValue.AdditionalProperties.passwordMinimumCharacterSetCount
+            PasswordMinimumLength = $getValue.AdditionalProperties.passwordMinimumLength
+            PasswordMinutesOfInactivityBeforeLock = $getValue.AdditionalProperties.passwordMinutesOfInactivityBeforeLock
+            PasswordMinutesOfInactivityBeforeScreenTimeout = $getValue.AdditionalProperties.passwordMinutesOfInactivityBeforeScreenTimeout
+            PasswordMinutesUntilFailedLoginReset = $getValue.AdditionalProperties.passwordMinutesUntilFailedLoginReset
+            PasswordPreviousPasswordBlockCount = $getValue.AdditionalProperties.passwordPreviousPasswordBlockCount
+            PasswordRequired = $getValue.AdditionalProperties.passwordRequired
+            PasswordRequiredType = $getValue.AdditionalProperties.passwordRequiredType
+            SafariBlockAutofill = $getValue.AdditionalProperties.safariBlockAutofill
+            ScreenCaptureBlocked = $getValue.AdditionalProperties.screenCaptureBlocked
+            SoftwareUpdateMajorOSDeferredInstallDelayInDays = $getValue.AdditionalProperties.softwareUpdateMajorOSDeferredInstallDelayInDays
+            SoftwareUpdateMinorOSDeferredInstallDelayInDays = $getValue.AdditionalProperties.softwareUpdateMinorOSDeferredInstallDelayInDays
+            SoftwareUpdateNonOSDeferredInstallDelayInDays = $getValue.AdditionalProperties.softwareUpdateNonOSDeferredInstallDelayInDays
+            SoftwareUpdatesEnforcedDelayInDays = $getValue.AdditionalProperties.softwareUpdatesEnforcedDelayInDays
+            SpotlightBlockInternetResults = $getValue.AdditionalProperties.spotlightBlockInternetResults
+            TouchIdTimeoutInHours = $getValue.AdditionalProperties.touchIdTimeoutInHours
+            UpdateDelayPolicy = $getValue.AdditionalProperties.updateDelayPolicy
+            WallpaperModificationBlocked = $getValue.AdditionalProperties.wallpaperModificationBlocked
+
+
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -471,7 +471,7 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        
+
         #region resource generator code
         [Parameter()]
         [System.String]
@@ -729,7 +729,7 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
-        #endregion 
+        #endregion
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -831,7 +831,7 @@ function Set-TargetResource
             $CreateParameters.add('AdditionalProperties',$AdditionalProperties)
         }
 
-        
+
         #region resource generator code
         $policy=New-MgDeviceManagementDeviceConfiguration @CreateParameters
         $assignmentsHash=@()
@@ -839,12 +839,15 @@ function Set-TargetResource
         {
             $assignmentsHash+=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
-        Update-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $policy.id `
-            -Targets $assignmentsHash `
-            -Repository deviceConfigurations
 
+        if($policy.id)
+        {
+            Update-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $policy.id `
+                -Targets $assignmentsHash `
+                -Repository deviceConfigurations
+        }
         #endregion
-        
+
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -880,7 +883,7 @@ function Set-TargetResource
             $UpdateParameters.add('AdditionalProperties',$AdditionalProperties)
         }
 
-        
+
         #region resource generator code
         Update-MgDeviceManagementDeviceConfiguration @UpdateParameters `
             -DeviceConfigurationId $currentInstance.Id
@@ -894,22 +897,22 @@ function Set-TargetResource
             -Repository deviceConfigurations
 
         #endregion
-        
+
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing {$DisplayName}"
 
-        
+
         #region resource generator code
         #endregion
-        
 
-        
+
+
         #region resource generator code
         Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
-        
+
     }
 }
 
@@ -919,7 +922,7 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        
+
         #region resource generator code
         [Parameter()]
         [System.String]
@@ -1177,7 +1180,7 @@ function Test-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
-        #endregion 
+        #endregion
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -1351,7 +1354,7 @@ function Export-TargetResource
 
     try
     {
-        
+
         #region resource generator code
         [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
             -ErrorAction Stop | Where-Object `
@@ -1365,7 +1368,7 @@ function Export-TargetResource
                 -ErrorAction Stop
         }
         #endregion
-        
+
 
         $i = 1
         $dscContent = ''
