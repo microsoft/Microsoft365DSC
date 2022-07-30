@@ -57,6 +57,36 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AppsBlockClipboardSharing = $True
                         AppsBlockCopyPaste = $True
                         AppsBlockYouTube = $True
+                        AppsHideList =@(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
+                                appId = "FakeStringValue"
+                                publisher = "FakeStringValue"
+                                appStoreUrl = "FakeStringValue"
+                                name = "FakeStringValue"
+                                odataType = "#microsoft.graph.appleAppListItem"
+
+                            } -ClientOnly)
+                        )
+                        AppsInstallAllowList =@(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
+                                appId = "FakeStringValue"
+                                publisher = "FakeStringValue"
+                                appStoreUrl = "FakeStringValue"
+                                name = "FakeStringValue"
+                                odataType = "#microsoft.graph.appleAppListItem"
+
+                            } -ClientOnly)
+                        )
+                        AppsLaunchBlockList =@(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
+                                appId = "FakeStringValue"
+                                publisher = "FakeStringValue"
+                                appStoreUrl = "FakeStringValue"
+                                name = "FakeStringValue"
+                                odataType = "#microsoft.graph.appleAppListItem"
+
+                            } -ClientOnly)
+                        )
                         BluetoothBlocked = $True
                         CameraBlocked = $True
                         CellularBlockDataRoaming = $True
@@ -64,6 +94,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         CellularBlockVoiceRoaming = $True
                         CellularBlockWiFiTethering = $True
                         CompliantAppListType = "none"
+                        CompliantAppsList =@(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
+                                appId = "FakeStringValue"
+                                publisher = "FakeStringValue"
+                                appStoreUrl = "FakeStringValue"
+                                name = "FakeStringValue"
+                                odataType = "#microsoft.graph.appleAppListItem"
+
+                            } -ClientOnly)
+                        )
                         DateAndTimeBlockChanges = $True
                         Description = "FakeStringValue"
                         DeviceSharingAllowed = $True
@@ -73,6 +113,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GoogleAccountBlockAutoSync = $True
                         GooglePlayStoreBlocked = $True
                         Id = "FakeStringValue"
+                        KioskModeApps =@(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
+                                appId = "FakeStringValue"
+                                publisher = "FakeStringValue"
+                                appStoreUrl = "FakeStringValue"
+                                name = "FakeStringValue"
+                                odataType = "#microsoft.graph.appleAppListItem"
+
+                            } -ClientOnly)
+                        )
                         KioskModeBlockSleepButton = $True
                         KioskModeBlockVolumeButtons = $True
                         LocationServicesBlocked = $True
@@ -129,6 +179,36 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AppsBlockClipboardSharing = $True
                         AppsBlockCopyPaste = $True
                         AppsBlockYouTube = $True
+                        AppsHideList =@(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
+                                appId = "FakeStringValue"
+                                publisher = "FakeStringValue"
+                                appStoreUrl = "FakeStringValue"
+                                name = "FakeStringValue"
+                                odataType = "#microsoft.graph.appleAppListItem"
+
+                            } -ClientOnly)
+                        )
+                        AppsInstallAllowList =@(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
+                                appId = "FakeStringValue"
+                                publisher = "FakeStringValue"
+                                appStoreUrl = "FakeStringValue"
+                                name = "FakeStringValue"
+                                odataType = "#microsoft.graph.appleAppListItem"
+
+                            } -ClientOnly)
+                        )
+                        AppsLaunchBlockList =@(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
+                                appId = "FakeStringValue"
+                                publisher = "FakeStringValue"
+                                appStoreUrl = "FakeStringValue"
+                                name = "FakeStringValue"
+                                odataType = "#microsoft.graph.appleAppListItem"
+
+                            } -ClientOnly)
+                        )
                         BluetoothBlocked = $True
                         CameraBlocked = $True
                         CellularBlockDataRoaming = $True
@@ -136,6 +216,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         CellularBlockVoiceRoaming = $True
                         CellularBlockWiFiTethering = $True
                         CompliantAppListType = "none"
+                        CompliantAppsList =@(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
+                                appId = "FakeStringValue"
+                                publisher = "FakeStringValue"
+                                appStoreUrl = "FakeStringValue"
+                                name = "FakeStringValue"
+                                odataType = "#microsoft.graph.appleAppListItem"
+
+                            } -ClientOnly)
+                        )
                         DateAndTimeBlockChanges = $True
                         Description = "FakeStringValue"
                         DeviceSharingAllowed = $True
@@ -145,6 +235,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GoogleAccountBlockAutoSync = $True
                         GooglePlayStoreBlocked = $True
                         Id = "FakeStringValue"
+                        KioskModeApps =@(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
+                                appId = "FakeStringValue"
+                                publisher = "FakeStringValue"
+                                appStoreUrl = "FakeStringValue"
+                                name = "FakeStringValue"
+                                odataType = "#microsoft.graph.appleAppListItem"
+
+                            } -ClientOnly)
+                        )
                         KioskModeBlockSleepButton = $True
                         KioskModeBlockVolumeButtons = $True
                         LocationServicesBlocked = $True
@@ -181,54 +281,108 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
                     return @{
-                        AppsBlockClipboardSharing = $True
-                        AppsBlockCopyPaste = $True
-                        AppsBlockYouTube = $True
-                        BluetoothBlocked = $True
-                        CameraBlocked = $True
-                        CellularBlockDataRoaming = $True
-                        CellularBlockMessaging = $True
-                        CellularBlockVoiceRoaming = $True
-                        CellularBlockWiFiTethering = $True
-                        CompliantAppListType = "none"
-                        DateAndTimeBlockChanges = $True
+                        AdditionalProperties =@{
+                            AppsBlockCopyPaste = $True
+                            StorageBlockRemovableStorage = $True
+                            PowerOffBlocked = $True
+                            KioskModeBlockSleepButton = $True
+                            ScreenCaptureBlocked = $True
+                            AppsLaunchBlockList =@(
+                                @{
+                                    name = "FakeStringValue"
+                                    appId = "FakeStringValue"
+                                    appStoreUrl = "FakeStringValue"
+                                    '@odata.type' = "#microsoft.graph.appleAppListItem"
+                                    publisher = "FakeStringValue"
+
+                                }
+                            )
+                            PasswordMinimumLength = 25
+                            PasswordRequired = $True
+                            KioskModeBlockVolumeButtons = $True
+                            PasswordSignInFailureCountBeforeFactoryReset = 25
+                            AppsBlockYouTube = $True
+                            PasswordExpirationDays = 25
+                            AppsHideList =@(
+                                @{
+                                    name = "FakeStringValue"
+                                    appId = "FakeStringValue"
+                                    appStoreUrl = "FakeStringValue"
+                                    '@odata.type' = "#microsoft.graph.appleAppListItem"
+                                    publisher = "FakeStringValue"
+
+                                }
+                            )
+                            LocationServicesBlocked = $True
+                            WebBrowserBlockAutofill = $True
+                            DateAndTimeBlockChanges = $True
+                            FactoryResetBlocked = $True
+                            PasswordRequiredType = "deviceDefault"
+                            WebBrowserBlockPopups = $True
+                            StorageRequireRemovableStorageEncryption = $True
+                            PasswordPreviousPasswordBlockCount = 25
+                            KioskModeApps =@(
+                                @{
+                                    name = "FakeStringValue"
+                                    appId = "FakeStringValue"
+                                    appStoreUrl = "FakeStringValue"
+                                    '@odata.type' = "#microsoft.graph.appleAppListItem"
+                                    publisher = "FakeStringValue"
+
+                                }
+                            )
+                            WebBrowserBlockJavaScript = $True
+                            PasswordMinutesOfInactivityBeforeScreenTimeout = 25
+                            PasswordBlockFingerprintUnlock = $True
+                            WiFiBlocked = $True
+                            CellularBlockMessaging = $True
+                            GooglePlayStoreBlocked = $True
+                            CellularBlockWiFiTethering = $True
+                            StorageRequireDeviceEncryption = $True
+                            NfcBlocked = $True
+                            DiagnosticDataBlockSubmission = $True
+                            CellularBlockDataRoaming = $True
+                            PasswordBlockTrustAgents = $True
+                            RequiredPasswordComplexity = "none"
+                            '@odata.type' = "#microsoft.graph.androidGeneralDeviceConfiguration"
+                            CameraBlocked = $True
+                            WebBrowserCookieSettings = "browserDefault"
+                            DeviceSharingAllowed = $True
+                            CompliantAppsList =@(
+                                @{
+                                    name = "FakeStringValue"
+                                    appId = "FakeStringValue"
+                                    appStoreUrl = "FakeStringValue"
+                                    '@odata.type' = "#microsoft.graph.appleAppListItem"
+                                    publisher = "FakeStringValue"
+
+                                }
+                            )
+                            VoiceAssistantBlocked = $True
+                            GoogleAccountBlockAutoSync = $True
+                            VoiceDialingBlocked = $True
+                            CompliantAppListType = "none"
+                            AppsBlockClipboardSharing = $True
+                            AppsInstallAllowList =@(
+                                @{
+                                    name = "FakeStringValue"
+                                    appId = "FakeStringValue"
+                                    appStoreUrl = "FakeStringValue"
+                                    '@odata.type' = "#microsoft.graph.appleAppListItem"
+                                    publisher = "FakeStringValue"
+
+                                }
+                            )
+                            WebBrowserBlocked = $True
+                            SecurityRequireVerifyApps = $True
+                            BluetoothBlocked = $True
+                            StorageBlockGoogleBackup = $True
+                            CellularBlockVoiceRoaming = $True
+
+                        }
                         Description = "FakeStringValue"
-                        DeviceSharingAllowed = $True
-                        DiagnosticDataBlockSubmission = $True
                         DisplayName = "FakeStringValue"
-                        FactoryResetBlocked = $True
-                        GoogleAccountBlockAutoSync = $True
-                        GooglePlayStoreBlocked = $True
                         Id = "FakeStringValue"
-                        KioskModeBlockSleepButton = $True
-                        KioskModeBlockVolumeButtons = $True
-                        LocationServicesBlocked = $True
-                        NfcBlocked = $True
-                        PasswordBlockFingerprintUnlock = $True
-                        PasswordBlockTrustAgents = $True
-                        PasswordExpirationDays = 25
-                        PasswordMinimumLength = 25
-                        PasswordMinutesOfInactivityBeforeScreenTimeout = 25
-                        PasswordPreviousPasswordBlockCount = 25
-                        PasswordRequired = $True
-                        PasswordRequiredType = "deviceDefault"
-                        PasswordSignInFailureCountBeforeFactoryReset = 25
-                        PowerOffBlocked = $True
-                        RequiredPasswordComplexity = "none"
-                        ScreenCaptureBlocked = $True
-                        SecurityRequireVerifyApps = $True
-                        StorageBlockGoogleBackup = $True
-                        StorageBlockRemovableStorage = $True
-                        StorageRequireDeviceEncryption = $True
-                        StorageRequireRemovableStorageEncryption = $True
-                        VoiceAssistantBlocked = $True
-                        VoiceDialingBlocked = $True
-                        WebBrowserBlockAutofill = $True
-                        WebBrowserBlocked = $True
-                        WebBrowserBlockJavaScript = $True
-                        WebBrowserBlockPopups = $True
-                        WebBrowserCookieSettings = "browserDefault"
-                        WiFiBlocked = $True
 
                     }
                 }
@@ -253,6 +407,36 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AppsBlockClipboardSharing = $True
                         AppsBlockCopyPaste = $True
                         AppsBlockYouTube = $True
+                        AppsHideList =@(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
+                                appId = "FakeStringValue"
+                                publisher = "FakeStringValue"
+                                appStoreUrl = "FakeStringValue"
+                                name = "FakeStringValue"
+                                odataType = "#microsoft.graph.appleAppListItem"
+
+                            } -ClientOnly)
+                        )
+                        AppsInstallAllowList =@(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
+                                appId = "FakeStringValue"
+                                publisher = "FakeStringValue"
+                                appStoreUrl = "FakeStringValue"
+                                name = "FakeStringValue"
+                                odataType = "#microsoft.graph.appleAppListItem"
+
+                            } -ClientOnly)
+                        )
+                        AppsLaunchBlockList =@(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
+                                appId = "FakeStringValue"
+                                publisher = "FakeStringValue"
+                                appStoreUrl = "FakeStringValue"
+                                name = "FakeStringValue"
+                                odataType = "#microsoft.graph.appleAppListItem"
+
+                            } -ClientOnly)
+                        )
                         BluetoothBlocked = $True
                         CameraBlocked = $True
                         CellularBlockDataRoaming = $True
@@ -260,6 +444,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         CellularBlockVoiceRoaming = $True
                         CellularBlockWiFiTethering = $True
                         CompliantAppListType = "none"
+                        CompliantAppsList =@(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
+                                appId = "FakeStringValue"
+                                publisher = "FakeStringValue"
+                                appStoreUrl = "FakeStringValue"
+                                name = "FakeStringValue"
+                                odataType = "#microsoft.graph.appleAppListItem"
+
+                            } -ClientOnly)
+                        )
                         DateAndTimeBlockChanges = $True
                         Description = "FakeStringValue"
                         DeviceSharingAllowed = $True
@@ -269,6 +463,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GoogleAccountBlockAutoSync = $True
                         GooglePlayStoreBlocked = $True
                         Id = "FakeStringValue"
+                        KioskModeApps =@(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
+                                appId = "FakeStringValue"
+                                publisher = "FakeStringValue"
+                                appStoreUrl = "FakeStringValue"
+                                name = "FakeStringValue"
+                                odataType = "#microsoft.graph.appleAppListItem"
+
+                            } -ClientOnly)
+                        )
                         KioskModeBlockSleepButton = $True
                         KioskModeBlockVolumeButtons = $True
                         LocationServicesBlocked = $True
@@ -305,62 +509,113 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
                     return @{
-                        AppsBlockClipboardSharing = $True
-                        AppsBlockCopyPaste = $True
-                        AppsBlockYouTube = $True
-                        BluetoothBlocked = $True
-                        CameraBlocked = $True
-                        CellularBlockDataRoaming = $True
-                        CellularBlockMessaging = $True
-                        CellularBlockVoiceRoaming = $True
-                        CellularBlockWiFiTethering = $True
-                        CompliantAppListType = "none"
-                        DateAndTimeBlockChanges = $True
+                        AdditionalProperties =@{
+                            AppsBlockCopyPaste = $True
+                            StorageBlockRemovableStorage = $True
+                            PowerOffBlocked = $True
+                            KioskModeBlockSleepButton = $True
+                            ScreenCaptureBlocked = $True
+                            AppsLaunchBlockList =@(
+                                @{
+                                    name = "FakeStringValue"
+                                    appId = "FakeStringValue"
+                                    appStoreUrl = "FakeStringValue"
+                                    '@odata.type' = "#microsoft.graph.appleAppListItem"
+                                    publisher = "FakeStringValue"
+
+                                }
+                            )
+                            PasswordMinimumLength = 25
+                            PasswordRequired = $True
+                            KioskModeBlockVolumeButtons = $True
+                            PasswordSignInFailureCountBeforeFactoryReset = 25
+                            AppsBlockYouTube = $True
+                            PasswordExpirationDays = 25
+                            AppsHideList =@(
+                                @{
+                                    name = "FakeStringValue"
+                                    appId = "FakeStringValue"
+                                    appStoreUrl = "FakeStringValue"
+                                    '@odata.type' = "#microsoft.graph.appleAppListItem"
+                                    publisher = "FakeStringValue"
+
+                                }
+                            )
+                            LocationServicesBlocked = $True
+                            WebBrowserBlockAutofill = $True
+                            DateAndTimeBlockChanges = $True
+                            FactoryResetBlocked = $True
+                            PasswordRequiredType = "deviceDefault"
+                            WebBrowserBlockPopups = $True
+                            StorageRequireRemovableStorageEncryption = $True
+                            PasswordPreviousPasswordBlockCount = 25
+                            KioskModeApps =@(
+                                @{
+                                    name = "FakeStringValue"
+                                    appId = "FakeStringValue"
+                                    appStoreUrl = "FakeStringValue"
+                                    '@odata.type' = "#microsoft.graph.appleAppListItem"
+                                    publisher = "FakeStringValue"
+
+                                }
+                            )
+                            WebBrowserBlockJavaScript = $True
+                            PasswordMinutesOfInactivityBeforeScreenTimeout = 25
+                            PasswordBlockFingerprintUnlock = $True
+                            WiFiBlocked = $True
+                            CellularBlockMessaging = $True
+                            GooglePlayStoreBlocked = $True
+                            CellularBlockWiFiTethering = $True
+                            StorageRequireDeviceEncryption = $True
+                            NfcBlocked = $True
+                            DiagnosticDataBlockSubmission = $True
+                            CellularBlockDataRoaming = $True
+                            PasswordBlockTrustAgents = $True
+                            RequiredPasswordComplexity = "none"
+                            '@odata.type' = "#microsoft.graph.androidGeneralDeviceConfiguration"
+                            CameraBlocked = $True
+                            WebBrowserCookieSettings = "browserDefault"
+                            DeviceSharingAllowed = $True
+                            CompliantAppsList =@(
+                                @{
+                                    name = "FakeStringValue"
+                                    appId = "FakeStringValue"
+                                    appStoreUrl = "FakeStringValue"
+                                    '@odata.type' = "#microsoft.graph.appleAppListItem"
+                                    publisher = "FakeStringValue"
+
+                                }
+                            )
+                            VoiceAssistantBlocked = $True
+                            GoogleAccountBlockAutoSync = $True
+                            VoiceDialingBlocked = $True
+                            CompliantAppListType = "none"
+                            AppsBlockClipboardSharing = $True
+                            AppsInstallAllowList =@(
+                                @{
+                                    name = "FakeStringValue"
+                                    appId = "FakeStringValue"
+                                    appStoreUrl = "FakeStringValue"
+                                    '@odata.type' = "#microsoft.graph.appleAppListItem"
+                                    publisher = "FakeStringValue"
+
+                                }
+                            )
+                            WebBrowserBlocked = $True
+                            SecurityRequireVerifyApps = $True
+                            BluetoothBlocked = $True
+                            StorageBlockGoogleBackup = $True
+                            CellularBlockVoiceRoaming = $True
+
+                        }
                         Description = "FakeStringValue"
-                        DeviceSharingAllowed = $True
-                        DiagnosticDataBlockSubmission = $True
                         DisplayName = "FakeStringValue"
-                        FactoryResetBlocked = $True
-                        GoogleAccountBlockAutoSync = $True
-                        GooglePlayStoreBlocked = $True
                         Id = "FakeStringValue"
-                        KioskModeBlockSleepButton = $True
-                        KioskModeBlockVolumeButtons = $True
-                        LocationServicesBlocked = $True
-                        NfcBlocked = $True
-                        PasswordBlockFingerprintUnlock = $True
-                        PasswordBlockTrustAgents = $True
-                        PasswordExpirationDays = 25
-                        PasswordMinimumLength = 25
-                        PasswordMinutesOfInactivityBeforeScreenTimeout = 25
-                        PasswordPreviousPasswordBlockCount = 25
-                        PasswordRequired = $True
-                        PasswordRequiredType = "deviceDefault"
-                        PasswordSignInFailureCountBeforeFactoryReset = 25
-                        PowerOffBlocked = $True
-                        RequiredPasswordComplexity = "none"
-                        ScreenCaptureBlocked = $True
-                        SecurityRequireVerifyApps = $True
-                        StorageBlockGoogleBackup = $True
-                        StorageBlockRemovableStorage = $True
-                        StorageRequireDeviceEncryption = $True
-                        StorageRequireRemovableStorageEncryption = $True
-                        VoiceAssistantBlocked = $True
-                        VoiceDialingBlocked = $True
-                        WebBrowserBlockAutofill = $True
-                        WebBrowserBlocked = $True
-                        WebBrowserBlockJavaScript = $True
-                        WebBrowserBlockPopups = $True
-                        WebBrowserCookieSettings = "browserDefault"
-                        WiFiBlocked = $True
 
                     }
                 }
             }
 
-            It "Should return Values from the Get method" {
-                Get-TargetResource @testParams
-            }
 
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
@@ -373,6 +628,36 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AppsBlockClipboardSharing = $True
                         AppsBlockCopyPaste = $True
                         AppsBlockYouTube = $True
+                        AppsHideList =@(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
+                                appId = "FakeStringValue"
+                                publisher = "FakeStringValue"
+                                appStoreUrl = "FakeStringValue"
+                                name = "FakeStringValue"
+                                odataType = "#microsoft.graph.appleAppListItem"
+
+                            } -ClientOnly)
+                        )
+                        AppsInstallAllowList =@(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
+                                appId = "FakeStringValue"
+                                publisher = "FakeStringValue"
+                                appStoreUrl = "FakeStringValue"
+                                name = "FakeStringValue"
+                                odataType = "#microsoft.graph.appleAppListItem"
+
+                            } -ClientOnly)
+                        )
+                        AppsLaunchBlockList =@(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
+                                appId = "FakeStringValue"
+                                publisher = "FakeStringValue"
+                                appStoreUrl = "FakeStringValue"
+                                name = "FakeStringValue"
+                                odataType = "#microsoft.graph.appleAppListItem"
+
+                            } -ClientOnly)
+                        )
                         BluetoothBlocked = $True
                         CameraBlocked = $True
                         CellularBlockDataRoaming = $True
@@ -380,6 +665,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         CellularBlockVoiceRoaming = $True
                         CellularBlockWiFiTethering = $True
                         CompliantAppListType = "none"
+                        CompliantAppsList =@(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
+                                appId = "FakeStringValue"
+                                publisher = "FakeStringValue"
+                                appStoreUrl = "FakeStringValue"
+                                name = "FakeStringValue"
+                                odataType = "#microsoft.graph.appleAppListItem"
+
+                            } -ClientOnly)
+                        )
                         DateAndTimeBlockChanges = $True
                         Description = "FakeStringValue"
                         DeviceSharingAllowed = $True
@@ -389,6 +684,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GoogleAccountBlockAutoSync = $True
                         GooglePlayStoreBlocked = $True
                         Id = "FakeStringValue"
+                        KioskModeApps =@(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
+                                appId = "FakeStringValue"
+                                publisher = "FakeStringValue"
+                                appStoreUrl = "FakeStringValue"
+                                name = "FakeStringValue"
+                                odataType = "#microsoft.graph.appleAppListItem"
+
+                            } -ClientOnly)
+                        )
                         KioskModeBlockSleepButton = $True
                         KioskModeBlockVolumeButtons = $True
                         LocationServicesBlocked = $True
@@ -425,54 +730,72 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
                     return @{
-                        AppsBlockClipboardSharing = $False
-                        AppsBlockCopyPaste = $False
-                        AppsBlockYouTube = $False
-                        BluetoothBlocked = $False
-                        CameraBlocked = $False
-                        CellularBlockDataRoaming = $False
-                        CellularBlockMessaging = $False
-                        CellularBlockVoiceRoaming = $False
-                        CellularBlockWiFiTethering = $False
-                        CompliantAppListType = "none"
-                        DateAndTimeBlockChanges = $False
+                        AdditionalProperties =@{
+                            AppsLaunchBlockList =@(
+                                @{
+                                    name = "FakeStringValue"
+                                    appId = "FakeStringValue"
+                                    appStoreUrl = "FakeStringValue"
+                                    '@odata.type' = "#microsoft.graph.appleAppListItem"
+                                    publisher = "FakeStringValue"
+
+                                }
+                            )
+                            AppsInstallAllowList =@(
+                                @{
+                                    name = "FakeStringValue"
+                                    appId = "FakeStringValue"
+                                    appStoreUrl = "FakeStringValue"
+                                    '@odata.type' = "#microsoft.graph.appleAppListItem"
+                                    publisher = "FakeStringValue"
+
+                                }
+                            )
+                            PasswordSignInFailureCountBeforeFactoryReset = 7
+                            '@odata.type' = "#microsoft.graph.androidGeneralDeviceConfiguration"
+                            RequiredPasswordComplexity = "none"
+                            AppsHideList =@(
+                                @{
+                                    name = "FakeStringValue"
+                                    appId = "FakeStringValue"
+                                    appStoreUrl = "FakeStringValue"
+                                    '@odata.type' = "#microsoft.graph.appleAppListItem"
+                                    publisher = "FakeStringValue"
+
+                                }
+                            )
+                            PasswordRequiredType = "deviceDefault"
+                            PasswordMinutesOfInactivityBeforeScreenTimeout = 7
+                            CompliantAppListType = "none"
+                            WebBrowserCookieSettings = "browserDefault"
+                            CompliantAppsList =@(
+                                @{
+                                    name = "FakeStringValue"
+                                    appId = "FakeStringValue"
+                                    appStoreUrl = "FakeStringValue"
+                                    '@odata.type' = "#microsoft.graph.appleAppListItem"
+                                    publisher = "FakeStringValue"
+
+                                }
+                            )
+                            PasswordPreviousPasswordBlockCount = 7
+                            KioskModeApps =@(
+                                @{
+                                    name = "FakeStringValue"
+                                    appId = "FakeStringValue"
+                                    appStoreUrl = "FakeStringValue"
+                                    '@odata.type' = "#microsoft.graph.appleAppListItem"
+                                    publisher = "FakeStringValue"
+
+                                }
+                            )
+                            PasswordExpirationDays = 7
+                            PasswordMinimumLength = 7
+
+                        }
                         Description = "FakeStringValue"
-                        DeviceSharingAllowed = $False
-                        DiagnosticDataBlockSubmission = $False
                         DisplayName = "FakeStringValue"
-                        FactoryResetBlocked = $False
-                        GoogleAccountBlockAutoSync = $False
-                        GooglePlayStoreBlocked = $False
                         Id = "FakeStringValue"
-                        KioskModeBlockSleepButton = $False
-                        KioskModeBlockVolumeButtons = $False
-                        LocationServicesBlocked = $False
-                        NfcBlocked = $False
-                        PasswordBlockFingerprintUnlock = $False
-                        PasswordBlockTrustAgents = $False
-                        PasswordExpirationDays = 7
-                        PasswordMinimumLength = 7
-                        PasswordMinutesOfInactivityBeforeScreenTimeout = 7
-                        PasswordPreviousPasswordBlockCount = 7
-                        PasswordRequired = $False
-                        PasswordRequiredType = "deviceDefault"
-                        PasswordSignInFailureCountBeforeFactoryReset = 7
-                        PowerOffBlocked = $False
-                        RequiredPasswordComplexity = "none"
-                        ScreenCaptureBlocked = $False
-                        SecurityRequireVerifyApps = $False
-                        StorageBlockGoogleBackup = $False
-                        StorageBlockRemovableStorage = $False
-                        StorageRequireDeviceEncryption = $False
-                        StorageRequireRemovableStorageEncryption = $False
-                        VoiceAssistantBlocked = $False
-                        VoiceDialingBlocked = $False
-                        WebBrowserBlockAutofill = $False
-                        WebBrowserBlocked = $False
-                        WebBrowserBlockJavaScript = $False
-                        WebBrowserBlockPopups = $False
-                        WebBrowserCookieSettings = "browserDefault"
-                        WiFiBlocked = $False
 
                     }
                 }
@@ -500,54 +823,108 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
                     return @{
-                        AppsBlockClipboardSharing = $True
-                        AppsBlockCopyPaste = $True
-                        AppsBlockYouTube = $True
-                        BluetoothBlocked = $True
-                        CameraBlocked = $True
-                        CellularBlockDataRoaming = $True
-                        CellularBlockMessaging = $True
-                        CellularBlockVoiceRoaming = $True
-                        CellularBlockWiFiTethering = $True
-                        CompliantAppListType = "none"
-                        DateAndTimeBlockChanges = $True
+                        AdditionalProperties =@{
+                            AppsBlockCopyPaste = $True
+                            StorageBlockRemovableStorage = $True
+                            PowerOffBlocked = $True
+                            KioskModeBlockSleepButton = $True
+                            ScreenCaptureBlocked = $True
+                            AppsLaunchBlockList =@(
+                                @{
+                                    name = "FakeStringValue"
+                                    appId = "FakeStringValue"
+                                    appStoreUrl = "FakeStringValue"
+                                    '@odata.type' = "#microsoft.graph.appleAppListItem"
+                                    publisher = "FakeStringValue"
+
+                                }
+                            )
+                            PasswordMinimumLength = 25
+                            PasswordRequired = $True
+                            KioskModeBlockVolumeButtons = $True
+                            PasswordSignInFailureCountBeforeFactoryReset = 25
+                            AppsBlockYouTube = $True
+                            PasswordExpirationDays = 25
+                            AppsHideList =@(
+                                @{
+                                    name = "FakeStringValue"
+                                    appId = "FakeStringValue"
+                                    appStoreUrl = "FakeStringValue"
+                                    '@odata.type' = "#microsoft.graph.appleAppListItem"
+                                    publisher = "FakeStringValue"
+
+                                }
+                            )
+                            LocationServicesBlocked = $True
+                            WebBrowserBlockAutofill = $True
+                            DateAndTimeBlockChanges = $True
+                            FactoryResetBlocked = $True
+                            PasswordRequiredType = "deviceDefault"
+                            WebBrowserBlockPopups = $True
+                            StorageRequireRemovableStorageEncryption = $True
+                            PasswordPreviousPasswordBlockCount = 25
+                            KioskModeApps =@(
+                                @{
+                                    name = "FakeStringValue"
+                                    appId = "FakeStringValue"
+                                    appStoreUrl = "FakeStringValue"
+                                    '@odata.type' = "#microsoft.graph.appleAppListItem"
+                                    publisher = "FakeStringValue"
+
+                                }
+                            )
+                            WebBrowserBlockJavaScript = $True
+                            PasswordMinutesOfInactivityBeforeScreenTimeout = 25
+                            PasswordBlockFingerprintUnlock = $True
+                            WiFiBlocked = $True
+                            CellularBlockMessaging = $True
+                            GooglePlayStoreBlocked = $True
+                            CellularBlockWiFiTethering = $True
+                            StorageRequireDeviceEncryption = $True
+                            NfcBlocked = $True
+                            DiagnosticDataBlockSubmission = $True
+                            CellularBlockDataRoaming = $True
+                            PasswordBlockTrustAgents = $True
+                            RequiredPasswordComplexity = "none"
+                            '@odata.type' = "#microsoft.graph.androidGeneralDeviceConfiguration"
+                            CameraBlocked = $True
+                            WebBrowserCookieSettings = "browserDefault"
+                            DeviceSharingAllowed = $True
+                            CompliantAppsList =@(
+                                @{
+                                    name = "FakeStringValue"
+                                    appId = "FakeStringValue"
+                                    appStoreUrl = "FakeStringValue"
+                                    '@odata.type' = "#microsoft.graph.appleAppListItem"
+                                    publisher = "FakeStringValue"
+
+                                }
+                            )
+                            VoiceAssistantBlocked = $True
+                            GoogleAccountBlockAutoSync = $True
+                            VoiceDialingBlocked = $True
+                            CompliantAppListType = "none"
+                            AppsBlockClipboardSharing = $True
+                            AppsInstallAllowList =@(
+                                @{
+                                    name = "FakeStringValue"
+                                    appId = "FakeStringValue"
+                                    appStoreUrl = "FakeStringValue"
+                                    '@odata.type' = "#microsoft.graph.appleAppListItem"
+                                    publisher = "FakeStringValue"
+
+                                }
+                            )
+                            WebBrowserBlocked = $True
+                            SecurityRequireVerifyApps = $True
+                            BluetoothBlocked = $True
+                            StorageBlockGoogleBackup = $True
+                            CellularBlockVoiceRoaming = $True
+
+                        }
                         Description = "FakeStringValue"
-                        DeviceSharingAllowed = $True
-                        DiagnosticDataBlockSubmission = $True
                         DisplayName = "FakeStringValue"
-                        FactoryResetBlocked = $True
-                        GoogleAccountBlockAutoSync = $True
-                        GooglePlayStoreBlocked = $True
                         Id = "FakeStringValue"
-                        KioskModeBlockSleepButton = $True
-                        KioskModeBlockVolumeButtons = $True
-                        LocationServicesBlocked = $True
-                        NfcBlocked = $True
-                        PasswordBlockFingerprintUnlock = $True
-                        PasswordBlockTrustAgents = $True
-                        PasswordExpirationDays = 25
-                        PasswordMinimumLength = 25
-                        PasswordMinutesOfInactivityBeforeScreenTimeout = 25
-                        PasswordPreviousPasswordBlockCount = 25
-                        PasswordRequired = $True
-                        PasswordRequiredType = "deviceDefault"
-                        PasswordSignInFailureCountBeforeFactoryReset = 25
-                        PowerOffBlocked = $True
-                        RequiredPasswordComplexity = "none"
-                        ScreenCaptureBlocked = $True
-                        SecurityRequireVerifyApps = $True
-                        StorageBlockGoogleBackup = $True
-                        StorageBlockRemovableStorage = $True
-                        StorageRequireDeviceEncryption = $True
-                        StorageRequireRemovableStorageEncryption = $True
-                        VoiceAssistantBlocked = $True
-                        VoiceDialingBlocked = $True
-                        WebBrowserBlockAutofill = $True
-                        WebBrowserBlocked = $True
-                        WebBrowserBlockJavaScript = $True
-                        WebBrowserBlockPopups = $True
-                        WebBrowserCookieSettings = "browserDefault"
-                        WiFiBlocked = $True
 
                     }
                 }
