@@ -85,7 +85,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName <GetCmdletName> -MockWith {
                     return @{
-<FakeValues>
+<FakeValues2>
                     }
                 }
             }
@@ -113,14 +113,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName <GetCmdletName> -MockWith {
                     return @{
-<FakeValues>
+<FakeValues2>
                     }
                 }
             }
 
-            It "Should return Values from the Get method" {
-                Get-TargetResource @testParams
-            }
 
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
@@ -164,7 +161,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName <GetCmdletName> -MockWith {
                     return @{
-<FakeValues>
+<FakeValues2>
                     }
                 }
             }
