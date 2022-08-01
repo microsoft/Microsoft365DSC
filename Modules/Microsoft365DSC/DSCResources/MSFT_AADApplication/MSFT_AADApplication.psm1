@@ -53,6 +53,10 @@ function Get-TargetResource
         $ReplyURLs,
 
         [Parameter()]
+        [System.String[]]
+        $Owners,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Permissions,
 
@@ -148,6 +152,17 @@ function Get-TargetResource
                 $currentOauth2RequirePostResponseValue = $false
             }
 
+            [Array]$Owners = Get-MgApplicationOwner -ApplicationId $AADApp.Id -All:$true | `
+                ?{ !$_.DeletedDateTime }
+            $OwnersValues = @()
+            foreach ($Owner in $Owners)
+            {
+                if ($Owner.AdditionalProperties.userPrincipalName)
+                {
+                    $OwnersValues += $Owner.AdditionalProperties.userPrincipalName
+                }
+            }
+
             $result = @{
                 DisplayName                = $AADApp.DisplayName
                 AvailableToOtherTenants    = $AvailableToOtherTenantsValue
@@ -159,6 +174,7 @@ function Get-TargetResource
                 Oauth2RequirePostResponse  = $currentOauth2RequirePostResponseValue
                 PublicClient               = $isPublicClient
                 ReplyURLs                  = $AADApp.web.RedirectUris
+                Owners                     = $OwnersValues
                 ObjectId                   = $AADApp.Id
                 AppId                      = $AADApp.AppId
                 Permissions                = $permissionsObj
@@ -249,6 +265,10 @@ function Set-TargetResource
         $ReplyURLs,
 
         [Parameter()]
+        [System.String[]]
+        $Owners,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Permissions,
 
@@ -312,6 +332,7 @@ function Set-TargetResource
     $currentParameters.Remove("ApplicationSecret")  | Out-Null
     $currentParameters.Remove("Ensure")  | Out-Null
     $currentParameters.Remove("Credential")  | Out-Null
+    $backCurrentOwners = $currentAADApp.Owners
 
     if ($KnownClientApplications)
     {
@@ -384,6 +405,39 @@ function Set-TargetResource
         $currentParameters.Remove("ReplyURLs") | Out-Null
         $currentParameters.Remove("LogoutURL") | Out-Null
         $currentParameters.Remove("Homepage") | Out-Null
+    }
+
+    if ($Ensure -ne 'Absent') {
+        $desiredOwnersValue = @()
+        if ($Owners.Length -gt 0)
+        {
+            $desiredOwnersValue = $Owners
+        }
+        if (!$backCurrentOwners)
+        {
+            $backCurrentOwners = @()
+        }
+        $ownersDiff = Compare-Object -ReferenceObject $backCurrentOwners -DifferenceObject $desiredOwnersValue
+        foreach ($diff in $ownersDiff)
+        {
+            $user = Get-MgUser -UserId $diff.InputObject
+
+            if ($diff.SideIndicator -eq '=>')
+            {
+                Write-Verbose -Message "Adding new owner {$($diff.InputObject)} to AAD Application {$DisplayName}"
+                $ownerObject = @{
+                    "@odata.id"= "https://graph.microsoft.com/v1.0/users/{$($user.Id)}"
+                }
+                New-MgApplicationOwnerByRef -ApplicationId $currentAADApp.ObjectId -BodyParameter $ownerObject | Out-Null
+            }
+            elseif ($diff.SideIndicator -eq '<=')
+            {
+                Write-Verbose -Message "Removing new owner {$($diff.InputObject)} from AAD Application {$DisplayName}"
+                $Uri = "https://graph.microsoft.com/v1.0/applications/{0}/owners/{1}/`$ref" -f $currentAADApp.ObjectId, $user.Id
+                Invoke-GraphRequest -Method DELETE -Uri $Uri
+            }
+        }
+        $currentParameters.Remove("Owners") | Out-Null
     }
 
     if ($Ensure -eq "Present" -and $currentAADApp.Ensure -eq "Absent")
@@ -530,6 +584,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $ReplyURLs,
+
+        [Parameter()]
+        [System.String[]]
+        $Owners,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
