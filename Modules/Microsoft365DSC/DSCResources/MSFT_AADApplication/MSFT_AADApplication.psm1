@@ -160,6 +160,8 @@ function Get-TargetResource
                 if ($Owner.AdditionalProperties.userPrincipalName)
                 {
                     $OwnersValues += $Owner.AdditionalProperties.userPrincipalName
+                } else {
+                    $OwnersValues += $Owner.Id
                 }
             }
 
@@ -420,20 +422,25 @@ function Set-TargetResource
         $ownersDiff = Compare-Object -ReferenceObject $backCurrentOwners -DifferenceObject $desiredOwnersValue
         foreach ($diff in $ownersDiff)
         {
-            $user = Get-MgUser -UserId $diff.InputObject
+            if ($diff.InputObject.Contains('@')) {
+                $OwnerId = $(Get-MgUser -UserId $diff.InputObject).Id
+            } else {
+                $OwnerId = $diff.InputObject
+            }
 
             if ($diff.SideIndicator -eq '=>')
             {
                 Write-Verbose -Message "Adding new owner {$($diff.InputObject)} to AAD Application {$DisplayName}"
+                $DirectoryObjectUri = "https://graph.microsoft.com/v1.0/directoryObjects/{0}" -f $OwnerId
                 $ownerObject = @{
-                    "@odata.id"= "https://graph.microsoft.com/v1.0/users/{$($user.Id)}"
+                    "@odata.id" = $DirectoryObjectUri
                 }
                 New-MgApplicationOwnerByRef -ApplicationId $currentAADApp.ObjectId -BodyParameter $ownerObject | Out-Null
             }
             elseif ($diff.SideIndicator -eq '<=')
             {
                 Write-Verbose -Message "Removing new owner {$($diff.InputObject)} from AAD Application {$DisplayName}"
-                $Uri = "https://graph.microsoft.com/v1.0/applications/{0}/owners/{1}/`$ref" -f $currentAADApp.ObjectId, $user.Id
+                $Uri = "https://graph.microsoft.com/v1.0/applications/{0}/owners/{1}/`$ref" -f $currentAADApp.ObjectId, $OwnerId
                 Invoke-GraphRequest -Method DELETE -Uri $Uri
             }
         }
