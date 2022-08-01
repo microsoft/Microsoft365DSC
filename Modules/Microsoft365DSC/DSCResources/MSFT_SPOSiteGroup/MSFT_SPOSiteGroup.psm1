@@ -282,11 +282,12 @@ function Set-TargetResource
             Identity = $Identity
         }
 
-        $UpdateGroupPermissions = $false
+        $NeedsToUpdateGroup = $true
+        $NeedsToUpdateGroupPermissions = $false
         if ($PermissionLevelsToAdd.Count -eq 0 -and $PermissionLevelsToRemove.Count -ne 0)
         {
             Write-Verbose -Message "Need to remove Permissions $PermissionLevelsToRemove"
-            $UpdateGroupPermissions = $true
+            $NeedsToUpdateGroupPermissions = $true
             $GroupPermissionsParameters.Add("RemoveRole", $PermissionLevelsToRemove)
         }
         elseif ($PermissionLevelsToRemove.Count -eq 0 -and $PermissionLevelsToAdd.Count -ne 0)
@@ -294,14 +295,15 @@ function Set-TargetResource
             Write-Verbose -Message "Need to add Permissions $PermissionLevelsToAdd"
             Write-Verbose -Message "Setting PnP Group with Identity {$Identity} and Owner {$Owner}"
             Write-Verbose -Message "Setting PnP Group Permissions Identity {$Identity} AddRole {$PermissionLevelsToAdd}"
-            $UpdateGroupPermissions = $true
+            $NeedsToUpdateGroupPermissions = $true
             $GroupPermissionsParameters.Add("AddRole", $PermissionLevelsToAdd)
         }
         elseif ($PermissionLevelsToAdd.Count -eq 0 -and $PermissionLevelsToRemove.Count -eq 0)
         {
-            if (($Identity -eq $currentValues.Identity) -and ($Owner -eq $currentlValues.Owner))
+            if (($Identity -eq $currentValues.Identity) -and ($Owner -eq $currentValues.Owner))
             {
                 Write-Verbose -Message "All values are configured as desired"
+                $NeedsToUpdateGroup = $false
             }
             else
             {
@@ -311,10 +313,12 @@ function Set-TargetResource
         else
         {
             Write-Verbose -Message "Updating Group Permissions Add {$PermissionLevelsToAdd} Remove {$PermissionLevelsToRemove}"
-            $UpdateGroupPermissions = $true
+            $NeedsToUpdateGroupPermissions = $true
             $GroupPermissionsParameters.Add("AddRole", $PermissionLevelsToAdd)
         }
-        Set-PnPGroup @SiteGroupSettings
+        if ($NeedsToUpdateGroup) {
+            Set-PnPGroup @SiteGroupSettings
+        }
         if ($UpdateGroupPermissions) {
             Set-PnPGroupPermissions @GroupPermissionsParameters
         }
