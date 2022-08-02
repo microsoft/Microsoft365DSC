@@ -251,14 +251,14 @@ function Set-TargetResource
             if ($ActionOnError -eq $false) {
                 $StopProcessingPolicy = $true
             } else {
-                if ($RedirectAddress -eq $false) {
+                if ([String]::IsNullOrEmpty($RedirectAddress)) {
                     $StopProcessingPolicy = $true
                 }
             }
             if ($StopProcessingPolicy -eq $true) {
                 try {
-                    $Message = "Please ensure that if Redirect is set to true then both " + `
-                        "ActionOnError and RedirectAddress are set to true as well "
+                    $Message = "Please ensure that if Redirect is set to true then  " + `
+                        "ActionOnError is also set to true and RedirectAddress is not null"
                     Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                         -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
                         -TenantId $tenantIdValue
