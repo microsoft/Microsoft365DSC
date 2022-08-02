@@ -255,7 +255,7 @@ function Set-TargetResource
                     $StopProcessingPolicy = $true
                 }
             }
-            if ($StopProcessingPolicy) {
+            if ($StopProcessingPolicy -eq $true) {
                 try {
                     $Message = "Please ensure that if Redirect is set to true then both " + `
                         "ActionOnError and RedirectAddress are set to true as well "
