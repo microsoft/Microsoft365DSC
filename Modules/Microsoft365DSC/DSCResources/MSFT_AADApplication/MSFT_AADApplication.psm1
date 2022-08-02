@@ -329,6 +329,7 @@ function Set-TargetResource
     $currentAADApp = Get-TargetResource @PSBoundParameters
     $currentParameters = $PSBoundParameters
     $currentParameters.Remove("ApplicationId")  | Out-Null
+    $tenantIdValue = $TenantId
     $currentParameters.Remove("TenantId")  | Out-Null
     $currentParameters.Remove("CertificateThumbprint")  | Out-Null
     $currentParameters.Remove("ApplicationSecret")  | Out-Null
@@ -462,16 +463,35 @@ function Set-TargetResource
         $ownersDiff = Compare-Object -ReferenceObject $backCurrentOwners -DifferenceObject $desiredOwnersValue
         foreach ($diff in $ownersDiff)
         {
-            if ($diff.InputObject.Contains('@')) {
-                $OwnerId = $(Get-MgUser -UserId $diff.InputObject).Id
-            } else {
-                $OwnerId = $diff.InputObject
+            $DirectoryObjectUri = "https://graph.microsoft.com/v1.0/directoryObjects/"
+            try {
+                if ($diff.InputObject.Contains('@')) {
+                    $OwnerId = $(Get-MgUser -UserId $diff.InputObject -ErrorAction Stop).Id
+                    $DirectoryObjectUri += "{0}" -f $OwnerId
+                } else {
+                    $OwnerId = $diff.InputObject
+                    $DirectoryObjectUri += "{0}" -f $OwnerId
+                    Invoke-GraphRequest -Method GET -Uri $DirectoryObjectUri -ErrorAction Stop
+                }
+            }
+            catch {
+                try {
+                    Write-Verbose -Message $_
+                    $Message = "Couldn't find user {0} to process on AAD Application {1}" `
+                        -f $diff.InputObject, $DisplayName
+                    Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $tenantIdValue
+                }
+                catch {
+                    Write-Verbose -Message $_
+                }
+                continue
             }
 
             if ($diff.SideIndicator -eq '=>')
             {
                 Write-Verbose -Message "Adding new owner {$($diff.InputObject)} to AAD Application {$DisplayName}"
-                $DirectoryObjectUri = "https://graph.microsoft.com/v1.0/directoryObjects/{0}" -f $OwnerId
                 $ownerObject = @{
                     "@odata.id" = $DirectoryObjectUri
                 }
