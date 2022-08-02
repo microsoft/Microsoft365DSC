@@ -245,6 +245,10 @@ function Set-TargetResource
     $SafeAttachmentPolicy = $SafeAttachmentPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
     if ('Present' -eq $Ensure )
     {
+        if ($null -eq $RedirectAddress -or $RedirectAddress -eq "") {
+            Write-Verbose -Message "Ignoring RedirectAddress because it is null."
+            $SafeAttachmentPolicyParams.Remove('RedirectAddress') | Out-Null
+        }
         if (-not $SafeAttachmentPolicy)
         {
             Write-Verbose -Message "Creating SafeAttachmentPolicy $($Identity)."
