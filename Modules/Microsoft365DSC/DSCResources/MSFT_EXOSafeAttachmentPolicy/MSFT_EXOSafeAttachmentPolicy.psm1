@@ -235,6 +235,7 @@ function Set-TargetResource
     $SafeAttachmentPolicyParams.Remove('Ensure') | Out-Null
     $SafeAttachmentPolicyParams.Remove('Credential') | Out-Null
     $SafeAttachmentPolicyParams.Remove('ApplicationId') | Out-Null
+    $tenantIdValue = $TenantId
     $SafeAttachmentPolicyParams.Remove('TenantId') | Out-Null
     $SafeAttachmentPolicyParams.Remove('CertificateThumbprint') | Out-Null
     $SafeAttachmentPolicyParams.Remove('CertificatePath') | Out-Null
@@ -245,6 +246,32 @@ function Set-TargetResource
     $SafeAttachmentPolicy = $SafeAttachmentPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
     if ('Present' -eq $Ensure )
     {
+        $StopProcessingPolicy = $false
+        if ($Redirect -eq $true) {
+            if ($ActionOnError -eq $false) {
+                $StopProcessingPolicy = $true
+            } else {
+                if ($RedirectAddress -eq $false) {
+                    $StopProcessingPolicy = $true
+                }
+            }
+            if ($StopProcessingPolicy) {
+                try {
+                    $Message = "Please ensure that if Redirect is set to true then both " + `
+                        "ActionOnError and RedirectAddress are set to true as well "
+                    Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $tenantIdValue
+                }
+                catch {
+                    Write-Verbose $_
+                }
+                break
+            }
+        } else {
+            $SafeAttachmentPolicyParams.Remove("RedirectAddress") | Out-Null
+        }
+
         if (-not $SafeAttachmentPolicy)
         {
             Write-Verbose -Message "Creating SafeAttachmentPolicy $($Identity)."
