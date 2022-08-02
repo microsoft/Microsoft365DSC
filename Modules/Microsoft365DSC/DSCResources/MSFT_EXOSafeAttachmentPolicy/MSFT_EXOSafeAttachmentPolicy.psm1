@@ -284,12 +284,36 @@ function Set-TargetResource
             }
 
             $SafeAttachmentPolicyParams.Remove('Identity') | Out-Null
-            New-SafeAttachmentPolicy @SafeAttachmentPolicyParams
+            try {
+                New-SafeAttachmentPolicy @SafeAttachmentPolicyParams
+            }
+            catch {
+                try {
+                    Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $tenantIdValue
+                }
+                catch {
+                    Write-Verbose $_
+                }
+            }
         }
         else
         {
             Write-Verbose -Message "Setting SafeAttachmentPolicy $Identity with values: $(Convert-M365DscHashtableToString -Hashtable $SafeAttachmentPolicyParams)"
-            Set-SafeAttachmentPolicy @SafeAttachmentPolicyParams
+            try {
+                Set-SafeAttachmentPolicy @SafeAttachmentPolicyParams
+            }
+            catch {
+                try {
+                    Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $tenantIdValue
+                }
+                catch {
+                    Write-Verbose $_
+                }
+            }
         }
     }
     elseif (('Absent' -eq $Ensure) -and ($SafeAttachmentPolicy))
