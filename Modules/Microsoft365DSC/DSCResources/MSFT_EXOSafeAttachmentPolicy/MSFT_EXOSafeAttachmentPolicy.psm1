@@ -247,15 +247,19 @@ function Set-TargetResource
     if ('Present' -eq $Ensure )
     {
         $StopProcessingPolicy = $false
+        $Message = "Cannot proceed with processing of SafeAttachmentPolicy because Redirect is set to true "
         if ($Redirect -eq $true) {
             if ($ActionOnError -eq $false) {
+                $Message += "and ActionOnError is false"
                 $StopProcessingPolicy = $true
             } else {
                 if ([String]::IsNullOrEmpty($RedirectAddress)) {
+                    $Message += "and RedirectAddress is null"
                     $StopProcessingPolicy = $true
                 }
             }
             if ($StopProcessingPolicy -eq $true) {
+                Write-Verbose $Message
                 try {
                     $Message = "Please ensure that if Redirect is set to true then  " + `
                         "ActionOnError is also set to true and RedirectAddress is not null"
