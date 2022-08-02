@@ -335,6 +335,7 @@ function Set-TargetResource
     $currentParameters.Remove("Ensure")  | Out-Null
     $currentParameters.Remove("Credential")  | Out-Null
     $backCurrentOwners = $currentAADApp.Owners
+    $currentParameters.Remove("Owners") | Out-Null
 
     if ($KnownClientApplications)
     {
@@ -409,44 +410,6 @@ function Set-TargetResource
         $currentParameters.Remove("Homepage") | Out-Null
     }
 
-    if ($Ensure -ne 'Absent') {
-        $desiredOwnersValue = @()
-        if ($Owners.Length -gt 0)
-        {
-            $desiredOwnersValue = $Owners
-        }
-        if (!$backCurrentOwners)
-        {
-            $backCurrentOwners = @()
-        }
-        $ownersDiff = Compare-Object -ReferenceObject $backCurrentOwners -DifferenceObject $desiredOwnersValue
-        foreach ($diff in $ownersDiff)
-        {
-            if ($diff.InputObject.Contains('@')) {
-                $OwnerId = $(Get-MgUser -UserId $diff.InputObject).Id
-            } else {
-                $OwnerId = $diff.InputObject
-            }
-
-            if ($diff.SideIndicator -eq '=>')
-            {
-                Write-Verbose -Message "Adding new owner {$($diff.InputObject)} to AAD Application {$DisplayName}"
-                $DirectoryObjectUri = "https://graph.microsoft.com/v1.0/directoryObjects/{0}" -f $OwnerId
-                $ownerObject = @{
-                    "@odata.id" = $DirectoryObjectUri
-                }
-                New-MgApplicationOwnerByRef -ApplicationId $currentAADApp.ObjectId -BodyParameter $ownerObject | Out-Null
-            }
-            elseif ($diff.SideIndicator -eq '<=')
-            {
-                Write-Verbose -Message "Removing new owner {$($diff.InputObject)} from AAD Application {$DisplayName}"
-                $Uri = "https://graph.microsoft.com/v1.0/applications/{0}/owners/{1}/`$ref" -f $currentAADApp.ObjectId, $OwnerId
-                Invoke-GraphRequest -Method DELETE -Uri $Uri
-            }
-        }
-        $currentParameters.Remove("Owners") | Out-Null
-    }
-
     if ($Ensure -eq "Present" -and $currentAADApp.Ensure -eq "Absent")
     {
         Write-Verbose -Message "Creating New AzureAD Application {$DisplayName} with values:`r`n$($currentParameters | Out-String)"
@@ -484,6 +447,43 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing AzureAD Application {$DisplayName} by ObjectID {$($currentAADApp.ObjectID)}"
         Remove-MgApplication -ApplicationId $currentAADApp.ObjectID
+    }
+
+    if ($Ensure -ne 'Absent') {
+        $desiredOwnersValue = @()
+        if ($Owners.Length -gt 0)
+        {
+            $desiredOwnersValue = $Owners
+        }
+        if (!$backCurrentOwners)
+        {
+            $backCurrentOwners = @()
+        }
+        $ownersDiff = Compare-Object -ReferenceObject $backCurrentOwners -DifferenceObject $desiredOwnersValue
+        foreach ($diff in $ownersDiff)
+        {
+            if ($diff.InputObject.Contains('@')) {
+                $OwnerId = $(Get-MgUser -UserId $diff.InputObject).Id
+            } else {
+                $OwnerId = $diff.InputObject
+            }
+
+            if ($diff.SideIndicator -eq '=>')
+            {
+                Write-Verbose -Message "Adding new owner {$($diff.InputObject)} to AAD Application {$DisplayName}"
+                $DirectoryObjectUri = "https://graph.microsoft.com/v1.0/directoryObjects/{0}" -f $OwnerId
+                $ownerObject = @{
+                    "@odata.id" = $DirectoryObjectUri
+                }
+                New-MgApplicationOwnerByRef -ApplicationId $currentAADApp.ObjectId -BodyParameter $ownerObject | Out-Null
+            }
+            elseif ($diff.SideIndicator -eq '<=')
+            {
+                Write-Verbose -Message "Removing new owner {$($diff.InputObject)} from AAD Application {$DisplayName}"
+                $Uri = "https://graph.microsoft.com/v1.0/applications/{0}/owners/{1}/`$ref" -f $currentAADApp.ObjectId, $OwnerId
+                Invoke-GraphRequest -Method DELETE -Uri $Uri
+            }
+        }
     }
 
     if ($needToUpdatePermissions -and -not [System.String]::IsNullOrEmpty($Permissions) -and $Permissions.Length -gt 0)
