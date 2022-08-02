@@ -1,6 +1,6 @@
 {
     "resourceName": "<ResourceFriendlyName>",
-    "description": "This resource configures an <ResourceDescription> Device.",
+    "description": "This resource configures an <ResourceDescription>.",
     "permissions":<ResourcePermissions>
 
 }
