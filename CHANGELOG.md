@@ -8,6 +8,27 @@
   FIXES [#2151](https://github.com/microsoft/Microsoft365DSC/issues/2151)
 * TeamsEventsPolicy
   * Initial release.
+* IntuneWifiConfigurationPolicyAndroidDeviceAdministrator
+  * Initial release
+* IntuneWifiConfigurationPolicyAndroidForWork
+  * Initial release
+* IntuneWifiConfigurationPolicyAndroidEntrepriseWorkProfile
+  * Initial release
+* IntuneWifiConfigurationPolicyAndroidEntrepriseDeviceOwner
+  * Initial release
+* IntuneWifiConfigurationPolicyAndroidOpenSourceProject
+  * Initial release
+* IntuneWifiConfigurationPolicyIOS
+  * Initial release
+* IntuneWifiConfigurationPolicyMacOS
+  * Initial release
+* IntuneWifiConfigurationPolicyWindows10
+  * Initial release
+* DRG
+  * Fixes Unit test automation
+  * Added support for CIM instances in Unit test automation
+  * Added support for settings.json automation
+  * Added support for readme.md automation
 * DEPENDENCIES
   * Updated MicrosoftTeams to version 4.6.0.
 
