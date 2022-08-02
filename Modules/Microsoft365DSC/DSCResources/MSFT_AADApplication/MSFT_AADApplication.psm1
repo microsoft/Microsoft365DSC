@@ -477,8 +477,9 @@ function Set-TargetResource
             catch {
                 try {
                     Write-Verbose -Message $_
-                    $Message = "Couldn't find user {0} to process on AAD Application {1}" `
-                        -f $diff.InputObject, $DisplayName
+                    $Message = "Couldn't find object {0} to add/remove as owner on AAD Application {1}, " `
+                        -f $diff.InputObject, $DisplayName + `
+                        "not processing any further objects"
                     Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                         -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
                         -TenantId $tenantIdValue
@@ -486,7 +487,7 @@ function Set-TargetResource
                 catch {
                     Write-Verbose -Message $_
                 }
-                continue
+                break
             }
 
             if ($diff.SideIndicator -eq '=>')
