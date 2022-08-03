@@ -327,7 +327,9 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing Group $Identity"
         Write-Verbose "Removing SPOSiteGroup $Identity"
-        $SiteGroupSettings.Remove("Owner")
+        $SiteGroupSettings = @{
+            Identity = $Identity
+        }
         Remove-PnPGroup @SiteGroupSettings
     }
 }
