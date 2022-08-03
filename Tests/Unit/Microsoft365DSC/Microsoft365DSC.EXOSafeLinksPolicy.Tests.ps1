@@ -62,7 +62,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnableForInternalSenders      = $false
                     EnableSafeLinksForEmail       = $false
                     EnableSafeLinksForTeams       = $false
-                    EnableSafeLinksForOffice      = $false
                     EnableOrganizationBranding    = $false
                     ScanUrls                      = $false
                     UseTranslatedNotificationText = $false
@@ -96,7 +95,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnableForInternalSenders      = $false
                     EnableSafeLinksForEmail       = $false
                     EnableSafeLinksForTeams       = $false
-                    EnableSafeLinksForOffice      = $false
                     EnableOrganizationBranding    = $false
                     ScanUrls                      = $false
                     UseTranslatedNotificationText = $false
@@ -111,7 +109,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         EnableForInternalSenders      = $false
                         EnableSafeLinksForEmail       = $false
                         EnableSafeLinksForTeams       = $false
-                        EnableSafeLinksForOffice      = $false
                         EnableOrganizationBranding    = $false
                         ScanUrls                      = $false
                         UseTranslatedNotificationText = $false
@@ -136,7 +133,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnableForInternalSenders      = $false
                     EnableSafeLinksForEmail       = $false
                     EnableSafeLinksForTeams       = $false
-                    EnableSafeLinksForOffice      = $false
                     EnableOrganizationBranding    = $false
                     ScanUrls                      = $false
                     UseTranslatedNotificationText = $false
@@ -153,7 +149,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         EnableForInternalSenders      = $true
                         EnableSafeLinksForEmail       = $true
                         EnableSafeLinksForTeams       = $true
-                        EnableSafeLinksForOffice      = $true
                         EnableOrganizationBranding    = $true
                         ScanUrls                      = $true
                         UseTranslatedNotificationText = $true
@@ -187,7 +182,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnableForInternalSenders      = $false
                     EnableSafeLinksForEmail       = $false
                     EnableSafeLinksForTeams       = $false
-                    EnableSafeLinksForOffice      = $false
                     EnableOrganizationBranding    = $false
                     ScanUrls                      = $false
                     UseTranslatedNotificationText = $false
@@ -230,7 +224,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         EnableForInternalSenders      = $false
                         EnableSafeLinksForEmail       = $false
                         EnableSafeLinksForTeams       = $false
-                        EnableSafeLinksForOffice      = $false
                         EnableOrganizationBranding    = $false
                         ScanUrls                      = $false
                         UseTranslatedNotificationText = $false
