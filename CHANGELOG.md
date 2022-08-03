@@ -10,6 +10,8 @@
   * Initial release.
 * DEPENDENCIES
   * Updated MicrosoftTeams to version 4.6.0.
+* O365User
+  * Optimize, call Get-MgSubscribedSku only once instead of inside of two loops per each user/license.
 
 # 1.22.727.1
 
