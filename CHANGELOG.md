@@ -8,6 +8,8 @@
   FIXES [#2151](https://github.com/microsoft/Microsoft365DSC/issues/2151)
 * TeamsEventsPolicy
   * Initial release.
+* AADApplication
+  * Added support to export/import app owners.
 * DEPENDENCIES
   * Updated MicrosoftTeams to version 4.6.0.
 
