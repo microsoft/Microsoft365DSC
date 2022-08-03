@@ -471,7 +471,7 @@ function Set-TargetResource
                 } else {
                     $OwnerId = $diff.InputObject
                     $DirectoryObjectUri += "{0}" -f $OwnerId
-                    Invoke-GraphRequest -Method GET -Uri $DirectoryObjectUri -ErrorAction Stop
+                    Get-MgDirectoryObject -DirectoryObjectId $DirectoryObjectUri -ErrorAction Stop
                 }
             }
             catch {
@@ -516,7 +516,7 @@ function Set-TargetResource
                 Write-Verbose -Message "Removing new owner {$($diff.InputObject)} from AAD Application {$DisplayName}"
                 $Uri = "https://graph.microsoft.com/v1.0/applications/{0}/owners/{1}/`$ref" -f $currentAADApp.ObjectId, $OwnerId
                 try {
-                    Invoke-GraphRequest -Method DELETE -Uri $Uri
+                    Remove-MgDirectoryObject -DirectoryObjectId $Uri -ErrorAction Stop
                 }
                 catch {
                     try {
