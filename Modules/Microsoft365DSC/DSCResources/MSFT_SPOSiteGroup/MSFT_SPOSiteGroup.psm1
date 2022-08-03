@@ -319,7 +319,7 @@ function Set-TargetResource
         if ($NeedsToUpdateGroup) {
             Set-PnPGroup @SiteGroupSettings
         }
-        if ($UpdateGroupPermissions) {
+        if ($NeedsToUpdateGroupPermissions) {
             Set-PnPGroupPermissions @GroupPermissionsParameters
         }
     }
