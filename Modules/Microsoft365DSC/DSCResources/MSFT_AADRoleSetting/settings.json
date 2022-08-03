@@ -1,0 +1,30 @@
+﻿{
+    "resourceName": "AADRoleSetting",
+    "description": "This resource configures an Azure Role.",
+    "permissions": [
+        {
+            "read": [
+                {
+                    "name": "RoleManagement.Read.Directory"
+                },
+                {
+                    "name": "Directory.Read.All"
+                }
+            ],
+            "update": [
+                {
+                    "name": "RoleManagement.Read.Directory"
+                },
+                {
+                    "name": "Directory.Read.All"
+                },
+                {
+                    "name": "RoleManagement.ReadWrite.Directory"
+                },
+                {
+                    "name": "Directory.ReadWrite.All"
+                }
+            ]
+        }
+    ]
+}
