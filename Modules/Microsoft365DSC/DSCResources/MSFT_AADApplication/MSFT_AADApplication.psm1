@@ -496,13 +496,39 @@ function Set-TargetResource
                 $ownerObject = @{
                     "@odata.id" = $DirectoryObjectUri
                 }
-                New-MgApplicationOwnerByRef -ApplicationId $currentAADApp.ObjectId -BodyParameter $ownerObject | Out-Null
+                try {
+                    New-MgApplicationOwnerByRef -ApplicationId $currentAADApp.ObjectId -BodyParameter $ownerObject | Out-Null
+                }
+                catch {
+                    try {
+                        Write-Verbose -Message $_
+                        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $tenantIdValue
+                    }
+                    catch {
+                        Write-Verbose -Message $_
+                    }
+                }
             }
             elseif ($diff.SideIndicator -eq '<=')
             {
                 Write-Verbose -Message "Removing new owner {$($diff.InputObject)} from AAD Application {$DisplayName}"
                 $Uri = "https://graph.microsoft.com/v1.0/applications/{0}/owners/{1}/`$ref" -f $currentAADApp.ObjectId, $OwnerId
-                Invoke-GraphRequest -Method DELETE -Uri $Uri
+                try {
+                    Invoke-GraphRequest -Method DELETE -Uri $Uri
+                }
+                catch {
+                    try {
+                        Write-Verbose -Message $_
+                        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $tenantIdValue
+                    }
+                    catch {
+                        Write-Verbose -Message $_
+                    }
+                }
             }
         }
     }
