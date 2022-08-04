@@ -1,7 +1,8 @@
 # Change log for Microsoft365DSC
 
 # 1.22.727.1
-
+* AADRoleSetting
+  * This new resource add the ability to configure existing Azure Roles with all parameters like in the UI.
 * EXOTransportRule
   * Fixed issue where the MessageContainsDataClassifications property was not properly extracted due to single quote exiting.
   FIXES [#1820](https://github.com/microsoft/Microsoft365DSC/issues/1820)
