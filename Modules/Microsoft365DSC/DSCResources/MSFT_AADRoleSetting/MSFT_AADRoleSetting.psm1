@@ -1129,6 +1129,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -1170,7 +1174,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$roles = Get-MgRoleManagementDirectoryRoleDefinition -ErrorAction Stop
+        [array]$roles = Get-MgRoleManagementDirectoryRoleDefinition -Filter $Filter -ErrorAction Stop
         $i = 1
         $dscContent = ''
         Write-Host "`r`n" -NoNewline
