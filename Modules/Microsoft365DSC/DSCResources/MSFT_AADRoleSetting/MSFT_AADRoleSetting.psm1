@@ -1170,7 +1170,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$roles = Get-MgRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId "9360feb5-f418-4baa-8175-e2a00bac4301" -ErrorAction Stop
+        [array]$roles = Get-MgRoleManagementDirectoryRoleDefinition -ErrorAction Stop
         $i = 1
         $dscContent = ''
         Write-Host "`r`n" -NoNewline
