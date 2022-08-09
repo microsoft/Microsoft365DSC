@@ -6,6 +6,10 @@
   * DEPRECATED then IncludeDevices and ExcludeDevices parameters.
   * Fixed issue extracting a policy that had invalid users or groups (deleted from AAD).
   FIXES [#2151](https://github.com/microsoft/Microsoft365DSC/issues/2151)
+* SPOSiteGroup
+  * Avoid redefining $SiteGroupSettings always to the same value, just define it once, and call it as is on Set-PnPGroup.
+  * To keep the same order of updating the group and then its permissions check on which conditions it needs to be updated and at the end call Set-PnPGroup then Set-PnPGroupPermissions.
+  * Fix typo in variable, not an issue right now but the group would always be updated even if name and owner were already correct.
 * TeamsEventsPolicy
   * Initial release.
 * DEPENDENCIES
