@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADApplication
+  * Fixed issue where Update-MgApplication could be called with parameter $ReplyURLs which is invalid.
 * AADConditionalAccessPolicy
   * DEPRECATED then IncludeDevices and ExcludeDevices parameters.
   * Fixed issue extracting a policy that had invalid users or groups (deleted from AAD).
