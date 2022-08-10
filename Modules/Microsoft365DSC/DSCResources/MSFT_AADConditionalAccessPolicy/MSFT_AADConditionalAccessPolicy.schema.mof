@@ -1,8 +1,8 @@
 [ClassVersion("1.0.0.0"), FriendlyName("AADConditionalAccessPolicy")]
 class MSFT_AADConditionalAccessPolicy : OMI_BaseResource
 {
-    [Key, Description("DisplayName of the AAD CA Policy")] String DisplayName;
-    [Write, Description("Specifies the GUID for the Policy.")] String Id;
+    [Key, Description("Specifies the GUID for the Policy.")] String Id;
+    [Write, Description("DisplayName of the AAD CA Policy")] String DisplayName;
     [Write, Description("Specifies the State of the Policy."), ValueMap{"disabled","enabled","enabledForReportingButNotEnforced"}, Values{"disabled","enabled","enabledForReportingButNotEnforced"}] String State;
     [Write, Description("Cloud Apps in scope of the Policy.")] String IncludeApplications[];
     [Write, Description("Cloud Apps out of scope of the Policy.")] String ExcludeApplications[];

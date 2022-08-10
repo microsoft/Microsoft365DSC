@@ -6,6 +6,8 @@
   * DEPRECATED then IncludeDevices and ExcludeDevices parameters.
   * Fixed issue extracting a policy that had invalid users or groups (deleted from AAD).
   FIXES [#2151](https://github.com/microsoft/Microsoft365DSC/issues/2151)
+  * Fixed issue compiling to MOF if objects had the same DisplayName (just identify them by their Id instead)
+  FIXES [#2184](https://github.com/microsoft/Microsoft365DSC/issues/2184)
 * TeamsEventsPolicy
   * Initial release.
 * DEPENDENCIES
