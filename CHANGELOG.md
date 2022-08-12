@@ -10,6 +10,9 @@
   * Initial release.
 * DEPENDENCIES
   * Updated MicrosoftTeams to version 4.6.0.
+* MISC
+  * FIXES [#2182] and updates various SPO Resources
+  * indentation fixes for various SPO Resources
 
 # 1.22.727.1
 
