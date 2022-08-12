@@ -130,7 +130,7 @@ function Get-TargetResource
             Identity              = $siteGroup.Title
             Owner                 = $siteGroup.Owner.LoginName
             PermissionLevels      = [array]$permissions
-            Credential    = $Credential
+            Credential            = $Credential
             Ensure                = "Present"
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
