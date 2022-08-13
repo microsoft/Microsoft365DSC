@@ -79,7 +79,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -91,7 +95,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -149,25 +153,26 @@ function Get-TargetResource
             }
 
             $result = @{
-                DisplayName                = $AADApp.DisplayName
-                AvailableToOtherTenants    = $AvailableToOtherTenantsValue
-                GroupMembershipClaims      = $AADApp.GroupMembershipClaims
-                Homepage                   = $AADApp.web.HomepageUrl
-                IdentifierUris             = $AADApp.IdentifierUris
-                KnownClientApplications    = $AADApp.Api.KnownClientApplications
-                LogoutURL                  = $AADApp.web.LogoutURL
-                Oauth2RequirePostResponse  = $currentOauth2RequirePostResponseValue
-                PublicClient               = $isPublicClient
-                ReplyURLs                  = $AADApp.web.RedirectUris
-                ObjectId                   = $AADApp.Id
-                AppId                      = $AADApp.AppId
-                Permissions                = $permissionsObj
-                Ensure                     = "Present"
-                Credential                 = $Credential
-                ApplicationId              = $ApplicationId
-                TenantId                   = $TenantId
-                ApplicationSecret          = $ApplicationSecret
-                CertificateThumbprint      = $CertificateThumbprint
+                DisplayName               = $AADApp.DisplayName
+                AvailableToOtherTenants   = $AvailableToOtherTenantsValue
+                GroupMembershipClaims     = $AADApp.GroupMembershipClaims
+                Homepage                  = $AADApp.web.HomepageUrl
+                IdentifierUris            = $AADApp.IdentifierUris
+                KnownClientApplications   = $AADApp.Api.KnownClientApplications
+                LogoutURL                 = $AADApp.web.LogoutURL
+                Oauth2RequirePostResponse = $currentOauth2RequirePostResponseValue
+                PublicClient              = $isPublicClient
+                ReplyURLs                 = $AADApp.web.RedirectUris
+                ObjectId                  = $AADApp.Id
+                AppId                     = $AADApp.AppId
+                Permissions               = $permissionsObj
+                Ensure                    = "Present"
+                Credential                = $Credential
+                ApplicationId             = $ApplicationId
+                TenantId                  = $TenantId
+                ApplicationSecret         = $ApplicationSecret
+                CertificateThumbprint     = $CertificateThumbprint
+                Identity                  = $Identity.IsPresent
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
@@ -275,7 +280,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     Write-Verbose -Message "Setting configuration of Azure AD Application"
@@ -285,7 +294,7 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -306,12 +315,13 @@ function Set-TargetResource
 
     $currentAADApp = Get-TargetResource @PSBoundParameters
     $currentParameters = $PSBoundParameters
-    $currentParameters.Remove("ApplicationId")  | Out-Null
-    $currentParameters.Remove("TenantId")  | Out-Null
-    $currentParameters.Remove("CertificateThumbprint")  | Out-Null
-    $currentParameters.Remove("ApplicationSecret")  | Out-Null
-    $currentParameters.Remove("Ensure")  | Out-Null
-    $currentParameters.Remove("Credential")  | Out-Null
+    $currentParameters.Remove("ApplicationId") | Out-Null
+    $currentParameters.Remove("TenantId") | Out-Null
+    $currentParameters.Remove("CertificateThumbprint") | Out-Null
+    $currentParameters.Remove("ApplicationSecret") | Out-Null
+    $currentParameters.Remove("Ensure") | Out-Null
+    $currentParameters.Remove("Credential") | Out-Null
+    $currentParameters.Remove("Identity") | Out-Null
 
     if ($KnownClientApplications)
     {
@@ -341,11 +351,11 @@ function Set-TargetResource
 
     if ($currentParameters.AvailableToOtherTenants)
     {
-        $currentParameters.Add("SignInAudience",'AzureADMultipleOrgs')
+        $currentParameters.Add("SignInAudience", 'AzureADMultipleOrgs')
     }
     else
     {
-        $currentParameters.Add("SignInAudience",'AzureADMyOrg')
+        $currentParameters.Add("SignInAudience", 'AzureADMyOrg')
     }
     $currentParameters.Remove("AvailableToOtherTenants") | Out-Null
     $currentParameters.Remove("PublicClient") | Out-Null
@@ -396,7 +406,8 @@ function Set-TargetResource
 
         $tries = 1
         $appEntity = $null
-        do {
+        do
+        {
             Write-Verbose -Message "Waiting for 10 seconds"
             Start-Sleep -Seconds 10
             $appEntity = Get-MgApplication -ApplicationId $currentAADApp.AppId -ErrorAction SilentlyContinue
@@ -437,8 +448,8 @@ function Set-TargetResource
             $permissionsForcurrentAPI = $Permissions | Where-Object -FilterScript { $_.SourceAPI -eq $sourceAPI }
             $apiPrincipal = Get-MgServicePrincipal -Filter "DisplayName eq '$($sourceAPI)'"
             $currentAPIAccess = @{
-                ResourceAppId        = $apiPrincipal.AppId
-                ResourceAccess       = @()
+                ResourceAppId  = $apiPrincipal.AppId
+                ResourceAccess = @()
             }
             foreach ($permission in $permissionsForcurrentAPI)
             {
@@ -558,14 +569,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -622,6 +637,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove("TenantId") | Out-Null
     $ValuesToCheck.Remove("ApplicationSecret") | Out-Null
     $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
+    $ValuesToCheck.Remove("Identity") | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -661,7 +677,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -669,7 +689,7 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -679,7 +699,8 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
-    $dscContent = [System.Text.StringBuilder]::new()
+    #$dscContent = [System.Text.StringBuilder]::new()
+    $dscContent = "#region $ResourceName`r`n"
     $i = 1
     Write-Host "`r`n" -NoNewline
     try
@@ -697,6 +718,8 @@ function Export-TargetResource
                 DisplayName           = $AADApp.DisplayName
                 ObjectID              = $AADApp.Id
                 Credential            = $Credential
+                Identity              = $Identity.IsPresent
+
             }
             $Results = Get-TargetResource @Params
 
@@ -720,14 +743,15 @@ function Export-TargetResource
                         -ParameterName "Permissions"
                 }
 
-                $dscContent.Append($currentDSCBlock) | Out-Null
+                $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
                 Write-Host $Global:M365DSCEmojiGreenCheckMark
                 $i++
             }
         }
-        return $dscContent.ToString()
+        $dscContent += "#endregion $ResourceName`r`n"
+        return $dscContent
     }
     catch
     {
@@ -768,7 +792,7 @@ function Get-M365DSCAzureADAppPermissions
     foreach ($requiredAccess in $requiredAccesses)
     {
         Write-Verbose -Message "[$i/$($requiredAccesses.Length)]Obtaining information for App's Permission for {$($requiredAccess.ResourceAppId)}"
-        $SourceAPI = Get-MGServicePrincipal -Filter "AppId eq '$($requiredAccess.ResourceAppId)'"
+        $SourceAPI = Get-MgServicePrincipal -Filter "AppId eq '$($requiredAccess.ResourceAppId)'"
 
         foreach ($resourceAccess in $requiredAccess.ResourceAccess)
         {
@@ -776,7 +800,7 @@ function Get-M365DSCAzureADAppPermissions
             $currentPermission.Add("SourceAPI", $SourceAPI.DisplayName)
             if ($resourceAccess.Type -eq 'Scope')
             {
-                $scopeInfo = $SourceAPI.Oauth2PermissionScopes | Where-Object -FilterScript {$_.Id -eq $resourceAccess.Id}
+                $scopeInfo = $SourceAPI.Oauth2PermissionScopes | Where-Object -FilterScript { $_.Id -eq $resourceAccess.Id }
                 $currentPermission.Add("Type", "Delegated")
                 $currentPermission.Add("Name", $scopeInfo.Value)
                 $currentPermission.Add("AdminConsentGranted", $false)
@@ -798,7 +822,7 @@ function Get-M365DSCAzureADAppPermissions
             elseif ($resourceAccess.Type -eq 'Role' -or $resourceAccess.Type -eq 'Role,Scope')
             {
                 $currentPermission.Add("Type", "AppOnly")
-                $role = $SourceAPI.AppRoles | Where-Object -FilterScript {$_.Id -eq $resourceAccess.Id}
+                $role = $SourceAPI.AppRoles | Where-Object -FilterScript { $_.Id -eq $resourceAccess.Id }
                 $currentPermission.Add("Name", $role.Value)
                 $currentPermission.Add("AdminConsentGranted", $false)
 
@@ -808,7 +832,7 @@ function Get-M365DSCAzureADAppPermissions
                     $roleAssignments = Get-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $appServicePrincipal.Id | Sort-Object ResourceDisplayName -Unique
                     foreach ($oAuth2Grant in $roleAssignments)
                     {
-                        $foundPermission = $oAuth2Grant | Where-Object -FilterScript { $_.AppRoleId -eq '134fd756-38ce-4afd-ba33-e9623dbe66c2'}
+                        $foundPermission = $oAuth2Grant | Where-Object -FilterScript { $_.AppRoleId -eq '134fd756-38ce-4afd-ba33-e9623dbe66c2' }
                         break
                     }
 

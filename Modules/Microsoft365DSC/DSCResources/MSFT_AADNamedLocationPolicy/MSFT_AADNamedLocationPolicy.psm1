@@ -56,7 +56,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     Write-Verbose -Message "Getting configuration of AAD Named Location"
@@ -64,8 +68,8 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ProfileName 'v1.0'
-    $context=Get-MgContext
-    if($null -eq $context)
+    $context = Get-MgContext
+    if ($null -eq $context)
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters -ProfileName 'beta'
@@ -79,7 +83,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -140,6 +144,7 @@ function Get-TargetResource
                 TenantId                          = $TenantId
                 CertificateThumbprint             = $CertificateThumbprint
                 Credential                        = $Credential
+                Identity                          = $Identity.IsPresent
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -212,7 +217,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     Write-Verbose -Message "Setting configuration of AAD Named Location"
@@ -222,7 +231,7 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -233,8 +242,8 @@ function Set-TargetResource
 
     $desiredValues = @{
         '@odata.type' = $OdataType
-        displayName = $DisplayName
-        isTrusted = $IsTrusted
+        displayName   = $DisplayName
+        isTrusted     = $IsTrusted
     }
     if ($OdataType -eq '#microsoft.graph.ipNamedLocation')
     {
@@ -248,7 +257,7 @@ function Set-TargetResource
             }
             $IpRangesValue += @{
                 '@odata.type' = $ipRangeType
-                cidrAddress = $IPRange
+                cidrAddress   = $IPRange
             }
         }
         if ($IpRangesValue)
@@ -356,7 +365,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -364,7 +377,7 @@ function Test-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -383,6 +396,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove("ApplicationId") | Out-Null
     $ValuesToCheck.Remove("TenantId") | Out-Null
     $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
+    $ValuesToCheck.Remove("Identity") | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -401,10 +415,6 @@ function Export-TargetResource
     param
     (
         [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -422,14 +432,18 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
     #$ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ProfileName 'v1.0'
-    $context=Get-MgContext
-    if($null -eq $context)
+    $context = Get-MgContext
+    if ($null -eq $context)
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters -ProfileName 'beta'
@@ -440,20 +454,20 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $dscContent = ''
+    $dscContent = "#region $ResourceName`r`n"
     $i = 1
 
     try
     {
 
-        $AADNamedLocations = Get-MgIdentityConditionalAccessNamedLocation -Filter $Filter -All:$true -ErrorAction Stop
+        $AADNamedLocations = Get-MgIdentityConditionalAccessNamedLocation -ErrorAction Stop
         if ($AADNamedLocations.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
@@ -473,6 +487,7 @@ function Export-TargetResource
                 DisplayName           = $AADNamedLocation.DisplayName
                 ID                    = $AADNamedLocation.ID
                 Credential            = $Credential
+                Identity              = $Identity.IsPresent
             }
             $Results = Get-TargetResource @Params
 
@@ -493,6 +508,7 @@ function Export-TargetResource
                 $i++
             }
         }
+        $dscContent += "#endregion $ResourceName`r`n"
         return $dscContent
     }
     catch

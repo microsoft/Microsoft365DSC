@@ -85,7 +85,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     Write-Verbose -Message "Getting configuration of AzureAD Group"
@@ -97,7 +101,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -198,6 +202,7 @@ function Get-TargetResource
                 CertificateThumbprint         = $CertificateThumbprint
                 ApplicationSecret             = $ApplicationSecret
                 Credential                    = $Credential
+                Identity                      = $Identity.IsPresent
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
@@ -311,7 +316,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     Write-Verbose -Message "Setting configuration of Azure AD Groups"
@@ -321,7 +330,7 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -336,6 +345,7 @@ function Set-TargetResource
     $currentParameters.Remove("ApplicationSecret") | Out-Null
     $currentParameters.Remove("Ensure") | Out-Null
     $currentParameters.Remove("Credential") | Out-Null
+    $currentParameters.Remove("Identity") | Out-Null
     $backCurrentOwners = $currentGroup.Owners
     $backCurrentMembers = $currentGroup.Members
     $currentParameters.Remove("Owners") | Out-Null
@@ -409,7 +419,7 @@ function Set-TargetResource
 
     foreach ($assignedLicense in $AllLicenses)
     {
-        $skuInfo = $allSkus | Where-Object -FilterScript {$_.SkuPartNumber -eq $assignedLicense.SkuId}
+        $skuInfo = $allSkus | Where-Object -FilterScript { $_.SkuPartNumber -eq $assignedLicense.SkuId }
         if ($skuInfo)
         {
             if ($toAdd.Contains($assignedLicense.SkuId))
@@ -417,11 +427,11 @@ function Set-TargetResource
                 $disabledPlansValues = @()
                 foreach ($plan in $assignedLicense.DisabledPlans)
                 {
-                    $foundItem = $allServicePlans | Where-Object -FilterScript {$_.ServicePlanName -eq $plan}
+                    $foundItem = $allServicePlans | Where-Object -FilterScript { $_.ServicePlanName -eq $plan }
                     $disabledPlansValues += $foundItem.ServicePlanId
                 }
 
-                $skuInfo = $allSkus | Where-Object -FilterScript {$_.SkuPartNumber -eq $assignedLicense.SkuId}
+                $skuInfo = $allSkus | Where-Object -FilterScript { $_.SkuPartNumber -eq $assignedLicense.SkuId }
                 $licensesToAdd += @{
                     DisabledPlans = $disabledPlansValues
                     SkuId         = $skuInfo.SkuId
@@ -541,7 +551,7 @@ function Set-TargetResource
             {
                 Write-Verbose -Message "Adding new owner {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
                 $ownerObject = @{
-                    "@odata.id"= "https://graph.microsoft.com/v1.0/users/{$($user.Id)}"
+                    "@odata.id" = "https://graph.microsoft.com/v1.0/users/{$($user.Id)}"
                 }
                 New-MgGroupOwnerByRef -GroupId ($currentGroup.Id) -BodyParameter $ownerObject | Out-Null
             }
@@ -576,7 +586,7 @@ function Set-TargetResource
             {
                 Write-Verbose -Message "Adding new member {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
                 $memberObject = @{
-                    "@odata.id"= "https://graph.microsoft.com/v1.0/users/{$($user.Id)}"
+                    "@odata.id" = "https://graph.microsoft.com/v1.0/users/{$($user.Id)}"
                 }
                 New-MgGroupMemberByRef -GroupId ($currentGroup.Id) -BodyParameter $memberObject | Out-Null
             }
@@ -676,7 +686,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -684,7 +698,7 @@ function Test-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -793,7 +807,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -803,7 +821,7 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -814,7 +832,7 @@ function Export-TargetResource
     {
         [array] $groups = Get-MgGroup -Filter $Filter -All:$true -ErrorAction Stop
         $i = 1
-        $dscContent = ''
+        $dscContent = "#region $ResourceName`r`n"
         Write-Host "`r`n" -NoNewline
         foreach ($group in $groups)
         {
@@ -828,6 +846,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 Credential            = $Credential
+                Identity              = $Identity.IsPresent
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -853,6 +872,7 @@ function Export-TargetResource
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
+        $dscContent += "#endregion $ResourceName`r`n"
         return $dscContent
     }
     catch
@@ -909,11 +929,11 @@ function Get-M365DSCAzureADGroupLicenses
 
     foreach ($assignedLicense in $AssignedLicenses)
     {
-        $skuPartNumber = $allSkus | Where-Object -FilterScript {$_.SkuId -eq $assignedLicense.SkuId}
+        $skuPartNumber = $allSkus | Where-Object -FilterScript { $_.SkuId -eq $assignedLicense.SkuId }
         $disabledPlansValues = @()
         foreach ($plan in $assignedLicense.DisabledPlans)
         {
-            $foundItem = $allServicePlans | Where-Object -FilterScript {$_.ServicePlanId -eq $plan}
+            $foundItem = $allServicePlans | Where-Object -FilterScript { $_.ServicePlanId -eq $plan }
             $disabledPlansValues += $foundItem.ServicePlanName
         }
         $currentLicense = @{

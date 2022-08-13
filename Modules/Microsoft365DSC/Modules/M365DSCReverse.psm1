@@ -79,7 +79,11 @@ function Start-M365DSCConfigurationExtract
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     # Start by checking to see if a new Version of the tool is available in the
@@ -143,10 +147,13 @@ function Start-M365DSCConfigurationExtract
         {
             $AuthMethods += "ApplicationWithSecret"
         }
-
+        if ($Identity)
+        {
+            $AuthMethods += "Identity"
+        }
         $ResourcesPath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\" `
-        -Resolve
+            -ChildPath "..\DSCResources\" `
+            -Resolve
         $AllResources = Get-ChildItem $ResourcesPath -Recurse | Where-Object { $_.Name -like 'MSFT_*.psm1' }
 
         $i = 1
@@ -260,6 +267,13 @@ function Start-M365DSCConfigurationExtract
                 $organization = $Credential.UserName.Split("@")[1]
             }
         }
+        elseif ($AuthMethods -contains 'Identity')
+        {
+            $ConnectionMode = 'ManagedIdentity'
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters @{'Identity' = $true }
+            $TenantId = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.TenantId
+            $organization = $TenantId
+        }
         if ($organization.IndexOf(".") -gt 0)
         {
             $principal = $organization.Split(".")[0]
@@ -346,10 +360,6 @@ function Start-M365DSCConfigurationExtract
                 -Key "OrganizationName" `
                 -Value $organization `
                 -Description "Tenant's default verified domain name"
-            Add-ConfigurationDataEntry -Node "NonNodeData" `
-                -Key "ApplicationId" `
-                -Value $ApplicationId `
-                -Description "Azure AD Application Id for Authentication"
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 Add-ConfigurationDataEntry -Node "NonNodeData" `
@@ -357,29 +367,37 @@ function Start-M365DSCConfigurationExtract
                     -Value $TenantId `
                     -Description "The Id or Name of the tenant to authenticate against"
             }
-
-            if (-not [System.String]::IsNullOrEmpty($ApplicationSecret))
+            # May be done via identity so not needed
+            if (-not $Identity)
             {
                 Add-ConfigurationDataEntry -Node "NonNodeData" `
-                    -Key "ApplicationSecret" `
-                    -Value $ApplicationSecret `
-                    -Description "Azure AD Application Secret for Authentication"
-            }
+                    -Key "ApplicationId" `
+                    -Value $ApplicationId `
+                    -Description "Azure AD Application Id for Authentication"
 
-            if (-not [System.String]::IsNullOrEmpty($CertificatePath))
-            {
-                Add-ConfigurationDataEntry -Node "NonNodeData" `
-                    -Key "CertificatePath" `
-                    -Value $CertificatePath `
-                    -Description "Local path to the .pfx certificate to use for authentication"
-            }
+                if (-not [System.String]::IsNullOrEmpty($ApplicationSecret))
+                {
+                    Add-ConfigurationDataEntry -Node "NonNodeData" `
+                        -Key "ApplicationSecret" `
+                        -Value $ApplicationSecret `
+                        -Description "Azure AD Application Secret for Authentication"
+                }
 
-            if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint))
-            {
-                Add-ConfigurationDataEntry -Node "NonNodeData" `
-                    -Key "CertificateThumbprint" `
-                    -Value $CertificateThumbprint `
-                    -Description "Thumbprint of the certificate to use for authentication"
+                if (-not [System.String]::IsNullOrEmpty($CertificatePath))
+                {
+                    Add-ConfigurationDataEntry -Node "NonNodeData" `
+                        -Key "CertificatePath" `
+                        -Value $CertificatePath `
+                        -Description "Local path to the .pfx certificate to use for authentication"
+                }
+
+                if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint))
+                {
+                    Add-ConfigurationDataEntry -Node "NonNodeData" `
+                        -Key "CertificateThumbprint" `
+                        -Value $CertificateThumbprint `
+                        -Description "Thumbprint of the certificate to use for authentication"
+                }
             }
         }
         [array]$ModuleVersion = Get-Module Microsoft365DSC
@@ -420,6 +438,7 @@ function Start-M365DSCConfigurationExtract
                 CertificatePath       = $CertificatePath
                 CertificatePassword   = $CertificatePassword.Password
                 Credential            = $Credential
+                Identity              = $Identity.IsPresent
             }
             try
             {
@@ -446,6 +465,7 @@ function Start-M365DSCConfigurationExtract
             $CertPathExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("CertificatePath")
             $CertPasswordExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("CertificatePassword")
             $FilterExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("Filter")
+            $IdentityExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("Identity")
 
             $parameters = @{}
             if ($CredentialExists -and -not [System.String]::IsNullOrEmpty($Credential))
@@ -479,6 +499,10 @@ function Start-M365DSCConfigurationExtract
             if ($CertPasswordExists -and $null -ne $CertificatePassword)
             {
                 $parameters.Add("CertificatePassword", $CertificatePassword)
+            }
+            if ($IdentityExists)
+            {
+                $parameters.Add("Identity", $Identity)
             }
             if ($ComponentsToSkip -notcontains $resource.Name.Split('.')[0] -replace 'MSFT_', '')
             {

@@ -31,7 +31,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [validateset('None','AdminsAndGuestInviters','AdminsGuestInvitersAndAllMembers','Everyone')]
+        [validateset('None', 'AdminsAndGuestInviters', 'AdminsGuestInvitersAndAllMembers', 'Everyone')]
         $AllowInvitesFrom,
 
         [Parameter()]
@@ -83,7 +83,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     Write-Verbose -Message "Getting configuration of AzureAD Authorization Policy"
@@ -146,6 +150,7 @@ function Get-TargetResource
             ApplicationId                                     = $ApplicationId
             TenantId                                          = $TenantId
             CertificateThumbprint                             = $CertificateThumbprint
+            Identity                                          = $Identity.IsPresent
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -185,7 +190,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [validateset('None','AdminsAndGuestInviters','AdminsGuestInvitersAndAllMembers','Everyone')]
+        [validateset('None', 'AdminsAndGuestInviters', 'AdminsGuestInvitersAndAllMembers', 'Everyone')]
         $AllowInvitesFrom,
 
         [Parameter()]
@@ -237,7 +242,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
     Write-Verbose -Message "Setting configuration of AzureAD Authorization Policy"
 
@@ -265,6 +274,8 @@ function Set-TargetResource
     $currentParameters.Remove("ApplicationSecret") | Out-Null
     $currentParameters.Remove("Ensure") | Out-Null
     $currentParameters.Remove("Credential") | Out-Null
+    $currentParameters.Remove("Identity") | Out-Null
+
 
     Write-Verbose -Message "Set-Targetresource: Authorization Policy Ensure Present"
     $UpdateParameters = @{}
@@ -280,6 +291,7 @@ function Set-TargetResource
             ($null -ne $currentParementers.$param -and $null -eq $currentPolicy.$param))
         {
             if ($param.ToLower() -match 'defaultuserrole')
+
             {
                 if ($param -like 'Permission*')
                 {
@@ -392,7 +404,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [validateset('None','AdminsAndGuestInviters','AdminsGuestInvitersAndAllMembers','Everyone')]
+        [validateset('None', 'AdminsAndGuestInviters', 'AdminsGuestInvitersAndAllMembers', 'Everyone')]
         $AllowInvitesFrom,
 
         [Parameter()]
@@ -443,7 +455,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     Write-Verbose -Message "Testing configuration of AzureAD Authorization Policy"
@@ -489,7 +505,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -511,7 +531,7 @@ function Export-TargetResource
     try
     {
         $results = Get-TargetResource -IsSingleInstance 'Yes' @PSBoundParameters
-        $dscContent = ''
+        $dscContent = "#region $ResourceName`r`n"
 
         Write-Host "`r`n" -NoNewline
         Write-Host "    |---[1/1] $($results.DisplayName)" -NoNewline
@@ -525,8 +545,9 @@ function Export-TargetResource
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
         Write-Host $Global:M365DSCEmojiGreenCheckMark
-
-        return $currentDSCBlock
+        $dscContent += $currentDSCBlock
+        $dscContent += "#endregion $ResourceName`r`n"
+        return $dscContent
     }
     catch
     {
@@ -565,7 +586,8 @@ https://docs.microsoft.com/en-us/graph/api/resources/authorizationpolicy?view=gr
 Internal, Hidden
 
 #>
-function Get-GuestUserRoleIdTable {
+function Get-GuestUserRoleIdTable
+{
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param()
@@ -598,7 +620,8 @@ https://docs.microsoft.com/en-us/graph/api/authorizationpolicy-update?view=graph
 Internal, Hidden
 
 #>
-function Get-GuestUserRoleIdFromName {
+function Get-GuestUserRoleIdFromName
+{
     [CmdletBinding()]
     [OutputType([System.string])]
     param(
@@ -633,7 +656,8 @@ https://docs.microsoft.com/en-us/graph/api/authorizationpolicy-update?view=graph
 Internal, Hidden
 
 #>
-function Get-GuestUserRoleNameFromId {
+function Get-GuestUserRoleNameFromId
+{
     [CmdletBinding()]
     [OutputType([System.string])]
     param(
@@ -647,14 +671,15 @@ function Get-GuestUserRoleNameFromId {
     {
         throw "Unexpected value of GuestuserRoleId '$GuestUserRoleId', should be one of $($guestUserRoleIdTable.Values -join ',')"
     }
-    foreach ($roleName in $guestUserRoleIdTable.Keys) {
+    foreach ($roleName in $guestUserRoleIdTable.Keys)
+    {
         if ($guestUserRoleIdTable.$roleName -eq $GuestUserRoleId)
         {
-            write-verbose "`tRoleName matching GuestUserRoleId is $roleName"
+            Write-Verbose "`tRoleName matching GuestUserRoleId is $roleName"
             break
         }
     }
-    write-verbose "return $rolename"
+    Write-Verbose "return $rolename"
     return $roleName
 }
 

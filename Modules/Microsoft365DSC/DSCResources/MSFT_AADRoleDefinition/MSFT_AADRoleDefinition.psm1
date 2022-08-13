@@ -59,7 +59,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     Write-Verbose -Message "Getting configuration of Azure AD role definition"
@@ -121,6 +125,7 @@ function Get-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                Identity                                          = $Identity.IsPresent
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
@@ -195,7 +200,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     Write-Verbose -Message "Setting configuration of Azure AD role definition"
@@ -220,6 +229,7 @@ function Set-TargetResource
     $currentParameters.Remove("TenantId")  | Out-Null
     $currentParameters.Remove("CertificateThumbprint")  | Out-Null
     $currentParameters.Remove("Credential")  | Out-Null
+    $currentParameters.Remove("Identity")  | Out-Null
     $currentParameters.Remove("Ensure")  | Out-Null
 
     $rolePermissionsObj = @()
@@ -314,7 +324,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -340,6 +354,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove("ApplicationId") | Out-Null
     $ValuesToCheck.Remove("TenantId") | Out-Null
     $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
+    $ValuesToCheck.Remove("Identity") | Out-Null
     $ValuesToCheck.Remove("Id") | Out-Null
     $ValuesToCheck.Remove("TemplateId") | Out-Null
 
@@ -381,7 +396,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
@@ -401,7 +420,7 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $dscContent = ''
+    $dscContent = "#region $ResourceName`r`n"
     $i = 1
     try
     {
@@ -419,6 +438,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                Identity                                          = $Identity.IsPresent
                 DisplayName           = $AADRoleDefinition.DisplayName
                 Id                    = $AADRoleDefinition.Id
                 IsEnabled             = $true
@@ -443,6 +463,7 @@ function Export-TargetResource
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
+        $dscContent += "#endregion $ResourceName`r`n"
         return $dscContent
     }
     catch

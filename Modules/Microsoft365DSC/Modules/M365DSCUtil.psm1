@@ -193,7 +193,7 @@ function Convert-M365DscArrayToString
         if ($item -is [System.Collections.Hashtable])
         {
             $str += "{"
-            $str += Convert-M365DSCHashtableToString -Hashtable $item
+            $str += Convert-M365DscHashtableToString -Hashtable $item
             $str += "}"
         }
         elseif ($Array[$i] -is [Microsoft.Management.Infrastructure.CimInstance])
@@ -952,6 +952,9 @@ Specifies the path of the PFX file which is used for authentication.
 .Parameter Filters
 Specifies resource level filters to apply in order to reduce the number of instances exported.
 
+.Parameter Identity
+Specifies use of managed identity for authentication
+
 .Example
 Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential
 
@@ -963,6 +966,9 @@ Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAcces
 
 .Example
 Export-M365DSCConfiguration -Credential $Credential -Filters @{AADApplication = "DisplayName eq 'MyApp'"}'
+
+.Example
+Export-M365DSCConfiguration -Identity -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings")
 
 .Functionality
 Public
@@ -1039,7 +1045,11 @@ function Export-M365DSCConfiguration
 
         [Parameter()]
         [System.String]
-        $CertificatePath
+        $CertificatePath,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
     # Suppress Progress overlays
     $Global:ProgressPreference = 'SilentlyContinue'
@@ -1066,7 +1076,7 @@ function Export-M365DSCConfiguration
             foreach ($dependency in $outdatedOrMissingAssemblies)
             {
                 Write-Host "Updating dependency {$($dependency.ModuleName)} to version {$($dependency.RequiredVersion)}..." -NoNewline
-                Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -Scope 'AllUsers'  | Out-Null
+                Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -Scope 'AllUsers' | Out-Null
                 Write-Host $Global:M365DSCEmojiGreenCheckmark
             }
         }
@@ -1095,7 +1105,7 @@ function Export-M365DSCConfiguration
     }
 
     # Default to Credential if no authentication mechanism were provided
-    if (-not $Credential -and (-not $ApplicationId -or -not $TenantId -or (-not $ApplicationSecret -and -not $CertificateThumbprint)) -and -not $LaunchWebUI)
+    if (-not $Credential -and -not $Identity -and (-not $ApplicationId -or -not $TenantId -or (-not $ApplicationSecret -and -not $CertificateThumbprint)) -and -not $LaunchWebUI)
     {
         $Credential = Get-Credential
     }
@@ -1135,7 +1145,8 @@ function Export-M365DSCConfiguration
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
                 -GenerateInfo $GenerateInfo `
-                -Filters $Filters
+                -Filters $Filters `
+                -Identity:$Identity
         }
         elseif ($null -ne $Components)
         {
@@ -1151,7 +1162,8 @@ function Export-M365DSCConfiguration
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
                 -GenerateInfo $GenerateInfo `
-                -Filters $Filters
+                -Filters $Filters `
+                -Identity:$Identity
         }
         elseif ($null -ne $Mode)
         {
@@ -1167,8 +1179,9 @@ function Export-M365DSCConfiguration
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
                 -GenerateInfo $GenerateInfo `
-                -AllComponents `
-                -Filters $Filters
+                -Filters $Filters `
+                -Identity:$Identity `
+                -AllComponents
         }
     }
 }
@@ -1414,14 +1427,15 @@ function New-M365DSCConnection
     elseif ($null -eq $InboundParameters.Credential -and `
             [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
             [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
-            [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
+            [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint) -and `
+            -not $InboundParameters.Identity)
     {
         $message = 'No Authentication method was provided'
         Write-Verbose -Message $message
         $message += "`r`nProvided Keys --> $($InboundParameters.Keys)"
         $data.Add("Event", "Error")
         $data.Add("Exception", $message)
-        $errorText = "You must specify either the Credential or ApplicationId, TenantId and CertificateThumbprint parameters."
+        $errorText = "You must specify either the Credential or ApplicationId, TenantId and CertificateThumbprint parameters. $($InboundParameters.Keys)"
         $data.Add("CustomMessage", $errorText)
         Add-M365DSCTelemetryEvent -Type "Error" -Data $data
         throw $errorText
@@ -1607,7 +1621,7 @@ function New-M365DSCConnection
             $message += "`r`nProvided Keys --> $($InboundParameters.Keys)"
             $data.Add("Event", "Error")
             $data.Add("Exception", $message)
-            $errorText = "You must specify either the Credential or ApplicationId, TenantId and CertificateThumbprint parameters."
+            $errorText = "You must specify either the Credential or ApplicationId, TenantId and CertificateThumbprint parameters. $($InboundParameters.Keys)"
             $data.Add("CustomMessage", $errorText)
             Add-M365DSCTelemetryEvent -Type "Error" -Data $data
             throw $errorText
@@ -1720,6 +1734,20 @@ function New-M365DSCConnection
         Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
         return "ServicePrincipalWithThumbprint"
     }
+    elseif ($InboundParameters.Identity)
+    {
+        Write-Verbose -Message "Connecting via managed identity $($InboundParameters.Identity)"
+        Connect-M365Tenant -Workload $Workload `
+            -Identity `
+            -SkipModuleReload $Global:CurrentModeIsExport `
+            -ProfileName $ProfileName
+
+        $data.Add("ConnectionType", "ManagedIdentity")
+        $data.Add("Tenant", $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.TenantId)
+        Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
+        return "ManagedIdentity"
+    }
+
     else
     {
         throw "Could not determine authentication method"
@@ -2308,7 +2336,6 @@ function Assert-M365DSCBlueprint
                 $ResourcesInBluePrint += $resource.ResourceName
             }
         }
-
         if (!$ResourcesInBluePrint) {
             Write-Host "Malformed BluePrint, aborting"
             break
@@ -2653,7 +2680,7 @@ function Update-M365DSCExportAuthenticationResults
     param(
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet("ServicePrincipalWithThumbprint", "ServicePrincipalWithSecret", "ServicePrincipalWithPath", "CredentialsWithApplicationId", "Credentials")]
+        [ValidateSet("ServicePrincipalWithThumbprint", "ServicePrincipalWithSecret", "ServicePrincipalWithPath", "CredentialsWithApplicationId", "Credentials", "ManagedIdentity")]
         $ConnectionMode,
 
         [Parameter(Mandatory = $true)]
@@ -2806,7 +2833,7 @@ function Get-M365DSCExportContentForResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet("ServicePrincipalWithThumbprint", "ServicePrincipalWithSecret", "ServicePrincipalWithPath", "CredentialsWithApplicationId", "Credentials")]
+        [ValidateSet("ServicePrincipalWithThumbprint", "ServicePrincipalWithSecret", "ServicePrincipalWithPath", "CredentialsWithApplicationId", "Credentials", "ManagedIdentity")]
         $ConnectionMode,
 
         [Parameter(Mandatory = $true)]
@@ -2825,6 +2852,10 @@ function Get-M365DSCExportContentForResource
     if ($ConnectionMode -like "ServicePrincipal*")
     {
         $OrganizationName = $TenantId
+    }
+    elseif ($ConnectionMode -eq "ManagedIdentity")
+    {
+        $OrganizationName = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.TenantId
     }
     else
     {
@@ -2960,7 +2991,7 @@ function Get-M365DSCComponentsForAuthenticationType
     param(
         [Parameter()]
         [System.String[]]
-        [ValidateSet('Application', 'ApplicationWithSecret', 'Certificate', 'Credentials')]
+        [ValidateSet('Application', 'ApplicationWithSecret', 'Certificate', 'Credentials', 'Identity')]
         $AuthenticationMethod,
 
         [Parameter()]
@@ -3012,6 +3043,12 @@ function Get-M365DSCComponentsForAuthenticationType
             # Case - Resource contains Credential
             elseif ($AuthenticationMethod.Contains("Credentials") -and `
                     $parameters.Contains('Credential'))
+            {
+                $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
+            }
+            # Case - Resource contains Identity
+            elseif ($AuthenticationMethod.Contains("Identity") -and `
+                    $parameters.Contains('Identity'))
             {
                 $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
             }
@@ -3332,7 +3369,8 @@ function New-M365DSCCmdletDocumentation
                     }
                     $mandatory = $parameter.Attributes.Where({ $_.TypeName.FullName -eq "Parameter" }).NamedArguments.Where({ $_.ArgumentName -eq "Mandatory" }).Argument.VariablePath.UserPath
                     if ($null -eq $mandatory)
-                    { $mandatory = "False"
+                    {
+                        $mandatory = "False"
                     }
                     $mandatory = (Get-Culture).TextInfo.ToTitleCase($mandatory.ToLower())
 

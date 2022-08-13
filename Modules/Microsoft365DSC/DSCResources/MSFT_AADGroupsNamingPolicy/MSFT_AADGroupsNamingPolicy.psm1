@@ -40,7 +40,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     Write-Verbose -Message "Getting configuration of AzureAD Groups Naming Policy"
@@ -54,7 +58,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -65,7 +69,7 @@ function Get-TargetResource
     $nullReturn.Ensure = "Absent"
     try
     {
-        $Policy = Get-MgDirectorySetting | Where-Object -FilterScript {$_.DisplayName -eq 'Group.Unified'}
+        $Policy = Get-MgDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq 'Group.Unified' }
 
         if ($null -eq $Policy)
         {
@@ -74,8 +78,8 @@ function Get-TargetResource
         else
         {
             Write-Verbose "Found existing AzureAD Groups Naming Policy"
-            $valuePrefix = $Policy.Values | Where-Object -FilterScript {$_.Name -eq "PrefixSuffixNamingRequirement"}
-            $valueBlockedWords = $Policy.Values | Where-Object -FilterScript {$_.Name -eq "CustomBlockedWordsList"}
+            $valuePrefix = $Policy.Values | Where-Object -FilterScript { $_.Name -eq "PrefixSuffixNamingRequirement" }
+            $valueBlockedWords = $Policy.Values | Where-Object -FilterScript { $_.Name -eq "CustomBlockedWordsList" }
             $result = @{
                 IsSingleInstance              = 'Yes'
                 PrefixSuffixNamingRequirement = $valuePrefix.Value
@@ -86,6 +90,7 @@ function Get-TargetResource
                 TenantId                      = $TenantId
                 ApplicationSecret             = $ApplicationSecret
                 CertificateThumbprint         = $CertificateThumbprint
+                Identity                      = $Identity.IsPresent
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -155,7 +160,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     Write-Verbose -Message "Setting configuration of Azure AD Groups Naming Policy"
@@ -169,7 +178,7 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -189,7 +198,7 @@ function Set-TargetResource
 
     if ($null -eq $Policy)
     {
-        $Policy = Get-MgDirectorySetting | Where-Object -FilterScript {$_.DisplayName -eq 'Group.Unified'}
+        $Policy = Get-MgDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq 'Group.Unified' }
     }
 
     if (($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present') -or $needToUpdate)
@@ -264,7 +273,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -272,7 +285,7 @@ function Test-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -289,6 +302,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('Identity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -324,7 +338,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
 
@@ -337,7 +355,7 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -346,7 +364,7 @@ function Export-TargetResource
 
     try
     {
-        $dscContent = ''
+        $dscContent = "#region $ResourceName`r`n"
         $Params = @{
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -354,6 +372,7 @@ function Export-TargetResource
             IsSingleInstance      = 'Yes'
             ApplicationSecret     = $ApplicationSecret
             Credential            = $Credential
+            Identity              = $Identity.IsPresent
         }
 
         $Results = Get-TargetResource @Params
@@ -377,6 +396,7 @@ function Export-TargetResource
         }
 
         Write-Host $Global:M365DSCEmojiGreenCheckMark
+        $dscContent += "#endregion $ResourceName`r`n"
         return $dscContent
     }
     catch

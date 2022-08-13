@@ -80,6 +80,7 @@ function Get-TargetResource
         $IncludeDevices,
 
         #DEPRECATED
+
         [Parameter()]
         [System.String[]]
         $ExcludeDevices,
@@ -179,7 +180,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     Write-Verbose -Message "Getting configuration of AzureAD Conditional Access Policy"
@@ -665,10 +670,8 @@ function Get-TargetResource
             #no translation needed, return empty string array if undefined
             IncludeLocations                         = $IncludeLocations
             ExcludeLocations                         = $ExcludeLocations
-
             IncludeDevices                           = [System.String[]](@() + $Policy.Conditions.Devices.IncludeDevices)
             ExcludeDevices                           = [System.String[]](@() + $Policy.Conditions.Devices.ExcludeDevices)
-
             #no translation needed, return empty string array if undefined
             DeviceFilterMode                         = [System.String]$Policy.Conditions.Devices.DeviceFilter.Mode
             #no translation or conversion needed
@@ -701,13 +704,14 @@ function Get-TargetResource
             PersistentBrowserMode                    = [System.String]$Policy.SessionControls.PersistentBrowser.Mode
             #no translation needed
             #Standard part
-            TermsOfUse                                = $termOfUseName
+            TermsOfUse                               = $termOfUseName
             Ensure                                   = "Present"
             Credential                               = $Credential
             ApplicationSecret                        = $ApplicationSecret
             ApplicationId                            = $ApplicationId
             TenantId                                 = $TenantId
             CertificateThumbprint                    = $CertificateThumbprint
+            Identity                                 = $Identity.IsPresent
         }
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
@@ -793,7 +797,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $IncludeDevices,
-
         #DEPRECATED
         [Parameter()]
         [System.String[]]
@@ -894,7 +897,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
     Write-Verbose -Message "Setting configuration of AzureAD Conditional Access Policy"
 
@@ -920,6 +927,7 @@ function Set-TargetResource
     $currentParameters.Remove("ApplicationSecret") | Out-Null
     $currentParameters.Remove("Ensure") | Out-Null
     $currentParameters.Remove("Credential") | Out-Null
+    $currentParameters.Remove("Identity") | Out-Null
 
     if ($Ensure -eq 'Present')#create policy attribute objects
     {
@@ -1294,7 +1302,8 @@ function Set-TargetResource
             #translate role names to template guid if defined
             $rolelookup = @{}
             foreach ($role in Get-MgDirectoryRoleTemplate)
-            { $rolelookup[$role.DisplayName] = $role.Id
+            {
+                $rolelookup[$role.DisplayName] = $role.Id
             }
             foreach ($IncludeRole in $IncludeRoles)
             {
@@ -1504,7 +1513,6 @@ function Set-TargetResource
         {
             Write-Verbose -Message "IncludeDevices and ExcludeDevices parameters are deprecated. These settings will not be applied. Instead, use the DeviceFilterMode and DeviceFilterRule parameters."
         }
-
         Write-Verbose -Message "Set-Targetresource: process device filter"
         if ($DeviceFilterMode -and $DeviceFilterRule)
         {
@@ -1515,26 +1523,30 @@ function Set-TargetResource
                 $conditions.Devices.DeviceFilter.Add("Mode", $DeviceFilterMode)
                 $conditions.Devices.DeviceFilter.Add("Rule", $DeviceFilterRule)
             }
-            else {
+            else
+            {
                 if (-not $conditions.Devices.Contains("DeviceFilter"))
                 {
                     $conditions.Devices.Add("DeviceFilter", @{})
                     $conditions.Devices.DeviceFilter.Add("Mode", $DeviceFilterMode)
                     $conditions.Devices.DeviceFilter.Add("Rule", $DeviceFilterRule)
                 }
-                else {
+                else
+                {
                     if (-not $conditions.Devices.DeviceFilter.Contains("Mode"))
                     {
                         $conditions.Devices.DeviceFilter.Add("Mode", $DeviceFilterMode)
                     }
-                    else {
+                    else
+                    {
                         $conditions.Devices.DeviceFilter.Mode = $DeviceFilterMode
                     }
                     if (-not $conditions.Devices.DeviceFilter.Contains("Rule"))
                     {
                         $conditions.Devices.DeviceFilter.Add("Rule", $DeviceFilterRule)
                     }
-                    else {
+                    else
+                    {
                         $conditions.Devices.DeviceFilter.Rule = $DeviceFilterRule
                     }
                 }
@@ -1560,7 +1572,7 @@ function Set-TargetResource
         if ($GrantControlOperator -and ($BuiltInControls -or $TermsOfUse))
         {
             $GrantControls = @{
-                Operator        = $GrantControlOperator
+                Operator = $GrantControlOperator
             }
 
             if ($BuiltInControls)
@@ -1831,7 +1843,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $IncludeDevices,
-
         #DEPRECATED
         [Parameter()]
         [System.String[]]
@@ -1932,7 +1943,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     Write-Verbose -Message "Testing configuration of AzureAD CA Policies"
@@ -1985,7 +2000,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -2010,7 +2029,7 @@ function Export-TargetResource
     {
         [array] $Policies = Get-MgIdentityConditionalAccessPolicy -Filter $Filter -All:$true -ErrorAction Stop
         $i = 1
-        $dscContent = ''
+        $dscContent = "#region $ResourceName`r`n"
 
         if ($Policies.Length -eq 0)
         {
@@ -2030,6 +2049,7 @@ function Export-TargetResource
                     ApplicationSecret     = $ApplicationSecret
                     CertificateThumbprint = $CertificateThumbprint
                     Credential            = $Credential
+                    Identity              = $Identity.IsPresent
                 }
                 $Results = Get-TargetResource @Params
 
@@ -2045,7 +2065,6 @@ function Export-TargetResource
                     Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The Exclude Devices parameter is deprecated. Instead use the Device Filter Mode and Device Filter Rule parameters in the portal."
                     $Results.Remove("ExcludeDevices") | Out-Null
                 }
-
                 if ([System.String]::IsNullOrEmpty($Results.DeviceFilterMode))
                 {
                     $Results.Remove("DeviceFilterMode") | Out-Null
@@ -2066,7 +2085,7 @@ function Export-TargetResource
                 $i++
             }
         }
-
+        $dscContent += "#endregion $ResourceName`r`n"
         return $dscContent
     }
     catch

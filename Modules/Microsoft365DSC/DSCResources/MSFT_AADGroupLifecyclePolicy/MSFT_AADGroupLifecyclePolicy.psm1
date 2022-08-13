@@ -45,7 +45,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
@@ -57,7 +61,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -114,6 +118,7 @@ function Get-TargetResource
                 ApplicationSecret           = $ApplicationSecret
                 TenantId                    = $TenantId
                 CertificateThumbprint       = $CertificateThumbprint
+                Identity                    = $Identity.IsPresent
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -192,7 +197,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     Write-Verbose -Message "Setting configuration of Azure AD Groups Lifecycle Policy"
@@ -202,7 +211,7 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -233,6 +242,7 @@ function Set-TargetResource
         $creationParams.Remove("TenantId")
         $creationParams.Remove("CertificateThumbprint")
         $creationParams.Remove("Ensure")
+        $creationParams.Remove("Identity")
 
         $emails = ""
         foreach ($email in $creationParams.AlternateNotificationEmails)
@@ -252,6 +262,7 @@ function Set-TargetResource
         $updateParams.Remove("TenantId")
         $updateParams.Remove("CertificateThumbprint")
         $updateParams.Remove("Ensure")
+        $updateParams.Remove("Identity")
 
         $emails = ""
         foreach ($email in $updateParams.AlternateNotificationEmails)
@@ -319,7 +330,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -327,7 +342,7 @@ function Test-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -376,7 +391,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
@@ -385,7 +404,7 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -405,6 +424,10 @@ function Export-TargetResource
         {
             $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
                 -TenantId $TenantId -ApplicationSecret $ApplicationSecret
+        }
+        elseif ($ConnectionMode -eq 'ManagedIdentity')
+        {
+            $organization = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.TenantId
         }
         else
         {
@@ -428,7 +451,7 @@ function Export-TargetResource
             return ""
         }
 
-        $dscContent = ''
+        $dscContent = "#region $ResourceName`r`n"
 
         $Params = @{
             Credential                  = $Credential
@@ -440,6 +463,7 @@ function Export-TargetResource
             ApplicationSecret           = $ApplicationSecret
             TenantId                    = $TenantId
             CertificateThumbprint       = $CertificateThumbprint
+            Identity                    = $Identity.IsPresent
         }
         $Results = Get-TargetResource @Params
         if ($Results.Ensure -eq 'Present')
@@ -457,7 +481,7 @@ function Export-TargetResource
         }
 
         Write-Host $Global:M365DSCEmojiGreenCheckMark
-
+        $dscContent += "#endregion $ResourceName`r`n"
         return $dscContent
     }
     catch

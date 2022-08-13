@@ -42,7 +42,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     Write-Verbose -Message "Getting configuration of AzureAD Tenant Details"
@@ -53,7 +57,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -88,6 +92,7 @@ function Get-TargetResource
                 TenantId                             = $TenantId
                 ApplicationSecret                    = $ApplicationSecret
                 CertificateThumbprint                = $CertificateThumbprint
+                Identity                             = $Identity.IsPresent
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
@@ -162,7 +167,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     Write-Verbose -Message "Setting configuration of AzureAD Tenant Details"
@@ -172,7 +181,7 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -198,6 +207,10 @@ function Set-TargetResource
     if ($currentParameters.ContainsKey("CertificateThumbprint"))
     {
         $currentParameters.Remove("CertificateThumbprint") | Out-Null
+    }
+    if ($currentParameters.ContainsKey("Identity"))
+    {
+        $currentParameters.Remove("Identity") | Out-Null
     }
     $currentParameters.Add("OrganizationId", $(Get-MgOrganization).Id)
     try
@@ -254,7 +267,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -262,7 +279,7 @@ function Test-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -314,7 +331,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
@@ -323,14 +344,14 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $dscContent = ''
+    $dscContent = "#region $ResourceName`r`n"
     try
     {
         $AADTenantDetails = Get-MgOrganization -ErrorAction Stop
@@ -346,6 +367,7 @@ function Export-TargetResource
             TenantId                             = $TenantId
             CertificateThumbprint                = $CertificateThumbprint
             IsSingleInstance                     = 'Yes'
+            Identity                             = $Identity.IsPresent
         }
         $Results = Get-TargetResource @Params
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode -Results $Results
@@ -359,6 +381,7 @@ function Export-TargetResource
             -FileName $Global:PartialExportFileName
 
         Write-Host $Global:M365DSCEmojiGreenCheckMark
+        $dscContent += "#endregion $ResourceName`r`n"
         return $dscContent
     }
     catch

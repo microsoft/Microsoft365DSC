@@ -47,7 +47,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     Write-Verbose -Message "Getting configuration of AzureAD Token Lifetime Policy"
@@ -59,7 +63,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -113,6 +117,7 @@ function Get-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                Identity              = $Identity.IsPresent
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -176,7 +181,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     Write-Verbose -Message "Setting configuration of Azure AD Policy"
@@ -186,7 +195,7 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -195,11 +204,12 @@ function Set-TargetResource
 
     $currentAADPolicy = Get-TargetResource @PSBoundParameters
     $currentParameters = $PSBoundParameters
-    $currentParameters.Remove("ApplicationId")  | Out-Null
-    $currentParameters.Remove("TenantId")  | Out-Null
-    $currentParameters.Remove("CertificateThumbprint")  | Out-Null
-    $currentParameters.Remove("Credential")  | Out-Null
-    $currentParameters.Remove("Ensure")  | Out-Null
+    $currentParameters.Remove("ApplicationId") | Out-Null
+    $currentParameters.Remove("TenantId") | Out-Null
+    $currentParameters.Remove("CertificateThumbprint") | Out-Null
+    $currentParameters.Remove("Credential") | Out-Null
+    $currentParameters.Remove("Ensure") | Out-Null
+    $currentParameters.Remove("Identity") | Out-Null
 
     # Policy should exist but it doesn't
     if ($Ensure -eq 'Present' -and $currentAADPolicy.Ensure -eq "Absent")
@@ -274,7 +284,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     Write-Verbose -Message "Testing configuration of AzureAD Policy"
@@ -289,6 +303,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove("ApplicationId") | Out-Null
     $ValuesToCheck.Remove("TenantId") | Out-Null
     $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
+    $ValuesToCheck.Remove("Identity") | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -307,10 +322,6 @@ function Export-TargetResource
     param
     (
         [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -328,7 +339,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
@@ -337,18 +352,18 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $dscContent = ''
+    $dscContent = "#region $ResourceName`r`n"
     $i = 1
     try
     {
-        [array]$AADPolicies = Get-MgPolicyTokenLifetimePolicy -All:$true -Filter $Filter -ErrorAction Stop
+        [array]$AADPolicies = Get-MgPolicyTokenLifetimePolicy -ErrorAction Stop
 
         if ($AADPolicies.Length -eq 0)
         {
@@ -369,6 +384,7 @@ function Export-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
                 DisplayName           = $AADPolicy.DisplayName
                 ID                    = $AADPolicy.ID
+                Identity              = $Identity.IsPresent
             }
             $Results = Get-TargetResource @Params
 
@@ -398,6 +414,7 @@ function Export-TargetResource
                 $i++
             }
         }
+        $dscContent += "#endregion $ResourceName`r`n"
         return $dscContent
     }
     catch
