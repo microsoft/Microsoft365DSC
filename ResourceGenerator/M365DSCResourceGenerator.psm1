@@ -117,6 +117,21 @@ function Get-CmdletDefinition
 
     return $cmdletDefinition
 }
+function Get-PropertiesDefinition
+{
+    param (
+        [Parameter()]
+        [ValidateSet('v1.0', 'beta')]
+        [string]
+        $APIVersion
+    )
+
+    $Uri="https://graph.microsoft.com/$APIVersion/deviceManagement/settingDefinitions"
+    $settingDefinitions=Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
+
+
+    return $settingDefinitions.value
+}
 function Get-DerivedType
 {
     param (
@@ -275,6 +290,10 @@ function Get-ParameterBlockInformation
         [Object[]]
         $Properties,
 
+        [Parameter()]
+        [Object[]]
+        $PropertiesDefinitions,
+
         # Parameter help description
         [Parameter()]
         [System.Object]
@@ -360,7 +379,7 @@ function Get-ParameterBlockInformation
                 }
                 Default
                 {
-                    #write-host ($property|out-string)
+                    #write-host ($property|out-string) -f Green
                     if($property.Members)
                     {
                         $type = 'System.String'
@@ -401,6 +420,17 @@ function Get-ParameterBlockInformation
         $parameterNameFirstLetter = $parameterNameFirstLetter.ToUpper()
         $parameterNameCamelCaseString = $parameterName.Substring(1)
         $parameterName = "$($parameterNameFirstLetter)$($parameterNameCamelCaseString)"
+        $parameterDescription=($PropertiesDefinitions | Where-Object -FilterScript{$_.id -like "*$parameterName*"}).description
+        if(-not [String]::IsNullOrEmpty($parameterDescription))
+        {
+
+            $parameterDescription=$parameterDescription -replace [regex]::Escape([char]0x201C),"'"
+            $parameterDescription=$parameterDescription -replace [regex]::Escape([char]0x201D),"'"
+            $parameterDescription=$parameterDescription -replace [regex]::Escape('"'),"'"
+            $parameterDescription=$parameterDescription -replace [regex]::Escape([char]0x2019),"'"
+            $parameterDescription=$parameterDescription.TrimStart()
+            $parameterDescription=$parameterDescription.TrimEnd()
+        }
 
         if($parameterType)
         {
@@ -409,6 +439,7 @@ function Get-ParameterBlockInformation
                     Attribute   = $parameterAttribute
                     Type        = $parameterType
                     Name        = $parameterName
+                    Description = $parameterDescription
                 }
             if($null -ne $property.Members -and $property.Members.count -gt 0)
             {
@@ -581,17 +612,31 @@ function Get-M365DSCFakeValues
     {
         switch ($parameter.Type)
         {
-            "System.String" {
-                $result.Add($parameter.Name, "FakeStringValue")
+            "System.String"
+            {
+                $fakeValue="FakeStringValue"
+                if($parameter.Members)
+                {
+                    $fakeValue=$parameter.Members[0]
+                }
+                $result.Add($parameter.Name, $fakeValue)
             }
-            "System.String[]" {
+            "System.String[]"
+            {
+                $fakeValue1='FakeStringArrayValue1'
+                $fakeValue2='FakeStringArrayValue2'
+                if($parameter.Members)
+                {
+                    $fakeValue1=$parameter.Members[0]
+                    $fakeValue2=$parameter.Members[1]
+                }
                 if ($IntroduceDrift)
                 {
-                    $result.Add($parameter.Name, @("FakeStringArrayValue1"))
+                    $result.Add($parameter.Name, @($fakeValue1))
                 }
                 else
                 {
-                    $result.Add($parameter.Name, @("FakeStringArrayValue1", "FakeStringArrayValue2"))
+                    $result.Add($parameter.Name, @($fakeValue1, $fakeValue2))
                 }
             }
             "System.Int32" {
@@ -629,7 +674,7 @@ function Get-M365DSCHashAsString
         $Values
     )
     $sb = [System.Text.StringBuilder]::New()
-    foreach ($key in $Values.Keys)
+    foreach ($key in ($Values.Keys|Sort-Object -Property $_))
     {
         switch ($Values.$key.GetType().Name)
         {
@@ -767,8 +812,29 @@ function New-M365DSCResource
 
     $actualType = $outputType.Replace("IMicrosoftGraph", "")
 
+    New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -ProfileName 'v1.0' `
+        -InboundParameters @{
+            Credential=$Credential
+        } |out-null
+
+    $context=Get-MgContext
+    if($null -eq $context)
+    {
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -ProfileName 'beta' `
+            -InboundParameters @{
+                Credential=$Credential
+            }|out-null
+    }
+
+    Select-MgProfile $APIVersion
+
     $cmdletDefinition=Get-CmdletDefinition -Entity $actualType `
             -APIVersion $ApiVersion
+
+    $propertiesDefinitions=@()
+
 
     $typeInformation = Get-DerivedType -CmdletDefinition $cmdletDefinition -Entity $actualType
 
@@ -822,10 +888,13 @@ function New-M365DSCResource
             'DeviceConfiguration'
             {
                 $repository='deviceConfigurations'
+                $propertiesDefinitions=Get-PropertiesDefinition -APIVersion $ApiVersion
             }
         }
 
     }
+
+    $PropertiesDefinitions=$PropertiesDefinitions|Where-Object -FilterScript {$_.id -like "*$($selectedODataType.Name)*"}
     $typeProperties = $selectedODataType.Properties|Where-Object -FilterScript {$_.Name -notin $ParametersToSkip}
     #$typeProperties
     $null = New-M365DSCResourceFolder -ResourceName $ResourceName -Path $Path
@@ -833,14 +902,17 @@ function New-M365DSCResource
     $unitTestPath = New-M365DSCUnitTest -ResourceName $ResourceName -Path $UnitTestPath
     #$defaultParameterSetProperties.name
 
-    $parameterInformation = Get-ParameterBlockInformation -Properties $typeProperties -DefaultParameterSetProperties $defaultParameterSetProperties
+    $parameterInformation = Get-ParameterBlockInformation -Properties $typeProperties `
+        -DefaultParameterSetProperties $defaultParameterSetProperties `
+        -PropertiesDefinitions $PropertiesDefinitions
     #write-host ($parameterInformation|out-string)
 
     $script:DiscoveredComplexTypes=@()
     $CimInstances = Get-M365DSCDRGCimInstances -ResourceName $ResourceName `
         -Properties $parameterInformation `
         -CmdletDefinition $CmdletDefinition `
-        -Workload $Workload
+        -Workload $Workload `
+        -PropertiesDefinitions $PropertiesDefinitions
 
     $script:DiscoveredComplexTypes=$null
 
@@ -917,9 +989,13 @@ function New-M365DSCResource
         $AssignmentsNew+="        {`r`n"
         $AssignmentsNew+="            `$assignmentsHash+=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject `$Assignment`r`n"
         $AssignmentsNew+="        }`r`n"
-        $AssignmentsNew+="        Update-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId `$policy.id ```r`n"
-        $AssignmentsNew+="            -Targets `$assignmentsHash ```r`n"
-        $AssignmentsNew+="            -Repository $repository`r`n"
+        $AssignmentsNew+="`r`n"
+        $AssignmentsNew+="        if(`$policy.id)"
+        $AssignmentsNew+="        {`r`n"
+        $AssignmentsNew+="            Update-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId `$policy.id ```r`n"
+        $AssignmentsNew+="                -Targets `$assignmentsHash ```r`n"
+        $AssignmentsNew+="                -Repository $repository`r`n"
+        $AssignmentsNew+="        }`r`n"
 
         $AssignmentsUpdate+="        `$assignmentsHash=@()`r`n"
         $AssignmentsUpdate+="        foreach(`$assignment in `$Assignments)`r`n"
@@ -1145,7 +1221,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     Write-TokenReplacement -Token "<Properties>" -Value $schemaProperties -FilePath $schemaFilePath
 
     #region Generate Examples
-    if ($null -ne $Credential)
+    if ($null -ne $Credential -and $generateExample)
     {
         Import-Module Microsoft365DSC -Force
         New-M365DSCExampleFile -ResourceName $ResourceName `
@@ -1201,7 +1277,7 @@ function Get-M365DSCDRGCimInstancesSchemaStringContent
                     $propertyType = $propertyType -replace "imicrosoftgraph", ""
                     $propertyType = $propertyType -replace '[[\]]',''
                     $propertyType = $workload + $propertyType
-                    $stringResult += "    [Write, Description(`"`"), EmbeddedInstance(`"MSFT_$propertyType`")] String $($property.Name)"
+                    $stringResult += "    [Write, Description(`"$($property.Description)`"), EmbeddedInstance(`"MSFT_$propertyType`")] String $($property.Name)"
                     if ($property.IsArray)
                     {
                         $stringResult += "[]"
@@ -1223,7 +1299,7 @@ function Get-M365DSCDRGCimInstancesSchemaStringContent
                         $propertySet=", ValueMap{$mySet}, Values{$mySet}"
                     }
 
-                    $stringResult += "    [Write, Description(`"`")$propertySet] $($propertyType) $($property.Name)"
+                    $stringResult += "    [Write, Description(`"$($property.Description)`")$propertySet] $($propertyType) $($property.Name)"
                     if ($property.IsArray)
                     {
                         $stringResult += "[]"
@@ -1260,6 +1336,9 @@ function Get-M365DSCDRGCimInstances
 
         [Parameter()]
         $CmdletDefinition,
+
+        [Parameter()]
+        $PropertiesDefinitions,
 
         [Parameter()]
         [System.String[]]
@@ -1306,7 +1385,7 @@ function Get-M365DSCDRGCimInstances
 
         if($objectInstance)
         {
-            #write-host -ForegroundColor yellow -Object $objectInstance.name
+            #write-host -ForegroundColor DarkRed -Object $objectInstance.name
             $inheritedInstance=$objectInstance.ImplementedInterfaces|Where-Object -FilterScript {$_.Fullname -like "Microsoft.Graph.PowerShell.Models.*"}
             $declaredProperties =@()
             $declaredProperties += $objectInstance.DeclaredProperties
@@ -1314,20 +1393,14 @@ function Get-M365DSCDRGCimInstances
         }
         else
         {
-            #write-host -Object ($cimInstance.name +": "+$cimInstance.type) -ForegroundColor DarkYellow
-
             $complexTypeName=$cimInstance.Type.replace("microsoft.graph.powershell.models.imicrosoftgraph","")
             $complexTypeName=$complexTypeName.replace("[]","")
             $declaredProperties = Get-ComplexTypeDefinition `
                                             -CmdletDefinition $CmdletDefinition `
                                             -ComplexTypeName $complexTypeName
 
-            #write-host -Object ($declaredProperties|out-string) -ForegroundColor cyan
-
             if($cimInstance.Properties)
             {
-                #write-host -Object ($cimInstance.name +": "+$cimInstance.type) -ForegroundColor DarkGreen
-
                 foreach($property in $cimInstance.Properties)
                 {
                     $complexProperty=$CmdletDefinition|Where-Object {($_.ItemType -in ('enumType','complexType')) -and $_.Name -eq $property.Type}
@@ -1358,6 +1431,15 @@ function Get-M365DSCDRGCimInstances
                 $propertyIsArray = $false
                 $currentProperty = @{}
                 $currentProperty.Add("Name", $declaredProperty.Name)
+                $parameterDescription=($PropertiesDefinitions | Where-Object -FilterScript{$_.id -like "*$($declaredProperty.Name)*"}).description
+                if(-not [String]::IsNullOrEmpty($parameterDescription))
+                {
+                    $parameterDescription=$parameterDescription -replace [regex]::Escape('"'),"'"
+                    $parameterDescription=$parameterDescription -replace [regex]::Escape([char]0x2019),"'"
+                    $parameterDescription=$parameterDescription.TrimStart()
+                    $parameterDescription=$parameterDescription.TrimEnd()
+                }
+                $currentProperty.Add("Description", $parameterDescription)
 
                 #Renaming Collection type {C(typeName)} to typeName[]
                 if($declaredProperty.propertyType -like 'C(*)')
@@ -1369,16 +1451,17 @@ function Get-M365DSCDRGCimInstances
                         $declaredProperty.propertyType="microsoft.graph.powershell.models.imicrosoftgraph$($declaredProperty.propertyType)"
                     }
                     $declaredProperty.propertyType = $declaredProperty.propertyType +"[]"
-                    write-host -Object ($declaredProperty.name +": "+$declaredProperty.propertyType) -ForegroundColor Red
+                    #write-host -Object ($declaredProperty.name +": "+$declaredProperty.propertyType) -ForegroundColor Red
                 }
 
                 #Retrieve Enum members or format Complextype and retrieve  properties from CmdletDefinition
-                if($declaredProperty.propertyType -notlike 'System.*' -and $declaredProperty.propertyType -notlike "microsoft.graph.powershell.models.*")
+                if($declaredProperty.propertyType.toString() -notlike 'System.*' -and $declaredProperty.propertyType.toString() -notlike "microsoft.graph.powershell.models.*")
                 {
+                    #write-host ($declaredProperty|out-string) -f Yellow
 
                     $propertyTypeName=$declaredProperty.propertyType.Replace("[]","")
                     $enum=Get-EnumTypeDefinition -CmdletDefinition $CmdletDefinition -ComplexTypeName $propertyTypeName
-                    if($enum)
+                    if($enum -and -not $declaredProperty.Members)
                     {
                         $declaredProperty.add('Members',$enum.Members)
                     }
@@ -1423,7 +1506,8 @@ function Get-M365DSCDRGCimInstances
                                         -ResourceName $ResourceName `
                                         -Properties $subProperties `
                                         -CmdletDefinition $CmdletDefinition `
-                                        -DiscoveredComplexTypes $DiscoveredComplexTypes
+                                        -DiscoveredComplexTypes $DiscoveredComplexTypes `
+                                        -PropertiesDefinitions $PropertiesDefinitions
                         $currentProperty.Add("NestedCIM", $subResult)
                     }
                 }
@@ -1458,7 +1542,7 @@ function New-M365SchemaPropertySet
                 $propertyType = $propertyType -replace "imicrosoftgraph", ""
                 $propertyType = $Workload + $propertyType
                 $propertyType = $propertyType -replace '[[\]]',''
-                $schemaProperties += "    [Write, Description(`"`"), EmbeddedInstance(`"MSFT_$propertyType`")] String $($_.Name)"
+                $schemaProperties += "    [Write, Description(`"$($_.Description)`"), EmbeddedInstance(`"MSFT_$propertyType`")] String $($_.Name)"
                 if ($_.Type.EndsWith("[]"))
                 {
                     $schemaProperties += "[]"
@@ -1479,7 +1563,7 @@ function New-M365SchemaPropertySet
                     $mySet = $mySet.Substring(0,$mySet.Length-1)
                     $propertySet=", ValueMap{$mySet}, Values{$mySet}"
                 }
-                $schemaProperties += "    [Write, Description(`"`")$propertySet] $($propertyType) $($_.Name)"
+                $schemaProperties += "    [Write, Description(`"$($_.Description)`")$propertySet] $($propertyType) $($_.Name)"
                 if ($_.Type.EndsWith("[]"))
                 {
                     $schemaProperties += "[]"

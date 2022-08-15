@@ -28942,16 +28942,20 @@ function Get-CsOnlineUser
         $SkipUserPolicies,
 
         [Parameter()]
+        [Microsoft.Teams.ConfigAPI.Cmdlets.Models.AccountType]
+        $AccountType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OnModernServer,
+
+        [Parameter()]
         [System.String]
         $LdapFilter,
 
         [Parameter()]
         [System.String]
         $Filter,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $OnModernServer,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -29089,6 +29093,23 @@ function Get-CsTeamsEmergencyCallingPolicy
     )
 }
 function Get-CsTeamsEmergencyCallRoutingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Get-CsTeamsEventsPolicy
 {
     [CmdletBinding()]
     param(
@@ -29697,6 +29718,35 @@ function New-CsTeamsEmergencyNumber
         [Parameter()]
         [System.String]
         $EmergencyDialMask,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function New-CsTeamsEventsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $EventAccessType,
+
+        [Parameter()]
+        [System.String]
+        $AllowWebinars,
 
         [Parameter()]
         [System.String]
@@ -30355,6 +30405,23 @@ function Remove-CsTeamsEmergencyCallRoutingPolicy
         $MsftInternalProcessingMode
     )
 }
+function Remove-CsTeamsEventsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
 function Remove-CsTeamsMeetingBroadcastPolicy
 {
     [CmdletBinding()]
@@ -30824,6 +30891,35 @@ function Set-CsTeamsEmergencyCallRoutingPolicy
         $MsftInternalProcessingMode
     )
 }
+function Set-CsTeamsEventsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $EventAccessType,
+
+        [Parameter()]
+        [System.String]
+        $AllowWebinars,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
 function Set-CsTeamsGuestCallingConfiguration
 {
     [CmdletBinding()]
@@ -30900,6 +30996,10 @@ function Set-CsTeamsGuestMessagingConfiguration
 
         [Parameter()]
         [System.Boolean]
+        $AllowUserDeleteMessage,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowGiphy,
 
         [Parameter()]
@@ -30909,10 +31009,6 @@ function Set-CsTeamsGuestMessagingConfiguration
         [Parameter()]
         [System.Boolean]
         $AllowUserEditMessage,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserDeleteMessage,
 
         [Parameter()]
         [System.String]
@@ -30961,6 +31057,10 @@ function Set-CsTeamsMeetingBroadcastConfiguration
 
         [Parameter()]
         [System.String]
+        $SdnLicenseId,
+
+        [Parameter()]
+        [System.String]
         $SupportURL,
 
         [Parameter()]
@@ -30973,11 +31073,7 @@ function Set-CsTeamsMeetingBroadcastConfiguration
 
         [Parameter()]
         [System.String]
-        $SdnApiTemplateUrl,
-
-        [Parameter()]
-        [System.String]
-        $SdnLicenseId
+        $SdnApiTemplateUrl
     )
 }
 function Set-CsTeamsMeetingBroadcastPolicy
@@ -31522,10 +31618,6 @@ function Set-CsTeamsUpgradeConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $SfBMeetingJoinUx,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
@@ -31536,6 +31628,10 @@ function Set-CsTeamsUpgradeConfiguration
         [Parameter()]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [System.String]
+        $SfBMeetingJoinUx,
 
         [Parameter()]
         [System.String]
@@ -31584,16 +31680,12 @@ function Set-CsTenantFederationConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Boolean]
+        $AllowTeamsConsumerInbound,
 
         [Parameter()]
         [System.Boolean]
         $SharedSipAddressSpace,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowTeamsConsumerInbound,
 
         [Parameter()]
         [System.Object]
@@ -31602,6 +31694,10 @@ function Set-CsTenantFederationConfiguration
         [Parameter()]
         [System.Boolean]
         $TreatDiscoveredPartnersAsUnverified,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Boolean]
