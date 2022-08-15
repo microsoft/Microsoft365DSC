@@ -1,7 +1,8 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-
+* AADRoleSetting
+  * initial release
 * AADConditionalAccessPolicy
   * DEPRECATED then IncludeDevices and ExcludeDevices parameters.
   * Fixed issue extracting a policy that had invalid users or groups (deleted from AAD).
