@@ -10,6 +10,9 @@
   FIXES [#2196](https://github.com/microsoft/Microsoft365DSC/issues/2196)
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 1.11.0.
+* MISC
+  * Fixed issue with Export-M365DSCConfiguration if all components were invalid or if resource files were not found.
+  * Updated MicrosoftTeams to version 4.6.0.
 
 # 1.22.727.1
 
