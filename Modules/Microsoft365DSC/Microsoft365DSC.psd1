@@ -168,9 +168,7 @@
             * Added support for filtering resources instances at extraction time.
             FIXES [#1691](https://github.com/microsoft/Microsoft365DSC/issues/1691)
             * REPORT: Fixed an issue where if the ModuleVersion was not specified, that the file would fail to properly get parsed.
-            FIXES [#1970](https://github.com/microsoft/Microsoft365DSC/issues/1970)
-            * Resources implementing the Ensure parameter now defaults its value to $true.
-            FIXES [#1738](https://github.com/microsoft/Microsoft365DSC/issues/1738)"
+            FIXES [#1970](https://github.com/microsoft/Microsoft365DSC/issues/1970)"
 
             # Flag to indicate whether the module requires explicit user acceptance for install/update
             # RequireLicenseAcceptance = $false
