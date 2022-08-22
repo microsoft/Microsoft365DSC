@@ -3,6 +3,7 @@
 # UNRELEASED
 
 * AADApplication
+  * Fixed issue where Update-MgApplication could be called with parameter ReplyURLs which is invalid.
   * Added support to export/import app owners.
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 1.11.0.

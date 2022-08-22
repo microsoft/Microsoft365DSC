@@ -406,10 +406,10 @@ function Set-TargetResource
         }
 
         $currentParameters.Add("web", $webValue)
-        $currentParameters.Remove("ReplyURLs") | Out-Null
-        $currentParameters.Remove("LogoutURL") | Out-Null
-        $currentParameters.Remove("Homepage") | Out-Null
     }
+    $currentParameters.Remove("ReplyURLs") | Out-Null
+    $currentParameters.Remove("LogoutURL") | Out-Null
+    $currentParameters.Remove("Homepage") | Out-Null
 
     if ($Ensure -eq "Present" -and $currentAADApp.Ensure -eq "Absent")
     {
