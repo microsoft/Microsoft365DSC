@@ -3,18 +3,16 @@
 # UNRELEASED
 
 * AADApplication
-  * Fixed issue where Update-MgApplication could be called with parameter $ReplyURLs which is invalid.
+  * Fixed issue where Update-MgApplication could be called with parameter ReplyURLs which is invalid.
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 1.11.0.
+
+# 1.22.727.1
+
 * AADConditionalAccessPolicy
   * DEPRECATED then IncludeDevices and ExcludeDevices parameters.
   * Fixed issue extracting a policy that had invalid users or groups (deleted from AAD).
   FIXES [#2151](https://github.com/microsoft/Microsoft365DSC/issues/2151)
-* TeamsEventsPolicy
-  * Initial release.
-* DEPENDENCIES
-  * Updated MicrosoftTeams to version 4.6.0.
-
-# 1.22.727.1
-
 * EXOTransportRule
   * Fixed issue where the MessageContainsDataClassifications property was not properly extracted due to single quote exiting.
   FIXES [#1820](https://github.com/microsoft/Microsoft365DSC/issues/1820)
@@ -39,9 +37,13 @@
 * SPOSite
   * Fixed owner value for root site.
   FIXES [#2035](https://github.com/microsoft/Microsoft365DSC/issues/2035)
+* TeamsEventsPolicy
+  * Initial release.
 * TeamsUser
   * Fixed the extraction process and removed the multi-threading from the resource.
   FIXES #1883
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 4.6.0.
 * MISC
   * Added support for filtering resources instances at extraction time.
   FIXES [#1691](https://github.com/microsoft/Microsoft365DSC/issues/1691)
