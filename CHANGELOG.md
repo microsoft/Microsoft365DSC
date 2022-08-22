@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADApplication
+  * Added support to export/import app owners.
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 1.11.0.
 
