@@ -1087,7 +1087,7 @@ function Export-M365DSCConfiguration
     # Make sure we are not connected to Microsoft Graph on another tenant
     try
     {
-        Disconnect-MgGraph | Out-Null
+        Disconnect-MgGraph -ErrorAction SilentlyContinue | Out-Null
     }
     catch
     {

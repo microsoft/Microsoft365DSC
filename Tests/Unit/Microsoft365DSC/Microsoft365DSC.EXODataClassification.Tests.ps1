@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "EXOJournalRule" -GenericStubModule $GenericStubPath
+    -DscResource "EXODataClassification" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -39,10 +39,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
             }
+
+            Mock -CommandName New-DataClassification -MockWith {
+
+            }
+
+            Mock -CommandName Set-DataClassification -MockWith {
+
+            }
         }
 
         # Test contexts
-        Context -Name "Rule doesn't exist and it should" -Fixture {
+        Context -Name "Classification doesn't exist and it should" -Fixture {
             BeforeAll {
                 $testParams = @{
                     Name                = "TestRule"

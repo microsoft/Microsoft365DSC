@@ -292,6 +292,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
+                $Global:CurrentModeIsExport = $true
                 $testParams = @{
                     ApplicationId        = "12345-12345-12345-12345-12345"
                     TenantID             = "11111-11111-22222-22222-22222"
