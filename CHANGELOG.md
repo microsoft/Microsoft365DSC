@@ -15,6 +15,9 @@
   * Updated MicrosoftTeams to version 4.6.0.
 * O365User
   * Optimize, call Get-MgSubscribedSku only once instead of inside of two loops per each user/license.
+* AADGroup
+  * Use New-MgGroupOwner and New-MgGroupMember instead of their ByRef counterparts
+  FIXES [#2203](https://github.com/microsoft/Microsoft365DSC/issues/2203)
 
 # 1.22.727.1
 

@@ -331,6 +331,7 @@ function Set-TargetResource
     $currentParameters = $PSBoundParameters
     $currentGroup = Get-TargetResource @PSBoundParameters
     $currentParameters.Remove("ApplicationId") | Out-Null
+    $tenantIdValue = $currentParameters.TenantId
     $currentParameters.Remove("TenantId") | Out-Null
     $currentParameters.Remove("CertificateThumbprint") | Out-Null
     $currentParameters.Remove("ApplicationSecret") | Out-Null
@@ -535,20 +536,60 @@ function Set-TargetResource
         $ownersDiff = Compare-Object -ReferenceObject $backCurrentOwners -DifferenceObject $desiredOwnersValue
         foreach ($diff in $ownersDiff)
         {
-            $user = Get-MgUser -UserId $diff.InputObject
+            try {
+                $user = Get-MgUser -UserId $diff.InputObject
+            }
+            catch {
+                try {
+                    Write-Verbose -Message $_
+                    $Message = "Couldn't find user {0} to add/remove as owner on AAD Group {1}, " `
+                        -f $diff.InputObject, $currentGroup.DisplayName + `
+                        "not processing any further objects"
+                    Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $tenantIdValue
+                }
+                catch {
+                    Write-Verbose -Message $_
+                }
+                break
+            }
 
             if ($diff.SideIndicator -eq '=>')
             {
                 Write-Verbose -Message "Adding new owner {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
-                $ownerObject = @{
-                    "@odata.id"= "https://graph.microsoft.com/v1.0/users/{$($user.Id)}"
+                try {
+                    New-MgGroupOwner -GroupId ($currentGroup.Id) -DirectoryObjectId ($user.Id) | Out-Null
                 }
-                New-MgGroupOwnerByRef -GroupId ($currentGroup.Id) -BodyParameter $ownerObject | Out-Null
+                catch {
+                    try {
+                        Write-Verbose -Message $_
+                        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $tenantIdValue
+                    }
+                    catch {
+                        Write-Verbose -Message $_
+                    }
+                }
             }
             elseif ($diff.SideIndicator -eq '<=')
             {
                 Write-Verbose -Message "Removing new owner {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
-                Remove-MgGroupOwnerByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($user.Id) | Out-Null
+                try {
+                    Remove-MgGroupOwnerByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($user.Id) | Out-Null
+                }
+                catch {
+                    try {
+                        Write-Verbose -Message $_
+                        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $tenantIdValue
+                    }
+                    catch {
+                        Write-Verbose -Message $_
+                    }
+                }
             }
         }
 
@@ -570,20 +611,60 @@ function Set-TargetResource
         $membersDiff = Compare-Object -ReferenceObject $backCurrentMembers -DifferenceObject $desiredMembersValue
         foreach ($diff in $membersDiff)
         {
-            $user = Get-MgUser -UserId $diff.InputObject
+            try {
+                $user = Get-MgUser -UserId $diff.InputObject
+            }
+            catch {
+                try {
+                    Write-Verbose -Message $_
+                    $Message = "Couldn't find user {0} to add/remove as member on AAD Group {1}, " `
+                        -f $diff.InputObject, $currentGroup.DisplayName + `
+                        "not processing any further objects"
+                    Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $tenantIdValue
+                }
+                catch {
+                    Write-Verbose -Message $_
+                }
+                    break
+            }
 
             if ($diff.SideIndicator -eq '=>')
             {
                 Write-Verbose -Message "Adding new member {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
-                $memberObject = @{
-                    "@odata.id"= "https://graph.microsoft.com/v1.0/users/{$($user.Id)}"
+                try {
+                    New-MgGroupMember -GroupId ($currentGroup.Id) -DirectoryObjectId ($user.Id) | Out-Null
                 }
-                New-MgGroupMemberByRef -GroupId ($currentGroup.Id) -BodyParameter $memberObject | Out-Null
+                catch {
+                    try {
+                        Write-Verbose -Message $_
+                        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $tenantIdValue
+                        }
+                        catch {
+                            Write-Verbose -Message $_
+                        }
+                }
             }
             elseif ($diff.SideIndicator -eq '<=')
             {
                 Write-Verbose -Message "Removing new member {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
-                Remove-MgGroupMemberByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($user.Id) | Out-Null
+                try {
+                    Remove-MgGroupMemberByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($user.Id) | Out-Null
+                }
+                catch {
+                    try {
+                        Write-Verbose -Message $_
+                        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $tenantIdValue
+                    }
+                    catch {
+                        Write-Verbose -Message $_
+                    }
+                }
             }
         }
     }

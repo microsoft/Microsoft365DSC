@@ -25,6 +25,7 @@ New-MgDirectorySetting,Directory.ReadWrite.All,Directory.ReadWrite.All
 New-MgGroup,Group.ReadWrite.All,Group.ReadWrite.All
 New-MgGroupLifecyclePolicy,Directory.ReadWrite.All,Directory.ReadWrite.All
 New-MgGroupMember,Group.ReadWrite.All,Group.ReadWrite.All
+New-MgGroupOwner,Group.ReadWrite.All,Group.ReadWrite.All
 New-MgGroupOwnerByRef,Group.ReadWrite.All,Group.ReadWrite.All
 New-MgIdentityConditionalAccessPolicy,Policy.Read.All/Policy.ReadWrite.ConditionalAccess,Policy.Read.All/Policy.ReadWrite.ConditionalAccess
 New-MgPlannerBucket,Tasks.ReadWrite,NotSupported
