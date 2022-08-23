@@ -417,11 +417,12 @@ function Set-TargetResource
 
         $licenses = @{}
 
+        $SubscribedSku = Get-MgSubscribedSku
         foreach ($licenseSkuPart in $LicenseAssignment)
         {
             Write-Verbose -Message "Adding License {$licenseSkuPart} to the Queue"
             $license = @{
-                SkuId = (Get-MgSubscribedSku | Where-Object -Property SkuPartNumber -Value $licenseSkuPart -EQ).SkuID
+                SkuId = ($SubscribedSku | Where-Object -Property SkuPartNumber -Value $licenseSkuPart -EQ).SkuID
             }
 
             # Set the Office license as the license we want to add in the $licenses object
@@ -441,7 +442,7 @@ function Set-TargetResource
             {
                 Write-Verbose -Message "Removing {$currentLicense} from user {$UserPrincipalName}"
                 $license = @{
-                    SkuId = (Get-MgSubscribedSku | Where-Object -Property SkuPartNumber -Value $currentLicense -EQ).SkuID
+                    SkuId = ($SubscribedSku | Where-Object -Property SkuPartNumber -Value $currentLicense -EQ).SkuID
                 }
                 if ( $licenses.Keys -NotContains "AddLicenses")
                 {
