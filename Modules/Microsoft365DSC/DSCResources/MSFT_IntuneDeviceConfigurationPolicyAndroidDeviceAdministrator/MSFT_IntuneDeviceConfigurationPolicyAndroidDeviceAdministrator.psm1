@@ -226,7 +226,7 @@ function Get-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
-        #endregion 
+        #endregion
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -269,7 +269,7 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message "Reloading1"
+        Write-Verbose -Message "Connection to the workload failed."
     }
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -289,7 +289,7 @@ function Get-TargetResource
     try
     {
         $getValue=$null
-        
+
         #region resource generator code
         if(-Not [string]::IsNullOrEmpty($DisplayName))
         {
@@ -309,7 +309,7 @@ function Get-TargetResource
             }
         }
         #endregion
-        
+
 
         if ($null -eq $getValue)
         {
@@ -319,58 +319,58 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found something with id {$id}"
         $results = @{
-            
-            #region resource generator code
-            Id = $getValue.Id 
-            Description = $getValue.Description 
-            DisplayName = $getValue.DisplayName 
-            AppsBlockClipboardSharing = $getValue.AdditionalProperties.appsBlockClipboardSharing 
-            AppsBlockCopyPaste = $getValue.AdditionalProperties.appsBlockCopyPaste 
-            AppsBlockYouTube = $getValue.AdditionalProperties.appsBlockYouTube 
-            BluetoothBlocked = $getValue.AdditionalProperties.bluetoothBlocked 
-            CameraBlocked = $getValue.AdditionalProperties.cameraBlocked 
-            CellularBlockDataRoaming = $getValue.AdditionalProperties.cellularBlockDataRoaming 
-            CellularBlockMessaging = $getValue.AdditionalProperties.cellularBlockMessaging 
-            CellularBlockVoiceRoaming = $getValue.AdditionalProperties.cellularBlockVoiceRoaming 
-            CellularBlockWiFiTethering = $getValue.AdditionalProperties.cellularBlockWiFiTethering 
-            CompliantAppListType = $getValue.AdditionalProperties.compliantAppListType 
-            DateAndTimeBlockChanges = $getValue.AdditionalProperties.dateAndTimeBlockChanges 
-            DeviceSharingAllowed = $getValue.AdditionalProperties.deviceSharingAllowed 
-            DiagnosticDataBlockSubmission = $getValue.AdditionalProperties.diagnosticDataBlockSubmission 
-            FactoryResetBlocked = $getValue.AdditionalProperties.factoryResetBlocked 
-            GoogleAccountBlockAutoSync = $getValue.AdditionalProperties.googleAccountBlockAutoSync 
-            GooglePlayStoreBlocked = $getValue.AdditionalProperties.googlePlayStoreBlocked 
-            KioskModeBlockSleepButton = $getValue.AdditionalProperties.kioskModeBlockSleepButton 
-            KioskModeBlockVolumeButtons = $getValue.AdditionalProperties.kioskModeBlockVolumeButtons 
-            LocationServicesBlocked = $getValue.AdditionalProperties.locationServicesBlocked 
-            NfcBlocked = $getValue.AdditionalProperties.nfcBlocked 
-            PasswordBlockFingerprintUnlock = $getValue.AdditionalProperties.passwordBlockFingerprintUnlock 
-            PasswordBlockTrustAgents = $getValue.AdditionalProperties.passwordBlockTrustAgents 
-            PasswordExpirationDays = $getValue.AdditionalProperties.passwordExpirationDays 
-            PasswordMinimumLength = $getValue.AdditionalProperties.passwordMinimumLength 
-            PasswordMinutesOfInactivityBeforeScreenTimeout = $getValue.AdditionalProperties.passwordMinutesOfInactivityBeforeScreenTimeout 
-            PasswordPreviousPasswordBlockCount = $getValue.AdditionalProperties.passwordPreviousPasswordBlockCount 
-            PasswordRequired = $getValue.AdditionalProperties.passwordRequired 
-            PasswordRequiredType = $getValue.AdditionalProperties.passwordRequiredType 
-            PasswordSignInFailureCountBeforeFactoryReset = $getValue.AdditionalProperties.passwordSignInFailureCountBeforeFactoryReset 
-            PowerOffBlocked = $getValue.AdditionalProperties.powerOffBlocked 
-            RequiredPasswordComplexity = $getValue.AdditionalProperties.requiredPasswordComplexity 
-            ScreenCaptureBlocked = $getValue.AdditionalProperties.screenCaptureBlocked 
-            SecurityRequireVerifyApps = $getValue.AdditionalProperties.securityRequireVerifyApps 
-            StorageBlockGoogleBackup = $getValue.AdditionalProperties.storageBlockGoogleBackup 
-            StorageBlockRemovableStorage = $getValue.AdditionalProperties.storageBlockRemovableStorage 
-            StorageRequireDeviceEncryption = $getValue.AdditionalProperties.storageRequireDeviceEncryption 
-            StorageRequireRemovableStorageEncryption = $getValue.AdditionalProperties.storageRequireRemovableStorageEncryption 
-            VoiceAssistantBlocked = $getValue.AdditionalProperties.voiceAssistantBlocked 
-            VoiceDialingBlocked = $getValue.AdditionalProperties.voiceDialingBlocked 
-            WebBrowserBlockAutofill = $getValue.AdditionalProperties.webBrowserBlockAutofill 
-            WebBrowserBlocked = $getValue.AdditionalProperties.webBrowserBlocked 
-            WebBrowserBlockJavaScript = $getValue.AdditionalProperties.webBrowserBlockJavaScript 
-            WebBrowserBlockPopups = $getValue.AdditionalProperties.webBrowserBlockPopups 
-            WebBrowserCookieSettings = $getValue.AdditionalProperties.webBrowserCookieSettings 
-            WiFiBlocked = $getValue.AdditionalProperties.wiFiBlocked 
 
-            
+            #region resource generator code
+            Id = $getValue.Id
+            Description = $getValue.Description
+            DisplayName = $getValue.DisplayName
+            AppsBlockClipboardSharing = $getValue.AdditionalProperties.appsBlockClipboardSharing
+            AppsBlockCopyPaste = $getValue.AdditionalProperties.appsBlockCopyPaste
+            AppsBlockYouTube = $getValue.AdditionalProperties.appsBlockYouTube
+            BluetoothBlocked = $getValue.AdditionalProperties.bluetoothBlocked
+            CameraBlocked = $getValue.AdditionalProperties.cameraBlocked
+            CellularBlockDataRoaming = $getValue.AdditionalProperties.cellularBlockDataRoaming
+            CellularBlockMessaging = $getValue.AdditionalProperties.cellularBlockMessaging
+            CellularBlockVoiceRoaming = $getValue.AdditionalProperties.cellularBlockVoiceRoaming
+            CellularBlockWiFiTethering = $getValue.AdditionalProperties.cellularBlockWiFiTethering
+            CompliantAppListType = $getValue.AdditionalProperties.compliantAppListType
+            DateAndTimeBlockChanges = $getValue.AdditionalProperties.dateAndTimeBlockChanges
+            DeviceSharingAllowed = $getValue.AdditionalProperties.deviceSharingAllowed
+            DiagnosticDataBlockSubmission = $getValue.AdditionalProperties.diagnosticDataBlockSubmission
+            FactoryResetBlocked = $getValue.AdditionalProperties.factoryResetBlocked
+            GoogleAccountBlockAutoSync = $getValue.AdditionalProperties.googleAccountBlockAutoSync
+            GooglePlayStoreBlocked = $getValue.AdditionalProperties.googlePlayStoreBlocked
+            KioskModeBlockSleepButton = $getValue.AdditionalProperties.kioskModeBlockSleepButton
+            KioskModeBlockVolumeButtons = $getValue.AdditionalProperties.kioskModeBlockVolumeButtons
+            LocationServicesBlocked = $getValue.AdditionalProperties.locationServicesBlocked
+            NfcBlocked = $getValue.AdditionalProperties.nfcBlocked
+            PasswordBlockFingerprintUnlock = $getValue.AdditionalProperties.passwordBlockFingerprintUnlock
+            PasswordBlockTrustAgents = $getValue.AdditionalProperties.passwordBlockTrustAgents
+            PasswordExpirationDays = $getValue.AdditionalProperties.passwordExpirationDays
+            PasswordMinimumLength = $getValue.AdditionalProperties.passwordMinimumLength
+            PasswordMinutesOfInactivityBeforeScreenTimeout = $getValue.AdditionalProperties.passwordMinutesOfInactivityBeforeScreenTimeout
+            PasswordPreviousPasswordBlockCount = $getValue.AdditionalProperties.passwordPreviousPasswordBlockCount
+            PasswordRequired = $getValue.AdditionalProperties.passwordRequired
+            PasswordRequiredType = $getValue.AdditionalProperties.passwordRequiredType
+            PasswordSignInFailureCountBeforeFactoryReset = $getValue.AdditionalProperties.passwordSignInFailureCountBeforeFactoryReset
+            PowerOffBlocked = $getValue.AdditionalProperties.powerOffBlocked
+            RequiredPasswordComplexity = $getValue.AdditionalProperties.requiredPasswordComplexity
+            ScreenCaptureBlocked = $getValue.AdditionalProperties.screenCaptureBlocked
+            SecurityRequireVerifyApps = $getValue.AdditionalProperties.securityRequireVerifyApps
+            StorageBlockGoogleBackup = $getValue.AdditionalProperties.storageBlockGoogleBackup
+            StorageBlockRemovableStorage = $getValue.AdditionalProperties.storageBlockRemovableStorage
+            StorageRequireDeviceEncryption = $getValue.AdditionalProperties.storageRequireDeviceEncryption
+            StorageRequireRemovableStorageEncryption = $getValue.AdditionalProperties.storageRequireRemovableStorageEncryption
+            VoiceAssistantBlocked = $getValue.AdditionalProperties.voiceAssistantBlocked
+            VoiceDialingBlocked = $getValue.AdditionalProperties.voiceDialingBlocked
+            WebBrowserBlockAutofill = $getValue.AdditionalProperties.webBrowserBlockAutofill
+            WebBrowserBlocked = $getValue.AdditionalProperties.webBrowserBlocked
+            WebBrowserBlockJavaScript = $getValue.AdditionalProperties.webBrowserBlockJavaScript
+            WebBrowserBlockPopups = $getValue.AdditionalProperties.webBrowserBlockPopups
+            WebBrowserCookieSettings = $getValue.AdditionalProperties.webBrowserCookieSettings
+            WiFiBlocked = $getValue.AdditionalProperties.wiFiBlocked
+
+
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -436,7 +436,7 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        
+
         #region resource generator code
         [Parameter()]
         [System.String]
@@ -659,7 +659,7 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
-        #endregion 
+        #endregion
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -761,7 +761,7 @@ function Set-TargetResource
             $CreateParameters.add('AdditionalProperties',$AdditionalProperties)
         }
 
-        
+
         #region resource generator code
         $policy=New-MgDeviceManagementDeviceConfiguration @CreateParameters
         $assignmentsHash=@()
@@ -777,7 +777,7 @@ function Set-TargetResource
         }
 
         #endregion
-        
+
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -813,7 +813,7 @@ function Set-TargetResource
             $UpdateParameters.add('AdditionalProperties',$AdditionalProperties)
         }
 
-        
+
         #region resource generator code
         Update-MgDeviceManagementDeviceConfiguration @UpdateParameters `
             -DeviceConfigurationId $currentInstance.Id
@@ -827,22 +827,22 @@ function Set-TargetResource
             -Repository deviceConfigurations
 
         #endregion
-        
+
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing {$DisplayName}"
 
-        
+
         #region resource generator code
         #endregion
-        
 
-        
+
+
         #region resource generator code
         Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
-        
+
     }
 }
 
@@ -852,7 +852,7 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        
+
         #region resource generator code
         [Parameter()]
         [System.String]
@@ -1075,7 +1075,7 @@ function Test-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
-        #endregion 
+        #endregion
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -1249,7 +1249,7 @@ function Export-TargetResource
 
     try
     {
-        
+
         #region resource generator code
         [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
             -ErrorAction Stop | Where-Object `
@@ -1263,7 +1263,7 @@ function Export-TargetResource
                 -ErrorAction Stop
         }
         #endregion
-        
+
 
         $i = 1
         $dscContent = ''

@@ -10,19 +10,19 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphapplistitem
 {
-    [Write, Description(""), ValueMap{"#microsoft.graph.appleAppListItem"}, Values{"#microsoft.graph.appleAppListItem"}] String odataType;
+    [Write, Description("odatatype of the item."), ValueMap{"#microsoft.graph.appleAppListItem"}, Values{"#microsoft.graph.appleAppListItem"}] String odataType;
     [Write, Description("Kiosk mode managed app id")] String appId;
-    [Write, Description("")] String appStoreUrl;
-    [Write, Description("")] String name;
-    [Write, Description("")] String publisher;
+    [Write, Description("Define the app store URL.")] String appStoreUrl;
+    [Write, Description("Define the name of the app.")] String name;
+    [Write, Description("Define the publisher of the app.")] String publisher;
 };
 
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator")]
 class MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator : OMI_BaseResource
 {
-    [Write, Description("")] String Id;
-    [Write, Description("")] String Description;
-    [Write, Description("")] String DisplayName;
+    [Write, Description("Id of the Intune policy.")] String Id;
+    [Write, Description("Description of the Intune policy.")] String Description;
+    [Write, Description("Display name of the Intune policy.")] String DisplayName;
     [Write, Description("Block clipboard sharing between apps (Samsung KNOX Standard 4.0+).")] Boolean AppsBlockClipboardSharing;
     [Write, Description("Block copy and paste functionality.")] Boolean AppsBlockCopyPaste;
     [Write, Description("Block YouTube (Samsung KNOX Standard 4.0+).")] Boolean AppsBlockYouTube;
@@ -58,17 +58,12 @@ class MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator : OMI_BaseR
     [Write, Description("Specify the type of password required."), ValueMap{"deviceDefault","alphabetic","alphanumeric","alphanumericWithSymbols","lowSecurityBiometric","numeric","numericComplex","any"}, Values{"deviceDefault","alphabetic","alphanumeric","alphanumericWithSymbols","lowSecurityBiometric","numeric","numericComplex","any"}] String PasswordRequiredType;
     [Write, Description("Number of consecutive times an incorrect password can be entered before device is wiped of all data.")] UInt32 PasswordSignInFailureCountBeforeFactoryReset;
     [Write, Description("Block user from powering off device. If this setting is disabled the setting 'Number of sign-in failures before wiping device' does not function.")] Boolean PowerOffBlocked;
-    [Write, Description(""), ValueMap{"none","low","medium","high"}, Values{"none","low","medium","high"}] String RequiredPasswordComplexity;
+    [Write, Description("Define the password complexity."), ValueMap{"none","low","medium","high"}, Values{"none","low","medium","high"}] String RequiredPasswordComplexity;
     [Write, Description("Block capturing contents of screen as an image.")] Boolean ScreenCaptureBlocked;
     [Write, Description("Security require verify apps")] Boolean SecurityRequireVerifyApps;
     [Write, Description("Block sync with Google backup.")] Boolean StorageBlockGoogleBackup;
     [Write, Description("Block removable storage usage (Samsung KNOX Standard 4.0+).")] Boolean StorageBlockRemovableStorage;
-    [Write, Description("Require encryption on device. Not all devices support encryption.<br>
-  <br>
-  You must also:<br>
-  1. Enable 'Require password'<br>
-  2. Specify 'Password quality' of 'At least numeric'<br>
-  3. Set 'Minimum password length' of at least 4, to correctly report compliance for this setting.")] Boolean StorageRequireDeviceEncryption;
+    [Write, Description("Require encryption on device. Not all devices support encryption.")] Boolean StorageRequireDeviceEncryption;
     [Write, Description("Storage cards must be encrypted. Not all devices support storage card encryption. For more information, see the device and mobile operating system documentation.")] Boolean StorageRequireRemovableStorageEncryption;
     [Write, Description("Block voice assistant (Samsung KNOX Standard 4.0+).")] Boolean VoiceAssistantBlocked;
     [Write, Description("Block voice dialing (Samsung KNOX Standard 4.0+).")] Boolean VoiceDialingBlocked;
@@ -78,9 +73,7 @@ class MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator : OMI_BaseR
     [Write, Description("Block pop-ups in web browser.")] Boolean WebBrowserBlockPopups;
     [Write, Description("Allow or block browser cookies"), ValueMap{"browserDefault","blockAlways","allowCurrentWebSite","allowFromWebsitesVisited","allowAlways"}, Values{"browserDefault","blockAlways","allowCurrentWebSite","allowFromWebsitesVisited","allowAlways"}] String WebBrowserCookieSettings;
     [Write, Description("Block Wi-Fi (Samsung KNOX Standard 4.0+).")] Boolean WiFiBlocked;
-
     [Write, Description("Represents the assignment to the Intune policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];
-
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
     [Write, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
