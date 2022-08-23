@@ -4,7 +4,6 @@
 
 * AADApplication
   * Fixed issue where Update-MgApplication could be called with parameter ReplyURLs which is invalid.
-  * Added support to export/import app owners.
 * EXOTransportRule
   * Fix issue setting IncidentReportContent
   FIXES [#2196](https://github.com/microsoft/Microsoft365DSC/issues/2196)
