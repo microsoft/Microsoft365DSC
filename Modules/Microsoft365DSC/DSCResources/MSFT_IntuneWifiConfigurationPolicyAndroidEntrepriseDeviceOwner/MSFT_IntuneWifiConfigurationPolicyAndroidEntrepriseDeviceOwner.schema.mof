@@ -11,24 +11,22 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneWifiConfigurationPolicyAndroidEntrepriseDeviceOwner")]
 class MSFT_IntuneWifiConfigurationPolicyAndroidEntrepriseDeviceOwner : OMI_BaseResource
 {
-    [Write, Description("")] String Id;
-    [Write, Description("")] String Description;
-    [Write, Description("")] String DisplayName;
+    [Write, Description("Id of the Intune policy")] String Id;
+    [Write, Description("Description of the Intune policy")] String Description;
+    [Write, Description("Disaply name of the Intune policy")] String DisplayName;
     [Write, Description("If the network is in range, automatically connect.")] Boolean ConnectAutomatically;
     [Write, Description("Don't show this Wi-Fi network on an end-user's device in the list of available networks. The SSID will not be broadcasted.")] Boolean ConnectWhenNetworkNameIsHidden;
-    [Write, Description("Network name")] String NetworkName;
-    [Write, Description("Pre shared key")] String PreSharedKey;
-    [Write, Description("Pre shared key is set")] Boolean PreSharedKeyIsSet;
-    [Write, Description("")] String ProxyAutomaticConfigurationUrl;
-    [Write, Description("")] String ProxyExclusionList;
-    [Write, Description("")] String ProxyManualAddress;
-    [Write, Description("")] UInt32 ProxyManualPort;
-    [Write, Description(""), ValueMap{"none","manual","automatic"}, Values{"none","manual","automatic"}] String ProxySettings;
+    [Write, Description("Network name.")] String NetworkName;
+    [Write, Description("Pre shared key.")] String PreSharedKey;
+    [Write, Description("Pre shared key is set.")] Boolean PreSharedKeyIsSet;
+    [Write, Description("URL of the automatic proxy.")] String ProxyAutomaticConfigurationUrl;
+    [Write, Description("Exclusion list of the proxy.")] String ProxyExclusionList;
+    [Write, Description("Address of the proxy.")] String ProxyManualAddress;
+    [Write, Description("Port of the proxy.")] UInt32 ProxyManualPort;
+    [Write, Description("Proxy setting type."), ValueMap{"none","manual","automatic"}, Values{"none","manual","automatic"}] String ProxySettings;
     [Write, Description("Service Set Identifier. The name of the Wi-Fi connection.")] String Ssid;
-    [Write, Description("Type of Wi-Fi profile"), ValueMap{"open","wep","wpaPersonal","wpaEnterprise"}, Values{"open","wep","wpaPersonal","wpaEnterprise"}] String WiFiSecurityType;
-
+    [Write, Description("Type of Wi-Fi profile."), ValueMap{"open","wep","wpaPersonal","wpaEnterprise"}, Values{"open","wep","wpaPersonal","wpaEnterprise"}] String WiFiSecurityType;
     [Write, Description("Represents the assignment to the Intune policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];
-
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
     [Write, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

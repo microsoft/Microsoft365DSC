@@ -77,7 +77,7 @@ function Get-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
-        #endregion 
+        #endregion
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -120,7 +120,7 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message "Reloading1"
+        Write-Verbose -Message "Connection to the workload failed."
     }
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -140,7 +140,7 @@ function Get-TargetResource
     try
     {
         $getValue=$null
-        
+
         #region resource generator code
         if(-Not [string]::IsNullOrEmpty($DisplayName))
         {
@@ -160,7 +160,7 @@ function Get-TargetResource
             }
         }
         #endregion
-        
+
 
         if ($null -eq $getValue)
         {
@@ -170,26 +170,26 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found something with id {$id}"
         $results = @{
-            
-            #region resource generator code
-            Id = $getValue.Id 
-            Description = $getValue.Description 
-            DisplayName = $getValue.DisplayName 
-            ConnectAutomatically = $getValue.AdditionalProperties.connectAutomatically 
-            ConnectToPreferredNetwork = $getValue.AdditionalProperties.connectToPreferredNetwork 
-            ConnectWhenNetworkNameIsHidden = $getValue.AdditionalProperties.connectWhenNetworkNameIsHidden 
-            ForceFIPSCompliance = $getValue.AdditionalProperties.forceFIPSCompliance 
-            MeteredConnectionLimit = $getValue.AdditionalProperties.meteredConnectionLimit 
-            NetworkName = $getValue.AdditionalProperties.networkName 
-            PreSharedKey = $getValue.AdditionalProperties.preSharedKey 
-            ProxyAutomaticConfigurationUrl = $getValue.AdditionalProperties.proxyAutomaticConfigurationUrl 
-            ProxyManualAddress = $getValue.AdditionalProperties.proxyManualAddress 
-            ProxyManualPort = $getValue.AdditionalProperties.proxyManualPort 
-            ProxySetting = $getValue.AdditionalProperties.proxySetting 
-            Ssid = $getValue.AdditionalProperties.ssid 
-            WifiSecurityType = $getValue.AdditionalProperties.wifiSecurityType 
 
-            
+            #region resource generator code
+            Id = $getValue.Id
+            Description = $getValue.Description
+            DisplayName = $getValue.DisplayName
+            ConnectAutomatically = $getValue.AdditionalProperties.connectAutomatically
+            ConnectToPreferredNetwork = $getValue.AdditionalProperties.connectToPreferredNetwork
+            ConnectWhenNetworkNameIsHidden = $getValue.AdditionalProperties.connectWhenNetworkNameIsHidden
+            ForceFIPSCompliance = $getValue.AdditionalProperties.forceFIPSCompliance
+            MeteredConnectionLimit = $getValue.AdditionalProperties.meteredConnectionLimit
+            NetworkName = $getValue.AdditionalProperties.networkName
+            PreSharedKey = $getValue.AdditionalProperties.preSharedKey
+            ProxyAutomaticConfigurationUrl = $getValue.AdditionalProperties.proxyAutomaticConfigurationUrl
+            ProxyManualAddress = $getValue.AdditionalProperties.proxyManualAddress
+            ProxyManualPort = $getValue.AdditionalProperties.proxyManualPort
+            ProxySetting = $getValue.AdditionalProperties.proxySetting
+            Ssid = $getValue.AdditionalProperties.ssid
+            WifiSecurityType = $getValue.AdditionalProperties.wifiSecurityType
+
+
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -235,7 +235,7 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        
+
         #region resource generator code
         [Parameter()]
         [System.String]
@@ -309,7 +309,7 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
-        #endregion 
+        #endregion
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -411,7 +411,7 @@ function Set-TargetResource
             $CreateParameters.add('AdditionalProperties',$AdditionalProperties)
         }
 
-        
+
         #region resource generator code
         $policy=New-MgDeviceManagementDeviceConfiguration @CreateParameters
         $assignmentsHash=@()
@@ -427,7 +427,7 @@ function Set-TargetResource
         }
 
         #endregion
-        
+
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -463,7 +463,7 @@ function Set-TargetResource
             $UpdateParameters.add('AdditionalProperties',$AdditionalProperties)
         }
 
-        
+
         #region resource generator code
         Update-MgDeviceManagementDeviceConfiguration @UpdateParameters `
             -DeviceConfigurationId $currentInstance.Id
@@ -477,22 +477,22 @@ function Set-TargetResource
             -Repository deviceConfigurations
 
         #endregion
-        
+
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing {$DisplayName}"
 
-        
+
         #region resource generator code
         #endregion
-        
 
-        
+
+
         #region resource generator code
         Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
-        
+
     }
 }
 
@@ -502,7 +502,7 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        
+
         #region resource generator code
         [Parameter()]
         [System.String]
@@ -576,7 +576,7 @@ function Test-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
-        #endregion 
+        #endregion
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -750,7 +750,7 @@ function Export-TargetResource
 
     try
     {
-        
+
         #region resource generator code
         [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
             -ErrorAction Stop | Where-Object `
@@ -760,7 +760,7 @@ function Export-TargetResource
 
 
         #endregion
-        
+
 
         $i = 1
         $dscContent = ''
