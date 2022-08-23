@@ -2,38 +2,26 @@
 
 # UNRELEASED
 
+* AADApplication
+  * Fixed issue where Update-MgApplication could be called with parameter ReplyURLs which is invalid.
+  * Added support to export/import app owners.
+* EXOTransportRule
+  * Fix issue setting IncidentReportContent
+  FIXES [#2196](https://github.com/microsoft/Microsoft365DSC/issues/2196)
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 1.11.0.
+* MISC
+  * Fixed issue with Export-M365DSCConfiguration if all components were invalid or if resource files were not found.
+  * Updated MicrosoftTeams to version 4.6.0.
+* O365User
+  * Optimize, call Get-MgSubscribedSku only once instead of inside of two loops per each user/license.
+
+# 1.22.727.1
+
 * AADConditionalAccessPolicy
   * DEPRECATED then IncludeDevices and ExcludeDevices parameters.
   * Fixed issue extracting a policy that had invalid users or groups (deleted from AAD).
   FIXES [#2151](https://github.com/microsoft/Microsoft365DSC/issues/2151)
-* TeamsEventsPolicy
-  * Initial release.
-* IntuneWifiConfigurationPolicyAndroidDeviceAdministrator
-  * Initial release
-* IntuneWifiConfigurationPolicyAndroidForWork
-  * Initial release
-* IntuneWifiConfigurationPolicyAndroidEntrepriseWorkProfile
-  * Initial release
-* IntuneWifiConfigurationPolicyAndroidEntrepriseDeviceOwner
-  * Initial release
-* IntuneWifiConfigurationPolicyAndroidOpenSourceProject
-  * Initial release
-* IntuneWifiConfigurationPolicyIOS
-  * Initial release
-* IntuneWifiConfigurationPolicyMacOS
-  * Initial release
-* IntuneWifiConfigurationPolicyWindows10
-  * Initial release
-* DRG
-  * Fixes Unit test automation
-  * Added support for CIM instances in Unit test automation
-  * Added support for settings.json automation
-  * Added support for readme.md automation
-* DEPENDENCIES
-  * Updated MicrosoftTeams to version 4.6.0.
-
-# 1.22.727.1
-
 * EXOTransportRule
   * Fixed issue where the MessageContainsDataClassifications property was not properly extracted due to single quote exiting.
   FIXES [#1820](https://github.com/microsoft/Microsoft365DSC/issues/1820)
@@ -58,9 +46,13 @@
 * SPOSite
   * Fixed owner value for root site.
   FIXES [#2035](https://github.com/microsoft/Microsoft365DSC/issues/2035)
+* TeamsEventsPolicy
+  * Initial release.
 * TeamsUser
   * Fixed the extraction process and removed the multi-threading from the resource.
   FIXES #1883
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 4.6.0.
 * MISC
   * Added support for filtering resources instances at extraction time.
   FIXES [#1691](https://github.com/microsoft/Microsoft365DSC/issues/1691)
