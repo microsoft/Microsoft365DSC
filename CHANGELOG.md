@@ -8,6 +8,9 @@
 * EXOTransportRule
   * Fix issue setting IncidentReportContent
   FIXES [#2196](https://github.com/microsoft/Microsoft365DSC/issues/2196)
+* EXOInboundConnector
+  * Add support for different syntax of SenderDomains parameter
+  FIXES [#2180](https://github.com/microsoft/Microsoft365DSC/issues/2180)
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 1.11.0.
 * MISC
