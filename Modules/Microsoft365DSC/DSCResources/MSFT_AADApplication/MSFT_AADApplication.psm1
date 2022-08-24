@@ -471,7 +471,7 @@ function Set-TargetResource
                 } else {
                     $OwnerId = $diff.InputObject
                     $DirectoryObjectUri += "{0}" -f $OwnerId
-                    Get-MgDirectoryObject -DirectoryObjectId $DirectoryObjectUri -ErrorAction Stop
+                    Invoke-MgGraphRequest -Method GET -Uri $DirectoryObjectUri -ErrorAction Stop
                 }
             }
             catch {
