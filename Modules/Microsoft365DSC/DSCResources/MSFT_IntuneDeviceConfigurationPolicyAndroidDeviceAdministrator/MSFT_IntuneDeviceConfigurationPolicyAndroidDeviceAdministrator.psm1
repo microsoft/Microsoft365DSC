@@ -19,15 +19,31 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AddingGameCenterFriendsBlocked,
+        $AppsBlockClipboardSharing,
 
         [Parameter()]
         [System.Boolean]
-        $AirDropBlocked,
+        $AppsBlockCopyPaste,
 
         [Parameter()]
         [System.Boolean]
-        $AppleWatchBlockAutoUnlock,
+        $AppsBlockYouTube,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AppsHideList,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AppsInstallAllowList,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AppsLaunchBlockList,
+
+        [Parameter()]
+        [System.Boolean]
+        $BluetoothBlocked,
 
         [Parameter()]
         [System.Boolean]
@@ -35,23 +51,19 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ClassroomAppBlockRemoteScreenObservation,
+        $CellularBlockDataRoaming,
 
         [Parameter()]
         [System.Boolean]
-        $ClassroomAppForceUnpromptedScreenObservation,
+        $CellularBlockMessaging,
 
         [Parameter()]
         [System.Boolean]
-        $ClassroomForceAutomaticallyJoinClasses,
+        $CellularBlockVoiceRoaming,
 
         [Parameter()]
         [System.Boolean]
-        $ClassroomForceRequestPermissionToLeaveClasses,
-
-        [Parameter()]
-        [System.Boolean]
-        $ClassroomForceUnpromptedAppAndDeviceLock,
+        $CellularBlockWiFiTethering,
 
         [Parameter()]
         [ValidateSet('none','appsInListCompliant','appsNotInListCompliant')]
@@ -64,95 +76,47 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ContentCachingBlocked,
+        $DateAndTimeBlockChanges,
 
         [Parameter()]
         [System.Boolean]
-        $DefinitionLookupBlocked,
-
-        [Parameter()]
-        [System.String[]]
-        $EmailInDomainSuffixes,
+        $DeviceSharingAllowed,
 
         [Parameter()]
         [System.Boolean]
-        $EraseContentAndSettingsBlocked,
+        $DiagnosticDataBlockSubmission,
 
         [Parameter()]
         [System.Boolean]
-        $GameCenterBlocked,
+        $FactoryResetBlocked,
 
         [Parameter()]
         [System.Boolean]
-        $ICloudBlockActivityContinuation,
+        $GoogleAccountBlockAutoSync,
 
         [Parameter()]
         [System.Boolean]
-        $ICloudBlockAddressBook,
+        $GooglePlayStoreBlocked,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $KioskModeApps,
 
         [Parameter()]
         [System.Boolean]
-        $ICloudBlockBookmarks,
+        $KioskModeBlockSleepButton,
 
         [Parameter()]
         [System.Boolean]
-        $ICloudBlockCalendar,
+        $KioskModeBlockVolumeButtons,
 
         [Parameter()]
         [System.Boolean]
-        $ICloudBlockDocumentSync,
+        $LocationServicesBlocked,
 
         [Parameter()]
         [System.Boolean]
-        $ICloudBlockMail,
-
-        [Parameter()]
-        [System.Boolean]
-        $ICloudBlockNotes,
-
-        [Parameter()]
-        [System.Boolean]
-        $ICloudBlockPhotoLibrary,
-
-        [Parameter()]
-        [System.Boolean]
-        $ICloudBlockReminders,
-
-        [Parameter()]
-        [System.Boolean]
-        $ICloudDesktopAndDocumentsBlocked,
-
-        [Parameter()]
-        [System.Boolean]
-        $ICloudPrivateRelayBlocked,
-
-        [Parameter()]
-        [System.Boolean]
-        $ITunesBlockFileSharing,
-
-        [Parameter()]
-        [System.Boolean]
-        $ITunesBlockMusicService,
-
-        [Parameter()]
-        [System.Boolean]
-        $KeyboardBlockDictation,
-
-        [Parameter()]
-        [System.Boolean]
-        $KeychainBlockCloudSync,
-
-        [Parameter()]
-        [System.Boolean]
-        $MultiplayerGamingBlocked,
-
-        [Parameter()]
-        [System.Boolean]
-        $PasswordBlockAirDropSharing,
-
-        [Parameter()]
-        [System.Boolean]
-        $PasswordBlockAutoFill,
+        $NfcBlocked,
 
         [Parameter()]
         [System.Boolean]
@@ -160,15 +124,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $PasswordBlockModification,
-
-        [Parameter()]
-        [System.Boolean]
-        $PasswordBlockProximityRequests,
-
-        [Parameter()]
-        [System.Boolean]
-        $PasswordBlockSimple,
+        $PasswordBlockTrustAgents,
 
         [Parameter()]
         [System.Int32]
@@ -176,27 +132,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Int32]
-        $PasswordMaximumAttemptCount,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordMinimumCharacterSetCount,
-
-        [Parameter()]
-        [System.Int32]
         $PasswordMinimumLength,
 
         [Parameter()]
         [System.Int32]
-        $PasswordMinutesOfInactivityBeforeLock,
-
-        [Parameter()]
-        [System.Int32]
         $PasswordMinutesOfInactivityBeforeScreenTimeout,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordMinutesUntilFailedLoginReset,
 
         [Parameter()]
         [System.Int32]
@@ -207,54 +147,79 @@ function Get-TargetResource
         $PasswordRequired,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','alphanumeric','numeric')]
+        [ValidateSet('deviceDefault','alphabetic','alphanumeric','alphanumericWithSymbols','lowSecurityBiometric','numeric','numericComplex','any')]
         [System.String]
         $PasswordRequiredType,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $PrivacyAccessControls,
+        [System.Int32]
+        $PasswordSignInFailureCountBeforeFactoryReset,
 
         [Parameter()]
         [System.Boolean]
-        $SafariBlockAutofill,
+        $PowerOffBlocked,
+
+        [Parameter()]
+        [ValidateSet('none','low','medium','high')]
+        [System.String]
+        $RequiredPasswordComplexity,
 
         [Parameter()]
         [System.Boolean]
         $ScreenCaptureBlocked,
 
         [Parameter()]
-        [System.Int32]
-        $SoftwareUpdateMajorOSDeferredInstallDelayInDays,
-
-        [Parameter()]
-        [System.Int32]
-        $SoftwareUpdateMinorOSDeferredInstallDelayInDays,
-
-        [Parameter()]
-        [System.Int32]
-        $SoftwareUpdateNonOSDeferredInstallDelayInDays,
-
-        [Parameter()]
-        [System.Int32]
-        $SoftwareUpdatesEnforcedDelayInDays,
+        [System.Boolean]
+        $SecurityRequireVerifyApps,
 
         [Parameter()]
         [System.Boolean]
-        $SpotlightBlockInternetResults,
+        $StorageBlockGoogleBackup,
 
         [Parameter()]
-        [System.Int32]
-        $TouchIdTimeoutInHours,
+        [System.Boolean]
+        $StorageBlockRemovableStorage,
 
         [Parameter()]
-        [ValidateSet('none','delayOSUpdateVisibility','delayAppUpdateVisibility','unknownFutureValue','delayMajorOsUpdateVisibility')]
+        [System.Boolean]
+        $StorageRequireDeviceEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $StorageRequireRemovableStorageEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $VoiceAssistantBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $VoiceDialingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $WebBrowserBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $WebBrowserBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $WebBrowserBlockJavaScript,
+
+        [Parameter()]
+        [System.Boolean]
+        $WebBrowserBlockPopups,
+
+        [Parameter()]
+        [ValidateSet('browserDefault','blockAlways','allowCurrentWebSite','allowFromWebsitesVisited','allowAlways')]
         [System.String]
-        $UpdateDelayPolicy,
+        $WebBrowserCookieSettings,
 
         [Parameter()]
         [System.Boolean]
-        $WallpaperModificationBlocked,
+        $WiFiBlocked,
 
 
         [Parameter()]
@@ -359,63 +324,51 @@ function Get-TargetResource
             Id = $getValue.Id
             Description = $getValue.Description
             DisplayName = $getValue.DisplayName
-            AddingGameCenterFriendsBlocked = $getValue.AdditionalProperties.addingGameCenterFriendsBlocked
-            AirDropBlocked = $getValue.AdditionalProperties.airDropBlocked
-            AppleWatchBlockAutoUnlock = $getValue.AdditionalProperties.appleWatchBlockAutoUnlock
+            AppsBlockClipboardSharing = $getValue.AdditionalProperties.appsBlockClipboardSharing
+            AppsBlockCopyPaste = $getValue.AdditionalProperties.appsBlockCopyPaste
+            AppsBlockYouTube = $getValue.AdditionalProperties.appsBlockYouTube
+            BluetoothBlocked = $getValue.AdditionalProperties.bluetoothBlocked
             CameraBlocked = $getValue.AdditionalProperties.cameraBlocked
-            ClassroomAppBlockRemoteScreenObservation = $getValue.AdditionalProperties.classroomAppBlockRemoteScreenObservation
-            ClassroomAppForceUnpromptedScreenObservation = $getValue.AdditionalProperties.classroomAppForceUnpromptedScreenObservation
-            ClassroomForceAutomaticallyJoinClasses = $getValue.AdditionalProperties.classroomForceAutomaticallyJoinClasses
-            ClassroomForceRequestPermissionToLeaveClasses = $getValue.AdditionalProperties.classroomForceRequestPermissionToLeaveClasses
-            ClassroomForceUnpromptedAppAndDeviceLock = $getValue.AdditionalProperties.classroomForceUnpromptedAppAndDeviceLock
+            CellularBlockDataRoaming = $getValue.AdditionalProperties.cellularBlockDataRoaming
+            CellularBlockMessaging = $getValue.AdditionalProperties.cellularBlockMessaging
+            CellularBlockVoiceRoaming = $getValue.AdditionalProperties.cellularBlockVoiceRoaming
+            CellularBlockWiFiTethering = $getValue.AdditionalProperties.cellularBlockWiFiTethering
             CompliantAppListType = $getValue.AdditionalProperties.compliantAppListType
-            ContentCachingBlocked = $getValue.AdditionalProperties.contentCachingBlocked
-            DefinitionLookupBlocked = $getValue.AdditionalProperties.definitionLookupBlocked
-            EmailInDomainSuffixes = $getValue.AdditionalProperties.emailInDomainSuffixes
-            EraseContentAndSettingsBlocked = $getValue.AdditionalProperties.eraseContentAndSettingsBlocked
-            GameCenterBlocked = $getValue.AdditionalProperties.gameCenterBlocked
-            ICloudBlockActivityContinuation = $getValue.AdditionalProperties.iCloudBlockActivityContinuation
-            ICloudBlockAddressBook = $getValue.AdditionalProperties.iCloudBlockAddressBook
-            ICloudBlockBookmarks = $getValue.AdditionalProperties.iCloudBlockBookmarks
-            ICloudBlockCalendar = $getValue.AdditionalProperties.iCloudBlockCalendar
-            ICloudBlockDocumentSync = $getValue.AdditionalProperties.iCloudBlockDocumentSync
-            ICloudBlockMail = $getValue.AdditionalProperties.iCloudBlockMail
-            ICloudBlockNotes = $getValue.AdditionalProperties.iCloudBlockNotes
-            ICloudBlockPhotoLibrary = $getValue.AdditionalProperties.iCloudBlockPhotoLibrary
-            ICloudBlockReminders = $getValue.AdditionalProperties.iCloudBlockReminders
-            ICloudDesktopAndDocumentsBlocked = $getValue.AdditionalProperties.iCloudDesktopAndDocumentsBlocked
-            ICloudPrivateRelayBlocked = $getValue.AdditionalProperties.iCloudPrivateRelayBlocked
-            ITunesBlockFileSharing = $getValue.AdditionalProperties.iTunesBlockFileSharing
-            ITunesBlockMusicService = $getValue.AdditionalProperties.iTunesBlockMusicService
-            KeyboardBlockDictation = $getValue.AdditionalProperties.keyboardBlockDictation
-            KeychainBlockCloudSync = $getValue.AdditionalProperties.keychainBlockCloudSync
-            MultiplayerGamingBlocked = $getValue.AdditionalProperties.multiplayerGamingBlocked
-            PasswordBlockAirDropSharing = $getValue.AdditionalProperties.passwordBlockAirDropSharing
-            PasswordBlockAutoFill = $getValue.AdditionalProperties.passwordBlockAutoFill
+            DateAndTimeBlockChanges = $getValue.AdditionalProperties.dateAndTimeBlockChanges
+            DeviceSharingAllowed = $getValue.AdditionalProperties.deviceSharingAllowed
+            DiagnosticDataBlockSubmission = $getValue.AdditionalProperties.diagnosticDataBlockSubmission
+            FactoryResetBlocked = $getValue.AdditionalProperties.factoryResetBlocked
+            GoogleAccountBlockAutoSync = $getValue.AdditionalProperties.googleAccountBlockAutoSync
+            GooglePlayStoreBlocked = $getValue.AdditionalProperties.googlePlayStoreBlocked
+            KioskModeBlockSleepButton = $getValue.AdditionalProperties.kioskModeBlockSleepButton
+            KioskModeBlockVolumeButtons = $getValue.AdditionalProperties.kioskModeBlockVolumeButtons
+            LocationServicesBlocked = $getValue.AdditionalProperties.locationServicesBlocked
+            NfcBlocked = $getValue.AdditionalProperties.nfcBlocked
             PasswordBlockFingerprintUnlock = $getValue.AdditionalProperties.passwordBlockFingerprintUnlock
-            PasswordBlockModification = $getValue.AdditionalProperties.passwordBlockModification
-            PasswordBlockProximityRequests = $getValue.AdditionalProperties.passwordBlockProximityRequests
-            PasswordBlockSimple = $getValue.AdditionalProperties.passwordBlockSimple
+            PasswordBlockTrustAgents = $getValue.AdditionalProperties.passwordBlockTrustAgents
             PasswordExpirationDays = $getValue.AdditionalProperties.passwordExpirationDays
-            PasswordMaximumAttemptCount = $getValue.AdditionalProperties.passwordMaximumAttemptCount
-            PasswordMinimumCharacterSetCount = $getValue.AdditionalProperties.passwordMinimumCharacterSetCount
             PasswordMinimumLength = $getValue.AdditionalProperties.passwordMinimumLength
-            PasswordMinutesOfInactivityBeforeLock = $getValue.AdditionalProperties.passwordMinutesOfInactivityBeforeLock
             PasswordMinutesOfInactivityBeforeScreenTimeout = $getValue.AdditionalProperties.passwordMinutesOfInactivityBeforeScreenTimeout
-            PasswordMinutesUntilFailedLoginReset = $getValue.AdditionalProperties.passwordMinutesUntilFailedLoginReset
             PasswordPreviousPasswordBlockCount = $getValue.AdditionalProperties.passwordPreviousPasswordBlockCount
             PasswordRequired = $getValue.AdditionalProperties.passwordRequired
             PasswordRequiredType = $getValue.AdditionalProperties.passwordRequiredType
-            SafariBlockAutofill = $getValue.AdditionalProperties.safariBlockAutofill
+            PasswordSignInFailureCountBeforeFactoryReset = $getValue.AdditionalProperties.passwordSignInFailureCountBeforeFactoryReset
+            PowerOffBlocked = $getValue.AdditionalProperties.powerOffBlocked
+            RequiredPasswordComplexity = $getValue.AdditionalProperties.requiredPasswordComplexity
             ScreenCaptureBlocked = $getValue.AdditionalProperties.screenCaptureBlocked
-            SoftwareUpdateMajorOSDeferredInstallDelayInDays = $getValue.AdditionalProperties.softwareUpdateMajorOSDeferredInstallDelayInDays
-            SoftwareUpdateMinorOSDeferredInstallDelayInDays = $getValue.AdditionalProperties.softwareUpdateMinorOSDeferredInstallDelayInDays
-            SoftwareUpdateNonOSDeferredInstallDelayInDays = $getValue.AdditionalProperties.softwareUpdateNonOSDeferredInstallDelayInDays
-            SoftwareUpdatesEnforcedDelayInDays = $getValue.AdditionalProperties.softwareUpdatesEnforcedDelayInDays
-            SpotlightBlockInternetResults = $getValue.AdditionalProperties.spotlightBlockInternetResults
-            TouchIdTimeoutInHours = $getValue.AdditionalProperties.touchIdTimeoutInHours
-            UpdateDelayPolicy = $getValue.AdditionalProperties.updateDelayPolicy
-            WallpaperModificationBlocked = $getValue.AdditionalProperties.wallpaperModificationBlocked
+            SecurityRequireVerifyApps = $getValue.AdditionalProperties.securityRequireVerifyApps
+            StorageBlockGoogleBackup = $getValue.AdditionalProperties.storageBlockGoogleBackup
+            StorageBlockRemovableStorage = $getValue.AdditionalProperties.storageBlockRemovableStorage
+            StorageRequireDeviceEncryption = $getValue.AdditionalProperties.storageRequireDeviceEncryption
+            StorageRequireRemovableStorageEncryption = $getValue.AdditionalProperties.storageRequireRemovableStorageEncryption
+            VoiceAssistantBlocked = $getValue.AdditionalProperties.voiceAssistantBlocked
+            VoiceDialingBlocked = $getValue.AdditionalProperties.voiceDialingBlocked
+            WebBrowserBlockAutofill = $getValue.AdditionalProperties.webBrowserBlockAutofill
+            WebBrowserBlocked = $getValue.AdditionalProperties.webBrowserBlocked
+            WebBrowserBlockJavaScript = $getValue.AdditionalProperties.webBrowserBlockJavaScript
+            WebBrowserBlockPopups = $getValue.AdditionalProperties.webBrowserBlockPopups
+            WebBrowserCookieSettings = $getValue.AdditionalProperties.webBrowserCookieSettings
+            WiFiBlocked = $getValue.AdditionalProperties.wiFiBlocked
 
 
             Ensure                = 'Present'
@@ -425,13 +378,25 @@ function Get-TargetResource
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
         }
+        if ($getValue.additionalProperties.appsHideList)
+        {
+            $results.Add("AppsHideList", $getValue.additionalProperties.appsHideList)
+        }
+        if ($getValue.additionalProperties.appsInstallAllowList)
+        {
+            $results.Add("AppsInstallAllowList", $getValue.additionalProperties.appsInstallAllowList)
+        }
+        if ($getValue.additionalProperties.appsLaunchBlockList)
+        {
+            $results.Add("AppsLaunchBlockList", $getValue.additionalProperties.appsLaunchBlockList)
+        }
         if ($getValue.additionalProperties.compliantAppsList)
         {
             $results.Add("CompliantAppsList", $getValue.additionalProperties.compliantAppsList)
         }
-        if ($getValue.additionalProperties.privacyAccessControls)
+        if ($getValue.additionalProperties.kioskModeApps)
         {
-            $results.Add("PrivacyAccessControls", $getValue.additionalProperties.privacyAccessControls)
+            $results.Add("KioskModeApps", $getValue.additionalProperties.kioskModeApps)
         }
 
         $myAssignments=@()
@@ -487,15 +452,31 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AddingGameCenterFriendsBlocked,
+        $AppsBlockClipboardSharing,
 
         [Parameter()]
         [System.Boolean]
-        $AirDropBlocked,
+        $AppsBlockCopyPaste,
 
         [Parameter()]
         [System.Boolean]
-        $AppleWatchBlockAutoUnlock,
+        $AppsBlockYouTube,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AppsHideList,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AppsInstallAllowList,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AppsLaunchBlockList,
+
+        [Parameter()]
+        [System.Boolean]
+        $BluetoothBlocked,
 
         [Parameter()]
         [System.Boolean]
@@ -503,23 +484,19 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ClassroomAppBlockRemoteScreenObservation,
+        $CellularBlockDataRoaming,
 
         [Parameter()]
         [System.Boolean]
-        $ClassroomAppForceUnpromptedScreenObservation,
+        $CellularBlockMessaging,
 
         [Parameter()]
         [System.Boolean]
-        $ClassroomForceAutomaticallyJoinClasses,
+        $CellularBlockVoiceRoaming,
 
         [Parameter()]
         [System.Boolean]
-        $ClassroomForceRequestPermissionToLeaveClasses,
-
-        [Parameter()]
-        [System.Boolean]
-        $ClassroomForceUnpromptedAppAndDeviceLock,
+        $CellularBlockWiFiTethering,
 
         [Parameter()]
         [ValidateSet('none','appsInListCompliant','appsNotInListCompliant')]
@@ -532,95 +509,47 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ContentCachingBlocked,
+        $DateAndTimeBlockChanges,
 
         [Parameter()]
         [System.Boolean]
-        $DefinitionLookupBlocked,
-
-        [Parameter()]
-        [System.String[]]
-        $EmailInDomainSuffixes,
+        $DeviceSharingAllowed,
 
         [Parameter()]
         [System.Boolean]
-        $EraseContentAndSettingsBlocked,
+        $DiagnosticDataBlockSubmission,
 
         [Parameter()]
         [System.Boolean]
-        $GameCenterBlocked,
+        $FactoryResetBlocked,
 
         [Parameter()]
         [System.Boolean]
-        $ICloudBlockActivityContinuation,
+        $GoogleAccountBlockAutoSync,
 
         [Parameter()]
         [System.Boolean]
-        $ICloudBlockAddressBook,
+        $GooglePlayStoreBlocked,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $KioskModeApps,
 
         [Parameter()]
         [System.Boolean]
-        $ICloudBlockBookmarks,
+        $KioskModeBlockSleepButton,
 
         [Parameter()]
         [System.Boolean]
-        $ICloudBlockCalendar,
+        $KioskModeBlockVolumeButtons,
 
         [Parameter()]
         [System.Boolean]
-        $ICloudBlockDocumentSync,
+        $LocationServicesBlocked,
 
         [Parameter()]
         [System.Boolean]
-        $ICloudBlockMail,
-
-        [Parameter()]
-        [System.Boolean]
-        $ICloudBlockNotes,
-
-        [Parameter()]
-        [System.Boolean]
-        $ICloudBlockPhotoLibrary,
-
-        [Parameter()]
-        [System.Boolean]
-        $ICloudBlockReminders,
-
-        [Parameter()]
-        [System.Boolean]
-        $ICloudDesktopAndDocumentsBlocked,
-
-        [Parameter()]
-        [System.Boolean]
-        $ICloudPrivateRelayBlocked,
-
-        [Parameter()]
-        [System.Boolean]
-        $ITunesBlockFileSharing,
-
-        [Parameter()]
-        [System.Boolean]
-        $ITunesBlockMusicService,
-
-        [Parameter()]
-        [System.Boolean]
-        $KeyboardBlockDictation,
-
-        [Parameter()]
-        [System.Boolean]
-        $KeychainBlockCloudSync,
-
-        [Parameter()]
-        [System.Boolean]
-        $MultiplayerGamingBlocked,
-
-        [Parameter()]
-        [System.Boolean]
-        $PasswordBlockAirDropSharing,
-
-        [Parameter()]
-        [System.Boolean]
-        $PasswordBlockAutoFill,
+        $NfcBlocked,
 
         [Parameter()]
         [System.Boolean]
@@ -628,15 +557,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $PasswordBlockModification,
-
-        [Parameter()]
-        [System.Boolean]
-        $PasswordBlockProximityRequests,
-
-        [Parameter()]
-        [System.Boolean]
-        $PasswordBlockSimple,
+        $PasswordBlockTrustAgents,
 
         [Parameter()]
         [System.Int32]
@@ -644,27 +565,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Int32]
-        $PasswordMaximumAttemptCount,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordMinimumCharacterSetCount,
-
-        [Parameter()]
-        [System.Int32]
         $PasswordMinimumLength,
 
         [Parameter()]
         [System.Int32]
-        $PasswordMinutesOfInactivityBeforeLock,
-
-        [Parameter()]
-        [System.Int32]
         $PasswordMinutesOfInactivityBeforeScreenTimeout,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordMinutesUntilFailedLoginReset,
 
         [Parameter()]
         [System.Int32]
@@ -675,54 +580,79 @@ function Set-TargetResource
         $PasswordRequired,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','alphanumeric','numeric')]
+        [ValidateSet('deviceDefault','alphabetic','alphanumeric','alphanumericWithSymbols','lowSecurityBiometric','numeric','numericComplex','any')]
         [System.String]
         $PasswordRequiredType,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $PrivacyAccessControls,
+        [System.Int32]
+        $PasswordSignInFailureCountBeforeFactoryReset,
 
         [Parameter()]
         [System.Boolean]
-        $SafariBlockAutofill,
+        $PowerOffBlocked,
+
+        [Parameter()]
+        [ValidateSet('none','low','medium','high')]
+        [System.String]
+        $RequiredPasswordComplexity,
 
         [Parameter()]
         [System.Boolean]
         $ScreenCaptureBlocked,
 
         [Parameter()]
-        [System.Int32]
-        $SoftwareUpdateMajorOSDeferredInstallDelayInDays,
-
-        [Parameter()]
-        [System.Int32]
-        $SoftwareUpdateMinorOSDeferredInstallDelayInDays,
-
-        [Parameter()]
-        [System.Int32]
-        $SoftwareUpdateNonOSDeferredInstallDelayInDays,
-
-        [Parameter()]
-        [System.Int32]
-        $SoftwareUpdatesEnforcedDelayInDays,
+        [System.Boolean]
+        $SecurityRequireVerifyApps,
 
         [Parameter()]
         [System.Boolean]
-        $SpotlightBlockInternetResults,
+        $StorageBlockGoogleBackup,
 
         [Parameter()]
-        [System.Int32]
-        $TouchIdTimeoutInHours,
+        [System.Boolean]
+        $StorageBlockRemovableStorage,
 
         [Parameter()]
-        [ValidateSet('none','delayOSUpdateVisibility','delayAppUpdateVisibility','unknownFutureValue','delayMajorOsUpdateVisibility')]
+        [System.Boolean]
+        $StorageRequireDeviceEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $StorageRequireRemovableStorageEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $VoiceAssistantBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $VoiceDialingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $WebBrowserBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $WebBrowserBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $WebBrowserBlockJavaScript,
+
+        [Parameter()]
+        [System.Boolean]
+        $WebBrowserBlockPopups,
+
+        [Parameter()]
+        [ValidateSet('browserDefault','blockAlways','allowCurrentWebSite','allowFromWebsitesVisited','allowAlways')]
         [System.String]
-        $UpdateDelayPolicy,
+        $WebBrowserCookieSettings,
 
         [Parameter()]
         [System.Boolean]
-        $WallpaperModificationBlocked,
+        $WiFiBlocked,
 
 
         [Parameter()]
@@ -840,12 +770,12 @@ function Set-TargetResource
             $assignmentsHash+=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
 
-        if($policy.id)
-        {
+        if($policy.id)        {
             Update-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository deviceConfigurations
         }
+
         #endregion
 
     }
@@ -938,15 +868,31 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AddingGameCenterFriendsBlocked,
+        $AppsBlockClipboardSharing,
 
         [Parameter()]
         [System.Boolean]
-        $AirDropBlocked,
+        $AppsBlockCopyPaste,
 
         [Parameter()]
         [System.Boolean]
-        $AppleWatchBlockAutoUnlock,
+        $AppsBlockYouTube,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AppsHideList,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AppsInstallAllowList,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AppsLaunchBlockList,
+
+        [Parameter()]
+        [System.Boolean]
+        $BluetoothBlocked,
 
         [Parameter()]
         [System.Boolean]
@@ -954,23 +900,19 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ClassroomAppBlockRemoteScreenObservation,
+        $CellularBlockDataRoaming,
 
         [Parameter()]
         [System.Boolean]
-        $ClassroomAppForceUnpromptedScreenObservation,
+        $CellularBlockMessaging,
 
         [Parameter()]
         [System.Boolean]
-        $ClassroomForceAutomaticallyJoinClasses,
+        $CellularBlockVoiceRoaming,
 
         [Parameter()]
         [System.Boolean]
-        $ClassroomForceRequestPermissionToLeaveClasses,
-
-        [Parameter()]
-        [System.Boolean]
-        $ClassroomForceUnpromptedAppAndDeviceLock,
+        $CellularBlockWiFiTethering,
 
         [Parameter()]
         [ValidateSet('none','appsInListCompliant','appsNotInListCompliant')]
@@ -983,95 +925,47 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ContentCachingBlocked,
+        $DateAndTimeBlockChanges,
 
         [Parameter()]
         [System.Boolean]
-        $DefinitionLookupBlocked,
-
-        [Parameter()]
-        [System.String[]]
-        $EmailInDomainSuffixes,
+        $DeviceSharingAllowed,
 
         [Parameter()]
         [System.Boolean]
-        $EraseContentAndSettingsBlocked,
+        $DiagnosticDataBlockSubmission,
 
         [Parameter()]
         [System.Boolean]
-        $GameCenterBlocked,
+        $FactoryResetBlocked,
 
         [Parameter()]
         [System.Boolean]
-        $ICloudBlockActivityContinuation,
+        $GoogleAccountBlockAutoSync,
 
         [Parameter()]
         [System.Boolean]
-        $ICloudBlockAddressBook,
+        $GooglePlayStoreBlocked,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $KioskModeApps,
 
         [Parameter()]
         [System.Boolean]
-        $ICloudBlockBookmarks,
+        $KioskModeBlockSleepButton,
 
         [Parameter()]
         [System.Boolean]
-        $ICloudBlockCalendar,
+        $KioskModeBlockVolumeButtons,
 
         [Parameter()]
         [System.Boolean]
-        $ICloudBlockDocumentSync,
+        $LocationServicesBlocked,
 
         [Parameter()]
         [System.Boolean]
-        $ICloudBlockMail,
-
-        [Parameter()]
-        [System.Boolean]
-        $ICloudBlockNotes,
-
-        [Parameter()]
-        [System.Boolean]
-        $ICloudBlockPhotoLibrary,
-
-        [Parameter()]
-        [System.Boolean]
-        $ICloudBlockReminders,
-
-        [Parameter()]
-        [System.Boolean]
-        $ICloudDesktopAndDocumentsBlocked,
-
-        [Parameter()]
-        [System.Boolean]
-        $ICloudPrivateRelayBlocked,
-
-        [Parameter()]
-        [System.Boolean]
-        $ITunesBlockFileSharing,
-
-        [Parameter()]
-        [System.Boolean]
-        $ITunesBlockMusicService,
-
-        [Parameter()]
-        [System.Boolean]
-        $KeyboardBlockDictation,
-
-        [Parameter()]
-        [System.Boolean]
-        $KeychainBlockCloudSync,
-
-        [Parameter()]
-        [System.Boolean]
-        $MultiplayerGamingBlocked,
-
-        [Parameter()]
-        [System.Boolean]
-        $PasswordBlockAirDropSharing,
-
-        [Parameter()]
-        [System.Boolean]
-        $PasswordBlockAutoFill,
+        $NfcBlocked,
 
         [Parameter()]
         [System.Boolean]
@@ -1079,15 +973,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $PasswordBlockModification,
-
-        [Parameter()]
-        [System.Boolean]
-        $PasswordBlockProximityRequests,
-
-        [Parameter()]
-        [System.Boolean]
-        $PasswordBlockSimple,
+        $PasswordBlockTrustAgents,
 
         [Parameter()]
         [System.Int32]
@@ -1095,27 +981,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Int32]
-        $PasswordMaximumAttemptCount,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordMinimumCharacterSetCount,
-
-        [Parameter()]
-        [System.Int32]
         $PasswordMinimumLength,
 
         [Parameter()]
         [System.Int32]
-        $PasswordMinutesOfInactivityBeforeLock,
-
-        [Parameter()]
-        [System.Int32]
         $PasswordMinutesOfInactivityBeforeScreenTimeout,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordMinutesUntilFailedLoginReset,
 
         [Parameter()]
         [System.Int32]
@@ -1126,54 +996,79 @@ function Test-TargetResource
         $PasswordRequired,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','alphanumeric','numeric')]
+        [ValidateSet('deviceDefault','alphabetic','alphanumeric','alphanumericWithSymbols','lowSecurityBiometric','numeric','numericComplex','any')]
         [System.String]
         $PasswordRequiredType,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $PrivacyAccessControls,
+        [System.Int32]
+        $PasswordSignInFailureCountBeforeFactoryReset,
 
         [Parameter()]
         [System.Boolean]
-        $SafariBlockAutofill,
+        $PowerOffBlocked,
+
+        [Parameter()]
+        [ValidateSet('none','low','medium','high')]
+        [System.String]
+        $RequiredPasswordComplexity,
 
         [Parameter()]
         [System.Boolean]
         $ScreenCaptureBlocked,
 
         [Parameter()]
-        [System.Int32]
-        $SoftwareUpdateMajorOSDeferredInstallDelayInDays,
-
-        [Parameter()]
-        [System.Int32]
-        $SoftwareUpdateMinorOSDeferredInstallDelayInDays,
-
-        [Parameter()]
-        [System.Int32]
-        $SoftwareUpdateNonOSDeferredInstallDelayInDays,
-
-        [Parameter()]
-        [System.Int32]
-        $SoftwareUpdatesEnforcedDelayInDays,
+        [System.Boolean]
+        $SecurityRequireVerifyApps,
 
         [Parameter()]
         [System.Boolean]
-        $SpotlightBlockInternetResults,
+        $StorageBlockGoogleBackup,
 
         [Parameter()]
-        [System.Int32]
-        $TouchIdTimeoutInHours,
+        [System.Boolean]
+        $StorageBlockRemovableStorage,
 
         [Parameter()]
-        [ValidateSet('none','delayOSUpdateVisibility','delayAppUpdateVisibility','unknownFutureValue','delayMajorOsUpdateVisibility')]
+        [System.Boolean]
+        $StorageRequireDeviceEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $StorageRequireRemovableStorageEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $VoiceAssistantBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $VoiceDialingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $WebBrowserBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $WebBrowserBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $WebBrowserBlockJavaScript,
+
+        [Parameter()]
+        [System.Boolean]
+        $WebBrowserBlockPopups,
+
+        [Parameter()]
+        [ValidateSet('browserDefault','blockAlways','allowCurrentWebSite','allowFromWebsitesVisited','allowAlways')]
         [System.String]
-        $UpdateDelayPolicy,
+        $WebBrowserCookieSettings,
 
         [Parameter()]
         [System.Boolean]
-        $WallpaperModificationBlocked,
+        $WiFiBlocked,
 
 
         [Parameter()]
@@ -1359,8 +1254,14 @@ function Export-TargetResource
         [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSGeneralDeviceConfiguration'  `
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidGeneralDeviceConfiguration'  `
             }
+
+        if (-not $getValue)
+        {
+            [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
+                -ErrorAction Stop
+        }
         #endregion
 
 
@@ -1391,6 +1292,39 @@ function Export-TargetResource
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
 
+        if ($Results.AppsHideList)
+        {
+            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.AppsHideList -CIMInstanceName MicrosoftGraphapplistitem
+            if ($complexTypeStringResult)
+            {
+                $Results.AppsHideList = $complexTypeStringResult            }
+            else
+            {
+                $Results.Remove('AppsHideList') | Out-Null
+            }
+        }
+        if ($Results.AppsInstallAllowList)
+        {
+            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.AppsInstallAllowList -CIMInstanceName MicrosoftGraphapplistitem
+            if ($complexTypeStringResult)
+            {
+                $Results.AppsInstallAllowList = $complexTypeStringResult            }
+            else
+            {
+                $Results.Remove('AppsInstallAllowList') | Out-Null
+            }
+        }
+        if ($Results.AppsLaunchBlockList)
+        {
+            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.AppsLaunchBlockList -CIMInstanceName MicrosoftGraphapplistitem
+            if ($complexTypeStringResult)
+            {
+                $Results.AppsLaunchBlockList = $complexTypeStringResult            }
+            else
+            {
+                $Results.Remove('AppsLaunchBlockList') | Out-Null
+            }
+        }
         if ($Results.CompliantAppsList)
         {
             $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.CompliantAppsList -CIMInstanceName MicrosoftGraphapplistitem
@@ -1402,15 +1336,15 @@ function Export-TargetResource
                 $Results.Remove('CompliantAppsList') | Out-Null
             }
         }
-        if ($Results.PrivacyAccessControls)
+        if ($Results.KioskModeApps)
         {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.PrivacyAccessControls -CIMInstanceName MicrosoftGraphmacosprivacyaccesscontrolitem
+            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.KioskModeApps -CIMInstanceName MicrosoftGraphapplistitem
             if ($complexTypeStringResult)
             {
-                $Results.PrivacyAccessControls = $complexTypeStringResult            }
+                $Results.KioskModeApps = $complexTypeStringResult            }
             else
             {
-                $Results.Remove('PrivacyAccessControls') | Out-Null
+                $Results.Remove('KioskModeApps') | Out-Null
             }
         }
 
@@ -1433,6 +1367,33 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential
 
+        if ($Results.AppsHideList)
+        {
+            $isCIMArray=$false
+            if($Results.AppsHideList.getType().Fullname -like "*[[\]]")
+            {
+                $isCIMArray=$true
+            }
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AppsHideList" -isCIMArray:$isCIMArray
+        }
+        if ($Results.AppsInstallAllowList)
+        {
+            $isCIMArray=$false
+            if($Results.AppsInstallAllowList.getType().Fullname -like "*[[\]]")
+            {
+                $isCIMArray=$true
+            }
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AppsInstallAllowList" -isCIMArray:$isCIMArray
+        }
+        if ($Results.AppsLaunchBlockList)
+        {
+            $isCIMArray=$false
+            if($Results.AppsLaunchBlockList.getType().Fullname -like "*[[\]]")
+            {
+                $isCIMArray=$true
+            }
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AppsLaunchBlockList" -isCIMArray:$isCIMArray
+        }
         if ($Results.CompliantAppsList)
         {
             $isCIMArray=$false
@@ -1442,14 +1403,14 @@ function Export-TargetResource
             }
             $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CompliantAppsList" -isCIMArray:$isCIMArray
         }
-        if ($Results.PrivacyAccessControls)
+        if ($Results.KioskModeApps)
         {
             $isCIMArray=$false
-            if($Results.PrivacyAccessControls.getType().Fullname -like "*[[\]]")
+            if($Results.KioskModeApps.getType().Fullname -like "*[[\]]")
             {
                 $isCIMArray=$true
             }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "PrivacyAccessControls" -isCIMArray:$isCIMArray
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "KioskModeApps" -isCIMArray:$isCIMArray
         }
 
         if ($Results.Assignments)
@@ -1817,68 +1778,59 @@ function Get-M365DSCAdditionalProperties
     )
 
     $additionalProperties=@(
-        "AddingGameCenterFriendsBlocked"
-        "AirDropBlocked"
-        "AppleWatchBlockAutoUnlock"
+        "AppsBlockClipboardSharing"
+        "AppsBlockCopyPaste"
+        "AppsBlockYouTube"
+        "AppsHideList"
+        "AppsInstallAllowList"
+        "AppsLaunchBlockList"
+        "BluetoothBlocked"
         "CameraBlocked"
-        "ClassroomAppBlockRemoteScreenObservation"
-        "ClassroomAppForceUnpromptedScreenObservation"
-        "ClassroomForceAutomaticallyJoinClasses"
-        "ClassroomForceRequestPermissionToLeaveClasses"
-        "ClassroomForceUnpromptedAppAndDeviceLock"
+        "CellularBlockDataRoaming"
+        "CellularBlockMessaging"
+        "CellularBlockVoiceRoaming"
+        "CellularBlockWiFiTethering"
         "CompliantAppListType"
         "CompliantAppsList"
-        "ContentCachingBlocked"
-        "DefinitionLookupBlocked"
-        "EmailInDomainSuffixes"
-        "EraseContentAndSettingsBlocked"
-        "GameCenterBlocked"
-        "ICloudBlockActivityContinuation"
-        "ICloudBlockAddressBook"
-        "ICloudBlockBookmarks"
-        "ICloudBlockCalendar"
-        "ICloudBlockDocumentSync"
-        "ICloudBlockMail"
-        "ICloudBlockNotes"
-        "ICloudBlockPhotoLibrary"
-        "ICloudBlockReminders"
-        "ICloudDesktopAndDocumentsBlocked"
-        "ICloudPrivateRelayBlocked"
-        "ITunesBlockFileSharing"
-        "ITunesBlockMusicService"
-        "KeyboardBlockDictation"
-        "KeychainBlockCloudSync"
-        "MultiplayerGamingBlocked"
-        "PasswordBlockAirDropSharing"
-        "PasswordBlockAutoFill"
+        "DateAndTimeBlockChanges"
+        "DeviceSharingAllowed"
+        "DiagnosticDataBlockSubmission"
+        "FactoryResetBlocked"
+        "GoogleAccountBlockAutoSync"
+        "GooglePlayStoreBlocked"
+        "KioskModeApps"
+        "KioskModeBlockSleepButton"
+        "KioskModeBlockVolumeButtons"
+        "LocationServicesBlocked"
+        "NfcBlocked"
         "PasswordBlockFingerprintUnlock"
-        "PasswordBlockModification"
-        "PasswordBlockProximityRequests"
-        "PasswordBlockSimple"
+        "PasswordBlockTrustAgents"
         "PasswordExpirationDays"
-        "PasswordMaximumAttemptCount"
-        "PasswordMinimumCharacterSetCount"
         "PasswordMinimumLength"
-        "PasswordMinutesOfInactivityBeforeLock"
         "PasswordMinutesOfInactivityBeforeScreenTimeout"
-        "PasswordMinutesUntilFailedLoginReset"
         "PasswordPreviousPasswordBlockCount"
         "PasswordRequired"
         "PasswordRequiredType"
-        "PrivacyAccessControls"
-        "SafariBlockAutofill"
+        "PasswordSignInFailureCountBeforeFactoryReset"
+        "PowerOffBlocked"
+        "RequiredPasswordComplexity"
         "ScreenCaptureBlocked"
-        "SoftwareUpdateMajorOSDeferredInstallDelayInDays"
-        "SoftwareUpdateMinorOSDeferredInstallDelayInDays"
-        "SoftwareUpdateNonOSDeferredInstallDelayInDays"
-        "SoftwareUpdatesEnforcedDelayInDays"
-        "SpotlightBlockInternetResults"
-        "TouchIdTimeoutInHours"
-        "UpdateDelayPolicy"
-        "WallpaperModificationBlocked"
+        "SecurityRequireVerifyApps"
+        "StorageBlockGoogleBackup"
+        "StorageBlockRemovableStorage"
+        "StorageRequireDeviceEncryption"
+        "StorageRequireRemovableStorageEncryption"
+        "VoiceAssistantBlocked"
+        "VoiceDialingBlocked"
+        "WebBrowserBlockAutofill"
+        "WebBrowserBlocked"
+        "WebBrowserBlockJavaScript"
+        "WebBrowserBlockPopups"
+        "WebBrowserCookieSettings"
+        "WiFiBlocked"
 
     )
-    $results = @{"@odata.type" = "#microsoft.graph.macOSGeneralDeviceConfiguration" }
+    $results = @{"@odata.type" = "#microsoft.graph.androidGeneralDeviceConfiguration" }
     $cloneProperties=$Properties.clone()
     foreach ($property in $cloneProperties.Keys)
     {
