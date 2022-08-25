@@ -70,7 +70,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SocialIdSignIn       = $True;
                 }
 
-                Mock -CommandName Get-OMEConfiguration  -MockWith {
+                Mock -CommandName Get-OMEConfiguration -MockWith {
                     return @{
                         BackgroundColor      = "Navy";
                         DisclaimerText       = "Test Text";
@@ -139,6 +139,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:CurrentModeIsExport = $true
                 $testParams = @{
                     Credential = $Credential
+                }
+
+                Mock -CommandName Get-OMEConfiguration  -MockWith {
+                    return @{
+                        BackgroundColor      = "Navy";
+                        DisclaimerText       = "Test Text";
+                        EmailText            = "Email";
+                        Identity             = "OME Configuration";
+                        IntroductionText     = "Hello World";
+                        OTPEnabled           = $True
+                        PortalText           = "Portal Text";
+                        PrivacyStatementUrl  = "Privacy";
+                        ReadButtonText       = "Read";
+                        SocialIdSignIn       = $True;
+                    }
                 }
             }
 

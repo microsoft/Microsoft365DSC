@@ -53,20 +53,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Classification doesn't exist and it should" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Name                = "TestRule"
-                    JournalEmailAddress = "test@contoso.com"
-                    Enabled             = $True
-                    RuleScope           = "Global"
-                    Recipient           = "bob.houle@contoso.com"
-                    Ensure              = "Present"
-                    Credential  = $Credential
+                    Credential           = $Credential;
+                    Description          = "Detects Australian driver's license number.";
+                    Ensure               = "Present";
+                    Identity             = "1cbbc8f5-9216-4392-9eb5-5ac2298d1356";
+                    IsDefault            = $True;
+                    Locale               = "en-US";
+                    Name                 = "Australia Driver's License Number";
                 }
 
-                Mock -CommandName Get-JournalRule -MockWith {
+                Mock -CommandName Get-DataClassification -MockWith {
                     return $null
                 }
 
-                Mock -CommandName New-JournalRule -MockWith {
+                Mock -CommandName New-DataClassification -MockWith {
 
                 }
             }
@@ -75,35 +75,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
 
-            It "Should call the New-JournalRule cmdlet" {
+            It "Should call the New- cmdlet" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-JournalRule" -Exactly 1
+                Should -Invoke -CommandName "New-DataClassification" -Exactly 1
             }
         }
 
-        Context -Name "Journal Rule already exists and should be updated" -Fixture {
+        Context -Name "Classification already exists and should be updated" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Name                = "TestRule"
-                    JournalEmailAddress = "test@contoso.com"
-                    Enabled             = $True
-                    RuleScope           = "Global"
-                    Recipient           = "bob.houle@contoso.com"
-                    Ensure              = "Present"
-                    Credential  = $Credential
+                    Credential           = $Credential;
+                    Description          = "Detects Australian driver's license number.";
+                    Ensure               = "Present";
+                    Identity             = "1cbbc8f5-9216-4392-9eb5-5ac2298d1356";
+                    IsDefault            = $True;
+                    Locale               = "en-US";
+                    Name                 = "Australia Driver's License Number";
                 }
 
-                Mock -CommandName Get-JournalRule -MockWith {
+                Mock -CommandName Get-DataClassification -MockWith {
                     return @{
-                        Name                = "TestRule"
-                        JournalEmailAddress = "test@contoso.com"
-                        Enabled             = $False #Drift
-                        Scope               = "Global"
-                        Recipient           = "JohnSmith@contoso.com" #Drift
+                        Description          = "Detects Australian driver's license number.";
+                        Identity             = "1cbbc8f5-9216-4392-9eb5-5ac2298d1356";
+                        IsDefault            = $False; #Drift
+                        Locale               = "en-US";
+                        Name                 = "Australia Driver's License Number";
                     }
                 }
 
-                Mock -CommandName Set-JournalRule -MockWith {
+                Mock -CommandName Set-DataClassification -MockWith {
 
                 }
             }
@@ -112,32 +112,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be "Present"
             }
 
-            It "Should set Call into the Set-JournalRule command exactly once" {
+            It "Should set Call into the Set-DataClassification command exactly once" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "Set-JournalRule" -Exactly 1
+                Should -Invoke -CommandName "Set-DataClassification" -Exactly 1
             }
         }
 
-        Context -Name "Rule exists and it should not" -Fixture {
+        Context -Name "Classification exists and it should not" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Name                = "TestRule"
-                    JournalEmailAddress = "test@contoso.com"
-                    Ensure              = "Absent"
-                    Credential  = $Credential
+                    Credential           = $Credential;
+                    Description          = "Detects Australian driver's license number.";
+                    Ensure               = "Absent";
+                    Identity             = "1cbbc8f5-9216-4392-9eb5-5ac2298d1356";
+                    IsDefault            = $True;
+                    Locale               = "en-US";
+                    Name                 = "Australia Driver's License Number";
                 }
 
-                Mock -CommandName Get-JournalRule -MockWith {
+                Mock -CommandName Get-DataClassification -MockWith {
                     return @{
-                        Name                = "TestRule"
-                        JournalEmailAddress = "test@contoso.com"
-                        Enabled             = $False
-                        Scope               = "Global"
-                        Recipient           = "JohnSmith@contoso.com"
+                        Description          = "Detects Australian driver's license number.";
+                        Identity             = "1cbbc8f5-9216-4392-9eb5-5ac2298d1356";
+                        IsDefault            = $True;
+                        Locale               = "en-US";
+                        Name                 = "Australia Driver's License Number";
                     }
                 }
 
-                Mock -CommandName Remove-JournalRule -MockWith {
+                Mock -CommandName Remove-DataClassification -MockWith {
 
                 }
             }
@@ -146,9 +149,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be "Present"
             }
 
-            It "Should call into the Remove-JournalRule cmdlet once" {
+            It "Should call into the Remove-DataClassification cmdlet once" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "Remove-JournalRule" -Exactly 1
+                Should -Invoke -CommandName "Remove-DataClassification" -Exactly 1
             }
         }
 
@@ -159,13 +162,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-JournalRule -MockWith {
+                Mock -CommandName Get-DataClassification -MockWith {
                     return @{
-                        Name                = "TestRule"
-                        JournalEmailAddress = "test@contoso.com"
-                        Enabled             = $False
-                        Scope               = "Global"
-                        Recipient           = "JohnSmith@contoso.com"
+                        Description          = "Detects Australian driver's license number.";
+                        Identity             = "1cbbc8f5-9216-4392-9eb5-5ac2298d1356";
+                        IsDefault            = $True;
+                        Locale               = "en-US";
+                        Name                 = "Australia Driver's License Number";
                     }
                 }
             }

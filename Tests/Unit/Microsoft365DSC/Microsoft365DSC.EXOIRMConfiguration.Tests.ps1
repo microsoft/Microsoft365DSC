@@ -160,6 +160,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Credential = $Credential
                 }
+
+                Mock -CommandName Get-IRMConfiguration  -MockWith {
+                    return @{
+                        AutomaticServiceUpdateEnabled              = $True;
+                        AzureRMSLicensingEnabled                   = $True;
+                        DecryptAttachmentForEncryptOnly            = $False;
+                        EDiscoverySuperUserEnabled                 = $True;
+                        EnablePdfEncryption                        = $False
+                        Identity                                   = "Test Config";
+                        InternalLicensingEnabled                   = $True;
+                        JournalReportDecryptionEnabled             = $True;
+                        LicensingLocation                          = @("https://contoso.com/_wmcs/licensing");
+                        RejectIfRecipientHasNoRights               = $False;
+                        SearchEnabled                              = $True;
+                        SimplifiedClientAccessDoNotForwardDisabled = $False;
+                        SimplifiedClientAccessEnabled              = $True;
+                        SimplifiedClientAccessEncryptOnlyDisabled  = $False;
+                        TransportDecryptionSetting                 = "Optional";
+                    }
+                }
             }
 
             It "Should Reverse Engineer resource from the Export method" {
