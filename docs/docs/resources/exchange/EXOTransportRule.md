@@ -120,7 +120,7 @@
 | **HeaderContainsWords** | Write | StringArray[] | The HeaderContainsWords parameter specifies a condition that looks for words in a header field. ||
 | **HeaderMatchesMessageHeader** | Write | String | The HeaderMatchesMessageHeader parameter specifies the name of header field in the message header when searching for the text patterns specified by the HeaderMatchesPatterns parameter. ||
 | **HeaderMatchesPatterns** | Write | StringArray[] | The HeaderMatchesPatterns parameter specifies a condition that looks for text patterns in a header field by using regular expressions.  ||
-| **IncidentReportContent** | Write | String | The IncidentReportContent parameter specifies the message properties that are included in the incident report that's generated when a message violates a DLP policy.  ||
+| **IncidentReportContent** | Write | StringArray[] | The IncidentReportContent parameter specifies the message properties that are included in the incident report that's generated when a message violates a DLP policy.  ||
 | **IncidentReportOriginalMail** | Write | String | The IncidentReportOriginalMail parameter specifies whether to include the original message with the incident report.  ||
 | **ManagerAddresses** | Write | StringArray[] | The ManagerAddresses parameter specifies the users (managers) for the ExceptIfManagerForEvaluatedUser parameter. ||
 | **ManagerForEvaluatedUser** | Write | String | The ManagerForEvaluatedUser parameter specifies a condition that looks for users in the Manager attribute of senders or recipients. |Recipient, Sender|
