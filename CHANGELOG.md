@@ -27,6 +27,8 @@
 * MISC
   * Fixed issue with Export-M365DSCConfiguration if all components were invalid or if resource files were not found.
   * Updated MicrosoftTeams to version 4.6.0.
+* AADRoleSetting
+  * New Resource, configure Azure PIM Role like in the UI
 
 # 1.22.727.1
 
