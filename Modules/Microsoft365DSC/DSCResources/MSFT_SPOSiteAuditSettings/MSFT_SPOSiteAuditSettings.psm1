@@ -69,13 +69,14 @@ function Get-TargetResource
         return @{
             Url                   = $Url
             AuditFlags            = $auditFlag
-            Credential    = $Credential
+            Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
+            Ensure                = "Present"
 
         }
     }
