@@ -196,7 +196,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             LibraryUrl = @{
                                 decodedurl = "sites/m365dsc/Missing"
                             }
-                        
+
                         CdnType            = "Public"
                         Credential         = $Credential;
                         Ensure             = "Present"
@@ -225,6 +225,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
+                $Global:CurrentModeIsExport = $true
                 $testParams = @{
                     Credential = $Credential
                 }

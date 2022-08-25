@@ -113,7 +113,7 @@ function Get-TargetResource
             Comment               = $Entity.Comment
             Ensure                = "Present"
             SiteUrl               = $SiteUrl
-            Credential    = $Credential
+            Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret

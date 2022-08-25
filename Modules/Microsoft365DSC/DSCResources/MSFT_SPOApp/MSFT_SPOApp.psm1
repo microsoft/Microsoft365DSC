@@ -94,7 +94,7 @@ function Get-TargetResource
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
-            Credential    = $Credential
+            Credential            = $Credential
         }
     }
     catch
