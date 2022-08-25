@@ -177,7 +177,7 @@ function Get-TargetResource
     try
     {
         #Retrieve policy general settings
-        $policy = Get-MgDeviceManagementConfigurationPolicy -Identity $Identity -ErrorAction Stop
+        $policy = Get-MgDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction Stop
 
         if ($null -eq $policy)
         {
@@ -197,7 +197,7 @@ function Get-TargetResource
         $returnHashtable.Add("Description",$policy.description)
 
         #write-host ($settings|out-string)
-        foreach ($setting in $settings)
+        foreach ($setting in $settings.SettingInstance.AdditionalProperties)
         {
             switch ($setting."@odata.type")
             {
@@ -705,9 +705,9 @@ function Export-TargetResource
         $policyTemplateID='e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
         [array]$policies = Get-MgDeviceManagementConfigurationPolicy `
             -ErrorAction Stop `
-            -TemplateId $policyTemplateID `
             -All:$true `
             -Filter $Filter
+        $policies = $policies | Where-Object -FilterScript {$_.TemplateReference.TemplateId -eq $policyTemplateId}
 
         if ($policies.Length -eq 0)
         {
@@ -963,238 +963,6 @@ function Format-M365DSCIntuneSettingCatalogASRRulesPolicySettings
     $settings+=$setting
 
     return $settings
-}
-
-function Get-MgDeviceManagementConfigurationPolicy
-{
-    [CmdletBinding()]
-    param (
-        [Parameter(
-            Mandatory = 'true',
-            ParameterSetName = 'Identity'
-        )]
-        [System.String]
-        $Identity,
-        [Parameter(
-            Mandatory = 'true',
-            ParameterSetName = 'TemplateId'
-        )]
-        [System.String]
-        $TemplateId
-    )
-    try
-    {
-        if(-Not [String]::IsNullOrEmpty($Identity))
-        {
-            try
-            {
-                $Uri="https://graph.microsoft.com/beta/deviceManagement/ConfigurationPolicies/$Identity"
-                $configurationPolicy=Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
-                return $configurationPolicy
-            }
-            catch
-            {
-                return $null
-            }
-        }
-        if(-Not [String]::IsNullOrEmpty($TemplateId))
-        {
-            $Uri="https://graph.microsoft.com/beta/deviceManagement/ConfigurationPolicies"
-            [Array]$configurationPolicies=(Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop).value
-            return ($configurationPolicies|Where-Object -FilterScript {$_.templateReference.templateId -eq "$TemplateId" })
-        }
-    }
-    catch
-    {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
-
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return $null
-    }
-}
-
-function New-MgDeviceManagementConfigurationPolicy
-{
-    [CmdletBinding()]
-    param (
-
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $TemplateReferenceId,
-
-        [Parameter()]
-        [System.String]
-        $Platforms,
-
-        [Parameter()]
-        [System.String]
-        $Technologies,
-
-        [Parameter()]
-        [System.Array]
-        $Settings
-    )
-
-    $templateReference=@{
-        "templateId"=$TemplateReferenceId
-    }
-
-    $Uri="https://graph.microsoft.com/beta/deviceManagement/ConfigurationPolicies"
-    $policy=[ordered]@{
-    "name"=$DisplayName
-    "description"=$Description
-    "platforms"=$Platforms
-    "technologies"=$Technologies
-    "templateReference"=$templateReference
-    "settings"=$Settings
-    }
-    #write-verbose (($policy|ConvertTo-Json -Depth 20))
-    Invoke-MgGraphRequest -Method POST `
-        -Uri $Uri `
-        -ContentType "application/json" `
-        -Body ($policy|ConvertTo-Json -Depth 20)
-}
-
-function Update-MgDeviceManagementConfigurationPolicy
-{
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $TemplateReferenceId,
-
-        [Parameter()]
-        [System.String]
-        $Platforms,
-
-        [Parameter()]
-        [System.String]
-        $Technologies,
-
-        [Parameter()]
-        [System.Array]
-        $Settings
-    )
-
-    $templateReference=@{
-        "templateId"=$TemplateReferenceId
-    }
-
-    $Uri="https://graph.microsoft.com/beta/deviceManagement/ConfigurationPolicies/$Identity"
-    $policy=[ordered]@{
-    "name"=$DisplayName
-    "description"=$Description
-    "platforms"=$Platforms
-    "technologies"=$Technologies
-    "templateReference"=$templateReference
-    "settings"=$Settings
-    }
-
-    #write-verbose (($policy|ConvertTo-Json -Depth 20))
-
-    Invoke-MgGraphRequest -Method PUT `
-        -Uri $Uri `
-        -ContentType "application/json" `
-        -Body ($policy|ConvertTo-Json -Depth 20)
-}
-
-function Remove-MgDeviceManagementConfigurationPolicy
-{
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $Identity
-    )
-
-    $Uri="https://graph.microsoft.com/beta/deviceManagement/ConfigurationPolicies/$Identity"
-
-    Invoke-MgGraphRequest -Method DELETE -Uri $Uri
-}
-function Get-MgDeviceManagementConfigurationPolicySetting
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param (
-        [Parameter(
-            Mandatory = 'true',
-            ParameterSetName='DeviceManagementConfigurationPolicyId'
-        )]
-        [System.String]
-        $DeviceManagementConfigurationPolicyId,
-
-        [Parameter(
-            Mandatory = 'true',
-            ParameterSetName='Identity'
-        )]
-        [System.String]
-        $Identity
-    )
-    try
-    {
-        if(-Not [string]::IsNullOrEmpty($DeviceManagementConfigurationPolicyId))
-        {
-            $Uri="https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/$DeviceManagementConfigurationPolicyId/settings"
-            $configurationPolicySettings=(Invoke-MgGraphRequest -Method GET  -Uri $Uri -ErrorAction Stop).value.settingInstance
-            return $configurationPolicySettings
-        }
-
-        if(-Not [string]::IsNullOrEmpty($Identity))
-        {
-            $Uri="https://graph.microsoft.com/beta/deviceManagement/ConfigurationSettings/$($Identity.tolower())"
-            $configurationPolicySetting=Invoke-MgGraphRequest -Method GET  -Uri $Uri -ErrorAction Stop
-            return $configurationPolicySetting
-        }
-    }
-    catch
-    {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return $null
-    }
-
-
 }
 
 Export-ModuleMember -Function *-TargetResource
