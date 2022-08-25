@@ -273,66 +273,63 @@ function Set-TargetResource
                 $PermissionLevelsToRemove += $entry.InputObject
             }
         }
+
+        $SiteGroupSettings = @{
+            Identity = $Identity
+            Owner    = $Owner
+        }
+        $GroupPermissionsParameters = @{
+            Identity = $Identity
+        }
+
+        $NeedsToUpdateGroup = $true
+        $NeedsToUpdateGroupPermissions = $false
         if ($PermissionLevelsToAdd.Count -eq 0 -and $PermissionLevelsToRemove.Count -ne 0)
         {
             Write-Verbose -Message "Need to remove Permissions $PermissionLevelsToRemove"
-            $SiteGroupSettings = @{
-                Identity = $Identity
-                Owner    = $Owner
-            }
-            Set-PnPGroup @SiteGroupSettings
-
-            Set-PnPGroupPermissions -Identity $Identity -RemoveRole $PermissionLevelsToRemove
+            $NeedsToUpdateGroupPermissions = $true
+            $GroupPermissionsParameters.Add("RemoveRole", $PermissionLevelsToRemove)
         }
         elseif ($PermissionLevelsToRemove.Count -eq 0 -and $PermissionLevelsToAdd.Count -ne 0)
         {
             Write-Verbose -Message "Need to add Permissions $PermissionLevelsToAdd"
-            $SiteGroupSettings = @{
-                Identity = $Identity
-                Owner    = $Owner
-            }
             Write-Verbose -Message "Setting PnP Group with Identity {$Identity} and Owner {$Owner}"
-            Set-PnPGroup @SiteGroupSettings
-
             Write-Verbose -Message "Setting PnP Group Permissions Identity {$Identity} AddRole {$PermissionLevelsToAdd}"
-            Set-PnPGroupPermissions -Identity $Identity -AddRole $PermissionLevelsToAdd
+            $NeedsToUpdateGroupPermissions = $true
+            $GroupPermissionsParameters.Add("AddRole", $PermissionLevelsToAdd)
         }
         elseif ($PermissionLevelsToAdd.Count -eq 0 -and $PermissionLevelsToRemove.Count -eq 0)
         {
-            if (($Identity -eq $currentValues.Identity) -and ($Owner -eq $currentlValues.Owner))
+            if (($Identity -eq $currentValues.Identity) -and ($Owner -eq $currentValues.Owner))
             {
                 Write-Verbose -Message "All values are configured as desired"
+                $NeedsToUpdateGroup = $false
             }
             else
             {
                 Write-Verbose -Message "Updating Group"
-                $SiteGroupSettings = @{
-                    Identity = $Identity
-                    Owner    = $Owner
-                }
-                Set-PnPGroup @SiteGroupSettings
             }
         }
         else
         {
             Write-Verbose -Message "Updating Group Permissions Add {$PermissionLevelsToAdd} Remove {$PermissionLevelsToRemove}"
-            $SiteGroupSettings = @{
-                Identity = $Identity
-                Owner    = $Owner
-            }
-            Set-PnPGroup @SiteGroupSettings
-
-            Set-PnPGroupPermissions -Identity $Identity -AddRole $PermissionLevelsToAdd -RemoveRole $PermissionLevelsToRemove
+            $NeedsToUpdateGroupPermissions = $true
+            $GroupPermissionsParameters.Add("AddRole", $PermissionLevelsToAdd)
         }
-
+        if ($NeedsToUpdateGroup) {
+            Set-PnPGroup @SiteGroupSettings
+        }
+        if ($NeedsToUpdateGroupPermissions) {
+            Set-PnPGroupPermissions @GroupPermissionsParameters
+        }
     }
     elseif ($Ensure -eq "Absent" -and $currentValues.Ensure -eq "Present")
     {
         Write-Verbose -Message "Removing Group $Identity"
+        Write-Verbose "Removing SPOSiteGroup $Identity"
         $SiteGroupSettings = @{
             Identity = $Identity
         }
-        Write-Verbose "Removing SPOSiteGroup $Identity"
         Remove-PnPGroup @SiteGroupSettings
     }
 }

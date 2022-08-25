@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.824.1
 
 * AADApplication
   * Fixed issue where Update-MgApplication could be called with parameter ReplyURLs which is invalid.
@@ -8,6 +8,12 @@
 * EXOTransportRule
   * Fix issue setting IncidentReportContent
   FIXES [#2196](https://github.com/microsoft/Microsoft365DSC/issues/2196)
+* O365User
+  * Optimize, call Get-MgSubscribedSku only once instead of inside of two loops per each user/license.
+* SPOSiteGroup
+  * Avoid redefining SiteGroupSettings always to the same value, just define it once, and call it as is on Set-PnPGroup.
+  * To keep the same order of updating the group and then its permissions check on which conditions it needs to be updated and at the end call Set-PnPGroup then Set-PnPGroupPermissions.
+  * Fix typo in variable, not an issue right now but the group would always be updated even if name and owner were already correct.
 * DEPENDENCIES
   * Updated DSCParser dependency to version 1.3.0.6.
   * Updated Microsoft.Graph dependencies to version 1.11.1.
@@ -15,8 +21,6 @@
 * MISC
   * Fixed issue with Export-M365DSCConfiguration if all components were invalid or if resource files were not found.
   * Updated MicrosoftTeams to version 4.6.0.
-* O365User
-  * Optimize, call Get-MgSubscribedSku only once instead of inside of two loops per each user/license.
 
 # 1.22.727.1
 
