@@ -140,6 +140,7 @@ $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
 
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
+                $Global:CurrentModeIsExport = $true
                 $testParams = @{
                     Credential = $Credential
                 }
