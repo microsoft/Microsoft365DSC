@@ -9,7 +9,14 @@
   * Fix issue setting IncidentReportContent
   FIXES [#2196](https://github.com/microsoft/Microsoft365DSC/issues/2196)
 * DEPENDENCIES
-  * Updated Microsoft.Graph dependencies to version 1.11.0.
+  * Updated DSCParser dependency to version 1.3.0.6.
+  * Updated Microsoft.Graph dependencies to version 1.11.1.
+  * Updated ReverseDSC dependency to version 2.0.0.12.
+* MISC
+  * Fixed issue with Export-M365DSCConfiguration if all components were invalid or if resource files were not found.
+  * Updated MicrosoftTeams to version 4.6.0.
+* O365User
+  * Optimize, call Get-MgSubscribedSku only once instead of inside of two loops per each user/license.
 
 # 1.22.727.1
 

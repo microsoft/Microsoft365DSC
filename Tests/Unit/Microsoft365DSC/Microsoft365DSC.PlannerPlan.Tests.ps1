@@ -194,6 +194,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
+                $Global:CurrentModeIsExport = $true
                 $testParams = @{
                     CertificateThumbprint = "12345678901234567890"
                     ApplicationId         = "12345"

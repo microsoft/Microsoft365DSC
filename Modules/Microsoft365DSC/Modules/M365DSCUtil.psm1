@@ -1208,6 +1208,11 @@ function Confirm-M365DSCDependencies
         else
         {
             Write-Verbose -Message "Dependencies were all successfully validated."
+
+            #region Remove invalid versions of depencendies from session
+            Remove-M365DSCInvalidDependenciesFromSession
+            #endregion
+
             $Script:M365DSCDependenciesValidated = $true
         }
     }
@@ -1238,7 +1243,51 @@ function Import-M365DSCDependencies
 
     foreach ($dependency in $dependencies)
     {
-        Import-Module $dependency.ModuleName -Force
+        Import-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force
+    }
+}
+
+<#
+.Description
+This function removes all versions of dependencies that are not specified in the manifest from the current PowerShell session.
+
+.Example
+Remove-M365DSCInvalidDependenciesFromSession
+
+.Functionality
+Private
+#>
+function Remove-M365DSCInvalidDependenciesFromSession
+{
+    [CmdletBinding()]
+    param()
+
+    $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
+    $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
+    $dependencies = $manifest.Dependencies
+
+    foreach ($dependency in $dependencies)
+    {
+        $loadedModuleInstances = Get-Module $dependency.ModuleName
+
+        $incorrectModuleVersions = $null
+        if ($loadedModuleInstances)
+        {
+            $incorrectModuleVersions = $loadedModuleInstances | Where-Object -FilterScript {$_.Version -ne $dependency.RequiredVersion}
+
+            if ($incorrectModuleVersions)
+            {
+                foreach ($incorrectVersion in $incorrectModuleVersions)
+                {
+                    $FQN = @{
+                        ModuleName    = $incorrectVersion.Name
+                        ModuleVersion = $incorrectVersion.Version
+                    }
+                    Write-Verbose -Message "Removing Module {$($incorrectVersion.Name)} version {$($incorrectVersion.Version)} from the current PowerShell session"
+                    Remove-Module -FullyQualifiedName $FQN -Force -ErrorAction SilentlyContinue
+                }
+            }
+        }
     }
 }
 
