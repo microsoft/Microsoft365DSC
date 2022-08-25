@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.824.1
 
 * AADApplication
   * Fixed issue where Update-MgApplication could be called with parameter ReplyURLs which is invalid.
