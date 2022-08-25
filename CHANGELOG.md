@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOInboundConnector
+  * Add support for different syntax of SenderDomains parameter
+  FIXES [#2180](https://github.com/microsoft/Microsoft365DSC/issues/2180)
+
 # 1.22.824.1
 
 * AADApplication
