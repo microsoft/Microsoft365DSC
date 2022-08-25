@@ -71,13 +71,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should Create the group from the Set method' {
                 Set-TargetResource @testParams
+                Should -Invoke -CommandName <NewCmdletName> -Exactly 1
             }
         }
 
         Context -Name "The <ResourceName> exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    <FakeValues>
+<FakeValues>
                     Ensure                        = "Absent"
                     Credential                    = $Credential;
                 }
@@ -99,6 +100,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the group from the Set method' {
                 Set-TargetResource @testParams
+                Should -Invoke -CommandName <RemoveCmdletName> -Exactly 1
             }
         }
         Context -Name "The <ResourceName> Exists and Values are already in the desired state" -Fixture {
@@ -141,7 +143,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return Values from the Get method" {
-                Get-TargetResource @testParams
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
             It 'Should return false from the Test method' {
@@ -150,11 +152,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the Set method" {
                 Set-TargetResource @testParams
+                Should -Invoke -CommandName <SetCmdletName> -Exactly 1
             }
         }
 
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
+                $Global:CurrentModeIsExport = $true
                 $testParams = @{
                     Credential = $Credential
                 }

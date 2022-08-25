@@ -3995,10 +3995,6 @@ function New-SafeLinksPolicy
 
         [Parameter()]
         [System.Object]
-        $EnableSafeLinksForOffice,
-
-        [Parameter()]
-        [System.Object]
         $TrackClicks,
 
         [Parameter()]
@@ -7563,7 +7559,7 @@ function Set-Mailbox
 
         [Parameter()]
         [System.Object]
-        $MessageRecallProcessingEnabled,
+        $SimpleDisplayName,
 
         [Parameter()]
         [System.Object]
@@ -7727,7 +7723,7 @@ function Set-Mailbox
 
         [Parameter()]
         [System.Object]
-        $SimpleDisplayName,
+        $WindowsEmailAddress,
 
         [Parameter()]
         [System.Object]
@@ -7772,10 +7768,6 @@ function Set-Mailbox
         [Parameter()]
         [System.Object]
         $AccountDisabled,
-
-        [Parameter()]
-        [System.Object]
-        $WindowsEmailAddress,
 
         [Parameter()]
         [System.Object]
@@ -8701,7 +8693,7 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Object]
-        $DefaultPublicFolderDeletedItemRetention,
+        $BookingsNamingPolicyPrefixEnabled,
 
         [Parameter()]
         [System.Object]
@@ -8717,7 +8709,7 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Object]
-        $OAuth2ClientProfileEnabled,
+        $BookingsNamingPolicyPrefix,
 
         [Parameter()]
         [System.Object]
@@ -8766,6 +8758,10 @@ function Set-OrganizationConfig
         [Parameter()]
         [System.Object]
         $MailTipsAllTipsEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $OAuth2ClientProfileEnabled,
 
         [Parameter()]
         [System.Object]
@@ -8833,7 +8829,7 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Object]
-        $WebPushNotificationsDisabled,
+        $DefaultGroupAccessType,
 
         [Parameter()]
         [System.Object]
@@ -8842,6 +8838,10 @@ function Set-OrganizationConfig
         [Parameter()]
         [System.Object]
         $BookingsAddressEntryRestricted,
+
+        [Parameter()]
+        [System.Object]
+        $DefaultPublicFolderDeletedItemRetention,
 
         [Parameter()]
         [System.Object]
@@ -8877,7 +8877,7 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Object]
-        $AllowPlusAddressInRecipients,
+        $OutlookMobileHelpShiftEnabled,
 
         [Parameter()]
         [System.Object]
@@ -8901,6 +8901,10 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Object]
+        $BookingsBlockedWordsEnabled,
+
+        [Parameter()]
+        [System.Object]
         $ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled,
 
         [Parameter()]
@@ -8909,7 +8913,7 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Object]
-        $WebSuggestedRepliesDisabled,
+        $BookingsNamingPolicyEnabled,
 
         [Parameter()]
         [System.Object]
@@ -8929,7 +8933,7 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Object]
-        $DefaultGroupAccessType,
+        $BookingsSearchEngineIndexDisabled,
 
         [Parameter()]
         [System.Object]
@@ -8945,6 +8949,10 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Object]
+        $WebSuggestedRepliesDisabled,
+
+        [Parameter()]
+        [System.Object]
         $DistributionGroupNamingPolicy,
 
         [Parameter()]
@@ -8954,6 +8962,14 @@ function Set-OrganizationConfig
         [Parameter()]
         [System.Object]
         $BookingsSocialSharingRestricted,
+
+        [Parameter()]
+        [System.Object]
+        $BookingsNamingPolicySuffix,
+
+        [Parameter()]
+        [System.Object]
+        $BookingsNamingPolicySuffixEnabled,
 
         [Parameter()]
         [System.Object]
@@ -8990,6 +9006,10 @@ function Set-OrganizationConfig
         [Parameter()]
         [System.Object]
         $BookingsEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $WebPushNotificationsDisabled,
 
         [Parameter()]
         [System.Object]
@@ -9078,10 +9098,6 @@ function Set-OrganizationConfig
         [Parameter()]
         [System.Object]
         $CustomerLockboxEnabled,
-
-        [Parameter()]
-        [System.Object]
-        $OutlookMobileHelpShiftEnabled,
 
         [Parameter()]
         [System.Object]
@@ -9324,6 +9340,10 @@ function Set-OwaMailboxPolicy
 
         [Parameter()]
         [System.Object]
+        $WacExternalServicesEnabled,
+
+        [Parameter()]
+        [System.Object]
         $ContactsEnabled,
 
         [Parameter()]
@@ -9384,6 +9404,10 @@ function Set-OwaMailboxPolicy
 
         [Parameter()]
         [System.Object]
+        $WacEditingEnabled,
+
+        [Parameter()]
+        [System.Object]
         $OutlookBetaToggleEnabled,
 
         [Parameter()]
@@ -9428,11 +9452,11 @@ function Set-OwaMailboxPolicy
 
         [Parameter()]
         [System.Object]
-        $ForceWacViewingFirstOnPublicComputers,
+        $ChangeSettingsAccountEnabled,
 
         [Parameter()]
         [System.Object]
-        $PlacesEnabled,
+        $AdditionalAccountsEnabled,
 
         [Parameter()]
         [System.Object]
@@ -9456,6 +9480,10 @@ function Set-OwaMailboxPolicy
 
         [Parameter()]
         [System.Object]
+        $ForceWacViewingFirstOnPublicComputers,
+
+        [Parameter()]
+        [System.Object]
         $GlobalAddressListEnabled,
 
         [Parameter()]
@@ -9472,6 +9500,10 @@ function Set-OwaMailboxPolicy
 
         [Parameter()]
         [System.Object]
+        $ItemsToOtherAccountsEnabled,
+
+        [Parameter()]
+        [System.Object]
         $WSSAccessOnPublicComputersEnabled,
 
         [Parameter()]
@@ -9484,7 +9516,7 @@ function Set-OwaMailboxPolicy
 
         [Parameter()]
         [System.Object]
-        $WacExternalServicesEnabled,
+        $PlacesEnabled,
 
         [Parameter()]
         [System.Object]
@@ -9564,7 +9596,7 @@ function Set-OwaMailboxPolicy
 
         [Parameter()]
         [System.Object]
-        $WacEditingEnabled,
+        $RemindersAndNotificationsEnabled,
 
         [Parameter()]
         [System.Object]
@@ -9648,7 +9680,7 @@ function Set-OwaMailboxPolicy
 
         [Parameter()]
         [System.Object]
-        $RemindersAndNotificationsEnabled,
+        $OneWinNativeOutlookEnabled,
 
         [Parameter()]
         [System.Object]
@@ -10167,10 +10199,6 @@ function Set-SafeLinksPolicy
         [Parameter()]
         [System.Object]
         $EnableSafeLinksForTeams,
-
-        [Parameter()]
-        [System.Object]
-        $EnableSafeLinksForOffice,
 
         [Parameter()]
         [System.Object]
@@ -11661,6 +11689,10 @@ function New-MgApplication
         $Description,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsFallbackPublicClient,
+
+        [Parameter()]
         [System.String]
         $ApplicationTemplateId,
 
@@ -11685,8 +11717,8 @@ function New-MgApplication
         $HttpPipelineAppend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject]
-        $CreatedOnBehalfOf,
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRequiredResourceAccess[]]
+        $RequiredResourceAccess,
 
         [Parameter()]
         [System.Collections.Hashtable]
@@ -11697,12 +11729,16 @@ function New-MgApplication
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [System.String[]]
-        $IdentifierUris,
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWebApplication]
+        $Web,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphParentalControlSettings]
         $ParentalControlSettings,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOptionalClaims]
+        $OptionalClaims,
 
         [Parameter()]
         [System.String]
@@ -11721,14 +11757,6 @@ function New-MgApplication
         $KeyCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphApiApplication]
-        $Api,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRequiredResourceAccess[]]
-        $RequiredResourceAccess,
-
-        [Parameter()]
         [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphHomeRealmDiscoveryPolicy[]]
         $HomeRealmDiscoveryPolicies,
 
@@ -11737,20 +11765,16 @@ function New-MgApplication
         $GroupMembershipClaims,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
+        [System.String[]]
+        $IdentifierUris,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWebApplication]
-        $Web,
+        [System.String]
+        $PublisherDomain,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCertification]
         $Certification,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOptionalClaims]
-        $OptionalClaims,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphInformationalUrl]
@@ -11758,7 +11782,15 @@ function New-MgApplication
 
         [Parameter()]
         [System.String]
+        $SamlMetadataUrl,
+
+        [Parameter()]
+        [System.String]
         $ServiceManagementReference,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphApiApplication]
+        $Api,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -11785,6 +11817,10 @@ function New-MgApplication
         $Owners,
 
         [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphFederatedIdentityCredential[]]
+        $FederatedIdentityCredentials,
+
+        [Parameter()]
         [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphApplication1]
         $BodyParameter,
 
@@ -11809,28 +11845,28 @@ function New-MgApplication
         $Tags,
 
         [Parameter()]
-        [System.DateTime]
-        $DeletedDateTime,
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPasswordCredential[]]
-        $PasswordCredentials,
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject]
+        $CreatedOnBehalfOf,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenIssuancePolicy[]]
         $TokenIssuancePolicies,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsFallbackPublicClient,
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPasswordCredential[]]
+        $PasswordCredentials,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Break,
 
         [Parameter()]
-        [System.String]
-        $PublisherDomain,
+        [System.DateTime]
+        $DeletedDateTime,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRole[]]
@@ -11839,6 +11875,59 @@ function New-MgApplication
         [Parameter()]
         [System.String]
         $AppId
+    )
+}
+function New-MgApplicationOwnerByRef
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IApplicationsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
     )
 }
 function New-MgServicePrincipal
@@ -11919,6 +12008,10 @@ function New-MgServicePrincipal
 
         [Parameter()]
         [System.String]
+        $Homepage,
+
+        [Parameter()]
+        [System.String]
         $ServicePrincipalType,
 
         [Parameter()]
@@ -11934,12 +12027,16 @@ function New-MgServicePrincipal
         $HttpPipelineAppend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
-        $Owners,
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
         $OwnedObjects,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphFederatedIdentityCredential[]]
+        $FederatedIdentityCredentials,
 
         [Parameter()]
         [System.String]
@@ -11948,10 +12045,6 @@ function New-MgServicePrincipal
         [Parameter()]
         [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenLifetimePolicy[]]
         $TokenLifetimePolicies,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
-        $CreatedObjects,
 
         [Parameter()]
         [System.String]
@@ -12010,16 +12103,16 @@ function New-MgServicePrincipal
         $Confirm,
 
         [Parameter()]
+        [System.String]
+        $AppId,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $ProxyCredential,
 
         [Parameter()]
         [System.String[]]
         $ReplyUrls,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -12050,6 +12143,10 @@ function New-MgServicePrincipal
         $PreferredSingleSignOnMode,
 
         [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $Owners,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ProxyUseDefaultCredentials,
 
@@ -12062,16 +12159,12 @@ function New-MgServicePrincipal
         $BodyParameter,
 
         [Parameter()]
-        [System.String]
-        $AppId,
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $CreatedObjects,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.String]
-        $Homepage
+        $Break
     )
 }
 function Remove-MgApplication
@@ -12177,132 +12270,44 @@ function Update-MgApplication
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAddIn[]]
-        $AddIns,
-
-        [Parameter()]
-        [System.String]
-        $SignInAudience,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationTemplateId,
-
-        [Parameter()]
-        [System.DateTime]
-        $CreatedDateTime,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphVerifiedPublisher]
-        $VerifiedPublisher,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRequiredResourceAccess[]]
-        $RequiredResourceAccess,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IApplicationsIdentity]
-        $InputObject,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWebApplication]
-        $Web,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphParentalControlSettings]
-        $ParentalControlSettings,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOptionalClaims]
-        $OptionalClaims,
-
-        [Parameter()]
-        [System.String]
-        $DisabledByMicrosoftStatus,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenLifetimePolicy[]]
-        $TokenLifetimePolicies,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphKeyCredential[]]
-        $KeyCredentials,
-
-        [Parameter()]
         [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphHomeRealmDiscoveryPolicy[]]
         $HomeRealmDiscoveryPolicies,
 
         [Parameter()]
-        [System.String]
-        $GroupMembershipClaims,
-
-        [Parameter()]
-        [System.String[]]
-        $IdentifierUris,
-
-        [Parameter()]
-        [System.String]
-        $PublisherDomain,
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSpaApplication]
+        $Spa,
 
         [Parameter()]
         [System.String[]]
         $Tags,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphInformationalUrl]
-        $Info,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsFallbackPublicClient,
+        [System.DateTime]
+        $CreatedDateTime,
 
         [Parameter()]
         [System.String]
-        $ServiceManagementReference,
+        $ApplicationTemplateId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphApiApplication]
-        $Api,
+        [System.String]
+        $SignInAudience,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphVerifiedPublisher]
+        $VerifiedPublisher,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOptionalClaims]
+        $OptionalClaims,
+
+        [Parameter()]
+        [System.String[]]
+        $IdentifierUris,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $IsDeviceOnlyAuthSupported,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.String]
-        $Notes,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSpaApplication]
-        $Spa,
 
         [Parameter()]
         [System.String]
@@ -12310,35 +12315,123 @@ function Update-MgApplication
 
         [Parameter()]
         [System.String]
+        $Description,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenIssuancePolicy[]]
+        $TokenIssuancePolicies,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphApiApplication]
+        $Api,
+
+        [Parameter()]
+        [System.String]
+        $PublisherDomain,
+
+        [Parameter()]
+        [System.String]
+        $GroupMembershipClaims,
+
+        [Parameter()]
+        [System.String]
         $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
         $Owners,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphFederatedIdentityCredential[]]
+        $FederatedIdentityCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenLifetimePolicy[]]
+        $TokenLifetimePolicies,
 
         [Parameter()]
         [System.String]
-        $ApplicationId,
+        $DisabledByMicrosoftStatus,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphExtensionProperty[]]
-        $ExtensionProperties,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPasswordCredential[]]
+        $PasswordCredentials,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPublicClientApplication]
         $PublicClient,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphApplication1]
-        $BodyParameter,
+        [System.String]
+        $Notes,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRequiredResourceAccess[]]
+        $RequiredResourceAccess,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphParentalControlSettings]
+        $ParentalControlSettings,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWebApplication]
+        $Web,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsFallbackPublicClient,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAddIn[]]
+        $AddIns,
+
+        [Parameter()]
+        [System.DateTime]
+        $DeletedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $LogoInputFile,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRole[]]
+        $AppRoles,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphExtensionProperty[]]
+        $ExtensionProperties,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -12349,40 +12442,48 @@ function Update-MgApplication
         $CreatedOnBehalfOf,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Oauth2RequirePostResponse,
-
-        [Parameter()]
         [System.String]
-        $LogoInputFile,
+        $ServiceManagementReference,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenIssuancePolicy[]]
-        $TokenIssuancePolicies,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPasswordCredential[]]
-        $PasswordCredentials,
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphKeyCredential[]]
+        $KeyCredentials,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCertification]
         $Certification,
 
         [Parameter()]
+        [System.String]
+        $SamlMetadataUrl,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphInformationalUrl]
+        $Info,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Break,
+        $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [System.DateTime]
-        $DeletedDateTime,
+        [System.Management.Automation.SwitchParameter]
+        $Oauth2RequirePostResponse,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRole[]]
-        $AppRoles,
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphApplication1]
+        $BodyParameter,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IApplicationsIdentity]
+        $InputObject,
 
         [Parameter()]
         [System.String]
-        $AppId
+        $AppId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
     )
 }
 function Update-MgServicePrincipal
@@ -12490,12 +12591,16 @@ function Update-MgServicePrincipal
         $HttpPipelineAppend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
-        $Owners,
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
         $OwnedObjects,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphFederatedIdentityCredential[]]
+        $FederatedIdentityCredentials,
 
         [Parameter()]
         [System.String]
@@ -12504,6 +12609,10 @@ function Update-MgServicePrincipal
         [Parameter()]
         [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenLifetimePolicy[]]
         $TokenLifetimePolicies,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $CreatedObjects,
 
         [Parameter()]
         [System.String]
@@ -12526,8 +12635,8 @@ function Update-MgServicePrincipal
         $Notes,
 
         [Parameter()]
-        [System.String]
-        $DisplayName,
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEndpoint[]]
+        $Endpoints,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -12564,10 +12673,6 @@ function Update-MgServicePrincipal
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
-
-        [Parameter()]
-        [System.String]
-        $AppId,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -12610,20 +12715,20 @@ function Update-MgServicePrincipal
         $PreferredSingleSignOnMode,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        $Owners,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEndpoint[]]
-        $Endpoints,
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphServicePrincipal]
         $BodyParameter,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
-        $CreatedObjects,
+        [System.String]
+        $AppId,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -13471,7 +13576,7 @@ function Update-MgDeviceManagement
         $TelecomExpenseManagementPartners,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTermsAndConditions1[]]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTermsAndConditions[]]
         $TermsAndConditions,
 
         [Parameter()]
@@ -13603,7 +13708,7 @@ function Update-MgDeviceManagement
         $MobileThreatDefenseConnectors,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagement1]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagement]
         $BodyParameter,
 
         [Parameter()]
@@ -14749,6 +14854,699 @@ function Update-MgRoleManagementDirectoryRoleDefinition
 }
 #endregion
 #region MicrosoftGraph
+function Invoke-MgTargetDeviceAppMgtTargetedManagedAppConfigurationApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IPathsXzr66BDeviceappmanagementTargetedmanagedappconfigurationsTargetedmanagedappconfigurationIdMicrosoftGraphTargetappsPostRequestbodyContentApplicationJsonSchema]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Support.TargetedManagedAppGroupType]
+        $AppGroupType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedMobileApp[]]
+        $Apps,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $TargetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function New-MgDeviceAppMgtAndroidManagedAppProtection
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $FingerprintBlocked,
+
+        [Parameter()]
+        [System.String]
+        $CustomBrowserDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DisableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.Int32]
+        $MinimumPinLength,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppPolicyDeploymentSummary]
+        $DeploymentSummary,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Support.ManagedBrowserType]
+        $ManagedBrowser,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $PeriodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Support.ManagedAppClipboardSharingLevel]
+        $AllowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $PeriodBeforePinReset,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PinRequired,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Int32]
+        $DeployedAppCount,
+
+        [Parameter()]
+        [System.String]
+        $CustomBrowserPackageId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $EncryptAppData,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $PeriodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredOSVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ManagedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ContactSyncBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $MaximumPinRetries,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $PeriodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Support.ManagedAppDataTransferLevel]
+        $AllowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DataBackupBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OrganizationalCredentialsRequired,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Support.ManagedAppDataStorageLocation[]]
+        $AllowedDataStorageLocations,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsAssigned,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $Version,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedMobileApp[]]
+        $Apps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SimplePinBlocked,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredAppVersion,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTargetedManagedAppPolicyAssignment1[]]
+        $Assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ScreenCaptureBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningOSVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SaveAsBlocked,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Support.ManagedAppDataTransferLevel]
+        $AllowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DisableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DeviceComplianceRequired,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAndroidManagedAppProtection1]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PrintBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Support.ManagedAppPinCharacterSet]
+        $PinCharacterSet
+    )
+}
+function Set-MgDeviceAppMgtTargetedManagedAppConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IPathsZxn05FDeviceappmanagementTargetedmanagedappconfigurationsTargetedmanagedappconfigurationIdMicrosoftGraphAssignPostRequestbodyContentApplicationJsonSchema]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTargetedManagedAppPolicyAssignment1[]]
+        $Assignments,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $TargetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Update-MgDeviceAppMgt
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTargetedManagedAppConfiguration1[]]
+        $TargetedManagedAppConfigurations,
+
+        [Parameter()]
+        [System.DateTime]
+        $MicrosoftStoreForBusinessLastSuccessfulSyncDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedEBook1[]]
+        $ManagedEBooks,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppPolicy1[]]
+        $ManagedAppPolicies,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppStatus[]]
+        $ManagedAppStatuses,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppRegistration1[]]
+        $ManagedAppRegistrations,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDefaultManagedAppProtection1[]]
+        $DefaultManagedAppProtections,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsEnabledForMicrosoftStoreForBusiness,
+
+        [Parameter()]
+        [System.DateTime]
+        $MicrosoftStoreForBusinessLastCompletedApplicationSyncTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphIosManagedAppProtection1[]]
+        $IosManagedAppProtections,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceAppManagement1]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMobileAppCategory[]]
+        $MobileAppCategories,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphVppToken1[]]
+        $VppTokens,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionPolicy1[]]
+        $WindowsInformationProtectionPolicies,
+
+        [Parameter()]
+        [System.String]
+        $MicrosoftStoreForBusinessLanguage,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAndroidManagedAppProtection1[]]
+        $AndroidManagedAppProtections,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMobileApp1[]]
+        $MobileApps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMdmWindowsInformationProtectionPolicy1[]]
+        $MdmWindowsInformationProtectionPolicies,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedDeviceMobileAppConfiguration1[]]
+        $MobileAppConfigurations,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgDeviceAppMgtAndroidManagedAppProtection
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $FingerprintBlocked,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.String]
+        $CustomBrowserDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DisableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DataBackupBlocked,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Support.ManagedBrowserType]
+        $ManagedBrowser,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $PeriodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Support.ManagedAppClipboardSharingLevel]
+        $AllowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $PeriodBeforePinReset,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Int32]
+        $MinimumPinLength,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PinRequired,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Int32]
+        $DeployedAppCount,
+
+        [Parameter()]
+        [System.String]
+        $CustomBrowserPackageId,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $PeriodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredOSVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ManagedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ContactSyncBlocked,
+
+        [Parameter()]
+        [System.String]
+        $AndroidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $PeriodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Support.ManagedAppDataTransferLevel]
+        $AllowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OrganizationalCredentialsRequired,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Support.ManagedAppDataStorageLocation[]]
+        $AllowedDataStorageLocations,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsAssigned,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $Version,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedMobileApp[]]
+        $Apps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SimplePinBlocked,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredAppVersion,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTargetedManagedAppPolicyAssignment1[]]
+        $Assignments,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppPolicyDeploymentSummary]
+        $DeploymentSummary,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ScreenCaptureBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $EncryptAppData,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningOSVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SaveAsBlocked,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Support.ManagedAppDataTransferLevel]
+        $AllowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.Int32]
+        $MaximumPinRetries,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DisableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DeviceComplianceRequired,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAndroidManagedAppProtection1]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PrintBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Support.ManagedAppPinCharacterSet]
+        $PinCharacterSet
+    )
+}
 function Get-MgDeviceAppManagement
 {
     [CmdletBinding()]
@@ -16201,6 +16999,10 @@ function New-MgGroupMemberByRef
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
         [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
         $HttpPipelinePrepend,
 
@@ -16213,8 +17015,8 @@ function New-MgGroupMemberByRef
         $Proxy,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
@@ -16245,10 +17047,63 @@ function New-MgGroupMemberByRef
         $Break
     )
 }
+function New-MgGroupOwner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $GroupId,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $DirectoryObjectId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
 function New-MgGroupOwnerByRef
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
         [Parameter()]
         [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
         $HttpPipelinePrepend,
@@ -16262,8 +17117,8 @@ function New-MgGroupOwnerByRef
         $Proxy,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
@@ -17442,7 +18297,7 @@ function New-MgDevice
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDevice1]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDevice]
         $BodyParameter,
 
         [Parameter()]
@@ -17644,7 +18499,7 @@ function Update-MgDevice
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDevice1]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDevice]
         $BodyParameter,
 
         [Parameter()]
@@ -19600,16 +20455,8 @@ function Get-MgTeam
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
+        [System.String[]]
+        $Property,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Models.ITeamsIdentity]
@@ -19620,24 +20467,64 @@ function Get-MgTeam
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [System.String[]]
-        $Property,
+        [System.Int32]
+        $PageSize,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelineAppend,
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
 
         [Parameter()]
         [System.String]
         $TeamId,
 
         [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Break
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
     )
 }
 function Get-MgTeamChannel
@@ -20234,7 +21121,7 @@ function New-MgUser
         $EmployeeType,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTodo1]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTodo]
         $Todo,
 
         [Parameter()]
@@ -20696,7 +21583,7 @@ function Update-MgUser
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTodo1]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTodo]
         $Todo,
 
         [Parameter()]
@@ -21638,6 +22525,10 @@ function Get-LabelPolicy
     param(
         [Parameter()]
         [System.Object]
+        $ForceValidate,
+
+        [Parameter()]
+        [System.Object]
         $Identity,
 
         [Parameter()]
@@ -22445,160 +23336,12 @@ function New-DlpComplianceRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Object]
+        $ActivationDate,
 
         [Parameter()]
         [System.Object]
-        $DocumentNameMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSubjectOrBodyMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfRecipientDomainIs,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentCreatedByMemberOf,
-
-        [Parameter()]
-        [System.Object]
-        $MessageSizeOver,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfContentContainsSensitiveInformation,
-
-        [Parameter()]
-        [System.Object]
-        $Policy,
-
-        [Parameter()]
-        [System.Object]
-        $ContentIsShared,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfProcessingLimitExceeded,
-
-        [Parameter()]
-        [System.Object]
-        $AnyOfRecipientAddressMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $UnscannableDocumentExtensionIs,
-
-        [Parameter()]
-        [System.Object]
-        $RedirectMessageTo,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentNameMatchesWords,
-
-        [Parameter()]
-        [System.Object]
-        $RecipientADAttributeMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyAllowOverride,
-
-        [Parameter()]
-        [System.Object]
-        $WithImportance,
-
-        [Parameter()]
-        [System.Object]
-        $SubjectOrBodyMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyUser,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $NonBifurcatingAccessScope,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfAnyOfRecipientAddressContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $EncryptRMSTemplate,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSenderIPRanges,
-
-        [Parameter()]
-        [System.Object]
-        $FromAddressMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ContentFileTypeMatches,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfFrom,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSubjectOrBodyContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentIsPasswordProtected,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyEmailCustomText,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSenderADAttributeContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSubjectMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ContentExtensionMatchesWords,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfMessageSizeOver,
-
-        [Parameter()]
-        [System.Object]
-        $HasSenderOverride,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyPolicyTipCustomTextTranslations,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfWithImportance,
-
-        [Parameter()]
-        [System.Object]
-        $HeaderContainsWords,
+        $ProcessingLimitExceeded,
 
         [Parameter()]
         [System.Object]
@@ -22606,59 +23349,7 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $BlockAccessScope,
-
-        [Parameter()]
-        [System.Object]
-        $AnyOfRecipientAddressContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfMessageTypeMatches,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentSizeOver,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfFromMemberOf,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfFromAddressMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfAccessScope,
-
-        [Parameter()]
-        [System.Object]
-        $PrependSubject,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfHeaderMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentCreatedBy,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyEmailCustomSubject,
-
-        [Parameter()]
-        [System.Object]
-        $IncidentReportContent,
-
-        [Parameter()]
-        [System.Object]
-        $Comment,
-
-        [Parameter()]
-        [System.Object]
-        $SenderIPRanges,
+        $NotifyUser,
 
         [Parameter()]
         [System.Object]
@@ -22666,43 +23357,7 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $NotifyEndpointUser,
-
-        [Parameter()]
-        [System.Object]
-        $GenerateIncidentReport,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfUnscannableDocumentExtensionIs,
-
-        [Parameter()]
-        [System.Object]
-        $From,
-
-        [Parameter()]
-        [System.Object]
-        $AccessScope,
-
-        [Parameter()]
-        [System.Object]
-        $RemoveRMSTemplate,
-
-        [Parameter()]
-        [System.Object]
-        $FromScope,
-
-        [Parameter()]
-        [System.Object]
-        $RecipientDomainIs,
-
-        [Parameter()]
-        [System.Object]
-        $ActivationDate,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfContentPropertyContainsWords,
+        $ExceptIfRecipientADAttributeContainsWords,
 
         [Parameter()]
         [System.Object]
@@ -22710,7 +23365,159 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $SubjectContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyEndpointUser,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderADAttributeContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyEmailCustomSubject,
+
+        [Parameter()]
+        [System.Object]
+        $FromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ContentIsShared,
+
+        [Parameter()]
+        [System.Object]
+        $OnPremisesScannerDlpRestrictions,
+
+        [Parameter()]
+        [System.Object]
+        $AddRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfUnscannableDocumentExtensionIs,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
         $SenderADAttributeContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfHeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfHeaderContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $HeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ContentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $HasSenderOverride,
+
+        [Parameter()]
+        [System.Object]
+        $SetHeader,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfHasSenderOverride,
+
+        [Parameter()]
+        [System.Object]
+        $Quarantine,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentCharacterSetContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptRMSTemplate,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfMessageTypeMatches,
+
+        [Parameter()]
+        [System.Object]
+        $SenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentNameMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentFileTypeMatches,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveHeader,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyHtmlDisclaimer,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $Moderate,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $GenerateAlert,
+
+        [Parameter()]
+        [System.Object]
+        $PrependSubject,
+
+        [Parameter()]
+        [System.Object]
+        $From,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfWithImportance,
 
         [Parameter()]
         [System.Object]
@@ -22718,7 +23525,11 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $ExceptIfSentToMemberOf,
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $EndpointDlpRestrictions,
 
         [Parameter()]
         [System.Object]
@@ -22730,187 +23541,7 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $ExceptIfRecipientADAttributeContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $SenderAddressLocation,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentNameMatchesWords,
-
-        [Parameter()]
-        [System.Object]
-        $Priority,
-
-        [Parameter()]
-        [System.Object]
-        $Name,
-
-        [Parameter()]
-        [System.Object]
-        $SubjectContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfHeaderContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $RemoveHeader,
-
-        [Parameter()]
-        [System.Object]
-        $SetHeader,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfContentCharacterSetContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $SenderDomainIs,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfRecipientADAttributeMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ContentContainsSensitiveInformation,
-
-        [Parameter()]
-        [System.Object]
-        $SubjectOrBodyContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $Moderate,
-
-        [Parameter()]
-        [System.Object]
-        $OnPremisesScannerDlpRestrictions,
-
-        [Parameter()]
-        [System.Object]
-        $FromMemberOf,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfHasSenderOverride,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfFromScope,
-
-        [Parameter()]
-        [System.Object]
-        $BlockAccess,
-
-        [Parameter()]
-        [System.Object]
-        $SentToMemberOf,
-
-        [Parameter()]
-        [System.Object]
-        $StopPolicyProcessing,
-
-        [Parameter()]
-        [System.Object]
-        $Disabled,
-
-        [Parameter()]
-        [System.Object]
-        $ReportSeverityLevel,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentIsUnsupported,
-
-        [Parameter()]
-        [System.Object]
-        $MessageTypeMatches,
-
-        [Parameter()]
-        [System.Object]
-        $RuleErrorAction,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentCreatedByMemberOf,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyPolicyTipCustomText,
-
-        [Parameter()]
-        [System.Object]
-        $Quarantine,
-
-        [Parameter()]
-        [System.Object]
-        $ContentPropertyContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $ProcessingLimitExceeded,
-
-        [Parameter()]
-        [System.Object]
-        $ModifySubject,
-
-        [Parameter()]
-        [System.Object]
-        $SentTo,
-
-        [Parameter()]
-        [System.Object]
-        $ThirdPartyAppDlpRestrictions,
-
-        [Parameter()]
-        [System.Object]
-        $GenerateAlert,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentIsUnsupported,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfContentIsShared,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfContentFileTypeMatches,
-
-        [Parameter()]
-        [System.Object]
-        $SubjectMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $HeaderMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSentTo,
-
-        [Parameter()]
-        [System.Object]
-        $ExpiryDate,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfContentExtensionMatchesWords,
-
-        [Parameter()]
-        [System.Object]
-        $RecipientADAttributeContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $EndpointDlpRestrictions,
+        $IncidentReportContent,
 
         [Parameter()]
         [System.Object]
@@ -22918,31 +23549,59 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $ExceptIfFrom,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $RestrictBrowserAccess,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentCreatedBy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $RuleErrorAction,
+
+        [Parameter()]
+        [System.Object]
+        $FromScope,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyPolicyTipCustomText,
+
+        [Parameter()]
+        [System.Object]
         $ExceptIfFromAddressContainsWords,
 
         [Parameter()]
         [System.Object]
-        $ExceptIfSubjectContainsWords,
+        $ExceptIfProcessingLimitExceeded,
 
         [Parameter()]
         [System.Object]
-        $DocumentCreatedBy,
+        $DocumentNameMatchesPatterns,
 
         [Parameter()]
         [System.Object]
-        $FromAddressContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $AlertProperties,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyHtmlDisclaimer,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentSizeOver,
+        $Priority,
 
         [Parameter()]
         [System.Object]
@@ -22950,15 +23609,259 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $RedirectMessageTo,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveRMSTemplate,
+
+        [Parameter()]
+        [System.Object]
+        $UnscannableDocumentExtensionIs,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentCreatedBy,
+
+        [Parameter()]
+        [System.Object]
+        $ReportSeverityLevel,
+
+        [Parameter()]
+        [System.Object]
+        $SenderDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $MessageSizeOver,
+
+        [Parameter()]
+        [System.Object]
         $ExceptIfDocumentMatchesPatterns,
 
         [Parameter()]
         [System.Object]
-        $ExceptIfAnyOfRecipientAddressMatchesPatterns,
+        $ExceptIfSentToMemberOf,
 
         [Parameter()]
         [System.Object]
-        $AddRecipients,
+        $DocumentNameMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $GenerateIncidentReport,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $EndpointDlpBrowserRestrictions,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentIsShared,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $HeaderContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $AlertProperties,
+
+        [Parameter()]
+        [System.Object]
+        $ContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $WithImportance,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentCreatedByMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $AccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentSizeOver,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyAllowOverride,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientADAttributeContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ThirdPartyAppDlpRestrictions,
+
+        [Parameter()]
+        [System.Object]
+        $ExpiryDate,
+
+        [Parameter()]
+        [System.Object]
+        $StopPolicyProcessing,
+
+        [Parameter()]
+        [System.Object]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentSizeOver,
+
+        [Parameter()]
+        [System.Object]
+        $ModifySubject,
+
+        [Parameter()]
+        [System.Object]
+        $Disabled,
+
+        [Parameter()]
+        [System.Object]
+        $ContentFileTypeMatches,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyEmailCustomText,
+
+        [Parameter()]
+        [System.Object]
+        $BlockAccess,
+
+        [Parameter()]
+        [System.Object]
+        $SenderAddressLocation,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyPolicyTipCustomTextTranslations,
+
+        [Parameter()]
+        [System.Object]
+        $Policy,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUserType,
+
+        [Parameter()]
+        [System.Object]
+        $NonBifurcatingAccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $BlockAccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentCreatedByMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $MessageTypeMatches,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfMessageSizeOver,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -23440,6 +24343,10 @@ function New-RetentionCompliancePolicy
         [Parameter()]
         [System.Object]
         $PolicyTemplateInfo,
+
+        [Parameter()]
+        [System.Object]
+        $RetainCloudAttachment,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -24814,76 +25721,12 @@ function Set-DlpComplianceRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Object]
+        $ActivationDate,
 
         [Parameter()]
         [System.Object]
-        $NotifyAllowOverride,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentNameMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSubjectOrBodyMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfRecipientDomainIs,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentCreatedByMemberOf,
-
-        [Parameter()]
-        [System.Object]
-        $MessageSizeOver,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfContentContainsSensitiveInformation,
-
-        [Parameter()]
-        [System.Object]
-        $ContentIsShared,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfProcessingLimitExceeded,
-
-        [Parameter()]
-        [System.Object]
-        $AnyOfRecipientAddressMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $UnscannableDocumentExtensionIs,
-
-        [Parameter()]
-        [System.Object]
-        $RedirectMessageTo,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentNameMatchesWords,
-
-        [Parameter()]
-        [System.Object]
-        $RecipientADAttributeMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Object]
-        $WithImportance,
-
-        [Parameter()]
-        [System.Object]
-        $SubjectOrBodyMatchesPatterns,
+        $ProcessingLimitExceeded,
 
         [Parameter()]
         [System.Object]
@@ -24891,183 +25734,11 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $ExceptIfDocumentContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $NonBifurcatingAccessScope,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfAnyOfRecipientAddressContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $EncryptRMSTemplate,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSenderIPRanges,
-
-        [Parameter()]
-        [System.Object]
-        $FromAddressMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ContentFileTypeMatches,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfFrom,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSubjectOrBodyContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentIsPasswordProtected,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyEmailCustomText,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSenderADAttributeContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSubjectMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ContentExtensionMatchesWords,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfMessageSizeOver,
-
-        [Parameter()]
-        [System.Object]
-        $HasSenderOverride,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyPolicyTipCustomTextTranslations,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfWithImportance,
-
-        [Parameter()]
-        [System.Object]
-        $HeaderContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $BlockAccessScope,
-
-        [Parameter()]
-        [System.Object]
-        $AnyOfRecipientAddressContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfMessageTypeMatches,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentSizeOver,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfFromMemberOf,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfFromAddressMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfAccessScope,
-
-        [Parameter()]
-        [System.Object]
-        $PrependSubject,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfHeaderMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentCreatedBy,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyEmailCustomSubject,
-
-        [Parameter()]
-        [System.Object]
-        $IncidentReportContent,
-
-        [Parameter()]
-        [System.Object]
-        $Comment,
-
-        [Parameter()]
-        [System.Object]
-        $SenderIPRanges,
-
-        [Parameter()]
-        [System.Object]
         $ExceptIfDocumentIsPasswordProtected,
 
         [Parameter()]
         [System.Object]
-        $NotifyEndpointUser,
-
-        [Parameter()]
-        [System.Object]
-        $GenerateIncidentReport,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfUnscannableDocumentExtensionIs,
-
-        [Parameter()]
-        [System.Object]
-        $From,
-
-        [Parameter()]
-        [System.Object]
-        $AccessScope,
-
-        [Parameter()]
-        [System.Object]
-        $RemoveRMSTemplate,
-
-        [Parameter()]
-        [System.Object]
-        $FromScope,
-
-        [Parameter()]
-        [System.Object]
-        $RecipientDomainIs,
-
-        [Parameter()]
-        [System.Object]
-        $ActivationDate,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfContentPropertyContainsWords,
+        $ExceptIfRecipientADAttributeContainsWords,
 
         [Parameter()]
         [System.Object]
@@ -25075,7 +25746,155 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $SubjectContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyEndpointUser,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderADAttributeContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyEmailCustomSubject,
+
+        [Parameter()]
+        [System.Object]
+        $FromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ContentIsShared,
+
+        [Parameter()]
+        [System.Object]
+        $AddRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfUnscannableDocumentExtensionIs,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
         $SenderADAttributeContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfHeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfHeaderContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $HeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ContentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $HasSenderOverride,
+
+        [Parameter()]
+        [System.Object]
+        $SetHeader,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfHasSenderOverride,
+
+        [Parameter()]
+        [System.Object]
+        $Quarantine,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentCharacterSetContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptRMSTemplate,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfMessageTypeMatches,
+
+        [Parameter()]
+        [System.Object]
+        $SenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentNameMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentFileTypeMatches,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveHeader,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyHtmlDisclaimer,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $Moderate,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $GenerateAlert,
+
+        [Parameter()]
+        [System.Object]
+        $PrependSubject,
+
+        [Parameter()]
+        [System.Object]
+        $From,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfWithImportance,
 
         [Parameter()]
         [System.Object]
@@ -25083,7 +25902,11 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $ExceptIfSentToMemberOf,
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $EndpointDlpRestrictions,
 
         [Parameter()]
         [System.Object]
@@ -25095,183 +25918,7 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $ExceptIfRecipientADAttributeContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $SenderAddressLocation,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentNameMatchesWords,
-
-        [Parameter()]
-        [System.Object]
-        $Priority,
-
-        [Parameter()]
-        [System.Object]
-        $SubjectContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfHeaderContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $RemoveHeader,
-
-        [Parameter()]
-        [System.Object]
-        $SetHeader,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfContentCharacterSetContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $SenderDomainIs,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfRecipientADAttributeMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ContentContainsSensitiveInformation,
-
-        [Parameter()]
-        [System.Object]
-        $SubjectOrBodyContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $Moderate,
-
-        [Parameter()]
-        [System.Object]
-        $OnPremisesScannerDlpRestrictions,
-
-        [Parameter()]
-        [System.Object]
-        $FromMemberOf,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfHasSenderOverride,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfFromScope,
-
-        [Parameter()]
-        [System.Object]
-        $BlockAccess,
-
-        [Parameter()]
-        [System.Object]
-        $SentToMemberOf,
-
-        [Parameter()]
-        [System.Object]
-        $StopPolicyProcessing,
-
-        [Parameter()]
-        [System.Object]
-        $Disabled,
-
-        [Parameter()]
-        [System.Object]
-        $ReportSeverityLevel,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentIsUnsupported,
-
-        [Parameter()]
-        [System.Object]
-        $MessageTypeMatches,
-
-        [Parameter()]
-        [System.Object]
-        $RuleErrorAction,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentCreatedByMemberOf,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyPolicyTipCustomText,
-
-        [Parameter()]
-        [System.Object]
-        $Quarantine,
-
-        [Parameter()]
-        [System.Object]
-        $ContentPropertyContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $ProcessingLimitExceeded,
-
-        [Parameter()]
-        [System.Object]
-        $ModifySubject,
-
-        [Parameter()]
-        [System.Object]
-        $SentTo,
-
-        [Parameter()]
-        [System.Object]
-        $ThirdPartyAppDlpRestrictions,
-
-        [Parameter()]
-        [System.Object]
-        $GenerateAlert,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentIsUnsupported,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfContentIsShared,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfContentFileTypeMatches,
-
-        [Parameter()]
-        [System.Object]
-        $SubjectMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $HeaderMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSentTo,
-
-        [Parameter()]
-        [System.Object]
-        $ExpiryDate,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfContentExtensionMatchesWords,
-
-        [Parameter()]
-        [System.Object]
-        $RecipientADAttributeContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $EndpointDlpRestrictions,
+        $IncidentReportContent,
 
         [Parameter()]
         [System.Object]
@@ -25279,31 +25926,63 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $ExceptIfFrom,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $RestrictBrowserAccess,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentCreatedBy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $RuleErrorAction,
+
+        [Parameter()]
+        [System.Object]
+        $FromScope,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyPolicyTipCustomText,
+
+        [Parameter()]
+        [System.Object]
         $ExceptIfFromAddressContainsWords,
 
         [Parameter()]
         [System.Object]
-        $ExceptIfSubjectContainsWords,
+        $ExceptIfProcessingLimitExceeded,
 
         [Parameter()]
         [System.Object]
-        $DocumentCreatedBy,
+        $DocumentNameMatchesPatterns,
 
         [Parameter()]
         [System.Object]
-        $FromAddressContainsWords,
+        $Priority,
 
         [Parameter()]
         [System.Object]
-        $AlertProperties,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyHtmlDisclaimer,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentSizeOver,
+        $OnPremisesScannerDlpRestrictions,
 
         [Parameter()]
         [System.Object]
@@ -25311,15 +25990,255 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $RedirectMessageTo,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveRMSTemplate,
+
+        [Parameter()]
+        [System.Object]
+        $UnscannableDocumentExtensionIs,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentCreatedBy,
+
+        [Parameter()]
+        [System.Object]
+        $ReportSeverityLevel,
+
+        [Parameter()]
+        [System.Object]
+        $SenderDomainIs,
+
+        [Parameter()]
+        [System.Object]
         $ExceptIfDocumentMatchesPatterns,
 
         [Parameter()]
         [System.Object]
-        $ExceptIfAnyOfRecipientAddressMatchesPatterns,
+        $ExceptIfSentToMemberOf,
 
         [Parameter()]
         [System.Object]
-        $AddRecipients,
+        $DocumentNameMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $GenerateIncidentReport,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $EndpointDlpBrowserRestrictions,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentIsShared,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $HeaderContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $AlertProperties,
+
+        [Parameter()]
+        [System.Object]
+        $ContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $WithImportance,
+
+        [Parameter()]
+        [System.Object]
+        $MessageSizeOver,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentCreatedByMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $AccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentSizeOver,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyAllowOverride,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientADAttributeContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ThirdPartyAppDlpRestrictions,
+
+        [Parameter()]
+        [System.Object]
+        $ExpiryDate,
+
+        [Parameter()]
+        [System.Object]
+        $StopPolicyProcessing,
+
+        [Parameter()]
+        [System.Object]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentSizeOver,
+
+        [Parameter()]
+        [System.Object]
+        $ModifySubject,
+
+        [Parameter()]
+        [System.Object]
+        $Disabled,
+
+        [Parameter()]
+        [System.Object]
+        $ContentFileTypeMatches,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyEmailCustomText,
+
+        [Parameter()]
+        [System.Object]
+        $BlockAccess,
+
+        [Parameter()]
+        [System.Object]
+        $SenderAddressLocation,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyPolicyTipCustomTextTranslations,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUserType,
+
+        [Parameter()]
+        [System.Object]
+        $NonBifurcatingAccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $BlockAccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentCreatedByMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $MessageTypeMatches,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfMessageSizeOver,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -28942,16 +29861,20 @@ function Get-CsOnlineUser
         $SkipUserPolicies,
 
         [Parameter()]
+        [Microsoft.Teams.ConfigAPI.Cmdlets.Models.AccountType]
+        $AccountType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OnModernServer,
+
+        [Parameter()]
         [System.String]
         $LdapFilter,
 
         [Parameter()]
         [System.String]
         $Filter,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $OnModernServer,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -29089,6 +30012,23 @@ function Get-CsTeamsEmergencyCallingPolicy
     )
 }
 function Get-CsTeamsEmergencyCallRoutingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Get-CsTeamsEventsPolicy
 {
     [CmdletBinding()]
     param(
@@ -29697,6 +30637,35 @@ function New-CsTeamsEmergencyNumber
         [Parameter()]
         [System.String]
         $EmergencyDialMask,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function New-CsTeamsEventsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $EventAccessType,
+
+        [Parameter()]
+        [System.String]
+        $AllowWebinars,
 
         [Parameter()]
         [System.String]
@@ -30355,6 +31324,23 @@ function Remove-CsTeamsEmergencyCallRoutingPolicy
         $MsftInternalProcessingMode
     )
 }
+function Remove-CsTeamsEventsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
 function Remove-CsTeamsMeetingBroadcastPolicy
 {
     [CmdletBinding()]
@@ -30818,6 +31804,35 @@ function Set-CsTeamsEmergencyCallRoutingPolicy
         [Parameter()]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Set-CsTeamsEventsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $EventAccessType,
+
+        [Parameter()]
+        [System.String]
+        $AllowWebinars,
 
         [Parameter()]
         [System.String]

@@ -117,7 +117,7 @@ class MSFT_EXOTransportRule : OMI_BaseResource
     [Write, Description("The HeaderContainsWords parameter specifies a condition that looks for words in a header field.")] String HeaderContainsWords[];
     [Write, Description("The HeaderMatchesMessageHeader parameter specifies the name of header field in the message header when searching for the text patterns specified by the HeaderMatchesPatterns parameter.")] String HeaderMatchesMessageHeader;
     [Write, Description("The HeaderMatchesPatterns parameter specifies a condition that looks for text patterns in a header field by using regular expressions. ")] String HeaderMatchesPatterns[];
-    [Write, Description("The IncidentReportContent parameter specifies the message properties that are included in the incident report that's generated when a message violates a DLP policy. ")] String IncidentReportContent;
+    [Write, Description("The IncidentReportContent parameter specifies the message properties that are included in the incident report that's generated when a message violates a DLP policy. ")] String IncidentReportContent[];
     [Write, Description("The IncidentReportOriginalMail parameter specifies whether to include the original message with the incident report. ")] String IncidentReportOriginalMail;
     [Write, Description("The ManagerAddresses parameter specifies the users (managers) for the ExceptIfManagerForEvaluatedUser parameter.")] String ManagerAddresses[];
     [Write, Description("The ManagerForEvaluatedUser parameter specifies a condition that looks for users in the Manager attribute of senders or recipients."), ValueMap{"Recipient","Sender"}, Values{"Recipient","Sender"}] String ManagerForEvaluatedUser;

@@ -1,7 +1,33 @@
 # Change log for Microsoft365DSC
 
+# 1.22.824.1
+
+* AADApplication
+  * Fixed issue where Update-MgApplication could be called with parameter ReplyURLs which is invalid.
+  * Added support to export/import app owners.
+* EXOTransportRule
+  * Fix issue setting IncidentReportContent
+  FIXES [#2196](https://github.com/microsoft/Microsoft365DSC/issues/2196)
+* O365User
+  * Optimize, call Get-MgSubscribedSku only once instead of inside of two loops per each user/license.
+* SPOSiteGroup
+  * Avoid redefining SiteGroupSettings always to the same value, just define it once, and call it as is on Set-PnPGroup.
+  * To keep the same order of updating the group and then its permissions check on which conditions it needs to be updated and at the end call Set-PnPGroup then Set-PnPGroupPermissions.
+  * Fix typo in variable, not an issue right now but the group would always be updated even if name and owner were already correct.
+* DEPENDENCIES
+  * Updated DSCParser dependency to version 1.3.0.6.
+  * Updated Microsoft.Graph dependencies to version 1.11.1.
+  * Updated ReverseDSC dependency to version 2.0.0.12.
+* MISC
+  * Fixed issue with Export-M365DSCConfiguration if all components were invalid or if resource files were not found.
+  * Updated MicrosoftTeams to version 4.6.0.
+
 # 1.22.727.1
 
+* AADConditionalAccessPolicy
+  * DEPRECATED then IncludeDevices and ExcludeDevices parameters.
+  * Fixed issue extracting a policy that had invalid users or groups (deleted from AAD).
+  FIXES [#2151](https://github.com/microsoft/Microsoft365DSC/issues/2151)
 * EXOTransportRule
   * Fixed issue where the MessageContainsDataClassifications property was not properly extracted due to single quote exiting.
   FIXES [#1820](https://github.com/microsoft/Microsoft365DSC/issues/1820)
@@ -26,9 +52,13 @@
 * SPOSite
   * Fixed owner value for root site.
   FIXES [#2035](https://github.com/microsoft/Microsoft365DSC/issues/2035)
+* TeamsEventsPolicy
+  * Initial release.
 * TeamsUser
   * Fixed the extraction process and removed the multi-threading from the resource.
   FIXES #1883
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 4.6.0.
 * MISC
   * Added support for filtering resources instances at extraction time.
   FIXES [#1691](https://github.com/microsoft/Microsoft365DSC/issues/1691)
