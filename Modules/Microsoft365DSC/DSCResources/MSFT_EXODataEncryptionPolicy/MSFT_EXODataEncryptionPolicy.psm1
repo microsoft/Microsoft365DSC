@@ -92,9 +92,7 @@ function Get-TargetResource
 
     try
     {
-        $DataEncryptionPolicies = Get-DataEncryptionPolicy -ErrorAction Stop
-        $DataEncryptionPolicy = $DataEncryptionPolicies | Where-Object `
-            -FilterScript { $_.Identity -eq $Identity }
+        $DataEncryptionPolicy = Get-DataEncryptionPolicy -Identity $Identity -ErrorAction Stop
 
         if ($null -eq $DataEncryptionPolicy)
         {
