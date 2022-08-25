@@ -136,7 +136,7 @@ function Get-TargetResource
             PreviewImageUrl       = $siteDesign.PreviewImageUrl
             Version               = $siteDesign.Version
             Ensure                = "Present"
-            Credential    = $Credential
+            Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret

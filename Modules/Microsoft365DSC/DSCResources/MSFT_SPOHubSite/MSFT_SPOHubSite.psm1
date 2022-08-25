@@ -149,7 +149,7 @@ function Get-TargetResource
                 AllowedToJoin         = $principals
                 SiteDesignId          = $hubSite.SiteDesignId
                 Ensure                = "Present"
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
