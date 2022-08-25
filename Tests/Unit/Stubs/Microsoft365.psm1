@@ -20375,7 +20375,7 @@ function Update-MgUser
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTodo1]
+        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTodo]
         $Todo,
 
         [Parameter()]
