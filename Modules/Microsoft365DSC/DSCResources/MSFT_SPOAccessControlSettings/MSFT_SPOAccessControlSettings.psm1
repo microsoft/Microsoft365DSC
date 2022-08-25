@@ -131,6 +131,7 @@ function Get-TargetResource
             CertificatePassword          = $CertificatePassword
             CertificatePath              = $CertificatePath
             CertificateThumbprint        = $CertificateThumbprint
+            Ensure                       = "Present"
         }
     }
     catch

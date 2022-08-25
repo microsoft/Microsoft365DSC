@@ -83,7 +83,7 @@ function Get-TargetResource
             Name                  = $theme.Name
             IsInverted            = $theme.IsInverted
             Palette               = $convertedPalette
-            Credential    = $Credential
+            Credential            = $Credential
             Ensure                = "Present"
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
