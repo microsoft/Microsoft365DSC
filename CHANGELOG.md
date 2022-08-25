@@ -1,6 +1,9 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+* AADRoleSetting
+  * New Resource, configure Azure PIM Role like in the UI
+# 1.22.824.1
 
 * AADApplication
   * Fixed issue where Update-MgApplication could be called with parameter ReplyURLs which is invalid.
@@ -21,8 +24,6 @@
 * MISC
   * Fixed issue with Export-M365DSCConfiguration if all components were invalid or if resource files were not found.
   * Updated MicrosoftTeams to version 4.6.0.
-* AADRoleSetting
-  * New Resource, configure Azure PIM Role like in the UI
 
 # 1.22.727.1
 
