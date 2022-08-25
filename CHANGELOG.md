@@ -1,7 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
 * EXOSafeLinksPolicy
   * Add EnableSafeLinksforEmail and DisableUrlRewrite parameters
+
 # 1.22.824.1
 
 * AADApplication
