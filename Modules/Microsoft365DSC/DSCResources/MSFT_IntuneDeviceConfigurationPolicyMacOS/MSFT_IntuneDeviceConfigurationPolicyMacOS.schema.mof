@@ -8,7 +8,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
 };
 [ClassVersion("1.0.0")]
-class MSFT_MicrosoftGraphapplistitem
+class MSFT_MicrosoftGraphapplistitemMacOS
 {
     [Write, Description(""), ValueMap{"#microsoft.graph.appleAppListItem"}, Values{"#microsoft.graph.appleAppListItem"}] String odataType;
     [Write, Description("")] String appId;
@@ -71,7 +71,7 @@ class MSFT_IntuneDeviceConfigurationPolicyMacOS : OMI_BaseResource
     [Write, Description("Students enrolled in an unmanaged Classroom course must get teacher consent to leave the course.")] Boolean ClassroomForceRequestPermissionToLeaveClasses;
     [Write, Description("Teachers can lock a student's device or app without the student's approval.")] Boolean ClassroomForceUnpromptedAppAndDeviceLock;
     [Write, Description("Device compliance can be viewed in the Restricted Apps Compliance report."), ValueMap{"none","appsInListCompliant","appsNotInListCompliant"}, Values{"none","appsInListCompliant","appsNotInListCompliant"}] String CompliantAppListType;
-    [Write, Description(" "), EmbeddedInstance("MSFT_MicrosoftGraphapplistitem")] String CompliantAppsList[];
+    [Write, Description(" "), EmbeddedInstance("MSFT_MicrosoftGraphapplistitemMacOS")] String CompliantAppsList[];
     [Write, Description("")] Boolean ContentCachingBlocked;
     [Write, Description("Block look up, a feature that looks up the definition of a highlighted word.")] Boolean DefinitionLookupBlocked;
     [Write, Description("Emails that the user sends or receives which don't match the domains you specify here will be marked as untrusted. ")] String EmailInDomainSuffixes[];
