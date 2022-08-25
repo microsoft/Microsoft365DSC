@@ -144,7 +144,7 @@ function Set-TargetResource
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Updating Teams Upgrade Policy {$Identity}"
+    Write-Verbose -Message "Updating Device Category {$Identity}"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters

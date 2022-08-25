@@ -79,13 +79,14 @@ function Get-TargetResource
             Enabled               = $BrowserIdleSignout.Enabled
             SignOutAfter          = $BrowserIdleSignout.SignOutAfter
             WarnAfter             = $BrowserIdleSignout.WarnAfter
-            Credential    = $Credential
+            Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
+            Ensure                = "Present"
         }
     }
     catch

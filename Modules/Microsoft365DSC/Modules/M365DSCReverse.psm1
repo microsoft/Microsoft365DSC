@@ -155,6 +155,11 @@ function Start-M365DSCConfigurationExtract
             -ChildPath "..\DSCResources\" `
             -Resolve
         $AllResources = Get-ChildItem $ResourcesPath -Recurse | Where-Object { $_.Name -like 'MSFT_*.psm1' }
+        if (!$AllResources)
+        {
+            Write-Host "Resource files were not found, aborting"
+            break
+        }
 
         $i = 1
         $ResourcesToExport = @()
@@ -178,6 +183,11 @@ function Start-M365DSCConfigurationExtract
             {
                 New-M365DSCLogEntry -Error $_ -Message $ResourceModule.Name -Source "[M365DSCReverse]$($ResourceModule.Name)"
             }
+        }
+        if (!$ResourcesToExport)
+        {
+            Write-Host "There are no valid resources to export, aborting"
+            break
         }
 
         $allSupportedResources = Get-M365DSCComponentsForAuthenticationType -AuthenticationMethod $AuthMethods `

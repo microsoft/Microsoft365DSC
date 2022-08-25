@@ -72,7 +72,7 @@ function Get-TargetResource
             CdnType               = $CdnType
             Enable                = $cdnEnabled.Value
             Ensure                = "Present"
-            Credential    = $Credential
+            Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret

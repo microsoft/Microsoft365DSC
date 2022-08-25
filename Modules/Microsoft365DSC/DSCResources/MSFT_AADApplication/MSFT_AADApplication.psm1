@@ -53,6 +53,10 @@ function Get-TargetResource
         $ReplyURLs,
 
         [Parameter()]
+        [System.String[]]
+        $Owners,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Permissions,
 
@@ -152,27 +156,41 @@ function Get-TargetResource
                 $currentOauth2RequirePostResponseValue = $false
             }
 
+            [Array]$Owners = Get-MgApplicationOwner -ApplicationId $AADApp.Id -All:$true | `
+                ?{ !$_.DeletedDateTime }
+            $OwnersValues = @()
+            foreach ($Owner in $Owners)
+            {
+                if ($Owner.AdditionalProperties.userPrincipalName)
+                {
+                    $OwnersValues += $Owner.AdditionalProperties.userPrincipalName
+                } else {
+                    $OwnersValues += $Owner.Id
+                }
+            }
+
             $result = @{
-                DisplayName               = $AADApp.DisplayName
-                AvailableToOtherTenants   = $AvailableToOtherTenantsValue
-                GroupMembershipClaims     = $AADApp.GroupMembershipClaims
-                Homepage                  = $AADApp.web.HomepageUrl
-                IdentifierUris            = $AADApp.IdentifierUris
-                KnownClientApplications   = $AADApp.Api.KnownClientApplications
-                LogoutURL                 = $AADApp.web.LogoutURL
-                Oauth2RequirePostResponse = $currentOauth2RequirePostResponseValue
-                PublicClient              = $isPublicClient
-                ReplyURLs                 = $AADApp.web.RedirectUris
-                ObjectId                  = $AADApp.Id
-                AppId                     = $AADApp.AppId
-                Permissions               = $permissionsObj
-                Ensure                    = "Present"
-                Credential                = $Credential
-                ApplicationId             = $ApplicationId
-                TenantId                  = $TenantId
-                ApplicationSecret         = $ApplicationSecret
-                CertificateThumbprint     = $CertificateThumbprint
-                Identity                  = $Identity.IsPresent
+                DisplayName                = $AADApp.DisplayName
+                AvailableToOtherTenants    = $AvailableToOtherTenantsValue
+                GroupMembershipClaims      = $AADApp.GroupMembershipClaims
+                Homepage                   = $AADApp.web.HomepageUrl
+                IdentifierUris             = $AADApp.IdentifierUris
+                KnownClientApplications    = $AADApp.Api.KnownClientApplications
+                LogoutURL                  = $AADApp.web.LogoutURL
+                Oauth2RequirePostResponse  = $currentOauth2RequirePostResponseValue
+                PublicClient               = $isPublicClient
+                ReplyURLs                  = $AADApp.web.RedirectUris
+                Owners                     = $OwnersValues
+                ObjectId                   = $AADApp.Id
+                AppId                      = $AADApp.AppId
+                Permissions                = $permissionsObj
+                Ensure                     = "Present"
+                Credential                 = $Credential
+                ApplicationId              = $ApplicationId
+                TenantId                   = $TenantId
+                ApplicationSecret          = $ApplicationSecret
+                CertificateThumbprint      = $CertificateThumbprint
+                Identity                   = $Identity.IsPresent
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
@@ -254,6 +272,10 @@ function Set-TargetResource
         $ReplyURLs,
 
         [Parameter()]
+        [System.String[]]
+        $Owners,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Permissions,
 
@@ -315,12 +337,15 @@ function Set-TargetResource
 
     $currentAADApp = Get-TargetResource @PSBoundParameters
     $currentParameters = $PSBoundParameters
-    $currentParameters.Remove("ApplicationId") | Out-Null
-    $currentParameters.Remove("TenantId") | Out-Null
-    $currentParameters.Remove("CertificateThumbprint") | Out-Null
-    $currentParameters.Remove("ApplicationSecret") | Out-Null
-    $currentParameters.Remove("Ensure") | Out-Null
-    $currentParameters.Remove("Credential") | Out-Null
+    $currentParameters.Remove("ApplicationId")  | Out-Null
+    $tenantIdValue = $TenantId
+    $currentParameters.Remove("TenantId")  | Out-Null
+    $currentParameters.Remove("CertificateThumbprint")  | Out-Null
+    $currentParameters.Remove("ApplicationSecret")  | Out-Null
+    $currentParameters.Remove("Ensure")  | Out-Null
+    $currentParameters.Remove("Credential")  | Out-Null
+    $backCurrentOwners = $currentAADApp.Owners
+    $currentParameters.Remove("Owners") | Out-Null
     $currentParameters.Remove("Identity") | Out-Null
 
     if ($KnownClientApplications)
@@ -391,10 +416,10 @@ function Set-TargetResource
         }
 
         $currentParameters.Add("web", $webValue)
-        $currentParameters.Remove("ReplyURLs") | Out-Null
-        $currentParameters.Remove("LogoutURL") | Out-Null
-        $currentParameters.Remove("Homepage") | Out-Null
     }
+    $currentParameters.Remove("ReplyURLs") | Out-Null
+    $currentParameters.Remove("LogoutURL") | Out-Null
+    $currentParameters.Remove("Homepage") | Out-Null
 
     if ($Ensure -eq "Present" -and $currentAADApp.Ensure -eq "Absent")
     {
@@ -434,6 +459,89 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing AzureAD Application {$DisplayName} by ObjectID {$($currentAADApp.ObjectID)}"
         Remove-MgApplication -ApplicationId $currentAADApp.ObjectID
+    }
+
+    if ($Ensure -ne 'Absent') {
+        $desiredOwnersValue = @()
+        if ($Owners.Length -gt 0)
+        {
+            $desiredOwnersValue = $Owners
+        }
+        if (!$backCurrentOwners)
+        {
+            $backCurrentOwners = @()
+        }
+        $ownersDiff = Compare-Object -ReferenceObject $backCurrentOwners -DifferenceObject $desiredOwnersValue
+        foreach ($diff in $ownersDiff)
+        {
+            $DirectoryObjectUri = "https://graph.microsoft.com/v1.0/directoryObjects/"
+            try {
+                if ($diff.InputObject.Contains('@')) {
+                    $OwnerId = $(Get-MgUser -UserId $diff.InputObject -ErrorAction Stop).Id
+                    $DirectoryObjectUri += "{0}" -f $OwnerId
+                } else {
+                    $OwnerId = $diff.InputObject
+                    $DirectoryObjectUri += "{0}" -f $OwnerId
+                    Get-MgDirectoryObject -DirectoryObjectId $DirectoryObjectUri -ErrorAction Stop
+                }
+            }
+            catch {
+                try {
+                    Write-Verbose -Message $_
+                    $Message = "Couldn't find object {0} to add/remove as owner on AAD Application {1}, " `
+                        -f $diff.InputObject, $DisplayName + `
+                        "not processing any further objects"
+                    Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $tenantIdValue
+                }
+                catch {
+                    Write-Verbose -Message $_
+                }
+                break
+            }
+
+            if ($diff.SideIndicator -eq '=>')
+            {
+                Write-Verbose -Message "Adding new owner {$($diff.InputObject)} to AAD Application {$DisplayName}"
+                $ownerObject = @{
+                    "@odata.id" = $DirectoryObjectUri
+                }
+                try {
+                    New-MgApplicationOwnerByRef -ApplicationId $currentAADApp.ObjectId -BodyParameter $ownerObject | Out-Null
+                }
+                catch {
+                    try {
+                        Write-Verbose -Message $_
+                        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $tenantIdValue
+                    }
+                    catch {
+                        Write-Verbose -Message $_
+                    }
+                }
+            }
+            elseif ($diff.SideIndicator -eq '<=')
+            {
+                Write-Verbose -Message "Removing new owner {$($diff.InputObject)} from AAD Application {$DisplayName}"
+                $Uri = "https://graph.microsoft.com/v1.0/applications/{0}/owners/{1}/`$ref" -f $currentAADApp.ObjectId, $OwnerId
+                try {
+                    Remove-MgDirectoryObject -DirectoryObjectId $Uri -ErrorAction Stop
+                }
+                catch {
+                    try {
+                        Write-Verbose -Message $_
+                        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $tenantIdValue
+                    }
+                    catch {
+                        Write-Verbose -Message $_
+                    }
+                }
+            }
+        }
     }
 
     if ($needToUpdatePermissions -and -not [System.String]::IsNullOrEmpty($Permissions) -and $Permissions.Length -gt 0)
@@ -541,6 +649,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $ReplyURLs,
+
+        [Parameter()]
+        [System.String[]]
+        $Owners,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]

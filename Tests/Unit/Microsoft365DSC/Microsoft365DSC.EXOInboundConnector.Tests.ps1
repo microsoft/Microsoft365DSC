@@ -139,7 +139,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         RequireTls                   = $true
                         RestrictDomainsToCertificate = $false
                         RestrictDomainsToIPAddresses = $true
-                        SenderDomains                = @('fabrikam.com', 'contoso.com')
+                        SenderDomains                = @('smtp:fabrikam.com;1', 'smtp:contoso.com;1')
                         SenderIPAddresses            = @('192.168.2.11')
                         TlsSenderCertificateName     = '*.contoso.com'
                         TreatMessagesAsInternal      = $true
@@ -187,7 +187,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         RequireTls                   = $true
                         RestrictDomainsToCertificate = $false
                         RestrictDomainsToIPAddresses = $true
-                        SenderDomains                = @('fabrikam.com', 'contoso.com')
+                        SenderDomains                = @('smtp:fabrikam.com;1', 'smtp:contoso.com;1')
                         SenderIPAddresses            = '192.168.2.114'
                         TlsSenderCertificateName     = '*.contoso.org'
                         TreatMessagesAsInternal      = $false
@@ -243,6 +243,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
+                $Global:CurrentModeIsExport = $true
                 $testParams = @{
                     Credential = $Credential
                 }

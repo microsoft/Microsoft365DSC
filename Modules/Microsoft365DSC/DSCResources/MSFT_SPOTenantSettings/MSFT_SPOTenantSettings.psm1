@@ -186,13 +186,14 @@ function Get-TargetResource
             MarkNewFilesSensitiveByDefault                = $SPOTenantSettings.MarkNewFilesSensitiveByDefault
             ConditionalAccessPolicy                       = $SPOTenantSettings.ConditionalAccessPolicy
             DisabledWebPartIds                            = $SPOTenantSettings.DisabledWebPartIds
-            Credential                            = $Credential
+            Credential                                    = $Credential
             ApplicationId                                 = $ApplicationId
             TenantId                                      = $TenantId
             ApplicationSecret                             = $ApplicationSecret
             CertificatePassword                           = $CertificatePassword
             CertificatePath                               = $CertificatePath
             CertificateThumbprint                         = $CertificateThumbprint
+            Ensure                                        = "Present"
         }
     }
     catch

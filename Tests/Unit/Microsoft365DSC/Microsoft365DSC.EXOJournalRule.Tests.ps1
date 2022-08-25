@@ -146,6 +146,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
+                $Global:CurrentModeIsExport = $true
                 $testParams = @{
                     Credential = $Credential
                 }
