@@ -7,6 +7,11 @@
 * EXOInboundConnector
   * Add support for different syntax of SenderDomains parameter
   FIXES [#2180](https://github.com/microsoft/Microsoft365DSC/issues/2180)
+* IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator
+  * Don't export all policies if none match the type
+* IntuneDeviceConfigurationPolicyAndroidOpenSourceProject
+  * Don't export all policies if none match the type
+  FIXES [#2228](https://github.com/microsoft/Microsoft365DSC/issues/2228)
 
 # 1.22.824.1
 
