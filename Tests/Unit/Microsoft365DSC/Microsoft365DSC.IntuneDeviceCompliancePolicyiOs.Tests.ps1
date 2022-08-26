@@ -16,11 +16,9 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
     -DscResource "IntuneDeviceCompliancePolicyiOs" -GenericStubModule $GenericStubPath
-
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
-
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
@@ -47,9 +45,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Remove-MgDeviceManagementDeviceCompliancePolicy -MockWith {
             }
-
-            # Test contexts
-            Context -Name "When the iOS Device Compliance Policy doesn't already exist" -Fixture {
+        }
+        # Test contexts
+        Context -Name "When the iOS Device Compliance Policy doesn't already exist" -Fixture {
                 BeforeAll {
                     $testParams = @{
                         DisplayName                                 = 'Test iOS Device Compliance Policy'
@@ -304,7 +302,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Export-TargetResource @testParams
                 }
             }
-        }
     }
 }
 

@@ -81,7 +81,7 @@ function Get-TargetResource
 
         $result = @{
             Identity                     = $ResourceConfiguration.Identity
-            ResourcePropertySchema           = $ResourceConfiguration.ResourcePropertySchema
+            ResourcePropertySchema       = $ResourceConfiguration.ResourcePropertySchema
             Credential                   = $Credential
             Ensure                       = 'Present'
             ApplicationId                = $ApplicationId

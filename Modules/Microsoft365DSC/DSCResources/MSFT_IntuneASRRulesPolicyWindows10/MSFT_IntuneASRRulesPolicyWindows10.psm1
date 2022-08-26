@@ -111,7 +111,7 @@ function Get-TargetResource
         [Parameter(Mandatory = $True)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = "Present"
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -338,7 +338,7 @@ function Set-TargetResource
         [Parameter(Mandatory = $True)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = "Present"
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -556,7 +556,7 @@ function Test-TargetResource
         [Parameter(Mandatory = $True)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = "Present"
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -665,7 +665,7 @@ function Export-TargetResource
 
     try
     {
-        $policyTemplateID='0e237410-1367-4844-bd7f-15fb0f08943b'
+        $policyTemplateID = '0e237410-1367-4844-bd7f-15fb0f08943b'
         [array]$policies = Get-MgDeviceManagementIntent `
             -ErrorAction Stop `
             -All:$true `
