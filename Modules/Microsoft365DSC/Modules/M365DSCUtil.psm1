@@ -1152,10 +1152,12 @@ function Export-M365DSCConfiguration
     # Make sure we are not connected to Microsoft Graph on another tenant
     try
     {
+        Disconnect-MgGraph -ErrorAction Stop | Out-Null
         $global:MsCloudLoginConnectionProfile.MicrosoftGraph.Connected = $false
     }
     catch
     {
+        Write-Verbose -Message "No existing connections to Microsoft Graph"
     }
 
     if (-not [System.String]::IsNullOrEmpty($TenantId))
