@@ -106,7 +106,7 @@ function Get-TargetResource
             Description           = $SiteScript.Description
             Content               = $SiteScript.Content
             Ensure                = 'Present'
-            Credential    = $Credential
+            Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret

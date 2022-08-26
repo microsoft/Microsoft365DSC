@@ -304,7 +304,7 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message "Reloading1"
+        Write-Verbose -Message "Connection to the workload failed."
     }
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -1361,12 +1361,6 @@ function Export-TargetResource
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSGeneralDeviceConfiguration'  `
             }
-
-        if (-not $getValue)
-        {
-            [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
-                -ErrorAction Stop
-        }
         #endregion
 
 

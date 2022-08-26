@@ -2,27 +2,40 @@
 
 # UNRELEASED
 
+* EXOSafeLinksPolicy
+  * Add Suport for EnableSafeLinksForEmail and DisableUrlRewrite
+* EXOInboundConnector
+  * Add support for different syntax of SenderDomains parameter
+  FIXES [#2180](https://github.com/microsoft/Microsoft365DSC/issues/2180)
 * PlannerBucket
   * Changed authentication method to Credentials only, since the Planner Graph API
     does not support anything else
+  FIXES [#1979](https://github.com/microsoft/Microsoft365DSC/issues/1979)
+  * Fixes issue with generating Export output
+  FIXES [#2032](https://github.com/microsoft/Microsoft365DSC/issues/2032)
 * PlannerPlan
   * Fix export issue where the export wasn't created correctly because of the
     use of an incorrect property name.
   * Changed authentication method to Credentials only, since the Planner Graph API
     does not support anything else
+  FIXES [#1979](https://github.com/microsoft/Microsoft365DSC/issues/1979)
 * PlannerTask
   * Changed authentication method to Credentials only, since the Planner Graph API
     does not support anything else
+  FIXES [#1979](https://github.com/microsoft/Microsoft365DSC/issues/1979)
 * TeamsMeetingBroadcastConfiguration
   * Fixing export issue where SdnApiToken is exported as a string instead of
     a variable
+  FIXES [#2056](https://github.com/microsoft/Microsoft365DSC/issues/2056)
 * MISC
   * Updated Export functionality to only export the LCM settings when the
     executed as Administrator
+  FIXES [#2037](https://github.com/microsoft/Microsoft365DSC/issues/2037)
   * Added support for multiple authentication methods to the Export functionality.
     The code now uses the most secure method that is provided in the command line
     and that supported by the specified resources in the following order:
     Certificate Thumbprint, Certificate Path, Application Secret, Credential
+  FIXES [#1759](https://github.com/microsoft/Microsoft365DSC/issues/1759)
 
 # 1.22.824.1
 
@@ -45,6 +58,8 @@
 * MISC
   * Fixed issue with Export-M365DSCConfiguration if all components were invalid or if resource files were not found.
   * Updated MicrosoftTeams to version 4.6.0.
+* AADRoleSetting
+  * New Resource, configure Azure PIM Role like in the UI
 
 # 1.22.727.1
 

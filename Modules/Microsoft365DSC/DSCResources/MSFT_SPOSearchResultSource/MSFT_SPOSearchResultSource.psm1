@@ -159,7 +159,7 @@ function Get-TargetResource
             SourceURL             = [string] $source.ConnectionUrlTemplate
             UseAutoDiscover       = $SourceHasAutoDiscover
             Ensure                = "Present"
-            Credential    = $Credential
+            Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
