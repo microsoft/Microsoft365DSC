@@ -1,6 +1,8 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+* EXOSafeLinksPolicy
+  * Add Suport for EnableSafeLinksForEmail and DisableUrlRewrite
 
 * EXOInboundConnector
   * Add support for different syntax of SenderDomains parameter
