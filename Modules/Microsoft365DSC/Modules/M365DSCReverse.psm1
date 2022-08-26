@@ -274,7 +274,7 @@ function Start-M365DSCConfigurationExtract
         {
             $principal = $organization.Split(".")[0]
         }
-        $AzureAutomation = $false
+
         [array] $version = Get-Module 'Microsoft365DSC'
         $version = $version[0].Version
         $DSCContent = [System.Text.StringBuilder]::New()
