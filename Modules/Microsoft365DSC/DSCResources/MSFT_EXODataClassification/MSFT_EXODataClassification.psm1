@@ -88,9 +88,7 @@ function Get-TargetResource
 
     try
     {
-        $DataClassifications = Get-DataClassification -ErrorAction Stop
-        $DataClassification = $DataClassifications | Where-Object `
-            -FilterScript { $_.Identity -eq $Identity }
+        $DataClassification = Get-DataClassification -Identity $Identity -ErrorAction Stop
         if ($null -eq $DataClassification)
         {
             Write-Verbose -Message "Data classification $($Identity) does not exist."

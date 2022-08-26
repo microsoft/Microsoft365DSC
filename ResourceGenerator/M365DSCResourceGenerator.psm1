@@ -420,7 +420,7 @@ function Get-ParameterBlockInformation
         $parameterNameFirstLetter = $parameterNameFirstLetter.ToUpper()
         $parameterNameCamelCaseString = $parameterName.Substring(1)
         $parameterName = "$($parameterNameFirstLetter)$($parameterNameCamelCaseString)"
-        $parameterDescription=($PropertiesDefinitions | Where-Object -FilterScript{$_.id -like "*$parameterName*"}).description
+        $parameterDescription=($PropertiesDefinitions | Where-Object -FilterScript{$_.id -like "*$parameterName"}).description
         if(-not [String]::IsNullOrEmpty($parameterDescription))
         {
 
@@ -604,24 +604,61 @@ function Get-M365DSCFakeValues
 
         [Parameter()]
         [System.Boolean]
-        $IntroduceDrift = $false
+        $IntroduceDrift = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $isCmdletCall = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $isRecursive = $false,
+
+        [Parameter()]
+        [System.String]
+        $AdditionalPropertiesType ="",
+
+        [Parameter()]
+        [System.String]
+        $Workload
+
     )
 
     $result = @{}
-    foreach ($parameter in $parametersInformation)
+    $parameters=$parametersInformation
+    $additionalProperties=@{}
+
+    if($isCmdletCall -and -not $isRecursive)
     {
-        switch ($parameter.Type)
+        $excludedFromAdditionalProperties=@(
+            'Description'
+            'DisplayName'
+            'Id'
+        )
+
+        $additionalProperties=@{
+            '@odata.type'="#microsoft.graph."+$AdditionalPropertiesType
+        }
+        $parameters=$parameters|where-object -FilterScript{$_.Name -notin $excludedFromAdditionalProperties}
+    }
+
+
+    foreach ($parameter in $parameters)
+    {
+        $hashValue=$null
+        switch -Wildcard ($parameter.Type)
         {
-            "System.String"
+            "*.String"
             {
                 $fakeValue="FakeStringValue"
                 if($parameter.Members)
                 {
                     $fakeValue=$parameter.Members[0]
                 }
-                $result.Add($parameter.Name, $fakeValue)
+                $hashValue=$fakeValue
+                break
             }
-            "System.String[]"
+            "*.String[[\]]"
             {
                 $fakeValue1='FakeStringArrayValue1'
                 $fakeValue2='FakeStringArrayValue2'
@@ -632,35 +669,90 @@ function Get-M365DSCFakeValues
                 }
                 if ($IntroduceDrift)
                 {
-                    $result.Add($parameter.Name, @($fakeValue1))
+                    $hashValue=@($fakeValue1)
                 }
                 else
                 {
-                    $result.Add($parameter.Name, @($fakeValue1, $fakeValue2))
+                    $hashValue=@($fakeValue1, $fakeValue2)
                 }
+                break
             }
-            "System.Int32" {
+            "*.Int32" {
                 if ($IntroduceDrift)
                 {
-                    $result.Add($parameter.Name, 7)
+                    $hashValue= 7
                 }
                 else
                 {
-                    $result.Add($parameter.Name, 25)
+                    $hashValue= 25
                 }
+                break
             }
-            "System.Boolean" {
+            "*.Boolean" {
                 if ($IntroduceDrift)
                 {
-                    $result.Add($parameter.Name, $false)
+                    $hashValue= $false
                 }
                 else
                 {
-                    $result.Add($parameter.Name, $true)
+                    $hashValue=$true
                 }
+                break
+            }
+            "microsoft.graph.powershell.models.imicrosoftgraph*"
+            {
+                $isArray=$false
+                if ($parameter.Type -like "*[[\]]")
+                {
+                    $isArray=$true
+                }
+
+                $hashValue=@{}
+                if(-not $isCmdletCall)
+                {
+                    $propertyType = $parameter.Type -replace "microsoft.graph.powershell.models.", ""
+                    $propertyType = $propertyType -replace "imicrosoftgraph", ""
+                    $propertyType = $propertyType -replace '[[\]]',''
+                    $propertyType = $workload + $propertyType
+                    $propertyType="MSFT_$propertyType"
+                    $hashValue.add('CIMType',$propertyType)
+                }
+                $hashValue.add('isArray',$isArray)
+
+                $nestedProperties=Get-M365DSCFakeValues -ParametersInformation $parameter.Properties `
+                    -Workload $Workload `
+                    -isCmdletCall $isCmdletCall `
+                    -isRecursive $true
+
+                $hashValue.add('Properties',$nestedProperties)
+                $hashValue.add('Name',$parameter.Name)
+            }
+        }
+
+        if($hashValue)
+        {
+            if($isCmdletCall -and -not $isRecursive)
+            {
+                $additionalProperties.Add($parameter.Name, $hashValue)
+            }
+            else
+            {
+                $result.Add($parameter.Name, $hashValue)
             }
         }
     }
+
+    if($isCmdletCall)
+    {
+        if(-not $isRecursive)
+        {
+            $result.Add('Id','FakeStringValue')
+            $result.Add('DisplayName','FakeStringValue')
+            $result.Add('Description','FakeStringValue')
+            $result.Add('AdditionalProperties',$additionalProperties)
+        }
+    }
+
     return $result
 }
 
@@ -671,34 +763,165 @@ function Get-M365DSCHashAsString
     param(
         [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]
-        $Values
+        $Values,
+
+        [Parameter()]
+        [System.String]
+        $Space="                        ",
+
+        [Parameter()]
+        [System.Boolean]
+        $isCmdletCall=$false
     )
     $sb = [System.Text.StringBuilder]::New()
-    foreach ($key in ($Values.Keys|Sort-Object -Property $_))
+    $keys=$Values.Keys|Sort-Object -Property $_
+    foreach ($key in $keys)
     {
         switch ($Values.$key.GetType().Name)
         {
-            "String" {
-                $sb.AppendLine("                        $key = `"$($Values.$key)`"") | Out-Null
+            "String"
+            {
+                $value=$Values.$key
+                if($key -eq '@odata.type')
+                {
+                    $key="'$key'"
+                }
+                $sb.AppendLine("$Space$key = `"$value`"") | Out-Null
             }
-            "Int32" {
-                $sb.AppendLine("                        $key = $($Values.$key)") | Out-Null
+
+            "Int32"
+            {
+                $sb.AppendLine("$Space$key = $($Values.$key)") | Out-Null
             }
-            "Boolean" {
-                $sb.AppendLine("                        $key = `$$($Values.$key)") | Out-Null
+
+            "Boolean"
+            {
+                $sb.AppendLine("$Space$key = `$$($Values.$key)") | Out-Null
             }
-            "String[]" {
+
+            "String[]"
+            {
                 $stringValue = ""
                 foreach ($item in $Values.$key)
                 {
                     $stringValue += "`"$item`","
                 }
                 $stringValue = $stringValue.Substring(0, $stringValue.Length - 1)
-                $sb.AppendLine("                        $key = `@($stringValue)") | Out-Null
+                $sb.AppendLine("$Space$key = `@($stringValue)") | Out-Null
+            }
+
+            "Hashtable"
+            {
+                $extraSpace=""
+                $line="$Space$extraSpace$key ="
+                if($Values.$Key.isArray)
+                {
+                    $line+="@(`r$space    "
+                    $extraSpace="    "
+                }
+                if($Values.$Key.CIMType)
+                {
+                    $line+="(New-CimInstance -ClassName $($Values.$Key.CIMType) -Property "
+                }
+
+                $sb.AppendLine("$line@{") | Out-Null
+                if($Values.$Key.Properties)
+                {
+                    $propLine=""
+                    foreach($prop in $Values.$Key.Properties)
+                    {
+                        if($isCmdletCall -and $prop.contains('odataType'))
+                        {
+                            $prop.add('@odata.type',$prop.odataType)
+                            $prop.remove('odataType')
+                        }
+                        $l=(Get-M365DSCHashAsString -Values $prop -Space "$Space$extraSpace    " -isCmdletCall $isCmdletCall)
+                        $propLine+=$l
+                    }
+                    $sb.AppendLine($propLine) | Out-Null
+
+                }
+                else
+                {
+                    $sb.AppendLine((Get-M365DSCHashAsString -Values $Values.$key -Space "$Space    " -isCmdletCall $isCmdletCall)) | Out-Null
+                }
+                $endLine="$Space$extraSpace}"
+                if($Values.$Key.CIMType )
+                {
+                    $endLine+=" -ClientOnly)"
+                }
+                $sb.AppendLine($endLine) | Out-Null
+                if($Values.$Key.isArray)
+                {
+                    $sb.AppendLine("$space)") | Out-Null
+                }
             }
         }
     }
     return $sb.ToString()
+}
+function Get-M365DSCResourcePermission
+{
+    param (
+        # Name of the Workload the resource is for.
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("ExchangeOnline", "Intune", `
+                "SecurityComplianceCenter", "PnP", "PowerPlatforms", `
+                "MicrosoftTeams", "MicrosoftGraph")]
+        [System.String]
+        $Workload,
+
+        # CmdLet Noun
+        [Parameter()]
+        [System.String]
+        $GraphModuleCmdLetNoun
+    )
+
+    $readPermissionsNames=(Find-MgGraphCommand -command "Get-$GraphModuleCmdLetNoun" | Select-object -First 1 -ExpandProperty Permissions).Name
+    $updatePermissionsNames=(Find-MgGraphCommand -command "Update-$GraphModuleCmdLetNoun" | Select-object -First 1 -ExpandProperty Permissions).Name
+
+    switch ($Workload)
+    {
+        "Intune"
+        {
+            $nodeWorkloadName='graph'
+        }
+        "MicrosoftGraph"
+        {
+            $nodeWorkloadName='graph'
+        }
+    }
+
+    $readPermissions=@()
+    foreach($permission in $readPermissionsNames)
+    {
+        $readPermissions+=@{'name'=$permission}
+    }
+
+    $updatePermissions=@()
+    foreach($permission in $updatePermissionsNames)
+    {
+        $updatePermissions+=@{'name'=$permission}
+    }
+
+    $delegatedPermissions=@{}
+    $delegatedPermissions.add('read',$readPermissions)
+    $delegatedPermissions.add('update',$updatePermissions)
+
+    $applicationPermissions=@{}
+    $applicationPermissions.add('read',$readPermissions)
+    $applicationPermissions.add('update',$updatePermissions)
+
+    $workloadPermissions=@{}
+    $workloadPermissions.add('delegated',$delegatedPermissions)
+    $workloadPermissions.add('application',$applicationPermissions)
+
+    $permissions=@{}
+    $permissions.add($nodeWorkloadName,$workloadPermissions)
+
+    $return=@{'permissions'=$permissions}
+
+    return $return
 }
 
 function New-M365DSCResource
@@ -899,6 +1122,8 @@ function New-M365DSCResource
     #$typeProperties
     $null = New-M365DSCResourceFolder -ResourceName $ResourceName -Path $Path
     $moduleFilePath = New-M365DSCModuleFile -ResourceName $ResourceName -Path $Path
+    $settingsFilePath = New-M365DSCSettingsFile -ResourceName $ResourceName -Path $Path
+    $readmeFilePath = New-M365DSCReadmeFile -ResourceName $ResourceName -Path $Path
     $unitTestPath = New-M365DSCUnitTest -ResourceName $ResourceName -Path $UnitTestPath
     #$defaultParameterSetProperties.name
 
@@ -933,11 +1158,28 @@ function New-M365DSCResource
     $hashTableMapping = $hashtableResults.StringContent
 
     #region UnitTests
-    $fakeValues = Get-M365DSCFakeValues -ParametersInformation $parameterInformation -IntroduceDrift $false
+    $fakeValues = Get-M365DSCFakeValues -ParametersInformation $parameterInformation -IntroduceDrift $false -Workload $Workload
+    #Write-Host($fakeValues|out-string)
     $fakeValuesString = Get-M365DSCHashAsString -Values $fakeValues
     Write-TokenReplacement -Token "<FakeValues>" -value $fakeValuesString -FilePath $unitTestPath
-    $fakeDriftValues = Get-M365DSCFakeValues -ParametersInformation $parameterInformation -IntroduceDrift $true
-    $fakeDriftValuesString = Get-M365DSCHashAsString -Values $fakeDriftValues
+    $fakeValues2=$fakeValues
+    if($isAdditionalProperty)
+    {
+        $fakeValues2 = Get-M365DSCFakeValues -ParametersInformation $parameterInformation `
+                                -IntroduceDrift $false `
+                                -isCmdletCall $true `
+                                -AdditionalPropertiesType $AdditionalPropertiesType `
+                                -Workload $Workload
+    }
+    $fakeValuesString2 = Get-M365DSCHashAsString -Values $fakeValues2 -isCmdletCall $true
+    Write-TokenReplacement -Token "<FakeValues2>" -value $fakeValuesString2 -FilePath $unitTestPath
+
+    $fakeDriftValues = Get-M365DSCFakeValues -ParametersInformation $parameterInformation `
+                                -IntroduceDrift $true `
+                                -isCmdletCall $true `
+                                -AdditionalPropertiesType $AdditionalPropertiesType `
+                                -Workload $Workload
+    $fakeDriftValuesString = Get-M365DSCHashAsString -Values $fakeDriftValues -isCmdletCall $true
     Write-TokenReplacement -Token "<DriftValues>" -value $fakeDriftValuesString -FilePath $unitTestPath
     Write-TokenReplacement -Token "<ResourceName>" -value $ResourceName -FilePath $unitTestPath
 
@@ -946,7 +1188,34 @@ function New-M365DSCResource
     Write-TokenReplacement -Token "<RemoveCmdletName>" -value "Remove-$($GraphModuleCmdLetNoun)" -FilePath $unitTestPath
     Write-TokenReplacement -Token "<NewCmdletName>" -value "New-$($GraphModuleCmdLetNoun)" -FilePath $unitTestPath
     #endregion
+    $platforms=@(
+        'Windows10'
+        'Android'
+        'Mac O S'
+        'I O S'
+    )
+    $resourceDescription= ($ResourceName -split '_')[0] -creplace '(?<=\w)([A-Z])', ' $1'
+    foreach($platform in $platforms)
+    {
+        if($resourceDescription -like "*$platform")
+        {
+            $platformName=$platform.replace(" ","")
+            if($platformName -eq 'IOS')
+            {
+                $platformName='iOS'
+            }
+            $resourceDescription=$resourceDescription.replace($platform, "for $($platformName)")
+        }
+    }
 
+    $resourcePermissions=(get-M365DSCResourcePermission -Workload $Workload -GraphModuleCmdLetNoun $GraphModuleCmdLetNoun).permissions|convertTo-Json -Depth 20
+    $resourcePermissions="    "+$resourcePermissions
+    Write-TokenReplacement -Token "<ResourceFriendlyName>" -Value $ResourceName -FilePath $settingsFilePath
+    Write-TokenReplacement -Token "<ResourceDescription>" -Value $resourceDescription -FilePath $settingsFilePath
+    Write-TokenReplacement -Token "<ResourcePermissions>" -Value $ResourcePermissions -FilePath $settingsFilePath
+
+    Write-TokenReplacement -Token "<ResourceFriendlyName>" -Value $ResourceName -FilePath $readmeFilePath
+    Write-TokenReplacement -Token "<ResourceDescription>" -Value $resourceDescription -FilePath $readmeFilePath
 
     Write-TokenReplacement -Token "<ParameterBlock>" -Value $parameterString -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<PrimaryKey>" -Value $typeProperties[0].Name -FilePath $moduleFilePath
@@ -961,6 +1230,19 @@ function New-M365DSCResource
 
     Write-TokenReplacement -Token "<FilterScript>" -Value "DisplayName" -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<FilterScriptShort>" -Value "`$_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.$($selectedODataType.Name)' " -FilePath $moduleFilePath
+    $NonIntuneResource=""
+    if(-not $isAdditionalProperty)
+    {
+$NonIntuneResource= @"
+        if (-not `$getValue)
+        {
+            [array]`$getValue = Get-$GraphModuleCmdLetNoun `
+                -ErrorAction Stop
+        }
+"@
+    }
+
+    Write-TokenReplacement -Token "<NonIntuneResource>" -Value $NonIntuneResource -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<HashTableMapping>" -Value $hashTableMapping -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<#ComplexTypeContent#>" -Value $hashtableResults.ComplexTypeContent -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<#ConvertComplexToString#>" -Value $hashtableResults.ConvertToString -FilePath $moduleFilePath
@@ -1715,6 +1997,40 @@ function New-M365DSCSchemaFile
     )
     $filePath = "$Path\MSFT_$ResourceName\MSFT_$($ResourceName).schema.mof"
     Copy-Item -Path .\Schema.Template.mof -Destination $filePath
+
+    return $filePath
+}
+
+function New-M365DSCSettingsFile
+{
+    param (
+        [Parameter()]
+        [System.String]
+        $ResourceName,
+
+        [Parameter()]
+        [System.String]
+        $Path
+    )
+    $filePath = "$Path\MSFT_$ResourceName\setting.json"
+    Copy-Item -Path .\settings.template.json -Destination $filePath
+
+    return $filePath
+}
+
+function New-M365DSCReadmeFile
+{
+    param (
+        [Parameter()]
+        [System.String]
+        $ResourceName,
+
+        [Parameter()]
+        [System.String]
+        $Path
+    )
+    $filePath = "$Path\MSFT_$ResourceName\readme.md"
+    Copy-Item -Path .\readme.template.md -Destination $filePath
 
     return $filePath
 }
