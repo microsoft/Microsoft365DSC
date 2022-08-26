@@ -1256,12 +1256,6 @@ function Export-TargetResource
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidGeneralDeviceConfiguration'  `
             }
-
-        if (-not $getValue)
-        {
-            [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
-                -ErrorAction Stop
-        }
         #endregion
 
 
