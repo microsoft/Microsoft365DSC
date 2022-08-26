@@ -493,7 +493,6 @@ function Set-TargetResource
             elseif ($diff.SideIndicator -eq '<=')
             {
                 Write-Verbose -Message "Removing new owner {$($diff.InputObject)} from AAD Application {$DisplayName}"
-                $Uri = "https://graph.microsoft.com/v1.0/applications/{0}/owners/{1}/`$ref" -f $currentAADApp.ObjectId, $OwnerId
                 try {
                     if ($diff.InputObject.Contains('@')) {
                         $ObjectId = $(Get-MgUser -UserId $diff.InputObject -ErrorAction Stop).Id
