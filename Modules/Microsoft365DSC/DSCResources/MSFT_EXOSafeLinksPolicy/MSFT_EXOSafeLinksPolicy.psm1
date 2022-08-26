@@ -46,6 +46,14 @@ function Get-TargetResource
         [Boolean]
         $EnableSafeLinksForTeams = $false,
 
+        [Parameter()]
+        [Boolean]
+        $EnableSafeLinksForEmail = $false,
+
+        [Parameter()]
+        [Boolean]
+        $DisableUrlRewrite = $false,
+
         #DEPRECATED
         [Parameter()]
         [Boolean]
@@ -153,6 +161,8 @@ function Get-TargetResource
                 EnableForInternalSenders      = $SafeLinksPolicy.EnableForInternalSenders
                 EnableOrganizationBranding    = $SafeLinksPolicy.EnableOrganizationBranding
                 EnableSafeLinksForTeams       = $SafeLinksPolicy.EnableSafeLinksForTeams
+                EnableSafeLinksForEmail       = $SafeLinksPolicy.EnableSafeLinksForEmail
+                DisableUrlRewrite             = $SafeLinksPolicy.DisableUrlRewrite
                 #Deprecated
                 #IsEnabled                     = $SafeLinksPolicy.IsEnabled
                 ScanUrls                      = $SafeLinksPolicy.ScanUrls
@@ -243,6 +253,14 @@ function Set-TargetResource
         [Parameter()]
         [Boolean]
         $EnableSafeLinksForTeams = $false,
+
+        [Parameter()]
+        [Boolean]
+        $EnableSafeLinksForEmail = $false,
+
+        [Parameter()]
+        [Boolean]
+        $DisableUrlRewrite = $false,
 
         #DEPRECATED
         [Parameter()]
@@ -403,6 +421,14 @@ function Test-TargetResource
         [Parameter()]
         [Boolean]
         $EnableSafeLinksForTeams = $false,
+
+        [Parameter()]
+        [Boolean]
+        $EnableSafeLinksForEmail = $false,
+
+        [Parameter()]
+        [Boolean]
+        $DisableUrlRewrite = $false,
 
         #DEPRECATED
         [Parameter()]
