@@ -314,28 +314,68 @@ function Export-TargetResource
             Write-Host "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.Id)}"
             try
             {
-                [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.Id -ErrorAction 'SilentlyContinue'
+                [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.Id  `
+                    -All:$true `
+                    -Filter $Filter `
+                    -ErrorAction 'SilentlyContinue'
 
                 $j = 1
                 foreach ($plan in $plans)
+                {
+                    $params = @{
+                        Title                 = $plan.Title
+                        OwnerGroup            = $group.ObjectId
+                        ApplicationId         = $ApplicationId
+                        TenantId              = $TenantId
+                        CertificateThumbprint = $CertificateThumbprint
+                    }
+
+                    Write-Host "        [$j/$($plans.Length)] $($plan.Title)"
+                    $results = Get-TargetResource @params
+                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                        -Results $Results
+                    $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                        -ConnectionMode $ConnectionMode `
+                        -ModulePath $PSScriptRoot `
+                        -Results $Results `
+                        -Credential $Credential
+                    $dscContent += $currentDSCBlock
+
+                    Save-M365DSCPartialExport -Content $currentDSCBlock `
+                        -FileName $Global:PartialExportFileName
+                    $j++
+                }
+                $i++
+            }
+            catch
+            {
+                try
+                {
+                    Write-Verbose -Message $_
+                    $tenantIdValue = ""
+                    if (-not [System.String]::IsNullOrEmpty($TenantId))
+                    {
+                        $tenantIdValue = $TenantId
+                    }
+                    elseif ($null -ne $Credential)
+                    {
+                        $tenantIdValue = $Credential.UserName.Split('@')[1]
+                    }
+                    Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $tenantIdValue
+                }
+                catch
+                {
+                    Write-Verbose -Message $_
+                }
+
                 Write-Host "        |---[$j/$($plans.Length)] $($plle)"
                 Credential = $Credential
             }
-            $results = Get-TargetResource @params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -Credential $Credential
-            $dscContent += $currentDSCBlock
-
-            Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
-            $j++
         }
-        $i++
+
+        return $dscContent
     }
     catch
     {
@@ -359,41 +399,6 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-    }
-}
-return $dscContent
-}
-catch
-{
-    try
-    {
-        Write-Verbose -Message $_
-        $tenantIdValue = ""
-        if (-not [System.String]::IsNullOrEmpty($TenantId))
-        {
-            $tenantIdValue = $TenantId
-        }
-        elseif ($null -ne $Credential)
-        {
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
-        }
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $tenantIdValue
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-    }
-    return ""
-}
-}
-
-Export-ModuleMember -Function *-TargetResource
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
     }
 }
 

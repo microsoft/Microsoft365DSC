@@ -1154,77 +1154,76 @@ function Export-M365DSCConfiguration
     {
         $global:MsCloudLoginConnectionProfile.MicrosoftGraph.Connected = $false
     }
-}
-catch
-{
-}
-
-if (-not [System.String]::IsNullOrEmpty($TenantId))
-{
-    $data.Add("Tenant", $TenantId)
-}
-else
-{
-    if ($Credential)
+    catch
     {
-        $tenant = $Credential.UserName.Split('@')[1]
-        $data.Add("Tenant", $tenant)
     }
-}
 
-Add-M365DSCTelemetryEvent -Data $data
-if ($null -ne $Workloads)
-{
-    Write-Output -InputObject "Exporting Microsoft 365 configuration for Workloads: $($Workloads -join ", ")"
-    Start-M365DSCConfigurationExtract -Credential $Credential `
-        -Workloads $Workloads `
-        -Mode $Mode `
-        -Path $Path -FileName $FileName `
-        -MaxProcesses $MaxProcesses `
-        -ConfigurationName $ConfigurationName `
-        -ApplicationId $ApplicationId `
-        -ApplicationSecret $ApplicationSecret `
-        -TenantId $TenantId `
-        -CertificateThumbprint $CertificateThumbprint `
-        -CertificatePath $CertificatePath `
-        -CertificatePassword $CertificatePassword `
-        -GenerateInfo $GenerateInfo
-}
-elseif ($null -ne $Components)
-{
-    Write-Output -InputObject "Exporting Microsoft 365 configuration for Components: $($Components -join ", ")"
-    Start-M365DSCConfigurationExtract -Credential $Credential `
-        -Components $Components `
-        -Path $Path -FileName $FileName `
-        -MaxProcesses $MaxProcesses `
-        -ConfigurationName $ConfigurationName `
-        -ApplicationId $ApplicationId `
-        -ApplicationSecret $ApplicationSecret `
-        -TenantId $TenantId `
-        -CertificateThumbprint $CertificateThumbprint `
-        -CertificatePath $CertificatePath `
-        -CertificatePassword $CertificatePassword `
-        -GenerateInfo $GenerateInfo `
-        -Filters $Filters
-}
-elseif ($null -ne $Mode)
-{
-    Write-Output -InputObject "Exporting Microsoft 365 configuration for Mode: $Mode"
-    Start-M365DSCConfigurationExtract -Credential $Credential `
-        -Mode $Mode `
-        -Path $Path -FileName $FileName `
-        -MaxProcesses $MaxProcesses `
-        -ConfigurationName $ConfigurationName `
-        -ApplicationId $ApplicationId `
-        -ApplicationSecret $ApplicationSecret `
-        -TenantId $TenantId `
-        -CertificateThumbprint $CertificateThumbprint `
-        -CertificatePath $CertificatePath `
-        -CertificatePassword $CertificatePassword `
-        -GenerateInfo $GenerateInfo `
-        -AllComponents `
-        -Filters $Filters
-}
+    if (-not [System.String]::IsNullOrEmpty($TenantId))
+    {
+        $data.Add("Tenant", $TenantId)
+    }
+    else
+    {
+        if ($Credential)
+        {
+            $tenant = $Credential.UserName.Split('@')[1]
+            $data.Add("Tenant", $tenant)
+        }
+    }
+
+    Add-M365DSCTelemetryEvent -Data $data
+    if ($null -ne $Workloads)
+    {
+        Write-Output -InputObject "Exporting Microsoft 365 configuration for Workloads: $($Workloads -join ", ")"
+        Start-M365DSCConfigurationExtract -Credential $Credential `
+            -Workloads $Workloads `
+            -Mode $Mode `
+            -Path $Path -FileName $FileName `
+            -MaxProcesses $MaxProcesses `
+            -ConfigurationName $ConfigurationName `
+            -ApplicationId $ApplicationId `
+            -ApplicationSecret $ApplicationSecret `
+            -TenantId $TenantId `
+            -CertificateThumbprint $CertificateThumbprint `
+            -CertificatePath $CertificatePath `
+            -CertificatePassword $CertificatePassword `
+            -GenerateInfo $GenerateInfo
+    }
+    elseif ($null -ne $Components)
+    {
+        Write-Output -InputObject "Exporting Microsoft 365 configuration for Components: $($Components -join ", ")"
+        Start-M365DSCConfigurationExtract -Credential $Credential `
+            -Components $Components `
+            -Path $Path -FileName $FileName `
+            -MaxProcesses $MaxProcesses `
+            -ConfigurationName $ConfigurationName `
+            -ApplicationId $ApplicationId `
+            -ApplicationSecret $ApplicationSecret `
+            -TenantId $TenantId `
+            -CertificateThumbprint $CertificateThumbprint `
+            -CertificatePath $CertificatePath `
+            -CertificatePassword $CertificatePassword `
+            -GenerateInfo $GenerateInfo `
+            -Filters $Filters
+    }
+    elseif ($null -ne $Mode)
+    {
+        Write-Output -InputObject "Exporting Microsoft 365 configuration for Mode: $Mode"
+        Start-M365DSCConfigurationExtract -Credential $Credential `
+            -Mode $Mode `
+            -Path $Path -FileName $FileName `
+            -MaxProcesses $MaxProcesses `
+            -ConfigurationName $ConfigurationName `
+            -ApplicationId $ApplicationId `
+            -ApplicationSecret $ApplicationSecret `
+            -TenantId $TenantId `
+            -CertificateThumbprint $CertificateThumbprint `
+            -CertificatePath $CertificatePath `
+            -CertificatePassword $CertificatePassword `
+            -GenerateInfo $GenerateInfo `
+            -AllComponents `
+            -Filters $Filters
+    }
 }
 
 $Script:M365DSCDependenciesValidated = $false
@@ -3590,65 +3589,6 @@ $resourceExample
 
 <#
 .Description
-    }
-
-    if ($params.ContainsKey("ApplicationSecret"))
-    {
-        $params.Remove("ApplicationSecret")
-    }
-
-    if ($params.ContainsKey("CertificateThumbprint"))
-    {
-        $params.Remove("CertificateThumbprint")
-    }
-
-    if ($params.ContainsKey("CertificatePath"))
-    {
-        $params.Remove("CertificatePath")
-    }
-
-    if ($params.ContainsKey("CertificatePassword"))
-    {
-        $params.Remove("CertificatePassword")
-    }
-
-    [string]$userName = 'admin@contoso.onmicrosoft.com'
-    [string]$userPassword = 'dummypassword'
-    [securestring]$secStringPassword = ConvertTo-SecureString $userPassword -AsPlainText -Force
-    [pscredential]$credObject = New-Object System.Management.Automation.PSCredential ($userName, $secStringPassword)
-
-    $resourceExample = Get-M365DSCExportContentForResource -ResourceName $ResourceName -ModulePath $resource.Path -Results $params -ConnectionMode Credentials -Credential $credObject
-
-    $resourceExample = $resourceExample.TrimEnd() -replace ";", ""
-
-    $exampleText = @"
-<#
-This example is used to test new resources and showcase the usage of new resources being worked on.
-It is not meant to use as a production baseline.
-#>
-
-Configuration Example
-{
-    param
-    (
-        [Parameter(Mandatory = `$true)]
-        [PSCredential]
-        `$credsGlobalAdmin
-    )
-    Import-DscResource -ModuleName Microsoft365DSC
-
-    node localhost
-    {
-$resourceExample
-    }
-}
-"@
-
-    return $exampleText
-}
-
-<#
-.Description
 This function creates an example from the resource schema, using ReverseDSC code.
 
 .Parameter ResourceName
@@ -3694,9 +3634,6 @@ function New-M365DSCMissingResourcesExample
     }
 }
 
-
-
-
 <#
 .Description
 This function validates there are no updates to the module or it's dependencies and no multiple versions are present on the local system.
@@ -3731,6 +3668,7 @@ function Test-M365DSCModuleValidity
         Write-Host "Update-Module -Name 'Microsoft365DSC' -Force`nUpdate-M365DSCDependencies -Force`nUninstall-M365DSCOutdatedDependencies" -ForegroundColor Blue
     }
 }
+
 Export-ModuleMember -Function @(
     'Assert-M365DSCBlueprint',
     'Confirm-ImportedCmdletIsAvailable',

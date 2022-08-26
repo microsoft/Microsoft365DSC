@@ -129,24 +129,31 @@ function Start-M365DSCConfigurationExtract
         # we are allowed to export the selected components.
         $AuthMethods = @()
 
+        Write-Host -Object " "
+        Write-Host -Object "Authentication methods specified:"
         if ($null -ne $Credential)
         {
+            Write-Host -Object "- Credentials"
             $AuthMethods += "Credentials"
         }
         if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint))
         {
+            Write-Host -Object "- Service Principal with Certificate Thumbprint"
             $AuthMethods += "CertificateThumbprint"
         }
 
         if (-not [System.String]::IsNullOrEmpty($CertificatePath))
         {
+            Write-Host -Object "- Service Principal with Certificate Path"
             $AuthMethods += "CertificatePath"
         }
 
         if (-not [System.String]::IsNullOrEmpty($ApplicationSecret))
         {
+            Write-Host -Object "- Service Principal with Application Secret"
             $AuthMethods += "ApplicationWithSecret"
         }
+        Write-Host -Object " "
 
         $allSupportedResourcesWithMostSecureAuthMethod = Get-M365DSCComponentsWithMostSecureAuthenticationType -AuthenticationMethod $AuthMethods
 
@@ -504,7 +511,7 @@ function Start-M365DSCConfigurationExtract
 
             if ($ComponentsToSkip -notcontains $resourceName)
             {
-                Write-Host "[$i/$($ResourcesToExport.Length)] Extracting [$resourceName]..." -NoNewline
+                Write-Host "[$i/$($ResourcesToExport.Length)] Extracting [$resourceName] using {$mostSecureAuthMethod}..." -NoNewline
                 $exportString = [System.Text.StringBuilder]::New()
                 if ($GenerateInfo)
                 {
