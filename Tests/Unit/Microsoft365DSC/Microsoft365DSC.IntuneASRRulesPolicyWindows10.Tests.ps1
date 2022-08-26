@@ -84,6 +84,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgDeviceManagementIntent -MockWith {
                     return $null
                 }
+                Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
+                    return $null
+                }
             }
 
             It "Should return absent from the Get method" {
@@ -131,29 +134,60 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDeviceManagementIntent -MockWith {
                     return @{
-                        Identity = "12345-12345-12345-12345-12345"
-                        DisplayName = "Test"
+                        Id = "12345-12345-12345-12345-12345"
                         Description = "This is a test"
-                        ProcessCreationType = "block"
-                        AdvancedRansomewareProtectionType = "enable"
-                        BlockPersistenceThroughWmiType = "block"
-                        ScriptObfuscatedMacroCodeType = "block"
-                        OfficeMacroCodeAllowWin32ImportsType = "block"
-                        OfficeAppsLaunchChildProcessType = "block" #drift
-                        GuardMyFoldersType = "auditMode"
-                        UntrustedUSBProcessType = "block"
-                        AttackSurfaceReductionExcludedPaths = @("room/telephone")
-                        UntrustedExecutableType = "block"
-                        OfficeCommunicationAppsLaunchChildProcess = "warn"
-                        EmailContentExecutionType = "disable"
-                        ScriptDownloadedPayloadExecutionType = "block"
-                        AdditionalGuardedFolders = @("main")
-                        AdobeReaderLaunchChildProcess = "notConfigured"
-                        OfficeAppsExecutableContentCreationOrLaunchType = "block"
-                        PreventCredentialStealingType = "enable"
-                        OfficeAppsOtherProcessInjectionType = "warn"
-                        GuardedFoldersAllowedAppPaths = @("main", "root")
+                        DisplayName = "Test"
+                        TemplateId = "0e237410-1367-4844-bd7f-15fb0f08943b"
                     }
+                }
+
+                Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
+                    return @(
+                        @{
+                            Id = "12345-12345-12345-12345-12345"
+                            DefinitionId = "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderOfficeAppsOtherProcessInjectionType"
+                            ValueJson = '"warn"'
+                            AdditionalProperties = @{
+                                "@odata.type" = '#microsoft.graph.deviceManagementStringSettingInstance'
+                                value = "warn"
+                            }
+                        },
+                        @{
+                            Id = "12345-12345-12345-12345-12345"
+                            DefinitionId = "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderAdobeReaderLaunchChildProcess"
+                            ValueJson = '"notConfigured"'
+                            AdditionalProperties = @{
+                                "@odata.type" = '#microsoft.graph.deviceManagementStringSettingInstance'
+                                value = "block" #drift
+                            }
+                        },
+                        @{
+                            Id = "12345-12345-12345-12345-12345"
+                            DefinitionId = "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderScriptObfuscatedMacroCodeType"
+                            ValueJson = '"block"'
+                            AdditionalProperties = @{
+                                "@odata.type" = '#microsoft.graph.deviceManagementStringSettingInstance'
+                                value = "block"
+                            }
+                        },
+                        @{
+                            Id = "12345-12345-12345-12345-12345"
+                            DefinitionId = "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderBlockPersistenceThroughWmiType"
+                            ValueJson = '"block"'
+                            AdditionalProperties = @{
+                                "@odata.type" = '#microsoft.graph.deviceManagementStringSettingInstance'
+                                value = "block"
+                            }
+                        },
+                        @{
+                            Id = "12345-12345-12345-12345-12345"
+                            DefinitionId = "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderAdditionalGuardedFolders"
+                            ValueJson = '["main","root"]'
+                            AdditionalProperties = @{
+                                "@odata.type" = '#microsoft.graph.deviceManagementCollectionSettingInstance'
+                            }
+                        }
+                    )
                 }
             }
 
@@ -177,54 +211,71 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity = "12345-12345-12345-12345-12345"
                     DisplayName = "Test"
                     Description = "This is a test"
-                    ProcessCreationType = "block"
-                    AdvancedRansomewareProtectionType = "enable"
-                    BlockPersistenceThroughWmiType = "block"
-                    ScriptObfuscatedMacroCodeType = "block"
-                    OfficeMacroCodeAllowWin32ImportsType = "block"
-                    OfficeAppsLaunchChildProcessType = "warn"
-                    GuardMyFoldersType = "auditMode"
-                    UntrustedUSBProcessType = "block"
-                    AttackSurfaceReductionExcludedPaths = @("room/telephone")
-                    UntrustedExecutableType = "block"
-                    OfficeCommunicationAppsLaunchChildProcess = "warn"
-                    EmailContentExecutionType = "disable"
-                    ScriptDownloadedPayloadExecutionType = "block"
-                    AdditionalGuardedFolders = @("main")
-                    AdobeReaderLaunchChildProcess = "notConfigured"
-                    OfficeAppsExecutableContentCreationOrLaunchType = "block"
-                    PreventCredentialStealingType = "enable"
-                    OfficeAppsOtherProcessInjectionType = "warn"
-                    GuardedFoldersAllowedAppPaths = @("main", "root")
                     Ensure = "Present"
                     Credential = $Credential
+                    OfficeAppsOtherProcessInjectionType = "warn"
+                    AdobeReaderLaunchChildProcess = "notConfigured"
+                    ScriptObfuscatedMacroCodeType = "block"
+                    AdditionalGuardedFolders = @("main", "root")
+                    BlockPersistenceThroughWmiType = "block"
                 }
 
                 Mock -CommandName Get-MgDeviceManagementIntent -MockWith {
                     return @{
-                        Identity = "12345-12345-12345-12345-12345"
-                        DisplayName = "Test"
+                        Id = "12345-12345-12345-12345-12345"
                         Description = "This is a test"
-                        ProcessCreationType = "block"
-                        AdvancedRansomewareProtectionType = "enable"
-                        BlockPersistenceThroughWmiType = "block"
-                        ScriptObfuscatedMacroCodeType = "block"
-                        OfficeMacroCodeAllowWin32ImportsType = "block"
-                        OfficeAppsLaunchChildProcessType = "warn"
-                        GuardMyFoldersType = "auditMode"
-                        UntrustedUSBProcessType = "block"
-                        AttackSurfaceReductionExcludedPaths = @("room/telephone")
-                        UntrustedExecutableType = "block"
-                        OfficeCommunicationAppsLaunchChildProcess = "warn"
-                        EmailContentExecutionType = "disable"
-                        ScriptDownloadedPayloadExecutionType = "block"
-                        AdditionalGuardedFolders = @("main")
-                        AdobeReaderLaunchChildProcess = "notConfigured"
-                        OfficeAppsExecutableContentCreationOrLaunchType = "block"
-                        PreventCredentialStealingType = "enable"
-                        OfficeAppsOtherProcessInjectionType = "warn"
-                        GuardedFoldersAllowedAppPaths = @("main", "root")
+                        DisplayName = "Test"
+                        TemplateId = "0e237410-1367-4844-bd7f-15fb0f08943b"
                     }
+                }
+
+                Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
+                    return @(
+                        @{
+                            Id = "12345-12345-12345-12345-12345"
+                            DefinitionId = "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderOfficeAppsOtherProcessInjectionType"
+                            ValueJson = '"warn"'
+                            AdditionalProperties = @{
+                                "@odata.type" = '#microsoft.graph.deviceManagementStringSettingInstance'
+                                value = "warn"
+                            }
+                        },
+                        @{
+                            Id = "12345-12345-12345-12345-12345"
+                            DefinitionId = "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderAdobeReaderLaunchChildProcess"
+                            ValueJson = '"notConfigured"'
+                            AdditionalProperties = @{
+                                "@odata.type" = '#microsoft.graph.deviceManagementStringSettingInstance'
+                                value = "notConfigured"
+                            }
+                        },
+                        @{
+                            Id = "12345-12345-12345-12345-12345"
+                            DefinitionId = "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderScriptObfuscatedMacroCodeType"
+                            ValueJson = '"block"'
+                            AdditionalProperties = @{
+                                "@odata.type" = '#microsoft.graph.deviceManagementStringSettingInstance'
+                                value = "block"
+                            }
+                        },
+                        @{
+                            Id = "12345-12345-12345-12345-12345"
+                            DefinitionId = "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderBlockPersistenceThroughWmiType"
+                            ValueJson = '"block"'
+                            AdditionalProperties = @{
+                                "@odata.type" = '#microsoft.graph.deviceManagementStringSettingInstance'
+                                value = "block"
+                            }
+                        },
+                        @{
+                            Id = "12345-12345-12345-12345-12345"
+                            DefinitionId = "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderAdditionalGuardedFolders"
+                            ValueJson = '["main","root"]'
+                            AdditionalProperties = @{
+                                "@odata.type" = '#microsoft.graph.deviceManagementCollectionSettingInstance'
+                            }
+                        }
+                    )
                 }
             }
 
@@ -264,29 +315,60 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDeviceManagementIntent -MockWith {
                     return @{
-                        Identity = "12345-12345-12345-12345-12345"
-                        DisplayName = "Test"
+                        Id = "12345-12345-12345-12345-12345"
                         Description = "This is a test"
-                        ProcessCreationType = "block"
-                        AdvancedRansomewareProtectionType = "enable"
-                        BlockPersistenceThroughWmiType = "block"
-                        ScriptObfuscatedMacroCodeType = "block"
-                        OfficeMacroCodeAllowWin32ImportsType = "block"
-                        OfficeAppsLaunchChildProcessType = "warn"
-                        GuardMyFoldersType = "auditMode"
-                        UntrustedUSBProcessType = "block"
-                        AttackSurfaceReductionExcludedPaths = @("room/telephone")
-                        UntrustedExecutableType = "block"
-                        OfficeCommunicationAppsLaunchChildProcess = "warn"
-                        EmailContentExecutionType = "disable"
-                        ScriptDownloadedPayloadExecutionType = "block"
-                        AdditionalGuardedFolders = @("main")
-                        AdobeReaderLaunchChildProcess = "notConfigured"
-                        OfficeAppsExecutableContentCreationOrLaunchType = "block"
-                        PreventCredentialStealingType = "enable"
-                        OfficeAppsOtherProcessInjectionType = "warn"
-                        GuardedFoldersAllowedAppPaths = @("main", "root")
+                        DisplayName = "Test"
+                        TemplateId = "0e237410-1367-4844-bd7f-15fb0f08943b"
                     }
+                }
+
+                Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
+                    return @(
+                        @{
+                            Id = "12345-12345-12345-12345-12345"
+                            DefinitionId = "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderOfficeAppsOtherProcessInjectionType"
+                            ValueJson = '"warn"'
+                            AdditionalProperties = @{
+                                "@odata.type" = '#microsoft.graph.deviceManagementStringSettingInstance'
+                                value = "warn"
+                            }
+                        },
+                        @{
+                            Id = "12345-12345-12345-12345-12345"
+                            DefinitionId = "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderAdobeReaderLaunchChildProcess"
+                            ValueJson = '"notConfigured"'
+                            AdditionalProperties = @{
+                                "@odata.type" = '#microsoft.graph.deviceManagementStringSettingInstance'
+                                value = "notConfigured"
+                            }
+                        },
+                        @{
+                            Id = "12345-12345-12345-12345-12345"
+                            DefinitionId = "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderScriptObfuscatedMacroCodeType"
+                            ValueJson = '"block"'
+                            AdditionalProperties = @{
+                                "@odata.type" = '#microsoft.graph.deviceManagementStringSettingInstance'
+                                value = "block"
+                            }
+                        },
+                        @{
+                            Id = "12345-12345-12345-12345-12345"
+                            DefinitionId = "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderBlockPersistenceThroughWmiType"
+                            ValueJson = '"block"'
+                            AdditionalProperties = @{
+                                "@odata.type" = '#microsoft.graph.deviceManagementStringSettingInstance'
+                                value = "block"
+                            }
+                        },
+                        @{
+                            Id = "12345-12345-12345-12345-12345"
+                            DefinitionId = "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderAdditionalGuardedFolders"
+                            ValueJson = '["main","root"]'
+                            AdditionalProperties = @{
+                                "@odata.type" = '#microsoft.graph.deviceManagementCollectionSettingInstance'
+                            }
+                        }
+                    )
                 }
             }
 
@@ -313,29 +395,60 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDeviceManagementIntent -MockWith {
                     return @{
-                        Identity = "12345-12345-12345-12345-12345"
-                        DisplayName = "Test"
+                        Id = "12345-12345-12345-12345-12345"
                         Description = "This is a test"
-                        ProcessCreationType = "block"
-                        AdvancedRansomewareProtectionType = "enable"
-                        BlockPersistenceThroughWmiType = "block"
-                        ScriptObfuscatedMacroCodeType = "block"
-                        OfficeMacroCodeAllowWin32ImportsType = "block"
-                        OfficeAppsLaunchChildProcessType = "warn"
-                        GuardMyFoldersType = "auditMode"
-                        UntrustedUSBProcessType = "block"
-                        AttackSurfaceReductionExcludedPaths = @("room/telephone")
-                        UntrustedExecutableType = "block"
-                        OfficeCommunicationAppsLaunchChildProcess = "warn"
-                        EmailContentExecutionType = "disable"
-                        ScriptDownloadedPayloadExecutionType = "block"
-                        AdditionalGuardedFolders = @("main")
-                        AdobeReaderLaunchChildProcess = "notConfigured"
-                        OfficeAppsExecutableContentCreationOrLaunchType = "block"
-                        PreventCredentialStealingType = "enable"
-                        OfficeAppsOtherProcessInjectionType = "warn"
-                        GuardedFoldersAllowedAppPaths = @("main", "root")
+                        DisplayName = "Test"
+                        TemplateId = "0e237410-1367-4844-bd7f-15fb0f08943b"
                     }
+                }
+
+                Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
+                    return @(
+                        @{
+                            Id = "12345-12345-12345-12345-12345"
+                            DefinitionId = "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderOfficeAppsOtherProcessInjectionType"
+                            ValueJson = '"warn"'
+                            AdditionalProperties = @{
+                                "@odata.type" = '#microsoft.graph.deviceManagementStringSettingInstance'
+                                value = "warn"
+                            }
+                        },
+                        @{
+                            Id = "12345-12345-12345-12345-12345"
+                            DefinitionId = "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderAdobeReaderLaunchChildProcess"
+                            ValueJson = '"notConfigured"'
+                            AdditionalProperties = @{
+                                "@odata.type" = '#microsoft.graph.deviceManagementStringSettingInstance'
+                                value = "notConfigured"
+                            }
+                        },
+                        @{
+                            Id = "12345-12345-12345-12345-12345"
+                            DefinitionId = "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderScriptObfuscatedMacroCodeType"
+                            ValueJson = '"block"'
+                            AdditionalProperties = @{
+                                "@odata.type" = '#microsoft.graph.deviceManagementStringSettingInstance'
+                                value = "block"
+                            }
+                        },
+                        @{
+                            Id = "12345-12345-12345-12345-12345"
+                            DefinitionId = "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderBlockPersistenceThroughWmiType"
+                            ValueJson = '"block"'
+                            AdditionalProperties = @{
+                                "@odata.type" = '#microsoft.graph.deviceManagementStringSettingInstance'
+                                value = "block"
+                            }
+                        },
+                        @{
+                            Id = "12345-12345-12345-12345-12345"
+                            DefinitionId = "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderAdditionalGuardedFolders"
+                            ValueJson = '["main","root"]'
+                            AdditionalProperties = @{
+                                "@odata.type" = '#microsoft.graph.deviceManagementCollectionSettingInstance'
+                            }
+                        }
+                    )
                 }
             }
 

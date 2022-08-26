@@ -143,12 +143,11 @@ function Get-TargetResource
     $context=Get-MgContext
     if($null -eq $context)
     {
-        New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters -ErrorAction Stop
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters -ProfileName 'beta' -ErrorAction Stop
     }
 
     Write-Verbose -Message "Select-MgProfile"
-    Select-MgProfile -Name 'beta'
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -172,6 +171,12 @@ function Get-TargetResource
             $policy = Get-MgDeviceManagementIntent -DeviceManagementIntentId $Identity -ErrorAction Stop
         }
         catch
+        {
+            Write-Verbose -Message "No Endpoint Protection Attack Surface Protection rules Policy {$DisplayName} was found"
+            return $nullResult
+        }
+
+        if ($null -eq $policy)
         {
             Write-Verbose -Message "No Endpoint Protection Attack Surface Protection rules Policy {$DisplayName} was found"
             return $nullResult
