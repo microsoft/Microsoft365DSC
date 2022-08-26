@@ -562,8 +562,6 @@ function Export-TargetResource
             try
             {
                 [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.Id -ErrorAction 'SilentlyContinue'
-                #                [Array]$plans = Get-M365DSCPlannerPlansFromGroup -GroupId $group.Id `
-                #                    -Credential $Credential
 
                 $j = 1
                 foreach ($plan in $plans)
@@ -571,8 +569,7 @@ function Export-TargetResource
                     Write-Host "        |---[$j/$($plans.Length)] $($plan.Title)"
 
                     [Array]$tasks = Get-MgGroupPlannerPlanTask -GroupId $group.Id -PlannerPlanId $plan.Id -ErrorAction 'SilentlyContinue'
-                    #                    [Array]$tasks = Get-M365DSCPlannerTasksFromPlan -PlanId  `
-                    #                        -Credential $Credential
+
                     $k = 1
                     foreach ($task in $tasks)
                     {
