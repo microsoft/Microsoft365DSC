@@ -860,6 +860,69 @@ function Get-M365DSCHashAsString
     }
     return $sb.ToString()
 }
+function Get-M365DSCResourcePermission
+{
+    param (
+        # Name of the Workload the resource is for.
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("ExchangeOnline", "Intune", `
+                "SecurityComplianceCenter", "PnP", "PowerPlatforms", `
+                "MicrosoftTeams", "MicrosoftGraph")]
+        [System.String]
+        $Workload,
+
+        # CmdLet Noun
+        [Parameter()]
+        [System.String]
+        $GraphModuleCmdLetNoun
+    )
+
+    $readPermissionsNames=(Find-MgGraphCommand -command "Get-$GraphModuleCmdLetNoun" | Select-object -First 1 -ExpandProperty Permissions).Name
+    $updatePermissionsNames=(Find-MgGraphCommand -command "Update-$GraphModuleCmdLetNoun" | Select-object -First 1 -ExpandProperty Permissions).Name
+
+    switch ($Workload)
+    {
+        "Intune"
+        {
+            $nodeWorkloadName='graph'
+        }
+        "MicrosoftGraph"
+        {
+            $nodeWorkloadName='graph'
+        }
+    }
+
+    $readPermissions=@()
+    foreach($permission in $readPermissionsNames)
+    {
+        $readPermissions+=@{'name'=$permission}
+    }
+
+    $updatePermissions=@()
+    foreach($permission in $updatePermissionsNames)
+    {
+        $updatePermissions+=@{'name'=$permission}
+    }
+
+    $delegatedPermissions=@{}
+    $delegatedPermissions.add('read',$readPermissions)
+    $delegatedPermissions.add('update',$updatePermissions)
+
+    $applicationPermissions=@{}
+    $applicationPermissions.add('read',$readPermissions)
+    $applicationPermissions.add('update',$updatePermissions)
+
+    $workloadPermissions=@{}
+    $workloadPermissions.add('delegated',$delegatedPermissions)
+    $workloadPermissions.add('application',$applicationPermissions)
+
+    $permissions=@{}
+    $permissions.add($nodeWorkloadName,$workloadPermissions)
+
+    $return=@{'permissions'=$permissions}
+
+    return $return
+}
 
 function New-M365DSCResource
 {
@@ -1059,6 +1122,8 @@ function New-M365DSCResource
     #$typeProperties
     $null = New-M365DSCResourceFolder -ResourceName $ResourceName -Path $Path
     $moduleFilePath = New-M365DSCModuleFile -ResourceName $ResourceName -Path $Path
+    $settingsFilePath = New-M365DSCSettingsFile -ResourceName $ResourceName -Path $Path
+    $readmeFilePath = New-M365DSCReadmeFile -ResourceName $ResourceName -Path $Path
     $unitTestPath = New-M365DSCUnitTest -ResourceName $ResourceName -Path $UnitTestPath
     #$defaultParameterSetProperties.name
 
@@ -1123,7 +1188,34 @@ function New-M365DSCResource
     Write-TokenReplacement -Token "<RemoveCmdletName>" -value "Remove-$($GraphModuleCmdLetNoun)" -FilePath $unitTestPath
     Write-TokenReplacement -Token "<NewCmdletName>" -value "New-$($GraphModuleCmdLetNoun)" -FilePath $unitTestPath
     #endregion
+    $platforms=@(
+        'Windows10'
+        'Android'
+        'Mac O S'
+        'I O S'
+    )
+    $resourceDescription= ($ResourceName -split '_')[0] -creplace '(?<=\w)([A-Z])', ' $1'
+    foreach($platform in $platforms)
+    {
+        if($resourceDescription -like "*$platform")
+        {
+            $platformName=$platform.replace(" ","")
+            if($platformName -eq 'IOS')
+            {
+                $platformName='iOS'
+            }
+            $resourceDescription=$resourceDescription.replace($platform, "for $($platformName)")
+        }
+    }
 
+    $resourcePermissions=(get-M365DSCResourcePermission -Workload $Workload -GraphModuleCmdLetNoun $GraphModuleCmdLetNoun).permissions|convertTo-Json -Depth 20
+    $resourcePermissions="    "+$resourcePermissions
+    Write-TokenReplacement -Token "<ResourceFriendlyName>" -Value $ResourceName -FilePath $settingsFilePath
+    Write-TokenReplacement -Token "<ResourceDescription>" -Value $resourceDescription -FilePath $settingsFilePath
+    Write-TokenReplacement -Token "<ResourcePermissions>" -Value $ResourcePermissions -FilePath $settingsFilePath
+
+    Write-TokenReplacement -Token "<ResourceFriendlyName>" -Value $ResourceName -FilePath $readmeFilePath
+    Write-TokenReplacement -Token "<ResourceDescription>" -Value $resourceDescription -FilePath $readmeFilePath
 
     Write-TokenReplacement -Token "<ParameterBlock>" -Value $parameterString -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<PrimaryKey>" -Value $typeProperties[0].Name -FilePath $moduleFilePath
@@ -1138,6 +1230,19 @@ function New-M365DSCResource
 
     Write-TokenReplacement -Token "<FilterScript>" -Value "DisplayName" -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<FilterScriptShort>" -Value "`$_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.$($selectedODataType.Name)' " -FilePath $moduleFilePath
+    $NonIntuneResource=""
+    if(-not $isAdditionalProperty)
+    {
+$NonIntuneResource= @"
+        if (-not `$getValue)
+        {
+            [array]`$getValue = Get-$GraphModuleCmdLetNoun `
+                -ErrorAction Stop
+        }
+"@
+    }
+
+    Write-TokenReplacement -Token "<NonIntuneResource>" -Value $NonIntuneResource -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<HashTableMapping>" -Value $hashTableMapping -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<#ComplexTypeContent#>" -Value $hashtableResults.ComplexTypeContent -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<#ConvertComplexToString#>" -Value $hashtableResults.ConvertToString -FilePath $moduleFilePath
@@ -1892,6 +1997,40 @@ function New-M365DSCSchemaFile
     )
     $filePath = "$Path\MSFT_$ResourceName\MSFT_$($ResourceName).schema.mof"
     Copy-Item -Path .\Schema.Template.mof -Destination $filePath
+
+    return $filePath
+}
+
+function New-M365DSCSettingsFile
+{
+    param (
+        [Parameter()]
+        [System.String]
+        $ResourceName,
+
+        [Parameter()]
+        [System.String]
+        $Path
+    )
+    $filePath = "$Path\MSFT_$ResourceName\setting.json"
+    Copy-Item -Path .\settings.template.json -Destination $filePath
+
+    return $filePath
+}
+
+function New-M365DSCReadmeFile
+{
+    param (
+        [Parameter()]
+        [System.String]
+        $ResourceName,
+
+        [Parameter()]
+        [System.String]
+        $Path
+    )
+    $filePath = "$Path\MSFT_$ResourceName\readme.md"
+    Copy-Item -Path .\readme.template.md -Destination $filePath
 
     return $filePath
 }

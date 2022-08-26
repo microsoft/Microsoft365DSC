@@ -508,11 +508,7 @@ function Export-TargetResource
                 <FilterScriptShort> `
             }
 
-        if (-not $getValue)
-        {
-            [array]$getValue = <GetCmdLetName> `
-                -ErrorAction Stop
-        }
+<NonIntuneResource>
         #endregion
         ResourceGenerator#>
 

@@ -477,12 +477,25 @@ function Test-TargetResource
 
     Write-Verbose -Message "Testing configuration of InboundConnector for $($Identity)"
 
+    #check syntax of SenderDomains parameter
+    $senderDomains = @()
+    foreach($domain in $PSBoundParameters.SenderDomains) {
+        if($domain -notlike "smtp:*") {
+            $senderDomains += "smtp:" + $domain + ";1"
+        } else {
+            $senderDomains += $domain
+        }
+    }
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
+    if($senderDomains.Length -gt 0) {
+        $ValuesToCheck.SenderDomains = $senderDomains
+    }
     $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null

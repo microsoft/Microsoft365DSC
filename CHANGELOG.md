@@ -2,8 +2,9 @@
 
 # UNRELEASED
 
-* EXOSafeLinksPolicy
-  * Add EnableSafeLinksforEmail and DisableUrlRewrite parameters
+* EXOInboundConnector
+  * Add support for different syntax of SenderDomains parameter
+  FIXES [#2180](https://github.com/microsoft/Microsoft365DSC/issues/2180)
 
 # 1.22.824.1
 
@@ -26,6 +27,8 @@
 * MISC
   * Fixed issue with Export-M365DSCConfiguration if all components were invalid or if resource files were not found.
   * Updated MicrosoftTeams to version 4.6.0.
+* AADRoleSetting
+  * New Resource, configure Azure PIM Role like in the UI
 
 # 1.22.727.1
 
