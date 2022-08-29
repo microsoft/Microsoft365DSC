@@ -22,6 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         BeforeAll {
+
             $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
@@ -41,11 +42,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            Mock -CommandName Update-MgDeviceAppManagementTargetedManagedAppConfiguration -MockWith {
+            Mock -CommandName Remove-MgDeviceManagementIntent -MockWith {
             }
-            Mock -CommandName New-MgDeviceAppManagementTargetedManagedAppConfiguration -MockWith {
+            Mock -CommandName New-MgDeviceManagementIntent -MockWith {
+
             }
-            Mock -CommandName Remove-MgDeviceAppManagementTargetedManagedAppConfiguration -MockWith {
+            Mock -CommandName Update-MgDeviceManagementIntent -MockWith {
+
             }
         }
 
@@ -59,7 +62,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgDeviceAppManagementTargetedManagedAppConfiguration -MockWith {
+                Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
                     return $null
                 }
             }
@@ -74,7 +77,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should create the App Configuration Policy from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-MgDeviceAppManagementTargetedManagedAppConfiguration" -Exactly 1
+                Should -Invoke -CommandName "New-MgDeviceManagementIntent" -Exactly 1
             }
         }
 
@@ -87,11 +90,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgDeviceAppManagementTargetedManagedAppConfiguration -MockWith {
+                Mock -CommandName Get-MgDeviceManagementIntent -MockWith {
                     return @{
-                        DisplayName = 'Test App Configuration Policy'
-                        Description = 'Different Value'
-                        Id          = 'A_19dbaff5-9aff-48b0-a60d-d0471ddaf141'
+                        Id         = 'A_19dbaff5-9aff-48b0-a60d-d0471ddaf141'
+                        TemplateId = '63be6324-e3c9-4c97-948a-e7f4b96f0f20'
+                        DisplayName  = 'Test App Configuration Policy'
+                        Description  = 'Different Value'
+                    }
+                }
+                Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
+                    return @{
+                        DisplayName  = 'Test App Configuration Policy'
+                        Description  = 'Different Value'
+                        Id           = 'A_19dbaff5-9aff-48b0-a60d-d0471ddaf141'
+                        DefinitionId = "appLockerApplicationControl"
+                        ValueJSON    = "'true'"
                     }
                 }
             }
@@ -106,7 +119,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should update the App Configuration Policy from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgDeviceAppManagementTargetedManagedAppConfiguration -Exactly 1
+                Should -Invoke -CommandName Update-MgDeviceManagementIntent -Exactly 1
             }
         }
 
@@ -116,13 +129,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName        = 'Test App Configuration Policy'
                     Description        = 'Test Definition'
                     Ensure             = 'Present'
-                    Credential = $Credential;
+                    Credential         = $Credential;
                 }
 
-                Mock -CommandName Get-MgDeviceAppManagementTargetedManagedAppConfiguration -MockWith {
+                Mock -CommandName Get-MgDeviceManagementIntent -MockWith {
                     return @{
-                        DisplayName = 'Test App Configuration Policy'
-                        Description = 'Test Definition'
+                        DisplayName  = 'Test App Configuration Policy'
+                        Description  = 'Test Definition'
+                        Id         = 'A_19dbaff5-9aff-48b0-a60d-d0471ddaf141'
+                        TemplateId = '63be6324-e3c9-4c97-948a-e7f4b96f0f20'
+                    }
+                }
+
+                Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
+                    return @{
+                        DisplayName  = 'Test App Configuration Policy'
+                        Description  = 'Test Definition'
+                        Id           = 'A_19dbaff5-9aff-48b0-a60d-d0471ddaf141'
+                        DefinitionId = "appLockerApplicationControl"
+                        ValueJSON    = "'true'"
                     }
                 }
             }
@@ -141,11 +166,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgDeviceAppManagementTargetedManagedAppConfiguration -MockWith {
+                Mock -CommandName Get-MgDeviceManagementIntent -MockWith {
                     return @{
-                        DisplayName = 'Test App Configuration Policy'
-                        Description = 'Test Definition'
-                        Id          = 'A_19dbaff5-9aff-48b0-a60d-d0471ddaf141'
+                        DisplayName  = 'Test App Configuration Policy'
+                        Description  = 'Test Definition'
+                        Id         = 'A_19dbaff5-9aff-48b0-a60d-d0471ddaf141'
+                        TemplateId = '63be6324-e3c9-4c97-948a-e7f4b96f0f20'
+                    }
+                }
+
+                Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
+                    return @{
+                        DisplayName  = 'Test App Configuration Policy'
+                        Description  = 'Test Definition'
+                        Id           = 'A_19dbaff5-9aff-48b0-a60d-d0471ddaf141'
+                        DefinitionId = "appLockerApplicationControl"
+                        ValueJSON    = "'true'"
                     }
                 }
             }
@@ -160,7 +196,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should remove the App Configuration Policy from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgDeviceAppManagementTargetedManagedAppConfiguration -Exactly 1
+                Should -Invoke -CommandName Remove-MgDeviceManagementIntent -Exactly 1
             }
         }
 
@@ -171,10 +207,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgDeviceAppManagementTargetedManagedAppConfiguration -MockWith {
+                Mock -CommandName Get-MgDeviceManagementIntent -MockWith {
                     return @{
-                        DisplayName = 'Test App Configuration Policy'
-                        Description = 'Test Definition'
+                        DisplayName  = 'Test App Configuration Policy'
+                        Description  = 'Test Definition'
+                        Id         = 'A_19dbaff5-9aff-48b0-a60d-d0471ddaf141'
+                        TemplateId = '63be6324-e3c9-4c97-948a-e7f4b96f0f20'
+                    }
+                }
+
+                Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
+                    return @{
+                        DisplayName  = 'Test App Configuration Policy'
+                        Description  = 'Test Definition'
+                        Id           = 'A_19dbaff5-9aff-48b0-a60d-d0471ddaf141'
+                        DefinitionId = "appLockerApplicationControl"
+                        ValueJSON    = "'true'"
                     }
                 }
             }
