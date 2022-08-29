@@ -697,7 +697,7 @@ function Test-TargetResource
         $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
             -Source $($MyInvocation.MyCommand.Source) `
             -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys -verbose
+            -ValuesToCheck $ValuesToCheck.Keys
     }
 
     Write-Verbose -Message "Test-TargetResource returned $testResult"
@@ -764,12 +764,6 @@ function Export-TargetResource
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.aospDeviceOwnerDeviceConfiguration'  `
             }
-
-        if (-not $getValue)
-        {
-            [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
-                -ErrorAction Stop
-        }
         #endregion
 
 
