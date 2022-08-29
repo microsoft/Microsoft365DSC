@@ -299,7 +299,8 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+    $ConnectionMode = "Credentials"
+    $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     try
@@ -314,7 +315,7 @@ function Export-TargetResource
             Write-Host "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.Id)}"
             try
             {
-                [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.Id  `
+                [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.Id `
                     -All:$true `
                     -Filter $Filter `
                     -ErrorAction 'SilentlyContinue'
@@ -323,11 +324,9 @@ function Export-TargetResource
                 foreach ($plan in $plans)
                 {
                     $params = @{
-                        Title                 = $plan.Title
-                        OwnerGroup            = $group.ObjectId
-                        ApplicationId         = $ApplicationId
-                        TenantId              = $TenantId
-                        CertificateThumbprint = $CertificateThumbprint
+                        Title      = $plan.Title
+                        OwnerGroup = $group.Id
+                        Credential = $Credential
                     }
 
                     Write-Host "        [$j/$($plans.Length)] $($plan.Title)"

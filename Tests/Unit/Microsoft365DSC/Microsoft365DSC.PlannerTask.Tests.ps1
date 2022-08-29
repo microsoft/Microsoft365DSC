@@ -2,14 +2,14 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath "..\..\Unit" `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath "\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
@@ -36,14 +36,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When the Task doesn't exist but it should" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    PlanId                = "1234567890"
-                    Title                 = "Contoso Task"
-                    Priority              = 5
-                    PercentComplete       = 75
-                    StartDateTime         = "2020-06-09"
-                    Ensure                = "Present"
-                    ApplicationId         = "1234567890"
-                    Credential    = $Credential
+                    PlanId          = "1234567890"
+                    Title           = "Contoso Task"
+                    Priority        = 5
+                    PercentComplete = 75
+                    StartDateTime   = "2020-06-09"
+                    Ensure          = "Present"
+                    Credential      = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {
@@ -86,13 +85,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             }
                             public string ConversationThreadId {get;set;}
                             public string OrderHint {get;set;}
-                            public void Create(System.Management.Automation.PSCredential Credential, string ApplicationId){}
-                            public void Update(System.Management.Automation.PSCredential Credential, string ApplicationId){}
+                            public void Create(System.Management.Automation.PSCredential Credential){}
+                            public void Update(System.Management.Automation.PSCredential Credential){}
                             public string GetTaskCategoryNameByColor(string ColorName){return "";}
                             public string GetTaskColorNameByCategory(string CategoryName){return "";}
-                            public void PopulateById(System.Management.Automation.PSCredential Credential, string ApplicationId, string TaskId){}
-                            public void UpdateDetails(System.Management.Automation.PSCredential Credential, string ApplicationId){}
-                            public void Delete(System.Management.Automation.PSCredential Credential, string ApplicationId, string TaskId){}
+                            public void PopulateById(System.Management.Automation.PSCredential Credential, string TaskId){}
+                            public void UpdateDetails(System.Management.Automation.PSCredential Credential){}
+                            public void Delete(System.Management.Automation.PSCredential Credential, string TaskId){}
                         }
 "@
                 }
@@ -118,25 +117,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Task exists and is NOT in the Desired State" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    PlanId                = "1234567890"
-                    TaskId                = "12345"
-                    Title                 = "Contoso Task"
-                    Priority              = 4
-                    PercentComplete       = 75
-                    StartDateTime         = "2020-06-09"
-                    Ensure                = "Present"
-                    ApplicationId         = "1234567890"
-                    Credential    = $Credential
+                    PlanId          = "1234567890"
+                    TaskId          = "12345"
+                    Title           = "Contoso Task"
+                    Priority        = 4
+                    PercentComplete = 75
+                    StartDateTime   = "2020-06-09"
+                    Ensure          = "Present"
+                    Credential      = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {
                     return @{
-                        PlanId                = "1234567890"
-                        Title                 = "Contoso Task"
-                        Id                    = "12345"
-                        Priority              = 5
-                        PercentComplete       = 75
-                        StartDateTime         = "2020-06-09"
+                        PlanId          = "1234567890"
+                        Title           = "Contoso Task"
+                        Id              = "12345"
+                        Priority        = 5
+                        PercentComplete = 75
+                        StartDateTime   = "2020-06-09"
                     }
                 }
             }
@@ -157,27 +155,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Task exists and is IN the Desired State" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    PlanId                = "1234567890"
-                    Title                 = "Contoso Task"
-                    TaskId                = "12345"
-                    Priority              = 5
-                    PercentComplete       = 75
-                    StartDateTime         = "2020-06-09"
-                    Bucket                = 'Bucket12345'
-                    Ensure                = "Present"
-                    ApplicationId         = "1234567890"
-                    Credential    = $Credential
+                    PlanId          = "1234567890"
+                    Title           = "Contoso Task"
+                    TaskId          = "12345"
+                    Priority        = 5
+                    PercentComplete = 75
+                    StartDateTime   = "2020-06-09"
+                    Bucket          = 'Bucket12345'
+                    Ensure          = "Present"
+                    Credential      = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {
                     return @{
-                        PlanId                = "1234567890"
-                        Title                 = "Contoso Task"
-                        Priority              = 5
-                        Id                    = "12345"
-                        PercentComplete       = 75
-                        StartDateTime         = "2020-06-09"
-                        BucketId              = 'Bucket12345'
+                        PlanId          = "1234567890"
+                        Title           = "Contoso Task"
+                        Priority        = 5
+                        Id              = "12345"
+                        PercentComplete = 75
+                        StartDateTime   = "2020-06-09"
+                        BucketId        = 'Bucket12345'
                     }
                 }
             }
@@ -194,25 +191,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Task exists but it should not" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    PlanId                = "1234567890"
-                    Title                 = "Contoso Task"
-                    TaskId                = "12345"
-                    Priority              = 5
-                    PercentComplete       = 75
-                    StartDateTime         = "2020-06-09"
-                    Ensure                = "Absent"
-                    ApplicationId         = "1234567890"
-                    Credential    = $Credential
+                    PlanId          = "1234567890"
+                    Title           = "Contoso Task"
+                    TaskId          = "12345"
+                    Priority        = 5
+                    PercentComplete = 75
+                    StartDateTime   = "2020-06-09"
+                    Ensure          = "Absent"
+                    Credential      = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {
                     return @{
-                        PlanId                = "1234567890"
-                        Title                 = "Contoso Task"
-                        Id                    = "12345"
-                        Priority              = 5
-                        PercentComplete       = 75
-                        StartDateTime         = "2020-06-09"
+                        PlanId          = "1234567890"
+                        Title           = "Contoso Task"
+                        Id              = "12345"
+                        Priority        = 5
+                        PercentComplete = 75
+                        StartDateTime   = "2020-06-09"
                     }
                 }
             }
@@ -229,34 +225,33 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Task is need to be part of a Bucket by ID and is in Desired State" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    PlanId                = "1234567890"
-                    TaskId                = "12345"
-                    Title                 = "Contoso Task"
-                    Bucket                = "Bucket12345"
-                    Priority              = 5
-                    PercentComplete       = 75
-                    StartDateTime         = "2020-06-09"
-                    Ensure                = "Present"
-                    ApplicationId         = "1234567890"
-                    Credential    = $Credential
+                    PlanId          = "1234567890"
+                    TaskId          = "12345"
+                    Title           = "Contoso Task"
+                    Bucket          = "Bucket12345"
+                    Priority        = 5
+                    PercentComplete = 75
+                    StartDateTime   = "2020-06-09"
+                    Ensure          = "Present"
+                    Credential      = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {
                     return @{
-                        PlanId                = "1234567890"
-                        Title                 = "Contoso Task"
-                        BucketId              = "Bucket12345"
-                        Id                    = "12345"
-                        Priority              = 5
-                        PercentComplete       = 75
-                        StartDateTime         = "2020-06-09"
+                        PlanId          = "1234567890"
+                        Title           = "Contoso Task"
+                        BucketId        = "Bucket12345"
+                        Id              = "12345"
+                        Priority        = 5
+                        PercentComplete = 75
+                        StartDateTime   = "2020-06-09"
                     }
                 }
 
                 Mock -CommandName Get-MgPlannerPlanBucket -MockWith {
                     return @{
-                        Id                    = "Bucket12345"
-                        Name                  = "TestBucket"
+                        Id   = "Bucket12345"
+                        Name = "TestBucket"
                     }
                 }
             }
@@ -274,26 +269,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Task is need to be part of a Bucket by Name and is NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    PlanId                = "1234567890"
-                    TaskId                = "12345"
-                    Title                 = "Contoso Task"
-                    Bucket                = "TestBucket"
-                    Priority              = 5
-                    PercentComplete       = 75
-                    StartDateTime         = "2020-06-09"
-                    Ensure                = "Present"
-                    ApplicationId         = "1234567890"
-                    Credential    = $Credential
+                    PlanId          = "1234567890"
+                    TaskId          = "12345"
+                    Title           = "Contoso Task"
+                    Bucket          = "TestBucket"
+                    Priority        = 5
+                    PercentComplete = 75
+                    StartDateTime   = "2020-06-09"
+                    Ensure          = "Present"
+                    Credential      = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {
                     return @{
-                        PlanId                = "1234567890"
-                        Title                 = "Contoso Task"
-                        Id                    = "12345"
-                        Priority              = 5
-                        PercentComplete       = 75
-                        StartDateTime         = "2020-06-09"
+                        PlanId          = "1234567890"
+                        Title           = "Contoso Task"
+                        Id              = "12345"
+                        Priority        = 5
+                        PercentComplete = 75
+                        StartDateTime   = "2020-06-09"
                     }
                 }
 
@@ -310,33 +304,32 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Task should not be part of a Bucket but it IS" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    PlanId                = "1234567890"
-                    TaskId                = "12345"
-                    Title                 = "Contoso Task"
-                    Priority              = 5
-                    PercentComplete       = 75
-                    StartDateTime         = "2020-06-09"
-                    Ensure                = "Present"
-                    ApplicationId         = "1234567890"
-                    Credential    = $Credential
+                    PlanId          = "1234567890"
+                    TaskId          = "12345"
+                    Title           = "Contoso Task"
+                    Priority        = 5
+                    PercentComplete = 75
+                    StartDateTime   = "2020-06-09"
+                    Ensure          = "Present"
+                    Credential      = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {
                     return @{
-                        PlanId                = "1234567890"
-                        Title                 = "Contoso Task"
-                        BucketId              = "Bucket12345"
-                        Id                    = "12345"
-                        Priority              = 5
-                        PercentComplete       = 75
-                        StartDateTime         = "2020-06-09"
+                        PlanId          = "1234567890"
+                        Title           = "Contoso Task"
+                        BucketId        = "Bucket12345"
+                        Id              = "12345"
+                        Priority        = 5
+                        PercentComplete = 75
+                        StartDateTime   = "2020-06-09"
                     }
                 }
 
                 Mock -CommandName Get-MgPlannerPlanBucket -MockWith {
                     return @{
-                        Id                    = "Bucket12345"
-                        Name                  = "TestBucket"
+                        Id   = "Bucket12345"
+                        Name = "TestBucket"
                     }
                 }
             }
@@ -354,17 +347,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $testParams = @{
-                    ApplicationId         = "1234567890"
-                    Credential    = $Credential
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {
                     return @{
-                        PlanId                = "1234567890"
-                        Title                 = "Contoso Task"
-                        Priority              = 5
-                        PercentComplete       = 75
-                        StartDateTime         = "2020-06-09"
+                        PlanId          = "1234567890"
+                        Title           = "Contoso Task"
+                        Priority        = 5
+                        PercentComplete = 75
+                        StartDateTime   = "2020-06-09"
                     }
                 }
             }
