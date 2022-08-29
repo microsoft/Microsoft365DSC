@@ -144,7 +144,7 @@ function Get-TargetResource
             DeviceThreatProtectionRequiredSecurityLevel = $devicePolicy.AdditionalProperties.deviceThreatProtectionRequiredSecurityLevel
             ManagedEmailProfileRequired                 = $devicePolicy.AdditionalProperties.managedEmailProfileRequired
             Ensure                                      = 'Present'
-            Credential                          = $Credential
+            Credential                                  = $Credential
             ApplicationId                               = $ApplicationId
             TenantId                                    = $TenantId
             ApplicationSecret                           = $ApplicationSecret

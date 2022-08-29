@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "IntuneDeviceCompliancePolicyiOs" -GenericStubModule $GenericStubPath
+    -DscResource "IntuneDeviceCompliancePolicyMacOs" -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -47,7 +47,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Remove-MgDeviceManagementDeviceCompliancePolicy -MockWith {
             }
-
+        }
             # Test contexts
             Context -Name "When the iOS Device Compliance Policy doesn't already exist" -Fixture {
                 BeforeAll {
@@ -71,9 +71,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         FirewallEnabled                             = $False
                         FirewallBlockAllIncoming                    = $False
                         FirewallEnableStealthMode                   = $False
-                        RoleScopeTagIds                             = "0"
                         Ensure                                      = 'Present'
-                        Credential                          = $Credential
+                        Credential                                  = $Credential
                     }
 
                     Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
@@ -117,7 +116,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         FirewallEnabled                             = $False
                         FirewallBlockAllIncoming                    = $False
                         FirewallEnableStealthMode                   = $False
-                        RoleScopeTagIds                             = "0"
                         Ensure                                      = 'Present'
                         Credential                          = $Credential
                     }
@@ -127,24 +125,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DisplayName                                 = "MacOS DSC Policy"
                             Description                                 = "Test policy with different value"
                             Id                                          = "d95e706d-c92c-410d-a132-09e0b1032dbd"
-                            PasswordRequired                            = $False
-                            PasswordBlockSimple                         = $False
-                            PasswordExpirationDays                      = 365
-                            PasswordMinimumLength                       = 6
-                            PasswordMinutesOfInactivityBeforeLock       = 5
-                            PasswordPreviousPasswordBlockCount          = 13
-                            PasswordMinimumCharacterSetCount            = 1
-                            PasswordRequiredType                        = "DeviceDefault"
-                            OsMinimumVersion                            = 10
-                            OsMaximumVersion                            = 13
-                            SystemIntegrityProtectionEnabled            = $False
-                            DeviceThreatProtectionEnabled               = $False
-                            DeviceThreatProtectionRequiredSecurityLevel = "Unavailable"
-                            StorageRequireEncryption                    = $False
-                            FirewallEnabled                             = $False
-                            FirewallBlockAllIncoming                    = $False
-                            FirewallEnableStealthMode                   = $False
-                            RoleScopeTagIds                             = "0"
+                            AdditionalProperties = @{
+                                '@odata.type'                               = '#microsoft.graph.macOSCompliancePolicy'
+                                PasswordRequired                            = $False
+                                PasswordBlockSimple                         = $False
+                                PasswordExpirationDays                      = 365
+                                PasswordMinimumLength                       = 6
+                                PasswordMinutesOfInactivityBeforeLock       = 5
+                                PasswordPreviousPasswordBlockCount          = 13
+                                PasswordMinimumCharacterSetCount            = 1
+                                PasswordRequiredType                        = "DeviceDefault"
+                                OsMinimumVersion                            = 10
+                                OsMaximumVersion                            = 13
+                                SystemIntegrityProtectionEnabled            = $False
+                                DeviceThreatProtectionEnabled               = $False
+                                DeviceThreatProtectionRequiredSecurityLevel = "Unavailable"
+                                StorageRequireEncryption                    = $False
+                                FirewallEnabled                             = $False
+                                FirewallBlockAllIncoming                    = $False
+                                FirewallEnableStealthMode                   = $False
+                                RoleScopeTagIds                             = "0"
+                            }
                         }
                     }
                 }
@@ -185,9 +186,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         FirewallEnabled                             = $False
                         FirewallBlockAllIncoming                    = $False
                         FirewallEnableStealthMode                   = $False
-                        RoleScopeTagIds                             = "0"
                         Ensure                                      = 'Present'
-                        Credential                          = $Credential
+                        Credential                                  = $Credential
                     }
 
                     Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
@@ -195,24 +195,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DisplayName                                 = "MacOS DSC Policy"
                             Description                                 = "Test policy"
                             Id                                          = "d95e706d-c92c-410d-a132-09e0b1032dbd"
-                            PasswordRequired                            = $False
-                            PasswordBlockSimple                         = $False
-                            PasswordExpirationDays                      = 365
-                            PasswordMinimumLength                       = 6
-                            PasswordMinutesOfInactivityBeforeLock       = 5
-                            PasswordPreviousPasswordBlockCount          = 13
-                            PasswordMinimumCharacterSetCount            = 1
-                            PasswordRequiredType                        = "DeviceDefault"
-                            OsMinimumVersion                            = 10
-                            OsMaximumVersion                            = 13
-                            SystemIntegrityProtectionEnabled            = $False
-                            DeviceThreatProtectionEnabled               = $False
-                            DeviceThreatProtectionRequiredSecurityLevel = "Unavailable"
-                            StorageRequireEncryption                    = $False
-                            FirewallEnabled                             = $False
-                            FirewallBlockAllIncoming                    = $False
-                            FirewallEnableStealthMode                   = $False
-                            RoleScopeTagIds                             = "0"
+                            AdditionalProperties = @{
+                                '@odata.type'                               = '#microsoft.graph.macOSCompliancePolicy'
+                                PasswordRequired                            = $False
+                                PasswordBlockSimple                         = $False
+                                PasswordExpirationDays                      = 365
+                                PasswordMinimumLength                       = 6
+                                PasswordMinutesOfInactivityBeforeLock       = 5
+                                PasswordPreviousPasswordBlockCount          = 13
+                                PasswordMinimumCharacterSetCount            = 1
+                                PasswordRequiredType                        = "DeviceDefault"
+                                OsMinimumVersion                            = 10
+                                OsMaximumVersion                            = 13
+                                SystemIntegrityProtectionEnabled            = $False
+                                DeviceThreatProtectionEnabled               = $False
+                                DeviceThreatProtectionRequiredSecurityLevel = "Unavailable"
+                                StorageRequireEncryption                    = $False
+                                FirewallEnabled                             = $False
+                                FirewallBlockAllIncoming                    = $False
+                                FirewallEnableStealthMode                   = $False
+                                RoleScopeTagIds                             = "0"
+                            }
                         }
                     }
                 }
@@ -244,9 +247,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         FirewallEnabled                             = $False
                         FirewallBlockAllIncoming                    = $False
                         FirewallEnableStealthMode                   = $False
-                        RoleScopeTagIds                             = "0"
-                        Ensure                                      = 'Present'
-                        Credential                          = $Credential
+                        Ensure                                      = 'Absent'
+                        Credential                                  = $Credential
                     }
 
                     Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
@@ -254,24 +256,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DisplayName                                 = "MacOS DSC Policy"
                             Description                                 = "Test policy"
                             Id                                          = "d95e706d-c92c-410d-a132-09e0b1032dbd"
-                            PasswordRequired                            = $False
-                            PasswordBlockSimple                         = $False
-                            PasswordExpirationDays                      = 365
-                            PasswordMinimumLength                       = 6
-                            PasswordMinutesOfInactivityBeforeLock       = 5
-                            PasswordPreviousPasswordBlockCount          = 13
-                            PasswordMinimumCharacterSetCount            = 1
-                            PasswordRequiredType                        = "DeviceDefault"
-                            OsMinimumVersion                            = 10
-                            OsMaximumVersion                            = 13
-                            SystemIntegrityProtectionEnabled            = $False
-                            DeviceThreatProtectionEnabled               = $False
-                            DeviceThreatProtectionRequiredSecurityLevel = "Unavailable"
-                            StorageRequireEncryption                    = $False
-                            FirewallEnabled                             = $False
-                            FirewallBlockAllIncoming                    = $False
-                            FirewallEnableStealthMode                   = $False
-                            RoleScopeTagIds                             = "0"
+                            AdditionalProperties = @{
+                                '@odata.type'                               = '#microsoft.graph.macOSCompliancePolicy'
+                                PasswordRequired                            = $False
+                                PasswordBlockSimple                         = $False
+                                PasswordExpirationDays                      = 365
+                                PasswordMinimumLength                       = 6
+                                PasswordMinutesOfInactivityBeforeLock       = 5
+                                PasswordPreviousPasswordBlockCount          = 13
+                                PasswordMinimumCharacterSetCount            = 1
+                                PasswordRequiredType                        = "DeviceDefault"
+                                OsMinimumVersion                            = 10
+                                OsMaximumVersion                            = 13
+                                SystemIntegrityProtectionEnabled            = $False
+                                DeviceThreatProtectionEnabled               = $False
+                                DeviceThreatProtectionRequiredSecurityLevel = "Unavailable"
+                                StorageRequireEncryption                    = $False
+                                FirewallEnabled                             = $False
+                                FirewallBlockAllIncoming                    = $False
+                                FirewallEnableStealthMode                   = $False
+                                RoleScopeTagIds                             = "0"
+                            }
                         }
                     }
                 }
@@ -302,24 +307,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DisplayName                                 = "MacOS DSC Policy"
                             Description                                 = "Test policy"
                             Id                                          = "d95e706d-c92c-410d-a132-09e0b1032dbd"
-                            PasswordRequired                            = $False
-                            PasswordBlockSimple                         = $False
-                            PasswordExpirationDays                      = 365
-                            PasswordMinimumLength                       = 6
-                            PasswordMinutesOfInactivityBeforeLock       = 5
-                            PasswordPreviousPasswordBlockCount          = 13
-                            PasswordMinimumCharacterSetCount            = 1
-                            PasswordRequiredType                        = "DeviceDefault"
-                            OsMinimumVersion                            = 10
-                            OsMaximumVersion                            = 13
-                            SystemIntegrityProtectionEnabled            = $False
-                            DeviceThreatProtectionEnabled               = $False
-                            DeviceThreatProtectionRequiredSecurityLevel = "Unavailable"
-                            StorageRequireEncryption                    = $False
-                            FirewallEnabled                             = $False
-                            FirewallBlockAllIncoming                    = $False
-                            FirewallEnableStealthMode                   = $False
-                            RoleScopeTagIds                             = "0"
+                            AdditionalProperties = @{
+                                '@odata.type'                               = '#microsoft.graph.macOSCompliancePolicy'
+                                PasswordRequired                            = $False
+                                PasswordBlockSimple                         = $False
+                                PasswordExpirationDays                      = 365
+                                PasswordMinimumLength                       = 6
+                                PasswordMinutesOfInactivityBeforeLock       = 5
+                                PasswordPreviousPasswordBlockCount          = 13
+                                PasswordMinimumCharacterSetCount            = 1
+                                PasswordRequiredType                        = "DeviceDefault"
+                                OsMinimumVersion                            = 10
+                                OsMaximumVersion                            = 13
+                                SystemIntegrityProtectionEnabled            = $False
+                                DeviceThreatProtectionEnabled               = $False
+                                DeviceThreatProtectionRequiredSecurityLevel = "Unavailable"
+                                StorageRequireEncryption                    = $False
+                                FirewallEnabled                             = $False
+                                FirewallBlockAllIncoming                    = $False
+                                FirewallEnableStealthMode                   = $False
+                                RoleScopeTagIds                             = "0"
+                            }
                         }
                     }
                 }
@@ -328,7 +336,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Export-TargetResource @testParams
                 }
             }
-        }
+
     }
 }
 

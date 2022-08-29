@@ -41,13 +41,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
+            Mock -CommandName Invoke-MgGraphRequest -MockWith {
+            }
+
             Mock -CommandName Update-MgDeviceManagementDeviceCompliancePolicy -MockWith {
             }
             Mock -CommandName New-MgDeviceManagementDeviceCompliancePolicy -MockWith {
+                return @{
+                    Id = "12345-12345-12345-12345-12345"
+                }
             }
             Mock -CommandName Remove-MgDeviceManagementDeviceCompliancePolicy -MockWith {
             }
-
+        }
             # Test contexts
             Context -Name "When the Windows 10  Device Compliance Policy doesn't already exist" -Fixture {
                 BeforeAll {
@@ -86,9 +92,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         TPMRequired                                 = $False;
                         DeviceCompliancePolicyScript                = $null;
                         ValidOperatingSystemBuildRanges             = @();
-                        RoleScopeTagIds                             = "0"
                         Ensure                                      = 'Present';
-                        Credential                          = $Credential;
+                        Credential                                  = $Credential;
                     }
 
                     Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
@@ -147,9 +152,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         TPMRequired                                 = $False;
                         DeviceCompliancePolicyScript                = $null;
                         ValidOperatingSystemBuildRanges             = @();
-                        RoleScopeTagIds                             = "0"
                         Ensure                                      = 'Present';
-                        Credential                          = $Credential;
+                        Credential                                  = $Credential;
                     }
 
                     Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
@@ -157,39 +161,42 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DisplayName                                 = "Windows 10 DSC Policy";
                             Description                                 = "Test policy";
                             Id                                          = "f38b283d-d893-4c33-b6d2-d3bcb5f2dcc2";
-                            PasswordRequired                            = $False;
-                            PasswordBlockSimple                         = $False;
-                            PasswordRequiredToUnlockFromIdle            = $True;
-                            PasswordMinutesOfInactivityBeforeLock       = 15;
-                            PasswordExpirationDays                      = 365;
-                            PasswordMinimumLength                       = 6;
-                            PasswordPreviousPasswordBlockCount          = 13;
-                            PasswordMinimumCharacterSetCount            = 1;
-                            PasswordRequiredType                        = "Devicedefault";
-                            RequireHealthyDeviceReport                  = $True;
-                            OsMinimumVersion                            = 10;
-                            OsMaximumVersion                            = 10.19;
-                            MobileOsMinimumVersion                      = 10;
-                            MobileOsMaximumVersion                      = 10.19;
-                            EarlyLaunchAntiMalwareDriverEnabled         = $False;
-                            BitLockerEnabled                            = $False;
-                            SecureBootEnabled                           = $True;
-                            CodeIntegrityEnabled                        = $True;
-                            StorageRequireEncryption                    = $True;
-                            ActiveFirewallRequired                      = $True;
-                            DefenderEnabled                             = $True;
-                            DefenderVersion                             = "";
-                            SignatureOutOfDate                          = $True;
-                            RtpEnabled                                  = $True;
-                            AntivirusRequired                           = $True;
-                            AntiSpywareRequired                         = $True;
-                            DeviceThreatProtectionEnabled               = $True;
-                            DeviceThreatProtectionRequiredSecurityLevel = "Medium";
-                            ConfigurationManagerComplianceRequired      = $False;
-                            TPMRequired                                 = $False;
-                            DeviceCompliancePolicyScript                = $null;
-                            ValidOperatingSystemBuildRanges             = @();
-                            RoleScopeTagIds                             = "0"
+                            AdditionalProperties = @{
+                                '@odata.type'                               = '#microsoft.graph.windows10CompliancePolicy'
+                                PasswordRequired                            = $False;
+                                PasswordBlockSimple                         = $True; #Drift
+                                PasswordRequiredToUnlockFromIdle            = $True;
+                                PasswordMinutesOfInactivityBeforeLock       = 15;
+                                PasswordExpirationDays                      = 365;
+                                PasswordMinimumLength                       = 6;
+                                PasswordPreviousPasswordBlockCount          = 13;
+                                PasswordMinimumCharacterSetCount            = 1;
+                                PasswordRequiredType                        = "Devicedefault";
+                                RequireHealthyDeviceReport                  = $True;
+                                OsMinimumVersion                            = 10;
+                                OsMaximumVersion                            = 10.19;
+                                MobileOsMinimumVersion                      = 10;
+                                MobileOsMaximumVersion                      = 10.19;
+                                EarlyLaunchAntiMalwareDriverEnabled         = $False;
+                                BitLockerEnabled                            = $False;
+                                SecureBootEnabled                           = $True;
+                                CodeIntegrityEnabled                        = $True;
+                                StorageRequireEncryption                    = $True;
+                                ActiveFirewallRequired                      = $True;
+                                DefenderEnabled                             = $True;
+                                DefenderVersion                             = "";
+                                SignatureOutOfDate                          = $True;
+                                RtpEnabled                                  = $True;
+                                AntivirusRequired                           = $True;
+                                AntiSpywareRequired                         = $True;
+                                DeviceThreatProtectionEnabled               = $True;
+                                DeviceThreatProtectionRequiredSecurityLevel = "Medium";
+                                ConfigurationManagerComplianceRequired      = $False;
+                                TPMRequired                                 = $False;
+                                DeviceCompliancePolicyScript                = $null;
+                                ValidOperatingSystemBuildRanges             = @();
+                                RoleScopeTagIds                             = "0"
+                            }
                         }
                     }
                 }
@@ -245,9 +252,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         TPMRequired                                 = $False;
                         DeviceCompliancePolicyScript                = $null;
                         ValidOperatingSystemBuildRanges             = @();
-                        RoleScopeTagIds                             = "0"
                         Ensure                                      = 'Present';
-                        Credential                          = $Credential;
+                        Credential                                  = $Credential;
                     }
 
                     Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
@@ -255,39 +261,42 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DisplayName                                 = "Windows 10 DSC Policy";
                             Description                                 = "Test policy";
                             Id                                          = "f38b283d-d893-4c33-b6d2-d3bcb5f2dcc2";
-                            PasswordRequired                            = $False;
-                            PasswordBlockSimple                         = $False;
-                            PasswordRequiredToUnlockFromIdle            = $True;
-                            PasswordMinutesOfInactivityBeforeLock       = 15;
-                            PasswordExpirationDays                      = 365;
-                            PasswordMinimumLength                       = 6;
-                            PasswordPreviousPasswordBlockCount          = 13;
-                            PasswordMinimumCharacterSetCount            = 1;
-                            PasswordRequiredType                        = "Devicedefault";
-                            RequireHealthyDeviceReport                  = $True;
-                            OsMinimumVersion                            = 10;
-                            OsMaximumVersion                            = 10.19;
-                            MobileOsMinimumVersion                      = 10;
-                            MobileOsMaximumVersion                      = 10.19;
-                            EarlyLaunchAntiMalwareDriverEnabled         = $False;
-                            BitLockerEnabled                            = $False;
-                            SecureBootEnabled                           = $True;
-                            CodeIntegrityEnabled                        = $True;
-                            StorageRequireEncryption                    = $True;
-                            ActiveFirewallRequired                      = $True;
-                            DefenderEnabled                             = $True;
-                            DefenderVersion                             = "";
-                            SignatureOutOfDate                          = $True;
-                            RtpEnabled                                  = $True;
-                            AntivirusRequired                           = $True;
-                            AntiSpywareRequired                         = $True;
-                            DeviceThreatProtectionEnabled               = $True;
-                            DeviceThreatProtectionRequiredSecurityLevel = "Medium";
-                            ConfigurationManagerComplianceRequired      = $False;
-                            TPMRequired                                 = $False;
-                            DeviceCompliancePolicyScript                = $null;
-                            ValidOperatingSystemBuildRanges             = @();
-                            RoleScopeTagIds                             = "0"
+                            AdditionalProperties = @{
+                                '@odata.type'                               = '#microsoft.graph.windows10CompliancePolicy'
+                                PasswordRequired                            = $False;
+                                PasswordBlockSimple                         = $False;
+                                PasswordRequiredToUnlockFromIdle            = $True;
+                                PasswordMinutesOfInactivityBeforeLock       = 15;
+                                PasswordExpirationDays                      = 365;
+                                PasswordMinimumLength                       = 6;
+                                PasswordPreviousPasswordBlockCount          = 13;
+                                PasswordMinimumCharacterSetCount            = 1;
+                                PasswordRequiredType                        = "Devicedefault";
+                                RequireHealthyDeviceReport                  = $True;
+                                OsMinimumVersion                            = 10;
+                                OsMaximumVersion                            = 10.19;
+                                MobileOsMinimumVersion                      = 10;
+                                MobileOsMaximumVersion                      = 10.19;
+                                EarlyLaunchAntiMalwareDriverEnabled         = $False;
+                                BitLockerEnabled                            = $False;
+                                SecureBootEnabled                           = $True;
+                                CodeIntegrityEnabled                        = $True;
+                                StorageRequireEncryption                    = $True;
+                                ActiveFirewallRequired                      = $True;
+                                DefenderEnabled                             = $True;
+                                DefenderVersion                             = "";
+                                SignatureOutOfDate                          = $True;
+                                RtpEnabled                                  = $True;
+                                AntivirusRequired                           = $True;
+                                AntiSpywareRequired                         = $True;
+                                DeviceThreatProtectionEnabled               = $True;
+                                DeviceThreatProtectionRequiredSecurityLevel = "Medium";
+                                ConfigurationManagerComplianceRequired      = $False;
+                                TPMRequired                                 = $False;
+                                DeviceCompliancePolicyScript                = $null;
+                                ValidOperatingSystemBuildRanges             = @();
+                                RoleScopeTagIds                             = "0"
+                            }
                         }
                     }
                 }
@@ -334,9 +343,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         TPMRequired                                 = $False;
                         DeviceCompliancePolicyScript                = $null;
                         ValidOperatingSystemBuildRanges             = @();
-                        RoleScopeTagIds                             = "0"
-                        Ensure                                      = 'Present';
-                        Credential                          = $Credential;
+                        Ensure                                      = 'Absent';
+                        Credential                                  = $Credential;
                     }
 
                     Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
@@ -344,39 +352,42 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DisplayName                                 = "Windows 10 DSC Policy";
                             Description                                 = "Test policy";
                             Id                                          = "f38b283d-d893-4c33-b6d2-d3bcb5f2dcc2";
-                            PasswordRequired                            = $False;
-                            PasswordBlockSimple                         = $False;
-                            PasswordRequiredToUnlockFromIdle            = $True;
-                            PasswordMinutesOfInactivityBeforeLock       = 15;
-                            PasswordExpirationDays                      = 365;
-                            PasswordMinimumLength                       = 6;
-                            PasswordPreviousPasswordBlockCount          = 13;
-                            PasswordMinimumCharacterSetCount            = 1;
-                            PasswordRequiredType                        = "Devicedefault";
-                            RequireHealthyDeviceReport                  = $True;
-                            OsMinimumVersion                            = 10;
-                            OsMaximumVersion                            = 10.19;
-                            MobileOsMinimumVersion                      = 10;
-                            MobileOsMaximumVersion                      = 10.19;
-                            EarlyLaunchAntiMalwareDriverEnabled         = $False;
-                            BitLockerEnabled                            = $False;
-                            SecureBootEnabled                           = $True;
-                            CodeIntegrityEnabled                        = $True;
-                            StorageRequireEncryption                    = $True;
-                            ActiveFirewallRequired                      = $True;
-                            DefenderEnabled                             = $True;
-                            DefenderVersion                             = "";
-                            SignatureOutOfDate                          = $True;
-                            RtpEnabled                                  = $True;
-                            AntivirusRequired                           = $True;
-                            AntiSpywareRequired                         = $True;
-                            DeviceThreatProtectionEnabled               = $True;
-                            DeviceThreatProtectionRequiredSecurityLevel = "Medium";
-                            ConfigurationManagerComplianceRequired      = $False;
-                            TPMRequired                                 = $False;
-                            DeviceCompliancePolicyScript                = $null;
-                            ValidOperatingSystemBuildRanges             = @();
-                            RoleScopeTagIds                             = "0"
+                            AdditionalProperties = @{
+                                '@odata.type'                               = '#microsoft.graph.windows10CompliancePolicy'
+                                PasswordRequired                            = $False;
+                                PasswordBlockSimple                         = $False;
+                                PasswordRequiredToUnlockFromIdle            = $True;
+                                PasswordMinutesOfInactivityBeforeLock       = 15;
+                                PasswordExpirationDays                      = 365;
+                                PasswordMinimumLength                       = 6;
+                                PasswordPreviousPasswordBlockCount          = 13;
+                                PasswordMinimumCharacterSetCount            = 1;
+                                PasswordRequiredType                        = "Devicedefault";
+                                RequireHealthyDeviceReport                  = $True;
+                                OsMinimumVersion                            = 10;
+                                OsMaximumVersion                            = 10.19;
+                                MobileOsMinimumVersion                      = 10;
+                                MobileOsMaximumVersion                      = 10.19;
+                                EarlyLaunchAntiMalwareDriverEnabled         = $False;
+                                BitLockerEnabled                            = $False;
+                                SecureBootEnabled                           = $True;
+                                CodeIntegrityEnabled                        = $True;
+                                StorageRequireEncryption                    = $True;
+                                ActiveFirewallRequired                      = $True;
+                                DefenderEnabled                             = $True;
+                                DefenderVersion                             = "";
+                                SignatureOutOfDate                          = $True;
+                                RtpEnabled                                  = $True;
+                                AntivirusRequired                           = $True;
+                                AntiSpywareRequired                         = $True;
+                                DeviceThreatProtectionEnabled               = $True;
+                                DeviceThreatProtectionRequiredSecurityLevel = "Medium";
+                                ConfigurationManagerComplianceRequired      = $False;
+                                TPMRequired                                 = $False;
+                                DeviceCompliancePolicyScript                = $null;
+                                ValidOperatingSystemBuildRanges             = @();
+                                RoleScopeTagIds                             = "0"
+                            }
                         }
                     }
                 }
@@ -407,39 +418,42 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DisplayName                                 = "Windows 10 DSC Policy";
                             Description                                 = "Test policy";
                             Id                                          = "f38b283d-d893-4c33-b6d2-d3bcb5f2dcc2";
-                            PasswordRequired                            = $False;
-                            PasswordBlockSimple                         = $False;
-                            PasswordRequiredToUnlockFromIdle            = $True;
-                            PasswordMinutesOfInactivityBeforeLock       = 15;
-                            PasswordExpirationDays                      = 365;
-                            PasswordMinimumLength                       = 6;
-                            PasswordPreviousPasswordBlockCount          = 13;
-                            PasswordMinimumCharacterSetCount            = 1;
-                            PasswordRequiredType                        = "Devicedefault";
-                            RequireHealthyDeviceReport                  = $True;
-                            OsMinimumVersion                            = 10;
-                            OsMaximumVersion                            = 10.19;
-                            MobileOsMinimumVersion                      = 10;
-                            MobileOsMaximumVersion                      = 10.19;
-                            EarlyLaunchAntiMalwareDriverEnabled         = $False;
-                            BitLockerEnabled                            = $False;
-                            SecureBootEnabled                           = $True;
-                            CodeIntegrityEnabled                        = $True;
-                            StorageRequireEncryption                    = $True;
-                            ActiveFirewallRequired                      = $True;
-                            DefenderEnabled                             = $True;
-                            DefenderVersion                             = "";
-                            SignatureOutOfDate                          = $True;
-                            RtpEnabled                                  = $True;
-                            AntivirusRequired                           = $True;
-                            AntiSpywareRequired                         = $True;
-                            DeviceThreatProtectionEnabled               = $True;
-                            DeviceThreatProtectionRequiredSecurityLevel = "Medium";
-                            ConfigurationManagerComplianceRequired      = $False;
-                            TPMRequired                                 = $False;
-                            DeviceCompliancePolicyScript                = $null;
-                            ValidOperatingSystemBuildRanges             = @();
-                            RoleScopeTagIds                             = "0"
+                            AdditionalProperties = @{
+                                '@odata.type'                               = '#microsoft.graph.windows10CompliancePolicy'
+                                PasswordRequired                            = $False;
+                                PasswordBlockSimple                         = $False;
+                                PasswordRequiredToUnlockFromIdle            = $True;
+                                PasswordMinutesOfInactivityBeforeLock       = 15;
+                                PasswordExpirationDays                      = 365;
+                                PasswordMinimumLength                       = 6;
+                                PasswordPreviousPasswordBlockCount          = 13;
+                                PasswordMinimumCharacterSetCount            = 1;
+                                PasswordRequiredType                        = "Devicedefault";
+                                RequireHealthyDeviceReport                  = $True;
+                                OsMinimumVersion                            = 10;
+                                OsMaximumVersion                            = 10.19;
+                                MobileOsMinimumVersion                      = 10;
+                                MobileOsMaximumVersion                      = 10.19;
+                                EarlyLaunchAntiMalwareDriverEnabled         = $False;
+                                BitLockerEnabled                            = $False;
+                                SecureBootEnabled                           = $True;
+                                CodeIntegrityEnabled                        = $True;
+                                StorageRequireEncryption                    = $True;
+                                ActiveFirewallRequired                      = $True;
+                                DefenderEnabled                             = $True;
+                                DefenderVersion                             = "";
+                                SignatureOutOfDate                          = $True;
+                                RtpEnabled                                  = $True;
+                                AntivirusRequired                           = $True;
+                                AntiSpywareRequired                         = $True;
+                                DeviceThreatProtectionEnabled               = $True;
+                                DeviceThreatProtectionRequiredSecurityLevel = "Medium";
+                                ConfigurationManagerComplianceRequired      = $False;
+                                TPMRequired                                 = $False;
+                                DeviceCompliancePolicyScript                = $null;
+                                ValidOperatingSystemBuildRanges             = @();
+                                RoleScopeTagIds                             = "0"
+                            }
                         }
                     }
                 }
@@ -448,7 +462,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Export-TargetResource @testParams
                 }
             }
-        }
     }
 }
 

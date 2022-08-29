@@ -1171,8 +1171,8 @@ function Test-TargetResource
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
-    #Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    #Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
     #Convert any DateTime to String
     foreach ($key in $ValuesToCheck.Keys)
@@ -1189,7 +1189,7 @@ function Test-TargetResource
         $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
             -Source $($MyInvocation.MyCommand.Source) `
             -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys -verbose
+            -ValuesToCheck $ValuesToCheck.Keys
     }
 
     Write-Verbose -Message "Test-TargetResource returned $testResult"
