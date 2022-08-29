@@ -7,6 +7,11 @@
 * EXOInboundConnector
   * Add support for different syntax of SenderDomains parameter
   FIXES [#2180](https://github.com/microsoft/Microsoft365DSC/issues/2180)
+* IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator
+  * Don't export all policies if none match the type
+* IntuneDeviceConfigurationPolicyAndroidOpenSourceProject
+  * Don't export all policies if none match the type
+  FIXES [#2228](https://github.com/microsoft/Microsoft365DSC/issues/2228)
 * PlannerBucket
   * Changed authentication method to Credentials only, since the Planner Graph API
     does not support anything else
@@ -36,6 +41,8 @@
     and that supported by the specified resources in the following order:
     Certificate Thumbprint, Certificate Path, Application Secret, Credential
   FIXES [#1759](https://github.com/microsoft/Microsoft365DSC/issues/1759)
+* MISC
+  * Fix issue of running Export-M365DSCConfiguration within Azure Run Book. FIXES [#2233](https://github.com/microsoft/Microsoft365DSC/issues/2233)
 
 # 1.22.824.1
 

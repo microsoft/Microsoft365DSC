@@ -235,6 +235,11 @@ function Start-M365DSCConfigurationExtract
         }
 
         $AzureAutomation = $false
+        if ($organization.IndexOf(".") -gt 0)
+        {
+            $principal = $organization.Split(".")[0]
+        }
+
         [array] $version = Get-Module 'Microsoft365DSC'
         $version = $version[0].Version
         $DSCContent = [System.Text.StringBuilder]::New()
@@ -544,6 +549,13 @@ function Start-M365DSCConfigurationExtract
         # Close the Node and Configuration declarations
         $DSCContent.Append("    }`r`n") | Out-Null
         $DSCContent.Append("}`r`n") | Out-Null
+
+        # Azure Automation Check
+        $AzureAutomation = $false
+        if ("AzureAutomation/" -eq $env:AZUREPS_HOST_ENVIRONMENT)
+        {
+            $AzureAutomation = $true
+        }
 
         $launchCommand = "$ConfigurationName -ConfigurationData .\ConfigurationData.psd1"
         switch ($AuthMethods)
