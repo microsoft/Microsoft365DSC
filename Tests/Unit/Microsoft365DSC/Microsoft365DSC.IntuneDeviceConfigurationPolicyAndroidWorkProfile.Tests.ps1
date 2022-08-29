@@ -111,7 +111,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should create the policy from the Set method" {
-                Set-TargetResource @TestParams -verbose
+                Set-TargetResource @TestParams
                 Should -Invoke -CommandName "New-MgDeviceManagementDeviceConfiguration" -Exactly 1
             }
         }

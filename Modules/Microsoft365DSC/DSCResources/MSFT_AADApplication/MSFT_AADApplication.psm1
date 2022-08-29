@@ -474,38 +474,17 @@ function Set-TargetResource
         $ownersDiff = Compare-Object -ReferenceObject $backCurrentOwners -DifferenceObject $desiredOwnersValue
         foreach ($diff in $ownersDiff)
         {
-            $DirectoryObjectUri = "https://graph.microsoft.com/v1.0/directoryObjects/"
-            try {
-                if ($diff.InputObject.Contains('@')) {
-                    $OwnerId = $(Get-MgUser -UserId $diff.InputObject -ErrorAction Stop).Id
-                    $DirectoryObjectUri += "{0}" -f $OwnerId
-                } else {
-                    $OwnerId = $diff.InputObject
-                    $DirectoryObjectUri += "{0}" -f $OwnerId
-                    Get-MgDirectoryObject -DirectoryObjectId $DirectoryObjectUri -ErrorAction Stop
-                }
-            }
-            catch {
-                try {
-                    Write-Verbose -Message $_
-                    $Message = "Couldn't find object {0} to add/remove as owner on AAD Application {1}, " `
-                        -f $diff.InputObject, $DisplayName + `
-                        "not processing any further objects"
-                    Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                        -TenantId $tenantIdValue
-                }
-                catch {
-                    Write-Verbose -Message $_
-                }
-                break
-            }
-
             if ($diff.SideIndicator -eq '=>')
             {
                 Write-Verbose -Message "Adding new owner {$($diff.InputObject)} to AAD Application {$DisplayName}"
+                if ($diff.InputObject.Contains('@')) {
+                    $Type = "users"
+                } else {
+                    $Type = "directoryObjects"
+                }
+                $ObjectUri = "https://graph.microsoft.com/v1.0/{0}/{1}" -f $Type, $diff.InputObject
                 $ownerObject = @{
-                    "@odata.id" = $DirectoryObjectUri
+                    "@odata.id" = $ObjectUri
                 }
                 try {
                     New-MgApplicationOwnerByRef -ApplicationId $currentAADApp.ObjectId -BodyParameter $ownerObject | Out-Null
@@ -525,9 +504,13 @@ function Set-TargetResource
             elseif ($diff.SideIndicator -eq '<=')
             {
                 Write-Verbose -Message "Removing new owner {$($diff.InputObject)} from AAD Application {$DisplayName}"
-                $Uri = "https://graph.microsoft.com/v1.0/applications/{0}/owners/{1}/`$ref" -f $currentAADApp.ObjectId, $OwnerId
                 try {
-                    Remove-MgDirectoryObject -DirectoryObjectId $Uri -ErrorAction Stop
+                    if ($diff.InputObject.Contains('@')) {
+                        $ObjectId = $(Get-MgUser -UserId $diff.InputObject -ErrorAction Stop).Id
+                    } else {
+                        $ObjectId = $diff.InputObject
+                    }
+                    Remove-MgApplicationOwnerByRef -ApplicationId $currentAADApp.ObjectId -DirectoryObjectId $ObjectId -ErrorAction Stop
                 }
                 catch {
                     try {

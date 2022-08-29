@@ -1286,7 +1286,7 @@ function Remove-M365DSCInvalidDependenciesFromSession
         $incorrectModuleVersions = $null
         if ($loadedModuleInstances)
         {
-            $incorrectModuleVersions = $loadedModuleInstances | Where-Object -FilterScript {$_.Version -ne $dependency.RequiredVersion}
+            $incorrectModuleVersions = $loadedModuleInstances | Where-Object -FilterScript { $_.Version -ne $dependency.RequiredVersion }
 
             if ($incorrectModuleVersions)
             {
@@ -2385,7 +2385,10 @@ function Assert-M365DSCBlueprint
                 $ResourcesInBluePrint += $resource.ResourceName
             }
         }
-        if (!$ResourcesInBluePrint) {
+
+
+        if (!$ResourcesInBluePrint)
+        {
             Write-Host "Malformed BluePrint, aborting"
             break
         }
@@ -2982,6 +2985,13 @@ function Test-M365DSCNewVersionAvailable
 {
     [CmdletBinding()]
     param()
+
+    if ("AzureAutomation/" -eq $env:AZUREPS_HOST_ENVIRONMENT)
+    {
+        $message = "Skipping check for newer version of Microsoft 365 DSC due to Azure Automation Environment restrictions."
+        Write-Verbose -Message $message
+        return
+    }
 
     try
     {
@@ -3606,9 +3616,6 @@ function New-M365DSCMissingResourcesExample
 .Description
 This function validates there are no updates to the module or it's dependencies and no multiple versions are present on the local system.
 
-.Parameter Force
-Specifies that all dependencies should be forcefully imported again.
-
 .Example
 Test-M365DSCModuleValidity
 
@@ -3623,6 +3630,14 @@ function Test-M365DSCModuleValidity
     [CmdletBinding()]
     param(
     )
+
+    if ("AzureAutomation/" -eq $env:AZUREPS_HOST_ENVIRONMENT)
+    {
+        $message = "Skipping check for newer version of Microsoft 365 DSC due to Azure Automation Environment restrictions."
+        Write-Verbose -Message $message
+        return
+    }
+
     $InformationPreference = 'Continue'
 
     # validate only one installation of the module is present (and it's the latest version available from the psgallery)
@@ -3636,6 +3651,7 @@ function Test-M365DSCModuleValidity
         Write-Host "Update-Module -Name 'Microsoft365DSC' -Force`nUpdate-M365DSCDependencies -Force`nUninstall-M365DSCOutdatedDependencies" -ForegroundColor Blue
     }
 }
+
 Export-ModuleMember -Function @(
     'Assert-M365DSCBlueprint',
     'Confirm-ImportedCmdletIsAvailable',

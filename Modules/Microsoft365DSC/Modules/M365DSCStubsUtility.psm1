@@ -87,14 +87,16 @@ function New-M365DSCStubFiles
         $cmdlets = Get-Command -CommandType 'Cmdlet' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
         if ($null -eq $cmdlets -or $Module.ModuleName -eq 'MicrosoftTeams')
         {
-            $cmdlets += Get-Command -CommandType 'Function' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
+            $cmdlets += Get-Command -CommandType 'Function' -Module $CurrentModuleName
         }
 
-        if ($CurrentModuleName -eq 'MicrosoftGraph')
+        if ($Module.Name -eq 'MicrosoftGraph')
         {
+            Write-Host "Loading Beta Graph APIs"
             $MaximumFunctionCount = 32000
             Select-MgProfile -Name beta | Out-Null
-            $betaCmdlets = Get-Command -CommandType 'Cmdlet' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
+            $betaCmdlets = Get-Command -CommandType 'Cmdlet' -Module $CurrentModuleName
+            $betaCmdlets += Get-Command -CommandType 'Function' -Module $CurrentModuleName
             foreach ($cmdlet in $betaCmdlets)
             {
                 if ($cmdlets.Name -notcontains $cmdlet.Name)
@@ -206,8 +208,8 @@ function New-M365DSCStubFiles
                     }
                 }
                 $StubContent += "`r`n    )`r`n}`n"
-                $i ++
             }
+            $i ++
         }
         Write-Progress -Activity "Generating Stubs" -Completed
 
@@ -224,6 +226,7 @@ function New-M365DSCStubFiles
         $Content += $StubContent
         $Content += "#endregion`r`n"
         $i++
+        Remove-Module $CurrentModuleName
     }
     $Content | Out-File $DestinationFilePath -Encoding utf8
 }
