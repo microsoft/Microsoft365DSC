@@ -368,9 +368,6 @@ function Export-TargetResource
                 {
                     Write-Verbose -Message $_
                 }
-
-                Write-Host "        |---[$j/$($plans.Length)] $($plle)"
-                Credential = $Credential
             }
         }
 

@@ -25,6 +25,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
+            Mock -CommandName Save-M365DSCPartialExport -MockWith {
+            }
             Mock -CommandName Connect-Graph -MockWith {
             }
 
@@ -151,6 +153,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
+                $Global:PartialExportFileName = "PlannerBucket.ps1"
                 Mock -CommandName Get-MgPlannerPlanBucket -MockWith {
                     return @{
                         PlanId = "1234567890"
