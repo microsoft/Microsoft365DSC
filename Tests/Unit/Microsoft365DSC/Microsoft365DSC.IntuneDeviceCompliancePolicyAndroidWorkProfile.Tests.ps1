@@ -57,7 +57,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PasswordRequired                                   = $True
                         PasswordMinimumLength                              = 6
                         PasswordRequiredType                               = "DeviceDefault"
-                        RequiredPasswordComplexity                         = "None"
                         PasswordMinutesOfInactivityBeforeLock              = 5
                         PasswordExpirationDays                             = 365
                         PasswordPreviousPasswordBlockCount                 = 10
@@ -77,9 +76,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SecurityRequireGooglePlayServices                  = $True
                         SecurityRequireUpToDateSecurityProviders           = $True
                         SecurityRequireCompanyPortalAppIntegrity           = $True
-                        RoleScopeTagIds                                    = "0"
                         Ensure                                             = 'Present'
-                        Credential                                 = $Credential
+                        Credential                                         = $Credential
                     }
 
                     Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
@@ -109,7 +107,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PasswordRequired                                   = $True
                         PasswordMinimumLength                              = 6
                         PasswordRequiredType                               = "DeviceDefault"
-                        RequiredPasswordComplexity                         = "None"
                         PasswordMinutesOfInactivityBeforeLock              = 5
                         PasswordExpirationDays                             = 365
                         PasswordPreviousPasswordBlockCount                 = 10
@@ -129,9 +126,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SecurityRequireGooglePlayServices                  = $True
                         SecurityRequireUpToDateSecurityProviders           = $True
                         SecurityRequireCompanyPortalAppIntegrity           = $True
-                        RoleScopeTagIds                                    = "0"
                         Ensure                                             = 'Present'
-                        Credential                                 = $Credential
+                        Credential                                         = $Credential
                     }
 
                     Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
@@ -139,30 +135,33 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DisplayName                                        = 'Test Android Work Profile Device Compliance Policy'
                             Description                                        = 'Test Android Work Profile Device Compliance Policy Description'
                             Id                                                 = '9c4e2ed7-706e-4874-a826-0c2778352d47'
-                            PasswordRequired                                   = $True
-                            PasswordMinimumLength                              = 6
-                            PasswordRequiredType                               = "DeviceDefault"
-                            RequiredPasswordComplexity                         = "None"
-                            PasswordMinutesOfInactivityBeforeLock              = 5
-                            PasswordExpirationDays                             = 365
-                            PasswordPreviousPasswordBlockCount                 = 10
-                            PasswordSignInFailureCountBeforeFactoryReset       = 11
-                            SecurityPreventInstallAppsFromUnknownSources       = $True
-                            SecurityDisableUsbDebugging                        = $True
-                            SecurityRequireVerifyApps                          = $True
-                            DeviceThreatProtectionEnabled                      = $True
-                            DeviceThreatProtectionRequiredSecurityLevel        = "Unavailable"
-                            AdvancedThreatProtectionRequiredSecurityLevel      = "Unavailable"
-                            SecurityBlockJailbrokenDevices                     = $True
-                            OsMinimumVersion                                   = 7
-                            OsMaximumVersion                                   = 11
-                            StorageRequireEncryption                           = $True
-                            SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
-                            SecurityRequireSafetyNetAttestationCertifiedDevice = $True
-                            SecurityRequireGooglePlayServices                  = $True
-                            SecurityRequireUpToDateSecurityProviders           = $True
-                            SecurityRequireCompanyPortalAppIntegrity           = $True
-                            RoleScopeTagIds                                    = "0"
+                            AdditionalProperties                               = @{
+                                '@odata.type'                                      = '#microsoft.graph.androidWorkProfileCompliancePolicy'
+                                PasswordRequired                                   = $True
+                                PasswordMinimumLength                              = 6
+                                PasswordRequiredType                               = "DeviceDefault"
+                                RequiredPasswordComplexity                         = "None"
+                                PasswordMinutesOfInactivityBeforeLock              = 5
+                                PasswordExpirationDays                             = 365
+                                PasswordPreviousPasswordBlockCount                 = 10
+                                PasswordSignInFailureCountBeforeFactoryReset       = 11
+                                SecurityPreventInstallAppsFromUnknownSources       = $True
+                                SecurityDisableUsbDebugging                        = $True
+                                SecurityRequireVerifyApps                          = $True
+                                DeviceThreatProtectionEnabled                      = $True
+                                DeviceThreatProtectionRequiredSecurityLevel        = "Unavailable"
+                                AdvancedThreatProtectionRequiredSecurityLevel      = "Unavailable"
+                                SecurityBlockJailbrokenDevices                     = $True
+                                OsMinimumVersion                                   = 7
+                                OsMaximumVersion                                   = 11
+                                StorageRequireEncryption                           = $True
+                                SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
+                                SecurityRequireSafetyNetAttestationCertifiedDevice = $True
+                                SecurityRequireGooglePlayServices                  = $True
+                                SecurityRequireUpToDateSecurityProviders           = $True
+                                SecurityRequireCompanyPortalAppIntegrity           = $True
+                                RoleScopeTagIds                                    = "0"
+                            }
                         }
                     }
                 }
@@ -189,7 +188,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PasswordRequired                                   = $True
                         PasswordMinimumLength                              = 6
                         PasswordRequiredType                               = "DeviceDefault"
-                        RequiredPasswordComplexity                         = "None"
                         PasswordMinutesOfInactivityBeforeLock              = 5
                         PasswordExpirationDays                             = 365
                         PasswordPreviousPasswordBlockCount                 = 10
@@ -209,40 +207,42 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SecurityRequireGooglePlayServices                  = $True
                         SecurityRequireUpToDateSecurityProviders           = $True
                         SecurityRequireCompanyPortalAppIntegrity           = $True
-                        RoleScopeTagIds                                    = "0"
                         Ensure                                             = 'Present'
-                        Credential                                 = $Credential
+                        Credential                                         = $Credential
                     }
 
                     Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
                         return @{
-                            DisplayName                                        = 'Test Android Device Compliance Policy'
-                            Description                                        = 'Test Android Device Compliance Policy Description'
+                            DisplayName                                        = 'Test Android Work Profile Device Compliance Policy'
+                            Description                                        = 'Test Android Work Profile Device Compliance Policy Description'
                             Id                                                 = '9c4e2ed7-706e-4874-a826-0c2778352d46'
-                            PasswordRequired                                   = $True
-                            PasswordMinimumLength                              = 6
-                            PasswordRequiredType                               = "DeviceDefault"
-                            RequiredPasswordComplexity                         = "None"
-                            PasswordMinutesOfInactivityBeforeLock              = 5
-                            PasswordExpirationDays                             = 365
-                            PasswordPreviousPasswordBlockCount                 = 10
-                            PasswordSignInFailureCountBeforeFactoryReset       = 11
-                            SecurityPreventInstallAppsFromUnknownSources       = $True
-                            SecurityDisableUsbDebugging                        = $True
-                            SecurityRequireVerifyApps                          = $True
-                            DeviceThreatProtectionEnabled                      = $True
-                            DeviceThreatProtectionRequiredSecurityLevel        = "Unavailable"
-                            AdvancedThreatProtectionRequiredSecurityLevel      = "Unavailable"
-                            SecurityBlockJailbrokenDevices                     = $True
-                            OsMinimumVersion                                   = 7
-                            OsMaximumVersion                                   = 11
-                            StorageRequireEncryption                           = $True
-                            SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
-                            SecurityRequireSafetyNetAttestationCertifiedDevice = $True
-                            SecurityRequireGooglePlayServices                  = $True
-                            SecurityRequireUpToDateSecurityProviders           = $True
-                            SecurityRequireCompanyPortalAppIntegrity           = $True
-                            RoleScopeTagIds                                    = "0"
+                            AdditionalProperties                               = @{
+                                '@odata.type'                                      = '#microsoft.graph.androidWorkProfileCompliancePolicy'
+                                PasswordRequired                                   = $True
+                                PasswordMinimumLength                              = 6
+                                PasswordRequiredType                               = "DeviceDefault"
+                                RequiredPasswordComplexity                         = "None"
+                                PasswordMinutesOfInactivityBeforeLock              = 5
+                                PasswordExpirationDays                             = 365
+                                PasswordPreviousPasswordBlockCount                 = 10
+                                PasswordSignInFailureCountBeforeFactoryReset       = 11
+                                SecurityPreventInstallAppsFromUnknownSources       = $True
+                                SecurityDisableUsbDebugging                        = $True
+                                SecurityRequireVerifyApps                          = $True
+                                DeviceThreatProtectionEnabled                      = $True
+                                DeviceThreatProtectionRequiredSecurityLevel        = "Unavailable"
+                                AdvancedThreatProtectionRequiredSecurityLevel      = "Unavailable"
+                                SecurityBlockJailbrokenDevices                     = $True
+                                OsMinimumVersion                                   = 7
+                                OsMaximumVersion                                   = 11
+                                StorageRequireEncryption                           = $True
+                                SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
+                                SecurityRequireSafetyNetAttestationCertifiedDevice = $True
+                                SecurityRequireGooglePlayServices                  = $True
+                                SecurityRequireUpToDateSecurityProviders           = $True
+                                SecurityRequireCompanyPortalAppIntegrity           = $True
+                                RoleScopeTagIds                                    = "0"
+                            }
                         }
                     }
                 }
@@ -260,7 +260,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PasswordRequired                                   = $True
                         PasswordMinimumLength                              = 6
                         PasswordRequiredType                               = "DeviceDefault"
-                        RequiredPasswordComplexity                         = "None"
                         PasswordMinutesOfInactivityBeforeLock              = 5
                         PasswordExpirationDays                             = 365
                         PasswordPreviousPasswordBlockCount                 = 10
@@ -280,40 +279,42 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SecurityRequireGooglePlayServices                  = $True
                         SecurityRequireUpToDateSecurityProviders           = $True
                         SecurityRequireCompanyPortalAppIntegrity           = $True
-                        RoleScopeTagIds                                    = "0"
-                        Ensure                                             = 'Present'
-                        Credential                                 = $Credential
+                        Ensure                                             = 'Absent'
+                        Credential                                         = $Credential
                     }
 
                     Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
                         return @{
-                            DisplayName                                        = 'Test Android Device Compliance Policy'
-                            Description                                        = 'Test Android Device Compliance Policy Description'
+                            DisplayName                                        = 'Test Android Work Profile Device Compliance Policy'
+                            Description                                        = 'Test Android Work Profile Device Compliance Policy Description'
                             Id                                                 = '9c4e2ed7-706e-4874-a826-0c2778352d46'
-                            PasswordRequired                                   = $True
-                            PasswordMinimumLength                              = 6
-                            PasswordRequiredType                               = "DeviceDefault"
-                            RequiredPasswordComplexity                         = "None"
-                            PasswordMinutesOfInactivityBeforeLock              = 5
-                            PasswordExpirationDays                             = 365
-                            PasswordPreviousPasswordBlockCount                 = 10
-                            PasswordSignInFailureCountBeforeFactoryReset       = 11
-                            SecurityPreventInstallAppsFromUnknownSources       = $True
-                            SecurityDisableUsbDebugging                        = $True
-                            SecurityRequireVerifyApps                          = $True
-                            DeviceThreatProtectionEnabled                      = $True
-                            DeviceThreatProtectionRequiredSecurityLevel        = "Unavailable"
-                            AdvancedThreatProtectionRequiredSecurityLevel      = "Unavailable"
-                            SecurityBlockJailbrokenDevices                     = $True
-                            OsMinimumVersion                                   = 7
-                            OsMaximumVersion                                   = 11
-                            StorageRequireEncryption                           = $True
-                            SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
-                            SecurityRequireSafetyNetAttestationCertifiedDevice = $True
-                            SecurityRequireGooglePlayServices                  = $True
-                            SecurityRequireUpToDateSecurityProviders           = $True
-                            SecurityRequireCompanyPortalAppIntegrity           = $True
-                            RoleScopeTagIds                                    = "0"
+                            AdditionalProperties                               = @{
+                                '@odata.type'                                      = '#microsoft.graph.androidWorkProfileCompliancePolicy'
+                                PasswordRequired                                   = $True
+                                PasswordMinimumLength                              = 6
+                                PasswordRequiredType                               = "DeviceDefault"
+                                RequiredPasswordComplexity                         = "None"
+                                PasswordMinutesOfInactivityBeforeLock              = 5
+                                PasswordExpirationDays                             = 365
+                                PasswordPreviousPasswordBlockCount                 = 10
+                                PasswordSignInFailureCountBeforeFactoryReset       = 11
+                                SecurityPreventInstallAppsFromUnknownSources       = $True
+                                SecurityDisableUsbDebugging                        = $True
+                                SecurityRequireVerifyApps                          = $True
+                                DeviceThreatProtectionEnabled                      = $True
+                                DeviceThreatProtectionRequiredSecurityLevel        = "Unavailable"
+                                AdvancedThreatProtectionRequiredSecurityLevel      = "Unavailable"
+                                SecurityBlockJailbrokenDevices                     = $True
+                                OsMinimumVersion                                   = 7
+                                OsMaximumVersion                                   = 11
+                                StorageRequireEncryption                           = $True
+                                SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
+                                SecurityRequireSafetyNetAttestationCertifiedDevice = $True
+                                SecurityRequireGooglePlayServices                  = $True
+                                SecurityRequireUpToDateSecurityProviders           = $True
+                                SecurityRequireCompanyPortalAppIntegrity           = $True
+                                RoleScopeTagIds                                    = "0"
+                            }
                         }
                     }
                 }
@@ -344,34 +345,32 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DisplayName                                        = 'Test Android Device Compliance Policy'
                             Description                                        = 'Test Android Device Compliance Policy Description'
                             Id                                                 = '9c4e2ed7-706e-4874-a826-0c2778352d46'
-                            PasswordRequired                                   = $True
-                            PasswordMinimumLength                              = 6
-                            PasswordRequiredType                               = "DeviceDefault"
-                            RequiredPasswordComplexity                         = "None"
-                            PasswordMinutesOfInactivityBeforeLock              = 5
-                            PasswordExpirationDays                             = 365
-                            PasswordPreviousPasswordBlockCount                 = 3
-                            PasswordSignInFailureCountBeforeFactoryReset       = 11
-                            SecurityPreventInstallAppsFromUnknownSources       = $True
-                            SecurityDisableUsbDebugging                        = $True
-                            SecurityRequireVerifyApps                          = $True
-                            DeviceThreatProtectionEnabled                      = $True
-                            DeviceThreatProtectionRequiredSecurityLevel        = "Unavailable"
-                            AdvancedThreatProtectionRequiredSecurityLevel      = "Unavailable"
-                            SecurityBlockJailbrokenDevices                     = $True
-                            SecurityBlockDeviceAdministratorManagedDevices     = $True
-                            OsMinimumVersion                                   = 7
-                            OsMaximumVersion                                   = 11
-                            MinAndroidSecurityPatchLevel                       = $Null
-                            StorageRequireEncryption                           = $True
-                            SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
-                            SecurityRequireSafetyNetAttestationCertifiedDevice = $True
-                            SecurityRequireGooglePlayServices                  = $True
-                            SecurityRequireUpToDateSecurityProviders           = $True
-                            SecurityRequireCompanyPortalAppIntegrity           = $True
-                            ConditionStatementId                               = $Null
-                            RestrictedApps                                     = "[]"
-                            RoleScopeTagIds                                    = 0
+                            AdditionalProperties                               = @{
+                                '@odata.type'                                      = '#microsoft.graph.androidWorkProfileCompliancePolicy'
+                                PasswordRequired                                   = $True
+                                PasswordMinimumLength                              = 6
+                                PasswordRequiredType                               = "DeviceDefault"
+                                RequiredPasswordComplexity                         = "None"
+                                PasswordMinutesOfInactivityBeforeLock              = 5
+                                PasswordExpirationDays                             = 365
+                                PasswordPreviousPasswordBlockCount                 = 10
+                                PasswordSignInFailureCountBeforeFactoryReset       = 11
+                                SecurityPreventInstallAppsFromUnknownSources       = $True
+                                SecurityDisableUsbDebugging                        = $True
+                                SecurityRequireVerifyApps                          = $True
+                                DeviceThreatProtectionEnabled                      = $True
+                                DeviceThreatProtectionRequiredSecurityLevel        = "Unavailable"
+                                AdvancedThreatProtectionRequiredSecurityLevel      = "Unavailable"
+                                SecurityBlockJailbrokenDevices                     = $True
+                                OsMinimumVersion                                   = 7
+                                OsMaximumVersion                                   = 11
+                                StorageRequireEncryption                           = $True
+                                SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
+                                SecurityRequireSafetyNetAttestationCertifiedDevice = $True
+                                SecurityRequireGooglePlayServices                  = $True
+                                SecurityRequireUpToDateSecurityProviders           = $True
+                                SecurityRequireCompanyPortalAppIntegrity           = $True
+                            }
                         }
                     }
                 }

@@ -69,7 +69,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PasswordPreviousPasswordCountToBlock               = 10
                         StorageRequireEncryption                           = $True
                         SecurityRequireIntuneAppIntegrity                  = $True
-                        RoleScopeTagIds                                    = "0"
                         Ensure                                             = 'Present'
                         Credential                                         = $Credential
                     }
@@ -113,7 +112,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PasswordPreviousPasswordCountToBlock               = 10
                         StorageRequireEncryption                           = $True
                         SecurityRequireIntuneAppIntegrity                  = $True
-                        RoleScopeTagIds                                    = "0"
                         Ensure                                             = 'Present'
                         Credential                                         = $Credential
                     }
@@ -122,22 +120,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         return @{
                             DisplayName                                        = 'Test Android Device Owner Device Compliance Policy'
                             Description                                        = 'Different Value'
-                            DeviceThreatProtectionEnabled                      = $True
-                            DeviceThreatProtectionRequiredSecurityLevel        = "Unavailable"
-                            AdvancedThreatProtectionRequiredSecurityLevel      = "Unavailable"
-                            SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
-                            SecurityRequireSafetyNetAttestationCertifiedDevice = $True
-                            OsMinimumVersion                                   = 7
-                            OsMaximumVersion                                   = 11
-                            PasswordRequired                                   = $True
-                            PasswordMinimumLength                              = 6
-                            PasswordRequiredType                               = "DeviceDefault"
-                            PasswordMinutesOfInactivityBeforeLock              = 5
-                            PasswordExpirationDays                             = 365
-                            PasswordPreviousPasswordCountToBlock               = 10
-                            StorageRequireEncryption                           = $True
-                            SecurityRequireIntuneAppIntegrity                  = $True
-                            RoleScopeTagIds                                    = "0"
+                            Id                                                 = '9c4e2ed7-706e-4874-a826-0c2778352d46'
+                            AdditionalProperties = @{
+                                '@odata.type' = '#microsoft.graph.androidDeviceOwnerCompliancePolicy'
+                                DeviceThreatProtectionEnabled                      = $True
+                                DeviceThreatProtectionRequiredSecurityLevel        = "Unavailable"
+                                AdvancedThreatProtectionRequiredSecurityLevel      = "Unavailable"
+                                SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
+                                SecurityRequireSafetyNetAttestationCertifiedDevice = $True
+                                OsMinimumVersion                                   = 7
+                                OsMaximumVersion                                   = 11
+                                PasswordRequired                                   = $True
+                                PasswordMinimumLength                              = 6
+                                PasswordRequiredType                               = "DeviceDefault"
+                                PasswordMinutesOfInactivityBeforeLock              = 5
+                                PasswordExpirationDays                             = 365
+                                PasswordPreviousPasswordCountToBlock               = 10
+                                StorageRequireEncryption                           = $True
+                                SecurityRequireIntuneAppIntegrity                  = $True
+                                RoleScopeTagIds                                    = "0"
+                            }
                         }
                     }
                 }
@@ -176,7 +178,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PasswordPreviousPasswordCountToBlock               = 10
                         StorageRequireEncryption                           = $True
                         SecurityRequireIntuneAppIntegrity                  = $True
-                        RoleScopeTagIds                                    = "0"
                         Ensure                                             = 'Present'
                         Credential                                         = $Credential
                     }
@@ -186,23 +187,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DisplayName                                        = 'Test Android Device Owner Device Compliance Policy'
                             Description                                        = 'Test Android Device Owner Device Compliance Policy Description'
                             Id                                                 = '9c4e2ed7-706e-4874-a826-0c2778352d46'
-                            DeviceThreatProtectionEnabled                      = $True
-                            DeviceThreatProtectionRequiredSecurityLevel        = "Unavailable"
-                            AdvancedThreatProtectionRequiredSecurityLevel      = "Unavailable"
-                            SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
-                            SecurityRequireSafetyNetAttestationCertifiedDevice = $True
-                            OsMinimumVersion                                   = 7
-                            OsMaximumVersion                                   = 11
-                            PasswordRequired                                   = $True
-                            PasswordMinimumLength                              = 6
-                            PasswordRequiredType                               = "DeviceDefault"
-                            PasswordMinutesOfInactivityBeforeLock              = 5
-                            PasswordExpirationDays                             = 365
-                            PasswordPreviousPasswordCountToBlock               = 10
-                            StorageRequireEncryption                           = $True
-                            SecurityRequireIntuneAppIntegrity                  = $True
-                            RoleScopeTagIds                                    = "0"
-                            Ensure                                             = 'Present'
+                            AdditionalProperties = @{
+                                '@odata.type' = '#microsoft.graph.androidDeviceOwnerCompliancePolicy'
+                                DeviceThreatProtectionEnabled                      = $True
+                                DeviceThreatProtectionRequiredSecurityLevel        = "Unavailable"
+                                AdvancedThreatProtectionRequiredSecurityLevel      = "Unavailable"
+                                SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
+                                SecurityRequireSafetyNetAttestationCertifiedDevice = $True
+                                OsMinimumVersion                                   = 7
+                                OsMaximumVersion                                   = 11
+                                PasswordRequired                                   = $True
+                                PasswordMinimumLength                              = 6
+                                PasswordRequiredType                               = "DeviceDefault"
+                                PasswordMinutesOfInactivityBeforeLock              = 5
+                                PasswordExpirationDays                             = 365
+                                PasswordPreviousPasswordCountToBlock               = 10
+                                StorageRequireEncryption                           = $True
+                                SecurityRequireIntuneAppIntegrity                  = $True
+                                RoleScopeTagIds                                    = "0"
+                            }
                         }
                     }
                 }
@@ -225,23 +228,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DisplayName                                        = 'Test Android Device Owner Device Compliance Policy'
                             Description                                        = 'Test Android Device Owner Device Compliance Policy Description'
                             Id                                                 = '9c4e2ed7-706e-4874-a826-0c2778352d46'
-                            DeviceThreatProtectionEnabled                      = $True
-                            DeviceThreatProtectionRequiredSecurityLevel        = "Unavailable"
-                            AdvancedThreatProtectionRequiredSecurityLevel      = "Unavailable"
-                            SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
-                            SecurityRequireSafetyNetAttestationCertifiedDevice = $True
-                            OsMinimumVersion                                   = 7
-                            OsMaximumVersion                                   = 11
-                            PasswordRequired                                   = $True
-                            PasswordMinimumLength                              = 6
-                            PasswordRequiredType                               = "DeviceDefault"
-                            PasswordMinutesOfInactivityBeforeLock              = 5
-                            PasswordExpirationDays                             = 365
-                            PasswordPreviousPasswordCountToBlock               = 10
-                            StorageRequireEncryption                           = $True
-                            SecurityRequireIntuneAppIntegrity                  = $True
-                            RoleScopeTagIds                                    = "0"
-                            Ensure                                             = 'Present'
+                            AdditionalProperties = @{
+                                '@odata.type' = '#microsoft.graph.androidDeviceOwnerCompliancePolicy'
+                                DeviceThreatProtectionEnabled                      = $True
+                                DeviceThreatProtectionRequiredSecurityLevel        = "Unavailable"
+                                AdvancedThreatProtectionRequiredSecurityLevel      = "Unavailable"
+                                SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
+                                SecurityRequireSafetyNetAttestationCertifiedDevice = $True
+                                OsMinimumVersion                                   = 7
+                                OsMaximumVersion                                   = 11
+                                PasswordRequired                                   = $True
+                                PasswordMinimumLength                              = 6
+                                PasswordRequiredType                               = "DeviceDefault"
+                                PasswordMinutesOfInactivityBeforeLock              = 5
+                                PasswordExpirationDays                             = 365
+                                PasswordPreviousPasswordCountToBlock               = 10
+                                StorageRequireEncryption                           = $True
+                                SecurityRequireIntuneAppIntegrity                  = $True
+                                RoleScopeTagIds                                    = "0"
+                            }
                         }
                     }
                 }
@@ -272,23 +277,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DisplayName                                        = 'Test Android Device Owner Device Compliance Policy'
                             Description                                        = 'Test Android Device Owner Device Compliance Policy Description'
                             Id                                                 = '9c4e2ed7-706e-4874-a826-0c2778352d46'
-                            DeviceThreatProtectionEnabled                      = $True
-                            DeviceThreatProtectionRequiredSecurityLevel        = "Unavailable"
-                            AdvancedThreatProtectionRequiredSecurityLevel      = "Unavailable"
-                            SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
-                            SecurityRequireSafetyNetAttestationCertifiedDevice = $True
-                            OsMinimumVersion                                   = 7
-                            OsMaximumVersion                                   = 11
-                            PasswordRequired                                   = $True
-                            PasswordMinimumLength                              = 6
-                            PasswordRequiredType                               = "DeviceDefault"
-                            PasswordMinutesOfInactivityBeforeLock              = 5
-                            PasswordExpirationDays                             = 365
-                            PasswordPreviousPasswordCountToBlock               = 10
-                            StorageRequireEncryption                           = $True
-                            SecurityRequireIntuneAppIntegrity                  = $True
-                            RoleScopeTagIds                                    = "0"
-                            Ensure                                             = 'Present'
+                            AdditionalProperties = @{
+                                '@odata.type' = '#microsoft.graph.androidDeviceOwnerCompliancePolicy'
+                                DeviceThreatProtectionEnabled                      = $True
+                                DeviceThreatProtectionRequiredSecurityLevel        = "Unavailable"
+                                AdvancedThreatProtectionRequiredSecurityLevel      = "Unavailable"
+                                SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
+                                SecurityRequireSafetyNetAttestationCertifiedDevice = $True
+                                OsMinimumVersion                                   = 7
+                                OsMaximumVersion                                   = 11
+                                PasswordRequired                                   = $True
+                                PasswordMinimumLength                              = 6
+                                PasswordRequiredType                               = "DeviceDefault"
+                                PasswordMinutesOfInactivityBeforeLock              = 5
+                                PasswordExpirationDays                             = 365
+                                PasswordPreviousPasswordCountToBlock               = 10
+                                StorageRequireEncryption                           = $True
+                                SecurityRequireIntuneAppIntegrity                  = $True
+                                RoleScopeTagIds                                    = "0"
+                            }
                         }
                     }
                 }
