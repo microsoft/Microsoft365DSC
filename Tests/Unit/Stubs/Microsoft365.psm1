@@ -11373,7 +11373,7 @@ function Get-MgApplication
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IApplicationsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -11527,7 +11527,7 @@ function Get-MgServicePrincipal
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IApplicationsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -11608,7 +11608,7 @@ function Get-MgServicePrincipalAppRoleAssignment
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IApplicationsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -11685,19 +11685,19 @@ function New-MgApplication
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOptionalClaims]
+        [PSObject]
         $OptionalClaims,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphHomeRealmDiscoveryPolicy[]]
+        [PSObject]
         $HomeRealmDiscoveryPolicies,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSpaApplication]
+        [PSObject]
         $Spa,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSynchronization]
+        [PSObject]
         $Synchronization,
 
         [Parameter()]
@@ -11717,7 +11717,7 @@ function New-MgApplication
         $SignInAudience,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphVerifiedPublisher]
+        [PSObject]
         $VerifiedPublisher,
 
         [Parameter()]
@@ -11741,7 +11741,7 @@ function New-MgApplication
         $Description,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenIssuancePolicy[]]
+        [PSObject]
         $TokenIssuancePolicies,
 
         [Parameter()]
@@ -11749,7 +11749,7 @@ function New-MgApplication
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphApiApplication]
+        [PSObject]
         $Api,
 
         [Parameter()]
@@ -11773,19 +11773,19 @@ function New-MgApplication
         $HttpPipelineAppend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $Owners,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphFederatedIdentityCredential[]]
+        [PSObject]
         $FederatedIdentityCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenLifetimePolicy[]]
+        [PSObject]
         $TokenLifetimePolicies,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppManagementPolicy[]]
+        [PSObject]
         $AppManagementPolicies,
 
         [Parameter()]
@@ -11793,11 +11793,11 @@ function New-MgApplication
         $DisabledByMicrosoftStatus,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPasswordCredential[]]
+        [PSObject]
         $PasswordCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPublicClientApplication]
+        [PSObject]
         $PublicClient,
 
         [Parameter()]
@@ -11805,15 +11805,15 @@ function New-MgApplication
         $Notes,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRequiredResourceAccess[]]
+        [PSObject]
         $RequiredResourceAccess,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphParentalControlSettings]
+        [PSObject]
         $ParentalControlSettings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWebApplication]
+        [PSObject]
         $Web,
 
         [Parameter()]
@@ -11825,7 +11825,7 @@ function New-MgApplication
         $IsFallbackPublicClient,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAddIn[]]
+        [PSObject]
         $AddIns,
 
         [Parameter()]
@@ -11833,7 +11833,7 @@ function New-MgApplication
         $DeletedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRequestSignatureVerification]
+        [PSObject]
         $RequestSignatureVerification,
 
         [Parameter()]
@@ -11845,7 +11845,7 @@ function New-MgApplication
         $AdditionalProperties,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRole[]]
+        [PSObject]
         $AppRoles,
 
         [Parameter()]
@@ -11861,11 +11861,11 @@ function New-MgApplication
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphExtensionProperty[]]
+        [PSObject]
         $ExtensionProperties,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsApplication]
+        [PSObject]
         $Windows,
 
         [Parameter()]
@@ -11873,23 +11873,23 @@ function New-MgApplication
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConnectorGroup]
+        [PSObject]
         $ConnectorGroup,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject]
+        [PSObject]
         $CreatedOnBehalfOf,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphKeyCredential[]]
+        [PSObject]
         $KeyCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCertification]
+        [PSObject]
         $Certification,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnPremisesPublishing]
+        [PSObject]
         $OnPremisesPublishing,
 
         [Parameter()]
@@ -11897,7 +11897,7 @@ function New-MgApplication
         $SamlMetadataUrl,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphInformationalUrl]
+        [PSObject]
         $Info,
 
         [Parameter()]
@@ -11909,7 +11909,7 @@ function New-MgApplication
         $Oauth2RequirePostResponse,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphApplication1]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -11946,7 +11946,7 @@ function New-MgApplicationOwnerByRef
         $PassThru,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IApplicationsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -11991,19 +11991,19 @@ function New-MgServicePrincipal
         $AppDescription,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphHomeRealmDiscoveryPolicy[]]
+        [PSObject]
         $HomeRealmDiscoveryPolicies,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPermissionScope[]]
+        [PSObject]
         $Oauth2PermissionScopes,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSynchronization]
+        [PSObject]
         $Synchronization,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRoleAssignment[]]
+        [PSObject]
         $AppRoleAssignments,
 
         [Parameter()]
@@ -12027,11 +12027,11 @@ function New-MgServicePrincipal
         $NotificationEmailAddresses,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphLicenseDetails[]]
+        [PSObject]
         $LicenseDetails,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphClaimsMappingPolicy[]]
+        [PSObject]
         $ClaimsMappingPolicies,
 
         [Parameter()]
@@ -12047,7 +12047,7 @@ function New-MgServicePrincipal
         $DisabledByMicrosoftStatus,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenIssuancePolicy[]]
+        [PSObject]
         $TokenIssuancePolicies,
 
         [Parameter()]
@@ -12063,7 +12063,7 @@ function New-MgServicePrincipal
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRoleAssignment[]]
+        [PSObject]
         $AppRoleAssignedTo,
 
         [Parameter()]
@@ -12079,7 +12079,7 @@ function New-MgServicePrincipal
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSamlSingleSignOnSettings]
+        [PSObject]
         $SamlSingleSignOnSettings,
 
         [Parameter()]
@@ -12091,15 +12091,15 @@ function New-MgServicePrincipal
         $HttpPipelineAppend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $Owners,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $OwnedObjects,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphFederatedIdentityCredential[]]
+        [PSObject]
         $FederatedIdentityCredentials,
 
         [Parameter()]
@@ -12107,15 +12107,15 @@ function New-MgServicePrincipal
         $LoginUrl,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenLifetimePolicy[]]
+        [PSObject]
         $TokenLifetimePolicies,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppManagementPolicy[]]
+        [PSObject]
         $AppManagementPolicies,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $CreatedObjects,
 
         [Parameter()]
@@ -12123,15 +12123,15 @@ function New-MgServicePrincipal
         $PreferredTokenSigningKeyEndDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDelegatedPermissionClassification[]]
+        [PSObject]
         $DelegatedPermissionClassifications,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPasswordCredential[]]
+        [PSObject]
         $PasswordCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $MemberOf,
 
         [Parameter()]
@@ -12139,7 +12139,7 @@ function New-MgServicePrincipal
         $Notes,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPermissionScope[]]
+        [PSObject]
         $PublishedPermissionScopes,
 
         [Parameter()]
@@ -12163,11 +12163,11 @@ function New-MgServicePrincipal
         $AdditionalProperties,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $TransitiveMemberOf,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRole[]]
+        [PSObject]
         $AppRoles,
 
         [Parameter()]
@@ -12191,27 +12191,27 @@ function New-MgServicePrincipal
         $AppRoleAssignmentRequired,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphKeyCredential[]]
+        [PSObject]
         $KeyCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOAuth2PermissionGrant[]]
+        [PSObject]
         $Oauth2PermissionGrants,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphResourceSpecificPermission[]]
+        [PSObject]
         $ResourceSpecificApplicationPermissions,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPasswordSingleSignOnSettings]
+        [PSObject]
         $PasswordSingleSignOnSettings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAddIn[]]
+        [PSObject]
         $AddIns,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphInformationalUrl]
+        [PSObject]
         $Info,
 
         [Parameter()]
@@ -12231,11 +12231,11 @@ function New-MgServicePrincipal
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEndpoint[]]
+        [PSObject]
         $Endpoints,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphServicePrincipal]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -12276,7 +12276,7 @@ function Remove-MgApplication
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IApplicationsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -12298,6 +12298,63 @@ function Remove-MgApplication
         [Parameter()]
         [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
         $HttpPipelineAppend
+    )
+}
+function Remove-MgApplicationOwnerByRef
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $DirectoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
     )
 }
 function Remove-MgServicePrincipal
@@ -12325,7 +12382,7 @@ function Remove-MgServicePrincipal
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IApplicationsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -12354,19 +12411,19 @@ function Update-MgApplication
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOptionalClaims]
+        [PSObject]
         $OptionalClaims,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IApplicationsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphHomeRealmDiscoveryPolicy[]]
+        [PSObject]
         $HomeRealmDiscoveryPolicies,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSpaApplication]
+        [PSObject]
         $Spa,
 
         [Parameter()]
@@ -12390,7 +12447,7 @@ function Update-MgApplication
         $SignInAudience,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphVerifiedPublisher]
+        [PSObject]
         $VerifiedPublisher,
 
         [Parameter()]
@@ -12414,7 +12471,7 @@ function Update-MgApplication
         $Description,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenIssuancePolicy[]]
+        [PSObject]
         $TokenIssuancePolicies,
 
         [Parameter()]
@@ -12422,7 +12479,7 @@ function Update-MgApplication
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphApiApplication]
+        [PSObject]
         $Api,
 
         [Parameter()]
@@ -12442,19 +12499,19 @@ function Update-MgApplication
         $HttpPipelineAppend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $Owners,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphFederatedIdentityCredential[]]
+        [PSObject]
         $FederatedIdentityCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenLifetimePolicy[]]
+        [PSObject]
         $TokenLifetimePolicies,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppManagementPolicy[]]
+        [PSObject]
         $AppManagementPolicies,
 
         [Parameter()]
@@ -12462,11 +12519,11 @@ function Update-MgApplication
         $DisabledByMicrosoftStatus,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPasswordCredential[]]
+        [PSObject]
         $PasswordCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPublicClientApplication]
+        [PSObject]
         $PublicClient,
 
         [Parameter()]
@@ -12478,15 +12535,15 @@ function Update-MgApplication
         $Notes,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRequiredResourceAccess[]]
+        [PSObject]
         $RequiredResourceAccess,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphParentalControlSettings]
+        [PSObject]
         $ParentalControlSettings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWebApplication]
+        [PSObject]
         $Web,
 
         [Parameter()]
@@ -12502,7 +12559,7 @@ function Update-MgApplication
         $PassThru,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSynchronization]
+        [PSObject]
         $Synchronization,
 
         [Parameter()]
@@ -12510,7 +12567,7 @@ function Update-MgApplication
         $DeletedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRequestSignatureVerification]
+        [PSObject]
         $RequestSignatureVerification,
 
         [Parameter()]
@@ -12526,7 +12583,7 @@ function Update-MgApplication
         $ApplicationId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRole[]]
+        [PSObject]
         $AppRoles,
 
         [Parameter()]
@@ -12538,11 +12595,11 @@ function Update-MgApplication
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphExtensionProperty[]]
+        [PSObject]
         $ExtensionProperties,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsApplication]
+        [PSObject]
         $Windows,
 
         [Parameter()]
@@ -12550,15 +12607,15 @@ function Update-MgApplication
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject]
+        [PSObject]
         $CreatedOnBehalfOf,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConnectorGroup]
+        [PSObject]
         $ConnectorGroup,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAddIn[]]
+        [PSObject]
         $AddIns,
 
         [Parameter()]
@@ -12566,15 +12623,15 @@ function Update-MgApplication
         $ServiceManagementReference,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphKeyCredential[]]
+        [PSObject]
         $KeyCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCertification]
+        [PSObject]
         $Certification,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnPremisesPublishing]
+        [PSObject]
         $OnPremisesPublishing,
 
         [Parameter()]
@@ -12582,7 +12639,7 @@ function Update-MgApplication
         $SamlMetadataUrl,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphInformationalUrl]
+        [PSObject]
         $Info,
 
         [Parameter()]
@@ -12590,7 +12647,7 @@ function Update-MgApplication
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphApplication1]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -12615,7 +12672,7 @@ function Update-MgServicePrincipal
         $AlternativeNames,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IApplicationsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -12623,19 +12680,19 @@ function Update-MgServicePrincipal
         $AppDescription,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphHomeRealmDiscoveryPolicy[]]
+        [PSObject]
         $HomeRealmDiscoveryPolicies,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPermissionScope[]]
+        [PSObject]
         $Oauth2PermissionScopes,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSynchronization]
+        [PSObject]
         $Synchronization,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRoleAssignment[]]
+        [PSObject]
         $AppRoleAssignments,
 
         [Parameter()]
@@ -12643,7 +12700,7 @@ function Update-MgServicePrincipal
         $ServicePrincipalId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphLicenseDetails[]]
+        [PSObject]
         $LicenseDetails,
 
         [Parameter()]
@@ -12659,7 +12716,7 @@ function Update-MgServicePrincipal
         $NotificationEmailAddresses,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphClaimsMappingPolicy[]]
+        [PSObject]
         $ClaimsMappingPolicies,
 
         [Parameter()]
@@ -12675,7 +12732,7 @@ function Update-MgServicePrincipal
         $DisabledByMicrosoftStatus,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenIssuancePolicy[]]
+        [PSObject]
         $TokenIssuancePolicies,
 
         [Parameter()]
@@ -12691,7 +12748,7 @@ function Update-MgServicePrincipal
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRoleAssignment[]]
+        [PSObject]
         $AppRoleAssignedTo,
 
         [Parameter()]
@@ -12707,7 +12764,7 @@ function Update-MgServicePrincipal
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSamlSingleSignOnSettings]
+        [PSObject]
         $SamlSingleSignOnSettings,
 
         [Parameter()]
@@ -12723,11 +12780,11 @@ function Update-MgServicePrincipal
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $OwnedObjects,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphFederatedIdentityCredential[]]
+        [PSObject]
         $FederatedIdentityCredentials,
 
         [Parameter()]
@@ -12735,15 +12792,15 @@ function Update-MgServicePrincipal
         $LoginUrl,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTokenLifetimePolicy[]]
+        [PSObject]
         $TokenLifetimePolicies,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppManagementPolicy[]]
+        [PSObject]
         $AppManagementPolicies,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $CreatedObjects,
 
         [Parameter()]
@@ -12755,15 +12812,15 @@ function Update-MgServicePrincipal
         $ErrorUrl,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDelegatedPermissionClassification[]]
+        [PSObject]
         $DelegatedPermissionClassifications,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPasswordCredential[]]
+        [PSObject]
         $PasswordCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $MemberOf,
 
         [Parameter()]
@@ -12771,11 +12828,11 @@ function Update-MgServicePrincipal
         $Notes,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPermissionScope[]]
+        [PSObject]
         $PublishedPermissionScopes,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEndpoint[]]
+        [PSObject]
         $Endpoints,
 
         [Parameter()]
@@ -12783,7 +12840,7 @@ function Update-MgServicePrincipal
         $PassThru,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAddIn[]]
+        [PSObject]
         $AddIns,
 
         [Parameter()]
@@ -12799,11 +12856,11 @@ function Update-MgServicePrincipal
         $AdditionalProperties,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $TransitiveMemberOf,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRole[]]
+        [PSObject]
         $AppRoles,
 
         [Parameter()]
@@ -12831,19 +12888,19 @@ function Update-MgServicePrincipal
         $ApplicationTemplateId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphKeyCredential[]]
+        [PSObject]
         $KeyCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOAuth2PermissionGrant[]]
+        [PSObject]
         $Oauth2PermissionGrants,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphResourceSpecificPermission[]]
+        [PSObject]
         $ResourceSpecificApplicationPermissions,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPasswordSingleSignOnSettings]
+        [PSObject]
         $PasswordSingleSignOnSettings,
 
         [Parameter()]
@@ -12851,7 +12908,7 @@ function Update-MgServicePrincipal
         $SamlMetadataUrl,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphInformationalUrl]
+        [PSObject]
         $Info,
 
         [Parameter()]
@@ -12863,7 +12920,7 @@ function Update-MgServicePrincipal
         $PreferredSingleSignOnMode,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $Owners,
 
         [Parameter()]
@@ -12875,7 +12932,7 @@ function Update-MgServicePrincipal
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphServicePrincipal]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -13111,7 +13168,7 @@ function Get-MgDeviceManagementDeviceCategory
         $DeviceCategoryId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -13184,7 +13241,7 @@ function Get-MgDeviceManagementDeviceCompliancePolicy
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -13261,7 +13318,7 @@ function Get-MgDeviceManagementDeviceConfiguration
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -13370,7 +13427,7 @@ function New-MgDeviceManagementDeviceCategory
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceCategory]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -13391,7 +13448,7 @@ function New-MgDeviceManagementDeviceCompliancePolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceComplianceUserStatus[]]
+        [PSObject]
         $UserStatuses,
 
         [Parameter()]
@@ -13403,7 +13460,7 @@ function New-MgDeviceManagementDeviceCompliancePolicy
         $LastModifiedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceCompliancePolicyAssignment[]]
+        [PSObject]
         $Assignments,
 
         [Parameter()]
@@ -13415,7 +13472,7 @@ function New-MgDeviceManagementDeviceCompliancePolicy
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceComplianceDeviceOverview]
+        [PSObject]
         $DeviceStatusOverview,
 
         [Parameter()]
@@ -13427,7 +13484,7 @@ function New-MgDeviceManagementDeviceCompliancePolicy
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceComplianceUserOverview]
+        [PSObject]
         $UserStatusOverview,
 
         [Parameter()]
@@ -13439,7 +13496,7 @@ function New-MgDeviceManagementDeviceCompliancePolicy
         $Version,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceComplianceDeviceStatus[]]
+        [PSObject]
         $DeviceStatuses,
 
         [Parameter()]
@@ -13447,7 +13504,7 @@ function New-MgDeviceManagementDeviceCompliancePolicy
         $RoleScopeTagIds,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceComplianceScheduledActionForRule[]]
+        [PSObject]
         $ScheduledActionsForRule,
 
         [Parameter()]
@@ -13455,7 +13512,7 @@ function New-MgDeviceManagementDeviceCompliancePolicy
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceCompliancePolicy]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -13463,7 +13520,7 @@ function New-MgDeviceManagementDeviceCompliancePolicy
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSettingStateDeviceSummary[]]
+        [PSObject]
         $DeviceSettingStateSummaries,
 
         [Parameter()]
@@ -13488,7 +13545,7 @@ function New-MgDeviceManagementDeviceConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationUserStatus[]]
+        [PSObject]
         $UserStatuses,
 
         [Parameter()]
@@ -13500,7 +13557,7 @@ function New-MgDeviceManagementDeviceConfiguration
         $LastModifiedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationAssignment[]]
+        [PSObject]
         $Assignments,
 
         [Parameter()]
@@ -13512,11 +13569,11 @@ function New-MgDeviceManagementDeviceConfiguration
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationDeviceStatus[]]
+        [PSObject]
         $DeviceStatuses,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationDeviceOverview]
+        [PSObject]
         $DeviceStatusOverview,
 
         [Parameter()]
@@ -13528,15 +13585,15 @@ function New-MgDeviceManagementDeviceConfiguration
         $SupportsScopeTags,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementApplicabilityRuleOSVersion]
+        [PSObject]
         $DeviceManagementApplicabilityRuleOSVersion,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationUserOverview]
+        [PSObject]
         $UserStatusOverview,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationGroupAssignment[]]
+        [PSObject]
         $GroupAssignments,
 
         [Parameter()]
@@ -13548,15 +13605,15 @@ function New-MgDeviceManagementDeviceConfiguration
         $Version,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSettingStateDeviceSummary[]]
+        [PSObject]
         $DeviceSettingStateSummaries,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementApplicabilityRuleDeviceMode]
+        [PSObject]
         $DeviceManagementApplicabilityRuleDeviceMode,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementApplicabilityRuleOSEdition]
+        [PSObject]
         $DeviceManagementApplicabilityRuleOSEdition,
 
         [Parameter()]
@@ -13564,7 +13621,7 @@ function New-MgDeviceManagementDeviceConfiguration
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfiguration]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -13625,7 +13682,7 @@ function Remove-MgDeviceManagementDeviceCategory
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -13674,7 +13731,7 @@ function Remove-MgDeviceManagementDeviceCompliancePolicy
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -13719,7 +13776,7 @@ function Remove-MgDeviceManagementDeviceConfiguration
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -13748,119 +13805,119 @@ function Update-MgDeviceManagement
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTermsAndConditions[]]
+        [PSObject]
         $TermsAndConditions,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAndroidForWorkSettings]
+        [PSObject]
         $AndroidForWorkSettings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMicrosoftTunnelHealthThreshold[]]
+        [PSObject]
         $MicrosoftTunnelHealthThresholds,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRoleScopeTag[]]
+        [PSObject]
         $RoleScopeTags,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementExchangeConnector[]]
+        [PSObject]
         $ExchangeConnectors,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagement]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroupPolicyObjectFile[]]
+        [PSObject]
         $GroupPolicyObjectFiles,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsAutopilotDeploymentProfile[]]
+        [PSObject]
         $WindowsAutopilotDeploymentProfiles,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphResourceOperation[]]
+        [PSObject]
         $ResourceOperations,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConfigManagerCollection[]]
+        [PSObject]
         $ConfigManagerCollections,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsBatteryHealthDevicePerformance[]]
+        [PSObject]
         $UserExperienceAnalyticsBatteryHealthDevicePerformance,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphZebraFotaConnector]
+        [PSObject]
         $ZebraFotaConnector,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphVirtualEndpoint]
+        [PSObject]
         $VirtualEndpoint,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementConfigurationCategory[]]
+        [PSObject]
         $ConfigurationCategories,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedDeviceEncryptionState[]]
+        [PSObject]
         $ManagedDeviceEncryptionStates,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMicrosoftTunnelSite[]]
+        [PSObject]
         $MicrosoftTunnelSites,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceEnrollmentConfiguration[]]
+        [PSObject]
         $DeviceEnrollmentConfigurations,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementExchangeOnPremisesPolicy]
+        [PSObject]
         $ExchangeOnPremisesPolicy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsBatteryHealthAppImpact[]]
+        [PSObject]
         $UserExperienceAnalyticsBatteryHealthAppImpact,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionAppLearningSummary[]]
+        [PSObject]
         $WindowsInformationProtectionAppLearningSummaries,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAndroidDeviceOwnerEnrollmentProfile[]]
+        [PSObject]
         $AndroidDeviceOwnerEnrollmentProfiles,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementConfigurationSettingDefinition[]]
+        [PSObject]
         $ReusableSettings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroupPolicyMigrationReport[]]
+        [PSObject]
         $GroupPolicyMigrationReports,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionNetworkLearningSummary[]]
+        [PSObject]
         $WindowsInformationProtectionNetworkLearningSummaries,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsAppHealthAppPerformanceByAppVersionDeviceId[]]
+        [PSObject]
         $UserExperienceAnalyticsAppHealthApplicationPerformanceByAppVersionDeviceId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsMetricHistory[]]
+        [PSObject]
         $UserExperienceAnalyticsMetricHistory,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsWorkFromAnywhereMetric[]]
+        [PSObject]
         $UserExperienceAnalyticsWorkFromAnywhereMetrics,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEmbeddedSimActivationCodePool[]]
+        [PSObject]
         $EmbeddedSimActivationCodePools,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsModelScores[]]
+        [PSObject]
         $UserExperienceAnalyticsModelScores,
 
         [Parameter()]
@@ -13868,31 +13925,31 @@ function Update-MgDeviceManagement
         $AdditionalProperties,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementCompliancePolicy[]]
+        [PSObject]
         $CompliancePolicies,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMobileThreatDefenseConnector[]]
+        [PSObject]
         $MobileThreatDefenseConnectors,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementConfigurationPolicy[]]
+        [PSObject]
         $ConfigurationPolicies,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceProtectionOverview]
+        [PSObject]
         $DeviceProtectionOverview,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDepOnboardingSetting[]]
+        [PSObject]
         $DepOnboardingSettings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroupPolicyDefinitionFile[]]
+        [PSObject]
         $GroupPolicyDefinitionFiles,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceAndAppManagementRoleAssignment[]]
+        [PSObject]
         $RoleAssignments,
 
         [Parameter()]
@@ -13900,15 +13957,15 @@ function Update-MgDeviceManagement
         $LastReportAggregationDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsDriverUpdateProfile[]]
+        [PSObject]
         $WindowsDriverUpdateProfiles,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCartToClassAssociation[]]
+        [PSObject]
         $CartToClassAssociations,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementScript[]]
+        [PSObject]
         $DeviceManagementScripts,
 
         [Parameter()]
@@ -13916,35 +13973,35 @@ function Update-MgDeviceManagement
         $SubscriptionState,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsMalwareInformation[]]
+        [PSObject]
         $WindowsMalwareInformation,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroupPolicyDefinition[]]
+        [PSObject]
         $GroupPolicyDefinitions,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDetectedApp[]]
+        [PSObject]
         $DetectedApps,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAdvancedThreatProtectionOnboardingStateSummary]
+        [PSObject]
         $AdvancedThreatProtectionOnboardingStateSummary,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsDeviceScope[]]
+        [PSObject]
         $UserExperienceAnalyticsDeviceScopes,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsBaseline[]]
+        [PSObject]
         $UserExperienceAnalyticsBaselines,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsScoreHistory[]]
+        [PSObject]
         $UserExperienceAnalyticsScoreHistory,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsAppHealthApplicationPerformance[]]
+        [PSObject]
         $UserExperienceAnalyticsAppHealthApplicationPerformance,
 
         [Parameter()]
@@ -13952,35 +14009,35 @@ function Update-MgDeviceManagement
         $AccountMoveCompletionDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementReports]
+        [PSObject]
         $Reports,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementSettings]
+        [PSObject]
         $Settings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfiguration[]]
+        [PSObject]
         $DeviceConfigurations,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRemoteAssistanceSettings]
+        [PSObject]
         $RemoteAssistanceSettings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCertificateConnectorDetails[]]
+        [PSObject]
         $CertificateConnectorDetails,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAuditEvent[]]
+        [PSObject]
         $AuditEvents,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroupPolicyConfiguration[]]
+        [PSObject]
         $GroupPolicyConfigurations,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceCategory[]]
+        [PSObject]
         $DeviceCategories,
 
         [Parameter()]
@@ -13988,91 +14045,91 @@ function Update-MgDeviceManagement
         $TenantAttachRbac,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsAppHealthAppPerformanceByOSVersion[]]
+        [PSObject]
         $UserExperienceAnalyticsAppHealthApplicationPerformanceByOSVersion,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsCategory]
+        [PSObject]
         $UserExperienceAnalyticsAppHealthOverview,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsAutopilotSettings]
+        [PSObject]
         $WindowsAutopilotSettings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsBatteryHealthDeviceAppImpact[]]
+        [PSObject]
         $UserExperienceAnalyticsBatteryHealthDeviceAppImpact,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementConfigurationPolicyTemplate[]]
+        [PSObject]
         $ConfigurationPolicyTemplates,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphApplePushNotificationCertificate]
+        [PSObject]
         $ApplePushNotificationCertificate,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsMetricHistory[]]
+        [PSObject]
         $UserExperienceAnalyticsDeviceMetricHistory,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsAppHealthOSVersionPerformance[]]
+        [PSObject]
         $UserExperienceAnalyticsAppHealthOSVersionPerformance,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRemoteAssistancePartner[]]
+        [PSObject]
         $RemoteAssistancePartners,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementAutopilotEvent[]]
+        [PSObject]
         $AutopilotEvents,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphComplianceManagementPartner[]]
+        [PSObject]
         $ComplianceManagementPartners,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsDeviceWithoutCloudIdentity[]]
+        [PSObject]
         $UserExperienceAnalyticsDevicesWithoutCloudIdentity,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementTroubleshootingEvent[]]
+        [PSObject]
         $TroubleshootingEvents,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsBatteryHealthCapacityDetails]
+        [PSObject]
         $UserExperienceAnalyticsBatteryHealthCapacityDetails,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedDeviceOverview]
+        [PSObject]
         $ManagedDeviceOverview,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroupPolicyUploadedDefinitionFile[]]
+        [PSObject]
         $GroupPolicyUploadedDefinitionFiles,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementPartner[]]
+        [PSObject]
         $DeviceManagementPartners,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAndroidManagedStoreAppConfigurationSchema[]]
+        [PSObject]
         $AndroidManagedStoreAppConfigurationSchemas,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsResourcePerformance[]]
+        [PSObject]
         $UserExperienceAnalyticsResourcePerformance,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMacOSSoftwareUpdateAccountSummary[]]
+        [PSObject]
         $MacOSSoftwareUpdateAccountSummaries,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsWorkFromAnywhereModelPerformance[]]
+        [PSObject]
         $UserExperienceAnalyticsWorkFromAnywhereModelPerformance,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementConfigurationCategory[]]
+        [PSObject]
         $ComplianceCategories,
 
         [Parameter()]
@@ -14080,19 +14137,19 @@ function Update-MgDeviceManagement
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationConflictSummary[]]
+        [PSObject]
         $DeviceConfigurationConflictSummary,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTelecomExpenseManagementPartner[]]
+        [PSObject]
         $TelecomExpenseManagementPartners,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementTemplate[]]
+        [PSObject]
         $Templates,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMicrosoftTunnelConfiguration[]]
+        [PSObject]
         $MicrosoftTunnelConfigurations,
 
         [Parameter()]
@@ -14100,35 +14157,35 @@ function Update-MgDeviceManagement
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsMalwareOverview]
+        [PSObject]
         $WindowsMalwareOverview,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementResourceAccessProfileBase[]]
+        [PSObject]
         $ResourceAccessProfiles,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsBatteryHealthDeviceRuntimeHistory[]]
+        [PSObject]
         $UserExperienceAnalyticsBatteryHealthDeviceRuntimeHistory,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementIntent[]]
+        [PSObject]
         $Intents,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsFeatureUpdateProfile[]]
+        [PSObject]
         $WindowsFeatureUpdateProfiles,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsBatteryHealthRuntimeDetails]
+        [PSObject]
         $UserExperienceAnalyticsBatteryHealthRuntimeDetails,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementConfigurationSettingDefinition[]]
+        [PSObject]
         $ComplianceSettings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsDeviceScores[]]
+        [PSObject]
         $UserExperienceAnalyticsDeviceScores,
 
         [Parameter()]
@@ -14136,11 +14193,11 @@ function Update-MgDeviceManagement
         $IntuneAccountId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnPremisesConditionalAccessSettings]
+        [PSObject]
         $ConditionalAccessSettings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphIosUpdateDeviceStatus[]]
+        [PSObject]
         $IosUpdateStatuses,
 
         [Parameter()]
@@ -14148,31 +14205,31 @@ function Update-MgDeviceManagement
         $DeviceComplianceReportSummarizationDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphZebraFotaDeployment[]]
+        [PSObject]
         $ZebraFotaDeployments,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCloudPcConnectivityIssue[]]
+        [PSObject]
         $CloudPcConnectivityIssues,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsImpactingProcess[]]
+        [PSObject]
         $UserExperienceAnalyticsImpactingProcess,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsDeviceStartupHistory[]]
+        [PSObject]
         $UserExperienceAnalyticsDeviceStartupHistory,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementDerivedCredentialSettings[]]
+        [PSObject]
         $DerivedCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsBatteryHealthModelPerformance[]]
+        [PSObject]
         $UserExperienceAnalyticsBatteryHealthModelPerformance,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceCompliancePolicy[]]
+        [PSObject]
         $DeviceCompliancePolicies,
 
         [Parameter()]
@@ -14180,7 +14237,7 @@ function Update-MgDeviceManagement
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAndroidForWorkAppConfigurationSchema[]]
+        [PSObject]
         $AndroidForWorkAppConfigurationSchemas,
 
         [Parameter()]
@@ -14188,55 +14245,55 @@ function Update-MgDeviceManagement
         $PassThru,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementSettingDefinition[]]
+        [PSObject]
         $SettingDefinitions,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsSettings]
+        [PSObject]
         $UserExperienceAnalyticsSettings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAndroidManagedStoreAccountEnterpriseSettings]
+        [PSObject]
         $AndroidManagedStoreAccountEnterpriseSettings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedDevice[]]
+        [PSObject]
         $ManagedDevices,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppleUserInitiatedEnrollmentProfile[]]
+        [PSObject]
         $AppleUserInitiatedEnrollmentProfiles,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationDeviceStateSummary]
+        [PSObject]
         $DeviceConfigurationDeviceStateSummaries,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsWorkFromAnywhereHardwareReadinessMetric]
+        [PSObject]
         $UserExperienceAnalyticsWorkFromAnywhereHardwareReadinessMetric,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementReusablePolicySetting[]]
+        [PSObject]
         $ReusablePolicySettings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsAppHealthAppPerformanceByAppVersionDetails[]]
+        [PSObject]
         $UserExperienceAnalyticsAppHealthApplicationPerformanceByAppVersionDetails,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOemWarrantyInformationOnboarding[]]
+        [PSObject]
         $OemWarrantyInformationOnboarding,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsRemoteConnection[]]
+        [PSObject]
         $UserExperienceAnalyticsRemoteConnection,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementConfigurationSettingDefinition[]]
+        [PSObject]
         $ConfigurationSettings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsDeviceScope]
+        [PSObject]
         $UserExperienceAnalyticsDeviceScope,
 
         [Parameter()]
@@ -14248,51 +14305,51 @@ function Update-MgDeviceManagement
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsNotAutopilotReadyDevice[]]
+        [PSObject]
         $UserExperienceAnalyticsNotAutopilotReadyDevice,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsCategory[]]
+        [PSObject]
         $UserExperienceAnalyticsCategories,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRestrictedAppsViolation[]]
+        [PSObject]
         $DeviceConfigurationRestrictedAppsViolations,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsDeviceStartupProcess[]]
+        [PSObject]
         $UserExperienceAnalyticsDeviceStartupProcesses,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMobileAppTroubleshootingEvent[]]
+        [PSObject]
         $MobileAppTroubleshootingEvents,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOrganizationalMessageGuidedContent[]]
+        [PSObject]
         $OrganizationalMessageGuidedContents,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphChromeOSOnboardingSettings[]]
+        [PSObject]
         $ChromeOSOnboardingSettings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRoleDefinition[]]
+        [PSObject]
         $RoleDefinitions,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceShellScript[]]
+        [PSObject]
         $DeviceShellScripts,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphImportedWindowsAutopilotDeviceIdentity[]]
+        [PSObject]
         $ImportedWindowsAutopilotDeviceIdentities,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsAppHealthAppPerformanceByAppVersion[]]
+        [PSObject]
         $UserExperienceAnalyticsAppHealthApplicationPerformanceByAppVersion,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceCompliancePolicySettingStateSummary[]]
+        [PSObject]
         $DeviceCompliancePolicySettingStateSummaries,
 
         [Parameter()]
@@ -14300,47 +14357,47 @@ function Update-MgDeviceManagement
         $HttpPipelineAppend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAndroidForWorkEnrollmentProfile[]]
+        [PSObject]
         $AndroidForWorkEnrollmentProfiles,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphComanagementEligibleDevice[]]
+        [PSObject]
         $ComanagementEligibleDevices,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsRegressionSummary]
+        [PSObject]
         $UserExperienceAnalyticsRegressionSummary,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphNotificationMessageTemplate[]]
+        [PSObject]
         $NotificationMessageTemplates,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphIntuneBrand]
+        [PSObject]
         $IntuneBrand,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsOverview]
+        [PSObject]
         $UserExperienceAnalyticsOverview,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementConfigurationSettingTemplate[]]
+        [PSObject]
         $TemplateSettings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRemoteActionAudit[]]
+        [PSObject]
         $RemoteActionAudits,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsUpdateCatalogItem[]]
+        [PSObject]
         $WindowsUpdateCatalogItems,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsAppHealthDevicePerformanceDetails[]]
+        [PSObject]
         $UserExperienceAnalyticsAppHealthDevicePerformanceDetails,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAdminConsent]
+        [PSObject]
         $AdminConsent,
 
         [Parameter()]
@@ -14352,51 +14409,51 @@ function Update-MgDeviceManagement
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceHealthScript[]]
+        [PSObject]
         $DeviceHealthScripts,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedDevice1[]]
+        [PSObject]
         $ComanagedDevices,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroupPolicyCategory[]]
+        [PSObject]
         $GroupPolicyCategories,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceAndAppManagementAssignmentFilter[]]
+        [PSObject]
         $AssignmentFilters,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationUserStateSummary]
+        [PSObject]
         $DeviceConfigurationUserStateSummaries,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAllDeviceCertificateState[]]
+        [PSObject]
         $DeviceConfigurationsAllManagedDeviceCertificateStates,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsAppHealthDevicePerformance[]]
+        [PSObject]
         $UserExperienceAnalyticsAppHealthDevicePerformance,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOrganizationalMessageDetail[]]
+        [PSObject]
         $OrganizationalMessageDetails,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceCustomAttributeShellScript[]]
+        [PSObject]
         $DeviceCustomAttributeShellScripts,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsAppHealthDeviceModelPerformance[]]
+        [PSObject]
         $UserExperienceAnalyticsAppHealthDeviceModelPerformance,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphZebraFotaArtifact[]]
+        [PSObject]
         $ZebraFotaArtifacts,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphImportedDeviceIdentity[]]
+        [PSObject]
         $ImportedDeviceIdentities,
 
         [Parameter()]
@@ -14404,11 +14461,11 @@ function Update-MgDeviceManagement
         $MaximumDepTokens,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSoftwareUpdateStatusSummary]
+        [PSObject]
         $SoftwareUpdateStatusSummary,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsQualityUpdateProfile[]]
+        [PSObject]
         $WindowsQualityUpdateProfiles,
 
         [Parameter()]
@@ -14416,47 +14473,47 @@ function Update-MgDeviceManagement
         $UnlicensedAdminstratorsEnabled,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphNdesConnector[]]
+        [PSObject]
         $NdesConnectors,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMicrosoftTunnelServerLogCollectionResponse[]]
+        [PSObject]
         $MicrosoftTunnelServerLogCollectionResponses,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsBatteryHealthOSPerformance[]]
+        [PSObject]
         $UserExperienceAnalyticsBatteryHealthOSPerformance,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserPfxCertificate[]]
+        [PSObject]
         $UserPfxCertificates,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsAutopilotDeviceIdentity[]]
+        [PSObject]
         $WindowsAutopilotDeviceIdentities,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsDeviceStartupProcessPerformance[]]
+        [PSObject]
         $UserExperienceAnalyticsDeviceStartupProcessPerformance,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphIntuneBrandingProfile[]]
+        [PSObject]
         $IntuneBrandingProfiles,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementDomainJoinConnector[]]
+        [PSObject]
         $DomainJoinConnectors,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementSettingCategory[]]
+        [PSObject]
         $Categories,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementExchangeOnPremisesPolicy[]]
+        [PSObject]
         $ExchangeOnPremisesPolicies,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceCompliancePolicyDeviceStateSummary]
+        [PSObject]
         $DeviceCompliancePolicyDeviceStateSummary,
 
         [Parameter()]
@@ -14464,11 +14521,11 @@ function Update-MgDeviceManagement
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsDevicePerformance[]]
+        [PSObject]
         $UserExperienceAnalyticsDevicePerformance,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceComplianceScript[]]
+        [PSObject]
         $DeviceComplianceScripts,
 
         [Parameter()]
@@ -14476,11 +14533,11 @@ function Update-MgDeviceManagement
         $Subscriptions,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedDeviceCleanupSettings]
+        [PSObject]
         $ManagedDeviceCleanupSettings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDataSharingConsent[]]
+        [PSObject]
         $DataSharingConsents
     )
 }
@@ -14517,7 +14574,7 @@ function Update-MgDeviceManagementDeviceCategory
         $RoleScopeTagIds,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -14525,7 +14582,7 @@ function Update-MgDeviceManagementDeviceCategory
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceCategory]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -14558,7 +14615,7 @@ function Update-MgDeviceManagementDeviceCompliancePolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceComplianceUserStatus[]]
+        [PSObject]
         $UserStatuses,
 
         [Parameter()]
@@ -14570,7 +14627,7 @@ function Update-MgDeviceManagementDeviceCompliancePolicy
         $LastModifiedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceCompliancePolicyAssignment[]]
+        [PSObject]
         $Assignments,
 
         [Parameter()]
@@ -14586,11 +14643,11 @@ function Update-MgDeviceManagementDeviceCompliancePolicy
         $DeviceCompliancePolicyId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceComplianceDeviceOverview]
+        [PSObject]
         $DeviceStatusOverview,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -14602,7 +14659,7 @@ function Update-MgDeviceManagementDeviceCompliancePolicy
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceComplianceUserOverview]
+        [PSObject]
         $UserStatusOverview,
 
         [Parameter()]
@@ -14614,7 +14671,7 @@ function Update-MgDeviceManagementDeviceCompliancePolicy
         $Version,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceComplianceDeviceStatus[]]
+        [PSObject]
         $DeviceStatuses,
 
         [Parameter()]
@@ -14622,7 +14679,7 @@ function Update-MgDeviceManagementDeviceCompliancePolicy
         $RoleScopeTagIds,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceComplianceScheduledActionForRule[]]
+        [PSObject]
         $ScheduledActionsForRule,
 
         [Parameter()]
@@ -14630,7 +14687,7 @@ function Update-MgDeviceManagementDeviceCompliancePolicy
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceCompliancePolicy]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -14638,7 +14695,7 @@ function Update-MgDeviceManagementDeviceCompliancePolicy
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSettingStateDeviceSummary[]]
+        [PSObject]
         $DeviceSettingStateSummaries,
 
         [Parameter()]
@@ -14667,7 +14724,7 @@ function Update-MgDeviceManagementDeviceConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationUserStatus[]]
+        [PSObject]
         $UserStatuses,
 
         [Parameter()]
@@ -14679,7 +14736,7 @@ function Update-MgDeviceManagementDeviceConfiguration
         $LastModifiedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationAssignment[]]
+        [PSObject]
         $Assignments,
 
         [Parameter()]
@@ -14691,15 +14748,15 @@ function Update-MgDeviceManagementDeviceConfiguration
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationDeviceStatus[]]
+        [PSObject]
         $DeviceStatuses,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationDeviceOverview]
+        [PSObject]
         $DeviceStatusOverview,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -14711,15 +14768,15 @@ function Update-MgDeviceManagementDeviceConfiguration
         $SupportsScopeTags,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementApplicabilityRuleOSVersion]
+        [PSObject]
         $DeviceManagementApplicabilityRuleOSVersion,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationUserOverview]
+        [PSObject]
         $UserStatusOverview,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfigurationGroupAssignment[]]
+        [PSObject]
         $GroupAssignments,
 
         [Parameter()]
@@ -14735,7 +14792,7 @@ function Update-MgDeviceManagementDeviceConfiguration
         $RoleScopeTagIds,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSettingStateDeviceSummary[]]
+        [PSObject]
         $DeviceSettingStateSummaries,
 
         [Parameter()]
@@ -14743,7 +14800,7 @@ function Update-MgDeviceManagementDeviceConfiguration
         $DeviceConfigurationId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementApplicabilityRuleOSEdition]
+        [PSObject]
         $DeviceManagementApplicabilityRuleOSEdition,
 
         [Parameter()]
@@ -14751,7 +14808,7 @@ function Update-MgDeviceManagementDeviceConfiguration
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceConfiguration]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -14763,7 +14820,7 @@ function Update-MgDeviceManagementDeviceConfiguration
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementApplicabilityRuleDeviceMode]
+        [PSObject]
         $DeviceManagementApplicabilityRuleDeviceMode,
 
         [Parameter()]
@@ -14796,7 +14853,7 @@ function Get-MgDeviceManagementAssignmentFilter
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -14873,7 +14930,7 @@ function Get-MgDeviceManagementConfigurationPolicy
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -14950,7 +15007,7 @@ function Get-MgDeviceManagementConfigurationPolicyAssignment
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -15031,7 +15088,7 @@ function Get-MgDeviceManagementConfigurationPolicySetting
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -15103,6 +15160,83 @@ function Get-MgDeviceManagementConfigurationPolicySetting
         $HttpPipelineAppend
     )
 }
+function Get-MgDeviceManagementConfigurationPolicyTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.String]
+        $DeviceManagementConfigurationPolicyTemplateId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
 function Get-MgDeviceManagementConfigurationSetting
 {
     [CmdletBinding()]
@@ -15112,7 +15246,7 @@ function Get-MgDeviceManagementConfigurationSetting
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -15189,7 +15323,7 @@ function Get-MgDeviceManagementIntent
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -15270,7 +15404,7 @@ function Get-MgDeviceManagementIntentSetting
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -15387,7 +15521,7 @@ function New-MgDeviceManagementAssignmentFilter
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceAndAppManagementAssignmentFilter]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -15424,7 +15558,7 @@ function New-MgDeviceManagementConfigurationPolicy
         $LastModifiedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementConfigurationPolicyAssignment[]]
+        [PSObject]
         $Assignments,
 
         [Parameter()]
@@ -15436,7 +15570,7 @@ function New-MgDeviceManagementConfigurationPolicy
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementConfigurationSetting[]]
+        [PSObject]
         $Settings,
 
         [Parameter()]
@@ -15456,7 +15590,7 @@ function New-MgDeviceManagementConfigurationPolicy
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementConfigurationPolicyTemplateReference]
+        [PSObject]
         $TemplateReference,
 
         [Parameter()]
@@ -15492,7 +15626,7 @@ function New-MgDeviceManagementConfigurationPolicy
         $CreationSource,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementConfigurationPolicy]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -15521,7 +15655,7 @@ function New-MgDeviceManagementIntent
         $LastModifiedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementIntentAssignment[]]
+        [PSObject]
         $Assignments,
 
         [Parameter()]
@@ -15529,7 +15663,7 @@ function New-MgDeviceManagementIntent
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementSettingInstance[]]
+        [PSObject]
         $Settings,
 
         [Parameter()]
@@ -15553,15 +15687,15 @@ function New-MgDeviceManagementIntent
         $TemplateId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementIntentDeviceSettingStateSummary[]]
+        [PSObject]
         $DeviceSettingStateSummaries,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementIntentDeviceState[]]
+        [PSObject]
         $DeviceStates,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementIntentSettingCategory[]]
+        [PSObject]
         $Categories,
 
         [Parameter()]
@@ -15569,7 +15703,7 @@ function New-MgDeviceManagementIntent
         $RoleScopeTagIds,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementIntentDeviceStateSummary]
+        [PSObject]
         $DeviceStateSummary,
 
         [Parameter()]
@@ -15577,7 +15711,7 @@ function New-MgDeviceManagementIntent
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementIntent]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -15589,11 +15723,11 @@ function New-MgDeviceManagementIntent
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementIntentUserState[]]
+        [PSObject]
         $UserStates,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementIntentUserStateSummary]
+        [PSObject]
         $UserStateSummary,
 
         [Parameter()]
@@ -15634,7 +15768,7 @@ function Remove-MgDeviceManagementAssignmentFilter
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -15687,7 +15821,7 @@ function Remove-MgDeviceManagementConfigurationPolicy
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -15732,7 +15866,7 @@ function Remove-MgDeviceManagementIntent
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -15777,7 +15911,7 @@ function Update-MgDeviceManagementAssignmentFilter
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -15809,7 +15943,7 @@ function Update-MgDeviceManagementAssignmentFilter
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceAndAppManagementAssignmentFilter]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -15854,7 +15988,7 @@ function Update-MgDeviceManagementConfigurationPolicy
         $LastModifiedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementConfigurationPolicyAssignment[]]
+        [PSObject]
         $Assignments,
 
         [Parameter()]
@@ -15866,11 +16000,11 @@ function Update-MgDeviceManagementConfigurationPolicy
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementConfigurationSetting[]]
+        [PSObject]
         $Settings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -15886,7 +16020,7 @@ function Update-MgDeviceManagementConfigurationPolicy
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementConfigurationPolicyTemplateReference]
+        [PSObject]
         $TemplateReference,
 
         [Parameter()]
@@ -15922,7 +16056,7 @@ function Update-MgDeviceManagementConfigurationPolicy
         $CreationSource,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementConfigurationPolicy]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -15955,7 +16089,7 @@ function Update-MgDeviceManagementConfigurationPolicyAssignment
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceAndAppManagementAssignmentTarget1]
+        [PSObject]
         $Target,
 
         [Parameter()]
@@ -15975,7 +16109,7 @@ function Update-MgDeviceManagementConfigurationPolicyAssignment
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -15987,7 +16121,7 @@ function Update-MgDeviceManagementConfigurationPolicyAssignment
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementConfigurationPolicyAssignment]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -16036,7 +16170,7 @@ function Update-MgDeviceManagementIntent
         $LastModifiedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementIntentAssignment[]]
+        [PSObject]
         $Assignments,
 
         [Parameter()]
@@ -16044,11 +16178,11 @@ function Update-MgDeviceManagementIntent
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementSettingInstance[]]
+        [PSObject]
         $Settings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -16068,15 +16202,15 @@ function Update-MgDeviceManagementIntent
         $TemplateId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementIntentDeviceSettingStateSummary[]]
+        [PSObject]
         $DeviceSettingStateSummaries,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementIntentDeviceState[]]
+        [PSObject]
         $DeviceStates,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementIntentSettingCategory[]]
+        [PSObject]
         $Categories,
 
         [Parameter()]
@@ -16084,7 +16218,7 @@ function Update-MgDeviceManagementIntent
         $RoleScopeTagIds,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementIntentDeviceStateSummary]
+        [PSObject]
         $DeviceStateSummary,
 
         [Parameter()]
@@ -16096,7 +16230,7 @@ function Update-MgDeviceManagementIntent
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementIntent]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -16112,11 +16246,11 @@ function Update-MgDeviceManagementIntent
         $PassThru,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementIntentUserState[]]
+        [PSObject]
         $UserStates,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementIntentUserStateSummary]
+        [PSObject]
         $UserStateSummary,
 
         [Parameter()]
@@ -16161,7 +16295,7 @@ function Update-MgDeviceManagementIntentSetting
         $ValueJson,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -16173,7 +16307,7 @@ function Update-MgDeviceManagementIntentSetting
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementSettingInstance]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -16218,7 +16352,7 @@ function Get-MgDeviceManagementDeviceEnrollmentConfiguration
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementEnrolmentIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -16369,7 +16503,7 @@ function Get-MgRoleManagementDirectoryRoleDefinition
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementEnrolmentIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -16450,7 +16584,7 @@ function New-MgDeviceManagementDeviceEnrollmentConfiguration
         $LastModifiedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEnrollmentConfigurationAssignment[]]
+        [PSObject]
         $Assignments,
 
         [Parameter()]
@@ -16490,7 +16624,7 @@ function New-MgDeviceManagementDeviceEnrollmentConfiguration
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceEnrollmentConfiguration1]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -16563,7 +16697,7 @@ function New-MgRoleManagementDirectoryRoleDefinition
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleDefinition1]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -16571,7 +16705,7 @@ function New-MgRoleManagementDirectoryRoleDefinition
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleDefinition1[]]
+        [PSObject]
         $InheritsPermissionsFrom,
 
         [Parameter()]
@@ -16579,7 +16713,7 @@ function New-MgRoleManagementDirectoryRoleDefinition
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRolePermission[]]
+        [PSObject]
         $RolePermissions,
 
         [Parameter()]
@@ -16624,7 +16758,7 @@ function Remove-MgDeviceManagementDeviceEnrollmentConfiguration
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementEnrolmentIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -16718,7 +16852,7 @@ function Remove-MgRoleManagementDirectoryRoleDefinition
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementEnrolmentIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -16751,7 +16885,7 @@ function Update-MgDeviceManagementDeviceEnrollmentConfiguration
         $LastModifiedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEnrollmentConfigurationAssignment[]]
+        [PSObject]
         $Assignments,
 
         [Parameter()]
@@ -16763,7 +16897,7 @@ function Update-MgDeviceManagementDeviceEnrollmentConfiguration
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementEnrolmentIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -16799,7 +16933,7 @@ function Update-MgDeviceManagementDeviceEnrollmentConfiguration
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceEnrollmentConfiguration1]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -16844,7 +16978,7 @@ function Update-MgRoleManagement
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRoleManagement]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -16856,7 +16990,7 @@ function Update-MgRoleManagement
         $PassThru,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRbacApplicationMultiple]
+        [PSObject]
         $DeviceManagement,
 
         [Parameter()]
@@ -16868,7 +17002,7 @@ function Update-MgRoleManagement
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRbacApplication1]
+        [PSObject]
         $EntitlementManagement,
 
         [Parameter()]
@@ -16876,11 +17010,11 @@ function Update-MgRoleManagement
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRbacApplication1]
+        [PSObject]
         $Directory,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRbacApplicationMultiple]
+        [PSObject]
         $CloudPc,
 
         [Parameter()]
@@ -16897,11 +17031,11 @@ function Update-MgRoleManagementDirectory
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleAssignmentScheduleRequest[]]
+        [PSObject]
         $RoleAssignmentScheduleRequests,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleAssignment1[]]
+        [PSObject]
         $TransitiveRoleAssignments,
 
         [Parameter()]
@@ -16913,11 +17047,11 @@ function Update-MgRoleManagementDirectory
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleEligibilitySchedule[]]
+        [PSObject]
         $RoleEligibilitySchedules,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRbacResourceNamespace[]]
+        [PSObject]
         $ResourceNamespaces,
 
         [Parameter()]
@@ -16925,23 +17059,23 @@ function Update-MgRoleManagementDirectory
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleDefinition1[]]
+        [PSObject]
         $RoleDefinitions,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleEligibilityScheduleInstance[]]
+        [PSObject]
         $RoleEligibilityScheduleInstances,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleEligibilityScheduleRequest[]]
+        [PSObject]
         $RoleEligibilityScheduleRequests,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleAssignmentSchedule[]]
+        [PSObject]
         $RoleAssignmentSchedules,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleAssignment[]]
+        [PSObject]
         $RoleAssignments,
 
         [Parameter()]
@@ -16949,7 +17083,7 @@ function Update-MgRoleManagementDirectory
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRbacApplication1]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -16969,11 +17103,11 @@ function Update-MgRoleManagementDirectory
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleAssignmentScheduleInstance[]]
+        [PSObject]
         $RoleAssignmentScheduleInstances,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphApproval[]]
+        [PSObject]
         $RoleAssignmentApprovals,
 
         [Parameter()]
@@ -17002,7 +17136,7 @@ function Update-MgRoleManagementDirectoryRoleDefinition
         $ResourceScopes,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDeviceManagementEnrolmentIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -17034,7 +17168,7 @@ function Update-MgRoleManagementDirectoryRoleDefinition
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleDefinition1]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -17042,7 +17176,7 @@ function Update-MgRoleManagementDirectoryRoleDefinition
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleDefinition1[]]
+        [PSObject]
         $InheritsPermissionsFrom,
 
         [Parameter()]
@@ -17054,7 +17188,7 @@ function Update-MgRoleManagementDirectoryRoleDefinition
         $PassThru,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRolePermission[]]
+        [PSObject]
         $RolePermissions,
 
         [Parameter()]
@@ -17093,7 +17227,7 @@ function Invoke-MgTargetDeviceAppMgtTargetedManagedAppConfigurationApp
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IPathsXzr66BDeviceappmanagementTargetedmanagedappconfigurationsTargetedmanagedappconfigurationIdMicrosoftGraphTargetappsPostRequestbodyContentApplicationJsonSchema]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -17109,11 +17243,11 @@ function Invoke-MgTargetDeviceAppMgtTargetedManagedAppConfigurationApp
         $PassThru,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedMobileApp[]]
+        [PSObject]
         $Apps,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -17402,7 +17536,7 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $MinimumWipeOSVersion,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphKeyValuePair[]]
+        [PSObject]
         $ApprovedKeyboards,
 
         [Parameter()]
@@ -17430,11 +17564,11 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $KeyboardsRestricted,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppPolicyDeploymentSummary]
+        [PSObject]
         $DeploymentSummary,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedMobileApp[]]
+        [PSObject]
         $Apps,
 
         [Parameter()]
@@ -17522,7 +17656,7 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $BlockDataIngestionIntoOrganizationDocuments,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTargetedManagedAppPolicyAssignment1[]]
+        [PSObject]
         $Assignments,
 
         [Parameter()]
@@ -17550,7 +17684,7 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAndroidManagedAppProtection1]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -17562,7 +17696,7 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphKeyValuePair[]]
+        [PSObject]
         $ExemptedAppPackages,
 
         [Parameter()]
@@ -17583,7 +17717,7 @@ function Set-MgDeviceAppMgtTargetedManagedAppConfiguration
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IPathsZxn05FDeviceappmanagementTargetedmanagedappconfigurationsTargetedmanagedappconfigurationIdMicrosoftGraphAssignPostRequestbodyContentApplicationJsonSchema]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -17595,11 +17729,11 @@ function Set-MgDeviceAppMgtTargetedManagedAppConfiguration
         $PassThru,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTargetedManagedAppPolicyAssignment1[]]
+        [PSObject]
         $Assignments,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -17632,27 +17766,27 @@ function Update-MgDeviceAppMgt
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTargetedManagedAppConfiguration1[]]
+        [PSObject]
         $TargetedManagedAppConfigurations,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedEBook1[]]
+        [PSObject]
         $ManagedEBooks,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMobileApp1[]]
+        [PSObject]
         $MobileApps,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEnterpriseCodeSigningCertificate[]]
+        [PSObject]
         $EnterpriseCodeSigningCertificates,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppPolicy1[]]
+        [PSObject]
         $ManagedAppPolicies,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceAppManagementTask[]]
+        [PSObject]
         $DeviceAppManagementTasks,
 
         [Parameter()]
@@ -17660,7 +17794,7 @@ function Update-MgDeviceAppMgt
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppStatus[]]
+        [PSObject]
         $ManagedAppStatuses,
 
         [Parameter()]
@@ -17680,7 +17814,7 @@ function Update-MgDeviceAppMgt
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppRegistration1[]]
+        [PSObject]
         $ManagedAppRegistrations,
 
         [Parameter()]
@@ -17688,11 +17822,11 @@ function Update-MgDeviceAppMgt
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsManagedAppProtection[]]
+        [PSObject]
         $WindowsManagedAppProtections,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDefaultManagedAppProtection1[]]
+        [PSObject]
         $DefaultManagedAppProtections,
 
         [Parameter()]
@@ -17700,11 +17834,11 @@ function Update-MgDeviceAppMgt
         $IsEnabledForMicrosoftStoreForBusiness,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMobileAppCategory[]]
+        [PSObject]
         $MobileAppCategories,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedEBookCategory[]]
+        [PSObject]
         $ManagedEBookCategories,
 
         [Parameter()]
@@ -17712,15 +17846,15 @@ function Update-MgDeviceAppMgt
         $MicrosoftStoreForBusinessLastCompletedApplicationSyncTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSymantecCodeSigningCertificate]
+        [PSObject]
         $SymantecCodeSigningCertificate,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphIosManagedAppProtection1[]]
+        [PSObject]
         $IosManagedAppProtections,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphIosLobAppProvisioningConfiguration[]]
+        [PSObject]
         $IosLobAppProvisioningConfigurations,
 
         [Parameter()]
@@ -17728,19 +17862,19 @@ function Update-MgDeviceAppMgt
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceAppManagement1]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionWipeAction[]]
+        [PSObject]
         $WindowsInformationProtectionWipeActions,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMdmWindowsInformationProtectionPolicy1[]]
+        [PSObject]
         $MdmWindowsInformationProtectionPolicies,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsManagementApp]
+        [PSObject]
         $WindowsManagementApp,
 
         [Parameter()]
@@ -17748,11 +17882,11 @@ function Update-MgDeviceAppMgt
         $PassThru,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSideLoadingKey[]]
+        [PSObject]
         $SideLoadingKeys,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPolicySet[]]
+        [PSObject]
         $PolicySets,
 
         [Parameter()]
@@ -17760,15 +17894,15 @@ function Update-MgDeviceAppMgt
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionDeviceRegistration[]]
+        [PSObject]
         $WindowsInformationProtectionDeviceRegistrations,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphVppToken1[]]
+        [PSObject]
         $VppTokens,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionPolicy1[]]
+        [PSObject]
         $WindowsInformationProtectionPolicies,
 
         [Parameter()]
@@ -17776,7 +17910,7 @@ function Update-MgDeviceAppMgt
         $MicrosoftStoreForBusinessPortalSelection,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAndroidManagedAppProtection1[]]
+        [PSObject]
         $AndroidManagedAppProtections,
 
         [Parameter()]
@@ -17788,7 +17922,7 @@ function Update-MgDeviceAppMgt
         $MicrosoftStoreForBusinessLastSuccessfulSyncDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedDeviceMobileAppConfiguration1[]]
+        [PSObject]
         $MobileAppConfigurations,
 
         [Parameter()]
@@ -17796,7 +17930,7 @@ function Update-MgDeviceAppMgt
         $HttpPipelineAppend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsDefenderApplicationControlSupplementalPolicy[]]
+        [PSObject]
         $WdacSupplementalPolicies
     )
 }
@@ -17849,7 +17983,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $CreatedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppPolicyDeploymentSummary]
+        [PSObject]
         $DeploymentSummary,
 
         [Parameter()]
@@ -17933,7 +18067,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $RequiredAndroidSafetyNetAppsVerificationType,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphKeyValuePair[]]
+        [PSObject]
         $ApprovedKeyboards,
 
         [Parameter()]
@@ -17985,7 +18119,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $AppActionIfMaximumPinRetriesExceeded,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -18097,7 +18231,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $RoleScopeTagIds,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedMobileApp[]]
+        [PSObject]
         $Apps,
 
         [Parameter()]
@@ -18189,7 +18323,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $BlockDataIngestionIntoOrganizationDocuments,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTargetedManagedAppPolicyAssignment1[]]
+        [PSObject]
         $Assignments,
 
         [Parameter()]
@@ -18217,7 +18351,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAndroidManagedAppProtection1]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -18233,7 +18367,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphKeyValuePair[]]
+        [PSObject]
         $ExemptedAppPackages,
 
         [Parameter()]
@@ -18287,7 +18421,7 @@ function Get-MgDeviceAppManagementAndroidManagedAppProtection
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -18364,7 +18498,7 @@ function Get-MgDeviceAppManagementiOSManagedAppProtection
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -18441,7 +18575,7 @@ function Get-MgDeviceAppManagementTargetedManagedAppConfiguration
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -18526,7 +18660,7 @@ function New-MgDeviceAppManagementTargetedManagedAppConfiguration
         $LastModifiedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTargetedManagedAppPolicyAssignment[]]
+        [PSObject]
         $Assignments,
 
         [Parameter()]
@@ -18558,7 +18692,7 @@ function New-MgDeviceAppManagementTargetedManagedAppConfiguration
         $Version,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppPolicyDeploymentSummary]
+        [PSObject]
         $DeploymentSummary,
 
         [Parameter()]
@@ -18574,11 +18708,11 @@ function New-MgDeviceAppManagementTargetedManagedAppConfiguration
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphKeyValuePair[]]
+        [PSObject]
         $CustomSettings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTargetedManagedAppConfiguration]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -18586,7 +18720,7 @@ function New-MgDeviceAppManagementTargetedManagedAppConfiguration
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedMobileApp[]]
+        [PSObject]
         $Apps,
 
         [Parameter()]
@@ -18635,7 +18769,7 @@ function Remove-MgDeviceAppManagementAndroidManagedAppProtection
         $AndroidManagedAppProtectionId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -18680,7 +18814,7 @@ function Remove-MgDeviceAppManagementiOSManagedAppProtection
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -18733,7 +18867,7 @@ function Remove-MgDeviceAppManagementTargetedManagedAppConfiguration
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -18762,31 +18896,31 @@ function Update-MgDeviceAppManagement
         $MicrosoftStoreForBusinessLastSuccessfulSyncDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTargetedManagedAppConfiguration[]]
+        [PSObject]
         $TargetedManagedAppConfigurations,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPolicySet[]]
+        [PSObject]
         $PolicySets,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedEBook[]]
+        [PSObject]
         $ManagedEBooks,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMobileApp[]]
+        [PSObject]
         $MobileApps,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEnterpriseCodeSigningCertificate[]]
+        [PSObject]
         $EnterpriseCodeSigningCertificates,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppPolicy[]]
+        [PSObject]
         $ManagedAppPolicies,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceAppManagementTask[]]
+        [PSObject]
         $DeviceAppManagementTasks,
 
         [Parameter()]
@@ -18794,7 +18928,7 @@ function Update-MgDeviceAppManagement
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppStatus[]]
+        [PSObject]
         $ManagedAppStatuses,
 
         [Parameter()]
@@ -18806,11 +18940,11 @@ function Update-MgDeviceAppManagement
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsManagementApp]
+        [PSObject]
         $WindowsManagementApp,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppRegistration[]]
+        [PSObject]
         $ManagedAppRegistrations,
 
         [Parameter()]
@@ -18818,11 +18952,11 @@ function Update-MgDeviceAppManagement
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsManagedAppProtection[]]
+        [PSObject]
         $WindowsManagedAppProtections,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDefaultManagedAppProtection[]]
+        [PSObject]
         $DefaultManagedAppProtections,
 
         [Parameter()]
@@ -18830,7 +18964,7 @@ function Update-MgDeviceAppManagement
         $IsEnabledForMicrosoftStoreForBusiness,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionWipeAction[]]
+        [PSObject]
         $WindowsInformationProtectionWipeActions,
 
         [Parameter()]
@@ -18838,7 +18972,7 @@ function Update-MgDeviceAppManagement
         $MicrosoftStoreForBusinessLanguage,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedEBookCategory[]]
+        [PSObject]
         $ManagedEBookCategories,
 
         [Parameter()]
@@ -18846,15 +18980,15 @@ function Update-MgDeviceAppManagement
         $MicrosoftStoreForBusinessLastCompletedApplicationSyncTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSymantecCodeSigningCertificate]
+        [PSObject]
         $SymantecCodeSigningCertificate,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphIosManagedAppProtection[]]
+        [PSObject]
         $IosManagedAppProtections,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphIosLobAppProvisioningConfiguration[]]
+        [PSObject]
         $IosLobAppProvisioningConfigurations,
 
         [Parameter()]
@@ -18862,7 +18996,7 @@ function Update-MgDeviceAppManagement
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceAppManagement]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -18870,7 +19004,7 @@ function Update-MgDeviceAppManagement
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMobileAppCategory[]]
+        [PSObject]
         $MobileAppCategories,
 
         [Parameter()]
@@ -18878,7 +19012,7 @@ function Update-MgDeviceAppManagement
         $PassThru,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSideLoadingKey[]]
+        [PSObject]
         $SideLoadingKeys,
 
         [Parameter()]
@@ -18886,15 +19020,15 @@ function Update-MgDeviceAppManagement
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionDeviceRegistration[]]
+        [PSObject]
         $WindowsInformationProtectionDeviceRegistrations,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphVppToken[]]
+        [PSObject]
         $VppTokens,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionPolicy[]]
+        [PSObject]
         $WindowsInformationProtectionPolicies,
 
         [Parameter()]
@@ -18902,7 +19036,7 @@ function Update-MgDeviceAppManagement
         $MicrosoftStoreForBusinessPortalSelection,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAndroidManagedAppProtection[]]
+        [PSObject]
         $AndroidManagedAppProtections,
 
         [Parameter()]
@@ -18910,11 +19044,11 @@ function Update-MgDeviceAppManagement
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMdmWindowsInformationProtectionPolicy[]]
+        [PSObject]
         $MdmWindowsInformationProtectionPolicies,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedDeviceMobileAppConfiguration[]]
+        [PSObject]
         $MobileAppConfigurations,
 
         [Parameter()]
@@ -18922,7 +19056,7 @@ function Update-MgDeviceAppManagement
         $HttpPipelineAppend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsDefenderApplicationControlSupplementalPolicy[]]
+        [PSObject]
         $WdacSupplementalPolicies
     )
 }
@@ -18931,7 +19065,7 @@ function Update-MgDeviceAppManagementTargetedManagedAppConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppPolicyDeploymentSummary]
+        [PSObject]
         $DeploymentSummary,
 
         [Parameter()]
@@ -18943,7 +19077,7 @@ function Update-MgDeviceAppManagementTargetedManagedAppConfiguration
         $LastModifiedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTargetedManagedAppPolicyAssignment[]]
+        [PSObject]
         $Assignments,
 
         [Parameter()]
@@ -18959,7 +19093,7 @@ function Update-MgDeviceAppManagementTargetedManagedAppConfiguration
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -18999,11 +19133,11 @@ function Update-MgDeviceAppManagementTargetedManagedAppConfiguration
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphKeyValuePair[]]
+        [PSObject]
         $CustomSettings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTargetedManagedAppConfiguration]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -19011,7 +19145,7 @@ function Update-MgDeviceAppManagementTargetedManagedAppConfiguration
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedMobileApp[]]
+        [PSObject]
         $Apps,
 
         [Parameter()]
@@ -19046,7 +19180,7 @@ function Get-MgGroup
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -19127,7 +19261,7 @@ function Get-MgGroupLifecyclePolicy
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -19358,7 +19492,7 @@ function New-MgGroup
         $Visibility,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphResourceSpecificPermissionGrant[]]
+        [PSObject]
         $PermissionGrants,
 
         [Parameter()]
@@ -19366,11 +19500,11 @@ function New-MgGroup
         $CreatedByAppId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSite1[]]
+        [PSObject]
         $Sites,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRoleAssignment[]]
+        [PSObject]
         $AppRoleAssignments,
 
         [Parameter()]
@@ -19378,7 +19512,7 @@ function New-MgGroup
         $SecurityEnabled,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAssignedLabel[]]
+        [PSObject]
         $AssignedLabels,
 
         [Parameter()]
@@ -19386,7 +19520,7 @@ function New-MgGroup
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCalendar]
+        [PSObject]
         $Calendar,
 
         [Parameter()]
@@ -19394,7 +19528,7 @@ function New-MgGroup
         $SecurityIdentifier,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAssignedLicense[]]
+        [PSObject]
         $AssignedLicenses,
 
         [Parameter()]
@@ -19406,11 +19540,11 @@ function New-MgGroup
         $RenewedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $RejectedSenders,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphExtension[]]
+        [PSObject]
         $Extensions,
 
         [Parameter()]
@@ -19450,7 +19584,7 @@ function New-MgGroup
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnPremisesProvisioningError[]]
+        [PSObject]
         $OnPremisesProvisioningErrors,
 
         [Parameter()]
@@ -19466,7 +19600,7 @@ function New-MgGroup
         $PreferredLanguage,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $TransitiveMembers,
 
         [Parameter()]
@@ -19474,7 +19608,7 @@ function New-MgGroup
         $HideFromAddressLists,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerGroup]
+        [PSObject]
         $Planner,
 
         [Parameter()]
@@ -19490,15 +19624,15 @@ function New-MgGroup
         $UnseenMessagesCount,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $Owners,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroupLifecyclePolicy[]]
+        [PSObject]
         $GroupLifecyclePolicies,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphLicenseProcessingState]
+        [PSObject]
         $LicenseProcessingState,
 
         [Parameter()]
@@ -19506,15 +19640,15 @@ function New-MgGroup
         $OnPremisesDomainName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroupSetting[]]
+        [PSObject]
         $Settings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $AcceptedSenders,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnenote]
+        [PSObject]
         $Onenote,
 
         [Parameter()]
@@ -19526,7 +19660,7 @@ function New-MgGroup
         $AccessType,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $MemberOf,
 
         [Parameter()]
@@ -19538,7 +19672,7 @@ function New-MgGroup
         $MailEnabled,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDrive1[]]
+        [PSObject]
         $Drives,
 
         [Parameter()]
@@ -19546,7 +19680,7 @@ function New-MgGroup
         $AllowExternalSenders,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $MembersWithLicenseErrors,
 
         [Parameter()]
@@ -19554,11 +19688,11 @@ function New-MgGroup
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroupWritebackConfiguration]
+        [PSObject]
         $WritebackConfiguration,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProfilePhoto]
+        [PSObject]
         $Photo,
 
         [Parameter()]
@@ -19566,7 +19700,7 @@ function New-MgGroup
         $Theme,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEvent1[]]
+        [PSObject]
         $Events,
 
         [Parameter()]
@@ -19586,7 +19720,7 @@ function New-MgGroup
         $IsManagementRestricted,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $TransitiveMemberOf,
 
         [Parameter()]
@@ -19610,7 +19744,7 @@ function New-MgGroup
         $IsFavorite,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDrive1]
+        [PSObject]
         $Drive,
 
         [Parameter()]
@@ -19618,11 +19752,11 @@ function New-MgGroup
         $OnPremisesNetBiosName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEvent1[]]
+        [PSObject]
         $CalendarView,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProfilePhoto[]]
+        [PSObject]
         $Photos,
 
         [Parameter()]
@@ -19638,7 +19772,7 @@ function New-MgGroup
         $HideFromOutlookClients,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMembershipRuleProcessingStatus]
+        [PSObject]
         $MembershipRuleProcessingStatus,
 
         [Parameter()]
@@ -19646,19 +19780,19 @@ function New-MgGroup
         $IsSubscribedByMail,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject]
+        [PSObject]
         $CreatedOnBehalfOf,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConversationThread[]]
+        [PSObject]
         $Threads,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTeam1]
+        [PSObject]
         $Team,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $Members,
 
         [Parameter()]
@@ -19682,7 +19816,7 @@ function New-MgGroup
         $CreatedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConversation[]]
+        [PSObject]
         $Conversations,
 
         [Parameter()]
@@ -19690,11 +19824,11 @@ function New-MgGroup
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEndpoint[]]
+        [PSObject]
         $Endpoints,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroup]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -19715,7 +19849,7 @@ function New-MgGroupLifecyclePolicy
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroupLifecyclePolicy]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -19768,7 +19902,7 @@ function New-MgGroupMember
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -19784,7 +19918,7 @@ function New-MgGroupMember
         $GroupId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -19833,7 +19967,7 @@ function New-MgGroupMemberByRef
         $PassThru,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -19870,7 +20004,7 @@ function New-MgGroupOwner
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -19886,7 +20020,7 @@ function New-MgGroupOwner
         $GroupId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -19935,7 +20069,7 @@ function New-MgGroupOwnerByRef
         $PassThru,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -19988,7 +20122,7 @@ function Remove-MgGroup
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -20041,7 +20175,7 @@ function Remove-MgGroupLifecyclePolicy
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -20094,7 +20228,7 @@ function Remove-MgGroupMemberByRef
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -20151,7 +20285,7 @@ function Remove-MgGroupOwnerByRef
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -20184,7 +20318,7 @@ function Set-MgGroupLicense
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IPaths6Fg5LiGroupsGroupIdMicrosoftGraphAssignlicensePostRequestbodyContentApplicationJsonSchema]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -20200,11 +20334,11 @@ function Set-MgGroupLicense
         $RemoveLicenses,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAssignedLicense[]]
+        [PSObject]
         $AddLicenses,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -20249,11 +20383,11 @@ function Update-MgGroup
         $Visibility,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphResourceSpecificPermissionGrant[]]
+        [PSObject]
         $PermissionGrants,
 
         [Parameter()]
@@ -20261,11 +20395,11 @@ function Update-MgGroup
         $CreatedByAppId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSite1[]]
+        [PSObject]
         $Sites,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRoleAssignment[]]
+        [PSObject]
         $AppRoleAssignments,
 
         [Parameter()]
@@ -20273,7 +20407,7 @@ function Update-MgGroup
         $SecurityEnabled,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAssignedLabel[]]
+        [PSObject]
         $AssignedLabels,
 
         [Parameter()]
@@ -20281,7 +20415,7 @@ function Update-MgGroup
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCalendar]
+        [PSObject]
         $Calendar,
 
         [Parameter()]
@@ -20289,7 +20423,7 @@ function Update-MgGroup
         $SecurityIdentifier,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAssignedLicense[]]
+        [PSObject]
         $AssignedLicenses,
 
         [Parameter()]
@@ -20301,11 +20435,11 @@ function Update-MgGroup
         $RenewedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $RejectedSenders,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphExtension[]]
+        [PSObject]
         $Extensions,
 
         [Parameter()]
@@ -20345,7 +20479,7 @@ function Update-MgGroup
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnPremisesProvisioningError[]]
+        [PSObject]
         $OnPremisesProvisioningErrors,
 
         [Parameter()]
@@ -20361,7 +20495,7 @@ function Update-MgGroup
         $PreferredLanguage,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $TransitiveMembers,
 
         [Parameter()]
@@ -20369,7 +20503,7 @@ function Update-MgGroup
         $HideFromAddressLists,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerGroup]
+        [PSObject]
         $Planner,
 
         [Parameter()]
@@ -20385,15 +20519,15 @@ function Update-MgGroup
         $UnseenMessagesCount,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $Owners,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroupLifecyclePolicy[]]
+        [PSObject]
         $GroupLifecyclePolicies,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphLicenseProcessingState]
+        [PSObject]
         $LicenseProcessingState,
 
         [Parameter()]
@@ -20405,15 +20539,15 @@ function Update-MgGroup
         $OnPremisesDomainName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroupSetting[]]
+        [PSObject]
         $Settings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $AcceptedSenders,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnenote]
+        [PSObject]
         $Onenote,
 
         [Parameter()]
@@ -20425,7 +20559,7 @@ function Update-MgGroup
         $AccessType,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $MemberOf,
 
         [Parameter()]
@@ -20437,7 +20571,7 @@ function Update-MgGroup
         $MailEnabled,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDrive1[]]
+        [PSObject]
         $Drives,
 
         [Parameter()]
@@ -20445,7 +20579,7 @@ function Update-MgGroup
         $AllowExternalSenders,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $MembersWithLicenseErrors,
 
         [Parameter()]
@@ -20453,11 +20587,11 @@ function Update-MgGroup
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroupWritebackConfiguration]
+        [PSObject]
         $WritebackConfiguration,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProfilePhoto]
+        [PSObject]
         $Photo,
 
         [Parameter()]
@@ -20465,7 +20599,7 @@ function Update-MgGroup
         $Theme,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEvent1[]]
+        [PSObject]
         $Events,
 
         [Parameter()]
@@ -20485,7 +20619,7 @@ function Update-MgGroup
         $IsManagementRestricted,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $TransitiveMemberOf,
 
         [Parameter()]
@@ -20509,7 +20643,7 @@ function Update-MgGroup
         $IsArchived,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDrive1]
+        [PSObject]
         $Drive,
 
         [Parameter()]
@@ -20517,11 +20651,11 @@ function Update-MgGroup
         $OnPremisesNetBiosName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEvent1[]]
+        [PSObject]
         $CalendarView,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProfilePhoto[]]
+        [PSObject]
         $Photos,
 
         [Parameter()]
@@ -20537,7 +20671,7 @@ function Update-MgGroup
         $HideFromOutlookClients,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMembershipRuleProcessingStatus]
+        [PSObject]
         $MembershipRuleProcessingStatus,
 
         [Parameter()]
@@ -20549,19 +20683,19 @@ function Update-MgGroup
         $IsSubscribedByMail,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject]
+        [PSObject]
         $CreatedOnBehalfOf,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConversationThread[]]
+        [PSObject]
         $Threads,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTeam1]
+        [PSObject]
         $Team,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $Members,
 
         [Parameter()]
@@ -20585,7 +20719,7 @@ function Update-MgGroup
         $CreatedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConversation[]]
+        [PSObject]
         $Conversations,
 
         [Parameter()]
@@ -20593,11 +20727,11 @@ function Update-MgGroup
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEndpoint[]]
+        [PSObject]
         $Endpoints,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroup]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -20610,7 +20744,7 @@ function Update-MgGroupLifecyclePolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IGroupsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -20646,7 +20780,7 @@ function Update-MgGroupLifecyclePolicy
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroupLifecyclePolicy]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -20685,7 +20819,7 @@ function Get-MgDevice
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -20803,7 +20937,7 @@ function Get-MgDirectoryRole
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -20876,7 +21010,7 @@ function Get-MgDirectoryRoleTemplate
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -20949,7 +21083,7 @@ function Get-MgOrganization
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -21026,7 +21160,7 @@ function Get-MgSubscribedSku
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -21095,7 +21229,7 @@ function New-MgDevice
         $Status,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUsageRight[]]
+        [PSObject]
         $UsageRights,
 
         [Parameter()]
@@ -21111,11 +21245,11 @@ function New-MgDevice
         $DeviceVersion,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphExtension[]]
+        [PSObject]
         $Extensions,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAlternativeSecurityId[]]
+        [PSObject]
         $AlternativeSecurityIds,
 
         [Parameter()]
@@ -21123,7 +21257,7 @@ function New-MgDevice
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCommand[]]
+        [PSObject]
         $Commands,
 
         [Parameter()]
@@ -21159,7 +21293,7 @@ function New-MgDevice
         $ProfileType,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnPremisesExtensionAttributes]
+        [PSObject]
         $ExtensionAttributes,
 
         [Parameter()]
@@ -21167,7 +21301,7 @@ function New-MgDevice
         $OnPremisesSyncEnabled,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $MemberOf,
 
         [Parameter()]
@@ -21203,7 +21337,7 @@ function New-MgDevice
         $IsManagementRestricted,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $TransitiveMemberOf,
 
         [Parameter()]
@@ -21219,11 +21353,11 @@ function New-MgDevice
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $RegisteredOwners,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $RegisteredUsers,
 
         [Parameter()]
@@ -21275,7 +21409,7 @@ function New-MgDevice
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDevice]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -21324,7 +21458,7 @@ function Remove-MgDevice
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -21357,7 +21491,7 @@ function Update-MgDevice
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -21369,7 +21503,7 @@ function Update-MgDevice
         $Status,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUsageRight[]]
+        [PSObject]
         $UsageRights,
 
         [Parameter()]
@@ -21389,11 +21523,11 @@ function Update-MgDevice
         $OperatingSystem,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphExtension[]]
+        [PSObject]
         $Extensions,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAlternativeSecurityId[]]
+        [PSObject]
         $AlternativeSecurityIds,
 
         [Parameter()]
@@ -21401,7 +21535,7 @@ function Update-MgDevice
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCommand[]]
+        [PSObject]
         $Commands,
 
         [Parameter()]
@@ -21437,7 +21571,7 @@ function Update-MgDevice
         $ProfileType,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnPremisesExtensionAttributes]
+        [PSObject]
         $ExtensionAttributes,
 
         [Parameter()]
@@ -21445,7 +21579,7 @@ function Update-MgDevice
         $OnPremisesSyncEnabled,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $MemberOf,
 
         [Parameter()]
@@ -21485,7 +21619,7 @@ function Update-MgDevice
         $IsManagementRestricted,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $TransitiveMemberOf,
 
         [Parameter()]
@@ -21501,11 +21635,11 @@ function Update-MgDevice
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $RegisteredOwners,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $RegisteredUsers,
 
         [Parameter()]
@@ -21557,7 +21691,7 @@ function Update-MgDevice
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDevice]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -21586,11 +21720,11 @@ function Update-MgDirectory
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphInboundSharedUserProfile[]]
+        [PSObject]
         $InboundSharedUserProfiles,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSharedEmailDomain[]]
+        [PSObject]
         $SharedEmailDomains,
 
         [Parameter()]
@@ -21602,11 +21736,11 @@ function Update-MgDirectory
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOutboundSharedUserProfile[]]
+        [PSObject]
         $OutboundSharedUserProfiles,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphIdentityProviderBase[]]
+        [PSObject]
         $FederationConfigurations,
 
         [Parameter()]
@@ -21614,15 +21748,15 @@ function Update-MgDirectory
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAdministrativeUnit[]]
+        [PSObject]
         $AdministrativeUnits,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRecommendation[]]
+        [PSObject]
         $Recommendations,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAttributeSet[]]
+        [PSObject]
         $AttributeSets,
 
         [Parameter()]
@@ -21630,11 +21764,11 @@ function Update-MgDirectory
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectory1]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $DeletedItems,
 
         [Parameter()]
@@ -21642,7 +21776,7 @@ function Update-MgDirectory
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphRecommendationResource[]]
+        [PSObject]
         $ImpactedResources,
 
         [Parameter()]
@@ -21658,11 +21792,11 @@ function Update-MgDirectory
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCustomSecurityAttributeDefinition[]]
+        [PSObject]
         $CustomSecurityAttributeDefinitions,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphFeatureRolloutPolicy[]]
+        [PSObject]
         $FeatureRolloutPolicies,
 
         [Parameter()]
@@ -21683,11 +21817,11 @@ function Update-MgOrganization
         $PostalCode,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphVerifiedDomain[]]
+        [PSObject]
         $VerifiedDomains,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCertificateConnectorSetting]
+        [PSObject]
         $CertificateConnectorSetting,
 
         [Parameter()]
@@ -21703,7 +21837,7 @@ function Update-MgOrganization
         $HttpPipelineAppend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOrganizationSettings]
+        [PSObject]
         $Settings,
 
         [Parameter()]
@@ -21739,11 +21873,11 @@ function Update-MgOrganization
         $MarketingNotificationEmails,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAssignedPlan[]]
+        [PSObject]
         $AssignedPlans,
 
         [Parameter()]
@@ -21767,7 +21901,7 @@ function Update-MgOrganization
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOrganization1]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -21779,7 +21913,7 @@ function Update-MgOrganization
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCertificateBasedAuthConfiguration[]]
+        [PSObject]
         $CertificateBasedAuthConfiguration,
 
         [Parameter()]
@@ -21787,11 +21921,11 @@ function Update-MgOrganization
         $PassThru,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPrivacyProfile]
+        [PSObject]
         $PrivacyProfile,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphExtension[]]
+        [PSObject]
         $Extensions,
 
         [Parameter()]
@@ -21799,11 +21933,11 @@ function Update-MgOrganization
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProvisionedPlan[]]
+        [PSObject]
         $ProvisionedPlans,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectorySizeQuota]
+        [PSObject]
         $DirectorySizeQuota,
 
         [Parameter()]
@@ -21811,7 +21945,7 @@ function Update-MgOrganization
         $TechnicalNotificationMails,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOrganizationalBranding]
+        [PSObject]
         $Branding,
 
         [Parameter()]
@@ -21864,7 +21998,7 @@ function Get-MgDirectorySetting
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -21933,7 +22067,7 @@ function New-MgDirectorySetting
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSettingValue[]]
+        [PSObject]
         $Values
     )
 }
@@ -21966,7 +22100,7 @@ function Remove-MgDirectorySetting
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -21991,7 +22125,7 @@ function Update-MgDirectorySetting
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSettingValue[]]
+        [PSObject]
         $Values
     )
 }
@@ -22006,7 +22140,7 @@ function Get-MgAgreement
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentityGovernanceIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -22069,7 +22203,7 @@ function Get-MgIdentityConditionalAccessNamedLocation
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -22142,7 +22276,7 @@ function Get-MgIdentityConditionalAccessPolicy
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -22223,7 +22357,7 @@ function Get-MgOauth2PermissionGrant
         $OAuth2PermissionGrantId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -22296,7 +22430,7 @@ function Get-MgPolicyAuthorizationPolicy
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -22410,7 +22544,7 @@ function Get-MgPolicyRoleManagementPolicy
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -22487,7 +22621,7 @@ function Get-MgPolicyRoleManagementPolicyAssignment
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -22564,7 +22698,7 @@ function Get-MgPolicyRoleManagementPolicyRule
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -22645,7 +22779,7 @@ function Get-MgPolicyTokenLifetimePolicy
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -22742,7 +22876,7 @@ function New-MgIdentityConditionalAccessPolicy
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConditionalAccessSessionControls]
+        [PSObject]
         $SessionControls,
 
         [Parameter()]
@@ -22754,7 +22888,7 @@ function New-MgIdentityConditionalAccessPolicy
         $State,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConditionalAccessConditionSet]
+        [PSObject]
         $Conditions,
 
         [Parameter()]
@@ -22762,7 +22896,7 @@ function New-MgIdentityConditionalAccessPolicy
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConditionalAccessPolicy]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -22770,7 +22904,7 @@ function New-MgIdentityConditionalAccessPolicy
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConditionalAccessGrantControls]
+        [PSObject]
         $GrantControls,
 
         [Parameter()]
@@ -22847,7 +22981,7 @@ function New-MgPolicyTokenLifetimePolicy
         $DeletedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $AppliesTo,
 
         [Parameter()]
@@ -22884,7 +23018,7 @@ function Remove-MgIdentityConditionalAccessNamedLocation
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -22933,7 +23067,7 @@ function Remove-MgIdentityConditionalAccessPolicy
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -22982,7 +23116,7 @@ function Remove-MgPolicyTokenLifetimePolicy
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -23027,7 +23161,7 @@ function Update-MgIdentityConditionalAccessPolicy
         $ModifiedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -23039,7 +23173,7 @@ function Update-MgIdentityConditionalAccessPolicy
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConditionalAccessSessionControls]
+        [PSObject]
         $SessionControls,
 
         [Parameter()]
@@ -23051,7 +23185,7 @@ function Update-MgIdentityConditionalAccessPolicy
         $State,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConditionalAccessConditionSet]
+        [PSObject]
         $Conditions,
 
         [Parameter()]
@@ -23063,7 +23197,7 @@ function Update-MgIdentityConditionalAccessPolicy
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConditionalAccessPolicy]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -23071,7 +23205,7 @@ function Update-MgIdentityConditionalAccessPolicy
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphConditionalAccessGrantControls]
+        [PSObject]
         $GrantControls,
 
         [Parameter()]
@@ -23120,7 +23254,7 @@ function Update-MgPolicyAuthorizationPolicy
         $AllowedToUseSspr,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -23144,7 +23278,7 @@ function Update-MgPolicyAuthorizationPolicy
         $AllowedToSignUpEmailBasedSubscriptions,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDefaultUserRoleOverride[]]
+        [PSObject]
         $DefaultUserRoleOverrides,
 
         [Parameter()]
@@ -23156,7 +23290,7 @@ function Update-MgPolicyAuthorizationPolicy
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAuthorizationPolicy]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -23192,7 +23326,7 @@ function Update-MgPolicyAuthorizationPolicy
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDefaultUserRolePermissions]
+        [PSObject]
         $DefaultUserRolePermissions,
 
         [Parameter()]
@@ -23233,7 +23367,7 @@ function Update-MgPolicyIdentitySecurityDefaultEnforcementPolicy
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphIdentitySecurityDefaultsEnforcementPolicy]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -23282,7 +23416,7 @@ function Update-MgPolicyRoleManagementPolicy
         $LastModifiedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleManagementPolicyRule[]]
+        [PSObject]
         $EffectiveRules,
 
         [Parameter()]
@@ -23294,7 +23428,7 @@ function Update-MgPolicyRoleManagementPolicy
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -23322,7 +23456,7 @@ function Update-MgPolicyRoleManagementPolicy
         $IsOrganizationDefault,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphIdentity]
+        [PSObject]
         $LastModifiedBy,
 
         [Parameter()]
@@ -23330,7 +23464,7 @@ function Update-MgPolicyRoleManagementPolicy
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleManagementPolicy]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -23350,7 +23484,7 @@ function Update-MgPolicyRoleManagementPolicy
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleManagementPolicyRule[]]
+        [PSObject]
         $Rules,
 
         [Parameter()]
@@ -23367,7 +23501,7 @@ function Update-MgPolicyRoleManagementPolicyRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleManagementPolicyRuleTarget]
+        [PSObject]
         $Target,
 
         [Parameter()]
@@ -23391,7 +23525,7 @@ function Update-MgPolicyRoleManagementPolicyRule
         $UnifiedRoleManagementPolicyId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -23399,7 +23533,7 @@ function Update-MgPolicyRoleManagementPolicyRule
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUnifiedRoleManagementPolicyRule]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -23444,7 +23578,7 @@ function Update-MgPolicyTokenLifetimePolicy
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IIdentitySignInsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -23492,7 +23626,7 @@ function Update-MgPolicyTokenLifetimePolicy
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $AppliesTo,
 
         [Parameter()]
@@ -23527,7 +23661,7 @@ function Get-MgGroupPlanner
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IPlannerIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -23564,7 +23698,7 @@ function Get-MgGroupPlannerPlan
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IPlannerIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -23682,7 +23816,7 @@ function Get-MgPlannerPlan
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IPlannerIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -23864,11 +23998,11 @@ function New-MgPlannerBucket
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerTask[]]
+        [PSObject]
         $Tasks,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerBucket]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -23889,7 +24023,7 @@ function New-MgPlannerPlan
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerBucket[]]
+        [PSObject]
         $Buckets,
 
         [Parameter()]
@@ -23917,15 +24051,15 @@ function New-MgPlannerPlan
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerTask[]]
+        [PSObject]
         $Tasks,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerPlanContainer]
+        [PSObject]
         $Container,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphIdentitySet]
+        [PSObject]
         $CreatedBy,
 
         [Parameter()]
@@ -23933,7 +24067,7 @@ function New-MgPlannerPlan
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerPlan]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -23941,7 +24075,7 @@ function New-MgPlannerPlan
         $Title,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerPlanDetails]
+        [PSObject]
         $Details,
 
         [Parameter()]
@@ -23970,7 +24104,7 @@ function Update-MgPlanner
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerBucket[]]
+        [PSObject]
         $Buckets,
 
         [Parameter()]
@@ -23994,15 +24128,15 @@ function Update-MgPlanner
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerTask[]]
+        [PSObject]
         $Tasks,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerRoster[]]
+        [PSObject]
         $Rosters,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerPlan[]]
+        [PSObject]
         $Plans,
 
         [Parameter()]
@@ -24010,7 +24144,7 @@ function Update-MgPlanner
         $PassThru,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlanner1]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -24039,7 +24173,7 @@ function Update-MgPlannerPlan
         $PlannerPlanId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerBucket[]]
+        [PSObject]
         $Buckets,
 
         [Parameter()]
@@ -24067,19 +24201,19 @@ function Update-MgPlannerPlan
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerTask[]]
+        [PSObject]
         $Tasks,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerPlanContainer]
+        [PSObject]
         $Container,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphIdentitySet]
+        [PSObject]
         $CreatedBy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IPlannerIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -24087,7 +24221,7 @@ function Update-MgPlannerPlan
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerPlan]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -24095,7 +24229,7 @@ function Update-MgPlannerPlan
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerPlanDetails]
+        [PSObject]
         $Details,
 
         [Parameter()]
@@ -24134,7 +24268,7 @@ function Get-MgTeam
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.ITeamsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -24211,7 +24345,7 @@ function Get-MgTeamChannel
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.ITeamsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -24292,7 +24426,7 @@ function Get-MgTeamChannelTab
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.ITeamsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -24393,7 +24527,7 @@ function Remove-MgTeam
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.ITeamsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -24442,7 +24576,7 @@ function Remove-MgTeamChannel
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.ITeamsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -24495,7 +24629,7 @@ function Remove-MgTeamChannelTab
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.ITeamsIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -24542,7 +24676,7 @@ function Get-MgUser
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IUsersIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -24623,7 +24757,7 @@ function Get-MgUserLicenseDetail
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IUsersIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -24700,19 +24834,19 @@ function New-MgUser
         $IsManagementRestricted,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTodo]
+        [PSObject]
         $Todo,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOfficeGraphInsights]
+        [PSObject]
         $Insights,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnlineMeeting1[]]
+        [PSObject]
         $OnlineMeetings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAssignedPlan[]]
+        [PSObject]
         $AssignedPlans,
 
         [Parameter()]
@@ -24720,7 +24854,7 @@ function New-MgUser
         $ExternalUserState,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUser]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -24732,19 +24866,19 @@ function New-MgUser
         $OnPremisesImmutableId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $RegisteredDevices,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRoleAssignment1[]]
+        [PSObject]
         $AppRoleAssignments,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphInformationProtection]
+        [PSObject]
         $InformationProtection,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphApproval[]]
+        [PSObject]
         $Approvals,
 
         [Parameter()]
@@ -24756,7 +24890,7 @@ function New-MgUser
         $ImAddresses,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceEnrollmentConfiguration[]]
+        [PSObject]
         $DeviceEnrollmentConfigurations,
 
         [Parameter()]
@@ -24776,7 +24910,7 @@ function New-MgUser
         $State,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphExtension[]]
+        [PSObject]
         $Extensions,
 
         [Parameter()]
@@ -24796,7 +24930,7 @@ function New-MgUser
         $HireDate,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMobileAppIntentAndState[]]
+        [PSObject]
         $MobileAppIntentAndStates,
 
         [Parameter()]
@@ -24804,7 +24938,7 @@ function New-MgUser
         $InfoCatalogs,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphChat1[]]
+        [PSObject]
         $Chats,
 
         [Parameter()]
@@ -24812,7 +24946,7 @@ function New-MgUser
         $AdditionalProperties,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEmployeeOrgData]
+        [PSObject]
         $EmployeeOrgData,
 
         [Parameter()]
@@ -24820,23 +24954,23 @@ function New-MgUser
         $LastPasswordChangeDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject]
+        [PSObject]
         $Manager,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphInferenceClassification]
+        [PSObject]
         $InferenceClassification,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCalendarGroup1[]]
+        [PSObject]
         $CalendarGroups,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMailFolder1[]]
+        [PSObject]
         $MailFolders,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphScopedRoleMembership[]]
+        [PSObject]
         $ScopedRoleMemberOf,
 
         [Parameter()]
@@ -24844,11 +24978,11 @@ function New-MgUser
         $ConsentProvidedForMinor,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSignInActivity]
+        [PSObject]
         $SignInActivity,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAgreementAcceptance[]]
+        [PSObject]
         $AgreementAcceptances,
 
         [Parameter()]
@@ -24856,19 +24990,19 @@ function New-MgUser
         $EmployeeType,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $OwnedObjects,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAuthorizationInfo]
+        [PSObject]
         $AuthorizationInfo,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProfilePhoto[]]
+        [PSObject]
         $Photos,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOAuth2PermissionGrant1[]]
+        [PSObject]
         $Oauth2PermissionGrants,
 
         [Parameter()]
@@ -24876,11 +25010,11 @@ function New-MgUser
         $PreferredDataLocation,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMailboxSettings1]
+        [PSObject]
         $MailboxSettings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphNotification[]]
+        [PSObject]
         $Notifications,
 
         [Parameter()]
@@ -24908,7 +25042,7 @@ function New-MgUser
         $DeletedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserSettings1]
+        [PSObject]
         $Settings,
 
         [Parameter()]
@@ -24924,7 +25058,7 @@ function New-MgUser
         $GivenName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphContactFolder1[]]
+        [PSObject]
         $ContactFolders,
 
         [Parameter()]
@@ -24932,11 +25066,11 @@ function New-MgUser
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPerson1[]]
+        [PSObject]
         $People,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionDeviceRegistration[]]
+        [PSObject]
         $WindowsInformationProtectionDeviceRegistrations,
 
         [Parameter()]
@@ -24964,7 +25098,7 @@ function New-MgUser
         $PreferredLanguage,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAccessReviewInstance[]]
+        [PSObject]
         $PendingAccessReviewInstances,
 
         [Parameter()]
@@ -24976,19 +25110,19 @@ function New-MgUser
         $AgeGroup,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerUser1]
+        [PSObject]
         $Planner,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphContact1[]]
+        [PSObject]
         $Contacts,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCalendar1[]]
+        [PSObject]
         $Calendars,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDrive1]
+        [PSObject]
         $Drive,
 
         [Parameter()]
@@ -25024,35 +25158,35 @@ function New-MgUser
         $City,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserTeamwork1]
+        [PSObject]
         $Teamwork,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppRegistration1[]]
+        [PSObject]
         $ManagedAppRegistrations,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMessage1[]]
+        [PSObject]
         $Messages,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserPrint]
+        [PSObject]
         $Print,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSecurity]
+        [PSObject]
         $Security,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphObjectIdentity[]]
+        [PSObject]
         $Identities,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTeam1[]]
+        [PSObject]
         $JoinedTeams,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTasks]
+        [PSObject]
         $Tasks,
 
         [Parameter()]
@@ -25068,7 +25202,7 @@ function New-MgUser
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserAnalytics]
+        [PSObject]
         $Analytics,
 
         [Parameter()]
@@ -25080,35 +25214,35 @@ function New-MgUser
         $OfficeLocation,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPresence1]
+        [PSObject]
         $Presence,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPasswordProfile]
+        [PSObject]
         $PasswordProfile,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppConsentRequest[]]
+        [PSObject]
         $AppConsentRequestsForApproval,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $TransitiveMemberOf,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedDevice1[]]
+        [PSObject]
         $ManagedDevices,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $CreatedObjects,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProfilePhoto]
+        [PSObject]
         $Photo,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphLicenseDetails[]]
+        [PSObject]
         $LicenseDetails,
 
         [Parameter()]
@@ -25116,11 +25250,11 @@ function New-MgUser
         $StreetAddress,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroup[]]
+        [PSObject]
         $JoinedGroups,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCloudPc[]]
+        [PSObject]
         $CloudPCs,
 
         [Parameter()]
@@ -25128,11 +25262,11 @@ function New-MgUser
         $CustomSecurityAttributes,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEvent1[]]
+        [PSObject]
         $CalendarView,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnenote1]
+        [PSObject]
         $Onenote,
 
         [Parameter()]
@@ -25144,11 +25278,11 @@ function New-MgUser
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphServicePrincipal[]]
+        [PSObject]
         $AppRoleAssignedResources,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $OwnedDevices,
 
         [Parameter()]
@@ -25156,15 +25290,15 @@ function New-MgUser
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSite1[]]
+        [PSObject]
         $FollowedSites,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDrive1[]]
+        [PSObject]
         $Drives,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMobileAppTroubleshootingEvent[]]
+        [PSObject]
         $MobileAppTroubleshootingEvents,
 
         [Parameter()]
@@ -25188,7 +25322,7 @@ function New-MgUser
         $HttpPipelineAppend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCalendar1]
+        [PSObject]
         $Calendar,
 
         [Parameter()]
@@ -25204,7 +25338,7 @@ function New-MgUser
         $CompanyName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $MemberOf,
 
         [Parameter()]
@@ -25216,15 +25350,15 @@ function New-MgUser
         $PostalCode,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAssignedLicense[]]
+        [PSObject]
         $AssignedLicenses,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEvent1[]]
+        [PSObject]
         $Events,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceKey[]]
+        [PSObject]
         $DeviceKeys,
 
         [Parameter()]
@@ -25236,15 +25370,15 @@ function New-MgUser
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUsageRight[]]
+        [PSObject]
         $UsageRights,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProvisionedPlan[]]
+        [PSObject]
         $ProvisionedPlans,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnPremisesProvisioningError[]]
+        [PSObject]
         $OnPremisesProvisioningErrors,
 
         [Parameter()]
@@ -25252,7 +25386,7 @@ function New-MgUser
         $MailNickname,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnPremisesExtensionAttributes]
+        [PSObject]
         $OnPremisesExtensionAttributes,
 
         [Parameter()]
@@ -25264,39 +25398,39 @@ function New-MgUser
         $CreatedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $DirectReports,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAuthentication1]
+        [PSObject]
         $Authentication,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $TransitiveReports,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphLicenseAssignmentState[]]
+        [PSObject]
         $LicenseAssignmentStates,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserActivity1[]]
+        [PSObject]
         $Activities,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDevice[]]
+        [PSObject]
         $Devices,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOutlookUser1]
+        [PSObject]
         $Outlook,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementTroubleshootingEvent1[]]
+        [PSObject]
         $DeviceManagementTroubleshootingEvents,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProfile]
+        [PSObject]
         $Profile,
 
         [Parameter()]
@@ -25341,7 +25475,7 @@ function Remove-MgUser
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IUsersIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -25374,23 +25508,23 @@ function Update-MgUser
         $IsManagementRestricted,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTodo]
+        [PSObject]
         $Todo,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOfficeGraphInsights]
+        [PSObject]
         $Insights,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnlineMeeting1[]]
+        [PSObject]
         $OnlineMeetings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IUsersIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAssignedPlan[]]
+        [PSObject]
         $AssignedPlans,
 
         [Parameter()]
@@ -25398,7 +25532,7 @@ function Update-MgUser
         $ExternalUserState,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUser]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -25410,19 +25544,19 @@ function Update-MgUser
         $OnPremisesImmutableId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $RegisteredDevices,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppRoleAssignment1[]]
+        [PSObject]
         $AppRoleAssignments,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphInformationProtection]
+        [PSObject]
         $InformationProtection,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphApproval[]]
+        [PSObject]
         $Approvals,
 
         [Parameter()]
@@ -25434,7 +25568,7 @@ function Update-MgUser
         $ImAddresses,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceEnrollmentConfiguration[]]
+        [PSObject]
         $DeviceEnrollmentConfigurations,
 
         [Parameter()]
@@ -25454,7 +25588,7 @@ function Update-MgUser
         $State,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphExtension[]]
+        [PSObject]
         $Extensions,
 
         [Parameter()]
@@ -25474,7 +25608,7 @@ function Update-MgUser
         $HireDate,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMobileAppIntentAndState[]]
+        [PSObject]
         $MobileAppIntentAndStates,
 
         [Parameter()]
@@ -25482,7 +25616,7 @@ function Update-MgUser
         $InfoCatalogs,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphChat1[]]
+        [PSObject]
         $Chats,
 
         [Parameter()]
@@ -25490,7 +25624,7 @@ function Update-MgUser
         $AdditionalProperties,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEmployeeOrgData]
+        [PSObject]
         $EmployeeOrgData,
 
         [Parameter()]
@@ -25498,23 +25632,23 @@ function Update-MgUser
         $LastPasswordChangeDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject]
+        [PSObject]
         $Manager,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphInferenceClassification]
+        [PSObject]
         $InferenceClassification,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCalendarGroup1[]]
+        [PSObject]
         $CalendarGroups,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMailFolder1[]]
+        [PSObject]
         $MailFolders,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphScopedRoleMembership[]]
+        [PSObject]
         $ScopedRoleMemberOf,
 
         [Parameter()]
@@ -25522,11 +25656,11 @@ function Update-MgUser
         $ConsentProvidedForMinor,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSignInActivity]
+        [PSObject]
         $SignInActivity,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAgreementAcceptance[]]
+        [PSObject]
         $AgreementAcceptances,
 
         [Parameter()]
@@ -25534,19 +25668,19 @@ function Update-MgUser
         $EmployeeType,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $OwnedObjects,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAuthorizationInfo]
+        [PSObject]
         $AuthorizationInfo,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProfilePhoto[]]
+        [PSObject]
         $Photos,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOAuth2PermissionGrant1[]]
+        [PSObject]
         $Oauth2PermissionGrants,
 
         [Parameter()]
@@ -25554,11 +25688,11 @@ function Update-MgUser
         $PreferredDataLocation,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMailboxSettings1]
+        [PSObject]
         $MailboxSettings,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphNotification[]]
+        [PSObject]
         $Notifications,
 
         [Parameter()]
@@ -25586,7 +25720,7 @@ function Update-MgUser
         $DeletedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserSettings1]
+        [PSObject]
         $Settings,
 
         [Parameter()]
@@ -25602,15 +25736,15 @@ function Update-MgUser
         $GivenName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphContactFolder1[]]
+        [PSObject]
         $ContactFolders,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPerson1[]]
+        [PSObject]
         $People,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionDeviceRegistration[]]
+        [PSObject]
         $WindowsInformationProtectionDeviceRegistrations,
 
         [Parameter()]
@@ -25638,7 +25772,7 @@ function Update-MgUser
         $PreferredLanguage,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAccessReviewInstance[]]
+        [PSObject]
         $PendingAccessReviewInstances,
 
         [Parameter()]
@@ -25650,19 +25784,19 @@ function Update-MgUser
         $AgeGroup,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPlannerUser1]
+        [PSObject]
         $Planner,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphContact1[]]
+        [PSObject]
         $Contacts,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCalendar1[]]
+        [PSObject]
         $Calendars,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDrive1]
+        [PSObject]
         $Drive,
 
         [Parameter()]
@@ -25698,35 +25832,35 @@ function Update-MgUser
         $City,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserTeamwork1]
+        [PSObject]
         $Teamwork,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedAppRegistration1[]]
+        [PSObject]
         $ManagedAppRegistrations,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMessage1[]]
+        [PSObject]
         $Messages,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserPrint]
+        [PSObject]
         $Print,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSecurity]
+        [PSObject]
         $Security,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphObjectIdentity[]]
+        [PSObject]
         $Identities,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTeam1[]]
+        [PSObject]
         $JoinedTeams,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphTasks]
+        [PSObject]
         $Tasks,
 
         [Parameter()]
@@ -25742,7 +25876,7 @@ function Update-MgUser
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserAnalytics]
+        [PSObject]
         $Analytics,
 
         [Parameter()]
@@ -25754,15 +25888,15 @@ function Update-MgUser
         $OfficeLocation,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPresence1]
+        [PSObject]
         $Presence,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphPasswordProfile]
+        [PSObject]
         $PasswordProfile,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAppConsentRequest[]]
+        [PSObject]
         $AppConsentRequestsForApproval,
 
         [Parameter()]
@@ -25770,23 +25904,23 @@ function Update-MgUser
         $UserType,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $TransitiveMemberOf,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedDevice1[]]
+        [PSObject]
         $ManagedDevices,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $CreatedObjects,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProfilePhoto]
+        [PSObject]
         $Photo,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphLicenseDetails[]]
+        [PSObject]
         $LicenseDetails,
 
         [Parameter()]
@@ -25794,11 +25928,11 @@ function Update-MgUser
         $StreetAddress,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphGroup[]]
+        [PSObject]
         $JoinedGroups,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCloudPc[]]
+        [PSObject]
         $CloudPCs,
 
         [Parameter()]
@@ -25806,11 +25940,11 @@ function Update-MgUser
         $CustomSecurityAttributes,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEvent1[]]
+        [PSObject]
         $CalendarView,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnenote1]
+        [PSObject]
         $Onenote,
 
         [Parameter()]
@@ -25822,11 +25956,11 @@ function Update-MgUser
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphServicePrincipal[]]
+        [PSObject]
         $AppRoleAssignedResources,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $OwnedDevices,
 
         [Parameter()]
@@ -25834,15 +25968,15 @@ function Update-MgUser
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphSite1[]]
+        [PSObject]
         $FollowedSites,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDrive1[]]
+        [PSObject]
         $Drives,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphMobileAppTroubleshootingEvent[]]
+        [PSObject]
         $MobileAppTroubleshootingEvents,
 
         [Parameter()]
@@ -25870,7 +26004,7 @@ function Update-MgUser
         $HttpPipelineAppend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphCalendar1]
+        [PSObject]
         $Calendar,
 
         [Parameter()]
@@ -25886,11 +26020,11 @@ function Update-MgUser
         $CompanyName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $MemberOf,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceKey[]]
+        [PSObject]
         $DeviceKeys,
 
         [Parameter()]
@@ -25898,11 +26032,11 @@ function Update-MgUser
         $EmployeeId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAssignedLicense[]]
+        [PSObject]
         $AssignedLicenses,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphEvent1[]]
+        [PSObject]
         $Events,
 
         [Parameter()]
@@ -25918,15 +26052,15 @@ function Update-MgUser
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUsageRight[]]
+        [PSObject]
         $UsageRights,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProvisionedPlan[]]
+        [PSObject]
         $ProvisionedPlans,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnPremisesProvisioningError[]]
+        [PSObject]
         $OnPremisesProvisioningErrors,
 
         [Parameter()]
@@ -25934,7 +26068,7 @@ function Update-MgUser
         $MailNickname,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOnPremisesExtensionAttributes]
+        [PSObject]
         $OnPremisesExtensionAttributes,
 
         [Parameter()]
@@ -25946,35 +26080,35 @@ function Update-MgUser
         $CreatedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $DirectReports,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphAuthentication1]
+        [PSObject]
         $Authentication,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDirectoryObject[]]
+        [PSObject]
         $TransitiveReports,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphLicenseAssignmentState[]]
+        [PSObject]
         $LicenseAssignmentStates,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphUserActivity1[]]
+        [PSObject]
         $Activities,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDevice[]]
+        [PSObject]
         $Devices,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphOutlookUser1]
+        [PSObject]
         $Outlook,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDeviceManagementTroubleshootingEvent1[]]
+        [PSObject]
         $DeviceManagementTroubleshootingEvents,
 
         [Parameter()]
@@ -25982,7 +26116,7 @@ function Update-MgUser
         $PassThru,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphProfile]
+        [PSObject]
         $Profile,
 
         [Parameter()]

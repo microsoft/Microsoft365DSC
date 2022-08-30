@@ -217,7 +217,7 @@ function Get-TargetResource
             RestrictedApps                                     = $devicePolicy.AdditionalProperties.restrictedApps
             RoleScopeTagIds                                    = $devicePolicy.AdditionalProperties.roleScopeTagIds
             Ensure                                             = 'Present'
-            Credential                                 = $Credential
+            Credential                                         = $Credential
             ApplicationId                                      = $ApplicationId
             TenantId                                           = $TenantId
             ApplicationSecret                                  = $ApplicationSecret
