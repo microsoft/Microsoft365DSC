@@ -157,7 +157,7 @@ function Get-TargetResource
     $context=Get-MgContext
     if($null -eq $context)
     {
-        New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters -ErrorAction Stop
     }
 
@@ -180,7 +180,7 @@ function Get-TargetResource
     try
     {
         #Retrieve policy general settings
-        $policy = Get-MgDeviceManagementConfigurationPolicy -Identity $Identity -ErrorAction Stop
+        $policy = Get-MgDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction Stop
 
         if ($null -eq $policy)
         {
@@ -199,7 +199,7 @@ function Get-TargetResource
         $returnHashtable.Add("DisplayName",$policy.name)
         $returnHashtable.Add("Description",$policy.description)
 
-        foreach ($setting in $settings)
+        foreach ($setting in $settings.settingInstance)
         {
             $addToParameters=$true
             $settingName=$setting.settingDefinitionId.Split("_")|Select-Object -Last 1
@@ -209,7 +209,7 @@ function Get-TargetResource
                 "#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance"
                 {
                     $values=@()
-                    foreach($value in $setting.simpleSettingCollectionValue)
+                    foreach($value in $setting.AdditionalProperties.simpleSettingCollectionValue)
                     {
                         $values+=Get-DeviceManagementConfigurationSettingInstanceValue -Setting $value
                     }
@@ -219,7 +219,7 @@ function Get-TargetResource
                 "#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance"
                 {
                     $values=@()
-                    foreach($value in $setting.groupSettingCollectionValue.children)
+                    foreach($value in $setting.AdditionalProperties.groupSettingCollectionValue.children)
                     {
                         $settingName=$value.settingDefinitionId.split("_")|Select-Object -Last 1
                         $settingValue= Get-DeviceManagementConfigurationSettingInstanceValue -Setting $value
@@ -229,7 +229,7 @@ function Get-TargetResource
                 }
                 Default
                 {
-                    $settingValue= Get-DeviceManagementConfigurationSettingInstanceValue -Setting $setting
+                    $settingValue= Get-DeviceManagementConfigurationSettingInstanceValue -Setting $setting.AdditionalProperties
                 }
             }
             if ($addToParameters)
@@ -457,16 +457,17 @@ function Set-TargetResource
         $settings= Format-M365DSCIntuneSettingCatalogPolicySettings `
             -DSCParams ([System.Collections.Hashtable]$PSBoundParameters)
 
+        $Template = Get-MgDeviceManagementConfigurationPolicyTemplate -DeviceManagementConfigurationPolicyTemplateId $templateReferenceId
         New-MgDeviceManagementConfigurationPolicy `
-            -DisplayName $DisplayName `
+            -Name $DisplayName `
             -Description $Description `
-            -TemplateReferenceId $templateReferenceId `
+            -TemplateReference $templateReference `
             -Platforms $platforms `
             -Technologies $technologies `
             -Settings $settings
 
         $assignmentsHash=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
-        Update-MgDeviceManagementConfigurationPolicyAssignments -DeviceManagementConfigurationPolicyId $policy.id -Targets $assignmentsHash
+        Update-MgDeviceManagementConfigurationPolicyAssignments -DeviceManagementConfigurationPolicyId $Identity -Targets $assignmentsHash
 
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
@@ -476,11 +477,12 @@ function Set-TargetResource
         $settings= Format-M365DSCIntuneSettingCatalogPolicySettings `
             -DSCParams ([System.Collections.Hashtable]$PSBoundParameters)
 
+        $Template = Get-MgDeviceManagementConfigurationPolicyTemplate -DeviceManagementConfigurationPolicyTemplateId $templateReferenceId
         Update-MgDeviceManagementConfigurationPolicy `
-            -Identity $Identity `
-            -DisplayName $DisplayName `
+            -DeviceManagementConfigurationPolicyId $Identity `
+            -Name $DisplayName `
             -Description $Description `
-            -TemplateReferenceId $templateReferenceId `
+            -TemplateReference $templateReference `
             -Platforms $platforms `
             -Technologies $technologies `
             -Settings $settings
@@ -492,7 +494,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Endpoint Protection Policy {$($currentPolicy.DisplayName)}"
-        Remove-MgDeviceManagementConfigurationPolicy -Identity $Identity
+        Remove-MgDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity
     }
 }
 
@@ -764,9 +766,9 @@ function Export-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -SkipModuleReload:$true
+        -SkipModuleReload:$true `
+        -ProfileName 'beta'
 
-    Select-MgProfile -Name 'Beta'
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -787,9 +789,7 @@ function Export-TargetResource
         $policyTemplateID='5dd36540-eb22-4e7e-b19c-2a07772ba627_1'
         [array]$policies = Get-MgDeviceManagementConfigurationPolicy `
             -All:$true `
-            -Filter $Filter `
-            -ErrorAction Stop `
-            -TemplateId $policyTemplateID
+            -Filter $Filter | Where-Object -FilterScript {$_.TemplateReference.TemplateId -eq $policyTemplateID}
 
         if ($policies.Length -eq 0)
         {
@@ -1225,63 +1225,7 @@ function Format-M365DSCIntuneSettingCatalogPolicySettings
     return $settings
 }
 
-function Get-MgDeviceManagementConfigurationPolicy
-{
-    [CmdletBinding()]
-    param (
-        [Parameter(
-            Mandatory = 'true',
-            ParameterSetName = 'Identity'
-        )]
-        [System.String]
-        $Identity,
-        [Parameter(
-            Mandatory = 'true',
-            ParameterSetName = 'TemplateId'
-        )]
-        [System.String]
-        $TemplateId
-    )
-    try
-    {
-        if(-Not [String]::IsNullOrEmpty($Identity))
-        {
-            try
-            {
-                $Uri="https://graph.microsoft.com/beta/deviceManagement/ConfigurationPolicies/$Identity"
-                $configurationPolicy=Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
-                return $configurationPolicy
-            }
-            catch
-            {
-                return $null
-            }
-        }
-        if(-Not [String]::IsNullOrEmpty($TemplateId))
-        {
-            $Uri="https://graph.microsoft.com/beta/deviceManagement/ConfigurationPolicies"
-            [Array]$configurationPolicies=(Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop).value
-            return ($configurationPolicies|Where-Object -FilterScript {$_.templateReference.templateId -eq "$TemplateId" })
-        }
-    }
-    catch
-    {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
 
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return $null
-    }
-}
 
 function New-MgDeviceManagementConfigurationPolicy
 {
