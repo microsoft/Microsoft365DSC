@@ -1569,8 +1569,6 @@ function Update-MgDeviceManagementConfigurationPolicyAssignments
         }
         return $null
     }
-
-
 }
 function Get-MgDeviceManagementConfigurationSettingDefinition
 {
