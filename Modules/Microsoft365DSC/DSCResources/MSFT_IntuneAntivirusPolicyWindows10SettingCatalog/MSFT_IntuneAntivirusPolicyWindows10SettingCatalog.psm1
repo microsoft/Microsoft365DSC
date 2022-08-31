@@ -244,7 +244,7 @@ function Get-TargetResource
     $context=Get-MgContext
     if($null -eq $context)
     {
-        New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters -ErrorAction Stop
     }
 
@@ -324,9 +324,21 @@ function Get-TargetResource
             }
 
         }
-        $returnAssignments = @()
+        $returnAssignments=@()
         $returnAssignments += Get-MgDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $Identity
-        $returnHashtable.Add('Assignments',$returnAssignments)
+        $assignmentResult = @()
+        foreach ($assignmentEntry in $returnAssignments)
+        {
+            $assignmentValue = @{
+                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+                deviceAndAppManagementAssignmentFilterType = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType
+                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
+                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
+                collectionId = $assignmentEntry.SourceId
+            }
+            $assignmentResult += $assignmentValue
+        }
+        $returnHashtable.Add('Assignments',$assignmentResult)
 
         Write-Verbose -Message "Found Endpoint Protection Policy {$($policy.name)}"
 
@@ -630,10 +642,11 @@ function Set-TargetResource
         $settings= Format-M365DSCIntuneSettingCatalogPolicySettings `
             -DSCParams ([System.Collections.Hashtable]$PSBoundParameters)
 
+        $Template = Get-MgDeviceManagementConfigurationPolicyTemplate -DeviceManagementConfigurationPolicyTemplateId $templateReferenceId
         $policy=New-MgDeviceManagementConfigurationPolicy `
-            -DisplayName $DisplayName `
+            -Name $DisplayName `
             -Description $Description `
-            -TemplateReferenceId $templateReferenceId `
+            -TemplateReference $Template `
             -Platforms $platforms `
             -Technologies $technologies `
             -Settings $settings
@@ -649,11 +662,12 @@ function Set-TargetResource
         $settings= Format-M365DSCIntuneSettingCatalogPolicySettings `
             -DSCParams ([System.Collections.Hashtable]$PSBoundParameters)
 
+        $Template = Get-MgDeviceManagementConfigurationPolicyTemplate -DeviceManagementConfigurationPolicyTemplateId $templateReferenceId
         Update-MgDeviceManagementConfigurationPolicy `
-            -Identity $Identity `
-            -DisplayName $DisplayName `
+            -DeviceManagementConfigurationPolicyId $Identity `
+            -Name $DisplayName `
             -Description $Description `
-            -TemplateReferenceId $templateReferenceId `
+            -TemplateReference $Template `
             -Platforms $platforms `
             -Technologies $technologies `
             -Settings $settings
@@ -665,7 +679,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Endpoint Protection Policy {$currentPolicy.DisplayName}"
-        Remove-MgDeviceManagementConfigurationPolicy -Identity $Identity
+        Remove-MgDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity
     }
 }
 
@@ -1167,6 +1181,69 @@ function Get-DeviceManagementConfigurationSettingInstanceValue
         }
     }
     return $settingValue
+}
+function Update-MgDeviceManagementConfigurationPolicyAssignments
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceManagementConfigurationPolicyId,
+
+        [Parameter()]
+        [Array]
+        $Targets
+    )
+    try
+    {
+        $configurationPolicyAssignments=@()
+
+        $Uri="https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/$DeviceManagementConfigurationPolicyId/assign"
+
+        foreach($target in $targets)
+        {
+            $formattedTarget=@{"@odata.type"=$target.dataType}
+            if($target.groupId)
+            {
+                $formattedTarget.Add('groupId',$target.groupId)
+            }
+            if($target.collectionId)
+            {
+                $formattedTarget.Add('collectionId',$target.collectionId)
+            }
+            if($target.deviceAndAppManagementAssignmentFilterType)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',$target.deviceAndAppManagementAssignmentFilterType)
+            }
+            if($target.deviceAndAppManagementAssignmentFilterId)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',$target.deviceAndAppManagementAssignmentFilterId)
+            }
+            $configurationPolicyAssignments+=@{'target'= $formattedTarget}
+        }
+        $body=@{'assignments'=$configurationPolicyAssignments}|ConvertTo-Json -Depth 20
+        #write-verbose -Message $body
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
+
+    }
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            $tenantIdValue = $Credential.UserName.Split('@')[1]
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return $null
+    }
 }
 function Convert-M365DSCParamsToSettingInstance
 {
