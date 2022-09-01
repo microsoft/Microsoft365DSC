@@ -1,5 +1,16 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* SCRetentionCompliancePolicy
+  * Fixes an issue where the TeamsChatLocation, TeamsChatLocationException, TeamsChannelLocation
+    and TeamsChannelLocationException properties were not properly set on Update.
+    FIXES #2173
+* SCRetentionComplianceRule
+  * Fixes an issue when trying to create new compliancerule for Teams based policies where invalid
+    parameters were passed.
+    FIXES #2181
+
 # 1.22.831.1
 
 * EXOAddressList
