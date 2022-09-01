@@ -2,6 +2,9 @@
 
 # 1.22.831.1
 
+* EXOAddressList
+  * Ignore precanned filters if recipient filter is used. Precanned filters and recipient filter cannot be used at the same time.
+    FIXES [#2194](https://github.com/microsoft/Microsoft365DSC/issues/2194)
 * EXOSafeLinksPolicy
   * Add Suport for EnableSafeLinksForEmail and DisableUrlRewrite
 * EXOInboundConnector
