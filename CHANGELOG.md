@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.831.1
 
 * EXOSafeLinksPolicy
   * Add Suport for EnableSafeLinksForEmail and DisableUrlRewrite
