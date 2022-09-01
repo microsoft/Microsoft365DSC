@@ -81,7 +81,7 @@ function Get-TargetResource
                 IsSingleInstance      = $IsSingleInstance
                 Url                   = $homeSiteUrl
                 Ensure                = "Present"
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret

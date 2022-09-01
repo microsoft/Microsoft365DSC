@@ -57,15 +57,12 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta' -ErrorAction Stop
 
-    $context=Get-MgContext
+    $context = Get-MgContext
     if($null -eq $context)
     {
-        New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters -ErrorAction Stop
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters -ErrorAction Stop -ProfileName 'beta'
     }
-
-    Write-Verbose -Message "Select-MgProfile"
-    Select-MgProfile -Name 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -218,7 +215,7 @@ function Set-TargetResource
             -DisplayName $DisplayName `
             -Description $Description `
             -Platform $Platform `
-            -Rule $Rule
+            -Rule $Rule | Out-Null
 
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
@@ -229,13 +226,13 @@ function Set-TargetResource
             -DeviceAndAppManagementAssignmentFilterId $currentPolicy.Identity `
             -DisplayName $DisplayName `
             -Description $Description `
-            -Rule $Rule
+            -Rule $Rule | Out-Null
 
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing assignment filter {$DisplayName}"
-        Remove-MgDeviceManagementAssignmentFilter -DeviceAndAppManagementAssignmentFilterId $currentPolicy.Identity
+        Remove-MgDeviceManagementAssignmentFilter -DeviceAndAppManagementAssignmentFilterId $currentPolicy.Identity | Out-Null
     }
 }
 

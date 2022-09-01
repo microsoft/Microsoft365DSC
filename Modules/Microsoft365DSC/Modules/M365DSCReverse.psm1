@@ -145,8 +145,8 @@ function Start-M365DSCConfigurationExtract
         }
 
         $ResourcesPath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\" `
-        -Resolve
+            -ChildPath "..\DSCResources\" `
+            -Resolve
         $AllResources = Get-ChildItem $ResourcesPath -Recurse | Where-Object { $_.Name -like 'MSFT_*.psm1' }
         if (!$AllResources)
         {
@@ -274,7 +274,7 @@ function Start-M365DSCConfigurationExtract
         {
             $principal = $organization.Split(".")[0]
         }
-        $AzureAutomation = $false
+
         [array] $version = Get-Module 'Microsoft365DSC'
         $version = $version[0].Version
         $DSCContent = [System.Text.StringBuilder]::New()
@@ -525,6 +525,13 @@ function Start-M365DSCConfigurationExtract
         # Close the Node and Configuration declarations
         $DSCContent.Append("    }`r`n") | Out-Null
         $DSCContent.Append("}`r`n") | Out-Null
+
+        # Azure Automation Check
+        $AzureAutomation = $false
+        if ("AzureAutomation/" -eq $env:AZUREPS_HOST_ENVIRONMENT)
+        {
+            $AzureAutomation = $true
+        }
 
         if ($ConnectionMode -eq 'Credentials')
         {
