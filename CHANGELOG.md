@@ -26,6 +26,35 @@
 * IntuneDeviceConfigurationPolicyAndroidOpenSourceProject
   * Don't export all policies if none match the type
   FIXES [#2228](https://github.com/microsoft/Microsoft365DSC/issues/2228)
+* PlannerBucket
+  * Changed authentication method to Credentials only, since the Planner Graph API
+    does not support anything else
+  FIXES [#1979](https://github.com/microsoft/Microsoft365DSC/issues/1979)
+  * Fixes issue with generating Export output
+  FIXES [#2032](https://github.com/microsoft/Microsoft365DSC/issues/2032)
+* PlannerPlan
+  * Fix export issue where the export wasn't created correctly because of the
+    use of an incorrect property name.
+  * Changed authentication method to Credentials only, since the Planner Graph API
+    does not support anything else
+  FIXES [#1979](https://github.com/microsoft/Microsoft365DSC/issues/1979)
+* PlannerTask
+  * Changed authentication method to Credentials only, since the Planner Graph API
+    does not support anything else
+  FIXES [#1979](https://github.com/microsoft/Microsoft365DSC/issues/1979)
+* TeamsMeetingBroadcastConfiguration
+  * Fixing export issue where SdnApiToken is exported as a string instead of
+    a variable
+  FIXES [#2056](https://github.com/microsoft/Microsoft365DSC/issues/2056)
+* MISC
+  * Updated Export functionality to only export the LCM settings when the
+    executed as Administrator
+  FIXES [#2037](https://github.com/microsoft/Microsoft365DSC/issues/2037)
+  * Added support for multiple authentication methods to the Export functionality.
+    The code now uses the most secure method that is provided in the command line
+    and that supported by the specified resources in the following order:
+    Certificate Thumbprint, Certificate Path, Application Secret, Credential
+  FIXES [#1759](https://github.com/microsoft/Microsoft365DSC/issues/1759)
 * MISC
   * Fix issue of running Export-M365DSCConfiguration within Azure Run Book. FIXES [#2233](https://github.com/microsoft/Microsoft365DSC/issues/2233)
   * Fix issue within M365DSCTelemetryEngine when used with ApplicationId. FIXES [#2237](https://github.com/microsoft/Microsoft365DSC/issues/2237)
