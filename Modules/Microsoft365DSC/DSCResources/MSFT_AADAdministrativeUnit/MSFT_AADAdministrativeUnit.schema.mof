@@ -1,40 +1,34 @@
-
 [ClassVersion("1.0.0")]
-class MSFT_MicrosoftGraphdirectoryobject
+class MSFT_MicrosoftGraphIdentity
 {
-    [Write, Description("")] String DeletedDateTime;
-    [Write, Description("")] String Id;
+    [Write, Description("Identity of direcory-object. For users, specify a UserPrincipalName. For Groups and SPNs, specify DisplayName")] String Identity;
+    [Write, Description("Specify User, Group or ServicePrincipal to interpret the Identity")] String Type;
 };
 [ClassVersion("1.0.0")]
-class MSFT_MicrosoftGraphscopedrolemembership
+class MSFT_MicrosoftGraphScopedRoleMembership
 {
-    [Write, Description("")] String AdministrativeUnitId;
-    [Write, Description("")] String RoleId;
-    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphidentity")] String RoleMemberInfo;
-    [Write, Description("")] String Id;
+    [Write, Description("Name of the Azure AD Role that is assigned")] String RoleName;
+    [Write, Description("Member that is assigned the scoped role"), EmbeddedInstance("MSFT_MicrosoftGraphIdentity")] String RoleMemberInfo;
 };
 [ClassVersion("1.0.0")]
-class MSFT_MicrosoftGraphidentity
+class MSFT_MicrosoftGraphExtension
 {
-    [Write, Description("")] String DisplayName;
-    [Write, Description("")] String Id;
-};
-[ClassVersion("1.0.0")]
-class MSFT_MicrosoftGraphextension
-{
-    [Write, Description("")] String Id;
+    [Write, Description("See https://docs.microsoft.com/en-us/graph/extensibility-overview")] String Id;
 };
 
 [ClassVersion("1.0.0.0"), FriendlyName("AADAdministrativeUnit")]
 class MSFT_AADAdministrativeUnit : OMI_BaseResource
 {
-    [Write, Description("")] String Id;
-    [Write, Description("")] String Description;
-    [Write, Description("")] String DisplayName;
-    [Write, Description("")] String Visibility;
-    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphdirectoryobject")] String Members[];
-    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphscopedrolemembership")] String ScopedRoleMembers[];
-    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphextension")] String Extensions[];
+    [Write, Description("Object-Id of the Administrative Unit")] String Id;
+    [Write, Description("Description of the Administrative Unit")] String Description;
+    [Write, Description("DisplayName of the Administrative Unit")] String DisplayName;
+    [Write, Description("Visibility of the Administrative Unit. Specify HiddenMembership if members of the AU are hidden")] String Visibility;
+    [Write, Description("Specify membership type. Possible values are Static and Dynamic (only if the preview has been activated)")] String MembershipType;
+    [Write, Description("Specify membership rule. Only specify if MembershipType is set to Dynamic AND if the preview has been activated)")] String MembershipRule;
+    [Write, Description("Specify dynamic membership-rule processing-state. Valid values are 'On' and 'Paused'. Only specify if MembershipType is set to Dynamic AND if the preview has been activated)")] String MembershipRuleProcessingState;
+    [Write, Description("Specify members. Only specify if MembershipType is set to Static"), EmbeddedInstance("MSFT_MicrosoftGraphIdentity")] String Members[];
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphScopedRoleMembership")] String ScopedRoleMembers[];
+    [Write, Description("Extensions. See https://docs.microsoft.com/en-us/graph/extensibility-overview"), EmbeddedInstance("MSFT_MicrosoftGraphExtension")] String Extensions[];
 
 
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;

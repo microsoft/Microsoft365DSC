@@ -8,12 +8,15 @@
                     {
                         "name": "AdmninistrativeUnit.Read.All"
                         "name": "Directory.Read.All"
+                        "name": "RoleManagement.Read.Directory"
+                        "name": "Member.Read.Hidden"
                     }
                 ],
                 "update": [
                     {
                         "name": "AdmninistrativeUnit.ReadWrite.All"
                         "name": "Directory.ReadWrite.All"
+                        "name": "RoleManagement.ReadWrite.Directory"
                     }
                 ]
             },
@@ -22,12 +25,15 @@
                     {
                         "name": "AdmninistrativeUnit.Read.All"
                         "name": "Directory.Read.All"
+                        "name": "RoleManagement.Read.Directory"
+                        "name": "Member.Read.Hidden"
                     }
                 ],
                 "update": [
                     {
                         "name": "AdmninistrativeUnit.ReadWrite.All"
                         "name": "Directory.ReadWrite.All"
+                        "name": "RoleManagement.ReadWrite.Directory"
                     }
                 ]
             }
