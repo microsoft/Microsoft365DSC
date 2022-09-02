@@ -593,6 +593,103 @@ function Set-TargetResource
             TeamsChatLocation             = $TeamsChatLocation
             TeamsChatLocationException    = $TeamsChatLocationException
         }
+
+        # Teams Chat Location is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CurrentPolicy.TeamsChatLocation -or `
+                $null -ne $TeamsChatLocation)
+        {
+            $ToBeRemoved = $CurrentPolicy.TeamsChatLocation | `
+                Where-Object { $TeamsChatLocation -NotContains $_ }
+            if ($null -ne $ToBeRemoved)
+            {
+                Write-Verbose -Message "Adding the RemoveTeamsChatLocation property."
+                $CreationParams.Add("RemoveTeamsChatLocation", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $TeamsChatLocation | `
+                Where-Object { $CurrentPolicy.TeamsChatLocation -NotContains $_ }
+            if ($null -ne $ToBeAdded)
+            {
+                Write-Verbose -Message "Adding the AddTeamsChatLocation property."
+                $CreationParams.Add("AddTeamsChatLocation", $ToBeAdded)
+            }
+            Write-Verbose -Message "Removing the TeamsChatLocation property."
+            $CreationParams.Remove("TeamsChatLocation")
+        }
+
+        # Teams Chat Location Exception is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CurrentPolicy.TeamsChatLocationException -or `
+                $null -ne $TeamsChatLocationException)
+        {
+            $ToBeRemoved = $CurrentPolicy.TeamsChatLocationException | `
+                Where-Object { $TeamsChatLocationException -NotContains $_ }
+            if ($null -ne $ToBeRemoved)
+            {
+                Write-Verbose -Message "Adding the RemoveTeamsChatLocationException property."
+                $CreationParams.Add("RemoveTeamsChatLocationException", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $TeamsChatLocationException | `
+                Where-Object { $CurrentPolicy.TeamsChatLocationException -NotContains $_ }
+            if ($null -ne $ToBeAdded)
+            {
+                Write-Verbose -Message "Adding the AddTeamsChatLocationException property."
+                $CreationParams.Add("AddTeamsChatLocationException", $ToBeAdded)
+            }
+            Write-Verbose -Message "Removing the TeamsChatLocationException property."
+            $CreationParams.Remove("TeamsChatLocationException")
+        }
+
+        # Teams Channel Location is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CurrentPolicy.TeamsChannelLocation -or `
+                $null -ne $TeamsChannelLocation)
+        {
+            $ToBeRemoved = $CurrentPolicy.TeamsChannelLocation | `
+                Where-Object { $TeamsChannelLocation -NotContains $_ }
+            if ($null -ne $ToBeRemoved)
+            {
+                Write-Verbose -Message "Adding the RemoveTeamsChannelLocation property."
+                $CreationParams.Add("RemoveTeamsChannelLocation", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $TeamsChannelLocation | `
+                Where-Object { $CurrentPolicy.TeamsChannelLocation -NotContains $_ }
+            if ($null -ne $ToBeAdded)
+            {
+                Write-Verbose -Message "Adding the AddTeamsChannelLocation property."
+                $CreationParams.Add("AddTeamsChannelLocation", $ToBeAdded)
+            }
+            Write-Verbose -Message "Removing the TeamsChannelLocation property."
+            $CreationParams.Remove("TeamsChannelLocation")
+        }
+
+        # Teams Channel Location Exception is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CurrentPolicy.TeamsChannelLocationException -or `
+                $null -ne $TeamsChannelLocationException)
+        {
+            $ToBeRemoved = $CurrentPolicy.TeamsChannelChannelLocationException | `
+                Where-Object { $TeamsChannelLocationException -NotContains $_ }
+            if ($null -ne $ToBeRemoved)
+            {
+                Write-Verbose -Message "Adding the RemoveTeamsChannelLocationException property."
+                $CreationParams.Add("RemoveTeamsChannelLocationException", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $TeamsChannelLocationException | `
+                Where-Object { $CurrentPolicy.TeamsChannelLocationException -NotContains $_ }
+            if ($null -ne $ToBeAdded)
+            {
+                Write-Verbose -Message "Adding the AddTeamsChannelLocationException property."
+                $CreationParams.Add("AddTeamsChannelLocationException", $ToBeAdded)
+            }
+            Write-Verbose -Message "Removing the TeamsChannelLocationException property."
+            $CreationParams.Remove("TeamsChannelLocationException")
+        }
+        $CreationParams.Remove("RestrictiveRetention") | Out-Null
     }
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentPolicy.Ensure))
     {

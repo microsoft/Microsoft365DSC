@@ -57,11 +57,9 @@ function Get-TargetResource
     $context=Get-MgContext
     if($null -eq $context)
     {
-        New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters -ErrorAction Stop
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters -ErrorAction Stop -ProfileName 'beta'
     }
 
-    Write-Verbose -Message "Select-MgProfile"
-    Select-MgProfile -Name 'beta'
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -185,7 +183,6 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
 
-    Select-MgProfile -Name 'beta'
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -372,8 +369,8 @@ function Export-TargetResource
         $CertificateThumbprint
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters -SkipModuleReload:$true
-    Select-MgProfile -Name 'Beta'
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters -SkipModuleReload:$true -ProfileName 'beta'
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 

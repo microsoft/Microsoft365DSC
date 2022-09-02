@@ -153,12 +153,10 @@ function Get-TargetResource
     $context=Get-MgContext
     if($null -eq $context)
     {
-        New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters -ErrorAction Stop
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters -ErrorAction Stop -ProfileName 'beta'
     }
 
-    Write-Verbose -Message "Select-MgProfile"
-    Select-MgProfile -Name 'beta'
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -436,10 +434,12 @@ function Set-TargetResource
             -DSCParams ([System.Collections.Hashtable]$PSBoundParameters) `
             -SettingDefinitionIDBase "device_vendor_msft_policy_config_defender_"
 
+        $Template = Get-MgDeviceManagementConfigurationPolicyTemplate -DeviceManagementConfigurationPolicyTemplateId 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
+
         New-MgDeviceManagementConfigurationPolicy `
-            -DisplayName $DisplayName `
+            -Name $DisplayName `
             -Description $Description `
-            -TemplateReferenceId "e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1" `
+            -TemplateReference $Template `
             -Platforms "windows10" `
             -Technologies "mdm,microsoftSense" `
             -Settings $settings
@@ -453,11 +453,13 @@ function Set-TargetResource
             -DSCParams ([System.Collections.Hashtable]$PSBoundParameters) `
             -SettingDefinitionIDBase "device_vendor_msft_policy_config_defender_"
 
+        $Template = Get-MgDeviceManagementConfigurationPolicyTemplate -DeviceManagementConfigurationPolicyTemplateId 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
+
         Update-MgDeviceManagementConfigurationPolicy `
-            -Identity $Identity `
-            -DisplayName $DisplayName `
+            -DeviceManagementConfigurationPolicyId $Identity `
+            -Name $DisplayName `
             -Description $Description `
-            -TemplateReferenceId "e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1" `
+            -TemplateReference $Template `
             -Platforms "windows10" `
             -Technologies "mdm,microsoftSense" `
             -Settings $settings
@@ -466,7 +468,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Endpoint Protection Attack Surface Protection rules Policy {$DisplayName}"
-        Remove-MgDeviceManagementConfigurationPolicy -Identity $Identity
+        Remove-MgDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity
     }
 }
 
@@ -832,7 +834,7 @@ function Format-M365DSCParamsToSettingInstance
         $settingName= $param
         $settingIdentity=($SettingDefinitionIdBase+$settingName).ToLower()
 
-        $settingDefinition= Get-MgDeviceManagementConfigurationPolicySetting -Identity $settingIdentity
+        $settingDefinition= Get-MgDeviceManagementConfigurationPolicySetting -DeviceManagementConfigurationPolicyId $settingIdentity
 
         $settingInstance=[ordered]@{}
 

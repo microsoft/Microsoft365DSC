@@ -2,6 +2,20 @@
 
 # UNRELEASED
 
+* SCRetentionCompliancePolicy
+  * Fixes an issue where the TeamsChatLocation, TeamsChatLocationException, TeamsChannelLocation
+    and TeamsChannelLocationException properties were not properly set on Update.
+    FIXES #2173
+* SCRetentionComplianceRule
+  * Fixes an issue when trying to create new compliancerule for Teams based policies where invalid
+    parameters were passed.
+    FIXES #2181
+
+# 1.22.831.1
+
+* EXOAddressList
+  * Ignore precanned filters if recipient filter is used. Precanned filters and recipient filter cannot be used at the same time.
+    FIXES [#2194](https://github.com/microsoft/Microsoft365DSC/issues/2194)
 * EXOSafeLinksPolicy
   * Add Suport for EnableSafeLinksForEmail and DisableUrlRewrite
 * EXOInboundConnector
@@ -43,6 +57,7 @@
   FIXES [#1759](https://github.com/microsoft/Microsoft365DSC/issues/1759)
 * MISC
   * Fix issue of running Export-M365DSCConfiguration within Azure Run Book. FIXES [#2233](https://github.com/microsoft/Microsoft365DSC/issues/2233)
+  * Fix issue within M365DSCTelemetryEngine when used with ApplicationId. FIXES [#2237](https://github.com/microsoft/Microsoft365DSC/issues/2237)
 
 # 1.22.824.1
 
