@@ -104,14 +104,17 @@ function Get-TargetResource
                 Name                         = $RuleObject.Name
                 Comment                      = $RuleObject.Comment
                 Policy                       = $AssociatedPolicy.Name
-                ExcludedItemClasses          = $RuleObject.ExcludedItemClasses
                 RetentionDuration            = $RuleObject.RetentionDuration
-                RetentionDurationDisplayHint = $RuleObject.RetentionDurationDisplayHint
-                ContentMatchQuery            = $RuleObject.ContentMatchQuery
-                ExpirationDateOption         = $RuleObject.ExpirationDateOption
                 RetentionComplianceAction    = $RetentionComplianceActionValue
                 Credential                   = $Credential
                 Ensure                       = 'Present'
+            }
+            if (-not $associatedPolicy.TeamsPolicy)
+            {
+                $result.Add('ExpirationDateOption', $RuleObject.ExpirationDateOption)
+                $result.Add('ExcludedItemClasses', $RuleObject.ExcludedItemClasses)
+                $result.Add('RetentionDurationDisplayHint', $RuleObject.RetentionDurationDisplayHint)
+                $result.Add('ContentMatchQuery', $RuleObject.ContentMatchQuery)
             }
 
             Write-Verbose -Message "Found RetentionComplianceRule $($Name)"
@@ -223,6 +226,45 @@ function Set-TargetResource
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove("Credential")
         $CreationParams.Remove("Ensure")
+
+        Write-Verbose -Message "Checking to see if the policy is a Teams based one."
+        $RuleObject = Get-RetentionComplianceRule -Identity $Name `
+            -ErrorAction SilentlyContinue
+        $AssociatedPolicy = Get-RetentionCompliancePolicy $RuleObject.Policy
+
+        if ($AssociatedPolicy.TeamsPolicy)
+        {
+            Write-Verbose -Message "The current policy is a Teams based one, removing invalid parameters."
+            if ($CreationParams.ContainsKey('ApplyComplianceTag'))
+            {
+                $CreationParams.Remove("ApplyComplianceTag") | Out-Null
+            }
+            if ($CreationParams.ContainsKey('ContentContainsSensitiveInformation'))
+            {
+                $CreationParams.Remove("ContentContainsSensitiveInformation") | Out-Null
+            }
+            if ($CreationParams.ContainsKey('ContentMatchQuery'))
+            {
+                $CreationParams.Remove("ContentMatchQuery") | Out-Null
+            }
+            if ($CreationParams.ContainsKey('ExcludedItemClasses'))
+            {
+                $CreationParams.Remove("ExcludedItemClasses") | Out-Null
+            }
+            if ($CreationParams.ContainsKey('ExpirationDateOption'))
+            {
+                $CreationParams.Remove("ExpirationDateOption") | Out-Null
+            }
+            if ($CreationParams.ContainsKey('PublishComplianceTag'))
+            {
+                $CreationParams.Remove("PublishComplianceTag") | Out-Null
+            }
+            if ($CreationParams.ContainsKey('RetentionDurationDisplayHint'))
+            {
+                $CreationParams.Remove("RetentionDurationDisplayHint") | Out-Null
+            }
+        }
+
         New-RetentionComplianceRule @CreationParams
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
@@ -233,6 +275,45 @@ function Set-TargetResource
         $CreationParams.Remove("Name")
         $CreationParams.Add("Identity", $Name)
         $CreationParams.Remove("Policy")
+
+        Write-Verbose -Message "Checking to see if the policy is a Teams based one."
+        $RuleObject = Get-RetentionComplianceRule -Identity $Name `
+            -ErrorAction SilentlyContinue
+        $AssociatedPolicy = Get-RetentionCompliancePolicy $RuleObject.Policy
+
+        if ($AssociatedPolicy.TeamsPolicy)
+        {
+            Write-Verbose -Message "The current policy is a Teams based one, removing invalid parameters."
+
+            if ($CreationParams.ContainsKey('ApplyComplianceTag'))
+            {
+                $CreationParams.Remove("ApplyComplianceTag") | Out-Null
+            }
+            if ($CreationParams.ContainsKey('ContentContainsSensitiveInformation'))
+            {
+                $CreationParams.Remove("ContentContainsSensitiveInformation") | Out-Null
+            }
+            if ($CreationParams.ContainsKey('ContentMatchQuery'))
+            {
+                $CreationParams.Remove("ContentMatchQuery") | Out-Null
+            }
+            if ($CreationParams.ContainsKey('ExcludedItemClasses'))
+            {
+                $CreationParams.Remove("ExcludedItemClasses") | Out-Null
+            }
+            if ($CreationParams.ContainsKey('ExpirationDateOption'))
+            {
+                $CreationParams.Remove("ExpirationDateOption") | Out-Null
+            }
+            if ($CreationParams.ContainsKey('PublishComplianceTag'))
+            {
+                $CreationParams.Remove("PublishComplianceTag") | Out-Null
+            }
+            if ($CreationParams.ContainsKey('RetentionDurationDisplayHint'))
+            {
+                $CreationParams.Remove("RetentionDurationDisplayHint") | Out-Null
+            }
+        }
 
         Set-RetentionComplianceRule @CreationParams
     }
