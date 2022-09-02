@@ -335,15 +335,15 @@ function Format-M365DSCTelemetryParameters
     {
         $data.Add("Resource", $ResourceName)
         $data.Add("Method", $CommandName)
-        if (-not $ApplicationId)
+        if (-not $Parameters.ApplicationId)
         {
             $data.Add("Principal", $Parameters.Credential.UserName)
             $data.Add("TenantId", $Parameters.Credential.UserName.Split('@')[1])
         }
         else
         {
-            $data.Add("Principal", $Parameter.ApplicationId)
-            $data.Add("TenantId", $TenantId)
+            $data.Add("Principal", $Parameters.ApplicationId)
+            $data.Add("TenantId", $Parameters.TenantId)
         }
         $data.Add("ConnectionMode", (Get-M365DSCAuthenticationMode -Parameters $Parameters))
     }

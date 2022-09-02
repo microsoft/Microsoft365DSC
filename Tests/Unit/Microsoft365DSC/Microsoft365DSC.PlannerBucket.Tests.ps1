@@ -2,14 +2,14 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath "..\..\Unit" `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath "\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
@@ -25,6 +25,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
+            Mock -CommandName Save-M365DSCPartialExport -MockWith {
+            }
             Mock -CommandName Connect-Graph -MockWith {
             }
 
@@ -42,12 +44,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When the Bucket doesn't exist but it should" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    PlanId                = "1234567890"
-                    Name                 = "Contoso Bucket"
-                    Ensure                = "Present"
-                    ApplicationId         = "1234567890"
-                    TenantId              = "1234567890"
-                    CertificateThumbprint = "1234567890"
+                    PlanId     = "1234567890"
+                    Name       = "Contoso Bucket"
+                    Ensure     = "Present"
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerPlanBucket -MockWith {
@@ -72,19 +72,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Bucket exists and is NOT in the Desired State" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    PlanId                = "1234567890"
-                    Name                 = "Contoso Bucket"
-                    Ensure                = "Present"
-                    ApplicationId         = "1234567890"
-                    TenantId              = "1234567890"
-                    CertificateThumbprint = "1234567890"
+                    PlanId     = "1234567890"
+                    Name       = "Contoso Bucket"
+                    Ensure     = "Present"
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerPlanBucket -MockWith {
                     return @{
-                        PlanId  = "1234567890"
-                        Id      = "12345"
-                        Name    = "Contoso Bucket"
+                        PlanId = "1234567890"
+                        Id     = "12345"
+                        Name   = "Contoso Bucket"
                     }
                 }
             }
@@ -97,19 +95,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Task exists and is IN the Desired State" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    PlanId                = "1234567890"
-                    Name                 = "Contoso Bucket"
-                    Ensure                = "Present"
-                    ApplicationId         = "1234567890"
-                    TenantId              = "1234567890"
-                    CertificateThumbprint = "1234567890"
+                    PlanId     = "1234567890"
+                    Name       = "Contoso Bucket"
+                    Ensure     = "Present"
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerPlanBucket -MockWith {
                     return @{
-                        PlanId  = "1234567890"
-                        Id      = "12345"
-                        Name    = "Contoso Bucket"
+                        PlanId = "1234567890"
+                        Id     = "12345"
+                        Name   = "Contoso Bucket"
                     }
                 }
             }
@@ -126,19 +122,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Task exists but it should not" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    PlanId                = "1234567890"
-                    Name                 = "Contoso Bucket"
-                    Ensure                = "Absent"
-                    ApplicationId         = "1234567890"
-                    TenantId              = "1234567890"
-                    CertificateThumbprint = "1234567890"
+                    PlanId     = "1234567890"
+                    Name       = "Contoso Bucket"
+                    Ensure     = "Absent"
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerPlanBucket -MockWith {
                     return @{
-                        PlanId  = "1234567890"
-                        Id      = "12345"
-                        Name    = "Contoso Bucket"
+                        PlanId = "1234567890"
+                        Id     = "12345"
+                        Name   = "Contoso Bucket"
                     }
                 }
             }
@@ -156,16 +150,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $testParams = @{
-                    ApplicationId         = "1234567890"
-                    TenantId              = "1234567890"
-                    CertificateThumbprint = "1234567890"
+                    Credential = $Credential
                 }
 
+                $Global:PartialExportFileName = "PlannerBucket.ps1"
                 Mock -CommandName Get-MgPlannerPlanBucket -MockWith {
                     return @{
-                        PlanId  = "1234567890"
-                        Id      = "12345"
-                        Name    = "Contoso Bucket"
+                        PlanId = "1234567890"
+                        Id     = "12345"
+                        Name   = "Contoso Bucket"
                     }
                 }
             }

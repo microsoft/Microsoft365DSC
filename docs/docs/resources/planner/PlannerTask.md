@@ -24,8 +24,7 @@
 | **Priority** | Write | UInt32 | Priority of the Task. Value can only be between 1 and 10. ||
 | **ConversationThreadId** | Write | String | Id of the group conversation thread associated with the comments section for this task. ||
 | **Ensure** | Write | String | Present ensures the Plan exists, absent ensures it is removed |Present, Absent|
-| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
-| **Credential** | Required | PSCredential | Credentials of the Global Admin ||
+| **Credential** | Required | PSCredential | Credentials of the account to authenticate with. ||
 
 # PlannerTask
 

@@ -48,7 +48,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -68,7 +68,7 @@ function Get-TargetResource
             SdnApiTemplateUrl                   = $config.SdnApiTemplateUrl
             SdnApiToken                         = $config.SdnApiToken
             SupportURL                          = $config.SupportURL
-            Credential                  = $Credential
+            Credential                          = $Credential
         }
     }
     catch
@@ -143,7 +143,7 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -203,14 +203,14 @@ function Test-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Teams Client"
+    Write-Verbose -Message "Testing configuration of Teams Meeting Broadcast"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -253,7 +253,7 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -264,7 +264,7 @@ function Export-TargetResource
     {
         $dscContent = ''
         $params = @{
-            Identity           = "Global"
+            Identity   = "Global"
             Credential = $Credential
         }
         Add-ConfigurationDataEntry -Node "NonNodeData" -Key "SdnApiToken" -Value "**********"`
@@ -272,7 +272,7 @@ function Export-TargetResource
         $results = Get-TargetResource @params
         $results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
             -Results $Results
-        $results.SdnAPIToken = '$ConfigurationData.Settings.SdnApiToken'
+        $results.SdnApiToken = '$ConfigurationData.Settings.SdnApiToken'
 
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
             -Results $Results
@@ -281,6 +281,10 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -Credential $Credential
+
+        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+            -ParameterName "SdnApiToken"
+
         $dscContent += $currentDSCBlock
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName

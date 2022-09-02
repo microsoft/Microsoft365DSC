@@ -20,41 +20,63 @@ class PlannerTaskObject
 
     [string]GetTaskCategoryNameByColor([string]$ColorName)
     {
-        switch($ColorName)
+        switch ($ColorName)
         {
-            "Pink"{return "category1"}
-            "Red"{return "category2"}
-            "Yellow"{return "category3"}
-            "Green"{return "category4"}
-            "Blue"{return "category5"}
-            "Purple"{return "category6"}
+            "Pink"
+            { return "category1"
+            }
+            "Red"
+            { return "category2"
+            }
+            "Yellow"
+            { return "category3"
+            }
+            "Green"
+            { return "category4"
+            }
+            "Blue"
+            { return "category5"
+            }
+            "Purple"
+            { return "category6"
+            }
         }
         return $null
     }
 
     [string]GetTaskColorNameByCategory([string]$CategoryName)
     {
-        switch($CategoryName)
+        switch ($CategoryName)
         {
-            "category1"{return "Pink"}
-            "category2"{return "Red"}
-            "category3"{return "Yellow"}
-            "category4"{return "Green"}
-            "category5"{return "Blue"}
-            "category6"{return "Purple"}
+            "category1"
+            { return "Pink"
+            }
+            "category2"
+            { return "Red"
+            }
+            "category3"
+            { return "Yellow"
+            }
+            "category4"
+            { return "Green"
+            }
+            "category5"
+            { return "Blue"
+            }
+            "category6"
+            { return "Purple"
+            }
         }
         return $null
     }
 
-    [void]PopulateById([System.Management.Automation.PSCredential]$Credential, [String]$ApplicationId, [string]$TaskId)
+    [void]PopulateById([System.Management.Automation.PSCredential]$Credential, [string]$TaskId)
     {
         $uri = "https://graph.microsoft.com/beta/planner/tasks/$TaskId"
-        $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $Credential `
-            -ApplicationId $ApplicationId `
+        $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -Credential $Credential `
             -Uri $uri `
             -Method Get
-        $taskDetailsResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $Credential `
-            -ApplicationId $ApplicationId `
+        $taskDetailsResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -Credential $Credential `
             -Uri ($uri + "/details") `
             -Method Get
 
@@ -62,7 +84,9 @@ class PlannerTaskObject
         $assignmentsValue = @()
         if ($null -ne $taskResponse.assignments)
         {
-            $allAssignments = $taskResponse.assignments | gm | Where-Object -FilterScript{$_.MemberType -eq 'NoteProperty'}
+            $allAssignments = $taskResponse.assignments | Get-Member | Where-Object -FilterScript {
+                $_.MemberType -eq 'NoteProperty'
+            }
             foreach ($assignment in $allAssignments)
             {
                 $assignmentsValue += $assignment.Name
@@ -74,7 +98,9 @@ class PlannerTaskObject
         $attachmentsValue = @()
         if ($null -ne $taskDetailsResponse.references)
         {
-            $allAttachments = $taskDetailsResponse.references | gm | Where-Object -FilterScript{$_.MemberType -eq 'NoteProperty'}
+            $allAttachments = $taskDetailsResponse.references | Get-Member | Where-Object -FilterScript {
+                $_.MemberType -eq 'NoteProperty'
+            }
             foreach ($attachment in $allAttachments)
             {
                 $hashEntry = @{
@@ -91,7 +117,9 @@ class PlannerTaskObject
         $categoriesValue = @()
         if ($null -ne $taskResponse.appliedCategories)
         {
-            $allCategories = $taskResponse.appliedCategories | gm | Where-Object -FilterScript{$_.MemberType -eq 'NoteProperty'}
+            $allCategories = $taskResponse.appliedCategories | Get-Member | Where-Object -FilterScript {
+                $_.MemberType -eq 'NoteProperty'
+            }
             foreach ($category in $allCategories)
             {
                 $categoriesValue += $this.GetTaskColorNameByCategory($category.Name)
@@ -103,7 +131,9 @@ class PlannerTaskObject
         $checklistValue = @()
         if ($null -ne $taskDetailsResponse.checklist)
         {
-            $allCheckListItems = $taskDetailsResponse.checklist | gm | Where-Object -FilterScript{$_.MemberType -eq 'NoteProperty'}
+            $allCheckListItems = $taskDetailsResponse.checklist | Get-Member | Where-Object -FilterScript {
+                $_.MemberType -eq 'NoteProperty'
+            }
             foreach ($checkListItem in $allCheckListItems)
             {
                 $hashEntry = @{
@@ -114,22 +144,23 @@ class PlannerTaskObject
             }
         }
         #endregion
-        $this.Etag                 = $taskResponse.'@odata.etag'
-        $this.Title                = $taskResponse.title
-        $this.StartDateTime        = $taskResponse.startDateTime
+        $this.Etag = $taskResponse.'@odata.etag'
+        $this.Title = $taskResponse.title
+        $this.StartDateTime = $taskResponse.startDateTime
         $this.ConversationThreadId = $taskResponse.conversationThreadId
-        $this.DueDateTime          = $taskResponse.dueDateTime
-        $this.CompletedDateTime    = $taskResponse.completedDateTime
-        $this.PlanId               = $taskResponse.planId
-        $this.TaskId               = $taskResponse.id
-        $this.BucketId             = $taskResponse.bucketId
-        $this.Priority             = $taskResponse.priority
-        $this.Notes                = $taskDetailsResponse.description
-        $this.Assignments          = $assignmentsValue
-        $this.Attachments          = $attachmentsValue
-        $this.Categories           = $categoriesValue
-        $this.Checklist            = $checklistValue
+        $this.DueDateTime = $taskResponse.dueDateTime
+        $this.CompletedDateTime = $taskResponse.completedDateTime
+        $this.PlanId = $taskResponse.planId
+        $this.TaskId = $taskResponse.id
+        $this.BucketId = $taskResponse.bucketId
+        $this.Priority = $taskResponse.priority
+        $this.Notes = $taskDetailsResponse.description
+        $this.Assignments = $assignmentsValue
+        $this.Attachments = $attachmentsValue
+        $this.Categories = $categoriesValue
+        $this.Checklist = $checklistValue
     }
+
     [string]ConvertToJSONTask()
     {
         $sb = [System.Text.StringBuilder]::New()
@@ -247,12 +278,11 @@ class PlannerTaskObject
         return $sb.ToString()
     }
 
-    [void]Create([System.Management.Automation.PSCredential]$Credential, [String]$ApplicationId)
+    [void]Create([System.Management.Automation.PSCredential]$Credential)
     {
         $uri = "https://graph.microsoft.com/v1.0/planner/tasks"
         $body = $this.ConvertToJSONTask()
-        $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $Credential `
-            -ApplicationId $ApplicationId `
+        $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -Credential $Credential `
             -Uri $uri `
             -Method "POST" `
             -Body $body
@@ -261,56 +291,51 @@ class PlannerTaskObject
         $this.UpdateDetails($Credential)
     }
 
-    [void]Update([System.Management.Automation.PSCredential]$Credential, [String]$ApplicationId)
+    [void]Update([System.Management.Automation.PSCredential]$Credential)
     {
-        $uri = "https://graph.microsoft.com/beta/planner/tasks/$($this.TaskId)"
+        $uri = "https://graph.microsoft.com/v1.0/planner/tasks/$($this.TaskId)"
         $body = $this.ConvertToJSONTask()
         $Headers = @{}
         $Headers.Add("If-Match", $this.ETag)
-        $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $Credential `
-            -ApplicationId $ApplicationId `
+        $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -Credential $Credential `
             -Uri $uri `
             -Method "PATCH" `
             -Body $body `
             -Headers $Headers
     }
 
-    [void]UpdateDetails([System.Management.Automation.PSCredential]$Credential, [String]$ApplicationId)
+    [void]UpdateDetails([System.Management.Automation.PSCredential]$Credential)
     {
         $uri = "https://graph.microsoft.com/v1.0/planner/tasks/$($this.TaskId)/details"
         $body = $this.ConvertToJSONTaskDetails()
 
         # Get ETag for the details
-        $currentTaskDetails = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $Credential `
-            -ApplicationId $ApplicationId `
+        $currentTaskDetails = Invoke-MSCloudLoginMicrosoftGraphAPI -Credential $Credential `
             -Uri $uri `
             -Method "GET"
         $Headers = @{}
         $Headers.Add("If-Match", $currentTaskDetails.'@odata.etag')
-        $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $Credential `
-            -ApplicationId $ApplicationId `
+        $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -Credential $Credential `
             -Uri $uri `
             -Method "PATCH" `
             -Body $body `
             -Headers $Headers
     }
 
-    [void]Delete([System.Management.Automation.PSCredential]$Credential, [string]$ApplicationId, [string]$TaskId)
+    [void]Delete([System.Management.Automation.PSCredential]$Credential, [string]$TaskId)
     {
         $VerbosePreference = 'Continue'
         Write-Verbose -Message "Initiating the Deletion of Task {$TaskId}"
         $uri = "https://graph.microsoft.com/v1.0/planner/tasks/$TaskId"
 
         # Get ETag for the details
-        $currentTaskDetails = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $Credential `
-            -ApplicationId $ApplicationId `
+        $currentTaskDetails = Invoke-MSCloudLoginMicrosoftGraphAPI -Credential $Credential `
             -Uri $uri `
             -Method "GET"
         $Headers = @{}
         $Headers.Add("If-Match", $currentTaskDetails.'@odata.etag')
         Write-Verbose -Message "Retrieved Task's ETag {$($currentTaskDetails.'@odata.etag')}"
-        $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $Credential `
-            -ApplicationId $ApplicationId `
+        $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -Credential $Credential `
             -Uri $uri `
             -Method "DELETE" `
             -Headers $Headers

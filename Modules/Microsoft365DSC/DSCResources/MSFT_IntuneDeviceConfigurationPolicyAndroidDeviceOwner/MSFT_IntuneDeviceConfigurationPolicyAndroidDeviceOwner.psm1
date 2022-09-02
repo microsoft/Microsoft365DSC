@@ -612,9 +612,6 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
             -ProfileName 'beta'
-        Write-Verbose -Message "1 - There are currently {$((dir function: | measure).Count) functions}"
-        Write-Verbose -Message "Here1 - Loading Profile {beta}"
-        Select-MgProfile 'beta' -ErrorAction Stop
     }
     catch
     {
@@ -1491,10 +1488,13 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating {$DisplayName}"
-        $CreateParameters = $PSBoundParameters
-        $CreateParameters.Remove("Id") | Out-Null
-
         $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        $CreateParameters = @{
+            DisplayName          = $DisplayName
+            Description          = $Description
+            AdditionalProperties = $AdditionalProperties
+        }
+
 
         #region resource generator code
         New-MgDeviceManagementDeviceConfiguration @CreateParameters
@@ -1535,8 +1535,14 @@ function Set-TargetResource
 
         #region resource generator code
         Write-Verbose -Message ($UpdateParameters | Out-String)
-        Update-MgDeviceManagementDeviceConfiguration @UpdateParameters `
-            -DeviceConfigurationId $currentInstance.Id
+        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        $UpdateParameters = @{
+            DeviceConfigurationId = $currentInstance.Id
+            DisplayName           = $DisplayName
+            Description           = $Description
+            AdditionalProperties  = $AdditionalProperties
+        }
+        Update-MgDeviceManagementDeviceConfiguration @UpdateParameters
         #endregion
 
     }
