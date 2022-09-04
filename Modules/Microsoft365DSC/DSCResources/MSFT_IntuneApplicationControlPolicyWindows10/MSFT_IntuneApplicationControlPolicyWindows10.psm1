@@ -238,11 +238,18 @@ function Set-TargetResource
             -TemplateId "63be6324-e3c9-4c97-948a-e7f4b96f0f20" `
             -Settings $Settings
 
+        #region Assignments
+        $assignmentsHash=@()
+        foreach($assignment in $Assignments)
+        {
+            $assignmentsHash+=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+        }
         if($policy.id)
         {
             Update-DeviceManagementIntentAssignments -DeviceManagementIntent $policy.id `
                 -Targets $assignmentsHash
         }
+        #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
@@ -273,6 +280,7 @@ function Set-TargetResource
                 -AdditionalProperties @{"@odata.type"=$setting."@odata.type"}
         }
 
+        #region Assignments
         $assignmentsHash=@()
         foreach($assignment in $Assignments)
         {
@@ -280,6 +288,7 @@ function Set-TargetResource
         }
         Update-DeviceManagementIntentAssignments -DeviceManagementIntentId $appControlPolicy.Id `
             -Targets $assignmentsHash
+        #endregion
 
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')

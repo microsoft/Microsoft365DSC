@@ -208,6 +208,8 @@ function Set-TargetResource
             $creationParams.Add("customSettings", $customSettingsValue)
         }
         $policy=New-MgDeviceAppManagementTargetedManagedAppConfiguration @creationParams
+
+        #region Assignments
         $assignmentsHash=@()
         foreach($assignment in $Assignments)
         {
@@ -219,6 +221,7 @@ function Set-TargetResource
             Update-AppConfigurationPolicyAssignments -AppConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash
         }
+        #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentconfigPolicy.Ensure -eq 'Present')
     {
