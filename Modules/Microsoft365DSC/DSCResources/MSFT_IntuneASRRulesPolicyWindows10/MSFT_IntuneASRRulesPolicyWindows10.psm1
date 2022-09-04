@@ -442,7 +442,7 @@ function Set-TargetResource
         }
         if($policy.id)
         {
-            Update-DeviceManagementIntentAssignments -DeviceManagementIntent $policy.id `
+            Update-DeviceManagementIntentAssignments -DeviceManagementIntentId $policy.id `
                 -Targets $assignmentsHash
         }
         #endregion
