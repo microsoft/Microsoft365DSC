@@ -335,49 +335,6 @@ function Test-TargetResource
         }
     }
 
-    #Testing Assignments
-    $testResult=$true
-    foreach($assignment in $CurrentValues.Assignments)
-    {
-        #GroupId Assignment
-        if(-not [String]::IsNullOrEmpty($assignment.groupId))
-        {
-            $source=[Array]$ValuesToCheck.Assignments|Where-Object -FilterScript {$_.groupId -eq $assignment.groupId}
-            if(-not $source)
-            {
-                Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
-                $testResult=$false
-                break;
-            }
-            $sourceHash=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-            $testResult=Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
-        }
-        #AllDevices/AllUsers assignment
-        else
-        {
-            $source=[Array]$ValuesToCheck.Assignments|Where-Object -FilterScript {$_.dataType -eq $assignment.dataType}
-            if(-not $source)
-            {
-                Write-Verbose -Message "Configuration drift: {$($assignment.dataType)} not found"
-                $testResult=$false
-                break;
-            }
-            $sourceHash=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-            $testResult=Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
-        }
-
-        if(-not $testResult)
-        {
-            $testResult=$false
-            break;
-        }
-
-    }
-
-    if(-not $testResult)
-    {
-        return $false
-    }
 
 
     $ValuesToCheck = $PSBoundParameters
@@ -386,7 +343,66 @@ function Test-TargetResource
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
     $ValuesToCheck.Remove('CustomSettings') | Out-Null
+
+    #region Assignments
+    $testResult=$true
+
+    if((-not $CurrentValues.Assignments) -xor (-not $ValuesToCheck.Assignments))
+    {
+        Write-Verbose -Message "Configuration drift: one the assignment is null"
+        return $false
+    }
+
+    if($CurrentValues.Assignments)
+    {
+        if($CurrentValues.Assignments.count -ne $ValuesToCheck.Assignments.count)
+        {
+            Write-Verbose -Message "Configuration drift: Number of assignment has changed - current {$($CurrentValues.Assignments.count)} target {$($ValuesToCheck.Assignments.count)}"
+            return $false
+        }
+        foreach($assignment in $CurrentValues.Assignments)
+        {
+            #GroupId Assignment
+            if(-not [String]::IsNullOrEmpty($assignment.groupId))
+            {
+                $source=[Array]$ValuesToCheck.Assignments|Where-Object -FilterScript {$_.groupId -eq $assignment.groupId}
+                if(-not $source)
+                {
+                    Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
+                    $testResult=$false
+                    break;
+                }
+                $sourceHash=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
+                $testResult=Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
+            }
+            #AllDevices/AllUsers assignment
+            else
+            {
+                $source=[Array]$ValuesToCheck.Assignments|Where-Object -FilterScript {$_.dataType -eq $assignment.dataType}
+                if(-not $source)
+                {
+                    Write-Verbose -Message "Configuration drift: {$($assignment.dataType)} not found"
+                    $testResult=$false
+                    break;
+                }
+                $sourceHash=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
+                $testResult=Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
+            }
+
+            if(-not $testResult)
+            {
+                $testResult=$false
+                break;
+            }
+
+        }
+    }
+    if(-not $testResult)
+    {
+        return $false
+    }
     $ValuesToCheck.Remove('Assignments') | Out-Null
+    #endregion
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
                                              -Source $($MyInvocation.MyCommand.Source) `
@@ -478,7 +494,6 @@ function Export-TargetResource
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Assignments) -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
 
-                write-host "After Get-M365DSCDRGComplexTypeToString "
                 if ($complexTypeStringResult)
                 {
                     $Results.Assignments = $complexTypeStringResult
@@ -489,7 +504,6 @@ function Export-TargetResource
                 }
             }
 
-            write-host "After Assign to string"
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -646,7 +660,6 @@ function ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings
     }
     return $result
 }
-
 
 function Update-AppConfigurationPolicyAssignments
 {
@@ -980,7 +993,6 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
     }
     return $returnValue
 }
-
 function Compare-M365DSCComplexObject
 {
     [CmdletBinding()]
@@ -1127,4 +1139,5 @@ function Convert-M365DSCDRGComplexTypeToHashtable
     }
     return $results
 }
-Export-ModuleMember -Function *-TargetResource,*
+
+Export-ModuleMember -Function *-TargetResource
