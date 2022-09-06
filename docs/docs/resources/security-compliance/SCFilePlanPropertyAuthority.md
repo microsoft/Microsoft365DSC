@@ -4,16 +4,40 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Name** | Key | String | The Name parameter specifies the unique name of the Authority. ||
-| **Ensure** | Write | String | Specify if this authority should exist or not. |Present, Absent|
-| **Credential** | Required | PSCredential | Credentials of the Exchange Global Admin ||
+| **Name** | Key | String | The Name parameter specifies the unique name of the Authority. | |
+| **Ensure** | Write | String | Specify if this authority should exist or not. | `Present`, `Absent` |
+| **Credential** | Required | PSCredential | Credentials of the Exchange Global Admin | |
 
-# SCFilePlanPropertyAuthority
-
-### Description
+## Description
 
 This resource configures an authority entry for Security and
 Compliance File Plans.
+
+## Permissions
+
+### Microsoft Graph
+
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
+
+#### Delegated permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
+
+#### Application permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
 
 ## Examples
 

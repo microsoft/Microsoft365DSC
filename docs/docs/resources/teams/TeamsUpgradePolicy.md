@@ -4,19 +4,43 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Identity** | Key | String | Identity of the Teams Upgrade Policy. ||
-| **Users** | Write | StringArray[] | List of users that will be granted the Upgrade Policy to. ||
-| **MigrateMeetingsToTeams** | Write | Boolean | Specifies whether to move existing Skype for Business meetings organized by the user to Teams. This parameter can only be true if the mode of the specified policy instance is either TeamsOnly or SfBWithTeamsCollabAndMeetings, and if the policy instance is being granted to a specific user. It not possible to trigger meeting migration when granting TeamsUpgradePolicy to the entire tenant. ||
-| **Credential** | Required | PSCredential | Credentials of the Teams Admin ||
+| **Identity** | Key | String | Identity of the Teams Upgrade Policy. | |
+| **Users** | Write | StringArray[] | List of users that will be granted the Upgrade Policy to. | |
+| **MigrateMeetingsToTeams** | Write | Boolean | Specifies whether to move existing Skype for Business meetings organized by the user to Teams. This parameter can only be true if the mode of the specified policy instance is either TeamsOnly or SfBWithTeamsCollabAndMeetings, and if the policy instance is being granted to a specific user. It not possible to trigger meeting migration when granting TeamsUpgradePolicy to the entire tenant. | |
+| **Credential** | Required | PSCredential | Credentials of the Teams Admin | |
 
 
-# TeamsUpgradePolicy
-
-### Description
+## Description
 
 This resource configures the Teams Upgrade policies.
 
 More information: https://docs.microsoft.com/en-us/microsoftteams/meetings-first#prepare-for-teams-meetings-in-meetings-first
+
+## Permissions
+
+### Microsoft Graph
+
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
+
+#### Delegated permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
+
+#### Application permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
 
 ## Examples
 

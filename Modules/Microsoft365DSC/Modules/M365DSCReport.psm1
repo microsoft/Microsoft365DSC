@@ -403,6 +403,21 @@ function New-M365DSCReportFromConfiguration
 .Description
 This function compares two provided DSC configuration to determine the delta.
 
+.Parameter Source
+Local path of the source configuration.
+
+.Parameter Destination
+Local path of the destination configuraton.
+
+.Parameter SourceObject
+Array that contains the list of configuration components for the source.
+
+.Parameter DestinationObject
+Array that contains the list of configuration components for the destination. |
+
+.Example
+Compare-M365DSCConfigurations -Source 'C:\DSC\source.ps1' -Destination 'C:\DSC\destination.ps1'
+
 .Functionality
 Public
 #>

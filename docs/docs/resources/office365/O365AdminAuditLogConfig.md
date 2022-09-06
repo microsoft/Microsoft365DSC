@@ -4,21 +4,45 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **IsSingleInstance** | Key | String | Specifies the resource is a single instance, the value must be 'Yes' |Yes|
-| **Ensure** | Write | String | 'Present' is the only value accepted. |Present|
-| **UnifiedAuditLogIngestionEnabled** | Required | String | Determins if Unified Audit Log Ingestion is enabled |Enabled, Disabled|
-| **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin ||
-| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
-| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
-| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
-| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword ||
-| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. ||
+| **IsSingleInstance** | Key | String | Specifies the resource is a single instance, the value must be 'Yes' | `Yes` |
+| **Ensure** | Write | String | 'Present' is the only value accepted. | `Present` |
+| **UnifiedAuditLogIngestionEnabled** | Required | String | Determins if Unified Audit Log Ingestion is enabled | `Enabled`, `Disabled` |
+| **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
+| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
+| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 
-# O365AdminAuditLogConfig
-
-### Description
+## Description
 
 This resource configures Security and Compliance Center Admin Audit Log.
+
+## Permissions
+
+### Microsoft Graph
+
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
+
+#### Delegated permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
+
+#### Application permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
 
 ## Examples
 
