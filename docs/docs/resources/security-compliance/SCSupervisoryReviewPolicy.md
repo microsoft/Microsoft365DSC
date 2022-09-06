@@ -4,17 +4,41 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Name** | Key | String | The Name parameter specifies the unique name for the supervisory review policy. The name can't exceed 64 characters. If the value contains spaces, enclose the value in quotation marks. ||
-| **Comment** | Write | String | The Comment parameter specifies an optional comment. If you specify a value that contains spaces, enclose the value in quotation marks. ||
-| **Reviewers** | Required | StringArray[] | The Reviewers parameter specifies the SMTP addresses of the reviewers for the supervisory review policy. You can specify multiple email addresses separated by commas. ||
-| **Ensure** | Write | String | Specify if this rule should exist or not. |Present, Absent|
-| **Credential** | Required | PSCredential | Credentials of the Exchange Global Admin ||
+| **Name** | Key | String | The Name parameter specifies the unique name for the supervisory review policy. The name can't exceed 64 characters. If the value contains spaces, enclose the value in quotation marks. | |
+| **Comment** | Write | String | The Comment parameter specifies an optional comment. If you specify a value that contains spaces, enclose the value in quotation marks. | |
+| **Reviewers** | Required | StringArray[] | The Reviewers parameter specifies the SMTP addresses of the reviewers for the supervisory review policy. You can specify multiple email addresses separated by commas. | |
+| **Ensure** | Write | String | Specify if this rule should exist or not. | `Present`, `Absent` |
+| **Credential** | Required | PSCredential | Credentials of the Exchange Global Admin | |
 
-# SCSupervisoryReviewPolicy
-
-### Description
+## Description
 
 This resource configures a Supervision Policy in Security and Compliance.
+
+## Permissions
+
+### Microsoft Graph
+
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
+
+#### Delegated permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
+
+#### Application permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
 
 ## Examples
 

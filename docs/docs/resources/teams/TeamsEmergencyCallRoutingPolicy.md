@@ -4,24 +4,55 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **EmergencyDialString** | Write | String | Specifies the emergency phone number. ||
-| **EmergencyDialMask** | Write | String | For each Teams emergency number, you can specify zero or more emergency dial masks. A dial mask is a number that you want to translate into the value of the emergency dial number value when it is dialed. ||
-| **OnlinePSTNUsage** | Write | String | Specify the online public switched telephone network (PSTN) usage ||
-| **Identity** | Key | String | Identity of the Teams Emergency Call Routing Policy. ||
-| **Description** | Write | String | Description of the Teams Emergency Call Routing Policy. ||
-| **EmergencyNumbers** | Write | InstanceArray[] | Emergency number(s) associated with the policy. ||
-| **AllowEnhancedEmergencyServices** | Write | Boolean | Flag to enable Enhanced Emergency Services ||
-| **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. |Present, Absent|
-| **Credential** | Required | PSCredential | Credentials of the Teams Admin. ||
+| **Identity** | Key | String | Identity of the Teams Emergency Call Routing Policy. | |
+| **Description** | Write | String | Description of the Teams Emergency Call Routing Policy. | |
+| **EmergencyNumbers** | Write | MSFT_TeamsEmergencyNumber[] | Emergency number(s) associated with the policy. | |
+| **AllowEnhancedEmergencyServices** | Write | Boolean | Flag to enable Enhanced Emergency Services | |
+| **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
+| **Credential** | Required | PSCredential | Credentials of the Teams Admin. | |
+
+### MSFT_TeamsEmergencyNumber
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **EmergencyDialString** | Write | String | Specifies the emergency phone number. | |
+| **EmergencyDialMask** | Write | String | For each Teams emergency number, you can specify zero or more emergency dial masks. A dial mask is a number that you want to translate into the value of the emergency dial number value when it is dialed. | |
+| **OnlinePSTNUsage** | Write | String | Specify the online public switched telephone network (PSTN) usage | |
 
 
-# TeamsEmergencyCallRoutingPolicy
-
-### Description
+## Description
 
 This resource configures the Teams Emergency Call Routing Policies.
 
 More information: https://docs.microsoft.com/en-us/microsoftteams/manage-emergency-call-routing-policies
+
+## Permissions
+
+### Microsoft Graph
+
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
+
+#### Delegated permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
+
+#### Application permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
 
 ## Examples
 

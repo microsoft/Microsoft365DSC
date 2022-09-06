@@ -614,7 +614,6 @@ function New-DscMofResourceWikiPage
 
             $permissionsContent = New-Object -TypeName System.Text.StringBuilder
             $null = $permissionsContent.AppendLine('## Permissions')
-            $null = $permissionsContent.AppendLine()
 
             if (Test-Path -Path $settingsFile)
             {
@@ -644,74 +643,148 @@ function New-DscMofResourceWikiPage
                     }
                     $null = $permissionsContent.AppendLine("- $roleGroups")
                 }
-                elseif ($null -ne $settingsJson.permissions.graph)
+                else
                 {
-                    $null = $permissionsContent.AppendLine("### Microsoft Graph")
-                    $null = $permissionsContent.AppendLine()
-                    $null = $permissionsContent.AppendLine('To authenticate with the Microsoft Graph API, this resource required the following permissions:')
-                    $null = $permissionsContent.AppendLine()
-                    $null = $permissionsContent.AppendLine("#### Delegated permissions")
-                    $null = $permissionsContent.AppendLine()
-                    $null = $permissionsContent.AppendLine("- **Read**")
-                    $null = $permissionsContent.AppendLine()
+                    # Microsoft Graph permissions
+                    if ($null -ne $settingsJson.permissions.graph)
+                    {
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine("### Microsoft Graph")
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine('To authenticate with the Microsoft Graph API, this resource required the following permissions:')
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine("#### Delegated permissions")
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine("- **Read**")
+                        $null = $permissionsContent.AppendLine()
 
-                    if ($settingsJson.permissions.graph.delegated.read.Count -eq 0)
-                    {
-                        $delegatedRead = 'None'
-                    }
-                    else
-                    {
-                        $delegatedRead = $settingsJson.permissions.graph.delegated.read.name -join ", "
-                    }
-                    $null = $permissionsContent.AppendLine("    - $delegatedRead")
+                        if ($settingsJson.permissions.graph.delegated.read.Count -eq 0)
+                        {
+                            $delegatedRead = 'None'
+                        }
+                        else
+                        {
+                            $delegatedRead = $settingsJson.permissions.graph.delegated.read.name -join ", "
+                        }
+                        $null = $permissionsContent.AppendLine("    - $delegatedRead")
 
-                    $null = $permissionsContent.AppendLine()
-                    $null = $permissionsContent.AppendLine("- **Update**")
-                    $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine("- **Update**")
+                        $null = $permissionsContent.AppendLine()
 
-                    if ($settingsJson.permissions.graph.delegated.update.Count -eq 0)
-                    {
-                        $delegatedUpdate = 'None'
-                    }
-                    else
-                    {
-                        $delegatedUpdate = $settingsJson.permissions.graph.delegated.update.name -join ", "
-                    }
-                    $null = $permissionsContent.AppendLine("    - $delegatedUpdate")
+                        if ($settingsJson.permissions.graph.delegated.update.Count -eq 0)
+                        {
+                            $delegatedUpdate = 'None'
+                        }
+                        else
+                        {
+                            $delegatedUpdate = $settingsJson.permissions.graph.delegated.update.name -join ", "
+                        }
+                        $null = $permissionsContent.AppendLine("    - $delegatedUpdate")
 
-                    $null = $permissionsContent.AppendLine()
-                    $null = $permissionsContent.AppendLine("#### Application permissions")
-                    $null = $permissionsContent.AppendLine()
-                    $null = $permissionsContent.AppendLine("- **Read**")
-                    $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine("#### Application permissions")
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine("- **Read**")
+                        $null = $permissionsContent.AppendLine()
 
-                    if ($settingsJson.permissions.graph.application.read.Count -eq 0)
-                    {
-                        $applicationRead = 'None'
-                    }
-                    else
-                    {
-                        $applicationRead = $settingsJson.permissions.graph.application.read.name -join ", "
-                    }
-                    $null = $permissionsContent.AppendLine("    - $applicationRead")
+                        if ($settingsJson.permissions.graph.application.read.Count -eq 0)
+                        {
+                            $applicationRead = 'None'
+                        }
+                        else
+                        {
+                            $applicationRead = $settingsJson.permissions.graph.application.read.name -join ", "
+                        }
+                        $null = $permissionsContent.AppendLine("    - $applicationRead")
 
-                    $null = $permissionsContent.AppendLine()
-                    $null = $permissionsContent.AppendLine("- **Update**")
-                    $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine("- **Update**")
+                        $null = $permissionsContent.AppendLine()
 
-                    if ($settingsJson.permissions.graph.application.update.Count -eq 0)
-                    {
-                        $applicationUpdate = 'None'
+                        if ($settingsJson.permissions.graph.application.update.Count -eq 0)
+                        {
+                            $applicationUpdate = 'None'
+                        }
+                        else
+                        {
+                            $applicationUpdate = $settingsJson.permissions.graph.application.update.name -join ", "
+                        }
+                        $null = $permissionsContent.AppendLine("    - $applicationUpdate")
                     }
-                    else
+
+                    # Microsoft SharePoint permissions
+                    if ($null -ne $settingsJson.permissions.sharepoint)
                     {
-                        $applicationUpdate = $settingsJson.permissions.graph.application.update.name -join ", "
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine("### Microsoft SharePoint")
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine('To authenticate with the SharePoint API, this resource required the following permissions:')
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine("#### Delegated permissions")
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine("- **Read**")
+                        $null = $permissionsContent.AppendLine()
+
+                        if ($settingsJson.permissions.sharepoint.delegated.read.Count -eq 0)
+                        {
+                            $delegatedRead = 'None'
+                        }
+                        else
+                        {
+                            $delegatedRead = $settingsJson.permissions.sharepoint.delegated.read.name -join ", "
+                        }
+                        $null = $permissionsContent.AppendLine("    - $delegatedRead")
+
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine("- **Update**")
+                        $null = $permissionsContent.AppendLine()
+
+                        if ($settingsJson.permissions.sharepoint.delegated.update.Count -eq 0)
+                        {
+                            $delegatedUpdate = 'None'
+                        }
+                        else
+                        {
+                            $delegatedUpdate = $settingsJson.permissions.sharepoint.delegated.update.name -join ", "
+                        }
+                        $null = $permissionsContent.AppendLine("    - $delegatedUpdate")
+
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine("#### Application permissions")
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine("- **Read**")
+                        $null = $permissionsContent.AppendLine()
+
+                        if ($settingsJson.permissions.sharepoint.application.read.Count -eq 0)
+                        {
+                            $applicationRead = 'None'
+                        }
+                        else
+                        {
+                            $applicationRead = $settingsJson.permissions.sharepoint.application.read.name -join ", "
+                        }
+                        $null = $permissionsContent.AppendLine("    - $applicationRead")
+
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine("- **Update**")
+                        $null = $permissionsContent.AppendLine()
+
+                        if ($settingsJson.permissions.sharepoint.application.update.Count -eq 0)
+                        {
+                            $applicationUpdate = 'None'
+                        }
+                        else
+                        {
+                            $applicationUpdate = $settingsJson.permissions.sharepoint.application.update.name -join ", "
+                        }
+                        $null = $permissionsContent.AppendLine("    - $applicationUpdate")
                     }
-                    $null = $permissionsContent.AppendLine("    - $applicationUpdate")
                 }
             }
             else
             {
+                $null = $permissionsContent.AppendLine()
                 $null = $permissionsContent.AppendLine("No permission information available")
             }
 

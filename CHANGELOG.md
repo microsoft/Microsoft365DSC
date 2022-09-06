@@ -10,6 +10,10 @@
   * Fixes an issue when trying to create new compliancerule for Teams based policies where invalid
     parameters were passed.
     FIXES #2181
+* MISC
+  * Update settings.json for all SharePoint resources to add SharePoint specific permissions
+    FIXES [#2240]
+  * Updated website pages with new information (cmdlet and resource documentation)
 
 # 1.22.831.1
 
