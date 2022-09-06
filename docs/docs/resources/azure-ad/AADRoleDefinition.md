@@ -4,53 +4,29 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **DisplayName** | Key | String | Specifies a display name for the role definition. | |
-| **Id** | Write | String | Specifies Id for the role definition. | |
-| **Description** | Write | String | Specifies a description for the role definition. | |
-| **ResourceScopes** | Write | StringArray[] | Specifies the resource scopes for the role definition. | |
-| **IsEnabled** | Required | Boolean | Specifies whether the role definition is enabled. | |
-| **RolePermissions** | Required | StringArray[] | Specifies permissions for the role definition. | |
-| **TemplateId** | Write | String | Specifies template id for the role definition. | |
-| **Version** | Write | String | Specifies version for the role definition. | |
-| **Ensure** | Write | String | Specify if the Azure AD Role definition should exist or not. | `Present`, `Absent` |
-| **Credential** | Write | PSCredential | Credentials of the Azure AD Admin | |
-| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
-| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
-| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory application to authenticate with. | |
-| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
+| **DisplayName** | Key | String | Specifies a display name for the role definition. ||
+| **Id** | Write | String | Specifies Id for the role definition. ||
+| **Description** | Write | String | Specifies a description for the role definition. ||
+| **ResourceScopes** | Write | StringArray[] | Specifies the resource scopes for the role definition. ||
+| **IsEnabled** | Required | Boolean | Specifies whether the role definition is enabled. ||
+| **RolePermissions** | Required | StringArray[] | Specifies permissions for the role definition. ||
+| **TemplateId** | Write | String | Specifies template id for the role definition. ||
+| **Version** | Write | String | Specifies version for the role definition. ||
+| **Ensure** | Write | String | Specify if the Azure AD Role definition should exist or not. |Present, Absent|
+| **Credential** | Write | PSCredential | Credentials of the Azure AD Admin ||
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
+| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory application to authenticate with. ||
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
-## Description
+# AADRoleDefinition
+
+### Description
 
 This resource configures an Azure Active Directory role definition.
 To configure custom roles you require an Azure AD Premium P1 license.
 The account used to configure role definitions based on this resource needs either to be a
 "Global Administrator" or a "Privileged role administrator".
-
-## Permissions
-
-### Microsoft Graph
-
-To authenticate with the Microsoft Graph API, this resource required the following permissions:
-
-#### Delegated permissions
-
-- **Read**
-
-    - RoleManagement.Read.Directory
-
-- **Update**
-
-    - RoleManagement.ReadWrite.Directory
-
-#### Application permissions
-
-- **Read**
-
-    - RoleManagement.Read.Directory
-
-- **Update**
-
-    - RoleManagement.ReadWrite.Directory
 
 ## Examples
 

@@ -4,32 +4,34 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **DisplayName** | Key | String | Display name of the Android Device Owner device compliance policy. | |
-| **Description** | Write | String | Description of the Android Device Owner device compliance policy. | |
-| **DeviceThreatProtectionEnabled** | Write | Boolean | DeviceThreatProtectionEnabled of the Android Device Owner device compliance policy. | |
-| **DeviceThreatProtectionRequiredSecurityLevel** | Write | String | DeviceThreatProtectionRequiredSecurityLevel of the Android Device Owner device compliance policy. | |
-| **AdvancedThreatProtectionRequiredSecurityLevel** | Write | String | AdvancedThreatProtectionRequiredSecurityLevel of the Android Device Owner device compliance policy. | |
-| **SecurityRequireSafetyNetAttestationBasicIntegrity** | Write | Boolean | SecurityRequireSafetyNetAttestationBasicIntegrity of the Android Device Owner device compliance policy. | |
-| **SecurityRequireSafetyNetAttestationCertifiedDevice** | Write | Boolean | SecurityRequireSafetyNetAttestationCertifiedDevice of the Android Device Owner device compliance policy. | |
-| **osMinimumVersion** | Write | String | osMinimumVersion of the Android Device Owner device compliance policy. | |
-| **osMaximumVersion** | Write | String | osMaximumVersion of the Android Device Owner device compliance policy. | |
-| **passwordRequired** | Write | Boolean | PasswordRequired of the Android Device Owner device compliance policy. | |
-| **passwordMinimumLength** | Write | UInt32 | PasswordMinimumLength of the Android Device Owner device compliance policy. | |
-| **PasswordRequiredType** | Write | String | PasswordRequiredType of the Android Device Owner device compliance policy. | `deviceDefault`, `alphabetic`, `alphanumeric`, `alphanumericWithSymbols`, `lowSecurityBiometric`, `numeric`, `numericComplex`, `any` |
-| **PasswordMinutesOfInactivityBeforeLock** | Write | UInt32 | PasswordMinutesOfInactivityBeforeLock of the Android Device Owner device compliance policy. | |
-| **PasswordExpirationDays** | Write | UInt32 | PasswordExpirationDays of the Android Device Owner device compliance policy. | |
-| **PasswordPreviousPasswordCountToBlock** | Write | UInt32 | PasswordPreviousPasswordCountToBlock of the Android Device Owner device compliance policy. | |
-| **StorageRequireEncryption** | Write | Boolean | StorageRequireEncryption of the Android Device Owner device compliance policy. | |
-| **SecurityRequireIntuneAppIntegrity** | Write | Boolean | SecurityRequireIntuneAppIntegrity of the Android Device Owner device compliance policy. | |
-| **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tags for this Entity instance. Inherited from deviceConfiguration | |
-| **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed | `Present`, `Absent` |
-| **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
-| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
-| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
-| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory tenant used for authentication. | |
-| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
+| **DisplayName** | Key | String | Display name of the Android Device Owner device compliance policy. ||
+| **Description** | Write | String | Description of the Android Device Owner device compliance policy. ||
+| **DeviceThreatProtectionEnabled** | Write | Boolean | DeviceThreatProtectionEnabled of the Android Device Owner device compliance policy. ||
+| **DeviceThreatProtectionRequiredSecurityLevel** | Write | String | DeviceThreatProtectionRequiredSecurityLevel of the Android Device Owner device compliance policy. ||
+| **AdvancedThreatProtectionRequiredSecurityLevel** | Write | String | AdvancedThreatProtectionRequiredSecurityLevel of the Android Device Owner device compliance policy. ||
+| **SecurityRequireSafetyNetAttestationBasicIntegrity** | Write | Boolean | SecurityRequireSafetyNetAttestationBasicIntegrity of the Android Device Owner device compliance policy. ||
+| **SecurityRequireSafetyNetAttestationCertifiedDevice** | Write | Boolean | SecurityRequireSafetyNetAttestationCertifiedDevice of the Android Device Owner device compliance policy. ||
+| **osMinimumVersion** | Write | String | osMinimumVersion of the Android Device Owner device compliance policy. ||
+| **osMaximumVersion** | Write | String | osMaximumVersion of the Android Device Owner device compliance policy. ||
+| **passwordRequired** | Write | Boolean | PasswordRequired of the Android Device Owner device compliance policy. ||
+| **passwordMinimumLength** | Write | UInt32 | PasswordMinimumLength of the Android Device Owner device compliance policy. ||
+| **PasswordRequiredType** | Write | String | PasswordRequiredType of the Android Device Owner device compliance policy. |deviceDefault, alphabetic, alphanumeric, alphanumericWithSymbols, lowSecurityBiometric, numeric, numericComplex, any|
+| **PasswordMinutesOfInactivityBeforeLock** | Write | UInt32 | PasswordMinutesOfInactivityBeforeLock of the Android Device Owner device compliance policy. ||
+| **PasswordExpirationDays** | Write | UInt32 | PasswordExpirationDays of the Android Device Owner device compliance policy. ||
+| **PasswordPreviousPasswordCountToBlock** | Write | UInt32 | PasswordPreviousPasswordCountToBlock of the Android Device Owner device compliance policy. ||
+| **StorageRequireEncryption** | Write | Boolean | StorageRequireEncryption of the Android Device Owner device compliance policy. ||
+| **SecurityRequireIntuneAppIntegrity** | Write | Boolean | SecurityRequireIntuneAppIntegrity of the Android Device Owner device compliance policy. ||
+| **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tags for this Entity instance. Inherited from deviceConfiguration ||
+| **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed |Present, Absent|
+| **Credential** | Write | PSCredential | Credentials of the Intune Admin ||
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
+| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory tenant used for authentication. ||
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
-## Description
+# IntuneDeviceCompliancePolicyAndroidDeviceOwner
+
+### Description
 
 This resource configures the settings of Android Work Profile device compliance policies
 in your cloud-based organization.
@@ -152,32 +154,6 @@ _You don't have to configure this setting because USB debugging is already disab
 Select the oldest security patch level a device can have. Devices that aren't at least at this patch level are noncompliant. The date must be entered in the YYYY-MM-DD format.
 
 _By default, no date is configured._
-
-## Permissions
-
-### Microsoft Graph
-
-To authenticate with the Microsoft Graph API, this resource required the following permissions:
-
-#### Delegated permissions
-
-- **Read**
-
-    - DeviceManagementConfiguration.Read.All
-
-- **Update**
-
-    - DeviceManagementConfiguration.ReadWrite.All
-
-#### Application permissions
-
-- **Read**
-
-    - DeviceManagementConfiguration.Read.All
-
-- **Update**
-
-    - DeviceManagementConfiguration.ReadWrite.All
 
 ## Examples
 

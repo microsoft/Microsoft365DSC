@@ -4,41 +4,17 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Name** | Key | String | The Name parameter specifies the unique name of the compliance case. | |
-| **Description** | Write | String | The description of the case. | |
-| **Ensure** | Write | String | Specify if this case should exist or not. | `Present`, `Absent` |
-| **Status** | Write | String | Status for the case. Can either be 'Active' or 'Closed' | `Active`, `Closed` |
-| **Credential** | Required | PSCredential | Credentials of the Global Admin Account | |
+| **Name** | Key | String | The Name parameter specifies the unique name of the compliance case. ||
+| **Description** | Write | String | The description of the case. ||
+| **Ensure** | Write | String | Specify if this case should exist or not. |Present, Absent|
+| **Status** | Write | String | Status for the case. Can either be 'Active' or 'Closed' |Active, Closed|
+| **Credential** | Required | PSCredential | Credentials of the Global Admin Account ||
 
-## Description
+# SCComplianceCase
+
+### Description
 
 This resource configures an eDiscovery Case in Security and Compliance.
-
-## Permissions
-
-### Microsoft Graph
-
-To authenticate with the Microsoft Graph API, this resource required the following permissions:
-
-#### Delegated permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
-
-#### Application permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
 
 ## Examples
 

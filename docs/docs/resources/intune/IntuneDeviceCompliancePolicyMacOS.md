@@ -4,33 +4,35 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **DisplayName** | Key | String | Display name of the MacOS device compliance policy. | |
-| **Description** | Write | String | Description of the MacOS device compliance policy. | |
-| **PasswordRequired** | Write | Boolean | PasswordRequired of the MacOS device compliance policy. | |
-| **PasswordBlockSimple** | Write | Boolean | PasswordBlockSimple of the MacOS device compliance policy. | |
-| **PasswordExpirationDays** | Write | UInt32 | PasswordExpirationDays of the MacOS device compliance policy. | |
-| **PasswordMinimumLength** | Write | UInt32 | PasswordMinimumLength of the MacOS device compliance policy. | |
-| **PasswordMinutesOfInactivityBeforeLock** | Write | UInt32 | PasswordMinutesOfInactivityBeforeLock of the MacOS device compliance policy. | |
-| **PasswordPreviousPasswordBlockCount** | Write | UInt32 | PasswordPreviousPasswordBlockCount of the MacOS device compliance policy. | |
-| **PasswordMinimumCharacterSetCount** | Write | UInt32 | PasswordMinimumCharacterSetCount of the MacOS device compliance policy. | |
-| **PasswordRequiredType** | Write | String | PasswordRequiredType of the MacOS device compliance policy. | `DeviceDefault`, `Alphanumeric`, `Numeric` |
-| **OsMinimumVersion** | Write | String | OsMinimumVersion of the MacOS device compliance policy. | |
-| **OsMaximumVersion** | Write | String | OsMaximumVersion of the MacOS device compliance policy. | |
-| **SystemIntegrityProtectionEnabled** | Write | Boolean | SystemIntegrityProtectionEnabled of the MacOS device compliance policy. | |
-| **DeviceThreatProtectionEnabled** | Write | Boolean | DeviceThreatProtectionEnabled of the MacOS device compliance policy. | |
-| **DeviceThreatProtectionRequiredSecurityLevel** | Write | String | DeviceThreatProtectionRequiredSecurityLevel of the MacOS device compliance policy. | `Unavailable`, `Secured`, `Low`, `Medium`, `High`, `NotSet` |
-| **StorageRequireEncryption** | Write | Boolean | StorageRequireEncryption of the MacOS device compliance policy. | |
-| **FirewallEnabled** | Write | Boolean | FirewallEnabled of the MacOS device compliance policy. | |
-| **FirewallBlockAllIncoming** | Write | Boolean | FirewallBlockAllIncoming of the MacOS device compliance policy. | |
-| **FirewallEnableStealthMode** | Write | Boolean | FirewallEnableStealthMode of the MacOS device compliance policy. | |
-| **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
-| **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
-| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
-| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
-| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory tenant used for authentication. | |
-| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
+| **DisplayName** | Key | String | Display name of the MacOS device compliance policy. ||
+| **Description** | Write | String | Description of the MacOS device compliance policy. ||
+| **PasswordRequired** | Write | Boolean | PasswordRequired of the MacOS device compliance policy. ||
+| **PasswordBlockSimple** | Write | Boolean | PasswordBlockSimple of the MacOS device compliance policy. ||
+| **PasswordExpirationDays** | Write | UInt32 | PasswordExpirationDays of the MacOS device compliance policy. ||
+| **PasswordMinimumLength** | Write | UInt32 | PasswordMinimumLength of the MacOS device compliance policy. ||
+| **PasswordMinutesOfInactivityBeforeLock** | Write | UInt32 | PasswordMinutesOfInactivityBeforeLock of the MacOS device compliance policy. ||
+| **PasswordPreviousPasswordBlockCount** | Write | UInt32 | PasswordPreviousPasswordBlockCount of the MacOS device compliance policy. ||
+| **PasswordMinimumCharacterSetCount** | Write | UInt32 | PasswordMinimumCharacterSetCount of the MacOS device compliance policy. ||
+| **PasswordRequiredType** | Write | String | PasswordRequiredType of the MacOS device compliance policy. |DeviceDefault, Alphanumeric, Numeric|
+| **OsMinimumVersion** | Write | String | OsMinimumVersion of the MacOS device compliance policy. ||
+| **OsMaximumVersion** | Write | String | OsMaximumVersion of the MacOS device compliance policy. ||
+| **SystemIntegrityProtectionEnabled** | Write | Boolean | SystemIntegrityProtectionEnabled of the MacOS device compliance policy. ||
+| **DeviceThreatProtectionEnabled** | Write | Boolean | DeviceThreatProtectionEnabled of the MacOS device compliance policy. ||
+| **DeviceThreatProtectionRequiredSecurityLevel** | Write | String | DeviceThreatProtectionRequiredSecurityLevel of the MacOS device compliance policy. |Unavailable, Secured, Low, Medium, High, NotSet|
+| **StorageRequireEncryption** | Write | Boolean | StorageRequireEncryption of the MacOS device compliance policy. ||
+| **FirewallEnabled** | Write | Boolean | FirewallEnabled of the MacOS device compliance policy. ||
+| **FirewallBlockAllIncoming** | Write | Boolean | FirewallBlockAllIncoming of the MacOS device compliance policy. ||
+| **FirewallEnableStealthMode** | Write | Boolean | FirewallEnableStealthMode of the MacOS device compliance policy. ||
+| **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. |Present, Absent|
+| **Credential** | Write | PSCredential | Credentials of the Intune Admin ||
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
+| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory tenant used for authentication. ||
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
-## Description
+# IntuneDeviceCompliancePolicyMacOS
+
+### Description
 
 This resource configures the settings of MacOS compliance policies
 in your cloud-based organization.
@@ -114,32 +116,6 @@ For more information, see Gatekeeper on macOS.
   * Mac App Store - Only install apps for the Mac app store. Apps can't be installed from third parties nor identified developers. If a user selects Gatekeeper to install apps outside the Mac App Store, then the device is considered not compliant.
   * Mac App Store and identified developers - Install apps for the Mac app store and from identified developers. macOS checks the identity of developers, and does some other checks to verify app integrity. If a user selects Gatekeeper to install apps outside these options, then the device is considered not compliant.
   * Anywhere - Apps can be installed from anywhere, and by any developer. This option is the least secure.
-
-## Permissions
-
-### Microsoft Graph
-
-To authenticate with the Microsoft Graph API, this resource required the following permissions:
-
-#### Delegated permissions
-
-- **Read**
-
-    - DeviceManagementConfiguration.Read.All
-
-- **Update**
-
-    - DeviceManagementConfiguration.ReadWrite.All
-
-#### Application permissions
-
-- **Read**
-
-    - DeviceManagementConfiguration.Read.All
-
-- **Update**
-
-    - DeviceManagementConfiguration.ReadWrite.All
 
 ## Examples
 
