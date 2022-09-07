@@ -398,7 +398,7 @@ function Set-TargetResource
         Write-Verbose -Message "The Distribution Group {$Name} already exists. Updating settings"
         Write-Verbose -Message "Setting Distribution Group {$Name} with values: $(Convert-M365DscHashtableToString -Hashtable $currentParameters)"
 
-        if ($currentDistributionGroup.OrganizationalUnit -ne $OrganizationalUnit)
+        if ($null -ne $OrganizationalUnit -and $currentDistributionGroup.OrganizationalUnit -ne $OrganizationalUnit)
         {
             Write-Warning -Message "Desired and current OrganizationalUnit values differ. This property cannot be updated once the distribution group has been created. Delete and recreate the distribution group to update the value."
         }
@@ -546,6 +546,11 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
+
+    if (!$ValuesToCheck.OrganizationalUnit)
+    {
+        $ValuesToCheck.Remove("OrganizationalUnit") | Out-Null
+    }
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

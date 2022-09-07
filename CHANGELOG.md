@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* EXODistributionGroup
+  * Fixes warning issue regarding OrganizationalUnit property
+    FIXES [#2252]
 * SCRetentionCompliancePolicy
   * Fixes an issue where the TeamsChatLocation, TeamsChatLocationException, TeamsChannelLocation
     and TeamsChannelLocationException properties were not properly set on Update.
