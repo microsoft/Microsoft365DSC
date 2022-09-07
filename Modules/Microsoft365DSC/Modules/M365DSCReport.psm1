@@ -49,7 +49,14 @@ function New-M365DSCConfigurationToHTML
 
         $partHTML = "<div width='100%' style='text-align:center;'><table width='80%' style='margin-left:auto; margin-right:auto;'>"
         $partHTML += "<tr><th rowspan='" + ($resource.Keys.Count) + "' width='20%'>"
-        $partHTML += "<img src='" + (Get-IconPath -ResourceName $resource.ResourceName) + "' />"
+        try
+        {
+            $partHTML += "<img src='" + (Get-IconPath -ResourceName $resource.ResourceName) + "' />"
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         $partHTML += "</th>"
 
         $partHTML += "<th colspan='2' style='background-color:silver;text-align:center;' width='80%'>"
@@ -388,8 +395,8 @@ function New-M365DSCReportFromConfiguration
         }
         "HTML"
         {
-            $templateName = Get-Item $ConfigurationPath
-            $templateName = $TemplateFile.Name.Split('.')[0]
+            $template = Get-Item $ConfigurationPath
+            $templateName = $Template.Name.Split('.')[0]
             New-M365DSCConfigurationToHTML -ParsedContent $parsedContent -OutputPath $OutputPath -TemplateName $templateName
         }
         "JSON"
@@ -602,7 +609,7 @@ function Compare-M365DSCConfigurations
         }
         catch
         {
-            Write-Host "Error: $($sourceResource.ResourceName)"
+            Write-Verbose -Message "Error: $_"
         }
         $i++
     }
@@ -610,36 +617,50 @@ function Compare-M365DSCConfigurations
 
     # Loop through all items in the destination array
     $i = 1
-    foreach ($destinationResource in $DestinationObject)
+    try
     {
-        [System.Collections.HashTable]$currentDestinationResource = ([array]$destinationResource)[0]
-        $key = Get-M365DSCResourceKey -Resource $currentDestinationResource
-        Write-Progress -Activity "Scanning Destination $Destination...[$i/$($DestinationObject.Count)]" -PercentComplete ($i / ($DestinationObject.Count) * 100)
-        $sourceResource = $SourceObject | Where-Object -FilterScript { $_.ResourceName -eq $currentDestinationResource.ResourceName -and $_.($key[0]) -eq $currentDestinationResource.($key[0]) }
-        $currentDestinationKeyValue = $currentDestinationResource.($key[0])
+        foreach ($destinationResource in $DestinationObject)
+        {
+            try
+            {
+                [System.Collections.HashTable]$currentDestinationResource = ([array]$destinationResource)[0]
+                $key = Get-M365DSCResourceKey -Resource $currentDestinationResource
+                Write-Progress -Activity "Scanning Destination $Destination...[$i/$($DestinationObject.Count)]" -PercentComplete ($i / ($DestinationObject.Count) * 100)
+                $sourceResource = $SourceObject | Where-Object -FilterScript { $_.ResourceName -eq $currentDestinationResource.ResourceName -and $_.($key[0]) -eq $currentDestinationResource.($key[0]) }
+                $currentDestinationKeyValue = $currentDestinationResource.($key[0])
 
-        # Filter on the second key
-        if ($key.Count -gt 1)
-        {
-            [array]$sourceResource = $sourceResource | Where-Object -FilterScript { $_.ResourceName -eq $currentDestinationResource.ResourceName -and $_.($key[1]) -eq $currentDestinationResource.($key[1]) }
-            $currentDestinationKeyValue = $currentDestinationResource.($key[0]), $currentDestinationResource.($key[1]) -join '\'
-        }
-        if ($null -eq $sourceResource)
-        {
-            $drift = @{
-                ResourceName = $currentDestinationResource.ResourceName
-                Key          = $keyName
-                KeyValue     = $currentDestinationKeyValue
-                Properties   = @(@{
-                        ParameterName      = 'Ensure'
-                        ValueInSource      = 'Absent'
-                        ValueInDestination = 'Present'
-                    })
+                # Filter on the second key
+                if ($key.Count -gt 1)
+                {
+                    [array]$sourceResource = $sourceResource | Where-Object -FilterScript { $_.ResourceName -eq $currentDestinationResource.ResourceName -and $_.($key[1]) -eq $currentDestinationResource.($key[1]) }
+                    $currentDestinationKeyValue = $currentDestinationResource.($key[0]), $currentDestinationResource.($key[1]) -join '\'
+                }
+                if ($null -eq $sourceResource)
+                {
+                    $drift = @{
+                        ResourceName = $currentDestinationResource.ResourceName
+                        Key          = $keyName
+                        KeyValue     = $currentDestinationKeyValue
+                        Properties   = @(@{
+                                ParameterName      = 'Ensure'
+                                ValueInSource      = 'Absent'
+                                ValueInDestination = 'Present'
+                            })
+                    }
+                    $Delta += , $drift
+                    $drift = $null
+                }
             }
-            $Delta += , $drift
-            $drift = $null
+            catch
+            {
+                Write-Verbose -Message "Error: $_"
+            }
+            $i++
         }
-        $i++
+    }
+    catch
+    {
+        Write-Verbose -Message "Error: $_"
     }
     Write-Progress -Activity "Scanning Destination..." -Completed
 
