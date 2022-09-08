@@ -480,13 +480,6 @@ Configuration Master
         #region SC
         if ($Environment -ne 'GCCH')
         {
-            SCAuditConfigurationPolicy SharePointAuditPolicy
-            {
-                Workload   = "SharePoint"
-                Ensure     = "Present"
-                Credential = $GlobalAdmin
-            }
-
             SCAuditConfigurationPolicy OneDriveAuditPolicy
             {
                 Workload   = "OneDriveForBusiness"
@@ -681,25 +674,6 @@ Configuration Master
                 Ensure     = "Present"
                 Credential = $GlobalAdmin
 
-            }
-
-            SCSupervisoryReviewPolicy SRPolicy
-            {
-                Name       = "MySRPolicy"
-                Comment    = "Test Policy"
-                Reviewers  = @($GlobalAdmin.UserName)
-                Ensure     = "Present"
-                Credential = $GlobalAdmin
-            }
-
-            SCSupervisoryReviewRule SRRule
-            {
-                Name         = "DemoRule"
-                Condition    = "(Reviewee:$($GlobalAdmin.UserName))"
-                SamplingRate = 100
-                Policy       = 'MySRPolicy'
-                Ensure       = "Present"
-                Credential   = $GlobalAdmin
             }
             #endregion
 
