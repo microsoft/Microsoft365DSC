@@ -15,7 +15,7 @@ This function does not generate any output.
 | --- | --- | --- | --- | --- | --- |
 | Source | True | String |  |  | The source DSC configuration to compare from. |
 | Destination | True | String |  |  | The destination DSC configuration to compare with. |
-| OutputPath | True | String |  |  | The output path of the delta report. |
+| OutputPath | False | String |  |  | The output path of the delta report. |
 | DriftOnly | False | Boolean |  |  | Specifies that only difference should be in the report. |
 | IsBlueprintAssessment | False | Boolean |  |  | Specifies that the report is a comparison with a Blueprint. |
 | HeaderFilePath | False | String |  |  | Specifies that file that contains a custom header for the report. |

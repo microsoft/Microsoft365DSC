@@ -21,6 +21,7 @@ This function does not generate any output.
 | Mode | False | String | Default | Lite, Default, Full | Specifies the mode of the export: Lite, Default or Full. |
 | MaxProcesses | False | Object |  |  | Specifies the maximum number of processes that should run simultanious. |
 | GenerateInfo | False | Boolean |  |  | Specifies if each exported resource should get a link to the Wiki article of the resource. |
+| Filters | False | Hashtable |  |  | Specifies resource level filters to apply in order to reduce the number of instances exported. |
 | ApplicationId | False | String |  |  | Specifies the application id to be used for authentication. |
 | TenantId | False | String |  |  | Specifies the id of the tenant. |
 | ApplicationSecret | False | String |  |  | Specifies the application secret of the application to be used for authentication. |
@@ -28,7 +29,6 @@ This function does not generate any output.
 | Credential | False | PSCredential |  |  | Specifies the credentials to be used for authentication. |
 | CertificatePassword | False | PSCredential |  |  | Specifies the password of the PFX file which is used for authentication. |
 | CertificatePath | False | String |  |  | Specifies the path of the PFX file which is used for authentication. |
-| Filters | False | Hashtable |  |  | Specifies resource level filters to apply in order to reduce the number of instances exported. |
 
 ## Examples
 
@@ -47,3 +47,5 @@ This function does not generate any output.
 -------------------------- EXAMPLE 4 --------------------------
 
 `Export-M365DSCConfiguration -Credential $Credential -Filters @{AADApplication = "DisplayName eq 'MyApp'"}`
+
+

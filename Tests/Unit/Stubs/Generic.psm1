@@ -1203,15 +1203,15 @@ function Connect-Graph
     )
 }
 
-function Get-MGGroupPlannerPlan
-{
-    [CmdletBinding()]
-    Param(
-        [Parameter()]
-        [System.String]
-        $GroupId
-    )
-}
+# function Get-MGGroupPlannerPlan
+# {
+#     [CmdletBinding()]
+#     Param(
+#         [Parameter()]
+#         [System.String]
+#         $GroupId
+#     )
+# }
 
 function Update-MGPlannerPlan
 {
