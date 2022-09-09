@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADRoleSetting
+  * Fixed an issue where the export wasn't properly passing credential to the Get function.
+
 # 1.22.907.1
 
 * EXODistributionGroup
