@@ -1,6 +1,6 @@
 !!! cite "What is Microsoft365DSC?"
 
-    Microsoft365DSC is the most comprehensive and complete solution to have your Microsoft 365 tenant configuration simple and stable. It's an Open-Source initiative hosted on [GitHub](https://github.com/Microsoft/Microsoft365DSC), lead by Microsoft engineers and maintained by the community.
+    Microsoft365DSC is the most comprehensive and complete solution to have your Microsoft 365 tenant configuration simple and stable. It's an Open-Source initiative hosted on [GitHub](https://github.com/Microsoft/Microsoft365DSC), led by Microsoft engineers and maintained by the community.
 
 # Automate Configuration Changes
 
