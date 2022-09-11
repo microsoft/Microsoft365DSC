@@ -1128,8 +1128,8 @@ function Get-TargetResource
         }
 
         $returnAssignments=@()
-        Select-MgProfile -ProfileName beta
-        $returnAssignments+=Get-MGDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId   $policy.Id
+        Select-MgProfile -name beta
+        $returnAssignments+=Get-MGDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $policy.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $returnAssignments)
         {
@@ -1142,7 +1142,7 @@ function Get-TargetResource
             $assignmentResult += $assignmentValue
         }
         $results.Add('Assignments',$assignmentResult)
-        Select-MgProfile -ProfileName v1.0
+        Select-MgProfile -name v1.0
         return $results
     }
     catch

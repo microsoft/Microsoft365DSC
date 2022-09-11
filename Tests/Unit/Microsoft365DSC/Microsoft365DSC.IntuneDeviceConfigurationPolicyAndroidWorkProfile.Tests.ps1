@@ -51,6 +51,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Remove-MgDeviceManagementDeviceConfiguration -MockWith {
             }
+            Mock -CommandName Get-MgDeviceManagementDeviceConfigurationAssignment -MockWith {
+
+                return @()
+            }
         }
 
         # Test contexts
