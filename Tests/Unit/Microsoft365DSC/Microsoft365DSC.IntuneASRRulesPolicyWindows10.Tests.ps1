@@ -48,9 +48,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
             }
-            Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
-                return @()
-            }
+
         }
 
         # Test contexts
@@ -88,6 +86,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
                 Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
                     return $null
+                }
+                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                    return @()
                 }
             }
 
@@ -191,6 +192,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                     )
                 }
+                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                    return @()
+                }
             }
 
             It "Should return Present from the Get method" {
@@ -278,6 +282,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             }
                         }
                     )
+                }
+                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                    return @()
                 }
             }
 
@@ -372,6 +379,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                     )
                 }
+                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                    return @()
+                }
             }
 
             It "Should return Present from the Get method" {
@@ -450,6 +460,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             }
                         }
                     )
+                }
+                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                    return @()
                 }
             }
 

@@ -50,9 +50,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Update-MgDeviceManagementIntent -MockWith {
 
             }
-            Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
-                return @()
-            }
+
         }
 
         # Test contexts
@@ -67,6 +65,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
                     return $null
+                }
+                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                    return @()
                 }
             }
 
@@ -109,6 +110,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DefinitionId = "appLockerApplicationControl"
                         ValueJSON    = "'true'"
                     }
+                }
+                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                    return @()
                 }
             }
 
@@ -153,6 +157,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ValueJSON    = "'true'"
                     }
                 }
+                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                    return @()
+                }
             }
 
             It "Should return true from the Test method" {
@@ -186,6 +193,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DefinitionId = "appLockerApplicationControl"
                         ValueJSON    = "'true'"
                     }
+                }
+                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                    return @()
                 }
             }
 
@@ -227,6 +237,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DefinitionId = "appLockerApplicationControl"
                         ValueJSON    = "'true'"
                     }
+                }
+                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                    return @()
                 }
             }
 
