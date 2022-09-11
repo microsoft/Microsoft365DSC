@@ -40,9 +40,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            Mock -CommandName New-MgDeviceManagementConfigurationPolicy -MockWith {
+            Mock -CommandName New-DeviceConfigurationPolicy -MockWith {
             }
-            Mock -CommandName Update-MgDeviceManagementConfigurationPolicy -MockWith {
+            Mock -CommandName Update-DeviceConfigurationPolicy -MockWith {
             }
             Mock -CommandName Remove-MgDeviceManagementConfigurationPolicy -MockWith {
             }
@@ -76,6 +76,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgDeviceManagementConfigurationPolicySetting -MockWith {
                     return $null
                 }
+
+                Mock -CommandName Get-MgDeviceManagementConfigurationPolicyAssignment -MockWith {
+                    return @()
+                }
             }
 
             It "Should return absent from the Get method" {
@@ -88,7 +92,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should create the policy from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-MgDeviceManagementConfigurationPolicy" -Exactly 1
+                Should -Invoke -CommandName "New-DeviceConfigurationPolicy" -Exactly 1
             }
         }
 
@@ -100,7 +104,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem = "warn";
                     blockwin32apicallsfromofficemacros                                = "block";
                     Credential                                                        = $Credential;
-                    Description                                                       = "";
+                    Description                                                       = "test";
                     DisplayName                                                       = "asdfads";
                     Ensure                                                            = "Present";
                     Identity                                                          = "12345-12345-12345-12345-12345";
@@ -168,6 +172,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AdditionalProperties = @{}
                     }
                 }
+
+                Mock -CommandName Get-MgDeviceManagementConfigurationPolicyAssignment -MockWith {
+                    return @()
+                }
             }
 
             It "Should return Present from the Get method" {
@@ -180,7 +188,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should update the policy from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgDeviceManagementConfigurationPolicy -Exactly 1
+                Should -Invoke -CommandName Update-DeviceConfigurationPolicy -Exactly 1
             }
         }
 
@@ -260,6 +268,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AdditionalProperties = @{}
                     }
                 }
+
+                Mock -CommandName Get-MgDeviceManagementConfigurationPolicyAssignment -MockWith {
+                    return @()
+                }
             }
 
             It "Should return true from the Test method" {
@@ -275,7 +287,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem = "warn";
                     blockwin32apicallsfromofficemacros                                = "block";
                     Credential                                                        = $Credential;
-                    Description                                                       = "";
+                    Description                                                       = "test";
                     DisplayName                                                       = "asdfads";
                     Ensure                                                            = "Absent";
                     Identity                                                          = "12345-12345-12345-12345-12345";
@@ -342,6 +354,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         )
                         AdditionalProperties = @{}
                     }
+                }
+
+                Mock -CommandName Get-MgDeviceManagementConfigurationPolicyAssignment -MockWith {
+                    return @()
                 }
             }
 
@@ -426,6 +442,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         )
                         AdditionalProperties = @{}
                     }
+                }
+
+                Mock -CommandName Get-MgDeviceManagementConfigurationPolicyAssignment -MockWith {
+                    return @()
                 }
             }
 
