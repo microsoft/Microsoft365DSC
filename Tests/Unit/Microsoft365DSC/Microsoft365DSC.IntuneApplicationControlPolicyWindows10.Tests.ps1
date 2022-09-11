@@ -31,7 +31,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
+                return "Content"
             }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
@@ -49,6 +49,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Update-MgDeviceManagementIntent -MockWith {
 
+            }
+            Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                return @()
             }
         }
 

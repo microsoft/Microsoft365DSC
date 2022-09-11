@@ -68,6 +68,7 @@ function Get-TargetResource
         $configPolicy = Get-MgDeviceAppManagementTargetedManagedAppConfiguration -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
 
+
         if ($null -eq $configPolicy)
         {
             Write-Verbose -Message "No App Configuration Policy with displayName {$DisplayName} was found"
@@ -85,7 +86,6 @@ function Get-TargetResource
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
         }
-
         $returnAssignments=@()
         Select-MgProfile -Name beta
         $returnAssignments+=Get-MgDeviceAppManagementTargetedManagedAppConfigurationAssignment -TargetedManagedAppConfigurationId $configPolicy.Id
@@ -101,6 +101,7 @@ function Get-TargetResource
             $assignmentResult += $assignmentValue
         }
         $returnHashtable.Add('Assignments',$assignmentResult)
+
         return $returnHashtable
     }
     catch
@@ -338,8 +339,6 @@ function Test-TargetResource
         }
     }
 
-
-
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
@@ -406,6 +405,7 @@ function Test-TargetResource
     }
     $ValuesToCheck.Remove('Assignments') | Out-Null
     #endregion
+
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
                                              -Source $($MyInvocation.MyCommand.Source) `

@@ -30,7 +30,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
             }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
@@ -48,6 +47,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgDeviceManagementIntent -MockWith {
             }
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
+            }
+            Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                return @()
             }
         }
 
@@ -388,7 +390,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
-                $Global:CurrentModeIsExport = $true
                 $testParams = @{
                     Credential = $Credential;
                 }
@@ -453,7 +454,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should Reverse Engineer resource from the Export method" {
-                Export-TargetResource @testParams
+                Export-TargetResource @testParams -verbose
             }
         }
     }
