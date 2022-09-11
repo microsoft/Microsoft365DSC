@@ -2,6 +2,14 @@
 
 # UNRELEASED
 
+* AADRoleSetting
+  * Fixed an issue where the export wasn't properly passing credential to the Get function.
+
+# 1.22.907.1
+
+* EXODistributionGroup
+  * Fixes warning issue regarding OrganizationalUnit property
+    FIXES [#2252]
 * SCRetentionCompliancePolicy
   * Fixes an issue where the TeamsChatLocation, TeamsChatLocationException, TeamsChannelLocation
     and TeamsChannelLocationException properties were not properly set on Update.
@@ -10,6 +18,12 @@
   * Fixes an issue when trying to create new compliancerule for Teams based policies where invalid
     parameters were passed.
     FIXES #2181
+* DEPENDENCIES
+  * Updated MicrosoftTeams dependency to version 4.7.0.
+* MISC
+  * Update settings.json for all SharePoint resources to add SharePoint specific permissions
+    FIXES [#2240]
+  * Updated website pages with new information (cmdlet and resource documentation)
 
 # 1.22.831.1
 
