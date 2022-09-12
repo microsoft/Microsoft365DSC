@@ -2,6 +2,13 @@
 
 # UNRELEASED
 
+* AADGroup
+  * Changed behavior where if a group has a dynamic membership rule that is active,
+    we no longer process members from the export, Get and Set functions.
+    FIXES [#2190](https://github.com/microsoft/Microsoft365DSC/issues/2190)
+  * Fixed an issue where if the licenses parameter was omitted and another parameter caused
+    a drift, that the licenses would get stripped from the group.
+    FIXES [#2191](https://github.com/microsoft/Microsoft365DSC/issues/2191)
 * AADRoleSetting
   * Fixed an issue where the export wasn't properly passing credential to the Get function.
 
