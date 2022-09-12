@@ -464,7 +464,7 @@ function Set-TargetResource
                 Update-MgGroup @currentParameters | Out-Null
             }
 
-            if ($licensesToAdd.Length -gt 0 -or $licensesToRemove.Length -gt 0)
+            if (($licensesToAdd.Length -gt 0 -or $licensesToRemove.Length -gt 0) -and $AssignedLicenses -ne $null)
             {
                 try
                 {
