@@ -783,15 +783,16 @@ function Get-M365DSCResourcesByWorkloads
         $Mode = 'Default'
     )
 
-    Write-Host "Finding all resources for workload {$Workload} and Mode {$Mode}" -ForegroundColor Gray
-
     $modules = Get-ChildItem -Path ($PSScriptRoot + "\..\DSCResources\") -Recurse -Filter '*.psm1'
     $Components = @()
-    foreach ($resource in $modules)
+    foreach ($Workload in $Workloads)
     {
-        $ResourceName = $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
-        foreach ($Workload in $Workloads)
+        Write-Host "Finding all resources for workload {$Workload} and Mode {$Mode}" -ForegroundColor Gray
+
+        foreach ($resource in $modules)
         {
+            $ResourceName = $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
+
             if ($ResourceName.StartsWith($Workload, 'CurrentCultureIgnoreCase') -and
                 ($Mode -eq "Full" -or `
                 ($Mode -eq "Default" -and -not $Global:FullComponents.Contains($ResourceName)) -or `

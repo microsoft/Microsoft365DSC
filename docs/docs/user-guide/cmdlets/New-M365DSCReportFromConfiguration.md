@@ -21,14 +21,14 @@ This function does not generate any output.
 
 -------------------------- EXAMPLE 1 --------------------------
 
-`New-M365DSCReportFromConfiguration -Type 'HTML' -ConfigurationPath 'C:\DSC\' -OutputPath 'C:\Dsc\M365Report.html'`
+`New-M365DSCReportFromConfiguration -Type 'HTML' -ConfigurationPath 'C:\DSC\ConfigName.ps1' -OutputPath 'C:\Dsc\M365Report.html'`
 
 -------------------------- EXAMPLE 2 --------------------------
 
-`New-M365DSCReportFromConfiguration -Type 'Excel' -ConfigurationPath 'C:\DSC\' -OutputPath 'C:\Dsc\M365Report.xlsx'`
+`New-M365DSCReportFromConfiguration -Type 'Excel' -ConfigurationPath 'C:\DSC\ConfigName.ps1' -OutputPath 'C:\Dsc\M365Report.xlsx'`
 
 -------------------------- EXAMPLE 3 --------------------------
 
-`New-M365DSCReportFromConfiguration -Type 'JSON' -ConfigurationPath 'C:\DSC\' -OutputPath 'C:\Dsc\M365Report.json'`
+`New-M365DSCReportFromConfiguration -Type 'JSON' -ConfigurationPath 'C:\DSC\ConfigName.ps1' -OutputPath 'C:\Dsc\M365Report.json'`
 
 

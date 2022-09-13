@@ -10,17 +10,11 @@
                     },
                     {
                         "name": "Domain.Read.All"
-                    },
-                    {
-                        "name": "Sites.FullControl.All"
                     }
                 ],
                 "update": [
                     {
                         "name": "Domain.Read.All"
-                    },
-                    {
-                        "name": "Sites.FullControl.All"
                     }
                 ]
             },
@@ -31,15 +25,35 @@
                     },
                     {
                         "name": "Domain.Read.All"
-                    },
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Domain.Read.All"
+                    }
+                ]
+            }
+        },
+        "sharepoint": {
+            "delegated": {
+                "read": [
                     {
                         "name": "Sites.FullControl.All"
                     }
                 ],
                 "update": [
                     {
-                        "name": "Domain.Read.All"
-                    },
+                        "name": "Sites.FullControl.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Sites.FullControl.All"
+                    }
+                ],
+                "update": [
                     {
                         "name": "Sites.FullControl.All"
                     }

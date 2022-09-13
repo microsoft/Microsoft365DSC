@@ -10,9 +10,6 @@
                     },
                     {
                         "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "Sites.FullControl.All"
                     }
                 ],
                 "update": [
@@ -21,9 +18,6 @@
                     },
                     {
                         "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "Sites.FullControl.All"
                     }
                 ]
             },
@@ -34,9 +28,6 @@
                     },
                     {
                         "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "Sites.FullControl.All"
                     }
                 ],
                 "update": [
@@ -45,7 +36,30 @@
                     },
                     {
                         "name": "Group.Read.All"
-                    },
+                    }
+                ]
+            }
+        },
+        "sharepoint": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Sites.FullControl.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Sites.FullControl.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Sites.FullControl.All"
+                    }
+                ],
+                "update": [
                     {
                         "name": "Sites.FullControl.All"
                     }

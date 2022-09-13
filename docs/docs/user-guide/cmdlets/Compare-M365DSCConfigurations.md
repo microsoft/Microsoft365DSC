@@ -6,7 +6,8 @@ This function compares two provided DSC configuration to determine the delta.
 
 ## Output
 
-Array the contains the differences between the source and destination configuration.
+This function outputs information as the following type:
+**System.Array**
 
 ## Parameters
 
@@ -14,8 +15,9 @@ Array the contains the differences between the source and destination configurat
 | --- | --- | --- | --- | --- | --- |
 | Source | False | String |  |  | Local path of the source configuration. |
 | Destination | False | String |  |  | Local path of the destination configuraton. |
-| SourceObject | False | Array |   |  | Array that contains the list of configuration components for the source. |
-| DestinationObject | False | Array |  |  | Array that contains the list of configuration components for the destination. |
+| CaptureTelemetry | False | Boolean |  |  |  |
+| SourceObject | False | Array |  |  | Array that contains the list of configuration components for the source. |
+| DestinationObject | False | Array |  |  | Array that contains the list of configuration components for the destination. | |
 
 ## Examples
 
