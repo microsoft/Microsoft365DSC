@@ -212,16 +212,7 @@ function Get-TargetResource
     #get role
     [string]$Filter = $null
     $Filter = "scopeId eq '/' and scopeType eq 'DirectoryRole' and RoleDefinitionId eq '" + $Id + "'"
-    try{
-        $Policy = Get-MgPolicyRoleManagementPolicyAssignment -Filter $Filter -Erroraction Stop
-    }
-    catch{
-        Write-Verbose -Message "Error: $($Error[0])"
-        if($Error[0].Exception.Message -match "The tenant needs an AAD Premium 2 license"){
-            Write-Verbose -Message "AAD Premium License is required to get the role"
-            exit
-        }
-    }
+    $Policy = Get-MgPolicyRoleManagementPolicyAssignment -Filter $Filter
     $RoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $Id
     #get Policyrule
     $role = Get-MgPolicyRoleManagementPolicyRule -UnifiedRoleManagementPolicyId $Policy.Policyid
