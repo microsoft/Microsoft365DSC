@@ -779,6 +779,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('Id') | Out-Null
     $ValuesToCheck.Remove('GroupTypes') | Out-Null
     $ValuesToCheck.Remove('AssignedLicenses') | Out-Null
+    $ValuesToCheck.Remove('Identity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
