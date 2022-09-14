@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADPIMRoleSetting
+  * Change Resource Name to better understand the scope (PIM)
+    FIXES [#2227](https://github.com/microsoft/Microsoft365DSC/issues/2227)
+  * Fixed an issue if the P2 License is not present on the tenant the Export stop working
 # 1.22.914.1
 
 * AADGroup
