@@ -3,7 +3,7 @@
 # UNRELEASED
 
 * O365User
-  * Improved extraction performance by leveraging StrinBuilder instead of re-assigning string.
+  * Improved extraction performance by leveraging StringBuilder instead of re-assigning string.
 
 # 1.22.914.1
 
