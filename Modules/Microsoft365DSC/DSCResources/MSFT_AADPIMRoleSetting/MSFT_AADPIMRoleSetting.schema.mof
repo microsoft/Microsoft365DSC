@@ -1,5 +1,5 @@
-[ClassVersion("1.0.0.0"), FriendlyName("AADRoleSetting")]
-class MSFT_AADRoleSetting : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("AADPIMRoleSetting")]
+class MSFT_AADPIMRoleSetting : OMI_BaseResource
 {
     [Key, Description("Specifies the RoleId.")] String Id;
     [Write, Description("RuleDefinition Displayname")] String Displayname;

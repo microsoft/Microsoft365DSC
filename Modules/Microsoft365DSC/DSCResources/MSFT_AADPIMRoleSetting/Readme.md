@@ -1,4 +1,4 @@
-# AADRoleSetting
+# AADPIMRoleSetting
 
 ## Description
 
