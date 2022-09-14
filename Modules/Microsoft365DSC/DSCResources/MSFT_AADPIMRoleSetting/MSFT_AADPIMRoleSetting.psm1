@@ -213,13 +213,13 @@ function Get-TargetResource
     [string]$Filter = $null
     $Filter = "scopeId eq '/' and scopeType eq 'DirectoryRole' and RoleDefinitionId eq '" + $Id + "'"
     try{
-        $Policy = Get-MgPolicyRoleManagementPolicyAssignment -Filter $Filter
+        $Policy = Get-MgPolicyRoleManagementPolicyAssignment -Filter $Filter -Erroraction Stop
     }
     catch{
         Write-Verbose -Message "Error: $($Error[0])"
-        if($Error[0].Exception.Message -match "AadPremiumLicenseRequired"){
+        if($Error[0].Exception.Message -match "The tenant needs an AAD Premium 2 license"){
             Write-Verbose -Message "AAD Premium License is required to get the role"
-            return $nullReturn
+            exit
         }
     }
     $RoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $Id
@@ -1250,14 +1250,12 @@ function Export-TargetResource
     #endregion
 
     try{
-        Get-MgPolicyRoleManagementPolicyAssignment -Filter "scopeId eq '/' and scopeType eq 'DirectoryRole'"
+        Get-MgPolicyRoleManagementPolicyAssignment -Filter "scopeId eq '/' and scopeType eq 'DirectoryRole'" -ErrorAction Stop
     }
     catch{
-        Write-Verbose -Message "Error: $($Error[0])"
-        if($Error[0].Exception.Message -match "AadPremiumLicenseRequired"){
-            Write-Verbose -Message "AAD Premium License is required to get the role"
-            return
-        }
+        Write-Host ""
+        Write-Host -Message "WARNING: AAD Premium License is required to get the role" -ForegroundColor Yellow
+        continue
     }
     try
     {

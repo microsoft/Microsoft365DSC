@@ -14,7 +14,7 @@ Configuration Example
 
     Node localhost
     {
-        AADRoleSetting 28b253d8-cde5-471f-a331-fe7320023cdd
+        AADPIMRoleSetting 28b253d8-cde5-471f-a331-fe7320023cdd
         {
             ActivateApprover                                          = @();
             ActivationMaxDuration                                     = "PT8H";
