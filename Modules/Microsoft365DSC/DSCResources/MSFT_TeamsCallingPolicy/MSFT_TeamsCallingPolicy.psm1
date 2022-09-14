@@ -47,7 +47,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Enabled', 'Disabled', 'Unanswered')]
+        [ValidateSet('Enabled', 'Disabled', 'Unanswered', 'UserOverride')]
         $BusyOnBusyEnabledType = 'Enabled',
 
         [Parameter()]
@@ -220,7 +220,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Enabled', 'Disabled', 'Unanswered')]
+        [ValidateSet('Enabled', 'Disabled', 'Unanswered','UserOverride')]
         $BusyOnBusyEnabledType = 'Enabled',
 
         [Parameter()]
@@ -357,7 +357,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Enabled', 'Disabled', 'Unanswered')]
+        [ValidateSet('Enabled', 'Disabled', 'Unanswered','UserOverride')]
         $BusyOnBusyEnabledType = 'Enabled',
 
         [Parameter()]
