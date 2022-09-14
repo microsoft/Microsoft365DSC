@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.914.1
 
 * AADGroup
   * Changed behavior where if a group has a dynamic membership rule that is active,
