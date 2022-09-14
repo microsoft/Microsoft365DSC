@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* O365User
+  * Improved extraction performance by leveraging StrinBuilder instead of re-assigning string.
+
 # 1.22.914.1
 
 * AADGroup
