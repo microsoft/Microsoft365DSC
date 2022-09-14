@@ -30,5 +30,5 @@ class MSFT_AADApplication : OMI_BaseResource
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("API permissions for the Azure Active Directory Application."),EmbeddedInstance("MSFT_AADApplicationPermission")] String Permissions[];
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
-    [Write, Description("Managed ID being used for authentication.")] Boolean Identity;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
 };

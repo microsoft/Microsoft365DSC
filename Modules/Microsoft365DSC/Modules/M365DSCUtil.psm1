@@ -577,8 +577,7 @@ function Test-M365DSCParameterState
         if (($_ -ne 'Verbose') -and ($_ -ne 'Credential') `
                 -and ($_ -ne 'ApplicationId') -and ($_ -ne 'CertificateThumbprint') `
                 -and ($_ -ne 'CertificatePath') -and ($_ -ne 'CertificatePassword') `
-                -and ($_ -ne 'TenantId') -and ($_ -ne 'ApplicationSecret') `
-                -and ($_ -ne 'Identity'))
+                -and ($_ -ne 'TenantId') -and ($_ -ne 'ApplicationSecret'))
         {
             if (($CurrentValues.ContainsKey($_) -eq $false) `
                     -or ($CurrentValues.$_ -ne $DesiredValues.$_) `
@@ -1047,7 +1046,7 @@ function Export-M365DSCConfiguration
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     # LaunchWebUI specified, launching that now
@@ -1087,7 +1086,7 @@ function Export-M365DSCConfiguration
     }
 
     if ($PSBoundParameters.ContainsKey('ApplicationId') -eq $false -and `
-            $Identity.IsPresent -eq $false -and `
+            $ManagedIdentity.IsPresent -eq $false -and `
             $PSBoundParameters.ContainsKey('TenantId') -eq $true)
     {
         Write-Host -Object '[ERROR] You have to specify ApplicationId when you specify TenantId' -ForegroundColor Red
@@ -1116,7 +1115,7 @@ function Export-M365DSCConfiguration
 
     # Default to Credential if no authentication mechanism were provided
     if ($PSBoundParameters.ContainsKey('Credential') -eq $false -and `
-            $Identity.IsPresent -eq $false -and `
+            $ManagedIdentity.IsPresent -eq $false -and `
             $PSBoundParameters.ContainsKey('ApplicationId') -eq $false)
     {
         $Credential = Get-Credential
@@ -1199,7 +1198,7 @@ function Export-M365DSCConfiguration
             -CertificateThumbprint $CertificateThumbprint `
             -CertificatePath $CertificatePath `
             -CertificatePassword $CertificatePassword `
-            -Identity:$Identity `
+            -ManagedIdentity:$ManagedIdentity `
             -GenerateInfo $GenerateInfo
     }
     elseif ($null -ne $Components)
@@ -1216,7 +1215,7 @@ function Export-M365DSCConfiguration
             -CertificateThumbprint $CertificateThumbprint `
             -CertificatePath $CertificatePath `
             -CertificatePassword $CertificatePassword `
-            -Identity:$Identity `
+            -ManagedIdentity:$ManagedIdentity `
             -GenerateInfo $GenerateInfo `
             -Filters $Filters
     }
@@ -1234,7 +1233,7 @@ function Export-M365DSCConfiguration
             -CertificateThumbprint $CertificateThumbprint `
             -CertificatePath $CertificatePath `
             -CertificatePassword $CertificatePassword `
-            -Identity:$Identity `
+            -ManagedIdentity:$ManagedIdentity `
             -GenerateInfo $GenerateInfo `
             -AllComponents `
             -Filters $Filters
@@ -1527,7 +1526,7 @@ function New-M365DSCConnection
             [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
             [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
             [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint) -and `
-            -not $InboundParameters.Identity)
+            -not $InboundParameters.ManagedIdentity)
     {
         $message = 'No Authentication method was provided'
         Write-Verbose -Message $message
@@ -1833,9 +1832,9 @@ function New-M365DSCConnection
         Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
         return 'ServicePrincipalWithThumbprint'
     }
-    elseif ($InboundParameters.Identity)
+    elseif ($InboundParameters.ManagedIdentity)
     {
-        Write-Verbose -Message "Connecting via managed identity $($InboundParameters.Identity)"
+        Write-Verbose -Message 'Connecting via managed identity'
         Connect-M365Tenant -Workload $Workload `
             -Identity `
             -SkipModuleReload $Global:CurrentModeIsExport `
@@ -3150,8 +3149,8 @@ function Get-M365DSCComponentsForAuthenticationType
             {
                 $Components += $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
             }
-            elseif ($AuthenticationMethod.Contains('Identity') -and `
-                    $parameters.Contains('Identity'))
+            elseif ($AuthenticationMethod.Contains('ManagedIdentity') -and `
+                    $parameters.Contains('ManagedIdentity'))
             {
                 $Components += $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
             }
@@ -3175,7 +3174,7 @@ function Get-M365DSCComponentsWithMostSecureAuthenticationType
     param(
         [Parameter()]
         [System.String[]]
-        [ValidateSet('ApplicationWithSecret', 'CertificateThumbprint', 'CertificatePath', 'Credentials', 'Identity')]
+        [ValidateSet('ApplicationWithSecret', 'CertificateThumbprint', 'CertificatePath', 'Credentials', 'ManagedIdentity')]
         $AuthenticationMethod
     )
 
@@ -3231,12 +3230,12 @@ function Get-M365DSCComponentsWithMostSecureAuthenticationType
                 AuthMethod = 'Credentials'
             }
         }
-        elseif ($AuthenticationMethod.Contains('Identity') -and `
-                $parameters.Contains('Identity'))
+        elseif ($AuthenticationMethod.Contains('ManagedIdentity') -and `
+                $parameters.Contains('ManagedIdentity'))
         {
             $Components += @{
                 Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
-                AuthMethod = 'Identity'
+                AuthMethod = 'ManagedIdentity'
             }
         }
     }
@@ -3435,7 +3434,7 @@ function Get-M365DSCAuthenticationMode
     {
         $AuthenticationType = 'Credentials'
     }
-    elseif ($Parameters.Identity)
+    elseif ($Parameters.ManagedIdentity)
     {
         $AuthenticationType = 'ManagedIdentity'
     }

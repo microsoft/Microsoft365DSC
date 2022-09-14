@@ -83,7 +83,7 @@ function Start-M365DSCConfigurationExtract
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     # Start by checking to see if a new Version of the tool is available in the
@@ -158,10 +158,10 @@ function Start-M365DSCConfigurationExtract
             $AuthMethods += 'ApplicationWithSecret'
         }
 
-        if ($Identity.IsPresent)
+        if ($ManagedIdentity.IsPresent)
         {
             Write-Host -Object '- Managed Identity'
-            $AuthMethods += 'Identity'
+            $AuthMethods += 'ManagedIdentity'
         }
 
         Write-Host -Object ' '
@@ -244,10 +244,9 @@ function Start-M365DSCConfigurationExtract
                 $organization = $Credential.UserName.Split('@')[1]
             }
         }
-        elseif ($AuthMethods -contains 'Identity')
+        elseif ($AuthMethods -contains 'ManagedIdentity')
         {
-            $ConnectionMode = 'ManagedIdentity'
-            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters @{'Identity' = $true }
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters @{'ManagedIdentity' = $true }
             $TenantId = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.TenantId
             $organization = $TenantId
         }
@@ -473,7 +472,7 @@ function Start-M365DSCConfigurationExtract
                 CertificatePath       = $CertificatePath
                 CertificatePassword   = $CertificatePassword.Password
                 Credential            = $Credential
-                Identity              = $Identity.IsPresent
+                Identity              = $ManagedIdentity.IsPresent
             }
             try
             {
@@ -521,9 +520,9 @@ function Start-M365DSCConfigurationExtract
                 {
                     $parameters.Add('Credential', $Credential)
                 }
-                'Identity'
+                'ManagedIdentity'
                 {
-                    $parameters.Add('Identity', $Identity)
+                    $parameters.Add('ManagedIdentity', $ManagedIdentity)
                 }
             }
 

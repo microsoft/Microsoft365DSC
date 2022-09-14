@@ -87,7 +87,7 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     Write-Verbose -Message 'Getting configuration of AzureAD Authorization Policy'
@@ -150,7 +150,7 @@ function Get-TargetResource
             ApplicationId                                     = $ApplicationId
             TenantId                                          = $TenantId
             CertificateThumbprint                             = $CertificateThumbprint
-            Identity                                          = $Identity.IsPresent
+            Managedidentity                                   = $ManagedIdentity.IsPresent
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -246,7 +246,7 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
     Write-Verbose -Message 'Setting configuration of AzureAD Authorization Policy'
 
@@ -274,7 +274,7 @@ function Set-TargetResource
     $currentParameters.Remove('ApplicationSecret') | Out-Null
     $currentParameters.Remove('Ensure') | Out-Null
     $currentParameters.Remove('Credential') | Out-Null
-    $currentParameters.Remove('Identity') | Out-Null
+    $currentParameters.Remove('ManagedIdentity') | Out-Null
 
     Write-Verbose -Message 'Set-Targetresource: Authorization Policy Ensure Present'
     $UpdateParameters = @{}
@@ -457,7 +457,7 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     Write-Verbose -Message 'Testing configuration of AzureAD Authorization Policy'
@@ -468,7 +468,7 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
-    $ValuesToCheck.Remove('Identity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -508,7 +508,7 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.

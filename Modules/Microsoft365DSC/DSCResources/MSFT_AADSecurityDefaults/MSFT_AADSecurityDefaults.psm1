@@ -48,7 +48,7 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     Write-Verbose -Message 'Getting configuration for Azure AD Security Defaults'
@@ -82,7 +82,7 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
-            Identity              = $Identity.IsPresent
+            Managedidentity       = $ManagedIdentity.IsPresent
             Credential            = $Credential
         }
 
@@ -160,7 +160,7 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     Write-Verbose -Message 'Setting configuration for Azure AD Security Defaults'
@@ -245,7 +245,7 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -306,7 +306,7 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -331,7 +331,7 @@ function Export-TargetResource
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
-            Identity              = $Identity.IsPresent
+            Managedidentity       = $ManagedIdentity.IsPresent
             IsSingleInstance      = 'Yes'
             ApplicationSecret     = $ApplicationSecret
             Credential            = $Credential

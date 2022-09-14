@@ -60,7 +60,7 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     Write-Verbose -Message 'Getting configuration of AAD Named Location'
@@ -144,7 +144,7 @@ function Get-TargetResource
                 TenantId                          = $TenantId
                 CertificateThumbprint             = $CertificateThumbprint
                 Credential                        = $Credential
-                Identity                          = $Identity.IsPresent
+                Managedidentity                   = $ManagedIdentity.IsPresent
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -221,7 +221,7 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     Write-Verbose -Message 'Setting configuration of AAD Named Location'
@@ -369,7 +369,7 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -396,7 +396,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('Identity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -440,7 +440,7 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
     #$ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -491,7 +491,7 @@ function Export-TargetResource
                 DisplayName           = $AADNamedLocation.DisplayName
                 ID                    = $AADNamedLocation.ID
                 Credential            = $Credential
-                Identity              = $Identity.IsPresent
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
             $Results = Get-TargetResource @Params
 

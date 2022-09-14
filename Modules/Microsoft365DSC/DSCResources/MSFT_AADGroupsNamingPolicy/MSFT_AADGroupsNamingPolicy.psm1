@@ -44,7 +44,7 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     Write-Verbose -Message 'Getting configuration of AzureAD Groups Naming Policy'
@@ -90,7 +90,7 @@ function Get-TargetResource
                 TenantId                      = $TenantId
                 ApplicationSecret             = $ApplicationSecret
                 CertificateThumbprint         = $CertificateThumbprint
-                Identity                      = $Identity.IsPresent
+                Managedidentity               = $ManagedIdentity.IsPresent
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -164,7 +164,7 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     Write-Verbose -Message 'Setting configuration of Azure AD Groups Naming Policy'
@@ -277,7 +277,7 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -341,7 +341,7 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
 
@@ -371,7 +371,7 @@ function Export-TargetResource
             IsSingleInstance      = 'Yes'
             ApplicationSecret     = $ApplicationSecret
             Credential            = $Credential
-            Identity              = $Identity.IsPresent
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
 
         $Results = Get-TargetResource @Params

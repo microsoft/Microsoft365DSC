@@ -186,7 +186,7 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration of Role: $Displayname"
@@ -523,7 +523,7 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of Role settings: $Displayname"
@@ -558,10 +558,12 @@ function Set-TargetResource
             {
                 Write-Verbose -Message 'Handle Send notifications when members are assigned as eligible to this role: Role assignment alert'
                 $notificationLevel = if ($EligibleAlertNotificationOnlyCritical -eq 'True')
-                { 'Critical'
+                {
+                    'Critical'
                 }
                 else
-                { 'All'
+                {
+                    'All'
                 }
                 $isDefaultRecipientsEnabled = $EligibleAlertNotificationDefaultRecipient
                 $notificationRecipients = @($EligibleAlertNotificationAdditionalRecipient)
@@ -586,10 +588,12 @@ function Set-TargetResource
             {
                 Write-Verbose -Message 'Handle Send notifications when members are assigned as eligible to this role: Notification to the assigned user (assignee)'
                 $notificationLevel = if ($EligibleAssigneeNotificationOnlyCritical -eq 'True')
-                { 'Critical'
+                {
+                    'Critical'
                 }
                 else
-                { 'All'
+                {
+                    'All'
                 }
                 $isDefaultRecipientsEnabled = $EligibleAssigneeNotificationDefaultRecipient
                 $notificationRecipients = @($EligibleAssigneeNotificationAdditionalRecipient)
@@ -614,10 +618,12 @@ function Set-TargetResource
             {
                 Write-Verbose -Message 'Handle Send notifications when members are assigned as eligible to this role: Request to approve a role assignment renewal/extension'
                 $notificationLevel = if ($EligibleApproveNotificationOnlyCritical -eq 'True')
-                { 'Critical'
+                {
+                    'Critical'
                 }
                 else
-                { 'All'
+                {
+                    'All'
                 }
                 $isDefaultRecipientsEnabled = $EligibleApproveNotificationDefaultRecipient
                 $notificationRecipients = @($EligibleApproveNotificationAdditionalRecipient)
@@ -642,10 +648,12 @@ function Set-TargetResource
             {
                 Write-Verbose -Message 'Handle Send notifications when members are assigned as active to this role: Role assignment alert'
                 $notificationLevel = if ($ActiveAlertNotificationOnlyCritical -eq 'True')
-                { 'Critical'
+                {
+                    'Critical'
                 }
                 else
-                { 'All'
+                {
+                    'All'
                 }
                 $isDefaultRecipientsEnabled = $ActiveAlertNotificationDefaultRecipient
                 $notificationRecipients = @($ActiveAlertNotificationAdditionalRecipient)
@@ -670,10 +678,12 @@ function Set-TargetResource
             {
                 Write-Verbose -Message 'Handle Send notifications when members are assigned as active to this role: Notification to the assigned user (assignee)'
                 $notificationLevel = if ($ActiveAssigneeNotificationOnlyCritical -eq 'True')
-                { 'Critical'
+                {
+                    'Critical'
                 }
                 else
-                { 'All'
+                {
+                    'All'
                 }
                 $isDefaultRecipientsEnabled = $ActiveAssigneeNotificationDefaultRecipient
                 $notificationRecipients = @($ActiveAssigneeNotificationAdditionalRecipient)
@@ -698,10 +708,12 @@ function Set-TargetResource
             {
                 Write-Verbose -Message 'Handle Send notifications when members are assigned as active to this role: Request to approve a role assignment renewal/extension'
                 $notificationLevel = if ($ActiveApproveNotificationOnlyCritical -eq 'True')
-                { 'Critical'
+                {
+                    'Critical'
                 }
                 else
-                { 'All'
+                {
+                    'All'
                 }
                 $isDefaultRecipientsEnabled = $ActiveApproveNotificationDefaultRecipient
                 $notificationRecipients = @($ActiveApproveNotificationAdditionalRecipient)
@@ -726,10 +738,12 @@ function Set-TargetResource
             {
                 Write-Verbose -Message 'Handle Send notifications when eligible members activate this role: Role activation alert'
                 $notificationLevel = if ($EligibleAssignmentAlertNotificationOnlyCritical -eq 'True')
-                { 'Critical'
+                {
+                    'Critical'
                 }
                 else
-                { 'All'
+                {
+                    'All'
                 }
                 $isDefaultRecipientsEnabled = $EligibleAssignmentAlertNotificationDefaultRecipient
                 $notificationRecipients = @($EligibleAssignmentAlertNotificationAdditionalRecipient)
@@ -754,10 +768,12 @@ function Set-TargetResource
             {
                 Write-Verbose -Message 'Handle Send notifications when eligible members activate this role: Notification to activated user (requestor)'
                 $notificationLevel = if ($EligibleAssignmentAssigneeNotificationOnlyCritical -eq 'True')
-                { 'Critical'
+                {
+                    'Critical'
                 }
                 else
-                { 'All'
+                {
+                    'All'
                 }
                 $isDefaultRecipientsEnabled = $EligibleAssignmentAssigneeNotificationDefaultRecipient
                 $notificationRecipients = @($EligibleAssignmentAssigneeNotificationAdditionalRecipient)
@@ -799,13 +815,16 @@ function Set-TargetResource
                 Write-Verbose -Message 'Handle Activation: Require justification on activation'
                 [String[]]$enabledrules = @()
                 if ($ActivationReqJustification)
-                { $enabledrules += 'Justification'
+                {
+                    $enabledrules += 'Justification'
                 }
                 if ($ActivationReqTicket)
-                { $enabledrules += 'Ticketing'
+                {
+                    $enabledrules += 'Ticketing'
                 }
                 if ($ActivationReqMFA)
-                { $enabledrules += 'MultiFactorAuthentication'
+                {
+                    $enabledrules += 'MultiFactorAuthentication'
                 }
                 $params = @{
                     '@odata.type'  = $odatatype
@@ -915,10 +934,12 @@ function Set-TargetResource
                 Write-Verbose -Message 'Handle Assignment: Require Azure Multi-Factor Authentication on active assignment / Require justification on active assignment'
                 [String[]]$enabledrules = @()
                 if ($AssignmentReqJustification)
-                { $enabledrules += 'Justification'
+                {
+                    $enabledrules += 'Justification'
                 }
                 if ($AssignmentReqMFA)
-                { $enabledrules += 'MultiFactorAuthentication'
+                {
+                    $enabledrules += 'MultiFactorAuthentication'
                 }
                 $params = @{
                     '@odata.type'  = $odatatype
@@ -939,10 +960,12 @@ function Set-TargetResource
                 Write-Verbose -Message 'Handle Assignment: Require Azure Multi-Factor Authentication on elegibility / Require justification on elegibility'
                 [String[]]$enabledrules = @()
                 if ($ElegibilityAssignmentReqJustification)
-                { $enabledrules += 'Justification'
+                {
+                    $enabledrules += 'Justification'
                 }
                 if ($ElegibilityAssignmentReqMFA)
-                { $enabledrules += 'MultiFactorAuthentication'
+                {
+                    $enabledrules += 'MultiFactorAuthentication'
                 }
                 $params = @{
                     '@odata.type'  = $odatatype
@@ -1164,7 +1187,7 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -1233,7 +1256,7 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -1269,7 +1292,7 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
-                Identity              = $Identity.IsPresent
+                Managedidentity       = $ManagedIdentity.IsPresent
                 Credential            = $Credential
             }
             $Results = Get-TargetResource @Params

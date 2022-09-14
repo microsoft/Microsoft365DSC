@@ -91,7 +91,7 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     Write-Verbose -Message 'Getting configuration of Azure AD ServicePrincipal'
@@ -159,7 +159,7 @@ function Get-TargetResource
                 ApplicationSecret         = $ApplicationSecret
                 TenantId                  = $TenantId
                 CertificateThumbprint     = $CertificateThumbprint
-                Identity                  = $Identity.IsPresent
+                Managedidentity           = $ManagedIdentity.IsPresent
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
@@ -283,7 +283,7 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "1 - There are now {$((Get-ChildItem function: | Measure-Object).Count) functions}"
@@ -309,7 +309,7 @@ function Set-TargetResource
     $currentParameters.Remove('ApplicationId') | Out-Null
     $currentParameters.Remove('TenantId') | Out-Null
     $currentParameters.Remove('CertificateThumbprint') | Out-Null
-    $currentParameters.Remove('Identity') | Out-Null
+    $currentParameters.Remove('ManagedIdentity') | Out-Null
     $currentParameters.Remove('Credential') | Out-Null
     $currentParameters.Remove('Ensure') | Out-Null
     $currentParameters.Remove('ObjectID') | Out-Null
@@ -429,7 +429,7 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -454,7 +454,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('Identity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
@@ -499,7 +499,7 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
     Select-MgProfile Beta | Out-Null
@@ -531,7 +531,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
-                Identity              = $Identity.IsPresent
+                Managedidentity       = $ManagedIdentity.IsPresent
                 AppID                 = $AADServicePrincipal.AppId
             }
             $Results = Get-TargetResource @Params

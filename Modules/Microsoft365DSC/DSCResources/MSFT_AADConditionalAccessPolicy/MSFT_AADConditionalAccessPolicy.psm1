@@ -183,7 +183,7 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     Write-Verbose -Message 'Getting configuration of AzureAD Conditional Access Policy'
@@ -712,7 +712,7 @@ function Get-TargetResource
             ApplicationId                            = $ApplicationId
             TenantId                                 = $TenantId
             CertificateThumbprint                    = $CertificateThumbprint
-            Identity                                 = $Identity.IsPresent
+            Managedidentity                          = $ManagedIdentity.IsPresent
         }
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
@@ -903,7 +903,7 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
     Write-Verbose -Message 'Setting configuration of AzureAD Conditional Access Policy'
 
@@ -929,7 +929,7 @@ function Set-TargetResource
     $currentParameters.Remove('ApplicationSecret') | Out-Null
     $currentParameters.Remove('Ensure') | Out-Null
     $currentParameters.Remove('Credential') | Out-Null
-    $currentParameters.Remove('Identity') | Out-Null
+    $currentParameters.Remove('ManagedIdentity') | Out-Null
 
     if ($Ensure -eq 'Present')#create policy attribute objects
     {
@@ -1304,7 +1304,8 @@ function Set-TargetResource
             #translate role names to template guid if defined
             $rolelookup = @{}
             foreach ($role in Get-MgDirectoryRoleTemplate)
-            { $rolelookup[$role.DisplayName] = $role.Id
+            {
+                $rolelookup[$role.DisplayName] = $role.Id
             }
             foreach ($IncludeRole in $IncludeRoles)
             {
@@ -1950,7 +1951,7 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     Write-Verbose -Message 'Testing configuration of AzureAD CA Policies'
@@ -1963,7 +1964,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-    $ValuesToCheck.Remove('Identity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
     $ValuesToCheck.Remove('Id') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
@@ -2008,7 +2009,7 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -2053,7 +2054,7 @@ function Export-TargetResource
                     ApplicationSecret     = $ApplicationSecret
                     CertificateThumbprint = $CertificateThumbprint
                     Credential            = $Credential
-                    Identity              = $Identity.IsPresent
+                    Managedidentity       = $ManagedIdentity.IsPresent
                 }
                 $Results = Get-TargetResource @Params
 

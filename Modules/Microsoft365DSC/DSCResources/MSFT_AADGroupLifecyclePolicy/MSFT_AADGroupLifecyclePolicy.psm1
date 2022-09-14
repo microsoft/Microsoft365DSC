@@ -49,7 +49,7 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
@@ -118,7 +118,7 @@ function Get-TargetResource
                 ApplicationSecret           = $ApplicationSecret
                 TenantId                    = $TenantId
                 CertificateThumbprint       = $CertificateThumbprint
-                Identity                    = $Identity.IsPresent
+                Managedidentity             = $ManagedIdentity.IsPresent
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -201,7 +201,7 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     Write-Verbose -Message 'Setting configuration of Azure AD Groups Lifecycle Policy'
@@ -241,7 +241,7 @@ function Set-TargetResource
         $creationParams.Remove('ApplicationId')
         $creationParams.Remove('TenantId')
         $creationParams.Remove('CertificateThumbprint')
-        $creationParams.Remove('Identity')
+        $creationParams.Remove('ManagedIdentity')
         $creationParams.Remove('Ensure')
 
         $emails = ''
@@ -261,7 +261,7 @@ function Set-TargetResource
         $updateParams.Remove('ApplicationId')
         $updateParams.Remove('TenantId')
         $updateParams.Remove('CertificateThumbprint')
-        $updateParams.Remove('Identity')
+        $updateParams.Remove('ManagedIdentity')
         $updateParams.Remove('Ensure')
 
         $emails = ''
@@ -334,7 +334,7 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -356,7 +356,7 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('Identity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -396,7 +396,7 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
@@ -460,7 +460,7 @@ function Export-TargetResource
             ApplicationSecret           = $ApplicationSecret
             TenantId                    = $TenantId
             CertificateThumbprint       = $CertificateThumbprint
-            Identity                    = $Identity.IsPresent
+            Managedidentity             = $ManagedIdentity.IsPresent
         }
         $Results = Get-TargetResource @Params
         if ($Results.Ensure -eq 'Present')

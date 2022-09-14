@@ -64,7 +64,7 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     Write-Verbose -Message 'Getting configuration of AzureAD Groups Settings'
@@ -132,7 +132,7 @@ function Get-TargetResource
                 ApplicationSecret         = $ApplicationSecret
                 CertificateThumbprint     = $CertificateThumbprint
                 Credential                = $Credential
-                Identity                  = $Identity.IsPresent
+                Managedidentity           = $ManagedIdentity.IsPresent
             }
 
             if (-not [System.String]::IsNullOrEmpty($AllowedGroupName))
@@ -231,7 +231,7 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     Write-Verbose -Message 'Setting configuration of Azure AD Groups Settings'
@@ -389,7 +389,7 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
 
@@ -454,7 +454,7 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $Identity
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -484,7 +484,7 @@ function Export-TargetResource
             IsSingleInstance      = 'Yes'
             ApplicationSecret     = $ApplicationSecret
             Credential            = $Credential
-            Identity              = $Identity.IsPresent
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
         $dscContent = ''
         $Results = Get-TargetResource @Params
