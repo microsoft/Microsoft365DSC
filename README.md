@@ -48,10 +48,6 @@ no contributions should be made directly to this branch.
 
 [![AzureCloud - Integration](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureCloud%20-%20Integration.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureCloud%20-%20Integration.yml)
 
-[![AzureUSGovernment - Integration](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureUSGovernment%20-%20Integration.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureUSGovernment%20-%20Integration.yml)
-
-[![AzureCloud - GCCHigh - Integration](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureUSGovernmentHigh%20-%20Integration.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureUSGovernmentHigh%20-%20Integration.yml)
-
 [![Unit Tests](https://github.com/microsoft/Microsoft365DSC/actions/workflows/Unit%20Tests.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/Unit%20Tests.yml)
 
 This is the development branch

@@ -156,14 +156,18 @@ function Get-TargetResource
                 }
             }
 
-            # Members
-            [Array]$members = Get-MgGroupMember -GroupId $Group.Id -All:$true
-            $MembersValues = @()
-            foreach ($member in $members)
+            $MembersValues = $null
+            if ($Group.MembershipRuleProcessingState -ne 'On')
             {
-                if ($member.AdditionalProperties.userPrincipalName -ne $null)
+                # Members
+                [Array]$members = Get-MgGroupMember -GroupId $Group.Id -All:$true
+                $MembersValues = @()
+                foreach ($member in $members)
                 {
-                    $MembersValues += $member.AdditionalProperties.userPrincipalName
+                    if ($member.AdditionalProperties.userPrincipalName -ne $null)
+                    {
+                        $MembersValues += $member.AdditionalProperties.userPrincipalName
+                    }
                 }
             }
 
@@ -460,7 +464,7 @@ function Set-TargetResource
                 Update-MgGroup @currentParameters | Out-Null
             }
 
-            if ($licensesToAdd.Length -gt 0 -or $licensesToRemove.Length -gt 0)
+            if (($licensesToAdd.Length -gt 0 -or $licensesToRemove.Length -gt 0) -and $AssignedLicenses -ne $null)
             {
                 try
                 {
@@ -553,38 +557,45 @@ function Set-TargetResource
         }
 
         #Members
-        $currentMembersValue = @()
-        if ($currentParameters.Members.Length -ne 0)
+        if ($MembershipRuleProcessingState -ne 'On')
         {
-            $currentMembersValue = $backCurrentMembers
-        }
-        $desiredMembersValue = @()
-        if ($Members.Length -ne 0)
-        {
-            $desiredMembersValue = $Members
-        }
-        if ($backCurrentMembers -eq $null)
-        {
-            $backCurrentMembers = @()
-        }
-        $membersDiff = Compare-Object -ReferenceObject $backCurrentMembers -DifferenceObject $desiredMembersValue
-        foreach ($diff in $membersDiff)
-        {
-            $user = Get-MgUser -UserId $diff.InputObject
+            $currentMembersValue = @()
+            if ($currentParameters.Members.Length -ne 0)
+            {
+                $currentMembersValue = $backCurrentMembers
+            }
+            $desiredMembersValue = @()
+            if ($Members.Length -ne 0)
+            {
+                $desiredMembersValue = $Members
+            }
+            if ($backCurrentMembers -eq $null)
+            {
+                $backCurrentMembers = @()
+            }
+            $membersDiff = Compare-Object -ReferenceObject $backCurrentMembers -DifferenceObject $desiredMembersValue
+            foreach ($diff in $membersDiff)
+            {
+                $user = Get-MgUser -UserId $diff.InputObject
 
-            if ($diff.SideIndicator -eq '=>')
-            {
-                Write-Verbose -Message "Adding new member {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
-                $memberObject = @{
-                    "@odata.id"= "https://graph.microsoft.com/v1.0/users/{$($user.Id)}"
+                if ($diff.SideIndicator -eq '=>')
+                {
+                    Write-Verbose -Message "Adding new member {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
+                    $memberObject = @{
+                        "@odata.id"= "https://graph.microsoft.com/v1.0/users/{$($user.Id)}"
+                    }
+                    New-MgGroupMemberByRef -GroupId ($currentGroup.Id) -BodyParameter $memberObject | Out-Null
                 }
-                New-MgGroupMemberByRef -GroupId ($currentGroup.Id) -BodyParameter $memberObject | Out-Null
+                elseif ($diff.SideIndicator -eq '<=')
+                {
+                    Write-Verbose -Message "Removing new member {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
+                    Remove-MgGroupMemberByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($user.Id) | Out-Null
+                }
             }
-            elseif ($diff.SideIndicator -eq '<=')
-            {
-                Write-Verbose -Message "Removing new member {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
-                Remove-MgGroupMemberByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($user.Id) | Out-Null
-            }
+        }
+        else
+        {
+            Write-Verbose -Message "Ignoring membership since this is a dynamic group."
         }
     }
 }
