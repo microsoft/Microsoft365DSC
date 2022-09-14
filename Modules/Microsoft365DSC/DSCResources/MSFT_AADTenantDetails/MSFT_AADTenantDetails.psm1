@@ -42,18 +42,22 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
-    Write-Verbose -Message "Getting configuration of AzureAD Tenant Details"
+    Write-Verbose -Message 'Getting configuration of AzureAD Tenant Details'
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -72,11 +76,11 @@ function Get-TargetResource
 
         if ($null -eq $AADTenantDetails)
         {
-            throw "Could not retrieve AzureAD Tenant Details"
+            throw 'Could not retrieve AzureAD Tenant Details'
         }
         else
         {
-            Write-Verbose -Message "Found existing AzureAD Tenant Details"
+            Write-Verbose -Message 'Found existing AzureAD Tenant Details'
             $result = @{
                 IsSingleInstance                     = 'Yes'
                 MarketingNotificationEmails          = $AADTenantDetails.MarketingNotificationEmails
@@ -88,6 +92,7 @@ function Get-TargetResource
                 TenantId                             = $TenantId
                 ApplicationSecret                    = $ApplicationSecret
                 CertificateThumbprint                = $CertificateThumbprint
+                Identity                             = $Identity.IsPresent
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
@@ -98,7 +103,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -115,7 +120,7 @@ function Get-TargetResource
         {
             Write-Verbose -Message $_
         }
-        throw "Could not retrieve AzureAD Tenant Details"
+        throw 'Could not retrieve AzureAD Tenant Details'
     }
 }
 
@@ -162,17 +167,21 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
-    Write-Verbose -Message "Setting configuration of AzureAD Tenant Details"
+    Write-Verbose -Message 'Setting configuration of AzureAD Tenant Details'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -181,32 +190,36 @@ function Set-TargetResource
 
 
     $currentParameters = $PSBoundParameters
-    $currentParameters.Remove("IsSingleInstance") | Out-Null
+    $currentParameters.Remove('IsSingleInstance') | Out-Null
 
-    if ($currentParameters.ContainsKey("Credential"))
+    if ($currentParameters.ContainsKey('Credential'))
     {
-        $currentParameters.Remove("Credential") | Out-Null
+        $currentParameters.Remove('Credential') | Out-Null
     }
-    if ($currentParameters.ContainsKey("ApplicationId"))
+    if ($currentParameters.ContainsKey('ApplicationId'))
     {
-        $currentParameters.Remove("ApplicationId") | Out-Null
+        $currentParameters.Remove('ApplicationId') | Out-Null
     }
-    if ($currentParameters.ContainsKey("TenantId"))
+    if ($currentParameters.ContainsKey('TenantId'))
     {
-        $currentParameters.Remove("TenantId") | Out-Null
+        $currentParameters.Remove('TenantId') | Out-Null
     }
-    if ($currentParameters.ContainsKey("CertificateThumbprint"))
+    if ($currentParameters.ContainsKey('CertificateThumbprint'))
     {
-        $currentParameters.Remove("CertificateThumbprint") | Out-Null
+        $currentParameters.Remove('CertificateThumbprint') | Out-Null
     }
-    $currentParameters.Add("OrganizationId", $(Get-MgOrganization).Id)
+    if ($currentParameters.ContainsKey('Identity'))
+    {
+        $currentParameters.Remove('Identity') | Out-Null
+    }
+    $currentParameters.Add('OrganizationId', $(Get-MgOrganization).Id)
     try
     {
         Update-MgOrganization @currentParameters
     }
     catch
     {
-        Write-Verbose -Message "Cannot Set AzureAD Tenant Details"
+        Write-Verbose -Message 'Cannot Set AzureAD Tenant Details'
     }
 }
 
@@ -254,22 +267,26 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of AzureAD Tenant Details"
+    Write-Verbose -Message 'Testing configuration of AzureAD Tenant Details'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -314,7 +331,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
@@ -322,8 +343,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -345,6 +366,7 @@ function Export-TargetResource
             ApplicationSecret                    = $ApplicationSecret
             TenantId                             = $TenantId
             CertificateThumbprint                = $CertificateThumbprint
+            Identity                             = $Identity.IsPresent
             IsSingleInstance                     = 'Yes'
         }
         $Results = Get-TargetResource @Params
@@ -367,7 +389,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -384,7 +406,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 

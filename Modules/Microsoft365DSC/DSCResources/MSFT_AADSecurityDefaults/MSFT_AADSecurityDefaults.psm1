@@ -44,10 +44,14 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
-    Write-Verbose -Message "Getting configuration for Azure AD Security Defaults"
+    Write-Verbose -Message 'Getting configuration for Azure AD Security Defaults'
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ProfileName 'v1.0'
@@ -56,8 +60,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -78,6 +82,7 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            Identity              = $Identity.IsPresent
             Credential            = $Credential
         }
 
@@ -89,7 +94,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -151,18 +156,22 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
-    Write-Verbose -Message "Setting configuration for Azure AD Security Defaults"
+    Write-Verbose -Message 'Setting configuration for Azure AD Security Defaults'
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -171,17 +180,17 @@ function Set-TargetResource
 
     if ($CurrentValues.DisplayName -ne $DisplayName)
     {
-        Write-Verbose -Message "The DisplayName property for the AADSecurityDefaults resource is read-only and cannot be changed."
+        Write-Verbose -Message 'The DisplayName property for the AADSecurityDefaults resource is read-only and cannot be changed.'
     }
 
     if ($CurrentValues.Description -ne $Description)
     {
-        Write-Verbose -Message "The Description property for the AADSecurityDefaults resource is read-only and cannot be changed."
+        Write-Verbose -Message 'The Description property for the AADSecurityDefaults resource is read-only and cannot be changed.'
     }
 
     $UpdateParameters = @{
-        Id          = $DisplayName
-        IsEnabled   = $IsEnabled
+        Id        = $DisplayName
+        IsEnabled = $IsEnabled
     }
     Update-MgPolicyIdentitySecurityDefaultEnforcementPolicy @UpdateParameters | Out-Null
 }
@@ -232,22 +241,26 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Azure AD Security Defaults"
+    Write-Verbose -Message 'Testing configuration of the Azure AD Security Defaults'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -289,7 +302,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -300,8 +317,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -314,6 +331,7 @@ function Export-TargetResource
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
+            Identity              = $Identity.IsPresent
             IsSingleInstance      = 'Yes'
             ApplicationSecret     = $ApplicationSecret
             Credential            = $Credential
@@ -339,7 +357,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -352,7 +370,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 

@@ -60,10 +60,14 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
-    Write-Verbose -Message "Getting configuration of AzureAD Groups Settings"
+    Write-Verbose -Message 'Getting configuration of AzureAD Groups Settings'
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
@@ -74,8 +78,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -83,10 +87,10 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
     try
     {
-        $Policy = Get-MgDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq "Group.Unified" }
+        $Policy = Get-MgDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq 'Group.Unified' }
 
         if ($null -eq $Policy)
         {
@@ -94,9 +98,9 @@ function Get-TargetResource
         }
         else
         {
-            Write-Verbose -Message "Found existing AzureAD Groups Settings"
+            Write-Verbose -Message 'Found existing AzureAD Groups Settings'
             $AllowedGroupName = $null
-            $GroupCreationValue = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'GroupCreationAllowedGroupId'}
+            $GroupCreationValue = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'GroupCreationAllowedGroupId' }
             if (-not [System.String]::IsNullOrEmpty($GroupCreationValue.Value))
             {
                 $groupObject = Get-MgGroup -GroupId $GroupCreationValue.Value -ErrorAction SilentlyContinue
@@ -107,32 +111,33 @@ function Get-TargetResource
                 }
             }
 
-            $valueEnableGroupCreation = $Policy.Values | Where-Object -FilterScript {$_.Name -eq "EnableGroupCreation"}
-            $valueAllowGuestsToBeGroupOwner = $Policy.Values | Where-Object -FilterScript {$_.Name -eq "AllowGuestsToBeGroupOwner"}
-            $valueAllowGuestsToAccessGroups = $Policy.Values | Where-Object -FilterScript {$_.Name -eq "AllowGuestsToAccessGroups"}
-            $valueGuestUsageGuidelinesUrl = $Policy.Values | Where-Object -FilterScript {$_.Name -eq "GuestUsageGuidelinesUrl"}
-            $valueAllowToAddGuests = $Policy.Values | Where-Object -FilterScript {$_.Name -eq "AllowToAddGuests"}
-            $valueUsageGuidelinesUrl = $Policy.Values | Where-Object -FilterScript {$_.Name -eq "UsageGuidelinesUrl"}
+            $valueEnableGroupCreation = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'EnableGroupCreation' }
+            $valueAllowGuestsToBeGroupOwner = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'AllowGuestsToBeGroupOwner' }
+            $valueAllowGuestsToAccessGroups = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'AllowGuestsToAccessGroups' }
+            $valueGuestUsageGuidelinesUrl = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'GuestUsageGuidelinesUrl' }
+            $valueAllowToAddGuests = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'AllowToAddGuests' }
+            $valueUsageGuidelinesUrl = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'UsageGuidelinesUrl' }
 
             $result = @{
-                IsSingleInstance              = 'Yes'
-                EnableGroupCreation           = [Boolean]::Parse($valueEnableGroupCreation.Value)
-                AllowGuestsToBeGroupOwner     = [Boolean]::Parse($valueAllowGuestsToBeGroupOwner.Value)
-                AllowGuestsToAccessGroups     = [Boolean]::Parse($valueAllowGuestsToAccessGroups.Value)
-                GuestUsageGuidelinesUrl       = $valueGuestUsageGuidelinesUrl.Value
-                AllowToAddGuests              = [Boolean]::Parse($valueAllowToAddGuests.Value)
-                UsageGuidelinesUrl            = $valueUsageGuidelinesUrl.Value
-                Ensure                        = "Present"
-                ApplicationId                 = $ApplicationId
-                TenantId                      = $TenantId
-                ApplicationSecret             = $ApplicationSecret
-                CertificateThumbprint         = $CertificateThumbprint
-                Credential                    = $Credential
+                IsSingleInstance          = 'Yes'
+                EnableGroupCreation       = [Boolean]::Parse($valueEnableGroupCreation.Value)
+                AllowGuestsToBeGroupOwner = [Boolean]::Parse($valueAllowGuestsToBeGroupOwner.Value)
+                AllowGuestsToAccessGroups = [Boolean]::Parse($valueAllowGuestsToAccessGroups.Value)
+                GuestUsageGuidelinesUrl   = $valueGuestUsageGuidelinesUrl.Value
+                AllowToAddGuests          = [Boolean]::Parse($valueAllowToAddGuests.Value)
+                UsageGuidelinesUrl        = $valueUsageGuidelinesUrl.Value
+                Ensure                    = 'Present'
+                ApplicationId             = $ApplicationId
+                TenantId                  = $TenantId
+                ApplicationSecret         = $ApplicationSecret
+                CertificateThumbprint     = $CertificateThumbprint
+                Credential                = $Credential
+                Identity                  = $Identity.IsPresent
             }
 
             if (-not [System.String]::IsNullOrEmpty($AllowedGroupName))
             {
-                $result.Add("GroupCreationAllowedGroupName", $AllowedGroupName)
+                $result.Add('GroupCreationAllowedGroupName', $AllowedGroupName)
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -144,7 +149,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -222,17 +227,21 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
-    Write-Verbose -Message "Setting configuration of Azure AD Groups Settings"
+    Write-Verbose -Message 'Setting configuration of Azure AD Groups Settings'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -243,13 +252,13 @@ function Set-TargetResource
 
     # Policy should exist but it doesn't
     $needToUpdate = $false
-    if ($Ensure -eq "Present" -and $currentPolicy.Ensure -eq "Absent")
+    if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         $Policy = New-MgDirectorySetting -TemplateId '62375ab9-6b52-47ed-826b-58e47e0e304b' | Out-Null
         $needToUpdate = $true
     }
 
-    $Policy = Get-MgDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq "Group.Unified" }
+    $Policy = Get-MgDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq 'Group.Unified' }
 
     if (($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present') -or $needToUpdate)
     {
@@ -268,37 +277,37 @@ function Set-TargetResource
         {
             if ($property.Name -eq 'EnableGroupCreation')
             {
-                $entry = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'EnableGroupCreation'}
+                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'EnableGroupCreation' }
                 $entry.Value = [System.Boolean]$EnableGroupCreation
             }
             elseif ($property.Name -eq 'AllowGuestsToBeGroupOwner')
             {
-                $entry = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'AllowGuestsToBeGroupOwner'}
+                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'AllowGuestsToBeGroupOwner' }
                 $entry.Value = [System.Boolean]$AllowGuestsToBeGroupOwner
             }
             elseif ($property.Name -eq 'AllowGuestsToAccessGroups')
             {
-                $entry = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'AllowGuestsToAccessGroups'}
+                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'AllowGuestsToAccessGroups' }
                 $entry.Value = [System.Boolean]$AllowGuestsToAccessGroups
             }
             elseif ($property.Name -eq 'GuestUsageGuidelinesUrl')
             {
-                $entry = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'GuestUsageGuidelinesUrl'}
+                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'GuestUsageGuidelinesUrl' }
                 $entry.Value = $GuestUsageGuidelinesUrl
             }
             elseif ($property.Name -eq 'GroupCreationAllowedGroupId')
             {
-                $entry = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'GroupCreationAllowedGroupId'}
+                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'GroupCreationAllowedGroupId' }
                 $entry.Value = $groupId
             }
             elseif ($property.Name -eq 'AllowToAddGuests')
             {
-                $entry = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'AllowToAddGuests'}
+                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'AllowToAddGuests' }
                 $entry.Value = [System.Boolean]$AllowToAddGuests
             }
             elseif ($property.Name -eq 'UsageGuidelinesUrl')
             {
-                $entry = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'UsageGuidelinesUrl'}
+                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'UsageGuidelinesUrl' }
                 $entry.Value = $UsageGuidelinesUrl
             }
             $index++;
@@ -310,7 +319,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "An existing Directory Setting entry exists, and we don't allow to have it removed."
-        throw "The AADGroupsSettings resource cannot delete existing Directory Setting entries. Please specify Present."
+        throw 'The AADGroupsSettings resource cannot delete existing Directory Setting entries. Please specify Present.'
     }
 }
 
@@ -376,7 +385,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
 
@@ -384,15 +397,15 @@ function Test-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of AzureAD Groups Settings"
+    Write-Verbose -Message 'Testing configuration of AzureAD Groups Settings'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -437,7 +450,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $Identity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -450,8 +467,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -467,6 +484,7 @@ function Export-TargetResource
             IsSingleInstance      = 'Yes'
             ApplicationSecret     = $ApplicationSecret
             Credential            = $Credential
+            Identity              = $Identity.IsPresent
         }
         $dscContent = ''
         $Results = Get-TargetResource @Params
@@ -489,7 +507,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -502,7 +520,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 
