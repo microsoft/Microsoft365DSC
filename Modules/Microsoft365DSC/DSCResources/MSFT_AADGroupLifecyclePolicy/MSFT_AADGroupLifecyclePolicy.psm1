@@ -426,9 +426,13 @@ function Export-TargetResource
             $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
                 -TenantId $TenantId -ApplicationSecret $ApplicationSecret
         }
+        elseif ($ConnectionMode -eq 'ManagedIdentity')
+        {
+            $organization = $TenantId
+        }
         else
         {
-            if ($Credential.UserName.Contains('@'))
+            if ($null -ne $Credential -and $Credential.UserName.Contains('@'))
             {
                 $organization = $Credential.UserName.Split('@')[1]
             }

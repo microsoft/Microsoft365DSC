@@ -523,6 +523,7 @@ function Start-M365DSCConfigurationExtract
                 'ManagedIdentity'
                 {
                     $parameters.Add('ManagedIdentity', $ManagedIdentity)
+                    $parameters.Add('TenantId', $TenantId)
                 }
             }
 
