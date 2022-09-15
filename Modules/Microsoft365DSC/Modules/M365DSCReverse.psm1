@@ -411,7 +411,15 @@ function Start-M365DSCConfigurationExtract
                 # Add the Credential to the Credentials List
                 Save-Credentials -UserName 'credential'
             }
+            'ManagedIdentity'
+            {
+                Add-ConfigurationDataEntry -Node 'NonNodeData' `
+                    -Key 'TenantId' `
+                    -Value $TenantId `
+                    -Description 'The Id or Name of the tenant to authenticate against'
+            }
         }
+
         $DSCContent.Append("    )`r`n`r`n") | Out-Null
         $DSCContent.Append($postParamContent.ToString()) | Out-Null
         $DSCContent.Append("`r`n") | Out-Null
