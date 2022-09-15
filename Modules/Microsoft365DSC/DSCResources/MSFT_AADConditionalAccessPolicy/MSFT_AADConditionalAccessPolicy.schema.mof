@@ -26,6 +26,7 @@ class MSFT_AADConditionalAccessPolicy : OMI_BaseResource
     [Write, Description("Client App types in scope of the Policy.")] String ClientAppTypes[];
     [Write, Description("Operator to be used for Grant Controls."), ValueMap{"AND","OR"}, Values{"AND","OR"}] String GrantControlOperator;
     [Write, Description("List of built-in Grant Controls to be applied by the Policy.")] String BuiltInControls[];
+    [Write, Description("List of Custom Grant Control IDs to be applied by the Policy.")] String CustomControls[];
     [Write, Description("Specifies, whether Application Enforced Restrictions are enabled in the Policy.")] Boolean ApplicationEnforcedRestrictionsIsEnabled;
     [Write, Description("Specifies, whether Cloud App Security is enforced by the Policy.")] Boolean CloudAppSecurityIsEnabled;
     [Write, Description("Specifies, what Cloud App Security control is enforced by the Policy.")] String CloudAppSecurityType;

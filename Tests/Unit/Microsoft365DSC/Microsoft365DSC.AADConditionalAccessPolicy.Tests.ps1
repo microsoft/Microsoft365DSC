@@ -275,6 +275,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     ApplicationEnforcedRestrictionsIsEnabled = $True
                     BuiltInControls                          = @("Mfa", "CompliantDevice", "DomainJoinedDevice", "ApprovedApplication", "CompliantApplication")
+                    CustomControls                           = @("Custom_Control_MFA_21341251")
                     ClientAppTypes                           = @("Browser", "MobileAppsAndDesktopClients")
                     CloudAppSecurityIsEnabled                = $True
                     CloudAppSecurityType                     = "MonitorOnly"
@@ -352,6 +353,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GrantControls   = @{
                             Operator        = "AND"
                             BuiltInControls = @("Mfa", "CompliantDevice", "DomainJoinedDevice", "ApprovedApplication", "CompliantApplication")
+                            CustomControls  = @("Custom_Control_MFA_21341251")
                         }
                         SessionControls = @{
                             ApplicationEnforcedRestrictions = @{
@@ -592,6 +594,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GrantControls   = @{
                             _Operator       = "AND"
                             BuiltInControls = @("Mfa", "CompliantDevice", "DomainJoinedDevice", "ApprovedApplication", "CompliantApplication")
+                            CustomControls  = @("Custom_Control_MFA_21341251")
                         }
                         SessionControls = @{
                             ApplicationEnforcedRestrictions = @{
