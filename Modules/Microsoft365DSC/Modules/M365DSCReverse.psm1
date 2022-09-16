@@ -547,7 +547,11 @@ function Start-M365DSCConfigurationExtract
 
             if ($ComponentsToSkip -notcontains $resourceName)
             {
-                Write-Host "[$i/$($ResourcesToExport.Length)] Extracting [$resourceName] using {$mostSecureAuthMethod}..." -NoNewline
+                Write-Host "[$i/$($ResourcesToExport.Length)] Extracting [" -NoNewLine
+                Write-Host $resourceName -ForegroundColor Green -NoNewLine
+                Write-Host "] using {" -NoNewLine
+                Write-Host $mostSecureAuthMethod -ForegroundColor Cyan -NoNewline
+                Write-Host "}..." -NoNewline
                 $exportString = [System.Text.StringBuilder]::New()
                 if ($GenerateInfo)
                 {

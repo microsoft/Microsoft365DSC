@@ -731,7 +731,8 @@ function Export-TargetResource
     try
     {
         $users = Get-MgUser -Filter $Filter -All:$true -ErrorAction Stop
-        $dscContent = ''
+
+        $dscContent = [System.Text.StringBuilder]::new()
         $i = 1
         Write-Host "`r`n" -NoNewline
         foreach ($user in $users)
@@ -762,8 +763,9 @@ function Export-TargetResource
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
                         -Credential $Credential
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Password'
-                    $dscContent += $currentDSCBlock
+
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Password"
+                    $dscContent.Append($currentDSCBlock) | Out-Null
 
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
@@ -772,7 +774,7 @@ function Export-TargetResource
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {
