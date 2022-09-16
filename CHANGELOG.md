@@ -4,6 +4,8 @@
 
 * O365User
   * Improved extraction performance by leveraging StringBuilder instead of re-assigning string.
+* DEPENDENCIES
+  * Updated the MSCloudLoginAssistant dependency to version 1.0.89.
 
 # 1.22.914.1
 
