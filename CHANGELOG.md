@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADConditionalAccessPolicy
+  * Added support for the CustomAuthenticationFactors parameter.
+  FIXES [#2292](https://github.com/microsoft/Microsoft365DSC/issues/2292)
 * O365User
   * Improved extraction performance by leveraging StringBuilder instead of re-assigning string.
 * DEPENDENCIES
