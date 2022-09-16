@@ -29,6 +29,7 @@
 | **ClientAppTypes** | Write | StringArray[] | Client App types in scope of the Policy. ||
 | **GrantControlOperator** | Write | String | Operator to be used for Grant Controls. |AND, OR|
 | **BuiltInControls** | Write | StringArray[] | List of built-in Grant Controls to be applied by the Policy. ||
+| **CustomControls** | Write | StringArray[] | List of Custom Grant Control IDs to be applied by the Policy. ||
 | **ApplicationEnforcedRestrictionsIsEnabled** | Write | Boolean | Specifies, whether Application Enforced Restrictions are enabled in the Policy. ||
 | **CloudAppSecurityIsEnabled** | Write | Boolean | Specifies, whether Cloud App Security is enforced by the Policy. ||
 | **CloudAppSecurityType** | Write | String | Specifies, what Cloud App Security control is enforced by the Policy. ||
@@ -107,4 +108,3 @@ Configuration Example
     }
 }
 ```
-

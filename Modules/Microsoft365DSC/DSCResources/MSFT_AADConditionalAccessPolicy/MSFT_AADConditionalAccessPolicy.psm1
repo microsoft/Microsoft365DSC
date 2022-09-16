@@ -688,7 +688,7 @@ function Get-TargetResource
             #no translation or conversion needed
             BuiltInControls                          = [System.String[]](@() + $Policy.GrantControls.BuiltInControls)
             #no translation or conversion needed
-            CustomControls                          = [System.String[]](@() + $Policy.GrantControls.CustomControls)
+            CustomControls                          = [System.String[]](@() + $Policy.GrantControls.CustomAuthenticationFactors)
             #no translation needed, return empty string array if undefined
             ApplicationEnforcedRestrictionsIsEnabled = $false -or $Policy.SessionControls.ApplicationEnforcedRestrictions.IsEnabled
             #make false if undefined, true if true
@@ -1580,12 +1580,12 @@ function Set-TargetResource
 
             if ($CustomControls)
             {
-                $GrantControls.Add("CustomControls", $CustomControls)
+                $GrantControls.Add("CustomAuthenticationFactors", $CustomControls)
             }
 
             if ($TermsOfUse)
             {
-                Write-Verbose -Message "Gettign Terms of Use {$TermsOfUse}"
+                Write-Verbose -Message "Getting Terms of Use {$TermsOfUse}"
                 $TermsOfUseObj = Get-MgAgreement | Where-Object -FilterScript {$_.DisplayName -eq $TermsOfUse}
                 $GrantControls.Add('TermsOfUse', $TermsOfUseObj.Id)
             }
