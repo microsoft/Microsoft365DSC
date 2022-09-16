@@ -2,6 +2,11 @@
 
 # UNRELEASED
 
+* AADPIMRoleSetting
+  * Fixed an issue if the P2 License is not present on the tenant the Export stop working
+    FIXES [#2227](https://github.com/microsoft/Microsoft365DSC/issues/2227)
+  * Fixed an issue with approver can be a group
+    FIXES [#2288](https://github.com/microsoft/Microsoft365DSC/issues/2288)
 * O365User
   * Improved extraction performance by leveraging StringBuilder instead of re-assigning string.
 * DEPENDENCIES
