@@ -155,6 +155,10 @@ function Get-TargetResource
         [System.String]
         $TermsOfUse,
 
+        [Parameter()]
+        [System.String[]]
+        $CustomAuthenticationFactors,
+
         #generic
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -687,6 +691,7 @@ function Get-TargetResource
             GrantControlOperator                     = $Policy.GrantControls.Operator
             #no translation or conversion needed
             BuiltInControls                          = [System.String[]](@() + $Policy.GrantControls.BuiltInControls)
+            CustomAuthenticationFactors              = [System.String[]](@() + $Policy.GrantControls.CustomAuthenticationFactors)
             #no translation needed, return empty string array if undefined
             ApplicationEnforcedRestrictionsIsEnabled = $false -or $Policy.SessionControls.ApplicationEnforcedRestrictions.IsEnabled
             #make false if undefined, true if true
@@ -874,6 +879,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $TermsOfUse,
+
+        [Parameter()]
+        [System.String[]]
+        $CustomAuthenticationFactors,
 
         #generic
         [Parameter()]
@@ -1572,7 +1581,7 @@ function Set-TargetResource
         #create and provision Grant Control object
         Write-Verbose -Message 'Set-Targetresource: create and provision Grant Control object'
 
-        if ($GrantControlOperator -and ($BuiltInControls -or $TermsOfUse))
+        if ($GrantControlOperator -and ($BuiltInControls -or $TermsOfUse -or $CustomAuthenticationFactors))
         {
             $GrantControls = @{
                 Operator = $GrantControlOperator
@@ -1581,6 +1590,10 @@ function Set-TargetResource
             if ($BuiltInControls)
             {
                 $GrantControls.Add('BuiltInControls', $BuiltInControls)
+            }
+            if ($customAuthenticationFactors)
+            {
+                $GrantControls.Add("customAuthenticationFactors", $CustomAuthenticationFactors)
             }
 
             if ($TermsOfUse)
@@ -1922,6 +1935,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $TermsOfUse,
+
+        [Parameter()]
+        [System.String[]]
+        $CustomAuthenticationFactors,
 
         #generic
         [Parameter()]
