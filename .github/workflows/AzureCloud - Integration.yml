@@ -37,9 +37,7 @@ jobs:
           & ./Tests/Integration/M365DSCIntegration.Master.Tests.ps1 `
           -GlobalAdminUser $env:PUBLIC_USERNAME `
           -GlobalAdminPassword $env:PUBLIC_PASSWORD
-      - name: Validate Configuration
-        shell: powershell
-        run: |
+
           $config = Test-DSCConfiguration -Detailed -Verbose
 
           if (!$config.InDesiredState)

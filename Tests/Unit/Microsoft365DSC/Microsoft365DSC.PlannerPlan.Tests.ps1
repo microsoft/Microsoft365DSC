@@ -2,14 +2,14 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath "..\..\Unit" `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath "\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
@@ -23,8 +23,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.onmicrosoft.com", $secpasswd)
 
+            Mock -CommandName Save-M365DSCPartialExport -MockWith {
+            }
             Mock -CommandName Connect-Graph -MockWith {
             }
 
@@ -42,19 +44,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When the Plan doesn't exist but it should" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Title                 = "Contoso Plan";
-                    OwnerGroup            = "Contoso Group"
-                    CertificateThumbprint = "12345678901234567890"
-                    ApplicationId         = "12345"
-                    TenantId              = "12345"
-                    Ensure                = 'Present'
+                    Title      = "Contoso Plan";
+                    OwnerGroup = "Contoso Group"
+                    Credential = $Credential
+                    Ensure     = 'Present'
                 }
 
                 Mock -CommandName Get-MgGroup -MockWith {
                     return @(
                         @{
-                            DisplayName ="Contoso Group"
-                            ObjectId    = "12345-12345-12345-12345-12345"
+                            DisplayName = "Contoso Group"
+                            Id          = "12345-12345-12345-12345-12345"
                         }
                     )
                 }
@@ -81,19 +81,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Plan exists and is NOT in the Desired State" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Title                 = "Contoso Plan";
-                    OwnerGroup            = "Contoso Group"
-                    CertificateThumbprint = "12345678901234567890"
-                    ApplicationId         = "12345"
-                    TenantId              = "12345"
-                    Ensure                = 'Present'
+                    Title      = "Contoso Plan";
+                    OwnerGroup = "Contoso Group"
+                    Credential = $Credential
+                    Ensure     = 'Present'
                 }
 
                 Mock -CommandName Get-MgGroup -MockWith {
                     return @(
                         @{
-                            DisplayName ="Contoso Group"
-                            ObjectId    = "12345-12345-12345-12345-12345"
+                            DisplayName = "Contoso Group"
+                            Id          = "12345-12345-12345-12345-12345"
                         }
                     )
                 }
@@ -120,19 +118,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Plan exists and is IN the Desired State" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Title                 = "Contoso Plan";
-                    OwnerGroup            = "12345-12345-12345-12345-12345"
-                    CertificateThumbprint = "12345678901234567890"
-                    ApplicationId         = "12345"
-                    TenantId              = "12345"
-                    Ensure                = 'Present'
+                    Title      = "Contoso Plan";
+                    OwnerGroup = "12345-12345-12345-12345-12345"
+                    Credential = $Credential
+                    Ensure     = 'Present'
                 }
 
                 Mock -CommandName Get-MgGroup -MockWith {
                     return @(
                         @{
-                            DisplayName ="Contoso Group"
-                            ObjectId    = "12345-12345-12345-12345-12345"
+                            DisplayName = "Contoso Group"
+                            Id          = "12345-12345-12345-12345-12345"
                         }
                     )
                 }
@@ -157,19 +153,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Plan exists but it should not" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Title                 = "Contoso Plan";
-                    OwnerGroup            = "Contoso Group"
-                    CertificateThumbprint = "12345678901234567890"
-                    ApplicationId         = "12345"
-                    TenantId              = "12345"
-                    Ensure                = 'Absent'
+                    Title      = "Contoso Plan";
+                    OwnerGroup = "Contoso Group"
+                    Credential = $Credential
+                    Ensure     = 'Absent'
                 }
 
                 Mock -CommandName Get-MgGroup -MockWith {
                     return @(
                         @{
-                            DisplayName ="Contoso Group"
-                            ObjectId    = "12345-12345-12345-12345-12345"
+                            DisplayName = "Contoso Group"
+                            Id          = "12345-12345-12345-12345-12345"
                         }
                     )
                 }
@@ -196,16 +190,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $testParams = @{
-                    CertificateThumbprint = "12345678901234567890"
-                    ApplicationId         = "12345"
-                    TenantId              = "12345"
+                    Credential = $Credential
                 }
 
+                $Global:PartialExportFileName = "PlannerPlan.ps1"
                 Mock -CommandName Get-MgGroup -MockWith {
                     return @(
                         @{
-                            DisplayName ="Contoso Group"
-                            ObjectId    = "12345-12345-12345-12345-12345"
+                            DisplayName = "Contoso Group"
+                            Id          = "12345-12345-12345-12345-12345"
                         }
                     )
                 }

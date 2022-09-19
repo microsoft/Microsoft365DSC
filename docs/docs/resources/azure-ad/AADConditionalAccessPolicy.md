@@ -34,6 +34,7 @@
 | **CloudAppSecurityType** | Write | String | Specifies, what Cloud App Security control is enforced by the Policy. ||
 | **SignInFrequencyValue** | Write | UInt32 | Sign in frequency time in the given unit to be enforced by the policy. ||
 | **TermsOfUse** | Write | String | Display name of the terms of use to assign. ||
+| **CustomAuthenticationFactors** | Write | StringArray[] | Custom Controls assigned to the grant property of this policy. ||
 | **SignInFrequencyType** | Write | String | Sign in frequency unit (days/hours) to be interpreted by the policy. |Days, Hours, |
 | **SignInFrequencyIsEnabled** | Write | Boolean | Specifies, whether sign-in frequency is enforced by the Policy. ||
 | **PersistentBrowserIsEnabled** | Write | Boolean | Specifies, whether Browser Persistence is controlled by the Policy. ||
