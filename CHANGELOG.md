@@ -1,7 +1,7 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-* AADPIMRoleSetting
+* AADRoleSetting
   * Fixed an issue if the P2 License is not present on the tenant the Export stop working
     FIXES [#2227](https://github.com/microsoft/Microsoft365DSC/issues/2227)
   * Fixed an issue with approver can be a group
