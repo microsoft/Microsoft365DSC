@@ -31,7 +31,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [validateset('None','AdminsAndGuestInviters','AdminsGuestInvitersAndAllMembers','Everyone')]
+        [validateset('None', 'AdminsAndGuestInviters', 'AdminsGuestInvitersAndAllMembers', 'Everyone')]
         $AllowInvitesFrom,
 
         [Parameter()]
@@ -55,7 +55,7 @@ function Get-TargetResource
         $PermissionGrantPolicyIdsAssignedToDefaultUserRole,
 
         [Parameter()]
-        [validateset("User", "Guest", "RestrictedGuest")]
+        [validateset('User', 'Guest', 'RestrictedGuest')]
         [System.String]
         $GuestUserRole,
 
@@ -83,10 +83,14 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
-    Write-Verbose -Message "Getting configuration of AzureAD Authorization Policy"
+    Write-Verbose -Message 'Getting configuration of AzureAD Authorization Policy'
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ProfileName 'v1.0'
@@ -95,7 +99,7 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -115,12 +119,12 @@ function Get-TargetResource
 
     if ($null -eq $Policy)
     {
-        Write-Verbose -Message "Existing Authorization Policy were not found"
-        throw "authorization policy was not found"
+        Write-Verbose -Message 'Existing Authorization Policy were not found'
+        throw 'authorization policy was not found'
     }
     else
     {
-        Write-Verbose -Message "Get-TargetResource: Found existing authorization policy"
+        Write-Verbose -Message 'Get-TargetResource: Found existing authorization policy'
 
         $result = @{
             IsSingleInstance                                  = 'Yes'
@@ -140,12 +144,13 @@ function Get-TargetResource
             #PermissionGrantPolicyIdsAssignedToDefaultUserRole = $Policy.PermissionGrantPolicyIdsAssignedToDefaultUserRole
             GuestUserRole                                     = Get-GuestUserRoleNameFromId -GuestUserRoleId $Policy.GuestUserRoleId
             #Standard part
-            Ensure                                            = "Present"
+            Ensure                                            = 'Present'
             Credential                                        = $Credential
             ApplicationSecret                                 = $ApplicationSecret
             ApplicationId                                     = $ApplicationId
             TenantId                                          = $TenantId
             CertificateThumbprint                             = $CertificateThumbprint
+            Managedidentity                                   = $ManagedIdentity.IsPresent
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -185,7 +190,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [validateset('None','AdminsAndGuestInviters','AdminsGuestInvitersAndAllMembers','Everyone')]
+        [validateset('None', 'AdminsAndGuestInviters', 'AdminsGuestInvitersAndAllMembers', 'Everyone')]
         $AllowInvitesFrom,
 
         [Parameter()]
@@ -209,7 +214,7 @@ function Set-TargetResource
         $PermissionGrantPolicyIdsAssignedToDefaultUserRole,
 
         [Parameter()]
-        [validateset("User", "Guest", "RestrictedGuest")]
+        [validateset('User', 'Guest', 'RestrictedGuest')]
         [System.String]
         $GuestUserRole,
 
@@ -237,15 +242,19 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
-    Write-Verbose -Message "Setting configuration of AzureAD Authorization Policy"
+    Write-Verbose -Message 'Setting configuration of AzureAD Authorization Policy'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -253,20 +262,21 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Set-Targetresource: Running Get-TargetResource"
+    Write-Verbose -Message 'Set-Targetresource: Running Get-TargetResource'
     $currentPolicy = Get-TargetResource @PSBoundParameters
 
-    Write-Verbose -Message "Set-Targetresource: Cleaning up parameters"
+    Write-Verbose -Message 'Set-Targetresource: Cleaning up parameters'
     $currentParameters = ([hashtable]$PSBoundParameters).Clone()
-    $currentParameters.Remove("IsSingleInstance") | Out-Null
-    $currentParameters.Remove("ApplicationId") | Out-Null
-    $currentParameters.Remove("TenantId") | Out-Null
-    $currentParameters.Remove("CertificateThumbprint") | Out-Null
-    $currentParameters.Remove("ApplicationSecret") | Out-Null
-    $currentParameters.Remove("Ensure") | Out-Null
-    $currentParameters.Remove("Credential") | Out-Null
+    $currentParameters.Remove('IsSingleInstance') | Out-Null
+    $currentParameters.Remove('ApplicationId') | Out-Null
+    $currentParameters.Remove('TenantId') | Out-Null
+    $currentParameters.Remove('CertificateThumbprint') | Out-Null
+    $currentParameters.Remove('ApplicationSecret') | Out-Null
+    $currentParameters.Remove('Ensure') | Out-Null
+    $currentParameters.Remove('Credential') | Out-Null
+    $currentParameters.Remove('ManagedIdentity') | Out-Null
 
-    Write-Verbose -Message "Set-Targetresource: Authorization Policy Ensure Present"
+    Write-Verbose -Message 'Set-Targetresource: Authorization Policy Ensure Present'
     $UpdateParameters = @{}
     # update policy with supplied parameters that are different from existing policy
 
@@ -336,7 +346,7 @@ function Set-TargetResource
         try
         {
             Write-Verbose -Message $Message
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -392,7 +402,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [validateset('None','AdminsAndGuestInviters','AdminsGuestInvitersAndAllMembers','Everyone')]
+        [validateset('None', 'AdminsAndGuestInviters', 'AdminsGuestInvitersAndAllMembers', 'Everyone')]
         $AllowInvitesFrom,
 
         [Parameter()]
@@ -416,7 +426,7 @@ function Test-TargetResource
         $PermissionGrantPolicyIdsAssignedToDefaultUserRole,
 
         [Parameter()]
-        [validateset("User", "Guest", "RestrictedGuest")]
+        [validateset('User', 'Guest', 'RestrictedGuest')]
         [System.String]$GuestUserRole,
 
         #generic
@@ -443,10 +453,14 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
-    Write-Verbose -Message "Testing configuration of AzureAD Authorization Policy"
+    Write-Verbose -Message 'Testing configuration of AzureAD Authorization Policy'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -454,6 +468,7 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -489,14 +504,18 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -534,7 +553,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -551,7 +570,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 <#
@@ -565,15 +584,16 @@ https://docs.microsoft.com/en-us/graph/api/resources/authorizationpolicy?view=gr
 Internal, Hidden
 
 #>
-function Get-GuestUserRoleIdTable {
+function Get-GuestUserRoleIdTable
+{
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param()
 
     @{
-        "User"            = 'a0b1b346-4d3e-4e8b-98f8-753987be4970'
-        "Guest"           = '10dae51f-b6af-4016-8d66-8c2a99b929b3'
-        "RestrictedGuest" = '2af84b1e-32c8-42b7-82bc-daa82404023b'
+        'User'            = 'a0b1b346-4d3e-4e8b-98f8-753987be4970'
+        'Guest'           = '10dae51f-b6af-4016-8d66-8c2a99b929b3'
+        'RestrictedGuest' = '2af84b1e-32c8-42b7-82bc-daa82404023b'
     }
 }
 <#
@@ -598,7 +618,8 @@ https://docs.microsoft.com/en-us/graph/api/authorizationpolicy-update?view=graph
 Internal, Hidden
 
 #>
-function Get-GuestUserRoleIdFromName {
+function Get-GuestUserRoleIdFromName
+{
     [CmdletBinding()]
     [OutputType([System.string])]
     param(
@@ -633,7 +654,8 @@ https://docs.microsoft.com/en-us/graph/api/authorizationpolicy-update?view=graph
 Internal, Hidden
 
 #>
-function Get-GuestUserRoleNameFromId {
+function Get-GuestUserRoleNameFromId
+{
     [CmdletBinding()]
     [OutputType([System.string])]
     param(
@@ -647,14 +669,15 @@ function Get-GuestUserRoleNameFromId {
     {
         throw "Unexpected value of GuestuserRoleId '$GuestUserRoleId', should be one of $($guestUserRoleIdTable.Values -join ',')"
     }
-    foreach ($roleName in $guestUserRoleIdTable.Keys) {
+    foreach ($roleName in $guestUserRoleIdTable.Keys)
+    {
         if ($guestUserRoleIdTable.$roleName -eq $GuestUserRoleId)
         {
-            write-verbose "`tRoleName matching GuestUserRoleId is $roleName"
+            Write-Verbose "`tRoleName matching GuestUserRoleId is $roleName"
             break
         }
     }
-    write-verbose "return $rolename"
+    Write-Verbose "return $rolename"
     return $roleName
 }
 
