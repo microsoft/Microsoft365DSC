@@ -207,12 +207,25 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = $null
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
     #get role
     [string]$Filter = $null
     $Filter = "scopeId eq '/' and scopeType eq 'DirectoryRole' and RoleDefinitionId eq '" + $Id + "'"
-    $Policy = Get-MgPolicyRoleManagementPolicyAssignment -Filter $Filter
+    #$Policy = Get-MgPolicyRoleManagementPolicyAssignment -Filter $Filter
+
+    try{
+        $Policy = Get-MgPolicyRoleManagementPolicyAssignment -Filter $Filter -ErrorAction Stop
+    }
+    catch{
+        if($_ -match "The tenant needs an AAD Premium 2 license"){
+            Write-Warning -Message "WARNING: AAD Premium License is required to get the role"
+            return $nullReturn
+        }
+    }
+
+
     $RoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $Id
     #get Policyrule
     $role = Get-MgPolicyRoleManagementPolicyRule -UnifiedRoleManagementPolicyId $Policy.Policyid
@@ -1280,9 +1293,10 @@ function Export-TargetResource
         Get-MgPolicyRoleManagementPolicyAssignment -Filter "scopeId eq '/' and scopeType eq 'DirectoryRole'" -ErrorAction Stop
     }
     catch{
-        Write-Host ""
-        Write-Host -Message "WARNING: AAD Premium License is required to get the role" -ForegroundColor Yellow
-        continue
+        if($_ -match "The tenant needs an AAD Premium 2 license"){
+            Write-Host -Message "`nWARNING: AAD Premium License is required to get the role" -ForegroundColor Yellow
+            continue
+        }
     }
     try
     {
