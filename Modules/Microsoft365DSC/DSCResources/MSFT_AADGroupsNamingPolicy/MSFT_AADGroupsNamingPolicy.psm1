@@ -40,21 +40,25 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
-    Write-Verbose -Message "Getting configuration of AzureAD Groups Naming Policy"
+    Write-Verbose -Message 'Getting configuration of AzureAD Groups Naming Policy'
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters -ProfileName "beta"
+        -InboundParameters $PSBoundParameters -ProfileName 'beta'
     Select-MgProfile -Name Beta | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -62,10 +66,10 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
     try
     {
-        $Policy = Get-MgDirectorySetting | Where-Object -FilterScript {$_.DisplayName -eq 'Group.Unified'}
+        $Policy = Get-MgDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq 'Group.Unified' }
 
         if ($null -eq $Policy)
         {
@@ -73,19 +77,20 @@ function Get-TargetResource
         }
         else
         {
-            Write-Verbose "Found existing AzureAD Groups Naming Policy"
-            $valuePrefix = $Policy.Values | Where-Object -FilterScript {$_.Name -eq "PrefixSuffixNamingRequirement"}
-            $valueBlockedWords = $Policy.Values | Where-Object -FilterScript {$_.Name -eq "CustomBlockedWordsList"}
+            Write-Verbose 'Found existing AzureAD Groups Naming Policy'
+            $valuePrefix = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'PrefixSuffixNamingRequirement' }
+            $valueBlockedWords = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'CustomBlockedWordsList' }
             $result = @{
                 IsSingleInstance              = 'Yes'
                 PrefixSuffixNamingRequirement = $valuePrefix.Value
                 CustomBlockedWordsList        = $valueBlockedWords.Value.Split(',')
-                Ensure                        = "Present"
+                Ensure                        = 'Present'
                 Credential                    = $Credential
                 ApplicationId                 = $ApplicationId
                 TenantId                      = $TenantId
                 ApplicationSecret             = $ApplicationSecret
                 CertificateThumbprint         = $CertificateThumbprint
+                Managedidentity               = $ManagedIdentity.IsPresent
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -97,7 +102,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -155,21 +160,25 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
-    Write-Verbose -Message "Setting configuration of Azure AD Groups Naming Policy"
+    Write-Verbose -Message 'Setting configuration of Azure AD Groups Naming Policy'
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters -ProfileName "beta"
+        -InboundParameters $PSBoundParameters -ProfileName 'beta'
     Select-MgProfile -Name Beta | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -180,23 +189,23 @@ function Set-TargetResource
 
     # Policy should exist but it doesn't
     $needToUpdate = $false
-    if ($Ensure -eq "Present" -and $currentPolicy.Ensure -eq "Absent")
+    if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating new Groups Naming Policy"
+        Write-Verbose -Message 'Creating new Groups Naming Policy'
         $Policy = New-MgDirectorySetting -TemplateId '62375ab9-6b52-47ed-826b-58e47e0e304b' | Out-Null
         $needToUpdate = $true
     }
 
     if ($null -eq $Policy)
     {
-        $Policy = Get-MgDirectorySetting | Where-Object -FilterScript {$_.DisplayName -eq 'Group.Unified'}
+        $Policy = Get-MgDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq 'Group.Unified' }
     }
 
     if (($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present') -or $needToUpdate)
     {
 
         [string]$blockedWordsValue = $null
-        $blockedWordsValue = $CustomBlockedWordsList -join ","
+        $blockedWordsValue = $CustomBlockedWordsList -join ','
 
         $index = 0
         foreach ($property in $Policy.Values)
@@ -217,7 +226,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing existing Groups Naming Policy {$($policy.Id)}"
-        $Policy = Get-MgDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq "Group.Unified" }
+        $Policy = Get-MgDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq 'Group.Unified' }
         Remove-MgDirectorySetting -DirectorySettingId $policy.Id | Out-Null
     }
 }
@@ -264,22 +273,26 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of AzureAD Groups Naming Policy"
+    Write-Verbose -Message 'Testing configuration of AzureAD Groups Naming Policy'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -324,20 +337,24 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters -ProfileName "beta"
+        -InboundParameters $PSBoundParameters -ProfileName 'beta'
     Select-MgProfile -Name Beta | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -354,6 +371,7 @@ function Export-TargetResource
             IsSingleInstance      = 'Yes'
             ApplicationSecret     = $ApplicationSecret
             Credential            = $Credential
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
 
         $Results = Get-TargetResource @Params
@@ -385,7 +403,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -402,7 +420,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 
