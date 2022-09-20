@@ -194,6 +194,7 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
 
+    Select-MgProfile -Name 'beta'
     $MaximumFunctionCount = 32000
 
     Write-Verbose -Message 'Getting configuration of Role'
@@ -210,12 +211,25 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = $null
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
     #get role
     [string]$Filter = $null
     $Filter = "scopeId eq '/' and scopeType eq 'DirectoryRole' and RoleDefinitionId eq '" + $Id + "'"
-    $Policy = Get-MgPolicyRoleManagementPolicyAssignment -Filter $Filter
+    #$Policy = Get-MgPolicyRoleManagementPolicyAssignment -Filter $Filter
+
+    try{
+        $Policy = Get-MgPolicyRoleManagementPolicyAssignment -Filter $Filter -ErrorAction Stop
+    }
+    catch{
+        if($_ -match "The tenant needs an AAD Premium 2 license"){
+            Write-Warning -Message "WARNING: AAD Premium License is required to get the role"
+            return $nullReturn
+        }
+    }
+
+
     $RoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $Id
     #get Policyrule
     $role = Get-MgPolicyRoleManagementPolicyRule -UnifiedRoleManagementPolicyId $Policy.Policyid
@@ -230,8 +244,19 @@ function Get-TargetResource
     [string[]]$ActivateApprover = @()
     foreach ($Item in $ActivateApprovers.id)
     {
-        $user = Get-MgUser -UserId $Item
-        $ActivateApprover += $user.UserPrincipalName
+        try{
+            $user = Get-MgUser -UserId $Item -ErrorAction Stop
+            $ActivateApprover += $user.UserPrincipalName
+        }
+        catch{
+            try{
+                $group = get-mggroup -GroupId $Item -ErrorAction stop
+                $ActivateApprover += $group.DisplayName
+            }
+            catch{
+                Write-Verbose -Message "Error: $($Error[0])"
+            }
+        }
     }
     $PermanentEligibleAssignmentisExpirationRequired = ($role | Where-Object { $_.Id -eq 'Expiration_Admin_Eligibility' }).AdditionalProperties.isExpirationRequired
     $ExpireEligibleAssignment = ($role | Where-Object { $_.Id -eq 'Expiration_Admin_Eligibility' }).AdditionalProperties.maximumDuration
@@ -847,14 +872,39 @@ function Set-TargetResource
                 if ($ActivateApprover.count -gt 0)
                 {
                     $primaryApprovers = @()
-                    foreach ($UPN in $ActivateApprover)
-                    {
-                        $ActivateApprovers = @{}
-                        $ActivateApprovers.Add('@odata.type', '#microsoft.graph.singleUser')
-                        $Filter = "UserPrincipalName eq '" + $UPN + "'"
-                        $user = Get-MgUser -Filter $Filter
-                        $ActivateApprovers.Add('userId', $user.Id)
-                        $primaryApprovers += $ActivateApprovers
+                    foreach ($item in $ActivateApprover){
+                        #is not a guid try with user
+                        $Filter = "UserPrincipalName eq '" + $item + "'"
+                        try{
+                            $user = Get-MgUser -Filter $Filter -ErrorAction Stop
+                        }
+                        catch{
+                            Write-Verbose -Message "User not found, try with group"
+                        }
+                        if($user.length -gt 0){
+                            $ActivateApprovers = @{}
+                            $ActivateApprovers.Add("@odata.type", "#microsoft.graph.singleUser")
+                            $ActivateApprovers.Add("userId", $user.Id)
+                            $primaryApprovers += $ActivateApprovers
+                            $user = $null
+                        }
+                        else{
+                            #try with group
+                            $Filter = "Displayname eq '" + $item + "'"
+                            try{
+                                $group = Get-MgGroup -Filter $Filter -ErrorAction Stop
+                            }
+                            catch{
+                                Write-Verbose -Message "Group not found"
+                            }
+                            if($group.length -gt 0){
+                                $ActivateApprovers = @{}
+                                $ActivateApprovers.Add("@odata.type", "#microsoft.graph.groupMembers")
+                                $ActivateApprovers.Add("groupId", $group.Id)
+                                $primaryApprovers += $ActivateApprovers
+                                $group = $null
+                            }
+                        }
                     }
                 }
                 $approvalStages = @{}
@@ -1278,6 +1328,15 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    try{
+        Get-MgPolicyRoleManagementPolicyAssignment -Filter "scopeId eq '/' and scopeType eq 'DirectoryRole'" -ErrorAction Stop
+    }
+    catch{
+        if($_ -match "The tenant needs an AAD Premium 2 license"){
+            Write-Host -Message "`nWARNING: AAD Premium License is required to get the role" -ForegroundColor Yellow
+            continue
+        }
+    }
     try
     {
         [array]$roles = Get-MgRoleManagementDirectoryRoleDefinition -Filter $Filter -ErrorAction Stop
