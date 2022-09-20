@@ -6,7 +6,7 @@
         },
         @{
             ModuleName      = 'ExchangeOnlineManagement'
-            RequiredVersion = '2.0.5'
+            RequiredVersion = '3.0.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Applications'
