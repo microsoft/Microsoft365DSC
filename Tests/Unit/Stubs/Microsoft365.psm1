@@ -4,15 +4,15 @@ function Add-AvailabilityAddressSpace
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Management.Automation.PSCredential]
         $Credentials,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ForestName,
 
         [Parameter()]
-        [System.Object]
+        [System.Uri]
         $TargetAutodiscoverEpr,
 
         [Parameter()]
@@ -21,11 +21,7 @@ function Add-AvailabilityAddressSpace
 
         [Parameter()]
         [System.Object]
-        $AccessMethod,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $AccessMethod
     )
 }
 function Disable-JournalRule
@@ -38,11 +34,7 @@ function Disable-JournalRule
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Enable-JournalRule
@@ -55,11 +47,7 @@ function Enable-JournalRule
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Enable-OrganizationCustomization
@@ -68,11 +56,7 @@ function Enable-OrganizationCustomization
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Confirm
     )
 }
 function Get-AcceptedDomain
@@ -81,11 +65,7 @@ function Get-AcceptedDomain
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-ActiveSyncDevice
@@ -93,7 +73,7 @@ function Get-ActiveSyncDevice
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $SortBy,
 
         [Parameter()]
@@ -105,7 +85,7 @@ function Get-ActiveSyncDevice
         $OrganizationalUnit,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Filter,
 
         [Parameter()]
@@ -114,11 +94,7 @@ function Get-ActiveSyncDevice
 
         [Parameter()]
         [System.Object]
-        $ResultSize,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $ResultSize
     )
 }
 function Get-ActiveSyncDeviceAccessRule
@@ -127,11 +103,7 @@ function Get-ActiveSyncDeviceAccessRule
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-AddressBookPolicy
@@ -140,20 +112,14 @@ function Get-AddressBookPolicy
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-AdminAuditLogConfig
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+
     )
 }
 function Get-AntiPhishPolicy
@@ -174,11 +140,7 @@ function Get-AntiPhishPolicy
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Spoof,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Spoof
     )
 }
 function Get-AntiPhishRule
@@ -191,11 +153,7 @@ function Get-AntiPhishRule
 
         [Parameter()]
         [System.Object]
-        $State,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $State
     )
 }
 function Get-App
@@ -216,11 +174,7 @@ function Get-App
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $PrivateCatalog,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $PrivateCatalog
     )
 }
 function Get-ApplicationAccessPolicy
@@ -229,11 +183,7 @@ function Get-ApplicationAccessPolicy
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-AtpPolicyForO365
@@ -242,20 +192,14 @@ function Get-AtpPolicyForO365
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-AuditConfig
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+
     )
 }
 function Get-AuditConfigurationPolicy
@@ -264,11 +208,7 @@ function Get-AuditConfigurationPolicy
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-AuthenticationPolicy
@@ -277,11 +217,7 @@ function Get-AuthenticationPolicy
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-AvailabilityAddressSpace
@@ -290,11 +226,7 @@ function Get-AvailabilityAddressSpace
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-AvailabilityConfig
@@ -303,11 +235,7 @@ function Get-AvailabilityConfig
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-CASMailbox
@@ -315,19 +243,23 @@ function Get-CASMailbox
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
-        $ResultSize,
+        [System.Management.Automation.SwitchParameter]
+        $RecalculateHasActiveSyncDevicePartnership,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $SortBy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProtocolSettings,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ReadIsOptimizedForAccessibility,
 
         [Parameter()]
-        [System.Object]
+        [System.Management.Automation.PSCredential]
         $Credential,
 
         [Parameter()]
@@ -347,19 +279,15 @@ function Get-CASMailbox
         $IgnoreDefaultScope,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProtocolSettings,
-
-        [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RecipientTypeDetails,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $RecalculateHasActiveSyncDevicePartnership,
+        [System.Object]
+        $ResultSize,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Filter,
 
         [Parameter()]
@@ -367,12 +295,8 @@ function Get-CASMailbox
         $ActiveSyncSuppressReadReceipt,
 
         [Parameter()]
-        [System.Object]
-        $Anr,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.String]
+        $Anr
     )
 }
 function Get-CASMailboxPlan
@@ -380,16 +304,16 @@ function Get-CASMailboxPlan
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $SortBy,
 
         [Parameter()]
-        [System.Object]
+        [System.Management.Automation.PSCredential]
         $Credential,
 
         [Parameter()]
         [System.Object]
-        $Filter,
+        $Identity,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -397,15 +321,11 @@ function Get-CASMailboxPlan
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Object]
         $ResultSize,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.String]
+        $Filter
     )
 }
 function Get-ClientAccessRule
@@ -422,11 +342,7 @@ function Get-ClientAccessRule
 
         [Parameter()]
         [System.Object]
-        $DomainController,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $DomainController
     )
 }
 function Get-ComplianceTag
@@ -439,11 +355,7 @@ function Get-ComplianceTag
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-DataClassification
@@ -456,11 +368,7 @@ function Get-DataClassification
 
         [Parameter()]
         [System.Object]
-        $ClassificationRuleCollectionIdentity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $ClassificationRuleCollectionIdentity
     )
 }
 function Get-DataEncryptionPolicy
@@ -477,11 +385,7 @@ function Get-DataEncryptionPolicy
 
         [Parameter()]
         [System.Object]
-        $DomainController,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $DomainController
     )
 }
 function Get-DeviceConditionalAccessPolicy
@@ -490,11 +394,7 @@ function Get-DeviceConditionalAccessPolicy
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-DeviceConfigurationPolicy
@@ -503,11 +403,7 @@ function Get-DeviceConfigurationPolicy
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-DistributionGroup
@@ -515,11 +411,11 @@ function Get-DistributionGroup
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $SortBy,
 
         [Parameter()]
-        [System.Object]
+        [System.Management.Automation.PSCredential]
         $Credential,
 
         [Parameter()]
@@ -531,7 +427,7 @@ function Get-DistributionGroup
         $Identity,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RecipientTypeDetails,
 
         [Parameter()]
@@ -539,7 +435,7 @@ function Get-DistributionGroup
         $ManagedBy,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Filter,
 
         [Parameter()]
@@ -547,12 +443,8 @@ function Get-DistributionGroup
         $ResultSize,
 
         [Parameter()]
-        [System.Object]
-        $Anr,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.String]
+        $Anr
     )
 }
 function Get-DkimSigningConfig
@@ -561,11 +453,7 @@ function Get-DkimSigningConfig
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-EmailAddressPolicy
@@ -574,11 +462,7 @@ function Get-EmailAddressPolicy
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-HostedConnectionFilterPolicy
@@ -587,11 +471,7 @@ function Get-HostedConnectionFilterPolicy
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-HostedContentFilterPolicy
@@ -600,11 +480,7 @@ function Get-HostedContentFilterPolicy
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-HostedContentFilterRule
@@ -617,11 +493,7 @@ function Get-HostedContentFilterRule
 
         [Parameter()]
         [System.Object]
-        $State,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $State
     )
 }
 function Get-HostedOutboundSpamFilterPolicy
@@ -630,11 +502,7 @@ function Get-HostedOutboundSpamFilterPolicy
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-HostedOutboundSpamFilterRule
@@ -647,11 +515,7 @@ function Get-HostedOutboundSpamFilterRule
 
         [Parameter()]
         [System.Object]
-        $State,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $State
     )
 }
 function Get-InboundConnector
@@ -660,11 +524,7 @@ function Get-InboundConnector
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-IntraOrganizationConnector
@@ -673,20 +533,14 @@ function Get-IntraOrganizationConnector
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-IRMConfiguration
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+
     )
 }
 function Get-JournalRule
@@ -695,11 +549,7 @@ function Get-JournalRule
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-Mailbox
@@ -711,7 +561,7 @@ function Get-Mailbox
         $IncludeInactiveMailbox,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $SortBy,
 
         [Parameter()]
@@ -743,7 +593,7 @@ function Get-Mailbox
         $SoftDeletedMailbox,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RecipientTypeDetails,
 
         [Parameter()]
@@ -751,7 +601,7 @@ function Get-Mailbox
         $ResultSize,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Filter,
 
         [Parameter()]
@@ -763,12 +613,8 @@ function Get-Mailbox
         $Migration,
 
         [Parameter()]
-        [System.Object]
-        $Anr,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.String]
+        $Anr
     )
 }
 function Get-MailboxPlan
@@ -776,12 +622,24 @@ function Get-MailboxPlan
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $SortBy,
 
         [Parameter()]
-        [System.Object]
+        [System.Management.Automation.PSCredential]
         $Credential,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IgnoreDefaultScope,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize,
 
         [Parameter()]
         [System.Object]
@@ -789,23 +647,7 @@ function Get-MailboxPlan
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $IgnoreDefaultScope,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AllMailboxPlanReleases,
-
-        [Parameter()]
-        [System.Object]
-        $Filter,
-
-        [Parameter()]
-        [System.Object]
-        $ResultSize,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $AllMailboxPlanReleases
     )
 }
 function Get-MailboxRegionalConfiguration
@@ -818,15 +660,15 @@ function Get-MailboxRegionalConfiguration
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $UseCustomRouting,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Archive,
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-MalwareFilterPolicy
@@ -835,11 +677,7 @@ function Get-MalwareFilterPolicy
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-MalwareFilterRule
@@ -852,11 +690,7 @@ function Get-MalwareFilterRule
 
         [Parameter()]
         [System.Object]
-        $State,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $State
     )
 }
 function Get-ManagementRole
@@ -868,11 +702,11 @@ function Get-ManagementRole
         $RoleType,
 
         [Parameter()]
-        [System.Object]
+        [System.String[]]
         $CmdletParameters,
 
         [Parameter()]
-        [System.Object]
+        [System.String[]]
         $ScriptParameters,
 
         [Parameter()]
@@ -880,24 +714,20 @@ function Get-ManagementRole
         $Identity,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Cmdlet,
-
-        [Parameter()]
-        [System.Object]
-        $Script,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $GetChildren,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Recurse,
 
         [Parameter()]
+        [System.String]
+        $Script,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $GetChildren
     )
 }
 function Get-MessageClassification
@@ -910,11 +740,7 @@ function Get-MessageClassification
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $IncludeLocales,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $IncludeLocales
     )
 }
 function Get-MobileDevice
@@ -926,12 +752,16 @@ function Get-MobileDevice
         $OWAforDevices,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $SortBy,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $UniversalOutlook,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ActiveSync,
 
         [Parameter()]
         [System.Object]
@@ -947,23 +777,15 @@ function Get-MobileDevice
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $ActiveSync,
+        $RestApi,
 
         [Parameter()]
         [System.Object]
         $ResultSize,
 
         [Parameter()]
-        [System.Object]
-        $Filter,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $RestApi,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.String]
+        $Filter
     )
 }
 function Get-MobileDeviceMailboxPolicy
@@ -972,11 +794,7 @@ function Get-MobileDeviceMailboxPolicy
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-OMEConfiguration
@@ -985,11 +803,7 @@ function Get-OMEConfiguration
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-OnPremisesOrganization
@@ -998,20 +812,14 @@ function Get-OnPremisesOrganization
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-OrganizationConfig
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+
     )
 }
 function Get-OrganizationRelationship
@@ -1020,11 +828,7 @@ function Get-OrganizationRelationship
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-OutboundConnector
@@ -1032,7 +836,7 @@ function Get-OutboundConnector
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $IncludeTestModeConnectors,
 
         [Parameter()]
@@ -1040,12 +844,8 @@ function Get-OutboundConnector
         $Identity,
 
         [Parameter()]
-        [System.Object]
-        $IsTransportRuleScoped,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $IsTransportRuleScoped
     )
 }
 function Get-OwaMailboxPolicy
@@ -1054,11 +854,7 @@ function Get-OwaMailboxPolicy
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-PartnerApplication
@@ -1067,11 +863,7 @@ function Get-PartnerApplication
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-PerimeterConfig
@@ -1080,21 +872,13 @@ function Get-PerimeterConfig
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-PolicyTipConfig
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.Object]
-        $Locale,
-
         [Parameter()]
         [System.Object]
         $Action,
@@ -1104,12 +888,12 @@ function Get-PolicyTipConfig
         $Original,
 
         [Parameter()]
-        [System.Object]
-        $Identity,
+        [System.Globalization.CultureInfo]
+        $Locale,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Object]
+        $Identity
     )
 }
 function Get-QuarantinePolicy
@@ -1122,11 +906,7 @@ function Get-QuarantinePolicy
 
         [Parameter()]
         [System.Object]
-        $QuarantinePolicyType,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $QuarantinePolicyType
     )
 }
 function Get-RemoteDomain
@@ -1135,20 +915,14 @@ function Get-RemoteDomain
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-ResourceConfig
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+
     )
 }
 function Get-RoleAssignmentPolicy
@@ -1157,11 +931,7 @@ function Get-RoleAssignmentPolicy
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-SafeAttachmentPolicy
@@ -1170,11 +940,7 @@ function Get-SafeAttachmentPolicy
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-SafeAttachmentRule
@@ -1187,11 +953,7 @@ function Get-SafeAttachmentRule
 
         [Parameter()]
         [System.Object]
-        $State,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $State
     )
 }
 function Get-SafeLinksPolicy
@@ -1200,11 +962,7 @@ function Get-SafeLinksPolicy
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-SafeLinksRule
@@ -1217,11 +975,7 @@ function Get-SafeLinksRule
 
         [Parameter()]
         [System.Object]
-        $State,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $State
     )
 }
 function Get-SharingPolicy
@@ -1230,11 +984,7 @@ function Get-SharingPolicy
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-SupervisoryReviewPolicyV2
@@ -1243,11 +993,7 @@ function Get-SupervisoryReviewPolicyV2
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-SupervisoryReviewRule
@@ -1260,20 +1006,14 @@ function Get-SupervisoryReviewRule
 
         [Parameter()]
         [System.Object]
-        $Policy,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Policy
     )
 }
 function Get-TransportConfig
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+
     )
 }
 function Get-TransportRule
@@ -1281,16 +1021,20 @@ function Get-TransportRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $DlpPolicy,
 
         [Parameter()]
         [System.Object]
+        $ResultSize,
+
+        [Parameter()]
+        [System.Boolean]
         $ExcludeConditionActionDetails,
 
         [Parameter()]
-        [System.Object]
-        $Identity,
+        [System.String]
+        $Filter,
 
         [Parameter()]
         [System.Object]
@@ -1298,15 +1042,7 @@ function Get-TransportRule
 
         [Parameter()]
         [System.Object]
-        $Filter,
-
-        [Parameter()]
-        [System.Object]
-        $ResultSize,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Get-User
@@ -1314,7 +1050,7 @@ function Get-User
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $SortBy,
 
         [Parameter()]
@@ -1334,7 +1070,7 @@ function Get-User
         $Identity,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RecipientTypeDetails,
 
         [Parameter()]
@@ -1342,16 +1078,12 @@ function Get-User
         $ResultSize,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Filter,
 
         [Parameter()]
-        [System.Object]
-        $Anr,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.String]
+        $Anr
     )
 }
 function New-ActiveSyncDeviceAccessRule
@@ -1359,7 +1091,7 @@ function New-ActiveSyncDeviceAccessRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $QueryString,
 
         [Parameter()]
@@ -1372,11 +1104,7 @@ function New-ActiveSyncDeviceAccessRule
 
         [Parameter()]
         [System.Object]
-        $AccessLevel,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $AccessLevel
     )
 }
 function New-AntiPhishPolicy
@@ -1384,7 +1112,7 @@ function New-AntiPhishPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableFirstContactSafetyTips,
 
         [Parameter()]
@@ -1392,7 +1120,7 @@ function New-AntiPhishPolicy
         $MakeDefault,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $PhishThresholdLevel,
 
         [Parameter()]
@@ -1400,35 +1128,31 @@ function New-AntiPhishPolicy
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableTargetedDomainsProtection,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $Enabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableViaTag,
 
         [Parameter()]
-        [System.Object]
-        $MailboxIntelligenceProtectionAction,
+        [System.String]
+        $Name,
 
         [Parameter()]
         [System.Object]
         $TargetedDomainsToProtect,
 
         [Parameter()]
-        [System.Object]
-        $EnableOrganizationDomainsProtection,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableSpoofIntelligence,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableSimilarUsersSafetyTips,
 
         [Parameter()]
@@ -1437,18 +1161,22 @@ function New-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
+        $MailboxIntelligenceProtectionAction,
+
+        [Parameter()]
+        [System.Object]
         $TargetedDomainActionRecipients,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableMailboxIntelligence,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $TargetedDomainQuarantineTag,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $SimilarUsersSafetyTipsCustomText,
 
         [Parameter()]
@@ -1460,12 +1188,8 @@ function New-AntiPhishPolicy
         $TargetedDomainProtectionAction,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $AdminDisplayName,
-
-        [Parameter()]
-        [System.Object]
-        $AuthenticationFailAction,
 
         [Parameter()]
         [System.Object]
@@ -1473,7 +1197,7 @@ function New-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
-        $SpoofQuarantineTag,
+        $TargetedUserProtectionAction,
 
         [Parameter()]
         [System.Object]
@@ -1484,48 +1208,52 @@ function New-AntiPhishPolicy
         $MailboxIntelligenceProtectionActionRecipients,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $MailboxIntelligenceQuarantineTag,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $UnusualCharactersSafetyTipsCustomText,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableSimilarDomainsSafetyTips,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
+        $SpoofQuarantineTag,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUnauthenticatedSender,
+
+        [Parameter()]
+        [System.String]
+        $PolicyTag,
+
+        [Parameter()]
+        [System.String]
+        $TargetedUserQuarantineTag,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableOrganizationDomainsProtection,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMailboxIntelligenceProtection,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUnusualCharactersSafetyTips,
+
+        [Parameter()]
+        [System.Boolean]
         $EnableTargetedUserProtection,
 
         [Parameter()]
         [System.Object]
-        $EnableUnauthenticatedSender,
-
-        [Parameter()]
-        [System.Object]
-        $TargetedUserQuarantineTag,
-
-        [Parameter()]
-        [System.Object]
-        $PolicyTag,
-
-        [Parameter()]
-        [System.Object]
-        $EnableUnusualCharactersSafetyTips,
-
-        [Parameter()]
-        [System.Object]
-        $Name,
-
-        [Parameter()]
-        [System.Object]
-        $EnableMailboxIntelligenceProtection,
-
-        [Parameter()]
-        [System.Object]
-        $TargetedUserProtectionAction,
+        $AuthenticationFailAction,
 
         [Parameter()]
         [System.Object]
@@ -1533,11 +1261,7 @@ function New-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
-        $ExcludedSenders,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $ExcludedSenders
     )
 }
 function New-AntiPhishRule
@@ -1545,39 +1269,39 @@ function New-AntiPhishRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $Priority,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
-
-        [Parameter()]
-        [System.Object]
-        $SentToMemberOf,
 
         [Parameter()]
         [System.Object]
         $AntiPhishPolicy,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object[]]
         $SentTo,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Comments,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RecipientDomainIs,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfRecipientDomainIs,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSentTo,
 
         [Parameter()]
@@ -1585,16 +1309,12 @@ function New-AntiPhishRule
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSentToMemberOf,
 
         [Parameter()]
-        [System.Object]
-        $Enabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $Enabled
     )
 }
 function New-App
@@ -1602,19 +1322,19 @@ function New-App
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Etoken,
 
         [Parameter()]
-        [System.Object]
+        [System.IO.Stream]
         $FileStream,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $Enabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Uri]
         $Url,
 
         [Parameter()]
@@ -1622,7 +1342,7 @@ function New-App
         $Mailbox,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $MarketplaceServicesUrl,
 
         [Parameter()]
@@ -1630,7 +1350,7 @@ function New-App
         $PrivateCatalog,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $MarketplaceCorrelationID,
 
         [Parameter()]
@@ -1638,11 +1358,11 @@ function New-App
         $DefaultStateForUser,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $MarketplaceQueryMarket,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $MarketplaceUserProfileType,
 
         [Parameter()]
@@ -1662,7 +1382,7 @@ function New-App
         $OrganizationApp,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $MarketplaceAssetID,
 
         [Parameter()]
@@ -1670,16 +1390,12 @@ function New-App
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.Byte[]]
         $FileData,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AllowReadWriteMailbox,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $AllowReadWriteMailbox
     )
 }
 function New-ApplicationAccessPolicy
@@ -1687,12 +1403,8 @@ function New-ApplicationAccessPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Description,
-
-        [Parameter()]
-        [System.Object]
-        $AppId,
 
         [Parameter()]
         [System.Object]
@@ -1707,8 +1419,8 @@ function New-ApplicationAccessPolicy
         $AccessRight,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.String[]]
+        $AppId
     )
 }
 function New-AuthenticationPolicy
@@ -1716,12 +1428,8 @@ function New-AuthenticationPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AllowBasicAuthRpc,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -1749,7 +1457,7 @@ function New-AuthenticationPolicy
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AllowBasicAuthActiveSync,
+        $AllowBasicAuthRpc,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -1769,11 +1477,11 @@ function New-AuthenticationPolicy
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AllowBasicAuthWebServices,
+        $AllowBasicAuthActiveSync,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $AllowBasicAuthWebServices
     )
 }
 function New-AvailabilityConfig
@@ -1786,21 +1494,13 @@ function New-AvailabilityConfig
 
         [Parameter()]
         [System.Object]
-        $OrgWideAccount,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $OrgWideAccount
     )
 }
 function New-ClientAccessRule
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.Object]
-        $UsernameMatchesAnyOfPatterns,
-
         [Parameter()]
         [System.Object]
         $Action,
@@ -1810,7 +1510,7 @@ function New-ClientAccessRule
         $AnyOfClientIPAddressesOrRanges,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $Enabled,
 
         [Parameter()]
@@ -1818,11 +1518,11 @@ function New-ClientAccessRule
         $ExceptAnyOfClientIPAddressesOrRanges,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $UserRecipientFilter,
 
         [Parameter()]
@@ -1830,12 +1530,16 @@ function New-ClientAccessRule
         $ExceptAnyOfProtocols,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $Priority,
 
         [Parameter()]
         [System.Object]
         $ExceptUsernameMatchesAnyOfPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $UsernameMatchesAnyOfPatterns,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -1855,11 +1559,7 @@ function New-ClientAccessRule
 
         [Parameter()]
         [System.Object]
-        $Scope,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Scope
     )
 }
 function New-DataClassification
@@ -1867,15 +1567,15 @@ function New-DataClassification
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Description,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.Globalization.CultureInfo]
         $Locale,
 
         [Parameter()]
@@ -1884,15 +1584,11 @@ function New-DataClassification
 
         [Parameter()]
         [System.Object]
-        $ClassificationRuleCollectionIdentity,
-
-        [Parameter()]
-        [System.Object]
         $Fingerprints,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Object]
+        $ClassificationRuleCollectionIdentity
     )
 }
 function New-DataEncryptionPolicy
@@ -1900,16 +1596,12 @@ function New-DataEncryptionPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Description,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
-
-        [Parameter()]
-        [System.Object]
-        $AzureKeyIDs,
 
         [Parameter()]
         [System.Object]
@@ -1921,11 +1613,11 @@ function New-DataEncryptionPolicy
 
         [Parameter()]
         [System.Object]
-        $Enabled,
+        $AzureKeyIDs,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $Enabled
     )
 }
 function New-DistributionGroup
@@ -1937,24 +1629,24 @@ function New-DistributionGroup
         $ModeratedBy,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RequireSenderAuthenticationEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ModerationEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $DisplayName,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
 
         [Parameter()]
         [System.Object]
         $MemberDepartRestriction,
+
+        [Parameter()]
+        [System.String]
+        $Name,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -1969,7 +1661,7 @@ function New-DistributionGroup
         $HiddenGroupMembershipEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $BypassNestedModerationEnabled,
 
         [Parameter()]
@@ -1977,7 +1669,7 @@ function New-DistributionGroup
         $CopyOwnerToMember,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $BccBlocked,
 
         [Parameter()]
@@ -1989,6 +1681,14 @@ function New-DistributionGroup
         $Description,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
         [System.Object]
         $MemberJoinRestriction,
 
@@ -1998,11 +1698,11 @@ function New-DistributionGroup
 
         [Parameter()]
         [System.Object]
-        $Alias,
+        $ManagedBy,
 
         [Parameter()]
-        [System.Object]
-        $ManagedBy,
+        [System.String]
+        $Alias,
 
         [Parameter()]
         [System.Object]
@@ -2014,19 +1714,7 @@ function New-DistributionGroup
 
         [Parameter()]
         [System.Object]
-        $Notes,
-
-        [Parameter()]
-        [System.Object]
-        $OrganizationalUnit,
-
-        [Parameter()]
-        [System.Object]
-        $Name,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $OrganizationalUnit
     )
 }
 function New-DkimSigningConfig
@@ -2034,7 +1722,7 @@ function New-DkimSigningConfig
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $AdminDisplayName,
 
         [Parameter()]
@@ -2047,23 +1735,19 @@ function New-DkimSigningConfig
 
         [Parameter()]
         [System.Object]
-        $KeySize,
+        $HeaderCanonicalization,
 
         [Parameter()]
-        [System.Object]
-        $HeaderCanonicalization,
+        [System.UInt16]
+        $KeySize,
 
         [Parameter()]
         [System.Object]
         $DomainName,
 
         [Parameter()]
-        [System.Object]
-        $Enabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $Enabled
     )
 }
 function New-EmailAddressPolicy
@@ -2075,7 +1759,7 @@ function New-EmailAddressPolicy
         $Priority,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
@@ -2087,20 +1771,16 @@ function New-EmailAddressPolicy
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $EnabledPrimarySMTPAddressTemplate,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ManagedByFilter,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $IncludeUnifiedGroupRecipients,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $IncludeUnifiedGroupRecipients
     )
 }
 function New-HostedConnectionFilterPolicy
@@ -2108,19 +1788,19 @@ function New-HostedConnectionFilterPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ConfigurationXmlRaw,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $AdminDisplayName,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableSafeList,
 
         [Parameter()]
@@ -2133,11 +1813,7 @@ function New-HostedConnectionFilterPolicy
 
         [Parameter()]
         [System.Object]
-        $IPAllowList,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $IPAllowList
     )
 }
 function New-HostedContentFilterPolicy
@@ -2149,39 +1825,39 @@ function New-HostedContentFilterPolicy
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $InlineSafetyTipsEnabled,
 
         [Parameter()]
         [System.Object]
-        $RegionBlockList,
+        $BulkSpamAction,
 
         [Parameter()]
-        [System.Object]
-        $MarkAsSpamFromAddressAuthFail,
-
-        [Parameter()]
-        [System.Object]
+        [System.String]
         $HighConfidencePhishQuarantineTag,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $EndUserSpamNotificationFrequency,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $EndUserSpamNotificationLimit,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $BulkThreshold,
 
         [Parameter()]
         [System.Object]
+        $TestModeBccToRecipients,
+
+        [Parameter()]
+        [System.String]
         $PhishQuarantineTag,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $AddXHeaderValue,
 
         [Parameter()]
@@ -2197,7 +1873,7 @@ function New-HostedContentFilterPolicy
         $IncreaseScoreWithImageLinks,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableLanguageBlockList,
 
         [Parameter()]
@@ -2205,7 +1881,7 @@ function New-HostedContentFilterPolicy
         $PhishSpamAction,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $EndUserSpamNotificationCustomFromName,
 
         [Parameter()]
@@ -2213,16 +1889,20 @@ function New-HostedContentFilterPolicy
         $MarkAsSpamSensitiveWordList,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $SpamQuarantineTag,
 
         [Parameter()]
         [System.Object]
-        $SpamZapEnabled,
+        $MarkAsSpamNdrBackscatter,
 
         [Parameter()]
         [System.Object]
         $BlockedSenders,
+
+        [Parameter()]
+        [System.Object]
+        $LanguageBlockList,
 
         [Parameter()]
         [System.Object]
@@ -2233,6 +1913,10 @@ function New-HostedContentFilterPolicy
         $AllowedSenderDomains,
 
         [Parameter()]
+        [System.Boolean]
+        $PhishZapEnabled,
+
+        [Parameter()]
         [System.Object]
         $IncreaseScoreWithBizOrInfoUrls,
 
@@ -2241,31 +1925,27 @@ function New-HostedContentFilterPolicy
         $MarkAsSpamWebBugsInHtml,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $AdminDisplayName,
 
         [Parameter()]
         [System.Object]
-        $MarkAsSpamJavaScriptInHtml,
+        $RegionBlockList,
+
+        [Parameter()]
+        [System.Object]
+        $MarkAsSpamFromAddressAuthFail,
+
+        [Parameter()]
+        [System.String]
+        $Name,
 
         [Parameter()]
         [System.Object]
         $MarkAsSpamEmptyMessages,
 
         [Parameter()]
-        [System.Object]
-        $LanguageBlockList,
-
-        [Parameter()]
-        [System.Object]
-        $MarkAsSpamNdrBackscatter,
-
-        [Parameter()]
-        [System.Object]
-        $Name,
-
-        [Parameter()]
-        [System.Object]
+        [System.String]
         $BulkQuarantineTag,
 
         [Parameter()]
@@ -2278,10 +1958,6 @@ function New-HostedContentFilterPolicy
 
         [Parameter()]
         [System.Object]
-        $BulkSpamAction,
-
-        [Parameter()]
-        [System.Object]
         $EndUserSpamNotificationLanguage,
 
         [Parameter()]
@@ -2289,7 +1965,7 @@ function New-HostedContentFilterPolicy
         $IncreaseScoreWithRedirectToOtherPort,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $QuarantineRetentionPeriod,
 
         [Parameter()]
@@ -2301,15 +1977,19 @@ function New-HostedContentFilterPolicy
         $RedirectToRecipients,
 
         [Parameter()]
+        [System.Boolean]
+        $SpamZapEnabled,
+
+        [Parameter()]
         [System.Object]
         $TestModeAction,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableRegionBlockList,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $EndUserSpamNotificationCustomSubject,
 
         [Parameter()]
@@ -2321,7 +2001,7 @@ function New-HostedContentFilterPolicy
         $EndUserSpamNotificationCustomFromAddress,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $DownloadLink,
 
         [Parameter()]
@@ -2329,7 +2009,7 @@ function New-HostedContentFilterPolicy
         $SpamAction,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ModifySubjectValue,
 
         [Parameter()]
@@ -2342,7 +2022,7 @@ function New-HostedContentFilterPolicy
 
         [Parameter()]
         [System.Object]
-        $TestModeBccToRecipients,
+        $MarkAsSpamJavaScriptInHtml,
 
         [Parameter()]
         [System.Object]
@@ -2357,20 +2037,12 @@ function New-HostedContentFilterPolicy
         $RecommendedPolicyType,
 
         [Parameter()]
-        [System.Object]
-        $PhishZapEnabled,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableEndUserSpamNotifications,
 
         [Parameter()]
-        [System.Object]
-        $HighConfidenceSpamQuarantineTag,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.String]
+        $HighConfidenceSpamQuarantineTag
     )
 }
 function New-HostedContentFilterRule
@@ -2378,15 +2050,15 @@ function New-HostedContentFilterRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $Priority,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SentToMemberOf,
 
         [Parameter()]
@@ -2394,23 +2066,23 @@ function New-HostedContentFilterRule
         $HostedContentFilterPolicy,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SentTo,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Comments,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RecipientDomainIs,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfRecipientDomainIs,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSentTo,
 
         [Parameter()]
@@ -2418,16 +2090,12 @@ function New-HostedContentFilterRule
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSentToMemberOf,
 
         [Parameter()]
-        [System.Object]
-        $Enabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $Enabled
     )
 }
 function New-HostedOutboundSpamFilterRule
@@ -2435,31 +2103,35 @@ function New-HostedOutboundSpamFilterRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $Priority,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
+        $ExceptIfFromMemberOf,
+
+        [Parameter()]
+        [System.Object[]]
         $ExceptIfFrom,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSenderDomainIs,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Comments,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $FromMemberOf,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SenderDomainIs,
 
         [Parameter()]
@@ -2467,24 +2139,16 @@ function New-HostedOutboundSpamFilterRule
         $HostedOutboundSpamFilterPolicy,
 
         [Parameter()]
-        [System.Object]
-        $ExceptIfFromMemberOf,
-
-        [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $From,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $Enabled,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Confirm
     )
 }
 function New-InboundConnector
@@ -2492,27 +2156,23 @@ function New-InboundConnector
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RestrictDomainsToIPAddresses,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $CloudServicesMailEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $Enabled,
-
-        [Parameter()]
-        [System.Object]
-        $Name,
 
         [Parameter()]
         [System.Object]
         $EFSkipMailGateway,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EFTestMode,
 
         [Parameter()]
@@ -2532,11 +2192,11 @@ function New-InboundConnector
         $AssociatedAcceptedDomains,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Comment,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RequireTls,
 
         [Parameter()]
@@ -2548,7 +2208,7 @@ function New-InboundConnector
         $SenderIPAddresses,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EFSkipLastIP,
 
         [Parameter()]
@@ -2564,7 +2224,7 @@ function New-InboundConnector
         $ConnectorType,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RestrictDomainsToCertificate,
 
         [Parameter()]
@@ -2572,7 +2232,7 @@ function New-InboundConnector
         $EFSkipIPs,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $TreatMessagesAsInternal,
 
         [Parameter()]
@@ -2580,8 +2240,8 @@ function New-InboundConnector
         $ConnectorSource,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.String]
+        $Name
     )
 }
 function New-IntraOrganizationConnector
@@ -2589,7 +2249,7 @@ function New-IntraOrganizationConnector
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
@@ -2597,24 +2257,20 @@ function New-IntraOrganizationConnector
         $TargetAddressDomains,
 
         [Parameter()]
-        [System.Object]
-        $DiscoveryEndpoint,
-
-        [Parameter()]
-        [System.Object]
-        $TargetSharingEpr,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Object]
-        $Enabled,
+        [System.Uri]
+        $TargetSharingEpr,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Uri]
+        $DiscoveryEndpoint,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled
     )
 }
 function New-JournalRule
@@ -2622,12 +2278,12 @@ function New-JournalRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
-        $Scope,
+        [System.String]
+        $Name,
 
         [Parameter()]
         [System.Object]
-        $Name,
+        $Scope,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -2642,12 +2298,8 @@ function New-JournalRule
         $Recipient,
 
         [Parameter()]
-        [System.Object]
-        $Enabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $Enabled
     )
 }
 function New-Mailbox
@@ -2655,7 +2307,7 @@ function New-Mailbox
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $MailboxRegion,
 
         [Parameter()]
@@ -2663,24 +2315,28 @@ function New-Mailbox
         $ModeratedBy,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ModerationEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $EnableRoomMailboxAccount,
+
+        [Parameter()]
+        [System.String]
         $Office,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $DisplayName,
 
         [Parameter()]
-        [System.Object]
+        [System.Security.SecureString]
         $Password,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $TargetAllMDBs,
+        [System.String]
+        $Name,
 
         [Parameter()]
         [System.Object]
@@ -2695,12 +2351,12 @@ function New-Mailbox
         $Force,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $LastName,
 
         [Parameter()]
-        [System.Object]
-        $EnableRoomMailboxAccount,
+        [System.Management.Automation.SwitchParameter]
+        $TargetAllMDBs,
 
         [Parameter()]
         [System.Object]
@@ -2719,11 +2375,11 @@ function New-Mailbox
         $Equipment,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ImmutableId,
 
         [Parameter()]
-        [System.Object]
+        [System.Security.SecureString]
         $RoomMailboxPassword,
 
         [Parameter()]
@@ -2731,7 +2387,7 @@ function New-Mailbox
         $Shared,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $IsExcludedFromServingHierarchy,
 
         [Parameter()]
@@ -2751,24 +2407,28 @@ function New-Mailbox
         $Room,
 
         [Parameter()]
-        [System.Object]
-        $ResetPasswordOnNextLogon,
-
-        [Parameter()]
-        [System.Object]
+        [System.String]
         $Initials,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Object]
+        $InactiveMailbox,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $FederatedIdentity,
 
         [Parameter()]
         [System.Object]
         $ActiveSyncMailboxPolicy,
+
+        [Parameter()]
+        [System.Object]
+        $OrganizationalUnit,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -2779,15 +2439,15 @@ function New-Mailbox
         $Discovery,
 
         [Parameter()]
-        [System.Object]
-        $Alias,
+        [System.Boolean]
+        $ResetPasswordOnNextLogon,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $FirstName,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Phone,
 
         [Parameter()]
@@ -2799,24 +2459,12 @@ function New-Mailbox
         $SendModerationNotifications,
 
         [Parameter()]
-        [System.Object]
-        $InactiveMailbox,
+        [System.String]
+        $Alias,
 
         [Parameter()]
-        [System.Object]
-        $OrganizationalUnit,
-
-        [Parameter()]
-        [System.Object]
-        $Name,
-
-        [Parameter()]
-        [System.Object]
-        $RemotePowerShellEnabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $RemotePowerShellEnabled
     )
 }
 function New-MalwareFilterPolicy
@@ -2824,27 +2472,31 @@ function New-MalwareFilterPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomFromName,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $AdminDisplayName,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
+        $CustomExternalBody,
+
+        [Parameter()]
+        [System.String]
         $QuarantineTag,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $CustomNotifications,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableExternalSenderAdminNotifications,
 
         [Parameter()]
@@ -2852,15 +2504,11 @@ function New-MalwareFilterPolicy
         $InternalSenderAdminAddress,
 
         [Parameter()]
-        [System.Object]
-        $CustomExternalBody,
-
-        [Parameter()]
-        [System.Object]
+        [System.String[]]
         $FileTypes,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableInternalSenderAdminNotifications,
 
         [Parameter()]
@@ -2868,11 +2516,11 @@ function New-MalwareFilterPolicy
         $CustomFromAddress,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomExternalSubject,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ZapEnabled,
 
         [Parameter()]
@@ -2892,20 +2540,16 @@ function New-MalwareFilterPolicy
         $FileTypeAction,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomInternalSubject,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomInternalBody,
 
         [Parameter()]
-        [System.Object]
-        $EnableFileFilter,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $EnableFileFilter
     )
 }
 function New-MalwareFilterRule
@@ -2913,39 +2557,39 @@ function New-MalwareFilterRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $Priority,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SentToMemberOf,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SentTo,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Comments,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RecipientDomainIs,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfRecipientDomainIs,
 
         [Parameter()]
         [System.Object]
         $MalwareFilterPolicy,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object[]]
         $ExceptIfSentTo,
 
         [Parameter()]
@@ -2953,16 +2597,12 @@ function New-MalwareFilterRule
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSentToMemberOf,
 
         [Parameter()]
-        [System.Object]
-        $Enabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $Enabled
     )
 }
 function New-ManagementRole
@@ -2970,16 +2610,16 @@ function New-ManagementRole
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Description,
 
         [Parameter()]
-        [System.Object]
-        $Name,
+        [System.String[]]
+        $EnabledCmdlets,
 
         [Parameter()]
-        [System.Object]
-        $EnabledCmdlets,
+        [System.String]
+        $Name,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -2991,11 +2631,7 @@ function New-ManagementRole
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Force,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Force
     )
 }
 function New-ManagementRoleAssignment
@@ -3007,12 +2643,12 @@ function New-ManagementRoleAssignment
         $CustomRecipientWriteScope,
 
         [Parameter()]
-        [System.Object]
-        $Name,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
-        [System.Object]
-        $RecipientAdministrativeUnitScope,
+        [System.String]
+        $Name,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -3024,11 +2660,7 @@ function New-ManagementRoleAssignment
 
         [Parameter()]
         [System.Object]
-        $User,
-
-        [Parameter()]
-        [System.Object]
-        $ExclusiveRecipientWriteScope,
+        $SecurityGroup,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -3036,11 +2668,11 @@ function New-ManagementRoleAssignment
 
         [Parameter()]
         [System.Object]
-        $SecurityGroup,
+        $User,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Object]
+        $RecipientRelativeWriteScope,
 
         [Parameter()]
         [System.Object]
@@ -3056,15 +2688,15 @@ function New-ManagementRoleAssignment
 
         [Parameter()]
         [System.Object]
-        $RecipientOrganizationalUnitScope,
+        $RecipientAdministrativeUnitScope,
 
         [Parameter()]
         [System.Object]
-        $RecipientRelativeWriteScope,
+        $ExclusiveRecipientWriteScope,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Object]
+        $RecipientOrganizationalUnitScope
     )
 }
 function New-MessageClassification
@@ -3072,48 +2704,44 @@ function New-MessageClassification
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
-        $Locale,
-
-        [Parameter()]
-        [System.Object]
-        $DisplayName,
-
-        [Parameter()]
-        [System.Object]
-        $RecipientDescription,
-
-        [Parameter()]
-        [System.Object]
-        $Name,
-
-        [Parameter()]
-        [System.Object]
-        $PermissionMenuVisible,
-
-        [Parameter()]
-        [System.Object]
-        $ClassificationID,
-
-        [Parameter()]
-        [System.Object]
+        [System.String]
         $SenderDescription,
 
         [Parameter()]
-        [System.Object]
-        $DisplayPrecedence,
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $RecipientDescription,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Globalization.CultureInfo]
+        $Locale,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RetainClassificationEnabled,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $PermissionMenuVisible,
+
+        [Parameter()]
+        [System.Guid]
+        $ClassificationID,
+
+        [Parameter()]
+        [System.Object]
+        $DisplayPrecedence
     )
 }
 function New-MobileDeviceMailboxPolicy
@@ -3121,15 +2749,15 @@ function New-MobileDeviceMailboxPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowMicrosoftPushNotifications,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowUnsignedApplications,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowUnsignedInstallationPackages,
 
         [Parameter()]
@@ -3137,31 +2765,27 @@ function New-MobileDeviceMailboxPolicy
         $MaxPasswordFailedAttempts,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowExternalDeviceManagement,
 
         [Parameter()]
-        [System.Object]
-        $RequireDeviceEncryption,
-
-        [Parameter()]
-        [System.Object]
-        $RequireSignedSMIMEMessages,
-
-        [Parameter()]
-        [System.Object]
-        $AllowStorageCard,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowIrDA,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $RequireSignedSMIMEMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowStorageCard,
+
+        [Parameter()]
+        [System.Int32]
         $PasswordHistory,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowNonProvisionableDevices,
 
         [Parameter()]
@@ -3169,48 +2793,20 @@ function New-MobileDeviceMailboxPolicy
         $UnapprovedInROMApplicationList,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RequireEncryptedSMIMEMessages,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $RequireDeviceEncryption,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowInternetSharing,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $PasswordEnabled,
-
-        [Parameter()]
-        [System.Object]
-        $MaxEmailHTMLBodyTruncationSize,
-
-        [Parameter()]
-        [System.Object]
-        $MinPasswordComplexCharacters,
-
-        [Parameter()]
-        [System.Object]
-        $UNCAccessEnabled,
-
-        [Parameter()]
-        [System.Object]
-        $AllowCamera,
-
-        [Parameter()]
-        [System.Object]
-        $IrmEnabled,
-
-        [Parameter()]
-        [System.Object]
-        $PasswordExpiration,
-
-        [Parameter()]
-        [System.Object]
-        $AllowBrowser,
-
-        [Parameter()]
-        [System.Object]
-        $MaxEmailAgeFilter,
 
         [Parameter()]
         [System.Object]
@@ -3218,10 +2814,42 @@ function New-MobileDeviceMailboxPolicy
 
         [Parameter()]
         [System.Object]
-        $RequireManualSyncWhenRoaming,
+        $MaxEmailHTMLBodyTruncationSize,
+
+        [Parameter()]
+        [System.Int32]
+        $MinPasswordComplexCharacters,
+
+        [Parameter()]
+        [System.Boolean]
+        $UNCAccessEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCamera,
+
+        [Parameter()]
+        [System.Boolean]
+        $IrmEnabled,
 
         [Parameter()]
         [System.Object]
+        $PasswordExpiration,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBrowser,
+
+        [Parameter()]
+        [System.Object]
+        $MaxEmailAgeFilter,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireManualSyncWhenRoaming,
+
+        [Parameter()]
+        [System.Boolean]
         $AlphanumericPasswordRequired,
 
         [Parameter()]
@@ -3245,15 +2873,15 @@ function New-MobileDeviceMailboxPolicy
         $DevicePolicyRefreshInterval,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowGooglePushNotifications,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowMobileOTAUpdate,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
@@ -3261,19 +2889,19 @@ function New-MobileDeviceMailboxPolicy
         $MaxAttachmentSize,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowSimplePassword,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowConsumerEmail,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowDesktopSync,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RequireStorageCardEncryption,
 
         [Parameter()]
@@ -3281,19 +2909,19 @@ function New-MobileDeviceMailboxPolicy
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AttachmentsEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowSMIMESoftCerts,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowRemoteDesktop,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $PasswordRecoveryEnabled,
 
         [Parameter()]
@@ -3301,15 +2929,19 @@ function New-MobileDeviceMailboxPolicy
         $MaxCalendarAgeFilter,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $AllowWiFi,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowApplePushNotifications,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowPOPIMAPEmail,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $IsDefault,
 
         [Parameter()]
@@ -3318,22 +2950,18 @@ function New-MobileDeviceMailboxPolicy
 
         [Parameter()]
         [System.Object]
-        $AllowWiFi,
-
-        [Parameter()]
-        [System.Object]
         $ApprovedApplicationList,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowTextMessaging,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $WSSAccessEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $DeviceEncryptionEnabled,
 
         [Parameter()]
@@ -3341,12 +2969,8 @@ function New-MobileDeviceMailboxPolicy
         $MinPasswordLength,
 
         [Parameter()]
-        [System.Object]
-        $AllowHTMLEmail,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $AllowHTMLEmail
     )
 }
 function New-OMEConfiguration
@@ -3354,60 +2978,56 @@ function New-OMEConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
-        $IntroductionText,
-
-        [Parameter()]
-        [System.Object]
+        [System.Double]
         $ExternalMailExpiryInDays,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ReadButtonText,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $PortalText,
 
         [Parameter()]
-        [System.Object]
+        [System.Byte[]]
         $Image,
 
         [Parameter()]
-        [System.Object]
-        $OTPEnabled,
+        [System.String]
+        $IntroductionText,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $BackgroundColor,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $DisclaimerText,
 
         [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Object]
+        [System.String]
         $PrivacyStatementUrl,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $SocialIdSignIn,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $EmailText,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $OTPEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
     )
 }
 function New-OnPremisesOrganization
@@ -3419,7 +3039,7 @@ function New-OnPremisesOrganization
         $InboundConnector,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
@@ -3427,7 +3047,7 @@ function New-OnPremisesOrganization
         $OutboundConnector,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $OrganizationName,
 
         [Parameter()]
@@ -3435,11 +3055,11 @@ function New-OnPremisesOrganization
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Comment,
 
         [Parameter()]
-        [System.Object]
+        [System.Guid]
         $OrganizationGuid,
 
         [Parameter()]
@@ -3448,11 +3068,7 @@ function New-OnPremisesOrganization
 
         [Parameter()]
         [System.Object]
-        $HybridDomains,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $HybridDomains
     )
 }
 function New-OrganizationRelationship
@@ -3461,42 +3077,46 @@ function New-OrganizationRelationship
     param(
         [Parameter()]
         [System.Object]
-        $TargetApplicationUri,
-
-        [Parameter()]
-        [System.Object]
         $MailTipsAccessLevel,
 
         [Parameter()]
-        [System.Object]
+        [System.Uri]
         $TargetAutodiscoverEpr,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $Enabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
         [System.Object]
+        $FreeBusyAccessScope,
+
+        [Parameter()]
+        [System.Boolean]
         $DeliveryReportEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $OAuthApplicationId,
+
+        [Parameter()]
+        [System.Boolean]
+        $MailTipsAccessEnabled,
 
         [Parameter()]
         [System.Object]
         $OrganizationContact,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ArchiveAccessEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $FreeBusyAccessEnabled,
 
         [Parameter()]
@@ -3504,15 +3124,15 @@ function New-OrganizationRelationship
         $MailTipsAccessScope,
 
         [Parameter()]
-        [System.Object]
+        [System.Uri]
         $TargetOwaURL,
 
         [Parameter()]
-        [System.Object]
-        $MailTipsAccessEnabled,
+        [System.Uri]
+        $TargetApplicationUri,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $PhotosEnabled,
 
         [Parameter()]
@@ -3524,7 +3144,7 @@ function New-OrganizationRelationship
         $MailboxMovePublishedScopes,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $MailboxMoveEnabled,
 
         [Parameter()]
@@ -3532,7 +3152,7 @@ function New-OrganizationRelationship
         $MailboxMoveCapability,
 
         [Parameter()]
-        [System.Object]
+        [System.Uri]
         $TargetSharingEpr,
 
         [Parameter()]
@@ -3541,15 +3161,7 @@ function New-OrganizationRelationship
 
         [Parameter()]
         [System.Object]
-        $DomainNames,
-
-        [Parameter()]
-        [System.Object]
-        $FreeBusyAccessScope,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $DomainNames
     )
 }
 function New-OutboundConnector
@@ -3557,7 +3169,7 @@ function New-OutboundConnector
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RouteAllMessagesViaOnPremises,
 
         [Parameter()]
@@ -3565,39 +3177,39 @@ function New-OutboundConnector
         $RecipientDomains,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $CloudServicesMailEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $Enabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Guid]
         $LinkForModifiedConnector,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
-        $TestMode,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllAcceptedDomains,
 
         [Parameter()]
         [System.Object]
+        $TlsDomain,
+
+        [Parameter()]
+        [System.String]
         $Comment,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $IsTransportRuleScoped,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $UseMXRecord,
 
         [Parameter()]
@@ -3617,20 +3229,16 @@ function New-OutboundConnector
         $SmartHosts,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $SenderRewritingEnabled,
 
         [Parameter()]
-        [System.Object]
-        $TlsDomain,
+        [System.Boolean]
+        $TestMode,
 
         [Parameter()]
         [System.Object]
-        $ConnectorSource,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $ConnectorSource
     )
 }
 function New-OwaMailboxPolicy
@@ -3638,7 +3246,7 @@ function New-OwaMailboxPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
@@ -3647,11 +3255,7 @@ function New-OwaMailboxPolicy
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $IsDefault,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $IsDefault
     )
 }
 function New-PartnerApplication
@@ -3659,11 +3263,11 @@ function New-PartnerApplication
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ApplicationIdentifier,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
@@ -3675,20 +3279,16 @@ function New-PartnerApplication
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AcceptSecurityIdentifierInformation,
 
         [Parameter()]
-        [System.Object]
-        $AccountType,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $Enabled,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Object]
+        $AccountType
     )
 }
 function New-PolicyTipConfig
@@ -3696,20 +3296,16 @@ function New-PolicyTipConfig
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
-        $Name,
-
-        [Parameter()]
-        [System.Object]
+        [System.String]
         $Value,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.String]
+        $Name,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Confirm
     )
 }
 function New-QuarantinePolicy
@@ -3725,27 +3321,27 @@ function New-QuarantinePolicy
         $AdminNotificationLanguage,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $AdminDisplayName,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $EndUserSpamNotificationFrequencyInDays,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomDisclaimer,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $EndUserQuarantinePermissionsValue,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ESNEnabled,
 
         [Parameter()]
@@ -3753,7 +3349,7 @@ function New-QuarantinePolicy
         $EndUserQuarantinePermissions,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AdminNotificationsEnabled,
 
         [Parameter()]
@@ -3777,24 +3373,20 @@ function New-QuarantinePolicy
         $MultiLanguageSetting,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $QuarantineRetentionDays,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $OrganizationBrandingEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $AdminNotificationFrequencyInDays,
 
         [Parameter()]
         [System.Object]
-        $QuarantinePolicyType,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $QuarantinePolicyType
     )
 }
 function New-RemoteDomain
@@ -3802,7 +3394,7 @@ function New-RemoteDomain
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
@@ -3811,11 +3403,7 @@ function New-RemoteDomain
 
         [Parameter()]
         [System.Object]
-        $DomainName,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $DomainName
     )
 }
 function New-RoleAssignmentPolicy
@@ -3823,15 +3411,15 @@ function New-RoleAssignmentPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Description,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $Roles,
 
         [Parameter()]
@@ -3840,11 +3428,7 @@ function New-RoleAssignmentPolicy
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $IsDefault,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $IsDefault
     )
 }
 function New-SafeAttachmentPolicy
@@ -3853,18 +3437,22 @@ function New-SafeAttachmentPolicy
     param(
         [Parameter()]
         [System.Object]
-        $Redirect,
+        $Action,
 
         [Parameter()]
         [System.Object]
         $RecommendedPolicyType,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $Redirect,
+
+        [Parameter()]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $AdminDisplayName,
 
         [Parameter()]
@@ -3872,7 +3460,7 @@ function New-SafeAttachmentPolicy
         $MakeBuiltInProtection,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $Enable,
 
         [Parameter()]
@@ -3880,24 +3468,16 @@ function New-SafeAttachmentPolicy
         $RedirectAddress,
 
         [Parameter()]
-        [System.Object]
-        $Action,
+        [System.String]
+        $QuarantineTag,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Object]
-        $QuarantineTag,
-
-        [Parameter()]
-        [System.Object]
-        $ActionOnError,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $ActionOnError
     )
 }
 function New-SafeAttachmentRule
@@ -3905,27 +3485,27 @@ function New-SafeAttachmentRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $Priority,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SentToMemberOf,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SentTo,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Comments,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RecipientDomainIs,
 
         [Parameter()]
@@ -3933,11 +3513,11 @@ function New-SafeAttachmentRule
         $SafeAttachmentPolicy,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfRecipientDomainIs,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSentTo,
 
         [Parameter()]
@@ -3945,16 +3525,12 @@ function New-SafeAttachmentRule
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSentToMemberOf,
 
         [Parameter()]
-        [System.Object]
-        $Enabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $Enabled
     )
 }
 function New-SafeLinksPolicy
@@ -3962,19 +3538,19 @@ function New-SafeLinksPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableOrganizationBranding,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $AdminDisplayName,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $UseTranslatedNotificationText,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
@@ -3986,19 +3562,23 @@ function New-SafeLinksPolicy
         $DoNotRewriteUrls,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableSafeLinksForTeams,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $DisableUrlRewrite,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $EnableSafeLinksForOffice,
+
+        [Parameter()]
+        [System.Boolean]
         $TrackClicks,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowClickThrough,
 
         [Parameter()]
@@ -4010,28 +3590,24 @@ function New-SafeLinksPolicy
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomNotificationText,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $DeliverMessageAfterScan,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableSafeLinksForEmail,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ScanUrls,
 
         [Parameter()]
-        [System.Object]
-        $EnableForInternalSenders,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $EnableForInternalSenders
     )
 }
 function New-SafeLinksRule
@@ -4039,31 +3615,31 @@ function New-SafeLinksRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $Priority,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SentToMemberOf,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SentTo,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Comments,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RecipientDomainIs,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfRecipientDomainIs,
 
         [Parameter()]
@@ -4071,7 +3647,7 @@ function New-SafeLinksRule
         $SafeLinksPolicy,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSentTo,
 
         [Parameter()]
@@ -4079,16 +3655,12 @@ function New-SafeLinksRule
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSentToMemberOf,
 
         [Parameter()]
-        [System.Object]
-        $Enabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $Enabled
     )
 }
 function New-SharingPolicy
@@ -4096,7 +3668,7 @@ function New-SharingPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
@@ -4112,12 +3684,8 @@ function New-SharingPolicy
         $Default,
 
         [Parameter()]
-        [System.Object]
-        $Enabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $Enabled
     )
 }
 function New-TransportRule
@@ -4129,7 +3697,7 @@ function New-TransportRule
         $ActivationDate,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $AddToRecipients,
 
         [Parameter()]
@@ -4137,23 +3705,15 @@ function New-TransportRule
         $ApplyHtmlDisclaimerFallbackAction,
 
         [Parameter()]
-        [System.Object]
-        $RemoveRMSAttachmentEncryption,
-
-        [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfRecipientADAttributeContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $RecipientADAttributeMatchesPatterns,
 
         [Parameter()]
         [System.Object]
         $AttachmentSizeOver,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSenderADAttributeContainsWords,
 
         [Parameter()]
@@ -4161,27 +3721,31 @@ function New-TransportRule
         $SetSCL,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $AnyOfToHeaderMemberOf,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $Disconnect,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
+        $Priority,
+
+        [Parameter()]
+        [System.Object[]]
         $ExceptIfSentToMemberOf,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfAnyOfCcHeader,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfAttachmentMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RecipientDomainIs,
 
         [Parameter()]
@@ -4189,11 +3753,7 @@ function New-TransportRule
         $ManagerForEvaluatedUser,
 
         [Parameter()]
-        [System.Object]
-        $SmtpRejectMessageRejectStatusCode,
-
-        [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfHeaderMatchesPatterns,
 
         [Parameter()]
@@ -4202,58 +3762,62 @@ function New-TransportRule
 
         [Parameter()]
         [System.Object]
-        $ADComparisonAttribute,
+        $AdComparisonAttribute,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfAttachmentContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfHeaderContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $HeaderMatchesPatterns,
 
         [Parameter()]
         [System.Object]
-        $ExceptIfAttachmentIsPasswordProtected,
+        $AddManagerAsRecipientType,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $DeleteMessage,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $HasSenderOverride,
 
         [Parameter()]
         [System.Object]
-        $ExceptIfSubjectOrBodyMatchesPatterns,
+        $SmtpRejectMessageRejectStatusCode,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ExceptIfHasClassification,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $Quarantine,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfAnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfRecipientInSenderList,
 
         [Parameter()]
         [System.Object]
         $RecipientAddressType,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfContentCharacterSetContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $BlindCopyTo,
 
         [Parameter()]
@@ -4269,19 +3833,19 @@ function New-TransportRule
         $SenderIpRanges,
 
         [Parameter()]
-        [System.Object]
+        [System.Collections.Hashtable[]]
         $ExceptIfMessageContainsDataClassifications,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ModerateMessageByUser,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $HasNoClassification,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSenderInRecipientList,
 
         [Parameter()]
@@ -4293,15 +3857,15 @@ function New-TransportRule
         $RemoveHeader,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $HasClassification,
 
         [Parameter()]
-        [System.Object]
+        [System.Collections.Hashtable[]]
         $MessageContainsDataClassifications,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfFromMemberOf,
 
         [Parameter()]
@@ -4313,15 +3877,15 @@ function New-TransportRule
         $SentToScope,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $AnyOfToCcHeaderMemberOf,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $From,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfAnyOfRecipientAddressContainsWords,
 
         [Parameter()]
@@ -4329,11 +3893,11 @@ function New-TransportRule
         $ExceptIfWithImportance,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ContentCharacterSetContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SubjectContainsWords,
 
         [Parameter()]
@@ -4341,27 +3905,27 @@ function New-TransportRule
         $RejectMessageEnhancedStatusCode,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SenderADAttributeMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSenderADAttributeMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $IncidentReportContent,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $UseLegacyRegex,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $FromMemberOf,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $AttachmentContainsWords,
 
         [Parameter()]
@@ -4369,7 +3933,7 @@ function New-TransportRule
         $ExceptIfSCLOver,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfBetweenMemberOf1,
 
         [Parameter()]
@@ -4381,7 +3945,11 @@ function New-TransportRule
         $NotifySender,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $ExceptIfAttachmentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Object[]]
         $ExceptIfAttachmentNameMatchesPatterns,
 
         [Parameter()]
@@ -4389,15 +3957,15 @@ function New-TransportRule
         $ExceptIfSenderManagementRelationship,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $SetAuditSeverity,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $AttachmentPropertyContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfAnyOfToHeader,
 
         [Parameter()]
@@ -4405,11 +3973,15 @@ function New-TransportRule
         $ApplyRightsProtectionCustomizationTemplate,
 
         [Parameter()]
+        [System.Object]
+        $SetHeaderName,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RouteMessageOutboundRequireTls,
 
         [Parameter()]
@@ -4425,19 +3997,19 @@ function New-TransportRule
         $FromScope,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $AttachmentNameMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SentTo,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfFromAddressMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $Enabled,
 
         [Parameter()]
@@ -4449,15 +4021,15 @@ function New-TransportRule
         $ExceptIfManagerForEvaluatedUser,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RemoveOMEv2,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfFromAddressContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AttachmentHasExecutableContent,
 
         [Parameter()]
@@ -4465,15 +4037,11 @@ function New-TransportRule
         $RouteMessageOutboundConnector,
 
         [Parameter()]
-        [System.Object]
-        $SubjectMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfRecipientDomainIs,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSenderDomainIs,
 
         [Parameter()]
@@ -4481,51 +4049,43 @@ function New-TransportRule
         $SenderManagementRelationship,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfBetweenMemberOf2,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RedirectMessageTo,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ApplyOME,
 
         [Parameter()]
-        [System.Object]
-        $AddManagerAsRecipientType,
+        [System.Object[]]
+        $SenderDomainIs,
 
         [Parameter()]
-        [System.Object]
-        $ExceptIfMessageSizeOver,
-
-        [Parameter()]
-        [System.Object]
-        $RecipientInSenderList,
-
-        [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SenderADAttributeContainsWords,
 
         [Parameter()]
-        [System.Object]
-        $MessageSizeOver,
+        [System.Object[]]
+        $ExceptIfAnyOfCcHeaderMemberOf,
 
         [Parameter()]
         [System.Object]
-        $ExceptIfRecipientInSenderList,
+        $ApplyHtmlDisclaimerText,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ExceptIfAttachmentHasExecutableContent,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ExceptIfAttachmentIsUnsupported,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RemoveOME,
 
         [Parameter()]
@@ -4533,7 +4093,7 @@ function New-TransportRule
         $RejectMessageReasonText,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RecipientAddressContainsWords,
 
         [Parameter()]
@@ -4541,31 +4101,27 @@ function New-TransportRule
         $GenerateIncidentReport,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $FromAddressContainsWords,
 
         [Parameter()]
-        [System.Object]
-        $AnyOfRecipientAddressMatchesPatterns,
+        [System.Boolean]
+        $RemoveRMSAttachmentEncryption,
 
         [Parameter()]
-        [System.Object]
-        $ApplyHtmlDisclaimerText,
-
-        [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RecipientAddressMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSubjectContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfFrom,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $AnyOfToCcHeader,
 
         [Parameter()]
@@ -4573,43 +4129,43 @@ function New-TransportRule
         $ExceptIfSentToScope,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfAnyOfToCcHeaderMemberOf,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ModerateMessageByManager,
 
         [Parameter()]
         [System.Object]
-        $ADComparisonOperator,
+        $AdComparisonOperator,
 
         [Parameter()]
         [System.Object]
+        $MessageSizeOver,
+
+        [Parameter()]
+        [System.Object[]]
         $BetweenMemberOf2,
 
         [Parameter()]
-        [System.Object]
-        $SetHeaderName,
+        [System.Object[]]
+        $SubjectMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AttachmentProcessingLimitExceeded,
 
         [Parameter()]
-        [System.Object]
-        $ExceptIfAnyOfCcHeaderMemberOf,
-
-        [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSubjectMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfRecipientAddressContainsWords,
 
         [Parameter()]
@@ -4617,35 +4173,35 @@ function New-TransportRule
         $HeaderMatchesMessageHeader,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $AnyOfRecipientAddressContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $HeaderContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Comments,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SentToMemberOf,
 
         [Parameter()]
         [System.Object]
-        $ExceptIfADComparisonAttribute,
+        $ExceptIfAdComparisonAttribute,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSentTo,
 
         [Parameter()]
         [System.Object]
-        $ExceptIfADComparisonOperator,
+        $ExceptIfAdComparisonOperator,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfAnyOfToHeaderMemberOf,
 
         [Parameter()]
@@ -4653,27 +4209,27 @@ function New-TransportRule
         $Mode,
 
         [Parameter()]
-        [System.Object]
-        $ExceptIfAnyOfToCcHeader,
+        [System.Object[]]
+        $RecipientInSenderList,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SubjectOrBodyMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfAttachmentExtensionMatchesWords,
 
         [Parameter()]
-        [System.Object]
-        $SenderDomainIs,
+        [System.Object[]]
+        $ExceptIfSubjectOrBodyMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfRecipientAddressMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ExceptIfHasNoClassification,
 
         [Parameter()]
@@ -4681,15 +4237,19 @@ function New-TransportRule
         $ExceptIfSenderIpRanges,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfRecipientADAttributeMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $StopRuleProcessing,
+
+        [Parameter()]
+        [System.Object[]]
         $RecipientADAttributeContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AttachmentIsUnsupported,
 
         [Parameter()]
@@ -4697,11 +4257,11 @@ function New-TransportRule
         $ExpiryDate,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $AttachmentExtensionMatchesWords,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSubjectOrBodyContainsWords,
 
         [Parameter()]
@@ -4709,23 +4269,27 @@ function New-TransportRule
         $LogEventText,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfManagerAddresses,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SenderInRecipientList,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
+        $ExceptIfAnyOfToCcHeader,
+
+        [Parameter()]
+        [System.Object[]]
         $AttachmentMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $DlpPolicy,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ManagerAddresses,
 
         [Parameter()]
@@ -4733,43 +4297,47 @@ function New-TransportRule
         $SenderAddressLocation,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $CopyTo,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SubjectOrBodyContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ApplyClassification,
+
+        [Parameter()]
+        [System.Object[]]
+        $RecipientADAttributeMatchesPatterns,
 
         [Parameter()]
         [System.Object]
         $SetHeaderValue,
 
         [Parameter()]
-        [System.Object]
-        $Priority,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AttachmentIsPasswordProtected,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $BetweenMemberOf1,
 
         [Parameter()]
         [System.Object]
+        $ExceptIfMessageSizeOver,
+
+        [Parameter()]
+        [System.Object[]]
         $AnyOfCcHeader,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ExceptIfAttachmentProcessingLimitExceeded,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $FromAddressMatchesPatterns,
 
         [Parameter()]
@@ -4781,15 +4349,15 @@ function New-TransportRule
         $SmtpRejectMessageRejectText,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $AnyOfCcHeaderMemberOf,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $AnyOfToHeader,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ExceptIfHasSenderOverride,
 
         [Parameter()]
@@ -4809,20 +4377,16 @@ function New-TransportRule
         $MessageTypeMatches,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfAttachmentPropertyContainsWords,
 
         [Parameter()]
-        [System.Object]
-        $StopRuleProcessing,
+        [System.Object[]]
+        $AnyOfRecipientAddressMatchesPatterns,
 
         [Parameter()]
         [System.Object]
-        $ExceptIfHeaderContainsMessageHeader,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $ExceptIfHeaderContainsMessageHeader
     )
 }
 function Remove-ActiveSyncDevice
@@ -4835,11 +4399,7 @@ function Remove-ActiveSyncDevice
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-ActiveSyncDeviceAccessRule
@@ -4852,11 +4412,7 @@ function Remove-ActiveSyncDeviceAccessRule
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-AntiPhishPolicy
@@ -4865,19 +4421,15 @@ function Remove-AntiPhishPolicy
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
     )
 }
 function Remove-AntiPhishRule
@@ -4890,11 +4442,7 @@ function Remove-AntiPhishRule
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-App
@@ -4919,11 +4467,7 @@ function Remove-App
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $PrivateCatalog,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $PrivateCatalog
     )
 }
 function Remove-ApplicationAccessPolicy
@@ -4936,11 +4480,7 @@ function Remove-ApplicationAccessPolicy
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-AuditConfigurationPolicy
@@ -4949,11 +4489,7 @@ function Remove-AuditConfigurationPolicy
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Confirm
     )
 }
 function Remove-AuthenticationPolicy
@@ -4966,11 +4502,7 @@ function Remove-AuthenticationPolicy
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-AvailabilityAddressSpace
@@ -4983,11 +4515,7 @@ function Remove-AvailabilityAddressSpace
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-AvailabilityConfig
@@ -5000,11 +4528,7 @@ function Remove-AvailabilityConfig
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-ClientAccessRule
@@ -5017,11 +4541,7 @@ function Remove-ClientAccessRule
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-DataClassification
@@ -5034,11 +4554,7 @@ function Remove-DataClassification
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-DistributionGroup
@@ -5055,11 +4571,7 @@ function Remove-DistributionGroup
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $BypassSecurityGroupManagerCheck,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $BypassSecurityGroupManagerCheck
     )
 }
 function Remove-EmailAddressPolicy
@@ -5072,11 +4584,7 @@ function Remove-EmailAddressPolicy
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-HostedConnectionFilterPolicy
@@ -5089,11 +4597,7 @@ function Remove-HostedConnectionFilterPolicy
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-HostedContentFilterPolicy
@@ -5106,11 +4610,7 @@ function Remove-HostedContentFilterPolicy
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-HostedContentFilterRule
@@ -5123,11 +4623,7 @@ function Remove-HostedContentFilterRule
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-HostedOutboundSpamFilterRule
@@ -5140,11 +4636,7 @@ function Remove-HostedOutboundSpamFilterRule
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-InboundConnector
@@ -5157,11 +4649,7 @@ function Remove-InboundConnector
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-IntraOrganizationConnector
@@ -5174,11 +4662,7 @@ function Remove-IntraOrganizationConnector
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-JournalRule
@@ -5191,17 +4675,17 @@ function Remove-JournalRule
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-Mailbox
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $PublicFolder,
@@ -5224,15 +4708,7 @@ function Remove-Mailbox
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Migration,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Migration
     )
 }
 function Remove-MalwareFilterPolicy
@@ -5245,11 +4721,7 @@ function Remove-MalwareFilterPolicy
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-MalwareFilterRule
@@ -5262,11 +4734,7 @@ function Remove-MalwareFilterRule
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-ManagementRole
@@ -5275,6 +4743,10 @@ function Remove-ManagementRole
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
@@ -5283,15 +4755,7 @@ function Remove-ManagementRole
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Force,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Recurse,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Recurse
     )
 }
 function Remove-ManagementRoleAssignment
@@ -5300,19 +4764,15 @@ function Remove-ManagementRoleAssignment
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
     )
 }
 function Remove-MessageClassification
@@ -5325,11 +4785,7 @@ function Remove-MessageClassification
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-MobileDevice
@@ -5342,11 +4798,7 @@ function Remove-MobileDevice
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-MobileDeviceMailboxPolicy
@@ -5355,19 +4807,15 @@ function Remove-MobileDeviceMailboxPolicy
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
     )
 }
 function Remove-OMEConfiguration
@@ -5380,11 +4828,7 @@ function Remove-OMEConfiguration
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-OnPremisesOrganization
@@ -5397,11 +4841,7 @@ function Remove-OnPremisesOrganization
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-OrganizationRelationship
@@ -5414,11 +4854,7 @@ function Remove-OrganizationRelationship
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-OutboundConnector
@@ -5431,11 +4867,7 @@ function Remove-OutboundConnector
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-OwaMailboxPolicy
@@ -5444,19 +4876,15 @@ function Remove-OwaMailboxPolicy
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
     )
 }
 function Remove-PartnerApplication
@@ -5469,11 +4897,7 @@ function Remove-PartnerApplication
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-PolicyTipConfig
@@ -5486,11 +4910,7 @@ function Remove-PolicyTipConfig
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-QuarantinePolicy
@@ -5503,11 +4923,7 @@ function Remove-QuarantinePolicy
 
         [Parameter()]
         [System.Object]
-        $DomainController,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $DomainController
     )
 }
 function Remove-RemoteDomain
@@ -5520,11 +4936,7 @@ function Remove-RemoteDomain
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-RoleAssignmentPolicy
@@ -5537,11 +4949,7 @@ function Remove-RoleAssignmentPolicy
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-SafeAttachmentPolicy
@@ -5550,19 +4958,15 @@ function Remove-SafeAttachmentPolicy
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
     )
 }
 function Remove-SafeAttachmentRule
@@ -5575,11 +4979,7 @@ function Remove-SafeAttachmentRule
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-SafeLinksPolicy
@@ -5588,19 +4988,15 @@ function Remove-SafeLinksPolicy
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
     )
 }
 function Remove-SafeLinksRule
@@ -5613,11 +5009,7 @@ function Remove-SafeLinksRule
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-SharingPolicy
@@ -5630,11 +5022,7 @@ function Remove-SharingPolicy
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Remove-TransportRule
@@ -5647,11 +5035,7 @@ function Remove-TransportRule
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Set-AcceptedDomain
@@ -5659,24 +5043,16 @@ function Set-AcceptedDomain
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
-        $OutboundOnly,
-
-        [Parameter()]
-        [System.Object]
-        $EnableNego2Authentication,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $CanHaveCloudCache,
 
         [Parameter()]
-        [System.Object]
-        $Identity,
+        [System.Boolean]
+        $EnableNego2Authentication,
 
         [Parameter()]
-        [System.Object]
-        $DomainType,
+        [System.Boolean]
+        $OutboundOnly,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -5684,11 +5060,15 @@ function Set-AcceptedDomain
 
         [Parameter()]
         [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
         $MatchSubDomains,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Object]
+        $DomainType
     )
 }
 function Set-ActiveSyncDeviceAccessRule
@@ -5705,11 +5085,7 @@ function Set-ActiveSyncDeviceAccessRule
 
         [Parameter()]
         [System.Object]
-        $AccessLevel,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $AccessLevel
     )
 }
 function Set-AdminAuditLogConfig
@@ -5718,19 +5094,15 @@ function Set-AdminAuditLogConfig
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $UnifiedAuditLogIngestionEnabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $UnifiedAuditLogIngestionEnabled
     )
 }
 function Set-AntiPhishPolicy
@@ -5738,7 +5110,7 @@ function Set-AntiPhishPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableFirstContactSafetyTips,
 
         [Parameter()]
@@ -5746,7 +5118,7 @@ function Set-AntiPhishPolicy
         $MakeDefault,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $PhishThresholdLevel,
 
         [Parameter()]
@@ -5754,7 +5126,7 @@ function Set-AntiPhishPolicy
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableTargetedDomainsProtection,
 
         [Parameter()]
@@ -5762,11 +5134,11 @@ function Set-AntiPhishPolicy
         $Identity,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $Enabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableViaTag,
 
         [Parameter()]
@@ -5778,15 +5150,11 @@ function Set-AntiPhishPolicy
         $TargetedDomainsToProtect,
 
         [Parameter()]
-        [System.Object]
-        $TargetedUsersToProtect,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableSpoofIntelligence,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableSimilarUsersSafetyTips,
 
         [Parameter()]
@@ -5794,7 +5162,7 @@ function Set-AntiPhishPolicy
         $ExcludedDomains,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $PolicyTag,
 
         [Parameter()]
@@ -5802,16 +5170,16 @@ function Set-AntiPhishPolicy
         $TargetedDomainActionRecipients,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableMailboxIntelligence,
 
         [Parameter()]
-        [System.Object]
-        $TargetedUserQuarantineTag,
+        [System.String]
+        $TargetedDomainQuarantineTag,
 
         [Parameter()]
-        [System.Object]
-        $TargetedDomainQuarantineTag,
+        [System.Boolean]
+        $EnableSimilarDomainsSafetyTips,
 
         [Parameter()]
         [System.Object]
@@ -5822,12 +5190,8 @@ function Set-AntiPhishPolicy
         $TargetedDomainProtectionAction,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $AdminDisplayName,
-
-        [Parameter()]
-        [System.Object]
-        $AuthenticationFailAction,
 
         [Parameter()]
         [System.Object]
@@ -5838,36 +5202,44 @@ function Set-AntiPhishPolicy
         $MailboxIntelligenceProtectionActionRecipients,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $MailboxIntelligenceQuarantineTag,
 
         [Parameter()]
         [System.Object]
-        $EnableSimilarDomainsSafetyTips,
+        $TargetedUsersToProtect,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $SpoofQuarantineTag,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableUnauthenticatedSender,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
+        $TargetedUserQuarantineTag,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableOrganizationDomainsProtection,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMailboxIntelligenceProtection,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUnusualCharactersSafetyTips,
+
+        [Parameter()]
+        [System.Boolean]
         $EnableTargetedUserProtection,
 
         [Parameter()]
         [System.Object]
-        $EnableOrganizationDomainsProtection,
-
-        [Parameter()]
-        [System.Object]
-        $EnableUnusualCharactersSafetyTips,
-
-        [Parameter()]
-        [System.Object]
-        $EnableMailboxIntelligenceProtection,
+        $AuthenticationFailAction,
 
         [Parameter()]
         [System.Object]
@@ -5875,11 +5247,7 @@ function Set-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
-        $ExcludedSenders,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $ExcludedSenders
     )
 }
 function Set-AntiPhishRule
@@ -5887,15 +5255,15 @@ function Set-AntiPhishRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $Priority,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SentToMemberOf,
 
         [Parameter()]
@@ -5903,15 +5271,15 @@ function Set-AntiPhishRule
         $AntiPhishPolicy,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SentTo,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Comments,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RecipientDomainIs,
 
         [Parameter()]
@@ -5919,11 +5287,11 @@ function Set-AntiPhishRule
         $Identity,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfRecipientDomainIs,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSentTo,
 
         [Parameter()]
@@ -5931,12 +5299,8 @@ function Set-AntiPhishRule
         $Confirm,
 
         [Parameter()]
-        [System.Object]
-        $ExceptIfSentToMemberOf,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Object[]]
+        $ExceptIfSentToMemberOf
     )
 }
 function Set-App
@@ -5949,11 +5313,11 @@ function Set-App
 
         [Parameter()]
         [System.Object]
-        $DefaultStateForUser,
+        $UserList,
 
         [Parameter()]
         [System.Object]
-        $UserList,
+        $DefaultStateForUser,
 
         [Parameter()]
         [System.Object]
@@ -5964,8 +5328,8 @@ function Set-App
         $OrganizationApp,
 
         [Parameter()]
-        [System.Object]
-        $ProvidedTo,
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -5973,11 +5337,7 @@ function Set-App
 
         [Parameter()]
         [System.Object]
-        $Enabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $ProvidedTo
     )
 }
 function Set-ApplicationAccessPolicy
@@ -5985,7 +5345,7 @@ function Set-ApplicationAccessPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Description,
 
         [Parameter()]
@@ -5994,11 +5354,7 @@ function Set-ApplicationAccessPolicy
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Set-AtpPolicyForO365
@@ -6006,11 +5362,15 @@ function Set-AtpPolicyForO365
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.Boolean]
+        $AllowSafeDocsOpen,
+
+        [Parameter()]
         [System.Object]
         $BlockUrls,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableATPForSPOTeamsODB,
 
         [Parameter()]
@@ -6018,30 +5378,18 @@ function Set-AtpPolicyForO365
         $Identity,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableSafeDocs,
 
         [Parameter()]
-        [System.Object]
-        $AllowSafeDocsOpen,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Confirm
     )
 }
 function Set-AuthenticationPolicy
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AllowBasicAuthRpc,
-
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $AllowBasicAuthPop,
@@ -6068,7 +5416,7 @@ function Set-AuthenticationPolicy
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AllowBasicAuthActiveSync,
+        $AllowBasicAuthRpc,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -6092,11 +5440,11 @@ function Set-AuthenticationPolicy
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AllowBasicAuthWebServices,
+        $AllowBasicAuthActiveSync,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $AllowBasicAuthWebServices
     )
 }
 function Set-AvailabilityConfig
@@ -6109,11 +5457,7 @@ function Set-AvailabilityConfig
 
         [Parameter()]
         [System.Object]
-        $OrgWideAccount,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $OrgWideAccount
     )
 }
 function Set-CASMailbox
@@ -6121,19 +5465,19 @@ function Set-CASMailbox
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $IsOptimizedForAccessibility,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ImapEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ImapSuppressReadReceipt,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ActiveSyncSuppressReadReceipt,
 
         [Parameter()]
@@ -6153,7 +5497,7 @@ function Set-CASMailbox
         $OwaMailboxPolicy,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $PopUseProtocolDefaults,
 
         [Parameter()]
@@ -6165,27 +5509,23 @@ function Set-CASMailbox
         $SmtpClientAuthenticationDisabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $PopForceICalForCalendarRetrievalOption,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ImapForceICalForCalendarRetrievalOption,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ShowGalAsDefaultView,
-
-        [Parameter()]
-        [System.Object]
-        $OutlookMobileEnabled,
 
         [Parameter()]
         [System.Object]
         $ActiveSyncBlockedDeviceIDs,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $MAPIEnabled,
 
         [Parameter()]
@@ -6193,7 +5533,7 @@ function Set-CASMailbox
         $EwsAllowOutlook,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $PopEnabled,
 
         [Parameter()]
@@ -6203,6 +5543,10 @@ function Set-CASMailbox
         [Parameter()]
         [System.Object]
         $EwsEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $OutlookMobileEnabled,
 
         [Parameter()]
         [System.Object]
@@ -6217,16 +5561,12 @@ function Set-CASMailbox
         $OneWinNativeOutlookEnabled,
 
         [Parameter()]
-        [System.Object]
-        $PublicFolderClientAccess,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $OWAEnabled,
 
         [Parameter()]
-        [System.Object]
-        $ActiveSyncEnabled,
+        [System.Boolean]
+        $PublicFolderClientAccess,
 
         [Parameter()]
         [System.Object]
@@ -6237,15 +5577,15 @@ function Set-CASMailbox
         $UniversalOutlookEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ImapUseProtocolDefaults,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ActiveSyncDebugLogging,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $OWAforDevicesEnabled,
 
         [Parameter()]
@@ -6253,11 +5593,15 @@ function Set-CASMailbox
         $ImapMessagesRetrievalMimeFormat,
 
         [Parameter()]
+        [System.Boolean]
+        $ActiveSyncEnabled,
+
+        [Parameter()]
         [System.Object]
         $MacOutlookEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $PopSuppressReadReceipt,
 
         [Parameter()]
@@ -6266,11 +5610,7 @@ function Set-CASMailbox
 
         [Parameter()]
         [System.Object]
-        $PopMessagesRetrievalMimeFormat,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $PopMessagesRetrievalMimeFormat
     )
 }
 function set-CASMailboxPlan
@@ -6278,12 +5618,8 @@ function set-CASMailboxPlan
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ImapEnabled,
-
-        [Parameter()]
-        [System.Object]
-        $OwaMailboxPolicy,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -6295,15 +5631,15 @@ function set-CASMailboxPlan
 
         [Parameter()]
         [System.Object]
+        $OwaMailboxPolicy,
+
+        [Parameter()]
+        [System.Boolean]
         $PopEnabled,
 
         [Parameter()]
-        [System.Object]
-        $ActiveSyncEnabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $ActiveSyncEnabled
     )
 }
 function Set-ClientAccessRule
@@ -6327,7 +5663,7 @@ function Set-ClientAccessRule
         $AnyOfClientIPAddressesOrRanges,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $Enabled,
 
         [Parameter()]
@@ -6335,11 +5671,11 @@ function Set-ClientAccessRule
         $ExceptAnyOfClientIPAddressesOrRanges,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $UserRecipientFilter,
 
         [Parameter()]
@@ -6347,7 +5683,7 @@ function Set-ClientAccessRule
         $ExceptAnyOfProtocols,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $Priority,
 
         [Parameter()]
@@ -6372,11 +5708,7 @@ function Set-ClientAccessRule
 
         [Parameter()]
         [System.Object]
-        $Scope,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Scope
     )
 }
 function Set-DataClassification
@@ -6384,15 +5716,15 @@ function Set-DataClassification
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Description,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.Globalization.CultureInfo]
         $Locale,
 
         [Parameter()]
@@ -6400,20 +5732,16 @@ function Set-DataClassification
         $Confirm,
 
         [Parameter()]
-        [System.Object]
-        $Identity,
+        [System.Management.Automation.SwitchParameter]
+        $IsDefault,
 
         [Parameter()]
         [System.Object]
         $Fingerprints,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsDefault,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Object]
+        $Identity
     )
 }
 function Set-DataEncryptionPolicy
@@ -6421,11 +5749,7 @@ function Set-DataEncryptionPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
-        $PermanentDataPurgeContact,
-
-        [Parameter()]
-        [System.Object]
+        [System.String]
         $Description,
 
         [Parameter()]
@@ -6433,8 +5757,12 @@ function Set-DataEncryptionPolicy
         $Force,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -6449,24 +5777,20 @@ function Set-DataEncryptionPolicy
         $Identity,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Refresh,
-
-        [Parameter()]
-        [System.Object]
+        [System.String]
         $PermanentDataPurgeReason,
 
         [Parameter()]
-        [System.Object]
-        $DomainController,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $Enabled,
 
         [Parameter()]
+        [System.String]
+        $PermanentDataPurgeContact,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Refresh
     )
 }
 function Set-DistributionGroup
@@ -6482,31 +5806,39 @@ function Set-DistributionGroup
         $RejectMessagesFromDLMembers,
 
         [Parameter()]
-        [System.Object]
-        $ModerationEnabled,
+        [System.Management.Automation.SwitchParameter]
+        $RoomList,
 
         [Parameter()]
         [System.Object]
         $AcceptMessagesOnlyFromSendersOrMembers,
 
         [Parameter()]
+        [System.String]
+        $CustomAttribute10,
+
+        [Parameter()]
         [System.Object]
         $ExtensionCustomAttribute5,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute8,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute5,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $BccBlocked,
 
         [Parameter()]
         [System.Object]
+        $AcceptMessagesOnlyFromDLMembers,
+
+        [Parameter()]
+        [System.String]
         $SimpleDisplayName,
 
         [Parameter()]
@@ -6514,11 +5846,11 @@ function Set-DistributionGroup
         $IgnoreNamingPolicy,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ReportToManagerEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $MailTip,
 
         [Parameter()]
@@ -6538,8 +5870,12 @@ function Set-DistributionGroup
         $AcceptMessagesOnlyFrom,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $BypassNestedModerationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ModerationEnabled,
 
         [Parameter()]
         [System.Object]
@@ -6550,7 +5886,7 @@ function Set-DistributionGroup
         $ExtensionCustomAttribute4,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute15,
 
         [Parameter()]
@@ -6562,19 +5898,15 @@ function Set-DistributionGroup
         $WindowsEmailAddress,
 
         [Parameter()]
-        [System.Object]
-        $RejectMessagesFrom,
-
-        [Parameter()]
-        [System.Object]
+        [System.String]
         $Alias,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $DisplayName,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ReportToOriginatorEnabled,
 
         [Parameter()]
@@ -6583,10 +5915,10 @@ function Set-DistributionGroup
 
         [Parameter()]
         [System.Object]
-        $AcceptMessagesOnlyFromDLMembers,
+        $RejectMessagesFrom,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute1,
 
         [Parameter()]
@@ -6606,23 +5938,23 @@ function Set-DistributionGroup
         $ExtensionCustomAttribute1,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute14,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RequireSenderAuthenticationEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute9,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute6,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $SendOofMessageToOriginatorEnabled,
 
         [Parameter()]
@@ -6631,18 +5963,14 @@ function Set-DistributionGroup
 
         [Parameter()]
         [System.Object]
-        $CustomAttribute7,
-
-        [Parameter()]
-        [System.Object]
         $ExtensionCustomAttribute2,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute13,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute2,
 
         [Parameter()]
@@ -6666,19 +5994,23 @@ function Set-DistributionGroup
         $MemberJoinRestriction,
 
         [Parameter()]
+        [System.Boolean]
+        $HiddenFromAddressListsEnabled,
+
+        [Parameter()]
         [System.Object]
         $MailTipTranslations,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
+        $CustomAttribute7,
+
+        [Parameter()]
+        [System.String]
         $CustomAttribute4,
 
         [Parameter()]
-        [System.Object]
-        $CustomAttribute10,
-
-        [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
@@ -6686,32 +6018,20 @@ function Set-DistributionGroup
         $ExtensionCustomAttribute3,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $RoomList,
-
-        [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute12,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute3,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute11,
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Object]
-        $HiddenFromAddressListsEnabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Set-DkimSigningConfig
@@ -6719,12 +6039,16 @@ function Set-DkimSigningConfig
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $AdminDisplayName,
 
         [Parameter()]
         [System.Object]
         $BodyCanonicalization,
+
+        [Parameter()]
+        [System.Object]
+        $HeaderCanonicalization,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -6739,16 +6063,8 @@ function Set-DkimSigningConfig
         $Identity,
 
         [Parameter()]
-        [System.Object]
-        $HeaderCanonicalization,
-
-        [Parameter()]
-        [System.Object]
-        $Enabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $Enabled
     )
 }
 function Set-EmailAddressPolicy
@@ -6760,7 +6076,7 @@ function Set-EmailAddressPolicy
         $Priority,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
@@ -6776,16 +6092,12 @@ function Set-EmailAddressPolicy
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $EnabledPrimarySMTPAddressTemplate,
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Set-HostedConnectionFilterPolicy
@@ -6793,15 +6105,15 @@ function Set-HostedConnectionFilterPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ConfigurationXmlRaw,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $AdminDisplayName,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableSafeList,
 
         [Parameter()]
@@ -6822,11 +6134,7 @@ function Set-HostedConnectionFilterPolicy
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $MakeDefault,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $MakeDefault
     )
 }
 function Set-HostedContentFilterPolicy
@@ -6838,31 +6146,27 @@ function Set-HostedContentFilterPolicy
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $InlineSafetyTipsEnabled,
 
         [Parameter()]
         [System.Object]
-        $RegionBlockList,
+        $BulkSpamAction,
 
         [Parameter()]
-        [System.Object]
-        $MarkAsSpamFromAddressAuthFail,
-
-        [Parameter()]
-        [System.Object]
+        [System.String]
         $HighConfidencePhishQuarantineTag,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $EndUserSpamNotificationFrequency,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $EndUserSpamNotificationLimit,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $BulkThreshold,
 
         [Parameter()]
@@ -6871,10 +6175,14 @@ function Set-HostedContentFilterPolicy
 
         [Parameter()]
         [System.Object]
+        $TestModeBccToRecipients,
+
+        [Parameter()]
+        [System.String]
         $PhishQuarantineTag,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $AddXHeaderValue,
 
         [Parameter()]
@@ -6890,7 +6198,7 @@ function Set-HostedContentFilterPolicy
         $IncreaseScoreWithImageLinks,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableLanguageBlockList,
 
         [Parameter()]
@@ -6898,7 +6206,7 @@ function Set-HostedContentFilterPolicy
         $PhishSpamAction,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $EndUserSpamNotificationCustomFromName,
 
         [Parameter()]
@@ -6906,16 +6214,20 @@ function Set-HostedContentFilterPolicy
         $MarkAsSpamSensitiveWordList,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $SpamQuarantineTag,
 
         [Parameter()]
         [System.Object]
-        $SpamZapEnabled,
+        $MarkAsSpamNdrBackscatter,
 
         [Parameter()]
         [System.Object]
         $BlockedSenders,
+
+        [Parameter()]
+        [System.Object]
+        $LanguageBlockList,
 
         [Parameter()]
         [System.Object]
@@ -6926,6 +6238,10 @@ function Set-HostedContentFilterPolicy
         $AllowedSenderDomains,
 
         [Parameter()]
+        [System.Boolean]
+        $PhishZapEnabled,
+
+        [Parameter()]
         [System.Object]
         $IncreaseScoreWithBizOrInfoUrls,
 
@@ -6934,27 +6250,23 @@ function Set-HostedContentFilterPolicy
         $MarkAsSpamWebBugsInHtml,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $AdminDisplayName,
 
         [Parameter()]
         [System.Object]
-        $MarkAsSpamJavaScriptInHtml,
+        $RegionBlockList,
+
+        [Parameter()]
+        [System.Object]
+        $MarkAsSpamFromAddressAuthFail,
 
         [Parameter()]
         [System.Object]
         $MarkAsSpamEmptyMessages,
 
         [Parameter()]
-        [System.Object]
-        $LanguageBlockList,
-
-        [Parameter()]
-        [System.Object]
-        $MarkAsSpamNdrBackscatter,
-
-        [Parameter()]
-        [System.Object]
+        [System.String]
         $BulkQuarantineTag,
 
         [Parameter()]
@@ -6967,10 +6279,6 @@ function Set-HostedContentFilterPolicy
 
         [Parameter()]
         [System.Object]
-        $BulkSpamAction,
-
-        [Parameter()]
-        [System.Object]
         $EndUserSpamNotificationLanguage,
 
         [Parameter()]
@@ -6978,7 +6286,7 @@ function Set-HostedContentFilterPolicy
         $IncreaseScoreWithRedirectToOtherPort,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $QuarantineRetentionPeriod,
 
         [Parameter()]
@@ -6990,15 +6298,19 @@ function Set-HostedContentFilterPolicy
         $RedirectToRecipients,
 
         [Parameter()]
+        [System.Boolean]
+        $SpamZapEnabled,
+
+        [Parameter()]
         [System.Object]
         $TestModeAction,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableRegionBlockList,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $EndUserSpamNotificationCustomSubject,
 
         [Parameter()]
@@ -7010,7 +6322,7 @@ function Set-HostedContentFilterPolicy
         $EndUserSpamNotificationCustomFromAddress,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $DownloadLink,
 
         [Parameter()]
@@ -7018,7 +6330,7 @@ function Set-HostedContentFilterPolicy
         $SpamAction,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ModifySubjectValue,
 
         [Parameter()]
@@ -7031,7 +6343,7 @@ function Set-HostedContentFilterPolicy
 
         [Parameter()]
         [System.Object]
-        $TestModeBccToRecipients,
+        $MarkAsSpamJavaScriptInHtml,
 
         [Parameter()]
         [System.Object]
@@ -7046,20 +6358,12 @@ function Set-HostedContentFilterPolicy
         $Identity,
 
         [Parameter()]
-        [System.Object]
-        $PhishZapEnabled,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableEndUserSpamNotifications,
 
         [Parameter()]
-        [System.Object]
-        $HighConfidenceSpamQuarantineTag,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.String]
+        $HighConfidenceSpamQuarantineTag
     )
 }
 function Set-HostedContentFilterRule
@@ -7067,15 +6371,15 @@ function Set-HostedContentFilterRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $Priority,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SentToMemberOf,
 
         [Parameter()]
@@ -7083,15 +6387,15 @@ function Set-HostedContentFilterRule
         $HostedContentFilterPolicy,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SentTo,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Comments,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RecipientDomainIs,
 
         [Parameter()]
@@ -7099,11 +6403,11 @@ function Set-HostedContentFilterRule
         $Identity,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfRecipientDomainIs,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSentTo,
 
         [Parameter()]
@@ -7111,12 +6415,8 @@ function Set-HostedContentFilterRule
         $Confirm,
 
         [Parameter()]
-        [System.Object]
-        $ExceptIfSentToMemberOf,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Object[]]
+        $ExceptIfSentToMemberOf
     )
 }
 function Set-HostedOutboundSpamFilterPolicy
@@ -7124,7 +6424,7 @@ function Set-HostedOutboundSpamFilterPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $AdminDisplayName,
 
         [Parameter()]
@@ -7136,11 +6436,7 @@ function Set-HostedOutboundSpamFilterPolicy
         $NotifyOutboundSpamRecipients,
 
         [Parameter()]
-        [System.Object]
-        $RecipientLimitInternalPerHour,
-
-        [Parameter()]
-        [System.Object]
+        [System.UInt32]
         $RecipientLimitPerDay,
 
         [Parameter()]
@@ -7156,24 +6452,24 @@ function Set-HostedOutboundSpamFilterPolicy
         $Identity,
 
         [Parameter()]
+        [System.UInt32]
+        $RecipientLimitExternalPerHour,
+
+        [Parameter()]
         [System.Object]
         $AutoForwardingMode,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $NotifyOutboundSpam,
 
         [Parameter()]
-        [System.Object]
-        $BccSuspiciousOutboundMail,
+        [System.UInt32]
+        $RecipientLimitInternalPerHour,
 
         [Parameter()]
-        [System.Object]
-        $RecipientLimitExternalPerHour,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $BccSuspiciousOutboundMail
     )
 }
 function Set-HostedOutboundSpamFilterRule
@@ -7181,27 +6477,31 @@ function Set-HostedOutboundSpamFilterRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $Priority,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
+        $ExceptIfFromMemberOf,
+
+        [Parameter()]
+        [System.Object[]]
         $ExceptIfFrom,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSenderDomainIs,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Comments,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $FromMemberOf,
 
         [Parameter()]
@@ -7209,7 +6509,7 @@ function Set-HostedOutboundSpamFilterRule
         $Identity,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SenderDomainIs,
 
         [Parameter()]
@@ -7217,20 +6517,12 @@ function Set-HostedOutboundSpamFilterRule
         $HostedOutboundSpamFilterPolicy,
 
         [Parameter()]
-        [System.Object]
-        $ExceptIfFromMemberOf,
-
-        [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $From,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Confirm
     )
 }
 function Set-InboundConnector
@@ -7238,11 +6530,11 @@ function Set-InboundConnector
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RestrictDomainsToIPAddresses,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $CloudServicesMailEnabled,
 
         [Parameter()]
@@ -7250,16 +6542,20 @@ function Set-InboundConnector
         $Identity,
 
         [Parameter()]
-        [System.Object]
-        $EFTestMode,
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
-        [System.Object]
-        $Enabled,
+        [System.String]
+        $Name,
 
         [Parameter()]
         [System.Object]
         $EFSkipMailGateway,
+
+        [Parameter()]
+        [System.Boolean]
+        $EFTestMode,
 
         [Parameter()]
         [System.Object]
@@ -7278,11 +6574,11 @@ function Set-InboundConnector
         $AssociatedAcceptedDomains,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Comment,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RequireTls,
 
         [Parameter()]
@@ -7294,7 +6590,7 @@ function Set-InboundConnector
         $SenderIPAddresses,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EFSkipLastIP,
 
         [Parameter()]
@@ -7310,7 +6606,7 @@ function Set-InboundConnector
         $ConnectorType,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RestrictDomainsToCertificate,
 
         [Parameter()]
@@ -7318,20 +6614,12 @@ function Set-InboundConnector
         $EFSkipIPs,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $TreatMessagesAsInternal,
 
         [Parameter()]
         [System.Object]
-        $ConnectorSource,
-
-        [Parameter()]
-        [System.Object]
-        $Name,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $ConnectorSource
     )
 }
 function Set-IntraOrganizationConnector
@@ -7351,20 +6639,16 @@ function Set-IntraOrganizationConnector
         $Identity,
 
         [Parameter()]
-        [System.Object]
+        [System.Uri]
         $DiscoveryEndpoint,
 
         [Parameter()]
-        [System.Object]
+        [System.Uri]
         $TargetSharingEpr,
 
         [Parameter()]
-        [System.Object]
-        $Enabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $Enabled
     )
 }
 function Set-IRMConfiguration
@@ -7380,63 +6664,63 @@ function Set-IRMConfiguration
         $TransportDecryptionSetting,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
+        [System.Uri]
         $RMSOnlineKeySharingLocation,
-
-        [Parameter()]
-        [System.Object]
-        $SimplifiedClientAccessDoNotForwardDisabled,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AzureRMSLicensingEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnablePortalTrackingLogs,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $DecryptAttachmentForEncryptOnly,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RejectIfRecipientHasNoRights,
 
         [Parameter()]
-        [System.Object]
-        $InternalLicensingEnabled,
-
-        [Parameter()]
-        [System.Object]
-        $EDiscoverySuperUserEnabled,
-
-        [Parameter()]
-        [System.Object]
-        $JournalReportDecryptionEnabled,
-
-        [Parameter()]
-        [System.Object]
-        $EnablePdfEncryption,
-
-        [Parameter()]
-        [System.Object]
-        $AutomaticServiceUpdateEnabled,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $SimplifiedClientAccessEncryptOnlyDisabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $InternalLicensingEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EDiscoverySuperUserEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $JournalReportDecryptionEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnablePdfEncryption,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $AutomaticServiceUpdateEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SimplifiedClientAccessDoNotForwardDisabled,
+
+        [Parameter()]
+        [System.Boolean]
         $SearchEnabled,
 
         [Parameter()]
@@ -7444,12 +6728,8 @@ function Set-IRMConfiguration
         $LicensingLocation,
 
         [Parameter()]
-        [System.Object]
-        $SimplifiedClientAccessEnabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $SimplifiedClientAccessEnabled
     )
 }
 function Set-JournalRule
@@ -7457,12 +6737,12 @@ function Set-JournalRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
-        $Scope,
+        [System.String]
+        $Name,
 
         [Parameter()]
         [System.Object]
-        $Name,
+        $Scope,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -7478,11 +6758,7 @@ function Set-JournalRule
 
         [Parameter()]
         [System.Object]
-        $Recipient,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Recipient
     )
 }
 function Set-Mailbox
@@ -7499,34 +6775,30 @@ function Set-Mailbox
 
         [Parameter()]
         [System.Object]
-        $AuditOwner,
+        $ResourceCapacity,
 
         [Parameter()]
         [System.Object]
         $AcceptMessagesOnlyFromSendersOrMembers,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $GroupMailbox,
+        [System.Object]
+        $Type,
 
         [Parameter()]
         [System.Object]
         $UserCertificate,
 
         [Parameter()]
-        [System.Object]
-        $CustomAttribute12,
-
-        [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute10,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $DeliverToMailboxAndForward,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $RetentionUrl,
 
         [Parameter()]
@@ -7538,11 +6810,11 @@ function Set-Mailbox
         $RecalculateInactiveMailbox,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute8,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $PitrEnabled,
 
         [Parameter()]
@@ -7550,40 +6822,44 @@ function Set-Mailbox
         $ProhibitSendReceiveQuota,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute5,
 
         [Parameter()]
-        [System.Object]
+        [System.Security.SecureString]
         $RoomMailboxPassword,
 
         [Parameter()]
         [System.Object]
-        $SimpleDisplayName,
+        $UseDatabaseQuotaDefaults,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ElcProcessingDisabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String[]]
         $ExcludeFromOrgHolds,
 
         [Parameter()]
-        [System.Object]
-        $Type,
+        [System.String]
+        $MailboxRegion,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $MailTip,
 
         [Parameter()]
-        [System.Object]
-        $IssueWarningQuota,
+        [System.Management.Automation.SwitchParameter]
+        $GroupMailbox,
 
         [Parameter()]
         [System.Object]
         $ModeratedBy,
+
+        [Parameter()]
+        [System.String]
+        $LitigationHoldOwner,
 
         [Parameter()]
         [System.Object]
@@ -7596,10 +6872,6 @@ function Set-Mailbox
         [Parameter()]
         [System.Object]
         $AuditLogAgeLimit,
-
-        [Parameter()]
-        [System.Object]
-        $SingleItemRecoveryEnabled,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -7618,15 +6890,15 @@ function Set-Mailbox
         $LitigationHoldDuration,
 
         [Parameter()]
-        [System.Object]
-        $ModerationEnabled,
+        [System.Management.Automation.SwitchParameter]
+        $ProvisionedForOfficeGraph,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $InactiveMailbox,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $RetentionComment,
 
         [Parameter()]
@@ -7634,55 +6906,51 @@ function Set-Mailbox
         $MaxReceiveSize,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $MessageCopyForSendOnBehalfEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute15,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $LitigationHoldEnabled,
 
         [Parameter()]
-        [System.Object]
-        $PitrCopyIntervalInSeconds,
+        [System.Management.Automation.SwitchParameter]
+        $UpdateEnforcedTimestamp,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ImmutableId,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PublicFolder,
+        [System.Object]
+        $WindowsEmailAddress,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $UseDatabaseRetentionDefaults,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $SchedulerAssistant,
 
         [Parameter()]
-        [System.Object]
+        [System.String[]]
         $RemoveOrphanedHolds,
-
-        [Parameter()]
-        [System.Object]
-        $RejectMessagesFrom,
 
         [Parameter()]
         [System.Object]
         $RulesQuota,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Alias,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $EnforcedTimestamps,
 
         [Parameter()]
@@ -7690,7 +6958,7 @@ function Set-Mailbox
         $RejectMessagesFromSendersOrMembers,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $DisplayName,
 
         [Parameter()]
@@ -7698,20 +6966,12 @@ function Set-Mailbox
         $ResourceCustom,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $MessageCopyForSMTPClientSubmissionEnabled,
 
         [Parameter()]
         [System.Object]
-        $DefaultPublicFolderMailbox,
-
-        [Parameter()]
-        [System.Object]
         $BypassModerationFromSendersOrMembers,
-
-        [Parameter()]
-        [System.Object]
-        $ProhibitSendQuota,
 
         [Parameter()]
         [System.Object]
@@ -7722,51 +6982,43 @@ function Set-Mailbox
         $AcceptMessagesOnlyFromDLMembers,
 
         [Parameter()]
-        [System.Object]
-        $WindowsEmailAddress,
-
-        [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute1,
 
         [Parameter()]
-        [System.Object]
+        [System.Int16]
+        $PitrCopyIntervalInSeconds,
+
+        [Parameter()]
+        [System.Boolean]
         $CalendarRepairDisabled,
 
         [Parameter()]
-        [System.Object]
-        $StsRefreshTokensValidFrom,
-
-        [Parameter()]
-        [System.Object]
-        $UseDatabaseQuotaDefaults,
-
-        [Parameter()]
-        [System.Object]
-        $AddressBookPolicy,
-
-        [Parameter()]
-        [System.Object]
-        $MailboxRegion,
+        [System.Management.Automation.SwitchParameter]
+        $RemoveMailboxProvisioningConstraint,
 
         [Parameter()]
         [System.Object]
         $NonCompliantDevices,
 
         [Parameter()]
-        [System.Object]
-        $ResourceCapacity,
+        [System.Boolean]
+        $ModerationEnabled,
 
         [Parameter()]
         [System.Object]
-        $LitigationHoldOwner,
+        $AuditOwner,
 
         [Parameter()]
         [System.Object]
-        $ExtensionCustomAttribute1,
+        $RejectMessagesFrom,
 
         [Parameter()]
         [System.Object]
+        $ProhibitSendQuota,
+
+        [Parameter()]
+        [System.Boolean]
         $AccountDisabled,
 
         [Parameter()]
@@ -7778,23 +7030,27 @@ function Set-Mailbox
         $AuditDelegate,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute14,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ApplyMandatoryProperties,
+        [System.Boolean]
+        $SingleItemRecoveryEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RequireSenderAuthenticationEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute9,
 
         [Parameter()]
         [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
         $CustomAttribute6,
 
         [Parameter()]
@@ -7814,12 +7070,8 @@ function Set-Mailbox
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableRoomMailboxAccount,
-
-        [Parameter()]
-        [System.Object]
-        $RetentionPolicy,
 
         [Parameter()]
         [System.Object]
@@ -7830,8 +7082,8 @@ function Set-Mailbox
         $MicrosoftOnlineServicesID,
 
         [Parameter()]
-        [System.Object]
-        $MessageTrackingReadStatusEnabled,
+        [System.Management.Automation.SwitchParameter]
+        $RemoveDelayReleaseHoldApplied,
 
         [Parameter()]
         [System.Object]
@@ -7843,18 +7095,22 @@ function Set-Mailbox
 
         [Parameter()]
         [System.Object]
+        $DefaultPublicFolderMailbox,
+
+        [Parameter()]
+        [System.Boolean]
         $RetentionHoldEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute13,
 
         [Parameter()]
         [System.Object]
-        $Identity,
+        $RetentionPolicy,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute2,
 
         [Parameter()]
@@ -7866,8 +7122,12 @@ function Set-Mailbox
         $ExternalOofOptions,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $RemoveMailboxProvisioningConstraint,
+        [System.Object]
+        $IssueWarningQuota,
+
+        [Parameter()]
+        [System.Object]
+        $StartDateForRetentionHold,
 
         [Parameter()]
         [System.Object]
@@ -7882,11 +7142,11 @@ function Set-Mailbox
         $RoleAssignmentPolicy,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $IsExcludedFromServingHierarchy,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Office,
 
         [Parameter()]
@@ -7894,23 +7154,39 @@ function Set-Mailbox
         $MaxSendSize,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ApplyMandatoryProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ExcludeFromAllOrgHolds,
+
+        [Parameter()]
         [System.Object]
         $RecipientLimits,
 
         [Parameter()]
         [System.Object]
+        $AddressBookPolicy,
+
+        [Parameter()]
+        [System.Boolean]
         $MessageCopyForSentAsEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $HiddenFromAddressListsEnabled,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $ProvisionedForOfficeGraph,
+        $PublicFolder,
 
         [Parameter()]
         [System.Object]
         $MailTipTranslations,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute7,
 
         [Parameter()]
@@ -7918,15 +7194,19 @@ function Set-Mailbox
         $SharingPolicy,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute4,
 
         [Parameter()]
         [System.Object]
+        $ExtensionCustomAttribute1,
+
+        [Parameter()]
+        [System.Boolean]
         $CalendarVersionStoreDisabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $SecondaryAddress,
 
         [Parameter()]
@@ -7934,15 +7214,11 @@ function Set-Mailbox
         $ArchiveName,
 
         [Parameter()]
-        [System.Object]
-        $StartDateForRetentionHold,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AuditEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Security.SecureString]
         $Password,
 
         [Parameter()]
@@ -7951,6 +7227,10 @@ function Set-Mailbox
 
         [Parameter()]
         [System.Object]
+        $StsRefreshTokensValidFrom,
+
+        [Parameter()]
+        [System.String]
         $Name,
 
         [Parameter()]
@@ -7962,36 +7242,28 @@ function Set-Mailbox
         $ForwardingAddress,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ExcludeFromAllOrgHolds,
+        [System.String]
+        $CustomAttribute12,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute3,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomAttribute11,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $RemoveDelayReleaseHoldApplied,
+        [System.String]
+        $SimpleDisplayName,
 
         [Parameter()]
         [System.Object]
         $ForwardingSmtpAddress,
 
         [Parameter()]
-        [System.Object]
-        $HiddenFromAddressListsEnabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $UpdateEnforcedTimestamp,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $MessageTrackingReadStatusEnabled
     )
 }
 function Set-MailboxPlan
@@ -8000,15 +7272,15 @@ function Set-MailboxPlan
     param(
         [Parameter()]
         [System.Object]
+        $IssueWarningQuota,
+
+        [Parameter()]
+        [System.Object]
         $RoleAssignmentPolicy,
 
         [Parameter()]
         [System.Object]
-        $IssueWarningQuota,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force,
+        $RetentionPolicy,
 
         [Parameter()]
         [System.Object]
@@ -8016,7 +7288,7 @@ function Set-MailboxPlan
 
         [Parameter()]
         [System.Object]
-        $RetentionPolicy,
+        $ProhibitSendReceiveQuota,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -8025,6 +7297,10 @@ function Set-MailboxPlan
         [Parameter()]
         [System.Object]
         $ProhibitSendQuota,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsDefault,
 
         [Parameter()]
         [System.Object]
@@ -8036,10 +7312,6 @@ function Set-MailboxPlan
 
         [Parameter()]
         [System.Object]
-        $ProhibitSendReceiveQuota,
-
-        [Parameter()]
-        [System.Object]
         $RecipientLimits,
 
         [Parameter()]
@@ -8048,11 +7320,7 @@ function Set-MailboxPlan
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $IsDefault,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Force
     )
 }
 function Set-MailboxRegionalConfiguration
@@ -8060,12 +7328,16 @@ function Set-MailboxRegionalConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $DateFormat,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $TimeFormat,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UseCustomRouting,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -8088,12 +7360,8 @@ function Set-MailboxRegionalConfiguration
         $Identity,
 
         [Parameter()]
-        [System.Object]
-        $Language,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Globalization.CultureInfo]
+        $Language
     )
 }
 function Set-MalwareFilterPolicy
@@ -8105,7 +7373,7 @@ function Set-MalwareFilterPolicy
         $MakeDefault,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomFromName,
 
         [Parameter()]
@@ -8113,19 +7381,23 @@ function Set-MalwareFilterPolicy
         $Identity,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $AdminDisplayName,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
+        $CustomExternalBody,
+
+        [Parameter()]
+        [System.String]
         $QuarantineTag,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $CustomNotifications,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableExternalSenderAdminNotifications,
 
         [Parameter()]
@@ -8133,15 +7405,11 @@ function Set-MalwareFilterPolicy
         $InternalSenderAdminAddress,
 
         [Parameter()]
-        [System.Object]
-        $CustomExternalBody,
-
-        [Parameter()]
-        [System.Object]
+        [System.String[]]
         $FileTypes,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableInternalSenderAdminNotifications,
 
         [Parameter()]
@@ -8149,11 +7417,11 @@ function Set-MalwareFilterPolicy
         $CustomFromAddress,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomExternalSubject,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ZapEnabled,
 
         [Parameter()]
@@ -8169,20 +7437,16 @@ function Set-MalwareFilterPolicy
         $FileTypeAction,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomInternalSubject,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomInternalBody,
 
         [Parameter()]
-        [System.Object]
-        $EnableFileFilter,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $EnableFileFilter
     )
 }
 function Set-MalwareFilterRule
@@ -8190,27 +7454,27 @@ function Set-MalwareFilterRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $Priority,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SentToMemberOf,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SentTo,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Comments,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RecipientDomainIs,
 
         [Parameter()]
@@ -8218,7 +7482,7 @@ function Set-MalwareFilterRule
         $Identity,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfRecipientDomainIs,
 
         [Parameter()]
@@ -8226,7 +7490,7 @@ function Set-MalwareFilterRule
         $MalwareFilterPolicy,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSentTo,
 
         [Parameter()]
@@ -8234,12 +7498,8 @@ function Set-MalwareFilterRule
         $Confirm,
 
         [Parameter()]
-        [System.Object]
-        $ExceptIfSentToMemberOf,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Object[]]
+        $ExceptIfSentToMemberOf
     )
 }
 function Set-MessageClassification
@@ -8247,15 +7507,19 @@ function Set-MessageClassification
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
+        $SenderDescription,
+
+        [Parameter()]
+        [System.String]
         $DisplayName,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $RecipientDescription,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
@@ -8263,7 +7527,11 @@ function Set-MessageClassification
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $RetainClassificationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $PermissionMenuVisible,
 
         [Parameter()]
@@ -8271,24 +7539,12 @@ function Set-MessageClassification
         $Identity,
 
         [Parameter()]
-        [System.Object]
+        [System.Guid]
         $ClassificationID,
 
         [Parameter()]
         [System.Object]
-        $SenderDescription,
-
-        [Parameter()]
-        [System.Object]
-        $DisplayPrecedence,
-
-        [Parameter()]
-        [System.Object]
-        $RetainClassificationEnabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $DisplayPrecedence
     )
 }
 function Set-MobileDeviceMailboxPolicy
@@ -8296,15 +7552,15 @@ function Set-MobileDeviceMailboxPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowMicrosoftPushNotifications,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowUnsignedApplications,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowUnsignedInstallationPackages,
 
         [Parameter()]
@@ -8312,31 +7568,23 @@ function Set-MobileDeviceMailboxPolicy
         $MaxPasswordFailedAttempts,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowExternalDeviceManagement,
 
         [Parameter()]
-        [System.Object]
-        $RequireDeviceEncryption,
-
-        [Parameter()]
-        [System.Object]
-        $RequireSignedSMIMEMessages,
-
-        [Parameter()]
-        [System.Object]
-        $AllowStorageCard,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowIrDA,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $AllowStorageCard,
+
+        [Parameter()]
+        [System.Int32]
         $PasswordHistory,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowNonProvisionableDevices,
 
         [Parameter()]
@@ -8344,48 +7592,20 @@ function Set-MobileDeviceMailboxPolicy
         $UnapprovedInROMApplicationList,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RequireEncryptedSMIMEMessages,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $RequireDeviceEncryption,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowInternetSharing,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $PasswordEnabled,
-
-        [Parameter()]
-        [System.Object]
-        $MaxEmailHTMLBodyTruncationSize,
-
-        [Parameter()]
-        [System.Object]
-        $MinPasswordComplexCharacters,
-
-        [Parameter()]
-        [System.Object]
-        $UNCAccessEnabled,
-
-        [Parameter()]
-        [System.Object]
-        $AllowCamera,
-
-        [Parameter()]
-        [System.Object]
-        $IrmEnabled,
-
-        [Parameter()]
-        [System.Object]
-        $PasswordExpiration,
-
-        [Parameter()]
-        [System.Object]
-        $AllowBrowser,
-
-        [Parameter()]
-        [System.Object]
-        $MaxEmailAgeFilter,
 
         [Parameter()]
         [System.Object]
@@ -8393,15 +7613,51 @@ function Set-MobileDeviceMailboxPolicy
 
         [Parameter()]
         [System.Object]
-        $RequireManualSyncWhenRoaming,
+        $MaxEmailHTMLBodyTruncationSize,
+
+        [Parameter()]
+        [System.Int32]
+        $MinPasswordComplexCharacters,
+
+        [Parameter()]
+        [System.Boolean]
+        $UNCAccessEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCamera,
+
+        [Parameter()]
+        [System.Boolean]
+        $IrmEnabled,
 
         [Parameter()]
         [System.Object]
+        $PasswordExpiration,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBrowser,
+
+        [Parameter()]
+        [System.Object]
+        $MaxEmailAgeFilter,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireManualSyncWhenRoaming,
+
+        [Parameter()]
+        [System.Boolean]
         $AlphanumericPasswordRequired,
 
         [Parameter()]
         [System.Object]
         $AllowSMIMEEncryptionAlgorithmNegotiation,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeviceEncryptionEnabled,
 
         [Parameter()]
         [System.Object]
@@ -8420,15 +7676,15 @@ function Set-MobileDeviceMailboxPolicy
         $DevicePolicyRefreshInterval,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowGooglePushNotifications,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowMobileOTAUpdate,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
@@ -8436,19 +7692,23 @@ function Set-MobileDeviceMailboxPolicy
         $MaxAttachmentSize,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowSimplePassword,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowConsumerEmail,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowDesktopSync,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $PasswordRecoveryEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $RequireStorageCardEncryption,
 
         [Parameter()]
@@ -8456,35 +7716,35 @@ function Set-MobileDeviceMailboxPolicy
         $Confirm,
 
         [Parameter()]
-        [System.Object]
-        $AttachmentsEnabled,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowSMIMESoftCerts,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowRemoteDesktop,
 
         [Parameter()]
-        [System.Object]
-        $PasswordRecoveryEnabled,
+        [System.Boolean]
+        $AttachmentsEnabled,
 
         [Parameter()]
         [System.Object]
         $MaxCalendarAgeFilter,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $AllowWiFi,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowApplePushNotifications,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowPOPIMAPEmail,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $IsDefault,
 
         [Parameter()]
@@ -8493,39 +7753,31 @@ function Set-MobileDeviceMailboxPolicy
 
         [Parameter()]
         [System.Object]
-        $AllowWiFi,
-
-        [Parameter()]
-        [System.Object]
         $ApprovedApplicationList,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowTextMessaging,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $WSSAccessEnabled,
 
         [Parameter()]
-        [System.Object]
-        $DeviceEncryptionEnabled,
+        [System.Boolean]
+        $RequireSignedSMIMEMessages,
 
         [Parameter()]
         [System.Object]
         $MinPasswordLength,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowHTMLEmail,
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Set-OMEConfiguration
@@ -8533,60 +7785,56 @@ function Set-OMEConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
-        $IntroductionText,
-
-        [Parameter()]
-        [System.Object]
+        [System.Double]
         $ExternalMailExpiryInDays,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ReadButtonText,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $PortalText,
 
         [Parameter()]
-        [System.Object]
+        [System.Byte[]]
         $Image,
 
         [Parameter()]
-        [System.Object]
-        $OTPEnabled,
+        [System.String]
+        $IntroductionText,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $BackgroundColor,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $DisclaimerText,
 
         [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Object]
+        [System.String]
         $PrivacyStatementUrl,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $SocialIdSignIn,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $EmailText,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $OTPEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
     )
 }
 function Set-OnPremisesOrganization
@@ -8602,7 +7850,7 @@ function Set-OnPremisesOrganization
         $OutboundConnector,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $OrganizationName,
 
         [Parameter()]
@@ -8610,7 +7858,7 @@ function Set-OnPremisesOrganization
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Comment,
 
         [Parameter()]
@@ -8623,11 +7871,7 @@ function Set-OnPremisesOrganization
 
         [Parameter()]
         [System.Object]
-        $HybridDomains,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $HybridDomains
     )
 }
 function Set-Organization
@@ -8636,19 +7880,15 @@ function Set-Organization
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $UnifiedAuditLogIngestionEnabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $UnifiedAuditLogIngestionEnabled
     )
 }
 function Set-OrganizationConfig
@@ -8656,19 +7896,19 @@ function Set-OrganizationConfig
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $FindTimeLockPollForAttendeesEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ConnectorsEnabledForYammer,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $PublicFolderShowClientControl,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $MailTipsGroupMetricsEnabled,
 
         [Parameter()]
@@ -8676,27 +7916,19 @@ function Set-OrganizationConfig
         $PublicFoldersEnabled,
 
         [Parameter()]
-        [System.Object]
-        $VisibleMeetingUpdateProperties,
-
-        [Parameter()]
-        [System.Object]
-        $WorkspaceTenantEnabled,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ReadTrackingEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ExchangeNotificationEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $BookingsNamingPolicyPrefixEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $MailTipsExternalRecipientsTipsEnabled,
 
         [Parameter()]
@@ -8708,71 +7940,67 @@ function Set-OrganizationConfig
         $EwsApplicationAccessPolicy,
 
         [Parameter()]
-        [System.Object]
-        $BookingsNamingPolicyPrefix,
+        [System.Boolean]
+        $OAuth2ClientProfileEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $MobileAppEducationEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableOutlookEvents,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $BookingsExposureOfStaffDetailsRestricted,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ElcProcessingDisabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $UnblockUnsafeSenderPromptEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AutoEnableArchiveMailbox,
 
         [Parameter()]
         [System.Object]
+        $DefaultAuthenticationPolicy,
+
+        [Parameter()]
+        [System.Boolean]
         $RefreshSessionEnabled,
 
         [Parameter()]
-        [System.Object]
-        $ActivityBasedAuthenticationTimeoutEnabled,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $SmtpActionableMessagesEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ConnectorsEnabledForTeams,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ComplianceMLBgdCrawlEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $MailTipsAllTipsEnabled,
-
-        [Parameter()]
-        [System.Object]
-        $OAuth2ClientProfileEnabled,
 
         [Parameter()]
         [System.Object]
         $RemotePublicFolderMailboxes,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $BlockMoveMessagesForGroupFolders,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $DefaultMinutesToReduceShortEventsBy,
 
         [Parameter()]
@@ -8780,12 +8008,16 @@ function Set-OrganizationConfig
         $EwsAllowEntourage,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $OutlookGifPickerDisabled,
 
         [Parameter()]
         [System.Object]
         $OnlineMeetingsByDefaultEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectorsEnabledForOutlook,
 
         [Parameter()]
         [System.Object]
@@ -8796,23 +8028,23 @@ function Set-OrganizationConfig
         $ExchangeNotificationRecipients,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $MessageRemindersEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $DirectReportsGroupAutoCreationEnabled,
 
         [Parameter()]
-        [System.Object]
-        $LinkPreviewEnabled,
+        [System.Boolean]
+        $AuditDisabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $BookingsAuthEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $OutlookMobileGCCRestrictionsEnabled,
 
         [Parameter()]
@@ -8820,32 +8052,36 @@ function Set-OrganizationConfig
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $BookingsCreationOfCustomQuestionsRestricted,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $BookingsSmsMicrosoftEnabled,
 
         [Parameter()]
-        [System.Object]
-        $DefaultGroupAccessType,
+        [System.Boolean]
+        $WebPushNotificationsDisabled,
 
         [Parameter()]
-        [System.Object]
-        $ConnectorsEnabledForOutlook,
+        [System.Boolean]
+        $ActivityBasedAuthenticationTimeoutEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $BookingsAddressEntryRestricted,
+
+        [Parameter()]
+        [System.String]
+        $BookingsNamingPolicyPrefix,
 
         [Parameter()]
         [System.Object]
         $DefaultPublicFolderDeletedItemRetention,
 
         [Parameter()]
-        [System.Object]
-        $BookingsNotesEntryRestricted,
+        [System.Int32]
+        $PreferredInternetCodePageForShiftJis,
 
         [Parameter()]
         [System.Object]
@@ -8853,18 +8089,14 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Object]
-        $AuditDisabled,
+        $HierarchicalAddressBookRoot,
 
         [Parameter()]
-        [System.Object]
-        $RequiredCharsetCoverage,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $IsAgendaMailEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $FindTimeOnlineMeetingOptionDisabled,
 
         [Parameter()]
@@ -8872,15 +8104,15 @@ function Set-OrganizationConfig
         $EwsEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $FindTimeAttendeeAuthenticationEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $OutlookMobileHelpShiftEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $LeanPopoutEnabled,
 
         [Parameter()]
@@ -8888,31 +8120,31 @@ function Set-OrganizationConfig
         $DistributionGroupNameBlockedWordsList,
 
         [Parameter()]
-        [System.Object]
-        $PreferredInternetCodePageForShiftJis,
+        [System.Int32]
+        $RequiredCharsetCoverage,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AsyncSendEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ConnectorsEnabledForSharepoint,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $BookingsBlockedWordsEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled,
 
         [Parameter()]
-        [System.Object]
-        $HierarchicalAddressBookRoot,
+        [System.Boolean]
+        $WorkspaceTenantEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $BookingsNamingPolicyEnabled,
 
         [Parameter()]
@@ -8920,63 +8152,67 @@ function Set-OrganizationConfig
         $DefaultPublicFolderAgeLimit,
 
         [Parameter()]
-        [System.Object]
-        $DefaultAuthenticationPolicy,
+        [System.String]
+        $VisibleMeetingUpdateProperties,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $OutlookPayEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.UInt32]
         $MailTipsLargeAudienceThreshold,
 
         [Parameter()]
         [System.Object]
-        $BookingsSearchEngineIndexDisabled,
+        $DefaultGroupAccessType,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $CalendarVersionStoreEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $BookingsPaymentsEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $MessageHighlightsEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $WebSuggestedRepliesDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisablePlusAddressInRecipients,
 
         [Parameter()]
         [System.Object]
         $DistributionGroupNamingPolicy,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $PublicComputersDetectionEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $BookingsSocialSharingRestricted,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $BookingsNamingPolicySuffix,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $BookingsNamingPolicySuffixEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $BookingsMembershipApprovalRequired,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $IsGroupMemberAllowedToEditContent,
 
         [Parameter()]
@@ -8988,43 +8224,43 @@ function Set-OrganizationConfig
         $DistributionGroupDefaultOU,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $OutlookTextPredictionDisabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $SharedDomainEmailAddressFlowEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ConnectorsActionableMessagesEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $MailTipsMailboxSourcedTipsEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $BookingsEnabled,
 
         [Parameter()]
-        [System.Object]
-        $WebPushNotificationsDisabled,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EndUserDLUpgradeFlowsDisabled,
 
         [Parameter()]
         [System.Object]
+        $RecallReadMessagesEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $BookingsPhoneNumberEntryRestricted,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AppsForOfficeEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableForwardingAddressSyncForMailboxes,
 
         [Parameter()]
@@ -9036,6 +8272,14 @@ function Set-OrganizationConfig
         $AutoExpandingArchive,
 
         [Parameter()]
+        [System.Boolean]
+        $LinkPreviewEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsSearchEngineIndexDisabled,
+
+        [Parameter()]
         [System.Object]
         $EwsAllowMacOutlook,
 
@@ -9045,14 +8289,14 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Object]
-        $DisablePlusAddressInRecipients,
+        $DefaultPublicFolderMaxItemSize,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $MatchSenderOrganizerProperties,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $DefaultMinutesToReduceLongEventsBy,
 
         [Parameter()]
@@ -9060,15 +8304,15 @@ function Set-OrganizationConfig
         $IPListBlocked,
 
         [Parameter()]
-        [System.Object]
-        $RecallReadMessagesEnabled,
+        [System.Boolean]
+        $BookingsNotesEntryRestricted,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $SendFromAliasEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AutodiscoverPartialDirSync,
 
         [Parameter()]
@@ -9076,19 +8320,23 @@ function Set-OrganizationConfig
         $ActivityBasedAuthenticationTimeoutInterval,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $OutlookMobileSingleAccountEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $IsGroupFoldersAndRulesEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $MaskClientIpInReceivedHeadersEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $PerTenantSwitchToESTSEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ConnectorsEnabled,
 
         [Parameter()]
@@ -9096,36 +8344,24 @@ function Set-OrganizationConfig
         $EwsBlockList,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $CustomerLockboxEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Uri]
         $SiteMailboxCreationURL,
 
         [Parameter()]
-        [System.Object]
-        $DefaultPublicFolderMaxItemSize,
-
-        [Parameter()]
-        [System.Object]
+        [System.Int32]
         $ByteEncoderTypeFor7BitCharsets,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $FindTimeAutoScheduleDisabled,
 
         [Parameter()]
         [System.Object]
-        $DefaultPublicFolderIssueWarningQuota,
-
-        [Parameter()]
-        [System.Object]
-        $OutlookMobileSingleAccountEnabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $DefaultPublicFolderIssueWarningQuota
     )
 }
 function Set-OrganizationRelationship
@@ -9134,50 +8370,50 @@ function Set-OrganizationRelationship
     param(
         [Parameter()]
         [System.Object]
-        $TargetApplicationUri,
-
-        [Parameter()]
-        [System.Object]
-        $TargetAutodiscoverEpr,
-
-        [Parameter()]
-        [System.Object]
         $MailTipsAccessLevel,
+
+        [Parameter()]
+        [System.Uri]
+        $TargetAutodiscoverEpr,
 
         [Parameter()]
         [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $Enabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
+
+        [Parameter()]
+        [System.Object]
+        $FreeBusyAccessScope,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $DeliveryReportEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $OAuthApplicationId,
 
         [Parameter()]
-        [System.Object]
-        $OrganizationContact,
+        [System.Boolean]
+        $MailTipsAccessEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ArchiveAccessEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $FreeBusyAccessEnabled,
 
         [Parameter()]
@@ -9185,16 +8421,16 @@ function Set-OrganizationRelationship
         $MailTipsAccessScope,
 
         [Parameter()]
-        [System.Object]
+        [System.Uri]
         $TargetOwaURL,
 
         [Parameter()]
-        [System.Object]
-        $MailTipsAccessEnabled,
+        [System.Uri]
+        $TargetApplicationUri,
 
         [Parameter()]
         [System.Object]
-        $PhotosEnabled,
+        $OrganizationContact,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -9205,7 +8441,7 @@ function Set-OrganizationRelationship
         $MailboxMovePublishedScopes,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $MailboxMoveEnabled,
 
         [Parameter()]
@@ -9213,7 +8449,7 @@ function Set-OrganizationRelationship
         $MailboxMoveCapability,
 
         [Parameter()]
-        [System.Object]
+        [System.Uri]
         $TargetSharingEpr,
 
         [Parameter()]
@@ -9225,12 +8461,8 @@ function Set-OrganizationRelationship
         $DomainNames,
 
         [Parameter()]
-        [System.Object]
-        $FreeBusyAccessScope,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $PhotosEnabled
     )
 }
 function Set-OutboundConnector
@@ -9238,7 +8470,7 @@ function Set-OutboundConnector
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RouteAllMessagesViaOnPremises,
 
         [Parameter()]
@@ -9246,7 +8478,7 @@ function Set-OutboundConnector
         $RecipientDomains,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $CloudServicesMailEnabled,
 
         [Parameter()]
@@ -9254,35 +8486,35 @@ function Set-OutboundConnector
         $Identity,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $Enabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
-        $TestMode,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllAcceptedDomains,
 
         [Parameter()]
         [System.Object]
+        $TlsDomain,
+
+        [Parameter()]
+        [System.String]
         $Comment,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $IsTransportRuleScoped,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $IsValidated,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $UseMXRecord,
 
         [Parameter()]
@@ -9294,7 +8526,7 @@ function Set-OutboundConnector
         $TlsSettings,
 
         [Parameter()]
-        [System.Object]
+        [System.String[]]
         $ValidationRecipients,
 
         [Parameter()]
@@ -9310,20 +8542,16 @@ function Set-OutboundConnector
         $SmartHosts,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $SenderRewritingEnabled,
 
         [Parameter()]
-        [System.Object]
-        $TlsDomain,
+        [System.Boolean]
+        $TestMode,
 
         [Parameter()]
         [System.Object]
-        $ConnectorSource,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $ConnectorSource
     )
 }
 function Set-OwaMailboxPolicy
@@ -9335,19 +8563,15 @@ function Set-OwaMailboxPolicy
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $DefaultClientLanguage,
 
         [Parameter()]
-        [System.Object]
-        $WacExternalServicesEnabled,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ContactsEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $PersonalAccountCalendarsEnabled,
 
         [Parameter()]
@@ -9355,99 +8579,91 @@ function Set-OwaMailboxPolicy
         $ConditionalAccessPolicy,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $MessagePreviewsDisabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ExplicitLogonEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ShowOnlineArchiveEnabled,
-
-        [Parameter()]
-        [System.Object]
-        $WebPartsFrameOptionsType,
 
         [Parameter()]
         [System.Object]
         $BlockedFileTypes,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $OneDriveAttachmentsEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $LinkedInEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $DirectFileAccessOnPrivateComputersEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String[]]
         $AllowedOrganizationAccountDomains,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ChangePasswordEnabled,
 
         [Parameter()]
-        [System.Object]
-        $SignaturesEnabled,
+        [System.Boolean]
+        $PlacesEnabled,
 
         [Parameter()]
-        [System.Object]
-        $AllowedMimeTypes,
+        [System.String]
+        $BookingsMailboxDomain,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $WacViewingOnPublicComputersEnabled,
 
         [Parameter()]
-        [System.Object]
-        $WacEditingEnabled,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $OutlookBetaToggleEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $SMimeSuppressNameChecksEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ExternalSPMySiteHostURL,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ReferenceAttachmentsEnabled,
 
         [Parameter()]
         [System.Object]
-        $NotesEnabled,
+        $ForceSaveMimeTypes,
 
         [Parameter()]
-        [System.Object]
-        $JournalEnabled,
+        [System.Boolean]
+        $CalendarEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $SpellCheckerEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $DisplayPhotosEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $TasksEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $GroupCreationEnabled,
 
         [Parameter()]
@@ -9463,43 +8679,51 @@ function Set-OwaMailboxPolicy
         $AdditionalAccountsEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $TeamsnapCalendarsEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $WacViewingOnPrivateComputersEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $TextMessagingEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $SearchFoldersEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $UserVoiceEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ForceWacViewingFirstOnPublicComputers,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $GlobalAddressListEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $IRMEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $DirectFileAccessOnPublicComputersEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $WacOMEXEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $JournalEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $NpsSurveysEnabled,
 
         [Parameter()]
@@ -9507,27 +8731,27 @@ function Set-OwaMailboxPolicy
         $ItemsToOtherAccountsEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $WSSAccessOnPublicComputersEnabled,
 
         [Parameter()]
-        [System.Object]
-        $ForceSaveMimeTypes,
+        [System.Boolean]
+        $SignaturesEnabled,
 
         [Parameter()]
-        [System.Object]
-        $WacOMEXEnabled,
+        [System.Boolean]
+        $WacExternalServicesEnabled,
 
         [Parameter()]
-        [System.Object]
-        $PlacesEnabled,
-
-        [Parameter()]
-        [System.Object]
+        [System.String]
         $InternalSPMySiteHostURL,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $RemindersAndNotificationsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $SatisfactionEnabled,
 
         [Parameter()]
@@ -9535,7 +8759,7 @@ function Set-OwaMailboxPolicy
         $InstantMessagingType,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ActiveSyncIntegrationEnabled,
 
         [Parameter()]
@@ -9543,99 +8767,107 @@ function Set-OwaMailboxPolicy
         $PersonalAccountsEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $DefaultTheme,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $SetPhotoEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ClassicAttachmentsEnabled,
 
         [Parameter()]
-        [System.Object]
-        $AllowCopyContactsToDeviceAddressBook,
+        [System.Boolean]
+        $ForceWacViewingFirstOnPrivateComputers,
 
         [Parameter()]
         [System.Object]
-        $UseISO885915,
+        $AllowedMimeTypes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCopyContactsToDeviceAddressBook,
 
         [Parameter()]
         [System.Object]
         $OutboundCharset,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $LocalEventsEnabled,
 
         [Parameter()]
-        [System.Object]
-        $CalendarEnabled,
+        [System.Boolean]
+        $ReportJunkEmailEnabled,
 
         [Parameter()]
-        [System.Object]
-        $ForceWacViewingFirstOnPrivateComputers,
+        [System.Boolean]
+        $UseISO885915,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RecoverDeletedItemsEnabled,
 
         [Parameter()]
-        [System.Object]
-        $InstantMessagingEnabled,
+        [System.Boolean]
+        $NotesEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $OrganizationEnabled,
 
         [Parameter()]
         [System.Object]
-        $DelegateAccessEnabled,
+        $WebPartsFrameOptionsType,
 
         [Parameter()]
         [System.Object]
         $ActionForUnknownFileAndMIMETypes,
 
         [Parameter()]
-        [System.Object]
-        $RemindersAndNotificationsEnabled,
+        [System.Boolean]
+        $WacEditingEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $PublicFoldersEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $BookingsMailboxCreationEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ForceSaveAttachmentFilteringEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $LogonAndErrorLanguage,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $WSSAccessOnPrivateComputersEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllAddressListsEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ExternalImageProxyEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ProjectMocaEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $DelegateAccessEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $PremiumClientEnabled,
 
         [Parameter()]
@@ -9643,19 +8875,19 @@ function Set-OwaMailboxPolicy
         $BlockedMimeTypes,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $UMIntegrationEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $FeedbackEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $SilverlightEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $WeatherEnabled,
 
         [Parameter()]
@@ -9663,7 +8895,7 @@ function Set-OwaMailboxPolicy
         $IsDefault,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $UseGB18030,
 
         [Parameter()]
@@ -9675,11 +8907,11 @@ function Set-OwaMailboxPolicy
         $AllowedFileTypes,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $SetPhotoURL,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RulesEnabled,
 
         [Parameter()]
@@ -9687,35 +8919,39 @@ function Set-OwaMailboxPolicy
         $OneWinNativeOutlookEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $FreCardsEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ThemeSelectionEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $InstantMessagingEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $AdditionalStorageProvidersAvailable,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $InterestingCalendarsEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $OWALightEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $PrintWithoutDownloadEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $SaveAttachmentsToCloudEnabled,
 
         [Parameter()]
@@ -9723,28 +8959,20 @@ function Set-OwaMailboxPolicy
         $Identity,
 
         [Parameter()]
-        [System.Object]
-        $ReportJunkEmailEnabled,
+        [System.Boolean]
+        $PhoneticSupportEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $SkipCreateUnifiedGroupCustomSharepointClassification,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $OnSendAddinsEnabled,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $DisableFacebook,
-
-        [Parameter()]
-        [System.Object]
-        $PhoneticSupportEnabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $DisableFacebook
     )
 }
 function Set-PartnerApplication
@@ -9752,11 +8980,11 @@ function Set-PartnerApplication
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ApplicationIdentifier,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
@@ -9768,7 +8996,7 @@ function Set-PartnerApplication
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AcceptSecurityIdentifierInformation,
 
         [Parameter()]
@@ -9776,20 +9004,16 @@ function Set-PartnerApplication
         $Identity,
 
         [Parameter()]
-        [System.Object]
-        $AccountType,
-
-        [Parameter()]
-        [System.Object]
+        [System.String[]]
         $ActAsPermissions,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $Enabled,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Object]
+        $AccountType
     )
 }
 function Set-PerimeterConfig
@@ -9806,11 +9030,7 @@ function Set-PerimeterConfig
 
         [Parameter()]
         [System.Object]
-        $GatewayIPAddresses,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $GatewayIPAddresses
     )
 }
 function Set-PolicyTipConfig
@@ -9818,7 +9038,7 @@ function Set-PolicyTipConfig
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Value,
 
         [Parameter()]
@@ -9827,11 +9047,7 @@ function Set-PolicyTipConfig
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $Identity
     )
 }
 function Set-QuarantinePolicy
@@ -9851,19 +9067,19 @@ function Set-QuarantinePolicy
         $Identity,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $EndUserSpamNotificationFrequencyInDays,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomDisclaimer,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $EndUserQuarantinePermissionsValue,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ESNEnabled,
 
         [Parameter()]
@@ -9875,7 +9091,7 @@ function Set-QuarantinePolicy
         $EndUserQuarantinePermissions,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AdminNotificationsEnabled,
 
         [Parameter()]
@@ -9903,20 +9119,16 @@ function Set-QuarantinePolicy
         $MultiLanguageSetting,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $QuarantineRetentionDays,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $OrganizationBrandingEnabled,
 
         [Parameter()]
-        [System.Object]
-        $AdminNotificationFrequencyInDays,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Int32]
+        $AdminNotificationFrequencyInDays
     )
 }
 function Set-RemoteDomain
@@ -9924,7 +9136,7 @@ function Set-RemoteDomain
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AutoReplyEnabled,
 
         [Parameter()]
@@ -9936,7 +9148,7 @@ function Set-RemoteDomain
         $TNEFEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $DeliveryReportEnabled,
 
         [Parameter()]
@@ -9944,7 +9156,7 @@ function Set-RemoteDomain
         $RequiredCharsetCoverage,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $MeetingForwardNotificationEnabled,
 
         [Parameter()]
@@ -9956,15 +9168,15 @@ function Set-RemoteDomain
         $ByteEncoderTypeFor7BitCharsets,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AutoForwardEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $TrustedMailInboundEnabled,
 
         [Parameter()]
@@ -9972,7 +9184,7 @@ function Set-RemoteDomain
         $LineWrapSize,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CharacterSet,
 
         [Parameter()]
@@ -9980,19 +9192,15 @@ function Set-RemoteDomain
         $PreferredInternetCodePageForShiftJis,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $NonMimeCharacterSet,
 
         [Parameter()]
-        [System.Object]
-        $NDREnabled,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $TargetDeliveryDomain,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $TrustedMailOutboundEnabled,
 
         [Parameter()]
@@ -10000,7 +9208,7 @@ function Set-RemoteDomain
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $DisplaySenderName,
 
         [Parameter()]
@@ -10008,20 +9216,20 @@ function Set-RemoteDomain
         $AllowedOOFType,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $NDREnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $NDRDiagnosticInfoEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $IsInternal,
 
         [Parameter()]
-        [System.Object]
-        $UseSimpleDisplayName,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $UseSimpleDisplayName
     )
 }
 function Set-ResourceConfig
@@ -10034,11 +9242,7 @@ function Set-ResourceConfig
 
         [Parameter()]
         [System.Object]
-        $ResourcePropertySchema,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $ResourcePropertySchema
     )
 }
 function Set-RoleAssignmentPolicy
@@ -10046,11 +9250,11 @@ function Set-RoleAssignmentPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Description,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
@@ -10058,16 +9262,12 @@ function Set-RoleAssignmentPolicy
         $Confirm,
 
         [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $IsDefault,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Object]
+        $Identity
     )
 }
 function Set-SafeAttachmentPolicy
@@ -10076,23 +9276,23 @@ function Set-SafeAttachmentPolicy
     param(
         [Parameter()]
         [System.Object]
+        $Action,
+
+        [Parameter()]
+        [System.Boolean]
         $Redirect,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $AdminDisplayName,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $Enable,
 
         [Parameter()]
         [System.Object]
         $RedirectAddress,
-
-        [Parameter()]
-        [System.Object]
-        $Action,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -10103,16 +9303,12 @@ function Set-SafeAttachmentPolicy
         $Identity,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $QuarantineTag,
 
         [Parameter()]
-        [System.Object]
-        $ActionOnError,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $ActionOnError
     )
 }
 function Set-SafeAttachmentRule
@@ -10120,27 +9316,27 @@ function Set-SafeAttachmentRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $Priority,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SentToMemberOf,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SentTo,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Comments,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RecipientDomainIs,
 
         [Parameter()]
@@ -10152,11 +9348,11 @@ function Set-SafeAttachmentRule
         $SafeAttachmentPolicy,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfRecipientDomainIs,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSentTo,
 
         [Parameter()]
@@ -10164,12 +9360,8 @@ function Set-SafeAttachmentRule
         $Confirm,
 
         [Parameter()]
-        [System.Object]
-        $ExceptIfSentToMemberOf,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Object[]]
+        $ExceptIfSentToMemberOf
     )
 }
 function Set-SafeLinksPolicy
@@ -10177,7 +9369,7 @@ function Set-SafeLinksPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableOrganizationBranding,
 
         [Parameter()]
@@ -10185,15 +9377,15 @@ function Set-SafeLinksPolicy
         $Identity,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $AdminDisplayName,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $UseTranslatedNotificationText,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $DisableUrlRewrite,
 
         [Parameter()]
@@ -10201,15 +9393,19 @@ function Set-SafeLinksPolicy
         $DoNotRewriteUrls,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableSafeLinksForTeams,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $EnableSafeLinksForOffice,
+
+        [Parameter()]
+        [System.Boolean]
         $TrackClicks,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AllowClickThrough,
 
         [Parameter()]
@@ -10217,28 +9413,24 @@ function Set-SafeLinksPolicy
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $CustomNotificationText,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $DeliverMessageAfterScan,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $EnableSafeLinksForEmail,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ScanUrls,
 
         [Parameter()]
-        [System.Object]
-        $EnableForInternalSenders,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $EnableForInternalSenders
     )
 }
 function Set-SafeLinksRule
@@ -10246,27 +9438,27 @@ function Set-SafeLinksRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $Priority,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SentToMemberOf,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SentTo,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Comments,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RecipientDomainIs,
 
         [Parameter()]
@@ -10274,7 +9466,7 @@ function Set-SafeLinksRule
         $Identity,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfRecipientDomainIs,
 
         [Parameter()]
@@ -10282,7 +9474,7 @@ function Set-SafeLinksRule
         $SafeLinksPolicy,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSentTo,
 
         [Parameter()]
@@ -10290,12 +9482,8 @@ function Set-SafeLinksRule
         $Confirm,
 
         [Parameter()]
-        [System.Object]
-        $ExceptIfSentToMemberOf,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Object[]]
+        $ExceptIfSentToMemberOf
     )
 }
 function Set-SharingPolicy
@@ -10303,7 +9491,7 @@ function Set-SharingPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
@@ -10323,12 +9511,8 @@ function Set-SharingPolicy
         $Identity,
 
         [Parameter()]
-        [System.Object]
-        $Enabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $Enabled
     )
 }
 function Set-TransportConfig
@@ -10336,19 +9520,15 @@ function Set-TransportConfig
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $InternalDelayDsnEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $InternalDsnSendHtml,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ExternalDelayDsnEnabled,
 
         [Parameter()]
@@ -10356,59 +9536,63 @@ function Set-TransportConfig
         $DSNConversionMode,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $SmtpClientAuthenticationDisabled,
 
         [Parameter()]
+        [System.Globalization.CultureInfo]
+        $InternalDsnDefaultLanguage,
+
+        [Parameter()]
         [System.Object]
-        $ReplyAllStormBlockDurationHours,
+        $MessageExpiration,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ReplyAllStormProtectionEnabled,
 
         [Parameter()]
-        [System.Object]
-        $AddressBookPolicyRoutingEnabled,
-
-        [Parameter()]
-        [System.Object]
-        $ExternalDsnLanguageDetectionEnabled,
-
-        [Parameter()]
-        [System.Object]
-        $ExternalDsnSendHtml,
-
-        [Parameter()]
-        [System.Object]
-        $Rfc2231EncodingEnabled,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $InternalDsnLanguageDetectionEnabled,
 
         [Parameter()]
-        [System.Object]
-        $AllowLegacyTLSClients,
+        [System.Boolean]
+        $AddressBookPolicyRoutingEnabled,
 
         [Parameter()]
-        [System.Object]
-        $VoicemailJournalingEnabled,
+        [System.Boolean]
+        $ExternalDsnLanguageDetectionEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExternalDsnSendHtml,
+
+        [Parameter()]
+        [System.Boolean]
+        $Rfc2231EncodingEnabled,
 
         [Parameter()]
         [System.Object]
         $HeaderPromotionModeSetting,
 
         [Parameter()]
+        [System.Boolean]
+        $VoicemailJournalingEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
         [System.Object]
         $JournalingReportNdrTo,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ConvertDisclaimerWrapperToEml,
 
         [Parameter()]
@@ -10416,7 +9600,7 @@ function Set-TransportConfig
         $InternalDsnReportingAuthority,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $JournalMessageExpirationDays,
 
         [Parameter()]
@@ -10424,7 +9608,7 @@ function Set-TransportConfig
         $MaxRecipientEnvelopeLimit,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
         $ReplyAllStormDetectionMinimumReplies,
 
         [Parameter()]
@@ -10432,28 +9616,28 @@ function Set-TransportConfig
         $ExternalDsnReportingAuthority,
 
         [Parameter()]
-        [System.Object]
+        [System.Globalization.CultureInfo]
         $ExternalDsnDefaultLanguage,
 
         [Parameter()]
         [System.Object]
-        $InternalDsnDefaultLanguage,
+        $AllowLegacyTLSClients,
+
+        [Parameter()]
+        [System.Boolean]
+        $ClearCategories,
+
+        [Parameter()]
+        [System.Int32]
+        $ReplyAllStormBlockDurationHours,
 
         [Parameter()]
         [System.Object]
         $ExternalPostmasterAddress,
 
         [Parameter()]
-        [System.Object]
-        $ClearCategories,
-
-        [Parameter()]
-        [System.Object]
-        $ReplyAllStormDetectionMinimumRecipients,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Int32]
+        $ReplyAllStormDetectionMinimumRecipients
     )
 }
 function Set-TransportRule
@@ -10465,7 +9649,7 @@ function Set-TransportRule
         $ActivationDate,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $AddToRecipients,
 
         [Parameter()]
@@ -10473,23 +9657,15 @@ function Set-TransportRule
         $ApplyHtmlDisclaimerFallbackAction,
 
         [Parameter()]
-        [System.Object]
-        $RemoveRMSAttachmentEncryption,
-
-        [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfRecipientADAttributeContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $RecipientADAttributeMatchesPatterns,
 
         [Parameter()]
         [System.Object]
         $AttachmentSizeOver,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSenderADAttributeContainsWords,
 
         [Parameter()]
@@ -10497,27 +9673,31 @@ function Set-TransportRule
         $SetSCL,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $AnyOfToHeaderMemberOf,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $Disconnect,
 
         [Parameter()]
-        [System.Object]
+        [System.Int32]
+        $Priority,
+
+        [Parameter()]
+        [System.Object[]]
         $ExceptIfSentToMemberOf,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfAnyOfCcHeader,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfAttachmentMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RecipientDomainIs,
 
         [Parameter()]
@@ -10525,11 +9705,7 @@ function Set-TransportRule
         $ManagerForEvaluatedUser,
 
         [Parameter()]
-        [System.Object]
-        $SmtpRejectMessageRejectStatusCode,
-
-        [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfHeaderMatchesPatterns,
 
         [Parameter()]
@@ -10538,54 +9714,58 @@ function Set-TransportRule
 
         [Parameter()]
         [System.Object]
-        $ADComparisonAttribute,
+        $AdComparisonAttribute,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfHeaderContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $HeaderMatchesPatterns,
 
         [Parameter()]
         [System.Object]
-        $ExceptIfAttachmentIsPasswordProtected,
+        $AddManagerAsRecipientType,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $DeleteMessage,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $HasSenderOverride,
 
         [Parameter()]
         [System.Object]
-        $ExceptIfSubjectOrBodyMatchesPatterns,
+        $SmtpRejectMessageRejectStatusCode,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ExceptIfHasClassification,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $Quarantine,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfAnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfRecipientInSenderList,
 
         [Parameter()]
         [System.Object]
         $RecipientAddressType,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfContentCharacterSetContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $BlindCopyTo,
 
         [Parameter()]
@@ -10601,19 +9781,19 @@ function Set-TransportRule
         $SenderIpRanges,
 
         [Parameter()]
-        [System.Object]
+        [System.Collections.Hashtable[]]
         $ExceptIfMessageContainsDataClassifications,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ModerateMessageByUser,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $HasNoClassification,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSenderInRecipientList,
 
         [Parameter()]
@@ -10625,15 +9805,15 @@ function Set-TransportRule
         $RemoveHeader,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $HasClassification,
 
         [Parameter()]
-        [System.Object]
+        [System.Collections.Hashtable[]]
         $MessageContainsDataClassifications,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfFromMemberOf,
 
         [Parameter()]
@@ -10641,19 +9821,23 @@ function Set-TransportRule
         $RuleSubType,
 
         [Parameter()]
+        [System.Object[]]
+        $AnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
         [System.Object]
         $SentToScope,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $AnyOfToCcHeaderMemberOf,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $From,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfAnyOfRecipientAddressContainsWords,
 
         [Parameter()]
@@ -10661,11 +9845,11 @@ function Set-TransportRule
         $ExceptIfWithImportance,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ContentCharacterSetContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SubjectContainsWords,
 
         [Parameter()]
@@ -10673,23 +9857,23 @@ function Set-TransportRule
         $RejectMessageEnhancedStatusCode,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SenderADAttributeMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSenderADAttributeMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $IncidentReportContent,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $FromMemberOf,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $AttachmentContainsWords,
 
         [Parameter()]
@@ -10697,7 +9881,7 @@ function Set-TransportRule
         $ExceptIfSCLOver,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfBetweenMemberOf1,
 
         [Parameter()]
@@ -10709,7 +9893,11 @@ function Set-TransportRule
         $NotifySender,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $ExceptIfAttachmentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Object[]]
         $ExceptIfAttachmentNameMatchesPatterns,
 
         [Parameter()]
@@ -10717,15 +9905,15 @@ function Set-TransportRule
         $ExceptIfSenderManagementRelationship,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $SetAuditSeverity,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $AttachmentPropertyContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfAnyOfToHeader,
 
         [Parameter()]
@@ -10733,11 +9921,15 @@ function Set-TransportRule
         $ApplyRightsProtectionCustomizationTemplate,
 
         [Parameter()]
+        [System.Object]
+        $SetHeaderName,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RouteMessageOutboundRequireTls,
 
         [Parameter()]
@@ -10753,19 +9945,19 @@ function Set-TransportRule
         $FromScope,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $AttachmentNameMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SentTo,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfFromAddressMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $AnyOfCcHeaderMemberOf,
 
         [Parameter()]
@@ -10777,15 +9969,15 @@ function Set-TransportRule
         $ExceptIfManagerForEvaluatedUser,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RemoveOMEv2,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfFromAddressContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AttachmentHasExecutableContent,
 
         [Parameter()]
@@ -10793,15 +9985,11 @@ function Set-TransportRule
         $RouteMessageOutboundConnector,
 
         [Parameter()]
-        [System.Object]
-        $SubjectMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfRecipientDomainIs,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSenderDomainIs,
 
         [Parameter()]
@@ -10809,51 +9997,43 @@ function Set-TransportRule
         $SenderManagementRelationship,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfBetweenMemberOf2,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RedirectMessageTo,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ApplyOME,
 
         [Parameter()]
-        [System.Object]
-        $AddManagerAsRecipientType,
+        [System.Object[]]
+        $SenderDomainIs,
 
         [Parameter()]
-        [System.Object]
-        $ExceptIfMessageSizeOver,
-
-        [Parameter()]
-        [System.Object]
-        $RecipientInSenderList,
-
-        [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SenderADAttributeContainsWords,
 
         [Parameter()]
-        [System.Object]
-        $MessageSizeOver,
+        [System.Object[]]
+        $ExceptIfAnyOfCcHeaderMemberOf,
 
         [Parameter()]
         [System.Object]
-        $ExceptIfRecipientInSenderList,
+        $ApplyHtmlDisclaimerText,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ExceptIfAttachmentHasExecutableContent,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ExceptIfAttachmentIsUnsupported,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RemoveOME,
 
         [Parameter()]
@@ -10861,7 +10041,7 @@ function Set-TransportRule
         $RejectMessageReasonText,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RecipientAddressContainsWords,
 
         [Parameter()]
@@ -10869,31 +10049,27 @@ function Set-TransportRule
         $GenerateIncidentReport,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $FromAddressContainsWords,
 
         [Parameter()]
-        [System.Object]
-        $AnyOfRecipientAddressMatchesPatterns,
+        [System.Boolean]
+        $RemoveRMSAttachmentEncryption,
 
         [Parameter()]
-        [System.Object]
-        $ApplyHtmlDisclaimerText,
-
-        [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RecipientAddressMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSubjectContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfFrom,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $AnyOfToCcHeader,
 
         [Parameter()]
@@ -10901,43 +10077,43 @@ function Set-TransportRule
         $ExceptIfSentToScope,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfAnyOfToCcHeaderMemberOf,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ModerateMessageByManager,
 
         [Parameter()]
         [System.Object]
-        $ADComparisonOperator,
+        $AdComparisonOperator,
 
         [Parameter()]
         [System.Object]
+        $MessageSizeOver,
+
+        [Parameter()]
+        [System.Object[]]
         $BetweenMemberOf2,
 
         [Parameter()]
-        [System.Object]
-        $SetHeaderName,
+        [System.Object[]]
+        $SubjectMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AttachmentProcessingLimitExceeded,
 
         [Parameter()]
-        [System.Object]
-        $ExceptIfAnyOfCcHeaderMemberOf,
-
-        [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSubjectMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Name,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfRecipientAddressContainsWords,
 
         [Parameter()]
@@ -10945,39 +10121,39 @@ function Set-TransportRule
         $HeaderMatchesMessageHeader,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $AnyOfRecipientAddressContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $HeaderContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Comments,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SentToMemberOf,
 
         [Parameter()]
         [System.Object]
-        $ExceptIfADComparisonAttribute,
+        $ExceptIfAdComparisonAttribute,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSentTo,
 
         [Parameter()]
         [System.Object]
-        $ExceptIfADComparisonOperator,
+        $ExceptIfAdComparisonOperator,
 
         [Parameter()]
         [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfAnyOfToHeaderMemberOf,
 
         [Parameter()]
@@ -10985,27 +10161,27 @@ function Set-TransportRule
         $Mode,
 
         [Parameter()]
-        [System.Object]
-        $ExceptIfAnyOfToCcHeader,
+        [System.Object[]]
+        $RecipientInSenderList,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SubjectOrBodyMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfAttachmentExtensionMatchesWords,
 
         [Parameter()]
-        [System.Object]
-        $SenderDomainIs,
+        [System.Object[]]
+        $ExceptIfSubjectOrBodyMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfRecipientAddressMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ExceptIfHasNoClassification,
 
         [Parameter()]
@@ -11013,15 +10189,15 @@ function Set-TransportRule
         $ExceptIfSenderIpRanges,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfRecipientADAttributeMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $RecipientADAttributeContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AttachmentIsUnsupported,
 
         [Parameter()]
@@ -11029,11 +10205,11 @@ function Set-TransportRule
         $ExpiryDate,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $AttachmentExtensionMatchesWords,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfSubjectOrBodyContainsWords,
 
         [Parameter()]
@@ -11041,23 +10217,27 @@ function Set-TransportRule
         $LogEventText,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfManagerAddresses,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SenderInRecipientList,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
+        $ExceptIfAnyOfToCcHeader,
+
+        [Parameter()]
+        [System.Object[]]
         $AttachmentMatchesPatterns,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $DlpPolicy,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ManagerAddresses,
 
         [Parameter()]
@@ -11065,43 +10245,47 @@ function Set-TransportRule
         $SenderAddressLocation,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $CopyTo,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $SubjectOrBodyContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ApplyClassification,
+
+        [Parameter()]
+        [System.Object[]]
+        $RecipientADAttributeMatchesPatterns,
 
         [Parameter()]
         [System.Object]
         $SetHeaderValue,
 
         [Parameter()]
-        [System.Object]
-        $Priority,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $AttachmentIsPasswordProtected,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $BetweenMemberOf1,
 
         [Parameter()]
         [System.Object]
+        $ExceptIfMessageSizeOver,
+
+        [Parameter()]
+        [System.Object[]]
         $AnyOfCcHeader,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ExceptIfAttachmentProcessingLimitExceeded,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $FromAddressMatchesPatterns,
 
         [Parameter()]
@@ -11113,15 +10297,15 @@ function Set-TransportRule
         $SmtpRejectMessageRejectText,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfAttachmentContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $AnyOfToHeader,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ExceptIfHasSenderOverride,
 
         [Parameter()]
@@ -11141,20 +10325,16 @@ function Set-TransportRule
         $MessageTypeMatches,
 
         [Parameter()]
-        [System.Object]
+        [System.Object[]]
         $ExceptIfAttachmentPropertyContainsWords,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $StopRuleProcessing,
 
         [Parameter()]
         [System.Object]
-        $ExceptIfHeaderContainsMessageHeader,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        $ExceptIfHeaderContainsMessageHeader
     )
 }
 function Set-User
@@ -11162,15 +10342,15 @@ function Set-User
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
-        $MailboxRegion,
+        [System.String]
+        $Company,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Phone,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $DisplayName,
 
         [Parameter()]
@@ -11178,7 +10358,7 @@ function Set-User
         $Identity,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Office,
 
         [Parameter()]
@@ -11194,11 +10374,15 @@ function Set-User
         $OtherTelephone,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Pager,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
         $PhoneticDisplayName,
 
         [Parameter()]
@@ -11206,7 +10390,7 @@ function Set-User
         $ClearDataEncryptionPolicy,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Fax,
 
         [Parameter()]
@@ -11214,23 +10398,19 @@ function Set-User
         $Force,
 
         [Parameter()]
-        [System.Object]
-        $Company,
-
-        [Parameter()]
-        [System.Object]
-        $StsRefreshTokensValidFrom,
+        [System.String]
+        $LastName,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $RemoveMailboxProvisioningConstraint,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $ResetPasswordOnNextLogon,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $BlockCloudCache,
 
         [Parameter()]
@@ -11238,39 +10418,35 @@ function Set-User
         $SeniorityIndex,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $City,
 
         [Parameter()]
-        [System.Object]
-        $StreetAddress,
+        [System.Boolean]
+        $VIP,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Title,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $MobilePhone,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $AssistantName,
 
         [Parameter()]
         [System.Object]
-        $VIP,
+        $OtherHomePhone,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $StateOrProvince,
 
         [Parameter()]
-        [System.Object]
-        $Manager,
-
-        [Parameter()]
-        [System.Object]
+        [System.String]
         $Initials,
 
         [Parameter()]
@@ -11278,43 +10454,51 @@ function Set-User
         $Confirm,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $WebPage,
 
         [Parameter()]
-        [System.Object]
-        $LastName,
+        [System.String]
+        $Notes,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $PermanentlyClearPreviousMailboxInfo,
 
         [Parameter()]
-        [System.Object]
-        $MailboxRegionSuffix,
+        [System.String]
+        $MailboxRegion,
 
         [Parameter()]
         [System.Object]
-        $HomePhone,
+        $Manager,
+
+        [Parameter()]
+        [System.Object]
+        $StsRefreshTokensValidFrom,
 
         [Parameter()]
         [System.Object]
         $OtherFax,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $SimpleDisplayName,
 
         [Parameter()]
         [System.Object]
+        $MailboxRegionSuffix,
+
+        [Parameter()]
+        [System.String]
+        $HomePhone,
+
+        [Parameter()]
+        [System.String]
         $Department,
 
         [Parameter()]
-        [System.Object]
-        $OtherHomePhone,
-
-        [Parameter()]
-        [System.Object]
+        [System.String]
         $FirstName,
 
         [Parameter()]
@@ -11330,36 +10514,28 @@ function Set-User
         $WindowsEmailAddress,
 
         [Parameter()]
-        [System.Object]
-        $Notes,
-
-        [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $RemotePowerShellEnabled,
 
         [Parameter()]
-        [System.Object]
-        $Name,
+        [System.String]
+        $PostalCode,
 
         [Parameter()]
         [System.Object]
         $GeoCoordinates,
 
         [Parameter()]
-        [System.Object]
-        $PostalCode,
+        [System.String]
+        $StreetAddress,
 
         [Parameter()]
         [System.Object]
         $DesiredWorkloads,
 
         [Parameter()]
-        [System.Object]
-        $CanHaveCloudCache,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
+        [System.Boolean]
+        $CanHaveCloudCache
     )
 }
 #endregion
@@ -13057,63 +12233,6 @@ function Select-MgProfile
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm
-    )
-}
-function Connect-Graph
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $UseDeviceAuthentication,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.Security.Cryptography.X509Certificates.X509Certificate2]
-        $Certificate,
-
-        [Parameter()]
-        [System.String[]]
-        $Scopes,
-
-        [Parameter()]
-        [System.String]
-        $ClientId,
-
-        [Parameter()]
-        [System.String]
-        $AccessToken,
-
-        [Parameter()]
-        [System.Double]
-        $ClientTimeout,
-
-        [Parameter()]
-        [System.String]
-        $CertificateName,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ForceRefresh,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.String]
-        $Environment,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Authentication.ContextScope]
-        $ContextScope
     )
 }
 #endregion
@@ -23770,6 +22889,83 @@ function Get-MgGroupPlannerPlan
         $HttpPipelineAppend
     )
 }
+function Get-MgGroupPlannerPlanTask
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.String]
+        $GroupId,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String]
+        $PlannerPlanId,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
 function Get-MgPlanner
 {
     [CmdletBinding()]
@@ -26177,6 +25373,64 @@ function Get-AuditConfigurationPolicy
         $AsJob
     )
 }
+function Get-AutoSensitivityLabelPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $ForceValidate,
+
+        [Parameter()]
+        [System.Object]
+        $IncludeTestModeResults,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeProgressFeedback,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DistributionDetail,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-AutoSensitivityLabelRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $IncludeExecutionRuleInformation,
+
+        [Parameter()]
+        [System.Object]
+        $Policy,
+
+        [Parameter()]
+        [System.Object]
+        $IncludeExecutionRuleGuids,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Get-CaseHoldPolicy
 {
     [CmdletBinding()]
@@ -26422,6 +25676,10 @@ function Get-DlpCompliancePolicy
         [Parameter()]
         [System.Object]
         $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $IRMUserRiskConfiguredAnyRule,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -26751,6 +26009,304 @@ function New-AuditConfigurationPolicy
         [Parameter()]
         [System.Object]
         $DomainController,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-AutoSensitivityLabelPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $PolicyTemplateInfo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $SharePointLocation,
+
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSenderException,
+
+        [Parameter()]
+        [System.Object]
+        $SharePointLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $OneDriveLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $UnifiedAuditLogEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ApplySensitivityLabel,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSender,
+
+        [Parameter()]
+        [System.Object]
+        $OneDriveLocation,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSenderMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSenderMemberOfException,
+
+        [Parameter()]
+        [System.Object]
+        $Mode,
+
+        [Parameter()]
+        [System.Object]
+        $OverwriteLabel,
+
+        [Parameter()]
+        [System.Object]
+        $ExternalMailRightsManagementOwner,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-AutoSensitivityLabelRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $HeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFrom,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Object]
+        $ExpiryDate,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $Workload,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $From,
+
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $Policy,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $SenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $SenderDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ActivationDate,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $Disabled,
+
+        [Parameter()]
+        [System.Object]
+        $RuleErrorAction,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $FromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $AccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfHeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ReportSeverityLevel,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Object]
+        $ImmutableId,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -27394,6 +26950,10 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $RecipientADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
         $ExceptIfDocumentNameMatchesPatterns,
 
         [Parameter()]
@@ -27422,7 +26982,7 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $OnPremisesScannerDlpRestrictions,
+        $ExceptIfSentToMemberOf,
 
         [Parameter()]
         [System.Object]
@@ -27474,7 +27034,7 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $ExceptIfHasSenderOverride,
+        $ThirdPartyAppDlpRestrictions,
 
         [Parameter()]
         [System.Object]
@@ -27674,10 +27234,6 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $ExceptIfSentToMemberOf,
-
-        [Parameter()]
-        [System.Object]
         $DocumentNameMatchesWords,
 
         [Parameter()]
@@ -27703,6 +27259,10 @@ function New-DlpComplianceRule
         [Parameter()]
         [System.Object]
         $SubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $AdvancedRule,
 
         [Parameter()]
         [System.Object]
@@ -27766,7 +27326,7 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $RecipientADAttributeMatchesPatterns,
+        $ContentIsNotLabeled,
 
         [Parameter()]
         [System.Object]
@@ -27786,6 +27346,10 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $NotifyOverrideRequirements,
+
+        [Parameter()]
+        [System.Object]
         $ExceptIfSenderIPRanges,
 
         [Parameter()]
@@ -27798,7 +27362,7 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $ThirdPartyAppDlpRestrictions,
+        $OnPremisesScannerDlpRestrictions,
 
         [Parameter()]
         [System.Object]
@@ -27883,6 +27447,10 @@ function New-DlpComplianceRule
         [Parameter()]
         [System.Object]
         $ExceptIfDocumentCreatedByMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfHasSenderOverride,
 
         [Parameter()]
         [System.Object]
@@ -28663,6 +28231,40 @@ function Remove-AuditConfigurationPolicy
         $AsJob
     )
 }
+function Remove-AutoSensitivityLabelPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Remove-AutoSensitivityLabelRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Remove-CaseHoldPolicy
 {
     [CmdletBinding()]
@@ -29125,6 +28727,332 @@ function Remove-SupervisoryReviewPolicyV2
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ForceDeletion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-AutoSensitivityLabelPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $AddExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $SpoAipIntegrationEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyTemplateInfo,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Enabled,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveOneDriveLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $AddSharePointLocation,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSenderException,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveSharePointLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddOneDriveLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RetryDistribution,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSender,
+
+        [Parameter()]
+        [System.Object]
+        $AddSharePointLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $ApplySensitivityLabel,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveSharePointLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSenderMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $StartSimulation,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSenderMemberOfException,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveOneDriveLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddOneDriveLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AutoEnableAfter,
+
+        [Parameter()]
+        [System.Object]
+        $Mode,
+
+        [Parameter()]
+        [System.Object]
+        $OverwriteLabel,
+
+        [Parameter()]
+        [System.Object]
+        $ExternalMailRightsManagementOwner,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-AutoSensitivityLabelRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $HeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFrom,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Object]
+        $ExpiryDate,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Workload,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $From,
+
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $SenderDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $SenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ActivationDate,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $Disabled,
+
+        [Parameter()]
+        [System.Object]
+        $RuleErrorAction,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $FromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $AccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfHeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ReportSeverityLevel,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentIsPasswordProtected,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -29803,6 +29731,10 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
         $AddRecipients,
 
         [Parameter()]
@@ -30047,11 +29979,11 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $ExceptIfDocumentMatchesPatterns,
+        $MessageSizeOver,
 
         [Parameter()]
         [System.Object]
-        $ExceptIfSentToMemberOf,
+        $ExceptIfDocumentMatchesPatterns,
 
         [Parameter()]
         [System.Object]
@@ -30075,11 +30007,19 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $ContentIsNotLabeled,
+
+        [Parameter()]
+        [System.Object]
         $ExceptIfSubjectContainsWords,
 
         [Parameter()]
         [System.Object]
         $SubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $AdvancedRule,
 
         [Parameter()]
         [System.Object]
@@ -30127,10 +30067,6 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $MessageSizeOver,
-
-        [Parameter()]
-        [System.Object]
         $ExceptIfSentTo,
 
         [Parameter()]
@@ -30160,6 +30096,10 @@ function Set-DlpComplianceRule
         [Parameter()]
         [System.Object]
         $NotifyAllowOverride,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyOverrideRequirements,
 
         [Parameter()]
         [System.Object]
@@ -34787,10 +34727,6 @@ function New-CsTeamsMeetingPolicy
         $AllowTranscription,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowCarbonSummary,
-
-        [Parameter()]
         [System.String]
         $RoomAttributeUserOverride,
 
@@ -34809,6 +34745,10 @@ function New-CsTeamsMeetingPolicy
         [Parameter()]
         [System.Boolean]
         $AllowAnonymousUsersToStartMeeting,
+
+        [Parameter()]
+        [System.String]
+        $AutoAdmittedUsers,
 
         [Parameter()]
         [System.String]
@@ -34831,6 +34771,10 @@ function New-CsTeamsMeetingPolicy
         $ScreenSharingMode,
 
         [Parameter()]
+        [System.String]
+        $AllowCartCaptionsScheduling,
+
+        [Parameter()]
         [System.Boolean]
         $AllowPrivateMeetNow,
 
@@ -34840,7 +34784,7 @@ function New-CsTeamsMeetingPolicy
 
         [Parameter()]
         [System.Boolean]
-        $AllowPSTNUsersToBypassLobby,
+        $AllowWatermarkForCameraVideo,
 
         [Parameter()]
         [System.String]
@@ -34899,12 +34843,16 @@ function New-CsTeamsMeetingPolicy
         $WhoCanRegister,
 
         [Parameter()]
-        [System.String]
-        $AutoAdmittedUsers,
+        [System.Boolean]
+        $AllowAvatarsInGallery,
 
         [Parameter()]
         [System.Boolean]
         $AllowCloudRecording,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWatermarkForScreenSharing,
 
         [Parameter()]
         [System.Boolean]
@@ -34916,7 +34864,11 @@ function New-CsTeamsMeetingPolicy
 
         [Parameter()]
         [System.String]
-        $AllowCartCaptionsScheduling,
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowImmersiveView,
 
         [Parameter()]
         [System.Boolean]
@@ -34964,11 +34916,11 @@ function New-CsTeamsMeetingPolicy
 
         [Parameter()]
         [System.Boolean]
-        $AllowMeetingReactions,
+        $AllowChannelMeetingScheduling,
 
         [Parameter()]
         [System.Boolean]
-        $AllowChannelMeetingScheduling,
+        $AllowMeetingReactions,
 
         [Parameter()]
         [System.String]
@@ -34991,8 +34943,12 @@ function New-CsTeamsMeetingPolicy
         $AllowRecordingStorageOutsideRegion,
 
         [Parameter()]
-        [System.String]
-        $Identity,
+        [System.Boolean]
+        $AllowPSTNUsersToBypassLobby,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCarbonSummary,
 
         [Parameter()]
         [System.String]
@@ -36183,10 +36139,6 @@ function Set-CsTeamsMeetingPolicy
         $AllowTranscription,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowCarbonSummary,
-
-        [Parameter()]
         [System.String]
         $RoomAttributeUserOverride,
 
@@ -36205,6 +36157,10 @@ function Set-CsTeamsMeetingPolicy
         [Parameter()]
         [System.Boolean]
         $AllowAnonymousUsersToStartMeeting,
+
+        [Parameter()]
+        [System.String]
+        $AutoAdmittedUsers,
 
         [Parameter()]
         [System.String]
@@ -36227,6 +36183,10 @@ function Set-CsTeamsMeetingPolicy
         $ScreenSharingMode,
 
         [Parameter()]
+        [System.String]
+        $AllowCartCaptionsScheduling,
+
+        [Parameter()]
         [System.Boolean]
         $AllowPrivateMeetNow,
 
@@ -36236,7 +36196,7 @@ function Set-CsTeamsMeetingPolicy
 
         [Parameter()]
         [System.Boolean]
-        $AllowPSTNUsersToBypassLobby,
+        $AllowWatermarkForCameraVideo,
 
         [Parameter()]
         [System.String]
@@ -36295,12 +36255,16 @@ function Set-CsTeamsMeetingPolicy
         $WhoCanRegister,
 
         [Parameter()]
-        [System.String]
-        $AutoAdmittedUsers,
+        [System.Boolean]
+        $AllowAvatarsInGallery,
 
         [Parameter()]
         [System.Boolean]
         $AllowCloudRecording,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWatermarkForScreenSharing,
 
         [Parameter()]
         [System.Boolean]
@@ -36312,7 +36276,11 @@ function Set-CsTeamsMeetingPolicy
 
         [Parameter()]
         [System.String]
-        $AllowCartCaptionsScheduling,
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowImmersiveView,
 
         [Parameter()]
         [System.Boolean]
@@ -36360,11 +36328,11 @@ function Set-CsTeamsMeetingPolicy
 
         [Parameter()]
         [System.Boolean]
-        $AllowMeetingReactions,
+        $AllowChannelMeetingScheduling,
 
         [Parameter()]
         [System.Boolean]
-        $AllowChannelMeetingScheduling,
+        $AllowMeetingReactions,
 
         [Parameter()]
         [System.String]
@@ -36387,8 +36355,12 @@ function Set-CsTeamsMeetingPolicy
         $AllowRecordingStorageOutsideRegion,
 
         [Parameter()]
-        [System.String]
-        $Identity,
+        [System.Boolean]
+        $AllowPSTNUsersToBypassLobby,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCarbonSummary,
 
         [Parameter()]
         [System.String]

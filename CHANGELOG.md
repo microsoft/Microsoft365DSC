@@ -7,6 +7,10 @@
   FIXES [#2292](https://github.com/microsoft/Microsoft365DSC/issues/2292)
 * O365User
   * Improved extraction performance by leveraging StringBuilder instead of re-assigning string.
+* SCAutoSensitivityLabelPolicy
+  * Initial Release.
+* SCAutoSensitivityLabelRule
+  * Initial Release.
 * DEPENDENCIES
   * Updated the MSCloudLoginAssistant dependency to version 1.0.89.
 
