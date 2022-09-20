@@ -16,6 +16,7 @@
 * SCAutoSensitivityLabelRule
   * Initial Release.
 * DEPENDENCIES
+  * Updated the ExchangeOnlineManagement dependency to version 3.0.0.
   * Updated the MSCloudLoginAssistant dependency to version 1.0.89.
 
 # 1.22.914.1
