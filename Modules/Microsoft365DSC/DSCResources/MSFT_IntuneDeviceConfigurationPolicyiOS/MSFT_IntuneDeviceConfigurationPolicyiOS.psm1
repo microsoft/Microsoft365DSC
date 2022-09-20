@@ -430,7 +430,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $PasscodeRequiredType = "deviceDefault",
+        $PasscodeRequiredType = 'deviceDefault',
 
         [Parameter()]
         [System.Boolean]
@@ -527,7 +527,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Checking for the Intune Device Configuration Policy {$DisplayName}"
@@ -538,8 +542,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -687,12 +691,13 @@ function Get-TargetResource
             SpotlightBlockInternetResults                  = $policy.AdditionalProperties.spotlightBlockInternetResults
             VoiceDialingBlocked                            = $policy.AdditionalProperties.voiceDialingBlocked
             WallpaperBlockModification                     = $policy.AdditionalProperties.wallpaperBlockModification
-            Ensure                                         = "Present"
-            Credential                             = $Credential
+            Ensure                                         = 'Present'
+            Credential                                     = $Credential
             ApplicationId                                  = $ApplicationId
             TenantId                                       = $TenantId
             ApplicationSecret                              = $ApplicationSecret
             CertificateThumbprint                          = $CertificateThumbprint
+            Managedidentity                                = $ManagedIdentity.IsPresent
         }
     }
     catch
@@ -700,7 +705,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             $tenantIdValue = $Credential.UserName.Split('@')[1]
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -1145,7 +1150,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $PasscodeRequiredType = "deviceDefault",
+        $PasscodeRequiredType = 'deviceDefault',
 
         [Parameter()]
         [System.Boolean]
@@ -1242,7 +1247,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -1252,8 +1261,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -1262,25 +1271,25 @@ function Set-TargetResource
 
     $currentPolicy = Get-TargetResource @PSBoundParameters
 
-    $PSBoundParameters.Remove("Ensure") | Out-Null
-    $PSBoundParameters.Remove("Credential") | Out-Null
-    $PSBoundParameters.Remove("ApplicationId") | Out-Null
-    $PSBoundParameters.Remove("TenantId") | Out-Null
-    $PSBoundParameters.Remove("ApplicationSecret") | Out-Null
+    $PSBoundParameters.Remove('Ensure') | Out-Null
+    $PSBoundParameters.Remove('Credential') | Out-Null
+    $PSBoundParameters.Remove('ApplicationId') | Out-Null
+    $PSBoundParameters.Remove('TenantId') | Out-Null
+    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Device Configuration Policy {$DisplayName}"
         $PSBoundParameters.Remove('DisplayName') | Out-Null
         $PSBoundParameters.Remove('Description') | Out-Null
         $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationPolicyiOSAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        New-MGDeviceManagementDeviceConfiguration -DisplayName $DisplayName `
+        New-MgDeviceManagementDeviceConfiguration -DisplayName $DisplayName `
             -Description $Description `
             -AdditionalProperties $AdditionalProperties
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing Device Configuration Policy {$DisplayName}"
-        $configDevicePolicy = Get-MGDeviceManagementDeviceConfiguration `
+        $configDevicePolicy = Get-MgDeviceManagementDeviceConfiguration `
             -ErrorAction Stop | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration' -and `
                 $_.displayName -eq $($DisplayName) }
@@ -1288,19 +1297,19 @@ function Set-TargetResource
         $PSBoundParameters.Remove('DisplayName') | Out-Null
         $PSBoundParameters.Remove('Description') | Out-Null
         $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationPolicyiOSAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        Update-MGDeviceManagementDeviceConfiguration -AdditionalProperties $AdditionalProperties `
+        Update-MgDeviceManagementDeviceConfiguration -AdditionalProperties $AdditionalProperties `
             -Description $Description `
             -DeviceConfigurationId $configDevicePolicy.Id
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Device Configuration Policy {$DisplayName}"
-        $configDevicePolicy = Get-MGDeviceManagementDeviceConfiguration `
-        -ErrorAction Stop | Where-Object `
-        -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration' -and `
-            $_.displayName -eq $($DisplayName) }
+        $configDevicePolicy = Get-MgDeviceManagementDeviceConfiguration `
+            -ErrorAction Stop | Where-Object `
+            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration' -and `
+                $_.displayName -eq $($DisplayName) }
 
-    Remove-MGDeviceManagementDeviceConfiguration -DeviceConfigurationId $configDevicePolicy.Id
+        Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $configDevicePolicy.Id
     }
 }
 
@@ -1736,7 +1745,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $PasscodeRequiredType = "deviceDefault",
+        $PasscodeRequiredType = 'deviceDefault',
 
         [Parameter()]
         [System.Boolean]
@@ -1833,14 +1842,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -1897,7 +1910,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -1906,8 +1923,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -1916,7 +1933,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$policies = Get-MGDeviceManagementDeviceConfiguration `
+        [array]$policies = Get-MgDeviceManagementDeviceConfiguration `
             -ErrorAction Stop -All:$true -Filter $Filter | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration' }
         $i = 1
@@ -1927,7 +1944,7 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
         foreach ($policy in $policies)
         {
@@ -1935,11 +1952,12 @@ function Export-TargetResource
             $params = @{
                 DisplayName           = $policy.displayName
                 Ensure                = 'Present'
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -1977,7 +1995,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 
@@ -1991,7 +2009,7 @@ function Get-M365DSCIntuneDeviceConfigurationPolicyiOSAdditionalProperties
         $Properties
     )
 
-    $results = @{"@odata.type" = "#microsoft.graph.iosGeneralDeviceConfiguration"}
+    $results = @{'@odata.type' = '#microsoft.graph.iosGeneralDeviceConfiguration' }
     foreach ($property in $properties.Keys)
     {
         if ($property -ne 'Verbose')

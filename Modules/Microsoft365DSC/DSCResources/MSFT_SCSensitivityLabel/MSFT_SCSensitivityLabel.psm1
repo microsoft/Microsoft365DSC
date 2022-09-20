@@ -585,7 +585,7 @@ function Set-TargetResource
 
     if ($PSBoundParameters.ContainsKey("Disabled"))
     {
-        Write-Verbose -Message "The Disabled parameter is no longer available and will be depricated."
+        Write-Verbose -Message "The Disabled parameter is no longer available and will be deprecated."
     }
 
 

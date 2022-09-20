@@ -1,12 +1,20 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-
+* AADRoleSetting
+  * Fixed an issue if the P2 License is not present on the tenant the Export stop working
+    FIXES [#2227](https://github.com/microsoft/Microsoft365DSC/issues/2227)
+  * Fixed an issue with approver can be a group
+    FIXES [#2283](https://github.com/microsoft/Microsoft365DSC/issues/2283)
 * AADConditionalAccessPolicy
   * Added support for the CustomAuthenticationFactors parameter.
   FIXES [#2292](https://github.com/microsoft/Microsoft365DSC/issues/2292)
 * O365User
   * Improved extraction performance by leveraging StringBuilder instead of re-assigning string.
+* SCAutoSensitivityLabelPolicy
+  * Initial Release.
+* SCAutoSensitivityLabelRule
+  * Initial Release.
 * DEPENDENCIES
   * Updated the MSCloudLoginAssistant dependency to version 1.0.89.
 
