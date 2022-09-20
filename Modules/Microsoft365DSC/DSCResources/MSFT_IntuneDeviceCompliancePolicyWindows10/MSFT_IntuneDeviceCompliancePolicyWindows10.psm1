@@ -169,7 +169,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Checking for the Intune Device Compliance Windows 10 Policy {$DisplayName}"
@@ -181,8 +185,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -193,10 +197,10 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $devicePolicy = Get-MGDeviceManagementDeviceCompliancePolicy `
+        $devicePolicy = Get-MgDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' -and `
-            $_.displayName -eq $($DisplayName) }
+                $_.displayName -eq $($DisplayName) }
 
         if ($null -eq $devicePolicy)
         {
@@ -246,11 +250,12 @@ function Get-TargetResource
             TenantId                                    = $TenantId
             ApplicationSecret                           = $ApplicationSecret
             CertificateThumbprint                       = $CertificateThumbprint
+            Managedidentity                             = $ManagedIdentity.IsPresent
         }
 
-        $myAssignments=@()
-        $myAssignments+=Get-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $devicePolicy.id -repository 'deviceCompliancePolicies'
-        $results.Add('Assignments',$myAssignments)
+        $myAssignments = @()
+        $myAssignments += Get-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $devicePolicy.id -repository 'deviceCompliancePolicies'
+        $results.Add('Assignments', $myAssignments)
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -258,7 +263,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -450,7 +455,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Intune Device Compliance Windows 10 Policy {$DisplayName}"
@@ -463,8 +472,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -480,12 +489,12 @@ function Set-TargetResource
     $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
 
     $scheduledActionsForRule = @{
-        '@odata.type'                 = "#microsoft.graph.deviceComplianceScheduledActionForRule"
-        ruleName                      = "PasswordRequired"
+        '@odata.type'                 = '#microsoft.graph.deviceComplianceScheduledActionForRule'
+        ruleName                      = 'PasswordRequired'
         scheduledActionConfigurations = @(
             @{
-                "@odata.type"= "#microsoft.graph.deviceComplianceActionItem"
-                actionType   =  "block"
+                '@odata.type' = '#microsoft.graph.deviceComplianceActionItem'
+                actionType    = 'block'
             }
         )
     }
@@ -498,15 +507,15 @@ function Set-TargetResource
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyWindows10AdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        $policy=New-MGDeviceManagementDeviceCompliancePolicy -DisplayName $DisplayName `
+        $policy = New-MgDeviceManagementDeviceCompliancePolicy -DisplayName $DisplayName `
             -Description $Description `
-            -additionalProperties $AdditionalProperties `
-            -scheduledActionsForRule $scheduledActionsForRule
+            -AdditionalProperties $AdditionalProperties `
+            -ScheduledActionsForRule $scheduledActionsForRule
 
-        $assignmentsHash=@()
-        foreach($assignment in $Assignments)
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
         {
-            $assignmentsHash+=Get-M365DSCAssignmentsAsHashtable -CIMAssignment $Assignment
+            $assignmentsHash += Get-M365DSCAssignmentsAsHashtable -CIMAssignment $Assignment
 
         }
         Update-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $policy.id `
@@ -517,24 +526,24 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentDeviceWindows10Policy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Intune Device Compliance Windows 10 Policy {$DisplayName}"
-        $configDevicePolicy = Get-MGDeviceManagementDeviceCompliancePolicy `
-        -ErrorAction Stop | Where-Object `
-        -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' -and `
-            $_.displayName -eq $($DisplayName) }
+        $configDevicePolicy = Get-MgDeviceManagementDeviceCompliancePolicy `
+            -ErrorAction Stop | Where-Object `
+            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' -and `
+                $_.displayName -eq $($DisplayName) }
 
         $PSBoundParameters.Remove('DisplayName') | Out-Null
         $PSBoundParameters.Remove('Description') | Out-Null
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyWindows10AdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        Update-MGDeviceManagementDeviceCompliancePolicy -AdditionalProperties $AdditionalProperties `
+        Update-MgDeviceManagementDeviceCompliancePolicy -AdditionalProperties $AdditionalProperties `
             -Description $Description `
             -DeviceCompliancePolicyId $configDevicePolicy.Id
 
-        $assignmentsHash=@()
-        foreach($assignment in $Assignments)
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
         {
-            $assignmentsHash+=Get-M365DSCAssignmentsAsHashtable -CIMAssignment $Assignment
+            $assignmentsHash += Get-M365DSCAssignmentsAsHashtable -CIMAssignment $Assignment
 
         }
         Update-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $configDevicePolicy.id `
@@ -544,12 +553,12 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentDeviceWindows10Policy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Intune Device Compliance Windows 10 Policy {$DisplayName}"
-        $configDevicePolicy = Get-MGDeviceManagementDeviceCompliancePolicy `
+        $configDevicePolicy = Get-MgDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
 
-        Remove-MGDeviceManagementDeviceCompliancePolicy -DeviceCompliancePolicyId $configDevicePolicy.Id
+        Remove-MgDeviceManagementDeviceCompliancePolicy -DeviceCompliancePolicyId $configDevicePolicy.Id
     }
 }
 
@@ -724,15 +733,19 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -752,72 +765,72 @@ function Test-TargetResource
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
-    $testResult=$true
-    if(([Array]$Assignments).count -ne $CurrentValues.Assignments.count)
+    $testResult = $true
+    if (([Array]$Assignments).count -ne $CurrentValues.Assignments.count)
     {
         Write-Verbose -Message "Configuration drift:Number of assignments does not match: Source=$([Array]$Assignments.count) Target=$($CurrentValues.Assignments.count)"
-        $testResult=$false
+        $testResult = $false
     }
-    if($testResult)
+    if ($testResult)
     {
-        foreach($assignment in $CurrentValues.Assignments)
+        foreach ($assignment in $CurrentValues.Assignments)
         {
             #GroupId Assignment
-            if(-not [String]::IsNullOrEmpty($assignment.groupId))
+            if (-not [String]::IsNullOrEmpty($assignment.groupId))
             {
-                $source=[Array]$ValuesToCheck.Assignments|Where-Object -FilterScript {$_.groupId -eq $assignment.groupId}
-                if(-not $source)
+                $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.groupId -eq $assignment.groupId }
+                if (-not $source)
                 {
                     Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
-                    $testResult=$false
+                    $testResult = $false
                     break;
                 }
 
-                $CIMAssignmentAsHash=Get-M365DSCAssignmentsAsHashtable -CIMAssignment $source
+                $CIMAssignmentAsHash = Get-M365DSCAssignmentsAsHashtable -CIMAssignment $source
             }
             #collectionId Assignment
-            elseif(-not [String]::IsNullOrEmpty($assignment.collectionId))
+            elseif (-not [String]::IsNullOrEmpty($assignment.collectionId))
             {
-                $source=[Array]$ValuesToCheck.Assignments|Where-Object -FilterScript {$_.groupId -eq $assignment.collectionId}
-                if(-not $source)
+                $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.groupId -eq $assignment.collectionId }
+                if (-not $source)
                 {
                     Write-Verbose -Message "Configuration drift: collectionId {$($assignment.collectionId)} not found"
-                    $testResult=$false
+                    $testResult = $false
                     break;
                 }
 
-                $CIMAssignmentAsHash=Get-M365DSCAssignmentsAsHashtable -CIMAssignment $source
+                $CIMAssignmentAsHash = Get-M365DSCAssignmentsAsHashtable -CIMAssignment $source
             }
             #AllDevices/AllUsers assignment
             else
             {
-                $source=[Array]$ValuesToCheck.Assignments|Where-Object -FilterScript {$_.dataType -eq $assignment.dataType}
-                if(-not $source)
+                $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.dataType -eq $assignment.dataType }
+                if (-not $source)
                 {
                     Write-Verbose -Message "Configuration drift: {$($assignment.dataType)} not found"
-                    $testResult=$false
+                    $testResult = $false
                     break;
                 }
-                $CIMAssignmentAsHash=Get-M365DSCAssignmentsAsHashtable -CIMAssignment $source
+                $CIMAssignmentAsHash = Get-M365DSCAssignmentsAsHashtable -CIMAssignment $source
             }
 
-            foreach($key in $assignment.keys)
+            foreach ($key in $assignment.keys)
             {
                 $compareResult = Compare-Object `
-                    -ReferenceObject @($assignment[$key]|Select-Object) `
-                    -DifferenceObject @($CIMAssignmentAsHash[$key]|Select-Object)
+                    -ReferenceObject @($assignment[$key] | Select-Object) `
+                    -DifferenceObject @($CIMAssignmentAsHash[$key] | Select-Object)
 
                 if ($null -ne $compareResult)
                 {
-                    Write-Verbose -Message "Configuration drift in assignment key: $key - CurrentValue $($assignment[$key]|out-string)"
-                    Write-Verbose -Message "Configuration drift in assignment key: $key - TargetValue $($CIMAssignmentAsHash[$key]|out-string)"
+                    Write-Verbose -Message "Configuration drift in assignment key: $key - CurrentValue $($assignment[$key]|Out-String)"
+                    Write-Verbose -Message "Configuration drift in assignment key: $key - TargetValue $($CIMAssignmentAsHash[$key]|Out-String)"
                     return $false
                 }
             }
 
-            if(-not $testResult)
+            if (-not $testResult)
             {
-                $testResult=$false
+                $testResult = $false
                 break;
             }
 
@@ -827,7 +840,7 @@ function Test-TargetResource
 
     $ValuesToCheck.Remove('Assignments') | Out-Null
 
-    if($testResult)
+    if ($testResult)
     {
         $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
             -Source $($MyInvocation.MyCommand.Source) `
@@ -868,7 +881,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -879,8 +896,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -889,7 +906,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$configDeviceWindowsPolicies = Get-MGDeviceManagementDeviceCompliancePolicy `
+        [array]$configDeviceWindowsPolicies = Get-MgDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop -All:$true -Filter $Filter | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' }
         $i = 1
@@ -900,7 +917,7 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
 
 
@@ -910,17 +927,18 @@ function Export-TargetResource
             $params = @{
                 DisplayName           = $configDeviceWindowsPolicy.displayName
                 Ensure                = 'Present'
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
             $Results = Get-TargetResource @Params
 
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-            if($Results.Assignments)
+            if ($Results.Assignments)
             {
                 $complexTypeStringResult = Get-M365DSCAssignmentsAsString -Params $Results.Assignments
                 if ($complexTypeStringResult)
@@ -940,12 +958,12 @@ function Export-TargetResource
 
             if ($Results.Assignments)
             {
-                $isCIMArray=$false
-                if($Results.Assignments.getType().Fullname -like "*[[\]]")
+                $isCIMArray = $false
+                if ($Results.Assignments.getType().Fullname -like '*[[\]]')
                 {
-                    $isCIMArray=$true
+                    $isCIMArray = $true
                 }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$isCIMArray
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$isCIMArray
             }
 
             $dscContent += $currentDSCBlock
@@ -963,7 +981,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -980,7 +998,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 
@@ -995,7 +1013,7 @@ function Get-M365DSCIntuneDeviceCompliancePolicyWindows10AdditionalProperties
         $Properties
     )
 
-    $results = @{"@odata.type" = "#microsoft.graph.windows10CompliancePolicy"}
+    $results = @{'@odata.type' = '#microsoft.graph.windows10CompliancePolicy' }
     foreach ($property in $properties.Keys)
     {
         if ($property -ne 'Verbose')
@@ -1024,9 +1042,9 @@ function Get-M365DSCAssignmentsAsString
         return $null
     }
     $currentProperty = "@(`r`n"
-    $space="                "
-    $nbParam=0
-    $hasValue=$false
+    $space = '                '
+    $nbParam = 0
+    $hasValue = $false
     foreach ($rule in $params)
     {
 
@@ -1036,20 +1054,20 @@ function Get-M365DSCAssignmentsAsString
             $value = $rule[$key]
             if (-not [System.String]::IsNullOrEmpty($value))
             {
-                $currentProperty += "                    " + $key + " = '" + $value + "'`r`n"
-                $hasValue=$true
+                $currentProperty += '                    ' + $key + " = '" + $value + "'`r`n"
+                $hasValue = $true
             }
 
         }
-        $currentProperty += "                }"
-        if($nbParam -lt ($params.Count -1) )
+        $currentProperty += '                }'
+        if ($nbParam -lt ($params.Count - 1) )
         {
             $nbParam++
-            $currentProperty +="`r`n"
+            $currentProperty += "`r`n"
         }
 
     }
-    $currentProperty += ")"
+    $currentProperty += ')'
     if (-not $hasValue)
     {
         return '@()'
@@ -1070,12 +1088,12 @@ function Get-M365DSCAssignmentsAsHashtable
     {
         return $null
     }
-    $CIMAssignmentAsHash=@{}
+    $CIMAssignmentAsHash = @{}
     $keys = $CIMAssignment | Get-Member -MemberType Properties
 
     foreach ($key in $keys)
     {
-        if($CIMAssignment.$($key.Name))
+        if ($CIMAssignment.$($key.Name))
         {
             $CIMAssignmentAsHash.Add($key.Name, $CIMAssignment.$($key.Name))
         }
@@ -1095,39 +1113,39 @@ function Get-MgDeviceManagementPolicyAssignments
         $DeviceManagementPolicyId,
 
         [Parameter()]
-        [ValidateSet('deviceCompliancePolicies','intents','configurationPolicies')]
+        [ValidateSet('deviceCompliancePolicies', 'intents', 'configurationPolicies')]
         [System.String]
-        $Repository='configurationPolicies'
+        $Repository = 'configurationPolicies'
     )
     try
     {
-        $deviceManagementPolicyAssignments=@()
+        $deviceManagementPolicyAssignments = @()
 
-        $Uri="https://graph.microsoft.com/beta/deviceManagement/$Repository/$DeviceManagementPolicyId/assignments"
-        $results=Invoke-MgGraphRequest -Method GET  -Uri $Uri -ErrorAction Stop
-        foreach($result in $results.value.target)
+        $Uri = "https://graph.microsoft.com/beta/deviceManagement/$Repository/$DeviceManagementPolicyId/assignments"
+        $results = Invoke-MgGraphRequest -Method GET  -Uri $Uri -ErrorAction Stop
+        foreach ($result in $results.value.target)
         {
-            $deviceManagementPolicyAssignments+=@{
-                dataType=$result."@odata.type"
-                groupId=$result.groupId
-                collectionId=$result.collectionId
-                deviceAndAppManagementAssignmentFilterType=$result.deviceAndAppManagementAssignmentFilterType
-                deviceAndAppManagementAssignmentFilterId=$result.deviceAndAppManagementAssignmentFilterId
+            $deviceManagementPolicyAssignments += @{
+                dataType                                   = $result.'@odata.type'
+                groupId                                    = $result.groupId
+                collectionId                               = $result.collectionId
+                deviceAndAppManagementAssignmentFilterType = $result.deviceAndAppManagementAssignmentFilterType
+                deviceAndAppManagementAssignmentFilterId   = $result.deviceAndAppManagementAssignmentFilterId
             }
         }
 
-        while($results."@odata.nextLink")
+        while ($results.'@odata.nextLink')
         {
-            $Uri=$results."@odata.nextLink"
-            $results=Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
-            foreach($result in $results.value.target)
+            $Uri = $results.'@odata.nextLink'
+            $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
+            foreach ($result in $results.value.target)
             {
-                $deviceManagementPolicyAssignments+=@{
-                    dataType=$result."@odata.type"
-                    groupId=$result.groupId
-                    collectionId=$result.collectionId
-                    deviceAndAppManagementAssignmentFilterType=$result.deviceAndAppManagementAssignmentFilterType
-                    deviceAndAppManagementAssignmentFilterId=$result.deviceAndAppManagementAssignmentFilterId
+                $deviceManagementPolicyAssignments += @{
+                    dataType                                   = $result.'@odata.type'
+                    groupId                                    = $result.groupId
+                    collectionId                               = $result.collectionId
+                    deviceAndAppManagementAssignmentFilterType = $result.deviceAndAppManagementAssignmentFilterType
+                    deviceAndAppManagementAssignmentFilterId   = $result.deviceAndAppManagementAssignmentFilterId
                 }
             }
         }
@@ -1138,7 +1156,7 @@ function Get-MgDeviceManagementPolicyAssignments
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             $tenantIdValue = $Credential.UserName.Split('@')[1]
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -1167,38 +1185,38 @@ function Update-MgDeviceManagementPolicyAssignments
         $Targets,
 
         [Parameter()]
-        [ValidateSet('deviceCompliancePolicies','intents','configurationPolicies')]
+        [ValidateSet('deviceCompliancePolicies', 'intents', 'configurationPolicies')]
         [System.String]
-        $Repository='configurationPolicies'
+        $Repository = 'configurationPolicies'
     )
     try
     {
-        $deviceManagementPolicyAssignments=@()
+        $deviceManagementPolicyAssignments = @()
 
-        $Uri="https://graph.microsoft.com/beta/deviceManagement/$Repository/$DeviceManagementPolicyId/assign"
+        $Uri = "https://graph.microsoft.com/beta/deviceManagement/$Repository/$DeviceManagementPolicyId/assign"
 
-        foreach($target in $targets)
+        foreach ($target in $targets)
         {
-            $formattedTarget=@{"@odata.type"=$target.dataType}
-            if($target.groupId)
+            $formattedTarget = @{'@odata.type' = $target.dataType }
+            if ($target.groupId)
             {
-                $formattedTarget.Add('groupId',$target.groupId)
+                $formattedTarget.Add('groupId', $target.groupId)
             }
-            if($target.collectionId)
+            if ($target.collectionId)
             {
-                $formattedTarget.Add('collectionId',$target.collectionId)
+                $formattedTarget.Add('collectionId', $target.collectionId)
             }
-            if($target.deviceAndAppManagementAssignmentFilterType)
+            if ($target.deviceAndAppManagementAssignmentFilterType)
             {
-                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',$target.deviceAndAppManagementAssignmentFilterType)
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType', $target.deviceAndAppManagementAssignmentFilterType)
             }
-            if($target.deviceAndAppManagementAssignmentFilterId)
+            if ($target.deviceAndAppManagementAssignmentFilterId)
             {
-                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',$target.deviceAndAppManagementAssignmentFilterId)
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId', $target.deviceAndAppManagementAssignmentFilterId)
             }
-            $deviceManagementPolicyAssignments+=@{'target'= $formattedTarget}
+            $deviceManagementPolicyAssignments += @{'target' = $formattedTarget }
         }
-        $body=@{'assignments'=$deviceManagementPolicyAssignments}|ConvertTo-Json -Depth 20
+        $body = @{'assignments' = $deviceManagementPolicyAssignments } | ConvertTo-Json -Depth 20
         #write-verbose -Message $body
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
 
@@ -1208,7 +1226,7 @@ function Update-MgDeviceManagementPolicyAssignments
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             $tenantIdValue = $Credential.UserName.Split('@')[1]
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -1224,4 +1242,4 @@ function Update-MgDeviceManagementPolicyAssignments
 
 }
 
-Export-ModuleMember -Function *-TargetResource,*
+Export-ModuleMember -Function *-TargetResource, *
