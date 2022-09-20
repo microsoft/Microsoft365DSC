@@ -17,7 +17,7 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet('android', 'androidForWork','iOS', 'macOS', 'windowsPhone81', 'windows81AndLater', 'windows10AndLater', 'androidWorkProfile', 'unknown')]
+        [ValidateSet('android', 'androidForWork', 'iOS', 'macOS', 'windowsPhone81', 'windows81AndLater', 'windows10AndLater', 'androidWorkProfile', 'unknown')]
         [System.String]
         $Platform,
 
@@ -48,7 +48,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Checking for the assignment filter {$DisplayName}"
@@ -58,7 +62,7 @@ function Get-TargetResource
         -ProfileName 'beta' -ErrorAction Stop
 
     $context = Get-MgContext
-    if($null -eq $context)
+    if ($null -eq $context)
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters -ErrorAction Stop -ProfileName 'beta'
@@ -68,8 +72,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -89,12 +93,12 @@ function Get-TargetResource
         {
             Write-Verbose -Message "No assignment filter with Identity {$Identity} was found."
 
-            [array]$assignmentFilter = Get-MgDeviceManagementAssignmentFilter -All | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+            [array]$assignmentFilter = Get-MgDeviceManagementAssignmentFilter -All | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
             if ($assignmentFilter.Length -gt 2)
             {
                 Write-Error -Message "More than one Assignment Filter found with name {$DisplayName}"
             }
-            elseif($assignmentFilter.Length -eq 0)
+            elseif ($assignmentFilter.Length -eq 0)
             {
                 Write-Verbose -Message "No assignment filter with name {$DisplayName} was found."
                 return $nullResult
@@ -103,17 +107,18 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found assignment filter {$($assignmentFilter.displayName)}"
         $returnHashtable = @{}
-        $returnHashtable.Add("Identity",$assignmentFilter.Id)
-        $returnHashtable.Add("DisplayName",$assignmentFilter.displayName)
-        $returnHashtable.Add("Description",$assignmentFilter.description)
-        $returnHashtable.Add("Platform",$assignmentFilter.platform.ToString())
-        $returnHashtable.Add("Rule",$assignmentFilter.rule)
-        $returnHashtable.Add("Ensure","Present")
-        $returnHashtable.Add("Credential",$Credential)
-        $returnHashtable.Add("ApplicationId",$ApplicationId)
-        $returnHashtable.Add("TenantId",$TenantId)
-        $returnHashtable.Add("ApplicationSecret",$ApplicationSecret)
-        $returnHashtable.Add("CertificateThumbprint",$CertificateThumbprint)
+        $returnHashtable.Add('Identity', $assignmentFilter.Id)
+        $returnHashtable.Add('DisplayName', $assignmentFilter.displayName)
+        $returnHashtable.Add('Description', $assignmentFilter.description)
+        $returnHashtable.Add('Platform', $assignmentFilter.platform.ToString())
+        $returnHashtable.Add('Rule', $assignmentFilter.rule)
+        $returnHashtable.Add('Ensure', 'Present')
+        $returnHashtable.Add('Credential', $Credential)
+        $returnHashtable.Add('ApplicationId', $ApplicationId)
+        $returnHashtable.Add('TenantId', $TenantId)
+        $returnHashtable.Add('ApplicationSecret', $ApplicationSecret)
+        $returnHashtable.Add('CertificateThumbprint', $CertificateThumbprint)
+        $returnHashtable.Add('ManagedIdentity', $ManagedIdentity.IsPresent)
 
         return $returnHashtable
     }
@@ -122,7 +127,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             $tenantIdValue = $Credential.UserName.Split('@')[1]
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -154,7 +159,7 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet('android', 'androidForWork','iOS', 'macOS', 'windowsPhone81', 'windows81AndLater', 'windows10AndLater', 'androidWorkProfile', 'unknown')]
+        [ValidateSet('android', 'androidForWork', 'iOS', 'macOS', 'windowsPhone81', 'windows81AndLater', 'windows10AndLater', 'androidWorkProfile', 'unknown')]
         [System.String]
         $Platform,
 
@@ -185,7 +190,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -197,8 +206,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -255,7 +264,7 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet('android', 'androidForWork','iOS', 'macOS', 'windowsPhone81', 'windows81AndLater', 'windows10AndLater', 'androidWorkProfile', 'unknown')]
+        [ValidateSet('android', 'androidForWork', 'iOS', 'macOS', 'windowsPhone81', 'windows81AndLater', 'windows10AndLater', 'androidWorkProfile', 'unknown')]
         [System.String]
         $Platform,
 
@@ -286,15 +295,19 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -351,7 +364,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -363,8 +380,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -384,7 +401,7 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
         foreach ($assignmentFilter in $assignmentFilters)
         {
@@ -398,6 +415,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
 
             $Results = Get-TargetResource @params
@@ -441,8 +459,8 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 
-Export-ModuleMember -Function *-TargetResource,*
+Export-ModuleMember -Function *-TargetResource, *

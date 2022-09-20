@@ -42,7 +42,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('DeviceDefault','Alphanumeric','Numeric')]
+        [ValidateSet('DeviceDefault', 'Alphanumeric', 'Numeric')]
         $PasswordRequiredType,
 
         [Parameter()]
@@ -63,7 +63,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Unavailable','Secured','Low', 'Medium','High','NotSet')]
+        [ValidateSet('Unavailable', 'Secured', 'Low', 'Medium', 'High', 'NotSet')]
         $DeviceThreatProtectionRequiredSecurityLevel,
 
         [Parameter()]
@@ -105,7 +105,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Checking for the Intune Device Compliance MacOS Policy {$DisplayName}"
@@ -116,8 +120,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -128,10 +132,10 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $devicePolicy = Get-MGDeviceManagementDeviceCompliancePolicy `
+        $devicePolicy = Get-MgDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSCompliancePolicy' -and `
-            $_.displayName -eq $($DisplayName) }
+                $_.displayName -eq $($DisplayName) }
 
         if ($null -eq $devicePolicy)
         {
@@ -161,11 +165,12 @@ function Get-TargetResource
             FirewallBlockAllIncoming                    = $devicePolicy.AdditionalProperties.firewallBlockAllIncoming
             FirewallEnableStealthMode                   = $devicePolicy.AdditionalProperties.firewallEnableStealthMode
             Ensure                                      = 'Present'
-            Credential                          = $Credential
+            Credential                                  = $Credential
             ApplicationId                               = $ApplicationId
             TenantId                                    = $TenantId
             ApplicationSecret                           = $ApplicationSecret
             CertificateThumbprint                       = $CertificateThumbprint
+            Managedidentity                             = $ManagedIdentity.IsPresent
         }
         return [System.Collections.Hashtable] $results
     }
@@ -174,7 +179,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -238,7 +243,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('DeviceDefault','Alphanumeric','Numeric')]
+        [ValidateSet('DeviceDefault', 'Alphanumeric', 'Numeric')]
         $PasswordRequiredType,
 
         [Parameter()]
@@ -259,7 +264,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Unavailable','Secured','Low', 'Medium','High','NotSet')]
+        [ValidateSet('Unavailable', 'Secured', 'Low', 'Medium', 'High', 'NotSet')]
         $DeviceThreatProtectionRequiredSecurityLevel,
 
         [Parameter()]
@@ -301,7 +306,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
 
@@ -314,8 +323,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -331,12 +340,12 @@ function Set-TargetResource
     $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
 
     $scheduledActionsForRule = @{
-        '@odata.type'                 = "#microsoft.graph.deviceComplianceScheduledActionForRule"
-        ruleName                      = "PasswordRequired"
+        '@odata.type'                 = '#microsoft.graph.deviceComplianceScheduledActionForRule'
+        ruleName                      = 'PasswordRequired'
         scheduledActionConfigurations = @(
             @{
-                "@odata.type"= "#microsoft.graph.deviceComplianceActionItem"
-                actionType   =  "block"
+                '@odata.type' = '#microsoft.graph.deviceComplianceActionItem'
+                actionType    = 'block'
             }
         )
     }
@@ -347,35 +356,35 @@ function Set-TargetResource
         $PSBoundParameters.Remove('DisplayName') | Out-Null
         $PSBoundParameters.Remove('Description') | Out-Null
         $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyMacOSAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        New-MGDeviceManagementDeviceCompliancePolicy -DisplayName $DisplayName `
+        New-MgDeviceManagementDeviceCompliancePolicy -DisplayName $DisplayName `
             -Description $Description `
-            -additionalProperties $AdditionalProperties `
-            -scheduledActionsForRule $scheduledActionsForRule
+            -AdditionalProperties $AdditionalProperties `
+            -ScheduledActionsForRule $scheduledActionsForRule
     }
     elseif ($Ensure -eq 'Present' -and $currentDeviceMacOsPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Intune Device Compliance MacOS Policy {$DisplayName}"
-        $configDevicePolicy = Get-MGDeviceManagementDeviceCompliancePolicy `
-        -ErrorAction Stop | Where-Object `
-        -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSCompliancePolicy' -and `
-            $_.displayName -eq $($DisplayName) }
+        $configDevicePolicy = Get-MgDeviceManagementDeviceCompliancePolicy `
+            -ErrorAction Stop | Where-Object `
+            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSCompliancePolicy' -and `
+                $_.displayName -eq $($DisplayName) }
 
         $PSBoundParameters.Remove('DisplayName') | Out-Null
         $PSBoundParameters.Remove('Description') | Out-Null
         $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyMacOSAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        Update-MGDeviceManagementDeviceCompliancePolicy -AdditionalProperties $AdditionalProperties `
+        Update-MgDeviceManagementDeviceCompliancePolicy -AdditionalProperties $AdditionalProperties `
             -Description $Description `
             -DeviceCompliancePolicyId $configDevicePolicy.Id
     }
     elseif ($Ensure -eq 'Absent' -and $currentDeviceMacOsPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Intune Device Compliance MacOS Policy {$DisplayName}"
-        $configDevicePolicy = Get-MGDeviceManagementDeviceCompliancePolicy `
+        $configDevicePolicy = Get-MgDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
 
-        Remove-MGDeviceManagementDeviceCompliancePolicy -DeviceCompliancePolicyId $configDevicePolicy.Id
+        Remove-MgDeviceManagementDeviceCompliancePolicy -DeviceCompliancePolicyId $configDevicePolicy.Id
     }
 }
 
@@ -423,7 +432,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('DeviceDefault','Alphanumeric','Numeric')]
+        [ValidateSet('DeviceDefault', 'Alphanumeric', 'Numeric')]
         $PasswordRequiredType,
 
         [Parameter()]
@@ -444,7 +453,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Unavailable','Secured','Low', 'Medium','High','NotSet')]
+        [ValidateSet('Unavailable', 'Secured', 'Low', 'Medium', 'High', 'NotSet')]
         $DeviceThreatProtectionRequiredSecurityLevel,
 
         [Parameter()]
@@ -486,15 +495,19 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -552,7 +565,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -562,8 +579,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -572,7 +589,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$configDeviceMacOsPolicies = Get-MGDeviceManagementDeviceCompliancePolicy `
+        [array]$configDeviceMacOsPolicies = Get-MgDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop -All:$true -Filter $Filter | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSCompliancePolicy' }
         $i = 1
@@ -583,7 +600,7 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
 
         foreach ($configDeviceMacOsPolicy in $configDeviceMacOsPolicies)
@@ -592,19 +609,20 @@ function Export-TargetResource
             $params = @{
                 DisplayName           = $configDeviceMacOsPolicy.displayName
                 Ensure                = 'Present'
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
             $result = Get-TargetResource @params
             $result = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Result
-            $content += "        IntuneDeviceCompliancePolicyMacOS " + (New-Guid).ToString() + "`r`n"
+            $content += '        IntuneDeviceCompliancePolicyMacOS ' + (New-Guid).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Credential"
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Credential'
             $content += "        }`r`n"
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckMark
@@ -617,7 +635,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -634,7 +652,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 
@@ -648,7 +666,7 @@ function Get-M365DSCIntuneDeviceCompliancePolicyMacOSAdditionalProperties
         $Properties
     )
 
-    $results = @{"@odata.type" = "#microsoft.graph.macOSCompliancePolicy"}
+    $results = @{'@odata.type' = '#microsoft.graph.macOSCompliancePolicy' }
     foreach ($property in $properties.Keys)
     {
         if ($property -ne 'Verbose')

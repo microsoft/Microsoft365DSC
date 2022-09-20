@@ -171,7 +171,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Checking for the Intune iOS App Protection Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -181,8 +185,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -194,7 +198,7 @@ function Get-TargetResource
 
     try
     {
-        $policyInfo = Get-MgDeviceAppManagementiosManagedAppProtection -Filter "displayName eq '$DisplayName'" `
+        $policyInfo = Get-MgDeviceAppManagementiOSManagedAppProtection -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
 
         if ($null -eq $policyInfo)
@@ -273,12 +277,13 @@ function Get-TargetResource
             ExcludedGroups                          = $exclusionArray
             CustomBrowserProtocol                   = $policy.CustomBrowserProtocol
             Apps                                    = $appsArray
-            Ensure                                  = "Present"
+            Ensure                                  = 'Present'
             Credential                              = $Credential
             ApplicationId                           = $ApplicationId
             ApplicationSecret                       = $ApplicationSecret
             TenantId                                = $TenantId
             CertificateThumbprint                   = $CertificateThumbprint
+            Managedidentity                         = $ManagedIdentity.IsPresent
         }
     }
     catch
@@ -471,7 +476,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -480,8 +489,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -490,8 +499,8 @@ function Set-TargetResource
 
     $currentPolicy = Get-TargetResource @PSBoundParameters
     $setParams = $PSBoundParameters
-    $setParams.Remove("Ensure") | Out-Null
-    $setParams.Remove("Credential") | Out-Null
+    $setParams.Remove('Ensure') | Out-Null
+    $setParams.Remove('Credential') | Out-Null
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new iOS App Protection Policy {$DisplayName}"
@@ -499,15 +508,15 @@ function Set-TargetResource
         Write-Verbose -Message "JSON: $JsonContent"
         New-M365DSCIntuneAppProtectionPolicyiOS -JSONContent $JsonContent
 
-        $policyInfo = Get-MgDeviceAppManagementiosManagedAppProtection -Filter "displayName eq '$DisplayName'" `
+        $policyInfo = Get-MgDeviceAppManagementiOSManagedAppProtection -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
 
         $counter = 1
-        while($policyInfo.ID -eq $null -and $counter -le 10)
+        while ($policyInfo.ID -eq $null -and $counter -le 10)
         {
             Write-Verbose -Message "Waiting $counter second for the policy {$DisplayName} to get created."
             Start-Sleep -Seconds 1
-            $policyInfo = Get-MgDeviceAppManagementiosManagedAppProtection -Filter "displayName eq '$DisplayName'" `
+            $policyInfo = Get-MgDeviceAppManagementiOSManagedAppProtection -Filter "displayName eq '$DisplayName'" `
                 -ErrorAction Stop
             $counter++
         }
@@ -525,7 +534,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing iOS App Protection Policy {$DisplayName}"
-        $policyInfo = Get-MgDeviceAppManagementiosManagedAppProtection -Filter "displayName eq '$DisplayName'" `
+        $policyInfo = Get-MgDeviceAppManagementiOSManagedAppProtection -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
 
         $JsonContent = Get-M365DSCIntuneAppProtectionPolicyiOSJSON -Parameters $PSBoundParameters `
@@ -541,9 +550,9 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing iOS App Protection Policy {$DisplayName}"
-        $policyInfo = Get-MgDeviceAppManagementiosManagedAppProtection -Filter "displayName eq '$DisplayName'" `
+        $policyInfo = Get-MgDeviceAppManagementiOSManagedAppProtection -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
-        Remove-MgDeviceAppManagementiosManagedAppProtection -IosManagedAppProtectionId $policyInfo.id
+        Remove-MgDeviceAppManagementiOSManagedAppProtection -IosManagedAppProtectionId $policyInfo.id
     }
 }
 
@@ -720,14 +729,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -780,7 +793,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -789,8 +806,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -799,7 +816,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$policies = Get-MgDeviceAppManagementiosManagedAppProtection -All:$true -Filter $Filter -ErrorAction Stop
+        [array]$policies = Get-MgDeviceAppManagementiOSManagedAppProtection -All:$true -Filter $Filter -ErrorAction Stop
         $i = 1
         $dscContent = ''
         if ($policies.Length -eq 0)
@@ -808,7 +825,7 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
         foreach ($policy in $policies)
         {
@@ -816,11 +833,12 @@ function Export-TargetResource
             $params = @{
                 DisplayName           = $policy.displayName
                 Ensure                = 'Present'
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationID         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -861,7 +879,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 
@@ -909,7 +927,7 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
     $JsonContent = "{`r`n    `"@odata.type`": `"#microsoft.graph.iosManagedAppProtection`",`r`n"
 
     #region AllowedDataStorageLocations
-    $allowedDataStorageLocations = "["
+    $allowedDataStorageLocations = '['
     $foundOne = $false
     foreach ($allowedLocation in $Parameters.AllowedDataStorageLocations)
     {
@@ -920,7 +938,7 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
     {
         $allowedDataStorageLocations = $allowedDataStorageLocations.TrimEnd(',') + " `r`n"
     }
-    $allowedDataStorageLocations += "],"
+    $allowedDataStorageLocations += '],'
 
     if ($foundOne)
     {
@@ -929,7 +947,7 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
     #endregion
 
     #region Apps
-    $appsValue = "["
+    $appsValue = '['
     $foundOne = $false
     foreach ($app in $Parameters.Apps)
     {
@@ -949,7 +967,7 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
     {
         $appsValue = $appsValue.TrimEnd(',') + " `r`n"
     }
-    $appsValue += "]"
+    $appsValue += ']'
     #endregion
 
     foreach ($key in $Parameters.Keys)
@@ -963,7 +981,7 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
     {
         $JsonContent += "`"apps`":$appsValue`r`n"
     }
-    $JsonContent += "}"
+    $JsonContent += '}'
     return $JsonContent
 }
 
@@ -978,7 +996,7 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSAppsJSON
     )
 
     #region Apps
-    $appsValue = "["
+    $appsValue = '['
     $foundOne = $false
     foreach ($app in $Parameters.Apps)
     {
@@ -998,7 +1016,7 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSAppsJSON
     {
         $appsValue = $appsValue.TrimEnd(',') + " `r`n"
     }
-    $appsValue += "]"
+    $appsValue += ']'
     #endregion
 
     $JsonContent = @"
@@ -1030,14 +1048,14 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSAssignmentJSON
         $JsonContent += "    {`"target`":{`r`n"
         $JsonContent += "        `"groupId`":`"$assignment`",`r`n"
         $JsonContent += "        `"@odata.type`":`"#microsoft.graph.groupAssignmentTarget`"`r`n"
-        $JsonContent += "    }},"
+        $JsonContent += '    }},'
     }
     foreach ($exclusion in $Exclusions)
     {
         $JsonContent += "    {`"target`":{`r`n"
         $JsonContent += "        `"groupId`":`"$exclusion`",`r`n"
         $JsonContent += "        `"@odata.type`":`"#microsoft.graph.exclusionGroupAssignmentTarget`"`r`n"
-        $JsonContent += "    }},"
+        $JsonContent += '    }},'
     }
     $JsonContent = $JsonContent.TrimEnd(',')
     $JsonContent += "]`r`n"
@@ -1061,7 +1079,7 @@ function New-M365DSCIntuneAppProtectionPolicyiOS
         Invoke-MgGraphRequest -Method POST `
             -Uri $Url `
             -Body $JSONContent `
-            -Headers @{"Content-Type" = "application/json" } | Out-Null
+            -Headers @{'Content-Type' = 'application/json' } | Out-Null
     }
     catch
     {
@@ -1092,7 +1110,7 @@ function Set-M365DSCIntuneAppProtectionPolicyiOS
         Invoke-MgGraphRequest -Method PATCH `
             -Uri $Url `
             -Body $JSONContent `
-            -Headers @{"Content-Type" = "application/json" } | Out-Null
+            -Headers @{'Content-Type' = 'application/json' } | Out-Null
     }
     catch
     {
@@ -1123,7 +1141,7 @@ function Set-M365DSCIntuneAppProtectionPolicyiOSApps
         Invoke-MgGraphRequest -Method POST `
             -Uri $Url `
             -Body $JSONContent `
-            -Headers @{"Content-Type" = "application/json" } | Out-Null
+            -Headers @{'Content-Type' = 'application/json' } | Out-Null
     }
     catch
     {
@@ -1154,7 +1172,7 @@ function Set-M365DSCIntuneAppProtectionPolicyiOSAssignment
         Invoke-MgGraphRequest -Method POST `
             -Uri $Url `
             -Body $JSONContent `
-            -Headers @{"Content-Type" = "application/json" } | Out-Null
+            -Headers @{'Content-Type' = 'application/json' } | Out-Null
     }
     catch
     {
