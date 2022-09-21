@@ -7,7 +7,7 @@
     PSCredential instead of string. This will ensure that the secrets get encrypted in MOF files
     when compiling with an encryption certificated instead of being exposed as plaintext.
 * DEPENDENCIES
-  * Updated MSCloudLoginAssistant dependency to version 1.0.91.
+  * Updated MSCloudLoginAssistant dependency to version 1.0.92.
 
 # 1.22.921.1
 
