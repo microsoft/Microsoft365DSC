@@ -9,7 +9,8 @@
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant dependency to version 1.0.91.
 
-# UNRELEASED
+# 1.22.921.1
+
 * AADRoleSetting
   * Fixed an issue if the P2 License is not present on the tenant the Export stop working
     FIXES [#2227](https://github.com/microsoft/Microsoft365DSC/issues/2227)
@@ -25,6 +26,7 @@
 * SCAutoSensitivityLabelRule
   * Initial Release.
 * DEPENDENCIES
+  * Updated the ExchangeOnlineManagement dependency to version 3.0.0.
   * Updated the MSCloudLoginAssistant dependency to version 1.0.89.
 
 # 1.22.914.1

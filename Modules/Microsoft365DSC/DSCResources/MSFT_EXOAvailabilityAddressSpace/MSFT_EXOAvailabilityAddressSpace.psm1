@@ -257,6 +257,8 @@ function Set-TargetResource
         # AvailabilityAddressSpace doe not have a new-AvailabilityAddressSpace cmdlet but instead uses an add-AvailabilityAddressSpace cmdlet
         try
         {
+            $AvailabilityAddressSpaceParams.Remove('Identity') | Out-Null
+            $AvailabilityAddressSpaceParams.Remove('Credentials') | Out-Null
             add-AvailabilityAddressSpace @AvailabilityAddressSpaceParams -ea stop
         }
         catch
@@ -279,6 +281,8 @@ function Set-TargetResource
 
         try
         {
+            $AvailabilityAddressSpaceParams.Remove('Identity') | Out-Null
+            $AvailabilityAddressSpaceParams.Remove('Credentials') | Out-Null
             add-AvailabilityAddressSpace @AvailabilityAddressSpaceParams -ea stop
         }
         catch
