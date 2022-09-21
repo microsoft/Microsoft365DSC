@@ -5,8 +5,13 @@
             RequiredVersion = '1.3.0.6'
         },
         @{
+<<<<<<< Updated upstream
             ModuleName      = 'ExchangeOnlineManagement'
             RequiredVersion = '2.0.5'
+=======
+            ModuleName      = "ExchangeOnlineManagement"
+            RequiredVersion = "3.0.0"
+>>>>>>> Stashed changes
         },
         @{
             ModuleName      = 'Microsoft.Graph.Applications'
