@@ -40,7 +40,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Checking for the Intune Device Enrollment Limit Restriction {$DisplayName}"
@@ -51,8 +55,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -65,7 +69,7 @@ function Get-TargetResource
     try
     {
         $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
-            | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
+        | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
 
         if ($null -eq $config)
         {
@@ -78,12 +82,13 @@ function Get-TargetResource
             DisplayName           = $config.DisplayName
             Description           = $config.Description
             Limit                 = $config.AdditionalProperties.limit
-            Ensure                = "Present"
-            Credential    = $Credential
+            Ensure                = 'Present'
+            Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
     }
     catch
@@ -145,7 +150,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -155,8 +164,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -171,28 +180,28 @@ function Set-TargetResource
         New-MgDeviceManagementDeviceEnrollmentConfiguration -DisplayName $DisplayName `
             -Description $Description `
             -AdditionalProperties @{
-                '@odata.type' = '#microsoft.graph.deviceEnrollmentLimitConfiguration'
-                limit         = $Limit
-            }
+            '@odata.type' = '#microsoft.graph.deviceEnrollmentLimitConfiguration'
+            limit         = $Limit
+        }
     }
     elseif ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Device Enrollment Limit Restriction {$DisplayName}"
         $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
-            | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
+        | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
 
         Update-MgDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $config.id `
             -Description $Description `
             -AdditionalProperties @{
-                '@odata.type' = '#microsoft.graph.deviceEnrollmentLimitConfiguration'
-                limit         = $Limit
-            }
+            '@odata.type' = '#microsoft.graph.deviceEnrollmentLimitConfiguration'
+            limit         = $Limit
+        }
     }
     elseif ($Ensure -eq 'Absent' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Device Enrollment Limit Restriction {$DisplayName}"
         $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
-            | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
+        | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
 
         Remove-MgDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $config.id | Out-Null
     }
@@ -240,14 +249,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -304,7 +317,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -313,8 +330,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -324,7 +341,7 @@ function Export-TargetResource
     try
     {
         [array]$configs = Get-MgDeviceManagementDeviceEnrollmentConfiguration -All:$true -Filter $Filter -ErrorAction Stop `
-            | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
+        | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
         $i = 1
         $dscContent = ''
         if ($configs.Length -eq 0)
@@ -333,7 +350,7 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
         foreach ($config in $configs)
         {
@@ -341,11 +358,12 @@ function Export-TargetResource
             $params = @{
                 DisplayName           = $config.displayName
                 Ensure                = 'Present'
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -382,7 +400,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 

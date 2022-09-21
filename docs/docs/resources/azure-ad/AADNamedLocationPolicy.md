@@ -17,6 +17,7 @@
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
 | **ApplicationSecret** | Write | String | Secret of the Azure Active Directory application to authenticate with. ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
+| **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. ||
 
 # AADNamedLocationPolicy
 
