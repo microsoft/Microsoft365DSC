@@ -2883,7 +2883,7 @@ function Update-M365DSCExportAuthenticationResults
         }
         if (-not [System.String]::IsNullOrEmpty($Results.ApplicationSecret))
         {
-            $Results.ApplicationSecret = "`$ConfigurationData.NonNodeData.ApplicationSecret"
+            $Results.ApplicationSecret = "New-Object System.Management.Automation.PSCredential ('ApplicationSecret', (ConvertTo-SecureString `$ConfigurationData.NonNodeData.ApplicationSecret -AsPlainText -Force))"
         }
         else
         {

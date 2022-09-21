@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+# 1.22.1005.1
+
+* [BREAKING]
+  * Authentication property ApplicationSecret has been changed across all resources to be of type
+    PSCredential instead of string. This will ensure that the secrets get encrypted in MOF files
+    when compiling with an encryption certificated instead of being exposed as plaintext.
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant dependency to version 1.0.91.
+
 # UNRELEASED
 * AADRoleSetting
   * Fixed an issue if the P2 License is not present on the tenant the Export stop working
