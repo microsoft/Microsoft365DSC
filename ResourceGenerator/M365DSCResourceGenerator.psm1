@@ -1000,14 +1000,25 @@ function New-M365DSCResource
         {
             throw "Cmdlet {$GetcmdletName} was not found"
         }
+        $cmdletFound = Get-Command $GetcmdletName -ErrorAction SilentlyContinue
     }
     Select-MgProfile $APIVersion
-    $cmdletFound = Get-Command $GetcmdletName -ErrorAction SilentlyContinue
     $GraphModule = $cmdletFound.ModuleName
     Import-Module $GraphModule -ErrorAction Stop
     $commandDetails = Find-MgGraphCommand -Command $GetcmdletName -ApiVersion $ApiVersion
 
-    $cmdletCommandDetails = Get-Command -Name "$($GraphModuleCmdLetVerb)-$($GraphModuleCmdLetNoun)" -Module $GraphModule
+    $cmdletCommandDetails = Get-Command -Name "$($GraphModuleCmdLetVerb)-$($GraphModuleCmdLetNoun)" -Module $GraphModule -ErrorAction SilentlyContinue
+    $hasNew = (-not [System.String]::IsNullOrEmpty($cmdletCommandDetails))
+    if (-not $hasNew)
+    {
+        Write-Warning "$($GraphModuleCmdLetVerb)-$($GraphModuleCmdLetNoun) does not exist"
+        $decision = $Host.UI.PromptForChoice('New/Update', "Attempt use of Update-$($GraphModuleCmdLetNoun)?", @('&Yes', '&No'), 0)
+        if ($decision -eq 0)
+        {
+            $GraphModuleCmdLetVerb = 'Update'
+            $cmdletCommandDetails = Get-Command -Name "$($GraphModuleCmdLetVerb)-$($GraphModuleCmdLetNoun)" -Module $GraphModule
+        }
+    }
     $defaultParameterSet = $cmdletCommandDetails.ParameterSets | Where-Object -FilterScript { $_.IsDefault -eq $true }
 
     $defaultParameterSetProperties = $defaultParameterSet.Parameters
@@ -1195,7 +1206,14 @@ function New-M365DSCResource
     Write-TokenReplacement -Token '<GetCmdletName>' -value $GetcmdletName -FilePath $unitTestPath
     Write-TokenReplacement -Token '<SetCmdletName>' -value "Update-$($GraphModuleCmdLetNoun)" -FilePath $unitTestPath
     Write-TokenReplacement -Token '<RemoveCmdletName>' -value "Remove-$($GraphModuleCmdLetNoun)" -FilePath $unitTestPath
-    Write-TokenReplacement -Token '<NewCmdletName>' -value "New-$($GraphModuleCmdLetNoun)" -FilePath $unitTestPath
+    if ($hasNew)
+    {
+        Write-TokenReplacement -Token '<NewCmdletName>' -value "New-$($GraphModuleCmdLetNoun)" -FilePath $unitTestPath
+    }
+    else
+    {
+        Write-TokenReplacement -Token '<NewCmdletName>' -value "Update-$($GraphModuleCmdLetNoun)" -FilePath $unitTestPath
+    }
     #endregion
     $platforms = @(
         'Windows10'
@@ -1229,7 +1247,14 @@ function New-M365DSCResource
     Write-TokenReplacement -Token '<ParameterBlock>' -Value $parameterString -FilePath $moduleFilePath
     Write-TokenReplacement -Token '<PrimaryKey>' -Value $typeProperties[0].Name -FilePath $moduleFilePath
     Write-TokenReplacement -Token '<GetCmdLetName>' -Value "Get-$($GraphModuleCmdLetNoun)" -FilePath $moduleFilePath
-    Write-TokenReplacement -Token '<NewCmdLetName>' -Value "New-$($GraphModuleCmdLetNoun)" -FilePath $moduleFilePath
+    if ($hasNew)
+    {
+        Write-TokenReplacement -Token '<NewCmdLetName>' -Value "New-$($GraphModuleCmdLetNoun)" -FilePath $moduleFilePath
+    }
+    else
+    {
+        Write-TokenReplacement -Token '<NewCmdletName>' -value "Update-$($GraphModuleCmdLetNoun)" -FilePath $unitTestPath
+    }
     Write-TokenReplacement -Token '<SetCmdLetName>' -Value "Set-$($GraphModuleCmdLetNoun)" -FilePath $moduleFilePath
     Write-TokenReplacement -Token '<UpdateCmdLetName>' -Value "Update-$($GraphModuleCmdLetNoun)" -FilePath $moduleFilePath
     Write-TokenReplacement -Token '<RemoveCmdLetName>' -Value "Remove-$($GraphModuleCmdLetNoun)" -FilePath $moduleFilePath
@@ -2067,7 +2092,14 @@ function New-M365HashTableMapping
         $DefaultParameterSetProperties
     )
 
-    $newCmdlet = Get-Command "New-$GraphNoun"
+    if ($hasNew)
+    {
+        $newCmdlet = Get-Command "New-$GraphNoun"
+    }
+    else
+    {
+        $newCmdlet = Get-Command "Update-$GraphNoun"
+    }
 
     $results = @{}
     $hashtable = ''
