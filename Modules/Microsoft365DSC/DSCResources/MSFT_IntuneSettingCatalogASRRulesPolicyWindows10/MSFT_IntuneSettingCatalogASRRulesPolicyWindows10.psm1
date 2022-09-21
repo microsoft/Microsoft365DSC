@@ -222,9 +222,12 @@ function Get-TargetResource
                 }
                 '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
                 {
-                    $settingName = $setting.settingDefinitionId.replace("$settingDefinitionIdBase", '')
-                    [Array]$settingValue = $setting.simpleSettingCollectionValue.value
-                    $returnHashtable.Add($settingName, $settingValue)
+                    if ($null -ne $setting.settingDefinitionId)
+                    {
+                        $settingName = $setting.settingDefinitionId.replace("$settingDefinitionIdBase", '')
+                        [Array]$settingValue = $setting.simpleSettingCollectionValue.value
+                        $returnHashtable.Add($settingName, $settingValue)
+                    }
                 }
                 Default {}
             }
