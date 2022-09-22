@@ -37,6 +37,7 @@
 | **TenantId** | Write | String | ID of the Azure Active Directory tenant used for authentication. ||
 | **ApplicationSecret** | Write | String | Secret of the Azure Active Directory tenant used for authentication. ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
+| **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. ||
 | **ManagedBrowser** | Write | String | Indicates in which managed browser(s) that internet links should be opened. When this property is configured, ManagedBrowserToOpenLinksRequired should be true. Possible values are: notConfigured, microsoftEdge. |notConfigured, microsoftEdge|
 | **MinimumRequiredAppVersion** | Write | String | Versions less than the specified version will block the managed app from accessing company data. ||
 | **MinimumRequiredOSVersion** | Write | String | Versions less than the specified version will block the managed app from accessing company data. ||
