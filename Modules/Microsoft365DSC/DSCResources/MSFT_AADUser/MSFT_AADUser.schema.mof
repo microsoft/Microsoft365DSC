@@ -1,5 +1,5 @@
-[ClassVersion("1.0.0.0"), FriendlyName("O365User")]
-class MSFT_O365User : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("AADUser")]
+class MSFT_AADUser : OMI_BaseResource
 {
     [Key, Description("The login name of the user")] String UserPrincipalName;
     [Write, Description("The display name for the user")] String DisplayName;

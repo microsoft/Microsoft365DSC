@@ -364,7 +364,7 @@ function Set-TargetResource
     # PreferredDataLocation is no longer an accepted value;
     if (![System.String]::IsNullOrEmpty($PreferredDataLocation))
     {
-        Write-Warning '[DEPRECATED] Property PreferredDataLocation is no longer supported by resource O365USer'
+        Write-Warning '[DEPRECATED] Property PreferredDataLocation is no longer supported by resource AADUser'
     }
 
     Write-Verbose -Message "Setting configuration of Office 365 User $UserPrincipalName"

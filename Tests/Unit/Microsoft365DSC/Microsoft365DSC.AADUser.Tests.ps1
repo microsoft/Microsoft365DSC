@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "O365User" -GenericStubModule $GenericStubPath
+    -DscResource "AADUSer" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -210,7 +210,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
                 Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-                    return "O365User Test{Password = `"`$test`"}"
+                    return "AADUSer Test{Password = `"`$test`"}"
                 }
 
                 Mock -CommandName Get-MgSubscribedSku -MockWith {
