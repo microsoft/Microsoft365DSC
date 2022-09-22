@@ -50,7 +50,7 @@ function Get-TargetResource
         $MessageFormat,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ModeratedBy,
 
         [Parameter()]
@@ -248,7 +248,7 @@ function Set-TargetResource
         $MessageFormat,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ModeratedBy,
 
         [Parameter()]
@@ -409,7 +409,7 @@ function Test-TargetResource
         $MessageFormat,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ModeratedBy,
 
         [Parameter()]
