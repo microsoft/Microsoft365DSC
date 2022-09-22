@@ -5,6 +5,7 @@ class MSFT_AADUser : OMI_BaseResource
     [Write, Description("The display name for the user")] String DisplayName;
     [Write, Description("The first name of the user")] String FirstName;
     [Write, Description("The last name of the user")] String LastName;
+    [Write, Description("The list of Azure Active Directory roles assigned to the user.")] String Roles[];
     [Write, Description("The country code the user will be assigned to")] String UsageLocation;
     [Write, Description("The account SKU Id for the license to be assigned to the user")] String LicenseAssignment[];
     [Write, Description("The password for the account. The parameter is a PSCredential object, but only the Password component will be used"), EmbeddedInstance("MSFT_Credential")] String Password;

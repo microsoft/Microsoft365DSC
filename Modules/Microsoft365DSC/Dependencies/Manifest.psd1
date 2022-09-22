@@ -61,6 +61,10 @@
             RequiredVersion = '1.11.1'
         },
         @{
+            ModuleName      = 'Microsoft.Graph.Users.Actions'
+            RequiredVersion = '1.11.1'
+        },
+        @{
             ModuleName      = 'Microsoft.PowerApps.Administration.PowerShell'
             RequiredVersion = '2.0.150'
         },

@@ -2,13 +2,20 @@
 
 # 1.22.1005.1
 
-* [BREAKING]
-  * Authentication property ApplicationSecret has been changed across all resources to be of type
+* AADUser
+  * Renamed from O365User
+  * Added support for Roles.
+  FIXES [#2288](https://github.com/microsoft/Microsoft365DSC/issues/2288)
+* O365User
+  * [BREAKING] Resource was renamed to AADUser.
+* MISC
+  * [BREAKING] Authentication property ApplicationSecret has been changed across all resources to be of type
     PSCredential instead of string. This will ensure that the secrets get encrypted in MOF files
     when compiling with an encryption certificated instead of being exposed as plaintext.
     FIXES [#1714](https://github.com/microsoft/Microsoft365DSC/issues/1714)
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant dependency to version 1.0.92.
+  * Added new dependency on Microsoft.Graph.Users.Actions.
 
 # 1.22.921.1
 

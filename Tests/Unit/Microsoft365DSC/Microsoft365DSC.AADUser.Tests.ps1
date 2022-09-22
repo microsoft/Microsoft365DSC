@@ -46,6 +46,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Update-MgUserLicenseDetail -MockWith {
             }
 
+            Mock -CommandName Get-MgRoleManagementDirectoryRoleAssignment -MockWith {
+                return @()
+            }
+
         }
         # Test contexts
         Context -Name "When the user doesn't already exist" -Fixture {
