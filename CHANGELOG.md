@@ -17,6 +17,15 @@
   * Updated MSCloudLoginAssistant dependency to version 1.0.92.
   * Added new dependency on Microsoft.Graph.Users.Actions.
 
+# UNRELEASED
+
+* MISC
+  * Fixes issue with DSCParser non-existing resources on one tenant weren't properly captured.
+  FIXES [#2261](https://github.com/microsoft/Microsoft365DSC/issues/2261)
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 1.12.0.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.152.
+
 # 1.22.921.1
 
 * AADRoleSetting
