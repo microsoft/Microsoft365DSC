@@ -14,12 +14,14 @@ class MSFT_AADGroup : OMI_BaseResource
     [Write, Description("Specifies an ID for the group.")] String Id;
     [Write, Description("User Service Principal values for the group's owners.")] String Owners[];
     [Write, Description("User Service Principal values for the group's members.")] String Members[];
+    [Write, Description("DisplayName values for the groups that htis group is a member of.")] String MemberOf[];
     [Write, Description("Specifies that the group is a dynamic group. To create a dynamic group, specify a value of DynamicMembership.")] String GroupTypes[];
     [Write, Description("Specifies the membership rule for a dynamic group.")] String MembershipRule;
     [Write, Description("Specifies the rule processing state. The acceptable values for this parameter are: On. Process the group rule or Paused. Stop processing the group rule."), ValueMap{"On","Paused"}, Values{"On","Paused"}] String MembershipRuleProcessingState;
     [Write, Description("Specifies whether the group is security enabled. For security groups, this value must be $True.")] Boolean SecurityEnabled;
     [Write, Description("Specifies whether this group is mail enabled. Currently, you cannot create mail enabled groups in Azure AD.")] Boolean MailEnabled;
     [Write, Description("Specifies whether this group can be assigned a role. Only available when creating a group and can't be modified after group is created.")] Boolean IsAssignableToRole;
+    [Write, Description("DisplayName values for the roles that the group is assigned to.")] String AssignedToRole[];
     [Write, Description("This parameter determines the visibility of the group's content and members list."), ValueMap{"Public","Private","HiddenMembership"}, Values{"Public","Private","HiddenMembership"}] String Visibility;
     [Write, Description("List of Licenses assigned to the group."),EmbeddedInstance("MSFT_AADGroupLicense")] String AssignedLicenses[];
     [Write, Description("Specify if the Azure AD Group should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
