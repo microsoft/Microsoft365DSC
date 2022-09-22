@@ -8,7 +8,7 @@ class MSFT_AADRoleSetting : OMI_BaseResource
     [Write, Description("Require ticket information on activation (True/False)")] Boolean ActivationReqTicket;
     [Write, Description("Require MFA on activation (True/False)")] Boolean ActivationReqMFA;
     [Write, Description("Require approval to activate (True/False)")] Boolean ApprovaltoActivate;
-    [Write, Description("Approver (UPN)")] String ActivateApprover[];
+    [Write, Description("Approver User UPN and/or Group Displayname")] String ActivateApprover[];
     [Write, Description("Allow permanent eligible assignment (True/False)")] Boolean PermanentEligibleAssignmentisExpirationRequired ;
     [Write, Description("Expire eligible assignments after (Days)")] String ExpireEligibleAssignment;
     [Write, Description("Allow permanent active assignment (True/False)")] Boolean PermanentActiveAssignmentisExpirationRequired;
