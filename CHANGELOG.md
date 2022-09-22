@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* EXOMailTips
+  * Fixes an issue where MailTips weren't extracted when using CertificateThumbprint to authenticate.
+  FIXES [#2235](https://github.com/microsoft/Microsoft365DSC/issues/2235)
 * MISC
   * Fixes issue with DSCParser non-existing resources on one tenant weren't properly captured.
   FIXES [#2261](https://github.com/microsoft/Microsoft365DSC/issues/2261)
