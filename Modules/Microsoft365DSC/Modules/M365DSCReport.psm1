@@ -1091,7 +1091,7 @@ function Initialize-M365DSCReporting
         return
     }
 
-    Write-Output "Loading file '$ConfigurationPath'"
+    Write-Verbose -Message "Loading file '$ConfigurationPath'"
 
     $fileContent = Get-Content $ConfigurationPath -Raw
     try
