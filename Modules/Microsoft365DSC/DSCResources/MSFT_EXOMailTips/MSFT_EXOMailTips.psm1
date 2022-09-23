@@ -413,7 +413,7 @@ function Export-TargetResource
     try
     {
         $OrganizationName = ""
-        if ($ConnectionMode -eq 'ServicePrincipal')
+        if ($ConnectionMode -like 'ServicePrincipal*')
         {
             $OrganizationName = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
                 -TenantId $TenantId `

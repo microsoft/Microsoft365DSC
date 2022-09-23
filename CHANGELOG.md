@@ -2,11 +2,16 @@
 
 # UNRELEASED
 
+* EXOMailContact
+  * Initial Release.
+* EXOMailTips
+  * Fixes an issue where MailTips weren't extracted when using CertificateThumbprint to authenticate.
+  FIXES [#2235](https://github.com/microsoft/Microsoft365DSC/issues/2235)
 * MISC
   * Fixes issue with DSCParser non-existing resources on one tenant weren't properly captured.
   FIXES [#2261](https://github.com/microsoft/Microsoft365DSC/issues/2261)
 * DEPENDENCIES
-  * Updated Microsoft.Graph dependencies to version 1.12.0.
+  * Updated Microsoft.Graph dependencies to version 1.12.1.
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.152.
 
 # 1.22.921.1
