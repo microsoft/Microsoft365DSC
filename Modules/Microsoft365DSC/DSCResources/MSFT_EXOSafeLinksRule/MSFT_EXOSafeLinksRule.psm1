@@ -75,7 +75,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Setting configuration of SafeLinksRule for $Identity"
     if ($Global:CurrentModeIsExport)
@@ -95,7 +99,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -129,13 +133,14 @@ function Get-TargetResource
                 RecipientDomainIs         = $SafeLinksRule.RecipientDomainIs
                 SentTo                    = $SafeLinksRule.SentTo
                 SentToMemberOf            = $SafeLinksRule.SentToMemberOf
-                Credential        = $Credential
+                Credential                = $Credential
                 Ensure                    = 'Present'
                 ApplicationId             = $ApplicationId
                 CertificateThumbprint     = $CertificateThumbprint
                 CertificatePath           = $CertificatePath
                 CertificatePassword       = $CertificatePassword
                 TenantId                  = $TenantId
+                Managedidentity           = $ManagedIdentity.IsPresent
             }
 
             if ('Enabled' -eq $SafeLinksRule.State)
@@ -255,7 +260,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of SafeLinksRule for $Identity"
@@ -264,7 +273,7 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -284,6 +293,7 @@ function Set-TargetResource
     $SafeLinksRuleParams.Remove('CertificateThumbprint') | Out-Null
     $SafeLinksRuleParams.Remove('CertificatePath') | Out-Null
     $SafeLinksRuleParams.Remove('CertificatePassword') | Out-Null
+    $SafeLinksRuleParams.Remove('ManagedIdentity') | Out-Null
 
 
     if (('Present' -eq $Ensure ) -and (-not $SafeLinksRule))
@@ -399,14 +409,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -427,6 +441,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -466,7 +481,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -477,7 +496,7 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -507,12 +526,13 @@ function Export-TargetResource
                 $Params = @{
                     Identity              = $SafeLinksRule.Identity
                     SafeLinksPolicy       = $SafeLinksRule.SafeLinksPolicy
-                    Credential    = $Credential
+                    Credential            = $Credential
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     CertificatePassword   = $CertificatePassword
                     CertificatePath       = $CertificatePath
+                    Managedidentity       = $ManagedIdentity.IsPresent
                 }
                 $Results = Get-TargetResource @Params
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

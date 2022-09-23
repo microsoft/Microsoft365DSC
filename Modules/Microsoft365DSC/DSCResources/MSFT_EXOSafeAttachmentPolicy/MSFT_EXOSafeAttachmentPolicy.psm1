@@ -60,7 +60,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration of SafeAttachmentPolicy for $Identity"
@@ -81,7 +85,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -112,12 +116,13 @@ function Get-TargetResource
                 Enable                = $SafeAttachmentPolicy.Enable
                 Redirect              = $SafeAttachmentPolicy.Redirect
                 RedirectAddress       = $SafeAttachmentPolicy.RedirectAddress
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePath       = $CertificatePath
                 CertificatePassword   = $CertificatePassword
                 TenantId              = $TenantId
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
 
             Write-Verbose -Message "Found SafeAttachmentPolicy $($Identity)"
@@ -212,7 +217,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of SafeAttachmentPolicy for $Identity"
@@ -221,7 +230,7 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -240,6 +249,7 @@ function Set-TargetResource
     $SafeAttachmentPolicyParams.Remove('CertificateThumbprint') | Out-Null
     $SafeAttachmentPolicyParams.Remove('CertificatePath') | Out-Null
     $SafeAttachmentPolicyParams.Remove('CertificatePassword') | Out-Null
+    $SafeAttachmentPolicyParams.Remove('ManagedIdentity') | Out-Null
 
     $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
 
@@ -247,32 +257,42 @@ function Set-TargetResource
     if ('Present' -eq $Ensure )
     {
         $StopProcessingPolicy = $false
-        if ($Redirect -eq $true) {
+        if ($Redirect -eq $true)
+        {
             $Message = "Cannot proceed with processing of SafeAttachmentPolicy because Redirect is set to true "
-            if ($ActionOnError -eq $false) {
+            if ($ActionOnError -eq $false)
+            {
                 $Message += "and ActionOnError is false"
                 $StopProcessingPolicy = $true
-            } else {
-                if ([String]::IsNullOrEmpty($RedirectAddress)) {
+            }
+            else
+            {
+                if ([String]::IsNullOrEmpty($RedirectAddress))
+                {
                     $Message += "and RedirectAddress is null"
                     $StopProcessingPolicy = $true
                 }
             }
-            if ($StopProcessingPolicy -eq $true) {
+            if ($StopProcessingPolicy -eq $true)
+            {
                 Write-Verbose $Message
-                try {
+                try
+                {
                     $Message = "Please ensure that if Redirect is set to true then  " + `
                         "ActionOnError is also set to true and RedirectAddress is not null"
                     Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                         -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
                         -TenantId $tenantIdValue
                 }
-                catch {
+                catch
+                {
                     Write-Verbose $_
                 }
                 break
             }
-        } else {
+        }
+        else
+        {
             $SafeAttachmentPolicyParams.Remove("RedirectAddress") | Out-Null
         }
 
@@ -284,16 +304,20 @@ function Set-TargetResource
             }
 
             $SafeAttachmentPolicyParams.Remove('Identity') | Out-Null
-            try {
+            try
+            {
                 New-SafeAttachmentPolicy @SafeAttachmentPolicyParams
             }
-            catch {
-                try {
+            catch
+            {
+                try
+                {
                     Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                         -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
                         -TenantId $tenantIdValue
                 }
-                catch {
+                catch
+                {
                     Write-Verbose $_
                 }
             }
@@ -301,16 +325,20 @@ function Set-TargetResource
         else
         {
             Write-Verbose -Message "Setting SafeAttachmentPolicy $Identity with values: $(Convert-M365DscHashtableToString -Hashtable $SafeAttachmentPolicyParams)"
-            try {
+            try
+            {
                 Set-SafeAttachmentPolicy @SafeAttachmentPolicyParams
             }
-            catch {
-                try {
+            catch
+            {
+                try
+                {
                     Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                         -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
                         -TenantId $tenantIdValue
                 }
-                catch {
+                catch
+                {
                     Write-Verbose $_
                 }
             }
@@ -385,14 +413,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -413,6 +445,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -452,7 +485,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -463,7 +500,7 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -489,13 +526,14 @@ function Export-TargetResource
             {
                 Write-Host "    |---[$i/$($SafeAttachmentPolicies.Length)] $($SafeAttachmentPolicy.Identity)" -NoNewline
                 $Params = @{
-                    Credential    = $Credential
+                    Credential            = $Credential
                     Identity              = $SafeAttachmentPolicy.Identity
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     CertificatePassword   = $CertificatePassword
                     CertificatePath       = $CertificatePath
+                    Managedidentity       = $ManagedIdentity.IsPresent
                 }
                 $Results = Get-TargetResource @Params
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

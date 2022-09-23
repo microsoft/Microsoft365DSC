@@ -52,7 +52,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration of Office 365 Shared Mailbox $DisplayName"
@@ -73,7 +77,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -84,7 +88,8 @@ function Get-TargetResource
     if ($PSBoundParameters.ContainsKey("Aliases"))
     {
         Write-Warning "Aliases is deprecated. Please use EmailAddresses instead and remove Aliases from your configuration."
-        if ($null -eq $EmailAddresses) {
+        if ($null -eq $EmailAddresses)
+        {
             $EmailAddresses = $Aliases
         }
     }
@@ -95,9 +100,9 @@ function Get-TargetResource
     try
     {
         $mailbox = Get-Mailbox -Identity $DisplayName `
-                               -RecipientTypeDetails "SharedMailbox" `
-                               -ResultSize Unlimited `
-                               -ErrorAction Stop
+            -RecipientTypeDetails "SharedMailbox" `
+            -ResultSize Unlimited `
+            -ErrorAction Stop
 
         if ($null -eq $mailbox)
         {
@@ -130,6 +135,7 @@ function Get-TargetResource
             CertificatePath       = $CertificatePath
             CertificatePassword   = $CertificatePassword
             TenantId              = $TenantId
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
 
         Write-Verbose -Message "Found an existing instance of Shared Mailbox '$($DisplayName)'"
@@ -214,7 +220,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Shared Mailbox $DisplayName"
@@ -223,7 +233,7 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -269,9 +279,9 @@ function Set-TargetResource
         $proxyAddresses = $emails -Split ','
         $CurrentParameters.EmailAddresses = $proxyAddresses
         $NewMailBoxParameters = @{
-            Name                  = $DisplayName
-            PrimarySMTPAddress    = $PrimarySMTPAddress
-            Shared                = $true
+            Name               = $DisplayName
+            PrimarySMTPAddress = $PrimarySMTPAddress
+            Shared             = $true
         }
         if ($Alias)
         {
@@ -394,14 +404,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -467,7 +481,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -478,7 +496,7 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -507,7 +525,7 @@ function Export-TargetResource
             if ($mailboxName)
             {
                 $params = @{
-                    Credential    = $Credential
+                    Credential            = $Credential
                     DisplayName           = $mailboxName
                     Alias                 = $mailbox.Alias
                     ApplicationId         = $ApplicationId
@@ -515,6 +533,7 @@ function Export-TargetResource
                     CertificateThumbprint = $CertificateThumbprint
                     CertificatePassword   = $CertificatePassword
                     CertificatePath       = $CertificatePath
+                    Managedidentity       = $ManagedIdentity.IsPresent
                 }
                 $Results = Get-TargetResource @Params
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

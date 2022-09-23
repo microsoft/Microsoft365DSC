@@ -55,7 +55,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of HostedConnectionFilterPolicy for $Identity"
@@ -76,7 +80,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -123,6 +127,7 @@ function Get-TargetResource
                 CertificatePath       = $CertificatePath
                 CertificatePassword   = $CertificatePassword
                 TenantId              = $TenantId
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
 
             if ($AntiPhishRule.IsDefault)
@@ -217,7 +222,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of HostedConnectionFilterPolicy for $Identity"
@@ -227,7 +236,7 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -250,6 +259,7 @@ function Set-TargetResource
     $HostedConnectionFilterPolicyParams.Remove('CertificateThumbprint') | Out-Null
     $HostedConnectionFilterPolicyParams.Remove('CertificatePath') | Out-Null
     $HostedConnectionFilterPolicyParams.Remove('CertificatePassword') | Out-Null
+    $HostedConnectionFilterPolicyParams.Remove('ManagedIdentity') | Out-Null
 
     if ($HostedConnectionFilterPolicyParams.RuleScope)
     {
@@ -349,7 +359,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -357,7 +371,7 @@ function Test-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -380,6 +394,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
@@ -420,7 +435,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -431,7 +450,7 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -462,6 +481,7 @@ function Export-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
             Write-Host "    |---[$i/$($HostedConnectionFilterPolicies.Length)] $($HostedConnectionFilterPolicy.Identity)" -NoNewline
             $Results = Get-TargetResource @Params
