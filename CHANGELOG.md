@@ -2,6 +2,9 @@
 
 # 1.22.1005.1
 
+* EXOATPPolicyForO365
+  * [BREAKING] Removed the deprecated BlockURLs, AllowClickThrough, EnableSafeLinksForO365Clients and TrackClicks parameters.
+  FIXES [#2204](https://github.com/microsoft/Microsoft365DSC/issues/2204)
 * [BREAKING]
   * Authentication property ApplicationSecret has been changed across all resources to be of type
     PSCredential instead of string. This will ensure that the secrets get encrypted in MOF files
