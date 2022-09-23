@@ -13,6 +13,7 @@
     "powershell.codeFormatting.whitespaceAfterSeparator": true,
     "powershell.codeFormatting.ignoreOneLineBlock": false,
     "powershell.codeFormatting.alignPropertyValuePairs": true,
+    "powershell.codeFormatting.useConstantStrings": true,
     "powershell.codeFormatting.preset": "Custom",
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true,
