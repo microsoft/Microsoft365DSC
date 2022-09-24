@@ -212,7 +212,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
+    $nullReturn.Ensure = "Absent"
 
     #get role
     [string]$Filter = $null
@@ -225,20 +225,18 @@ function Get-TargetResource
     }
     catch
     {
-        if ($_ -match 'The tenant needs an AAD Premium 2 license')
+        if ($_ -match "The tenant needs an AAD Premium 2 license")
         {
-            Write-Warning -Message 'WARNING: AAD Premium License is required to get the role'
+            Write-Warning -Message "WARNING: AAD Premium License is required to get the role"
             return $nullReturn
         }
     }
 
+    $RoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $Id
     if ($null -eq $Policy)
     {
-        Write-Warning "No policy associated with RoleDefinitionId $Id"
-        return $nullReturn
+        return $null
     }
-
-    $RoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $Id
     #get Policyrule
     $role = Get-MgPolicyRoleManagementPolicyRule -UnifiedRoleManagementPolicyId $Policy.Policyid
 
@@ -894,13 +892,13 @@ function Set-TargetResource
                         }
                         catch
                         {
-                            Write-Verbose -Message 'User not found, try with group'
+                            Write-Verbose -Message "User not found, try with group"
                         }
                         if ($user.length -gt 0)
                         {
                             $ActivateApprovers = @{}
-                            $ActivateApprovers.Add('@odata.type', '#microsoft.graph.singleUser')
-                            $ActivateApprovers.Add('userId', $user.Id)
+                            $ActivateApprovers.Add("@odata.type", "#microsoft.graph.singleUser")
+                            $ActivateApprovers.Add("userId", $user.Id)
                             $primaryApprovers += $ActivateApprovers
                             $user = $null
                         }
@@ -914,13 +912,13 @@ function Set-TargetResource
                             }
                             catch
                             {
-                                Write-Verbose -Message 'Group not found'
+                                Write-Verbose -Message "Group not found"
                             }
                             if ($group.length -gt 0)
                             {
                                 $ActivateApprovers = @{}
-                                $ActivateApprovers.Add('@odata.type', '#microsoft.graph.groupMembers')
-                                $ActivateApprovers.Add('groupId', $group.Id)
+                                $ActivateApprovers.Add("@odata.type", "#microsoft.graph.groupMembers")
+                                $ActivateApprovers.Add("groupId", $group.Id)
                                 $primaryApprovers += $ActivateApprovers
                                 $group = $null
                             }
@@ -1283,6 +1281,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
     $ValuesToCheck.Remove('Id') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -1354,7 +1353,7 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_ -match 'The tenant needs an AAD Premium 2 license')
+        if ($_ -match "The tenant needs an AAD Premium 2 license")
         {
             Write-Host -Message "`nWARNING: AAD Premium License is required to get the role" -ForegroundColor Yellow
             continue
@@ -1378,6 +1377,11 @@ function Export-TargetResource
                 Credential            = $Credential
             }
             $Results = Get-TargetResource @Params
+            if ($null -eq $Results)
+            {
+                Write-Host $Global:M365DSCEmojiRedX
+                continue
+            }
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
