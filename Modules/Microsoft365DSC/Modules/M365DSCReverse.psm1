@@ -472,38 +472,15 @@ function Start-M365DSCConfigurationExtract
         {
             Write-Host "Connecting to {$Workload}..." -NoNewline
             $ConnectionParams = @{
-                Workload = $Workload
-            }
-            if (-not [System.String]::IsNullOrEmpty($ApplicationId))
-            {
-                $ConnectionParams.Add('ApplicationId', $ApplicationId)
-                $ConnectionParams.Add('TenantId', $TenantId)
-
-                if (-not [System.String]::IsNullOrEmpty($ApplicationSecret))
-                {
-                    $ConnectionParams.Add('ApplicationSecret', $ApplicationSecret)
-                }
-                elseif ($null -ne $CertificateThumbprint)
-                {
-                    $ConnectionParams.Add('CertificateThumbprint', $CertificateThumbprint)
-                }
-                elseif ($null -ne $CertificatePath)
-                {
-                    $ConnectionParams.Add('CertificatePath', $CertificatePath)
-                    $ConnectionParams.Add('CertificatePassword', $CertificatePassword)
-                }
-                elseif ($null -ne $ApplicationSecret)
-                {
-                    $ConnectionParams.Add('ApplicationSecret', $ApplicationSecret)
-                }
-            }
-            elseif ($null -ne $Credential)
-            {
-                $ConnectionParams.Add('Credential', $Credential)
-            }
-            elseif ($ManagedIdentity.IsPresent)
-            {
-                $ConnectionParams.Add('Identity', $ManagedIdentity)
+                Workload              = $Workload
+                ApplicationId         = $ApplicationId
+                ApplicationSecret     = $ApplicationSecret
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword.Password
+                Credential            = $Credential
+                Identity              = $ManagedIdentity.IsPresent
             }
             try
             {
@@ -516,7 +493,6 @@ function Start-M365DSCConfigurationExtract
                 throw $_
             }
         }
-
 
         foreach ($resource in $ResourcesPath)
         {
@@ -571,11 +547,11 @@ function Start-M365DSCConfigurationExtract
 
             if ($ComponentsToSkip -notcontains $resourceName)
             {
-                Write-Host "[$i/$($ResourcesToExport.Length)] Extracting [" -NoNewline
-                Write-Host $resourceName -ForegroundColor Green -NoNewline
-                Write-Host '] using {' -NoNewline
+                Write-Host "[$i/$($ResourcesToExport.Length)] Extracting [" -NoNewLine
+                Write-Host $resourceName -ForegroundColor Green -NoNewLine
+                Write-Host "] using {" -NoNewLine
                 Write-Host $mostSecureAuthMethod -ForegroundColor Cyan -NoNewline
-                Write-Host '}...' -NoNewline
+                Write-Host "}..." -NoNewline
                 $exportString = [System.Text.StringBuilder]::New()
                 if ($GenerateInfo)
                 {
