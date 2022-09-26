@@ -46,4 +46,5 @@ class MSFT_IntuneAppProtectionPolicyAndroid : OMI_BaseResource
     [Write, Description("Indicates if the policy is deployed to any inclusion groups or not. Inherited from targetedManagedAppProtection.")] Boolean IsAssigned;
     [Write, Description("Indicates whether or not to Block the user from taking Screenshots.")] Boolean ScreenCaptureBlocked;
     [Write, Description("Indicates whether or not the Encrypt org data value is enabled.")] Boolean EncryptAppData;
+    [Write, Description("Indicates whether or not the 'Encrypt org data on enrolled devices' value is enabled.  False = require.  Only functions if EncryptAppData is set to True")] Boolean DisableAppEncryptionIfDeviceEncryptionIsEnabled;
 };

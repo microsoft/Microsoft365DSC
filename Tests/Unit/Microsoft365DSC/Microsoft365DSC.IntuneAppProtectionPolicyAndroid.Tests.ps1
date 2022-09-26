@@ -42,6 +42,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DataBackupBlocked                       = $False;
                     Description                             = 'DSC Policy';
                     DeviceComplianceRequired                = $True;
+                    DisableAppEncryptionIfDeviceEncryptionIsEnabled = $True;
                     EncryptAppData                          = $True;
                     DisplayName                             = "DSC Policy";
                     Ensure                                  = "Present"
@@ -142,6 +143,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DataBackupBlocked                       = $False;
                     Description                             = 'DSC Policy'
                     DeviceComplianceRequired                = $True;
+                    DisableAppEncryptionIfDeviceEncryptionIsEnabled = $true;
                     EncryptAppData                          = $True;
                     FingerprintBlocked                      = $False;
                     ManagedBrowserToOpenLinksRequired       = $True;

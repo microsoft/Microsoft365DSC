@@ -101,6 +101,10 @@ function Get-TargetResource
         $FingerprintBlocked,
 
         [Parameter()]
+        [System.Boolean]
+        $DisableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
         [System.String[]]
         $Apps,
 
@@ -419,6 +423,10 @@ function Set-TargetResource
         $FingerprintBlocked,
 
         [Parameter()]
+        [System.Boolean]
+        $DisableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
         [System.String[]]
         $Apps,
 
@@ -724,6 +732,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $FingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableAppEncryptionIfDeviceEncryptionIsEnabled,
 
         [Parameter()]
         [System.String[]]
@@ -1168,6 +1180,7 @@ function get-InputParameters
         DataBackupBlocked                       = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         Description                             = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         DeviceComplianceRequired                = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        DisableAppEncryptionIfDeviceEncryptionIsEnabled = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         DisableAppPinIfDevicePinIsSet           = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         DisplayName                             = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         EncryptAppData                          = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
