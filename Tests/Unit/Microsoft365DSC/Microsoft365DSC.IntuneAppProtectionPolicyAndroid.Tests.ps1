@@ -42,6 +42,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DataBackupBlocked                       = $False;
                     Description                             = 'DSC Policy';
                     DeviceComplianceRequired                = $True;
+                    EncryptAppData                          = $True;
                     DisplayName                             = "DSC Policy";
                     Ensure                                  = "Present"
                     ExcludedGroups                          = @("3eacc231-d77b-4efb-bb5f-310f68bd6198");
@@ -69,7 +70,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MinimumWarningAppVersion                = "1.5";
                     MinimumWarningOSVersion                 = "1.5";
                     MinimumWarningPatchVersion              = "2021-07-13";
-                    IsAssigned                              = $true;
+                    IsAssigned                              = $True;
                 }
 
             }
@@ -141,6 +142,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DataBackupBlocked                       = $False;
                     Description                             = 'DSC Policy'
                     DeviceComplianceRequired                = $True;
+                    EncryptAppData                          = $True;
                     FingerprintBlocked                      = $False;
                     ManagedBrowserToOpenLinksRequired       = $True;
                     MaximumPinRetries                       = 5;
@@ -164,7 +166,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MinimumWarningAppVersion                = "1.5";
                     MinimumWarningOSVersion                 = "1.5";
                     MinimumWarningPatchVersion              = "2021-07-13";
-                    IsAssigned                              = $true;
+                    IsAssigned                              = $True;
                 }
             }
 

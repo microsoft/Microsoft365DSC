@@ -154,6 +154,10 @@ function Get-TargetResource
         [System.Boolean]
         $ScreenCaptureBlocked,
 
+        [Parameter()]
+        [System.Boolean]
+        $EncryptAppData,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -468,6 +472,10 @@ function Set-TargetResource
         [System.Boolean]
         $ScreenCaptureBlocked,
 
+        [Parameter()]
+        [System.Boolean]
+        $EncryptAppData,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -770,6 +778,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $ScreenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptAppData,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -1158,6 +1170,7 @@ function get-InputParameters
         DeviceComplianceRequired                = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         DisableAppPinIfDevicePinIsSet           = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         DisplayName                             = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        EncryptAppData                          = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         Ensure                                  = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
         ExcludedGroups                          = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
         FingerprintBlocked                      = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };

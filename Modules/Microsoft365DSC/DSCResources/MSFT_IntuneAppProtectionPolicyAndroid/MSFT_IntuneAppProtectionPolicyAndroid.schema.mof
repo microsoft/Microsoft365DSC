@@ -45,4 +45,5 @@ class MSFT_IntuneAppProtectionPolicyAndroid : OMI_BaseResource
     [Write, Description("The apps controlled by this protection policy, overrides any values in Apps unless this value is 'selectedPublicApps'."),ValueMap{"allApps", "allMicrosoftApps", "allCoreMicrosoftApps", "selectedPublicApps"}, Values{"allApps", "allMicrosoftApps", "allCoreMicrosoftApps", "selectedPublicApps"}] String AppGroupType;
     [Write, Description("Indicates if the policy is deployed to any inclusion groups or not. Inherited from targetedManagedAppProtection.")] Boolean IsAssigned;
     [Write, Description("Indicates whether or not to Block the user from taking Screenshots.")] Boolean ScreenCaptureBlocked;
+    [Write, Description("Indicates whether or not the Encrypt org data value is enabled.")] Boolean EncryptAppData;
 };
