@@ -61,6 +61,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrintBlocked                            = $False;
                     SaveAsBlocked                           = $True;
                     SimplePinBlocked                        = $False;
+                    ScreenCaptureBlocked                    = $False;
                     ManagedBrowser                          = "notConfigured";
                     MinimumRequiredAppVersion               = "1.2";
                     MinimumRequiredOSVersion                = "1.1";
@@ -155,6 +156,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrintBlocked                            = $False;
                     SaveAsBlocked                           = $True;
                     SimplePinBlocked                        = $False;
+                    ScreenCaptureBlocked                    = $False;
                     ManagedBrowser                          = "notConfigured";
                     MinimumRequiredAppVersion               = "1.2";
                     MinimumRequiredOSVersion                = "1.1";

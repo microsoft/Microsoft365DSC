@@ -150,6 +150,10 @@ function Get-TargetResource
         [System.Boolean]
         $IsAssigned,
 
+        [Parameter()]
+        [System.Boolean]
+        $ScreenCaptureBlocked,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -460,6 +464,10 @@ function Set-TargetResource
         [System.Boolean]
         $IsAssigned,
 
+        [Parameter()]
+        [System.Boolean]
+        $ScreenCaptureBlocked,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -758,6 +766,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $IsAssigned,
+
+        [Parameter()]
+        [System.Boolean]
+        $ScreenCaptureBlocked,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -1169,6 +1181,7 @@ function get-InputParameters
         PinRequired                             = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         PrintBlocked                            = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         SaveAsBlocked                           = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        ScreenCaptureBlocked                    = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         SimplePinBlocked                        = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         TenantId                                = @{Type = 'Credential'       ; ExportFileType = 'NA'; }
     }
