@@ -31,6 +31,7 @@ class MSFT_AADConditionalAccessPolicy : OMI_BaseResource
     [Write, Description("Specifies, what Cloud App Security control is enforced by the Policy.")] String CloudAppSecurityType;
     [Write, Description("Sign in frequency time in the given unit to be enforced by the policy.")] UInt32 SignInFrequencyValue;
     [Write, Description("Display name of the terms of use to assign.")] String TermsOfUse;
+    [Write, Description("Custom Controls assigned to the grant property of this policy.")] String CustomAuthenticationFactors[];
     [Write, Description("Sign in frequency unit (days/hours) to be interpreted by the policy."), ValueMap{"Days","Hours",""}, Values{"Days","Hours",""}] String SignInFrequencyType;
     [Write, Description("Specifies, whether sign-in frequency is enforced by the Policy.")] Boolean SignInFrequencyIsEnabled;
     [Write, Description("Specifies, whether Browser Persistence is controlled by the Policy.")] Boolean PersistentBrowserIsEnabled;
@@ -41,4 +42,5 @@ class MSFT_AADConditionalAccessPolicy : OMI_BaseResource
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Secret of the Azure Active Directory application to authenticate with.")] String ApplicationSecret;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
 };

@@ -1,4 +1,5 @@
-function Get-TargetResource {
+function Get-TargetResource
+{
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
@@ -175,31 +176,35 @@ function Get-TargetResource {
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Checking for the Intune Device Configuration Policy {$DisplayName}"
 
     $M365DSCConnectionSplat = @{
-        Workload = 'MicrosoftGraph'
+        Workload          = 'MicrosoftGraph'
         InboundParameters = $PSBoundParameters
-        ProfileName = 'Beta'
+        ProfileName       = 'Beta'
     }
     $ConnectionMode = New-M365DSCConnection @M365DSCConnectionSplat
     $MaximumFunctionCount = 32000
-    Select-MGProfile -Name 'Beta' | Out-Null
+    Select-MgProfile -Name 'Beta' | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $Credential.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
+    $data.Add('Resource', $ResourceName)
+    $data.Add('Method', $MyInvocation.MyCommand)
+    $data.Add('Principal', $Credential.UserName)
+    $data.Add('TenantId', $TenantId)
+    $data.Add('ConnectionMode', $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -208,7 +213,7 @@ function Get-TargetResource {
 
     try
     {
-        $policy = Get-MGDeviceManagementDeviceConfiguration -Filter "displayName eq '$DisplayName'" `
+        $policy = Get-MgDeviceManagementDeviceConfiguration -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' }
 
         if ($null -eq $policy)
@@ -219,48 +224,49 @@ function Get-TargetResource {
 
         Write-Verbose -Message "Found Device Configuration Policy {$DisplayName}"
         return @{
-            Description                                                 = $policy.Description
-            DisplayName                                                 = $policy.DisplayName
-            PasswordBlockFingerprintUnlock                              = $policy.AdditionalProperties.passwordBlockFingerprintUnlock
-            PasswordBlockTrustAgents                                    = $policy.AdditionalProperties.passwordBlockTrustAgents
-            PasswordExpirationDays                                      = $policy.AdditionalProperties.passwordExpirationDays
-            PasswordMinimumLength                                       = $policy.AdditionalProperties.passwordMinimumLength
-            PasswordMinutesOfInactivityBeforeScreenTimeout              = $policy.AdditionalProperties.passwordMinutesOfInactivityBeforeScreenTimeout
-            PasswordPreviousPasswordBlockCount                          = $policy.AdditionalProperties.passwordPreviousPasswordBlockCount
-            PasswordSignInFailureCountBeforeFactoryReset                = $policy.AdditionalProperties.passwordSignInFailureCountBeforeFactoryReset
-            PasswordRequiredType                                        = $policy.AdditionalProperties.passwordRequiredType
-            WorkProfileDataSharingType                                  = $policy.AdditionalProperties.workProfileDataSharingType
-            WorkProfileBlockNotificationsWhileDeviceLocked              = $policy.AdditionalProperties.workProfileBlockAddingAccounts
-            WorkProfileBlockAddingAccounts                              = $policy.AdditionalProperties.workProfileBlockAddingAccounts
-            WorkProfileBluetoothEnableContactSharing                    = $policy.AdditionalProperties.workProfileBluetoothEnableContactSharing
-            WorkProfileBlockScreenCapture                               = $policy.AdditionalProperties.workProfileBlockScreenCapture
-            WorkProfileBlockCrossProfileCallerId                        = $policy.AdditionalProperties.workProfileBlockCrossProfileCallerId
-            WorkProfileBlockCamera                                      = $policy.AdditionalProperties.workProfileBlockCamera
-            WorkProfileBlockCrossProfileContactsSearch                  = $policy.AdditionalProperties.workProfileBlockCrossProfileContactsSearch
-            WorkProfileBlockCrossProfileCopyPaste                       = $policy.AdditionalProperties.workProfileBlockCrossProfileCopyPaste
-            WorkProfileDefaultAppPermissionPolicy                       = $policy.AdditionalProperties.workProfileDefaultAppPermissionPolicy
-            WorkProfilePasswordBlockFingerprintUnlock                   = $policy.AdditionalProperties.workProfilePasswordBlockFingerprintUnlock
-            WorkProfilePasswordBlockTrustAgents                         = $policy.AdditionalProperties.workProfilePasswordBlockTrustAgents
-            WorkProfilePasswordExpirationDays                           = $policy.AdditionalProperties.workProfilePasswordExpirationDays
-            WorkProfilePasswordMinimumLength                            = $policy.AdditionalProperties.workProfilePasswordMinimumLength
-            WorkProfilePasswordMinNumericCharacters                     = $policy.AdditionalProperties.workProfilePasswordMinNumericCharacters
-            WorkProfilePasswordMinNonLetterCharacters                   = $policy.AdditionalProperties.workProfilePasswordMinNonLetterCharacters
-            WorkProfilePasswordMinLetterCharacters                      = $policy.AdditionalProperties.workProfilePasswordMinLetterCharacters
-            WorkProfilePasswordMinLowerCaseCharacters                   = $policy.AdditionalProperties.workProfilePasswordMinLowerCaseCharacters
-            WorkProfilePasswordMinUpperCaseCharacters                   = $policy.AdditionalProperties.workProfilePasswordMinUpperCaseCharacters
-            WorkProfilePasswordMinSymbolCharacters                      = $policy.AdditionalProperties.workProfilePasswordMinSymbolCharacters
-            WorkProfilePasswordMinutesOfInactivityBeforeScreenTimeout   = $policy.AdditionalProperties.workProfilePasswordMinutesOfInactivityBeforeScreenTimeout
-            WorkProfilePasswordPreviousPasswordBlockCount               = $policy.AdditionalProperties.workProfilePasswordPreviousPasswordBlockCount
-            WorkProfilePasswordSignInFailureCountBeforeFactoryReset     = $policy.AdditionalProperties.workProfilePasswordSignInFailureCountBeforeFactoryReset
-            WorkProfilePasswordRequiredType                             = $policy.AdditionalProperties.workProfilePasswordRequiredType
-            WorkProfileRequirePassword                                  = $policy.AdditionalProperties.workProfileRequirePassword
-            SecurityRequireVerifyApps                                   = $policy.AdditionalProperties.securityRequireVerifyApps
-            Ensure                                                      = "Present"
-            Credential                                                  = $Credential
-            ApplicationId                                               = $ApplicationId
-            TenantId                                                    = $TenantId
-            ApplicationSecret                                           = $ApplicationSecret
-            CertificateThumbprint                                       = $CertificateThumbprint
+            Description                                               = $policy.Description
+            DisplayName                                               = $policy.DisplayName
+            PasswordBlockFingerprintUnlock                            = $policy.AdditionalProperties.passwordBlockFingerprintUnlock
+            PasswordBlockTrustAgents                                  = $policy.AdditionalProperties.passwordBlockTrustAgents
+            PasswordExpirationDays                                    = $policy.AdditionalProperties.passwordExpirationDays
+            PasswordMinimumLength                                     = $policy.AdditionalProperties.passwordMinimumLength
+            PasswordMinutesOfInactivityBeforeScreenTimeout            = $policy.AdditionalProperties.passwordMinutesOfInactivityBeforeScreenTimeout
+            PasswordPreviousPasswordBlockCount                        = $policy.AdditionalProperties.passwordPreviousPasswordBlockCount
+            PasswordSignInFailureCountBeforeFactoryReset              = $policy.AdditionalProperties.passwordSignInFailureCountBeforeFactoryReset
+            PasswordRequiredType                                      = $policy.AdditionalProperties.passwordRequiredType
+            WorkProfileDataSharingType                                = $policy.AdditionalProperties.workProfileDataSharingType
+            WorkProfileBlockNotificationsWhileDeviceLocked            = $policy.AdditionalProperties.workProfileBlockAddingAccounts
+            WorkProfileBlockAddingAccounts                            = $policy.AdditionalProperties.workProfileBlockAddingAccounts
+            WorkProfileBluetoothEnableContactSharing                  = $policy.AdditionalProperties.workProfileBluetoothEnableContactSharing
+            WorkProfileBlockScreenCapture                             = $policy.AdditionalProperties.workProfileBlockScreenCapture
+            WorkProfileBlockCrossProfileCallerId                      = $policy.AdditionalProperties.workProfileBlockCrossProfileCallerId
+            WorkProfileBlockCamera                                    = $policy.AdditionalProperties.workProfileBlockCamera
+            WorkProfileBlockCrossProfileContactsSearch                = $policy.AdditionalProperties.workProfileBlockCrossProfileContactsSearch
+            WorkProfileBlockCrossProfileCopyPaste                     = $policy.AdditionalProperties.workProfileBlockCrossProfileCopyPaste
+            WorkProfileDefaultAppPermissionPolicy                     = $policy.AdditionalProperties.workProfileDefaultAppPermissionPolicy
+            WorkProfilePasswordBlockFingerprintUnlock                 = $policy.AdditionalProperties.workProfilePasswordBlockFingerprintUnlock
+            WorkProfilePasswordBlockTrustAgents                       = $policy.AdditionalProperties.workProfilePasswordBlockTrustAgents
+            WorkProfilePasswordExpirationDays                         = $policy.AdditionalProperties.workProfilePasswordExpirationDays
+            WorkProfilePasswordMinimumLength                          = $policy.AdditionalProperties.workProfilePasswordMinimumLength
+            WorkProfilePasswordMinNumericCharacters                   = $policy.AdditionalProperties.workProfilePasswordMinNumericCharacters
+            WorkProfilePasswordMinNonLetterCharacters                 = $policy.AdditionalProperties.workProfilePasswordMinNonLetterCharacters
+            WorkProfilePasswordMinLetterCharacters                    = $policy.AdditionalProperties.workProfilePasswordMinLetterCharacters
+            WorkProfilePasswordMinLowerCaseCharacters                 = $policy.AdditionalProperties.workProfilePasswordMinLowerCaseCharacters
+            WorkProfilePasswordMinUpperCaseCharacters                 = $policy.AdditionalProperties.workProfilePasswordMinUpperCaseCharacters
+            WorkProfilePasswordMinSymbolCharacters                    = $policy.AdditionalProperties.workProfilePasswordMinSymbolCharacters
+            WorkProfilePasswordMinutesOfInactivityBeforeScreenTimeout = $policy.AdditionalProperties.workProfilePasswordMinutesOfInactivityBeforeScreenTimeout
+            WorkProfilePasswordPreviousPasswordBlockCount             = $policy.AdditionalProperties.workProfilePasswordPreviousPasswordBlockCount
+            WorkProfilePasswordSignInFailureCountBeforeFactoryReset   = $policy.AdditionalProperties.workProfilePasswordSignInFailureCountBeforeFactoryReset
+            WorkProfilePasswordRequiredType                           = $policy.AdditionalProperties.workProfilePasswordRequiredType
+            WorkProfileRequirePassword                                = $policy.AdditionalProperties.workProfileRequirePassword
+            SecurityRequireVerifyApps                                 = $policy.AdditionalProperties.securityRequireVerifyApps
+            Ensure                                                    = 'Present'
+            Credential                                                = $Credential
+            ApplicationId                                             = $ApplicationId
+            TenantId                                                  = $TenantId
+            ApplicationSecret                                         = $ApplicationSecret
+            CertificateThumbprint                                     = $CertificateThumbprint
+            Managedidentity                                           = $ManagedIdentity.IsPresent
         }
     }
     catch
@@ -268,7 +274,7 @@ function Get-TargetResource {
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             $tenantIdValue = $Credential.UserName.Split('@')[1]
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -459,52 +465,56 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     $M365DSCConnectionSplat = @{
-        Workload = 'MicrosoftGraph'
+        Workload          = 'MicrosoftGraph'
         InboundParameters = $PSBoundParameters
-        ProfileName = 'Beta'
+        ProfileName       = 'Beta'
     }
     $ConnectionMode = New-M365DSCConnection @M365DSCConnectionSplat
     $MaximumFunctionCount = 32000
-    Select-MGProfile -Name 'Beta' | Out-Null
+    Select-MgProfile -Name 'Beta' | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $Credential.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
+    $data.Add('Resource', $ResourceName)
+    $data.Add('Method', $MyInvocation.MyCommand)
+    $data.Add('Principal', $Credential.UserName)
+    $data.Add('TenantId', $TenantId)
+    $data.Add('ConnectionMode', $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
     $currentPolicy = Get-TargetResource @PSBoundParameters
-    $PSBoundParameters.Remove("Ensure") | Out-Null
-    $PSBoundParameters.Remove("Credential") | Out-Null
-    $PSBoundParameters.Remove("ApplicationId") | Out-Null
-    $PSBoundParameters.Remove("TenantId") | Out-Null
-    $PSBoundParameters.Remove("ApplicationSecret") | Out-Null
+    $PSBoundParameters.Remove('Ensure') | Out-Null
+    $PSBoundParameters.Remove('Credential') | Out-Null
+    $PSBoundParameters.Remove('ApplicationId') | Out-Null
+    $PSBoundParameters.Remove('TenantId') | Out-Null
+    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Device Configuration Policy {$DisplayName}"
         $PSBoundParameters.Remove('DisplayName') | Out-Null
         $PSBoundParameters.Remove('Description') | Out-Null
         $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationPolicyAndroidWorkProfileAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        New-MGDeviceManagementDeviceConfiguration -DisplayName $DisplayName `
+        New-MgDeviceManagementDeviceConfiguration -DisplayName $DisplayName `
             -Description $Description `
             -AdditionalProperties $AdditionalProperties
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing Device Configuration Policy {$DisplayName}"
-        $configDevicePolicy = Get-MGDeviceManagementDeviceConfiguration `
+        $configDevicePolicy = Get-MgDeviceManagementDeviceConfiguration `
             -ErrorAction Stop | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' -and `
                 $_.displayName -eq $($DisplayName) }
@@ -512,19 +522,19 @@ function Set-TargetResource
         $PSBoundParameters.Remove('DisplayName') | Out-Null
         $PSBoundParameters.Remove('Description') | Out-Null
         $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationPolicyAndroidWorkProfileAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        Update-MGDeviceManagementDeviceConfiguration -AdditionalProperties $AdditionalProperties `
+        Update-MgDeviceManagementDeviceConfiguration -AdditionalProperties $AdditionalProperties `
             -Description $Description `
             -DeviceConfigurationId $configDevicePolicy.Id
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Device Configuration Policy {$DisplayName}"
-        $configDevicePolicy = Get-MGDeviceManagementDeviceConfiguration `
-        -ErrorAction Stop | Where-Object `
-        -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' -and `
-            $_.displayName -eq $($DisplayName) }
+        $configDevicePolicy = Get-MgDeviceManagementDeviceConfiguration `
+            -ErrorAction Stop | Where-Object `
+            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' -and `
+                $_.displayName -eq $($DisplayName) }
 
-        Remove-MGDeviceManagementDeviceConfiguration -DeviceConfigurationId $configDevicePolicy.Id
+        Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $configDevicePolicy.Id
     }
 }
 
@@ -706,18 +716,22 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $Credential.UserName)
-    $data.Add("TenantId", $TenantId)
+    $data.Add('Resource', $ResourceName)
+    $data.Add('Method', $MyInvocation.MyCommand)
+    $data.Add('Principal', $Credential.UserName)
+    $data.Add('TenantId', $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
     Write-Verbose -Message "Testing configuration of Device Configuration Policy {$DisplayName}"
@@ -771,35 +785,39 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     $M365DSCConnectionSplat = @{
-        Workload = 'MicrosoftGraph'
+        Workload          = 'MicrosoftGraph'
         InboundParameters = $PSBoundParameters
-        ProfileName = 'Beta'
+        ProfileName       = 'Beta'
     }
     $ConnectionMode = New-M365DSCConnection @M365DSCConnectionSplat
     $MaximumFunctionCount = 32000
-    Select-MGProfile -Name 'Beta' | Out-Null
+    Select-MgProfile -Name 'Beta' | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $Credential.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
+    $data.Add('Resource', $ResourceName)
+    $data.Add('Method', $MyInvocation.MyCommand)
+    $data.Add('Principal', $Credential.UserName)
+    $data.Add('TenantId', $TenantId)
+    $data.Add('ConnectionMode', $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
     try
     {
-        [array]$policies = Get-MGDeviceManagementDeviceConfiguration `
+        [array]$policies = Get-MgDeviceManagementDeviceConfiguration `
             -ErrorAction Stop -All:$true -Filter $Filter | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' }
         $i = 1
@@ -810,7 +828,7 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
         foreach ($policy in $policies)
         {
@@ -823,6 +841,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -861,7 +880,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 
@@ -875,7 +894,7 @@ function Get-M365DSCIntuneDeviceConfigurationPolicyAndroidWorkProfileAdditionalP
         $Properties
     )
 
-    $results = @{"@odata.type" = "#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration"}
+    $results = @{'@odata.type' = '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' }
     foreach ($property in $properties.Keys)
     {
         if ($property -ne 'Verbose')

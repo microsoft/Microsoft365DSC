@@ -11,7 +11,7 @@
 | **ActivationReqTicket** | Write | Boolean | Require ticket information on activation (True/False) ||
 | **ActivationReqMFA** | Write | Boolean | Require MFA on activation (True/False) ||
 | **ApprovaltoActivate** | Write | Boolean | Require approval to activate (True/False) ||
-| **ActivateApprover** | Write | StringArray[] | Approver (UPN) ||
+| **ActivateApprover** | Write | StringArray[] | Approver User UPN and/or Group Displayname ||
 | **PermanentEligibleAssignmentisExpirationRequired** | Write | Boolean | Allow permanent eligible assignment (True/False) ||
 | **ExpireEligibleAssignment** | Write | String | Expire eligible assignments after (Days) ||
 | **PermanentActiveAssignmentisExpirationRequired** | Write | Boolean | Allow permanent active assignment (True/False) ||
@@ -49,6 +49,7 @@
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
 | **ApplicationSecret** | Write | String | Secret of the Azure Active Directory application to authenticate with. ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
+| **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. ||
 
 # AADRoleSetting
 

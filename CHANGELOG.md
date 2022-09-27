@@ -2,6 +2,40 @@
 
 # UNRELEASED
 
+* EXOMailContact
+  * Initial Release.
+* EXOMailTips
+  * Fixes an issue where MailTips weren't extracted when using CertificateThumbprint to authenticate.
+  FIXES [#2235](https://github.com/microsoft/Microsoft365DSC/issues/2235)
+* MISC
+  * Fixes issue with DSCParser non-existing resources on one tenant weren't properly captured.
+  FIXES [#2261](https://github.com/microsoft/Microsoft365DSC/issues/2261)
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 1.12.1.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.152.
+
+# 1.22.921.1
+
+* AADRoleSetting
+  * Fixed an issue if the P2 License is not present on the tenant the Export stop working
+    FIXES [#2227](https://github.com/microsoft/Microsoft365DSC/issues/2227)
+  * Fixed an issue with approver can be a group
+    FIXES [#2283](https://github.com/microsoft/Microsoft365DSC/issues/2283)
+* AADConditionalAccessPolicy
+  * Added support for the CustomAuthenticationFactors parameter.
+  FIXES [#2292](https://github.com/microsoft/Microsoft365DSC/issues/2292)
+* O365User
+  * Improved extraction performance by leveraging StringBuilder instead of re-assigning string.
+* SCAutoSensitivityLabelPolicy
+  * Initial Release.
+* SCAutoSensitivityLabelRule
+  * Initial Release.
+* DEPENDENCIES
+  * Updated the ExchangeOnlineManagement dependency to version 3.0.0.
+  * Updated the MSCloudLoginAssistant dependency to version 1.0.89.
+
+# 1.22.914.1
+
 * AADGroup
   * Changed behavior where if a group has a dynamic membership rule that is active,
     we no longer process members from the export, Get and Set functions.
@@ -11,6 +45,9 @@
     FIXES [#2191](https://github.com/microsoft/Microsoft365DSC/issues/2191)
 * AADRoleSetting
   * Fixed an issue where the export wasn't properly passing credential to the Get function.
+* TeamsCallingPolicy
+  * Added UserOverride as an accepted value for the BusyOnBusyEnabledType parameter.
+  FIXES [#2271](https://github.com/microsoft/Microsoft365DSC/issues/2271)
 
 # 1.22.907.1
 

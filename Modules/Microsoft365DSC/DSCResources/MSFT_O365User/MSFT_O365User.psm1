@@ -89,14 +89,14 @@ function Get-TargetResource
         $Title,
 
         [Parameter()]
-        [ValidateSet("Guest", "Member", "Other", "Viral")]
+        [ValidateSet('Guest', 'Member', 'Other', 'Viral')]
         [System.String]
         $UserType,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -116,7 +116,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Getting configuration of Office 365 User $UserPrincipalName"
 
@@ -127,8 +131,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -147,14 +151,15 @@ function Get-TargetResource
         ApplicationId         = $ApplicationId
         TenantId              = $TenantId
         CertificateThumbprint = $CertificateThumbprint
+        Managedidentity       = $ManagedIdentity.IsPresent
         ApplicationSecret     = $ApplicationSecret
-        Ensure                = "Absent"
+        Ensure                = 'Absent'
     }
 
     try
     {
         Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
-        $propertiesToRetrieve = @("UserPrincipalName", "DisplayName", "GivenName", "Surname", "UsageLocation", "City", "Country", "Department", "FacsimileTelephoneNumber", "Mobile", "OfficeLocation", "TelephoneNumber", "PostalCode", "PreferredLanguage", "State", "StreetAddress", "JobTitle", "UserType")
+        $propertiesToRetrieve = @('UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType')
         $user = Get-MgUser -UserId $UserPrincipalName -Property $propertiesToRetrieve -ErrorAction SilentlyContinue
         if ($null -eq $user)
         {
@@ -171,7 +176,7 @@ function Get-TargetResource
         }
 
         $userPasswordPolicyInfo = $user | Select-Object UserprincipalName, @{
-            N = "PasswordNeverExpires"; E = { $_.PasswordPolicies -contains "DisablePasswordExpiration" }
+            N = 'PasswordNeverExpires'; E = { $_.PasswordPolicies -contains 'DisablePasswordExpiration' }
         }
         $passwordNeverExpires = $userPasswordPolicyInfo.PasswordNeverExpires
 
@@ -202,7 +207,7 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
-            Ensure                = "Present"
+            Ensure                = 'Present'
         }
         return [System.Collections.Hashtable] $results
     }
@@ -211,7 +216,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -322,14 +327,14 @@ function Set-TargetResource
         $Title,
 
         [Parameter()]
-        [ValidateSet("Guest", "Member", "Other", "Viral")]
+        [ValidateSet('Guest', 'Member', 'Other', 'Viral')]
         [System.String]
         $UserType,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -349,13 +354,17 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     # PreferredDataLocation is no longer an accepted value;
     if (![System.String]::IsNullOrEmpty($PreferredDataLocation))
     {
-        Write-Warning "[DEPRECATED] Property PreferredDataLocation is no longer supported by resource O365USer"
+        Write-Warning '[DEPRECATED] Property PreferredDataLocation is no longer supported by resource O365USer'
     }
 
     Write-Verbose -Message "Setting configuration of Office 365 User $UserPrincipalName"
@@ -364,8 +373,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -390,28 +399,28 @@ function Set-TargetResource
         }
         else
         {
-            $PasswordPolicies = "None"
+            $PasswordPolicies = 'None'
         }
         $CreationParams = @{
-            City                       = $City
-            Country                    = $Country
-            Department                 = $Department
-            DisplayName                = $DisplayName
-            FacsimileTelephoneNumber   = $Fax
-            GivenName                  = $FirstName
-            JobTitle                   = $Title
-            Mobile                     = $MobilePhone
-            PasswordPolicies           = $PasswordPolicies
-            OfficeLocation             = $Office
-            PostalCode                 = $PostalCode
-            PreferredLanguage          = $PreferredLanguage
-            State                      = $State
-            StreetAddress              = $StreetAddress
-            Surname                    = $LastName
-            TelephoneNumber            = $PhoneNumber
-            UsageLocation              = $UsageLocation
-            UserPrincipalName          = $UserPrincipalName
-            UserType                   = $UserType
+            City                     = $City
+            Country                  = $Country
+            Department               = $Department
+            DisplayName              = $DisplayName
+            FacsimileTelephoneNumber = $Fax
+            GivenName                = $FirstName
+            JobTitle                 = $Title
+            Mobile                   = $MobilePhone
+            PasswordPolicies         = $PasswordPolicies
+            OfficeLocation           = $Office
+            PostalCode               = $PostalCode
+            PreferredLanguage        = $PreferredLanguage
+            State                    = $State
+            StreetAddress            = $StreetAddress
+            Surname                  = $LastName
+            TelephoneNumber          = $PhoneNumber
+            UsageLocation            = $UsageLocation
+            UserPrincipalName        = $UserPrincipalName
+            UserType                 = $UserType
         }
         $CreationParams = Remove-NullEntriesFromHashtable -Hash $CreationParams
 
@@ -426,9 +435,9 @@ function Set-TargetResource
             }
 
             # Set the Office license as the license we want to add in the $licenses object
-            if ($licenses.Keys -NotContains "AddLicenses")
+            if ($licenses.Keys -NotContains 'AddLicenses')
             {
-                $licenses.Add("AddLicenses", @($license))
+                $licenses.Add('AddLicenses', @($license))
             }
             else
             {
@@ -444,9 +453,9 @@ function Set-TargetResource
                 $license = @{
                     SkuId = ($SubscribedSku | Where-Object -Property SkuPartNumber -Value $currentLicense -EQ).SkuID
                 }
-                if ( $licenses.Keys -NotContains "AddLicenses")
+                if ( $licenses.Keys -NotContains 'AddLicenses')
                 {
-                    $licenses.Add("RemoveLicenses", @($license))
+                    $licenses.Add('RemoveLicenses', @($license))
                 }
                 else
                 {
@@ -478,19 +487,19 @@ function Set-TargetResource
             }
 
             Write-Verbose -Message "Updating Office 365 User $UserPrincipalName Information"
-            $CreationParams.Add("UserId", $UserPrincipalName)
+            $CreationParams.Add('UserId', $UserPrincipalName)
             $user = Update-MgUser @CreationParams
         }
         else
         {
             Write-Verbose -Message "Creating Office 365 User $UserPrincipalName"
-            $CreationParams.Add("AccountEnabled", $true)
+            $CreationParams.Add('AccountEnabled', $true)
             $PasswordProfile = @{
                 Password = 'TempP@ss'
             }
-            $CreationParams.Add("AssignedLicenses", $licenses)
-            $CreationParams.Add("PasswordProfile", $PasswordProfile)
-            $CreationParams.Add("MailNickName", $UserPrincipalName.Split('@')[0])
+            $CreationParams.Add('AssignedLicenses', $licenses)
+            $CreationParams.Add('PasswordProfile', $PasswordProfile)
+            $CreationParams.Add('MailNickName', $UserPrincipalName.Split('@')[0])
             $user = New-MgUser @CreationParams
         }
     }
@@ -587,14 +596,14 @@ function Test-TargetResource
         $Title,
 
         [Parameter()]
-        [ValidateSet("Guest", "Member", "Other", "Viral")]
+        [ValidateSet('Guest', 'Member', 'Other', 'Viral')]
         [System.String]
         $UserType,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -614,14 +623,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -639,27 +652,27 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure", `
-            "UserPrincipalName", `
-            "LicenseAssignment", `
-            "UsageLocation", `
-            "FirstName", `
-            "LastName", `
-            "DisplayName", `
-            "City", `
-            "Country", `
-            "Department", `
-            "Fax", `
-            "MobilePhone", `
-            "Office", `
-            "PasswordNeverExpires", `
-            "PhoneNumber", `
-            "PostalCode", `
-            "PreferredLanguage", `
-            "State", `
-            "StreetAddress", `
-            "Title", `
-            "UserType")
+        -ValuesToCheck @('Ensure', `
+            'UserPrincipalName', `
+            'LicenseAssignment', `
+            'UsageLocation', `
+            'FirstName', `
+            'LastName', `
+            'DisplayName', `
+            'City', `
+            'Country', `
+            'Department', `
+            'Fax', `
+            'MobilePhone', `
+            'Office', `
+            'PasswordNeverExpires', `
+            'PhoneNumber', `
+            'PostalCode', `
+            'PreferredLanguage', `
+            'State', `
+            'StreetAddress', `
+            'Title', `
+            'UserType')
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -694,7 +707,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -703,8 +720,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -714,7 +731,8 @@ function Export-TargetResource
     try
     {
         $users = Get-MgUser -Filter $Filter -All:$true -ErrorAction Stop
-        $dscContent = ""
+
+        $dscContent = [System.Text.StringBuilder]::new()
         $i = 1
         Write-Host "`r`n" -NoNewline
         foreach ($user in $users)
@@ -730,6 +748,7 @@ function Export-TargetResource
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                    Managedidentity       = $ManagedIdentity.IsPresent
                     ApplicationSecret     = $ApplicationSecret
                 }
 
@@ -744,8 +763,9 @@ function Export-TargetResource
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
                         -Credential $Credential
+
                     $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Password"
-                    $dscContent += $currentDSCBlock
+                    $dscContent.Append($currentDSCBlock) | Out-Null
 
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
@@ -754,14 +774,14 @@ function Export-TargetResource
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -778,7 +798,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 
