@@ -353,6 +353,7 @@ function Get-TargetResource
             EligibleAssignmentAssigneeNotificationOnlyCritical        = $EligibleAssignmentAssigneeNotificationOnlyCritical
             Ensure                                                    = 'Present'
             Managedidentity                                           = $ManagedIdentity.IsPresent
+            TenantId                                                  = $TenantId
         }
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
