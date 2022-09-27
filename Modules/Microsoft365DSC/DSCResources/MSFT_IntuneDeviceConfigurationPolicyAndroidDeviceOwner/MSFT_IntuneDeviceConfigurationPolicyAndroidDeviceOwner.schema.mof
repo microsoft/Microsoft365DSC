@@ -46,9 +46,14 @@ class MSFT_MicrosoftGraphandroiddeviceownerkioskmodeapppositionitem
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphandroiddeviceownerkioskmodehomescreenitem
 {
-    [Write, Description("Type of the item."), ValueMap{"#microsoft.graph.androidDeviceOwnerKioskModeFolderItem","#microsoft.graph.androidDeviceOwnerKioskModeManagedFolderReference"}, Values{"#microsoft.graph.androidDeviceOwnerKioskModeFolderItem","#microsoft.graph.androidDeviceOwnerKioskModeManagedFolderReference"}] String odataType;
+    [Write, Description("Type of the item."), ValueMap{"#microsoft.graph.androidDeviceOwnerKioskModeApp","#microsoft.graph.androidDeviceOwnerKioskModeWeblink","#microsoft.graph.androidDeviceOwnerKioskModeManagedFolder"}, Values{"#microsoft.graph.androidDeviceOwnerKioskModeApp","#microsoft.graph.androidDeviceOwnerKioskModeWeblink","#microsoft.graph.androidDeviceOwnerKioskModeManagedFolder"}] String odataType;
     [Write, Description("The folder identifier.")] String folderIdentifier;
     [Write, Description("The folder name.")] String folderName;
+    [Write, Description("Item to be arranged."), EmbeddedInstance("MSFT_MicrosoftGraphandroiddeviceownerkioskmodefolderitem")] String items[];
+    [Write, Description("The class name of the item.")] String className;
+    [Write, Description("The package of the item.")] String package;
+    [Write, Description("The label of the item.")] String label;
+    [Write, Description("The link of the item.")] String link;
 };
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphandroiddeviceownerkioskmodemanagedfolder
