@@ -621,7 +621,7 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message 'Reloading1'
+        Write-Verbose -Message $_
     }
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -633,32 +633,35 @@ function Get-TargetResource
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
+
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
     $nullResult = $PSBoundParameters
     $nullResult.Ensure = 'Absent'
+
     try
     {
         $getValue=$null
 
         #region resource generator code
         $getValue = Get-MgDeviceManagementDeviceConfiguration `
+            -All:$true `
             -ErrorAction Stop | Where-Object `
-            -FilterScript {
-            $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration' -and $_.displayName -eq $($DisplayName)
-        }
+            -FilterScript { `
+                $_.id -eq $Id `
+            }
 
         if (-not $getValue)
         {
-            [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
+            $getValue = Get-MgDeviceManagementDeviceConfiguration `
+                -All:$true `
                 -ErrorAction Stop | Where-Object `
-                -FilterScript {
-                $_.displayName -eq $DisplayName
-            }
+                -FilterScript { `
+                    $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration' -and $_.displayName -eq $($DisplayName) `
+                }
         }
         #endregion
-
 
         if ($null -eq $getValue)
         {
@@ -672,13 +675,13 @@ function Get-TargetResource
             #region resource generator code
             Id                                                       = $getValue.Id
             Description                                              = $getValue.Description
-            DeviceManagementApplicabilityRuleDeviceMode              = $getValue.DeviceManagementApplicabilityRuleDeviceMode
-            DeviceManagementApplicabilityRuleOsEdition               = $getValue.DeviceManagementApplicabilityRuleOsEdition
-            DeviceManagementApplicabilityRuleOsVersion               = $getValue.DeviceManagementApplicabilityRuleOsVersion
+#           DeviceManagementApplicabilityRuleDeviceMode              = $getValue.DeviceManagementApplicabilityRuleDeviceMode
+#           DeviceManagementApplicabilityRuleOsEdition               = $getValue.DeviceManagementApplicabilityRuleOsEdition
+#           DeviceManagementApplicabilityRuleOsVersion               = $getValue.DeviceManagementApplicabilityRuleOsVersion
             DisplayName                                              = $getValue.DisplayName
-            RoleScopeTagIds                                          = $getValue.RoleScopeTagIds
-            SupportsScopeTags                                        = $getValue.SupportsScopeTags
-            Version                                                  = $getValue.Version
+#           RoleScopeTagIds                                          = $getValue.RoleScopeTagIds
+#           SupportsScopeTags                                        = $getValue.SupportsScopeTags
+#           Version                                                  = $getValue.Version
             AccountsBlockModification                                = $getValue.AdditionalProperties.accountsBlockModification
             AppsAllowInstallFromUnknownSources                       = $getValue.AdditionalProperties.appsAllowInstallFromUnknownSources
             AppsAutoUpdatePolicy                                     = $getValue.AdditionalProperties.appsAutoUpdatePolicy
@@ -695,6 +698,8 @@ function Get-TargetResource
             CrossProfilePoliciesShowWorkContactsInPersonalProfile    = $getValue.AdditionalProperties.crossProfilePoliciesShowWorkContactsInPersonalProfile
             DataRoamingBlocked                                       = $getValue.AdditionalProperties.dataRoamingBlocked
             DateTimeConfigurationBlocked                             = $getValue.AdditionalProperties.dateTimeConfigurationBlocked
+            DetailedHelpText                                         = $getValue.AdditionalProperties.detailedHelpText
+            DeviceOwnerLockScreenMessage                             = $getValue.additionalProperties.deviceOwnerLockScreenMessage
             EnrollmentProfile                                        = $getValue.AdditionalProperties.enrollmentProfile
             FactoryResetBlocked                                      = $getValue.AdditionalProperties.factoryResetBlocked
             FactoryResetDeviceAdministratorEmails                    = $getValue.AdditionalProperties.factoryResetDeviceAdministratorEmails
@@ -738,6 +743,7 @@ function Get-TargetResource
             KioskModeScreenSaverStartDelayInSeconds                  = $getValue.AdditionalProperties.kioskModeScreenSaverStartDelayInSeconds
             KioskModeShowAppNotificationBadge                        = $getValue.AdditionalProperties.kioskModeShowAppNotificationBadge
             KioskModeShowDeviceInfo                                  = $getValue.AdditionalProperties.kioskModeShowDeviceInfo
+            KioskModeUseManagedHomeScreenApp                         = $getValue.AdditionalProperties.kioskModeUseManagedHomeScreenApp
             KioskModeVirtualHomeButtonEnabled                        = $getValue.AdditionalProperties.kioskModeVirtualHomeButtonEnabled
             KioskModeVirtualHomeButtonType                           = $getValue.AdditionalProperties.kioskModeVirtualHomeButtonType
             KioskModeWallpaperUrl                                    = $getValue.AdditionalProperties.kioskModeWallpaperUrl
@@ -768,6 +774,7 @@ function Get-TargetResource
             PasswordMinutesOfInactivityBeforeScreenTimeout           = $getValue.AdditionalProperties.passwordMinutesOfInactivityBeforeScreenTimeout
             PasswordPreviousPasswordCountToBlock                     = $getValue.AdditionalProperties.passwordPreviousPasswordCountToBlock
             PasswordRequiredType                                     = $getValue.AdditionalProperties.passwordRequiredType
+            PasswordRequireUnlock                                    = $getValue.AdditionalProperties.passwordRequireUnlock
             PasswordSignInFailureCountBeforeFactoryReset             = $getValue.AdditionalProperties.passwordSignInFailureCountBeforeFactoryReset
             PersonalProfileAppsAllowInstallFromUnknownSources        = $getValue.AdditionalProperties.personalProfileAppsAllowInstallFromUnknownSources
             PersonalProfileCameraBlocked                             = $getValue.AdditionalProperties.personalProfileCameraBlocked
@@ -776,8 +783,10 @@ function Get-TargetResource
             PersonalProfileScreenCaptureBlocked                      = $getValue.AdditionalProperties.personalProfileScreenCaptureBlocked
             PlayStoreMode                                            = $getValue.AdditionalProperties.playStoreMode
             ScreenCaptureBlocked                                     = $getValue.AdditionalProperties.screenCaptureBlocked
+            SecurityCommonCriteriaModeEnabled                        = $getValue.AdditionalProperties.securityCommonCriteriaModeEnabled
             SecurityDeveloperSettingsEnabled                         = $getValue.AdditionalProperties.securityDeveloperSettingsEnabled
             SecurityRequireVerifyApps                                = $getValue.AdditionalProperties.securityRequireVerifyApps
+            ShortHelpText                                            = $getValue.additionalProperties.shortHelpText
             StatusBarBlocked                                         = $getValue.AdditionalProperties.statusBarBlocked
             StayOnModes                                              = $getValue.AdditionalProperties.stayOnModes
             StorageAllowUsb                                          = $getValue.AdditionalProperties.storageAllowUsb
@@ -805,14 +814,15 @@ function Get-TargetResource
             WorkProfilePasswordMinimumUpperCaseCharacters            = $getValue.AdditionalProperties.workProfilePasswordMinimumUpperCaseCharacters
             WorkProfilePasswordPreviousPasswordCountToBlock          = $getValue.AdditionalProperties.workProfilePasswordPreviousPasswordCountToBlock
             WorkProfilePasswordRequiredType                          = $getValue.AdditionalProperties.workProfilePasswordRequiredType
+            WorkProfilePasswordRequireUnlock                         = $getValue.AdditionalProperties.workProfilePasswordRequireUnlock
             WorkProfilePasswordSignInFailureCountBeforeFactoryReset  = $getValue.AdditionalProperties.workProfilePasswordSignInFailureCountBeforeFactoryReset
-            Assignments                                              = $getValue.AdditionalProperties.assignments
-            DeviceSettingStateSummaries                              = $getValue.AdditionalProperties.deviceSettingStateSummaries
-            DeviceStatuses                                           = $getValue.AdditionalProperties.deviceStatuses
-            DeviceStatusOverview                                     = $getValue.AdditionalProperties.deviceStatusOverview
-            GroupAssignments                                         = $getValue.AdditionalProperties.groupAssignments
-            UserStatuses                                             = $getValue.AdditionalProperties.userStatuses
-            UserStatusOverview                                       = $getValue.AdditionalProperties.userStatusOverview
+#            Assignments                                              = $getValue.AdditionalProperties.assignments
+#            DeviceSettingStateSummaries                              = $getValue.AdditionalProperties.deviceSettingStateSummaries
+#            DeviceStatuses                                           = $getValue.AdditionalProperties.deviceStatuses
+#            DeviceStatusOverview                                     = $getValue.AdditionalProperties.deviceStatusOverview
+#            GroupAssignments                                         = $getValue.AdditionalProperties.groupAssignments
+#            UserStatuses                                             = $getValue.AdditionalProperties.userStatuses
+#            UserStatusOverview                                       = $getValue.AdditionalProperties.userStatusOverview
 
 
             Ensure                                                   = 'Present'
@@ -823,17 +833,6 @@ function Get-TargetResource
             CertificateThumbprint                                    = $CertificateThumbprint
             Managedidentity                                          = $ManagedIdentity.IsPresent
         }
-
-        $results.Add("AzureAdSharedDeviceDataClearApps", $getValue.additionalProperties.azureAdSharedDeviceDataClearApps)
-        $results.Add("detailedHelpText", $getValue.additionalProperties.detailedHelpText)
-        $results.Add("deviceOwnerLockScreenMessage", $getValue.additionalProperties.deviceOwnerLockScreenMessage)
-        $results.Add("GlobalProxy", $getValue.additionalProperties.globalProxy)
-        $results.Add("KioskModeAppPositions", $getValue.additionalProperties.kioskModeAppPositions)
-        $results.Add("KioskModeApps", $getValue.additionalProperties.kioskModeApps)
-        $results.Add("KioskModeManagedFolders", $getValue.additionalProperties.kioskModeManagedFolders)
-        $results.Add("PersonalProfilePersonalApplications",$getValue.additionalProperties.personalProfilePersonalApplications)
-        $results.Add("ShortHelpText", $getValue.additionalProperties.shortHelpText)
-        $results.Add("SystemUpdateFreezePeriods", $getValue.additionalProperties.systemUpdateFreezePeriods)
 
         $myAssignments=@()
         $myAssignments+=Get-MgDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId  $getValue.Id
@@ -1498,12 +1497,10 @@ function Set-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
             -ProfileName 'beta'
-        Write-Verbose -Message "2 - There are currently {$((Get-ChildItem function: | Measure-Object).Count) functions}"
-        Write-Verbose -Message 'Here2'
     }
     catch
     {
-        Write-Verbose -Message 'Reloading2'
+        Write-Verbose -Message $_
     }
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -1576,9 +1573,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating {$DisplayName}"
-        [System.Collections.Hashtable]$UpdateParameters = $PSBoundParameters
-        $UpdateParameters.Remove('Id') | Out-Null
-        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        $PSBoundParameters.Remove("Assignments") | Out-Null
 
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
         $UpdateParameters=Rename-M365DSCCimInstanceODataParameter -Properties $UpdateParameters
@@ -1590,19 +1585,18 @@ function Set-TargetResource
         {
             if($UpdateParameters.$key.getType().Fullname -like "*CimInstance*")
             {
-                Write-Verbose -Message "Converting complex property {$key} to Hashtable"
-                $hashtableValue = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters[$key]
-                $currentParameter = @{
-                    Name  = $key
-                    Value = $hashtableValue
-                }
-                $ConvertedParameters += $currentParameter
+                $UpdateParameters.$key=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
+            }
+
+            if($key -ne '@odata.type')
+            {
+                $keyName=$key.substring(0,1).ToLower()+$key.substring(1,$key.length-1)
+                $keyValue=$UpdateParameters.$key
+                $UpdateParameters.remove($key)
+                $UpdateParameters.add($keyName,$keyValue)
             }
         }
         $UpdateParameters.add("@odata.type","#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration")
-
-        #Write-Verbose -Message ("Set-TargetResource >>> "+(ConvertTo-Json $UpdateParameters -Depth 20))
-
 
         Update-MgDeviceManagementDeviceConfiguration -BodyParameter $UpdateParameters `
             -DeviceConfigurationId $currentInstance.Id
@@ -2358,14 +2352,7 @@ function Export-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName 'v1.0'
-    $context=Get-MgContext
-    if($null -eq $context)
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters -ProfileName 'beta'
-    }
-    Select-MgProfile 'beta' -ErrorAction Stop
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -2785,7 +2772,41 @@ function Get-M365DSCDRGComplexTypeToHashtable
         $ComplexObject
     )
 
-    $keys = $ComplexObject | Get-Member | Where-Object -FilterScript { $_.MemberType -eq 'Property' -and $_.Name -ne 'AdditionalProperties' }
+    if($null -eq $ComplexObject)
+    {
+        return $null
+    }
+
+
+    if($ComplexObject.getType().Fullname -like "*hashtable")
+    {
+        return $ComplexObject
+    }
+    if($ComplexObject.getType().Fullname -like "*hashtable[[\]]")
+    {
+        return [hashtable[]]$ComplexObject
+    }
+
+
+    if($ComplexObject.gettype().fullname -like "*[[\]]")
+    {
+        $results=@()
+
+        foreach($item in $ComplexObject)
+        {
+            if($item)
+            {
+                $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
+                $results+=$hash
+            }
+        }
+
+        # PowerShell returns all non-captured stream output, not just the argument of the return statement.
+        #An empty array is mangled into $null in the process.
+        #However, an array can be preserved on return by prepending it with the array construction operator (,)
+        return ,[hashtable[]]$results
+    }
+
     $results = @{}
     $keys = $ComplexObject | Get-Member | Where-Object -FilterScript {$_.MemberType -eq 'Property' -and $_.Name -ne 'AdditionalProperties'}
 
@@ -2877,22 +2898,94 @@ function Get-M365DSCDRGComplexTypeToString
     $keyNotNull = 0
     foreach ($key in $ComplexObject.Keys)
     {
-        write-host  ("Get-M365DSCDRGComplexTypeToString >>> CimInstance - Key: $key")
 
         if ($ComplexObject[$key])
         {
             $keyNotNull++
             if ($ComplexObject[$key].GetType().FullName -like "Microsoft.Graph.PowerShell.Models.*" -or $key -in $ComplexTypeMapping.Name)
             {
-                $currentProperty += '                ' + $key + " = `$" + $ComplexObject[$key].ToString() + "`r`n"
-            }
+                $hashPropertyType=$ComplexObject[$key].GetType().Name.tolower()
+
+                #overwrite type if object defined in mapping complextypemapping
+                if($key -in $ComplexTypeMapping.Name)
+                {
+                    $hashPropertyType=($ComplexTypeMapping|Where-Object -FilterScript {$_.Name -eq $key}).CimInstanceName
+                    $hashProperty=$ComplexObject[$key]
+                }
+                else
+                {
+                    $hashProperty=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key]
+                }
+
+                if($key -notin $ComplexTypeMapping.Name)
+                {
+                    $Whitespace+="            "
+                }
+
+                if(-not $isArray -or ($isArray -and $key -in $ComplexTypeMapping.Name ))
+                {
+                    $currentProperty += $whitespace + $key + " = "
+                    if($ComplexObject[$key].GetType().FullName -like "*[[\]]")
+                    {
+                        $currentProperty += "@("
+                    }
+                }
+
+                if($key -in $ComplexTypeMapping.Name)
+                {
+                    $Whitespace=""
+
+                }
+                $currentProperty += Get-M365DSCDRGComplexTypeToString `
+                                -ComplexObject $hashProperty `
+                                -CIMInstanceName $hashPropertyType `
+                                -Whitespace $Whitespace `
+                                -ComplexTypeMapping $ComplexTypeMapping
+
+                if($ComplexObject[$key].GetType().FullName -like "*[[\]]")
+                {
+                    $currentProperty += ")"
+                }
+        }
             else
             {
-                $currentProperty += '                ' + $key + " = '" + $ComplexObject[$key] + "'`r`n"
+                if(-not $isArray)
+                {
+                    $Whitespace= "            "
+                }
+                $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $ComplexObject[$key] -Space ($Whitespace+"    ")
+            }
+        }
+        else
+        {
+            $mappedKey=$ComplexTypeMapping|where-object -filterscript {$_.name -eq $key}
+
+            if($mappedKey -and $mappedKey.isRequired)
+            {
+                if($mappedKey.isArray)
+                {
+                    $currentProperty += "$Whitespace    $key = @()`r`n"
+                }
+                else
+                {
+                    $currentProperty += "$Whitespace    $key = `$null`r`n"
+                }
             }
         }
     }
-    $currentProperty += '            }'
+    $currentProperty += "$Whitespace}"
+
+    return $currentProperty
+}
+
+Function Get-M365DSCDRGSimpleObjectTypeToString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $Key,
 
         [Parameter(Mandatory = 'true')]
         $Value,
@@ -3050,7 +3143,6 @@ function Rename-M365DSCCimInstanceODataParameter
 
         return $clonedProperties
 }
-
 function Compare-M365DSCComplexObject
 {
     [CmdletBinding()]
@@ -3194,7 +3286,6 @@ function Compare-M365DSCComplexObject
 
     return $true
 }
-
 function Convert-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
@@ -3257,9 +3348,7 @@ function Update-DeviceConfigurationPolicyAssignment
         [Array]
         $Targets
     )
-
-    $results = @{'@odata.type' = '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration' }
-    foreach ($property in $properties.Keys)
+    try
     {
         $deviceManagementPolicyAssignments=@()
 
