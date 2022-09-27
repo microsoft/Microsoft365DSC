@@ -13,7 +13,7 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "enforceComponentsAndStoreApps","auditComponentsAndStoreApps", "enforceComponentsStoreAppsAndSmartlocker", "auditComponentsStoreAppsAndSmartlocker")]
+        [ValidateSet('notConfigured', 'enforceComponentsAndStoreApps', 'auditComponentsAndStoreApps', 'enforceComponentsStoreAppsAndSmartlocker', 'auditComponentsStoreAppsAndSmartlocker')]
         [System.String]
         $AppLockerApplicationControl,
 
@@ -48,14 +48,18 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Checking for the Intune Endpoint Protection Application Control Policy {$DisplayName}"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters -ProfileName 'beta' -ErrorAction Stop
-    $context=Get-MgContext
-    if($null -eq $context)
+    $context = Get-MgContext
+    if ($null -eq $context)
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters -ErrorAction Stop -ProfileName 'beta'
     }
@@ -64,8 +68,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -78,7 +82,7 @@ function Get-TargetResource
     try
     {
         #Retrieve policy general settings
-        Write-Verbose -Message "Get-MgDeviceManagementIntent"
+        Write-Verbose -Message 'Get-MgDeviceManagementIntent'
         $policy = Get-MgDeviceManagementIntent -Filter "displayName eq '$DisplayName'" -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateId -eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20' }
 
         if ($null -eq $policy)
@@ -89,23 +93,24 @@ function Get-TargetResource
 
         #Retrieve policy specific settings
         [array]$settings = Get-MgDeviceManagementIntentSetting -DeviceManagementIntentId $policy.Id -ErrorAction Stop
-        $settingAppLockerApplicationControl= ($settings|Where-Object -FilterScript {$_.DefinitionId -like "*appLockerApplicationControl"}).ValueJson.Replace("`"","")
-        $settingSmartScreenBlockOverrideForFiles= [System.Convert]::ToBoolean(($settings|Where-Object -FilterScript {$_.DefinitionId -like "*smartScreenBlockOverrideForFiles"}).ValueJson)
-        $settingSmartScreenEnableInShell= [System.Convert]::ToBoolean(($settings|Where-Object -FilterScript {$_.DefinitionId -like "*smartScreenEnableInShell"}).ValueJson)
+        $settingAppLockerApplicationControl = ($settings | Where-Object -FilterScript { $_.DefinitionId -like '*appLockerApplicationControl' }).ValueJson.Replace("`"", '')
+        $settingSmartScreenBlockOverrideForFiles = [System.Convert]::ToBoolean(($settings | Where-Object -FilterScript { $_.DefinitionId -like '*smartScreenBlockOverrideForFiles' }).ValueJson)
+        $settingSmartScreenEnableInShell = [System.Convert]::ToBoolean(($settings | Where-Object -FilterScript { $_.DefinitionId -like '*smartScreenEnableInShell' }).ValueJson)
         Write-Verbose -Message "Found Endpoint Protection Application Control Policy {$DisplayName}"
 
         return @{
-            Description                                             = $policy.Description
-            DisplayName                                             = $policy.DisplayName
-            AppLockerApplicationControl                             = $settingAppLockerApplicationControl
-            SmartScreenBlockOverrideForFiles                        = $settingSmartScreenBlockOverrideForFiles
-            SmartScreenEnableInShell                                = $settingSmartScreenEnableInShell
-            Ensure                                                  = "Present"
-            Credential                                              = $Credential
-            ApplicationId                                           = $ApplicationId
-            TenantId                                                = $TenantId
-            ApplicationSecret                                       = $ApplicationSecret
-            CertificateThumbprint                                   = $CertificateThumbprint
+            Description                      = $policy.Description
+            DisplayName                      = $policy.DisplayName
+            AppLockerApplicationControl      = $settingAppLockerApplicationControl
+            SmartScreenBlockOverrideForFiles = $settingSmartScreenBlockOverrideForFiles
+            SmartScreenEnableInShell         = $settingSmartScreenEnableInShell
+            Ensure                           = 'Present'
+            Credential                       = $Credential
+            ApplicationId                    = $ApplicationId
+            TenantId                         = $TenantId
+            ApplicationSecret                = $ApplicationSecret
+            CertificateThumbprint            = $CertificateThumbprint
+            Managedidentity                  = $ManagedIdentity.IsPresent
         }
     }
     catch
@@ -113,7 +118,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             $tenantIdValue = $Credential.UserName.Split('@')[1]
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -141,7 +146,7 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "enforceComponentsAndStoreApps","auditComponentsAndStoreApps", "enforceComponentsStoreAppsAndSmartlocker", "auditComponentsStoreAppsAndSmartlocker")]
+        [ValidateSet('notConfigured', 'enforceComponentsAndStoreApps', 'auditComponentsAndStoreApps', 'enforceComponentsStoreAppsAndSmartlocker', 'auditComponentsStoreAppsAndSmartlocker')]
         [System.String]
         $AppLockerApplicationControl,
 
@@ -176,7 +181,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -187,8 +196,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -196,12 +205,13 @@ function Set-TargetResource
     #endregion
 
     $currentPolicy = Get-TargetResource @PSBoundParameters
-    $PSBoundParameters.Remove("Ensure") | Out-Null
-    $PSBoundParameters.Remove("Credential") | Out-Null
-    $PSBoundParameters.Remove("ApplicationId") | Out-Null
-    $PSBoundParameters.Remove("TenantId") | Out-Null
-    $PSBoundParameters.Remove("ApplicationSecret") | Out-Null
-    $PSBoundParameters.Remove("CertificateThumbprint") | Out-Null
+    $PSBoundParameters.Remove('Ensure') | Out-Null
+    $PSBoundParameters.Remove('Credential') | Out-Null
+    $PSBoundParameters.Remove('ApplicationId') | Out-Null
+    $PSBoundParameters.Remove('TenantId') | Out-Null
+    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
+    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
+    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Endpoint Protection Application Control Policy {$DisplayName}"
@@ -210,8 +220,9 @@ function Set-TargetResource
         $Settings = Get-M365DSCIntuneEndpointProtectionPolicyWindowsSettings -Properties ([System.Collections.Hashtable]$PSBoundParameters)
         New-MgDeviceManagementIntent -DisplayName $DisplayName `
             -Description $Description `
-            -TemplateId "63be6324-e3c9-4c97-948a-e7f4b96f0f20" `
+            -TemplateId '63be6324-e3c9-4c97-948a-e7f4b96f0f20' `
             -Settings $Settings `
+    
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
@@ -224,19 +235,19 @@ function Set-TargetResource
         $PSBoundParameters.Remove('DisplayName') | Out-Null
         $PSBoundParameters.Remove('Description') | Out-Null
         $Settings = Get-M365DSCIntuneEndpointProtectionPolicyWindowsSettings -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        $currentSettings=Get-MgDeviceManagementIntentSetting -DeviceManagementIntentId $appControlPolicy.Id -ErrorAction Stop
+        $currentSettings = Get-MgDeviceManagementIntentSetting -DeviceManagementIntentId $appControlPolicy.Id -ErrorAction Stop
         Update-MgDeviceManagementIntent -ErrorAction Stop `
             -Description $Description `
             -DeviceManagementIntentId $appControlPolicy.Id
 
-        foreach($setting in $Settings)
+        foreach ($setting in $Settings)
         {
-            $s=$currentSettings|Where-Object{$_.DefinitionId -eq $setting.DefinitionId}
+            $s = $currentSettings | Where-Object{ $_.DefinitionId -eq $setting.DefinitionId }
             Update-MgDeviceManagementIntentSetting -ErrorAction Stop `
                 -DeviceManagementIntentId $appControlPolicy.Id `
                 -DeviceManagementSettingInstanceId $s.Id `
-                -ValueJson ($setting.value|ConvertTo-Json) `
-                -AdditionalProperties @{"@odata.type"=$setting."@odata.type"}
+                -ValueJson ($setting.value | ConvertTo-Json) `
+                -AdditionalProperties @{'@odata.type' = $setting.'@odata.type' }
         }
 
     }
@@ -267,7 +278,7 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "enforceComponentsAndStoreApps","auditComponentsAndStoreApps", "enforceComponentsStoreAppsAndSmartlocker", "auditComponentsStoreAppsAndSmartlocker")]
+        [ValidateSet('notConfigured', 'enforceComponentsAndStoreApps', 'auditComponentsAndStoreApps', 'enforceComponentsStoreAppsAndSmartlocker', 'auditComponentsStoreAppsAndSmartlocker')]
         [System.String]
         $AppLockerApplicationControl,
 
@@ -302,14 +313,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -366,7 +381,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters -SkipModuleReload:$true -ProfileName 'beta'
@@ -375,8 +394,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -397,20 +416,21 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
         foreach ($policy in $policies)
         {
             Write-Host "    |---[$i/$($policies.Count)] $($policy.DisplayName)" -NoNewline
 
             $params = @{
-                DisplayName                         = $policy.DisplayName
-                Ensure                              = 'Present'
-                Credential                          = $Credential
-                ApplicationId                       = $ApplicationId
-                TenantId                            = $TenantId
-                ApplicationSecret                   = $ApplicationSecret
-                CertificateThumbprint               = $CertificateThumbprint
+                DisplayName           = $policy.DisplayName
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
 
             $Results = Get-TargetResource @params
@@ -454,7 +474,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 
@@ -473,20 +493,21 @@ function Get-M365DSCIntuneEndpointProtectionPolicyWindowsSettings
     {
         if ($property -ne 'Verbose')
         {
-            $setting=@{}
-            $settingType=($properties.$property.gettype()).name
-            switch ($settingType) {
-                "String" {$setting.Add("@odata.type","#microsoft.graph.deviceManagementStringSettingInstance")}
-                "Boolean" {$setting.Add("@odata.type","#microsoft.graph.deviceManagementBooleanSettingInstance")}
-                "Int32" {$setting.Add("@odata.type","#microsoft.graph.deviceManagementIntegerSettingInstance")}
-                Default {$setting.Add("@odata.type","#microsoft.graph.deviceManagementComplexSettingInstance")}
+            $setting = @{}
+            $settingType = ($properties.$property.gettype()).name
+            switch ($settingType)
+            {
+                'String' { $setting.Add('@odata.type', '#microsoft.graph.deviceManagementStringSettingInstance') }
+                'Boolean' { $setting.Add('@odata.type', '#microsoft.graph.deviceManagementBooleanSettingInstance') }
+                'Int32' { $setting.Add('@odata.type', '#microsoft.graph.deviceManagementIntegerSettingInstance') }
+                Default { $setting.Add('@odata.type', '#microsoft.graph.deviceManagementComplexSettingInstance') }
             }
-            $settingDefinitionIdPrefix="deviceConfiguration--windows10EndpointProtectionConfiguration_"
-            $settingDefinitionId =$settingDefinitionIdPrefix + $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
-            $setting.Add("DefinitionId", $settingDefinitionId)
+            $settingDefinitionIdPrefix = 'deviceConfiguration--windows10EndpointProtectionConfiguration_'
+            $settingDefinitionId = $settingDefinitionIdPrefix + $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
+            $setting.Add('DefinitionId', $settingDefinitionId)
             $settingValue = $properties.$property
-            $setting.Add("value", $settingValue)
-            $results+=$setting
+            $setting.Add('value', $settingValue)
+            $results += $setting
         }
     }
     return $results

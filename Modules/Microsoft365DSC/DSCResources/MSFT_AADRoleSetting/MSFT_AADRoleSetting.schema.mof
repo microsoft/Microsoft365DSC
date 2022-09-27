@@ -8,7 +8,7 @@ class MSFT_AADRoleSetting : OMI_BaseResource
     [Write, Description("Require ticket information on activation (True/False)")] Boolean ActivationReqTicket;
     [Write, Description("Require MFA on activation (True/False)")] Boolean ActivationReqMFA;
     [Write, Description("Require approval to activate (True/False)")] Boolean ApprovaltoActivate;
-    [Write, Description("Approver (UPN)")] String ActivateApprover[];
+    [Write, Description("Approver User UPN and/or Group Displayname")] String ActivateApprover[];
     [Write, Description("Allow permanent eligible assignment (True/False)")] Boolean PermanentEligibleAssignmentisExpirationRequired ;
     [Write, Description("Expire eligible assignments after (Days)")] String ExpireEligibleAssignment;
     [Write, Description("Allow permanent active assignment (True/False)")] Boolean PermanentActiveAssignmentisExpirationRequired;
@@ -46,4 +46,5 @@ class MSFT_AADRoleSetting : OMI_BaseResource
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Secret of the Azure Active Directory application to authenticate with.")] String ApplicationSecret;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
 };

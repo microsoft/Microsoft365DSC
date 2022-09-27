@@ -21,87 +21,87 @@ function Get-TargetResource
         $AttackSurfaceReductionOnlyExclusions,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $AttackSurfaceReductionRules,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockAbuseOfExploitedVulnerableSignedDrivers,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockAdobeReaderFromCreatingChildProcesses,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockAllOfficeApplicationsFromCreatingChildProcesses,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockExecutableContentFromEmailClientAndWebmail,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockExecutableFilesRunningUnlessTheyMeetPrevalenceAgeTrustedListCriterion,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockExecutionOfPotentiallyObfuscatedScripts,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockOfficeApplicationsFromCreatingExecutableContent,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockOfficeCommunicationAppFromCreatingChildProcesses,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockPersistenceThroughWMIEventSubscription,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockProcessCreationsFromPSExecAndWMICommands,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockUntrustedUnsignedProcessesThatRunFromUSB,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockWin32APICallsFromOfficeMacros,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $UseAdvancedProtectionAgainstRansomware,
 
@@ -114,7 +114,7 @@ function Get-TargetResource
         $ControlledFolderAccessAllowedApplications,
 
         [Parameter()]
-        [ValidateSet("0", "1","2")]
+        [ValidateSet('0', '1', '2')]
         [System.String]
         $EnableControlledFolderAccess,
 
@@ -141,7 +141,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Checking for the Intune Endpoint Protection Attack Surface Protection rules Policy {$DisplayName}"
@@ -150,8 +154,8 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta' -ErrorAction Stop
 
-    $context=Get-MgContext
-    if($null -eq $context)
+    $context = Get-MgContext
+    if ($null -eq $context)
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters -ErrorAction Stop -ProfileName 'beta'
@@ -161,8 +165,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -188,38 +192,39 @@ function Get-TargetResource
             -DeviceManagementConfigurationPolicyId $Identity `
             -ErrorAction Stop
 
-        $settingDefinitionIdBase="device_vendor_msft_policy_config_defender_"
-        $returnHashtable=@{}
-        $returnHashtable.Add("Identity",$Identity)
-        $returnHashtable.Add("DisplayName",$policy.name)
-        $returnHashtable.Add("Description",$policy.description)
+        $settingDefinitionIdBase = 'device_vendor_msft_policy_config_defender_'
+        $returnHashtable = @{}
+        $returnHashtable.Add('Identity', $Identity)
+        $returnHashtable.Add('DisplayName', $policy.name)
+        $returnHashtable.Add('Description', $policy.description)
 
         #write-host ($settings|out-string)
         foreach ($setting in $settings.SettingInstance.AdditionalProperties)
         {
-            switch ($setting."@odata.type")
+            switch ($setting.'@odata.type')
             {
-                "#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance" {
-                    foreach($settingInstance in $setting.groupSettingCollectionValue.children)
+                '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                {
+                    foreach ($settingInstance in $setting.groupSettingCollectionValue.children)
                     {
-                        $prefix="attacksurfacereductionrules_"
-                        $settingDefinitionIdPrefix=$settingDefinitionIdBase+$prefix
-                        $settingName=$settingInstance.settingDefinitionId.replace("$settingDefinitionIdPrefix","")
-                        $settingValue= $settingInstance.choiceSettingValue.value.replace("$settingDefinitionIdPrefix$settingName`_","")
-                        $returnHashtable.Add($settingName,$settingValue)
+                        $prefix = 'attacksurfacereductionrules_'
+                        $settingDefinitionIdPrefix = $settingDefinitionIdBase + $prefix
+                        $settingName = $settingInstance.settingDefinitionId.replace("$settingDefinitionIdPrefix", '')
+                        $settingValue = $settingInstance.choiceSettingValue.value.replace("$settingDefinitionIdPrefix$settingName`_", '')
+                        $returnHashtable.Add($settingName, $settingValue)
                     }
                 }
-                "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
+                '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
                 {
-                    $settingName=$setting.settingDefinitionId.replace("$settingDefinitionIdBase","")
-                    [String]$settingValue= $setting.choiceSettingValue.value.replace("$settingDefinitionIdBase$settingName`_","")
-                    $returnHashtable.Add($settingName,$settingValue)
+                    $settingName = $setting.settingDefinitionId.replace("$settingDefinitionIdBase", '')
+                    [String]$settingValue = $setting.choiceSettingValue.value.replace("$settingDefinitionIdBase$settingName`_", '')
+                    $returnHashtable.Add($settingName, $settingValue)
                 }
-                "#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance"
+                '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
                 {
-                    $settingName=$setting.settingDefinitionId.replace("$settingDefinitionIdBase","")
-                    [Array]$settingValue= $setting.simpleSettingCollectionValue.value
-                    $returnHashtable.Add($settingName,$settingValue)
+                    $settingName = $setting.settingDefinitionId.replace("$settingDefinitionIdBase", '')
+                    [Array]$settingValue = $setting.simpleSettingCollectionValue.value
+                    $returnHashtable.Add($settingName, $settingValue)
                 }
                 Default {}
             }
@@ -228,12 +233,13 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found Endpoint Protection Attack Surface Protection rules Policy {$($policy.name)}"
 
-        $returnHashtable.Add("Ensure","Present")
-        $returnHashtable.Add("Credential",$Credential)
-        $returnHashtable.Add("ApplicationId",$ApplicationId)
-        $returnHashtable.Add("TenantId",$TenantId)
-        $returnHashtable.Add("ApplicationSecret",$ApplicationSecret)
-        $returnHashtable.Add("CertificateThumbprint",$CertificateThumbprint)
+        $returnHashtable.Add('Ensure', 'Present')
+        $returnHashtable.Add('Credential', $Credential)
+        $returnHashtable.Add('ApplicationId', $ApplicationId)
+        $returnHashtable.Add('TenantId', $TenantId)
+        $returnHashtable.Add('ApplicationSecret', $ApplicationSecret)
+        $returnHashtable.Add('CertificateThumbprint', $CertificateThumbprint)
+        $returnHashtable.Add('ManagedIdentity', $ManagedIdentity.IsPresent)
 
         return $returnHashtable
     }
@@ -242,7 +248,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             $tenantIdValue = $Credential.UserName.Split('@')[1]
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -278,87 +284,87 @@ function Set-TargetResource
         $AttackSurfaceReductionOnlyExclusions,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $AttackSurfaceReductionRules,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockAbuseOfExploitedVulnerableSignedDrivers,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockAdobeReaderFromCreatingChildProcesses,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockAllOfficeApplicationsFromCreatingChildProcesses,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockExecutableContentFromEmailClientAndWebmail,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockExecutableFilesRunningUnlessTheyMeetPrevalenceAgeTrustedListCriterion,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockExecutionOfPotentiallyObfuscatedScripts,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockOfficeApplicationsFromCreatingExecutableContent,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockOfficeCommunicationAppFromCreatingChildProcesses,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockPersistenceThroughWMIEventSubscription,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockProcessCreationsFromPSExecAndWMICommands,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockUntrustedUnsignedProcessesThatRunFromUSB,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockWin32APICallsFromOfficeMacros,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $UseAdvancedProtectionAgainstRansomware,
 
@@ -371,7 +377,7 @@ function Set-TargetResource
         $ControlledFolderAccessAllowedApplications,
 
         [Parameter()]
-        [ValidateSet("0", "1","2")]
+        [ValidateSet('0', '1', '2')]
         [System.String]
         $EnableControlledFolderAccess,
 
@@ -398,7 +404,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -410,8 +420,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -419,20 +429,21 @@ function Set-TargetResource
     #endregion
 
     $currentPolicy = Get-TargetResource @PSBoundParameters
-    $PSBoundParameters.Remove("Ensure") | Out-Null
-    $PSBoundParameters.Remove("Credential") | Out-Null
-    $PSBoundParameters.Remove("ApplicationId") | Out-Null
-    $PSBoundParameters.Remove("TenantId") | Out-Null
-    $PSBoundParameters.Remove("ApplicationSecret") | Out-Null
-    $PSBoundParameters.Remove("CertificateThumbprint") | Out-Null
+    $PSBoundParameters.Remove('Ensure') | Out-Null
+    $PSBoundParameters.Remove('Credential') | Out-Null
+    $PSBoundParameters.Remove('ApplicationId') | Out-Null
+    $PSBoundParameters.Remove('TenantId') | Out-Null
+    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
+    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
+    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Endpoint Protection Attack Surface Protection rules Policy {$DisplayName}"
 
-        $settings= Format-M365DSCIntuneSettingCatalogASRRulesPolicySettings `
+        $settings = Format-M365DSCIntuneSettingCatalogASRRulesPolicySettings `
             -DSCParams ([System.Collections.Hashtable]$PSBoundParameters) `
-            -SettingDefinitionIDBase "device_vendor_msft_policy_config_defender_"
+            -SettingDefinitionIDBase 'device_vendor_msft_policy_config_defender_'
 
         $Template = Get-MgDeviceManagementConfigurationPolicyTemplate -DeviceManagementConfigurationPolicyTemplateId 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
 
@@ -440,8 +451,8 @@ function Set-TargetResource
             -Name $DisplayName `
             -Description $Description `
             -TemplateReference $Template `
-            -Platforms "windows10" `
-            -Technologies "mdm,microsoftSense" `
+            -Platforms 'windows10' `
+            -Technologies 'mdm,microsoftSense' `
             -Settings $settings
 
     }
@@ -449,9 +460,9 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating existing Endpoint Protection Attack Surface Protection rules Policy {$DisplayName}"
 
-        $settings= Format-M365DSCIntuneSettingCatalogASRRulesPolicySettings `
+        $settings = Format-M365DSCIntuneSettingCatalogASRRulesPolicySettings `
             -DSCParams ([System.Collections.Hashtable]$PSBoundParameters) `
-            -SettingDefinitionIDBase "device_vendor_msft_policy_config_defender_"
+            -SettingDefinitionIDBase 'device_vendor_msft_policy_config_defender_'
 
         $Template = Get-MgDeviceManagementConfigurationPolicyTemplate -DeviceManagementConfigurationPolicyTemplateId 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
 
@@ -460,8 +471,8 @@ function Set-TargetResource
             -Name $DisplayName `
             -Description $Description `
             -TemplateReference $Template `
-            -Platforms "windows10" `
-            -Technologies "mdm,microsoftSense" `
+            -Platforms 'windows10' `
+            -Technologies 'mdm,microsoftSense' `
             -Settings $settings
 
     }
@@ -495,87 +506,87 @@ function Test-TargetResource
         $AttackSurfaceReductionOnlyExclusions,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $AttackSurfaceReductionRules,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockAbuseOfExploitedVulnerableSignedDrivers,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockAdobeReaderFromCreatingChildProcesses,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockAllOfficeApplicationsFromCreatingChildProcesses,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockExecutableContentFromEmailClientAndWebmail,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockExecutableFilesRunningUnlessTheyMeetPrevalenceAgeTrustedListCriterion,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockExecutionOfPotentiallyObfuscatedScripts,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockOfficeApplicationsFromCreatingExecutableContent,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockOfficeCommunicationAppFromCreatingChildProcesses,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockPersistenceThroughWMIEventSubscription,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockProcessCreationsFromPSExecAndWMICommands,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockUntrustedUnsignedProcessesThatRunFromUSB,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockWin32APICallsFromOfficeMacros,
 
         [Parameter()]
-        [ValidateSet("off", "block","audit", "warn")]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $UseAdvancedProtectionAgainstRansomware,
 
@@ -588,7 +599,7 @@ function Test-TargetResource
         $ControlledFolderAccessAllowedApplications,
 
         [Parameter()]
-        [ValidateSet("0", "1","2")]
+        [ValidateSet('0', '1', '2')]
         [System.String]
         $EnableControlledFolderAccess,
 
@@ -615,14 +626,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -679,7 +694,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -691,8 +710,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -704,12 +723,12 @@ function Export-TargetResource
 
     try
     {
-        $policyTemplateID='e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
+        $policyTemplateID = 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
         [array]$policies = Get-MgDeviceManagementConfigurationPolicy `
             -ErrorAction Stop `
             -All:$true `
             -Filter $Filter
-        $policies = $policies | Where-Object -FilterScript {$_.TemplateReference.TemplateId -eq $policyTemplateId}
+        $policies = $policies | Where-Object -FilterScript { $_.TemplateReference.TemplateId -eq $policyTemplateId }
 
         if ($policies.Length -eq 0)
         {
@@ -717,20 +736,21 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
         foreach ($policy in $policies)
         {
             Write-Host "    |---[$i/$($policies.Count)] $($policy.Name)" -NoNewline
 
             $params = @{
-                Identity                            = $policy.id
-                Ensure                              = 'Present'
-                Credential                          = $Credential
-                ApplicationId                       = $ApplicationId
-                TenantId                            = $TenantId
-                ApplicationSecret                   = $ApplicationSecret
-                CertificateThumbprint               = $CertificateThumbprint
+                Identity              = $policy.id
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
 
             $Results = Get-TargetResource @params
@@ -774,7 +794,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 
@@ -792,7 +812,7 @@ function Format-M365DSCParamsToSettingInstance
         $SettingDefinitionIdBase,
 
         [Parameter(
-            ParameterSetName='GroupSettingCollectionInstance'
+            ParameterSetName = 'GroupSettingCollectionInstance'
         )]
         [System.String]
         $GroupSettingDefinitionIdName,
@@ -806,76 +826,76 @@ function Format-M365DSCParamsToSettingInstance
         $SettingValueTemplateId
     )
 
-    $DSCParams.Remove("Verbose") | Out-Null
+    $DSCParams.Remove('Verbose') | Out-Null
     $results = @()
 
-    if(-Not[string]::IsNullOrEmpty($GroupSettingDefinitionIdName))
+    if (-Not[string]::IsNullOrEmpty($GroupSettingDefinitionIdName))
     {
-        $settingInstance=[ordered]@{}
-        $settingInstance.add("@odata.type","#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance")
-        $settingInstance.add("settingDefinitionId",$GroupSettingDefinitionIdName)
-        $settingInstance.add("settingInstanceTemplateReference",@{"settingInstanceTemplateId"=$settingInstanceTemplateId})
-        $groupSettingCollectionValues=@()
+        $settingInstance = [ordered]@{}
+        $settingInstance.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance')
+        $settingInstance.add('settingDefinitionId', $GroupSettingDefinitionIdName)
+        $settingInstance.add('settingInstanceTemplateReference', @{'settingInstanceTemplateId' = $settingInstanceTemplateId })
+        $groupSettingCollectionValues = @()
 
-        $groupSettingCollectionValueChildren= Format-M365DSCParamsToSettingInstance `
+        $groupSettingCollectionValueChildren = Format-M365DSCParamsToSettingInstance `
             -DSCParams $DSCParams `
             -SettingDefinitionIdBase "$GroupSettingDefinitionIdName`_"
 
-        $groupSettingCollectionValue=@{}
-        $groupSettingCollectionValue.add("children",$groupSettingCollectionValueChildren)
-        $groupSettingCollectionValues+=$groupSettingCollectionValue
-        $settingInstance.add("groupSettingCollectionValue",$groupSettingCollectionValues)
+        $groupSettingCollectionValue = @{}
+        $groupSettingCollectionValue.add('children', $groupSettingCollectionValueChildren)
+        $groupSettingCollectionValues += $groupSettingCollectionValue
+        $settingInstance.add('groupSettingCollectionValue', $groupSettingCollectionValues)
         $results += $settingInstance
         return $results
     }
 
     foreach ($param in $DSCParams.Keys)
     {
-        $settingName= $param
-        $settingIdentity=($SettingDefinitionIdBase+$settingName).ToLower()
+        $settingName = $param
+        $settingIdentity = ($SettingDefinitionIdBase + $settingName).ToLower()
 
-        $settingDefinition= Get-MgDeviceManagementConfigurationPolicySetting -DeviceManagementConfigurationPolicyId $settingIdentity
+        $settingDefinition = Get-MgDeviceManagementConfigurationPolicySetting -DeviceManagementConfigurationPolicyId $settingIdentity
 
-        $settingInstance=[ordered]@{}
+        $settingInstance = [ordered]@{}
 
-        switch ($settingDefinition."@odata.type")
+        switch ($settingDefinition.'@odata.type')
         {
-            "#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition"
+            '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
             {
-                $settingInstance.add("@odata.type","#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance")
-                $settingInstance.add("settingDefinitionId",$settingIdentity)
-                if(-Not [string]::IsNullOrEmpty($settingInstanceTemplateId))
+                $settingInstance.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance')
+                $settingInstance.add('settingDefinitionId', $settingIdentity)
+                if (-Not [string]::IsNullOrEmpty($settingInstanceTemplateId))
                 {
-                    $settingInstance.add("settingInstanceTemplateReference",@{"settingInstanceTemplateId"=$SettingInstanceTemplateId})
+                    $settingInstance.add('settingInstanceTemplateReference', @{'settingInstanceTemplateId' = $SettingInstanceTemplateId })
                 }
-                $choiceSettingValue=[ordered]@{}
-                $choiceSettingValue.add("children",@())
-                if(-Not [string]::IsNullOrEmpty($settingValueTemplateId))
+                $choiceSettingValue = [ordered]@{}
+                $choiceSettingValue.add('children', @())
+                if (-Not [string]::IsNullOrEmpty($settingValueTemplateId))
                 {
-                    $choiceSettingValue.add("settingValueTemplateReference",@{"settingValueTemplateId"=$SettingValueTemplateId})
+                    $choiceSettingValue.add('settingValueTemplateReference', @{'settingValueTemplateId' = $SettingValueTemplateId })
                 }
-                $choiceSettingValue.add("value","$settingIdentity`_$($DSCParams.$param)")
-                $settingInstance.add("choiceSettingValue",$choiceSettingValue)
-                $results+=$settingInstance
+                $choiceSettingValue.add('value', "$settingIdentity`_$($DSCParams.$param)")
+                $settingInstance.add('choiceSettingValue', $choiceSettingValue)
+                $results += $settingInstance
             }
-            "#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionDefinition"
+            '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionDefinition'
             {
-                $settingInstance.add("@odata.type","#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance")
-                $settingInstance.add("settingDefinitionId",$settingIdentity)
-                if(-Not [string]::IsNullOrEmpty($settingInstanceTemplateId))
+                $settingInstance.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance')
+                $settingInstance.add('settingDefinitionId', $settingIdentity)
+                if (-Not [string]::IsNullOrEmpty($settingInstanceTemplateId))
                 {
-                    $settingInstance.add("settingInstanceTemplateReference",@{"settingInstanceTemplateId"=$SettingInstanceTemplateId})
+                    $settingInstance.add('settingInstanceTemplateReference', @{'settingInstanceTemplateId' = $SettingInstanceTemplateId })
                 }
-                $simpleSettingCollectionValues=@()
-                foreach($value in $DSCParams.$param)
+                $simpleSettingCollectionValues = @()
+                foreach ($value in $DSCParams.$param)
                 {
-                    $simpleSettingCollectionValue=@{}
-                    $simpleSettingCollectionValue.add("@odata.type","#microsoft.graph.deviceManagementConfigurationStringSettingValue")
-                    $simpleSettingCollectionValue.add("value",$value)
-                    $simpleSettingCollectionValues+=$simpleSettingCollectionValue
+                    $simpleSettingCollectionValue = @{}
+                    $simpleSettingCollectionValue.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationStringSettingValue')
+                    $simpleSettingCollectionValue.add('value', $value)
+                    $simpleSettingCollectionValues += $simpleSettingCollectionValue
                 }
-                $settingInstance.add("simpleSettingCollectionValue",$simpleSettingCollectionValues)
-                $results+=$settingInstance
+                $settingInstance.add('simpleSettingCollectionValue', $simpleSettingCollectionValues)
+                $results += $settingInstance
             }
             Default {}
         }
@@ -902,10 +922,10 @@ function Format-M365DSCIntuneSettingCatalogASRRulesPolicySettings
     $DSCParams.Remove('DisplayName') | Out-Null
     $DSCParams.Remove('Description') | Out-Null
 
-    $settings=@()
+    $settings = @()
 
     #Prepare settings other than attacksurfacereductionrules
-    $otherSettings=@(
+    $otherSettings = @(
         'AttackSurfaceReductionOnlyExclusions'
         'ControlledFolderAccessProtectedFolders'
         'ControlledFolderAccessAllowedApplications'
@@ -914,38 +934,38 @@ function Format-M365DSCIntuneSettingCatalogASRRulesPolicySettings
 
     foreach ($settingKey in $otherSettings)
     {
-        $settingInstanceTemplateId=""
-        $settingValueTemplateId=""
+        $settingInstanceTemplateId = ''
+        $settingValueTemplateId = ''
 
         switch ($settingKey)
         {
-            "AttackSurfaceReductionOnlyExclusions"{$settingInstanceTemplateId="0eaea6bb-736e-44ed-a450-b2ef5bea1377"}
-            "ControlledFolderAccessProtectedFolders"{$settingInstanceTemplateId="8f2096a7-d4f0-430c-9287-b08db7139163"}
-            "ControlledFolderAccessAllowedApplications"{$settingInstanceTemplateId="e10f2cf5-121a-4890-af23-d4e91e0fab5f"}
-            "EnableControlledFolderAccess"
+            'AttackSurfaceReductionOnlyExclusions'{ $settingInstanceTemplateId = '0eaea6bb-736e-44ed-a450-b2ef5bea1377' }
+            'ControlledFolderAccessProtectedFolders'{ $settingInstanceTemplateId = '8f2096a7-d4f0-430c-9287-b08db7139163' }
+            'ControlledFolderAccessAllowedApplications'{ $settingInstanceTemplateId = 'e10f2cf5-121a-4890-af23-d4e91e0fab5f' }
+            'EnableControlledFolderAccess'
             {
-                $settingInstanceTemplateId="78c83b32-56c0-445a-932a-872d69af6e49"
-                $settingValueTemplateId="e57db701-c3c6-4264-ab50-7896cb90dfd6"
+                $settingInstanceTemplateId = '78c83b32-56c0-445a-932a-872d69af6e49'
+                $settingValueTemplateId = 'e57db701-c3c6-4264-ab50-7896cb90dfd6'
             }
 
         }
 
-        $setting=@{}
-        if($null -ne ($DSCParams."$settingKey"))
+        $setting = @{}
+        if ($null -ne ($DSCParams."$settingKey"))
         {
-            $setting.add("@odata.type","#microsoft.graph.deviceManagementConfigurationSetting")
-            $formatParams=@{}
-            $formatParams.Add('DSCParams',@{$settingKey=$DSCParams."$settingKey"})
-            $formatParams.Add('SettingDefinitionIdBase',$settingDefinitionIdBase)
-            $formatParams.Add('SettingInstanceTemplateId',$settingInstanceTemplateId)
-            if(-Not [string]::IsNullOrEmpty($settingValueTemplateId))
+            $setting.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationSetting')
+            $formatParams = @{}
+            $formatParams.Add('DSCParams', @{$settingKey = $DSCParams."$settingKey" })
+            $formatParams.Add('SettingDefinitionIdBase', $settingDefinitionIdBase)
+            $formatParams.Add('SettingInstanceTemplateId', $settingInstanceTemplateId)
+            if (-Not [string]::IsNullOrEmpty($settingValueTemplateId))
             {
-                $formatParams.Add('SettingValueTemplateId',$settingValueTemplateId)
+                $formatParams.Add('SettingValueTemplateId', $settingValueTemplateId)
             }
-            $myFormattedSetting= Format-M365DSCParamsToSettingInstance @formatParams
+            $myFormattedSetting = Format-M365DSCParamsToSettingInstance @formatParams
 
-            $setting.add('settingInstance',$myFormattedSetting)
-            $settings+=$setting
+            $setting.add('settingInstance', $myFormattedSetting)
+            $settings += $setting
         }
     }
 
@@ -955,14 +975,14 @@ function Format-M365DSCIntuneSettingCatalogASRRulesPolicySettings
     $DSCParams.Remove('AttackSurfaceReductionOnlyExclusions') | Out-Null
 
     #Prepare attacksurfacereductionrules
-    $setting=@{}
-    $setting.add("@odata.type","#microsoft.graph.deviceManagementConfigurationSetting")
+    $setting = @{}
+    $setting.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationSetting')
     $ASRSettings = Format-M365DSCParamsToSettingInstance `
         -DSCParams $DSCParams `
-        -GroupSettingDefinitionIdName "device_vendor_msft_policy_config_defender_attacksurfacereductionrules" `
-        -SettingInstanceTemplateId "19600663-e264-4c02-8f55-f2983216d6d7"
-    $setting.add('settingInstance',$ASRSettings)
-    $settings+=$setting
+        -GroupSettingDefinitionIdName 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules' `
+        -SettingInstanceTemplateId '19600663-e264-4c02-8f55-f2983216d6d7'
+    $setting.add('settingInstance', $ASRSettings)
+    $settings += $setting
 
     return $settings
 }

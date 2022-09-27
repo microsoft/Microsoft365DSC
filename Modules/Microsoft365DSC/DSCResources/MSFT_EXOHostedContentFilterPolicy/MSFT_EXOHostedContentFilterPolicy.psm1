@@ -684,12 +684,12 @@ function Set-TargetResource
     if ($HostedContentFilterPolicyParams.Contains('EndUserSpamNotificationCustomFromAddress'))
     {
         $HostedContentFilterPolicyParams.Remove('EndUserSpamNotificationCustomFromAddress') | Out-Null
-        Write-Verbose -Message "The EndUserSpamNotificationCustomFromAddress parameter is no longer available and will be depricated."
+        Write-Verbose -Message "The EndUserSpamNotificationCustomFromAddress parameter is no longer available and will be deprecated."
     }
     if ($HostedContentFilterPolicyParams.Contains('EndUserSpamNotificationCustomFromName'))
     {
         $HostedContentFilterPolicyParams.Remove('EndUserSpamNotificationCustomFromName') | Out-Null
-        Write-Verbose -Message "The EndUserSpamNotificationCustomFromName parameter is no longer available and will be depricated."
+        Write-Verbose -Message "The EndUserSpamNotificationCustomFromName parameter is no longer available and will be deprecated."
     }
 
     if (('Present' -eq $Ensure ) -and ($null -eq $HostedContentFilterPolicy))

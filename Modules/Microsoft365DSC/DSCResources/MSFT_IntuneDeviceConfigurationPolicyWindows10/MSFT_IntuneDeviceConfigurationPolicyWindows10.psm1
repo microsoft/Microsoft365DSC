@@ -65,7 +65,7 @@ function Get-TargetResource
         $SearchEnableAutomaticIndexSizeManangement,
 
         [Parameter()]
-        [ValidateSet("userDefined", "none", "basic","enhanced","full")]
+        [ValidateSet('userDefined', 'none', 'basic', 'enhanced', 'full')]
         [System.String]
         $DiagnosticsDataSubmissionMode,
 
@@ -110,7 +110,7 @@ function Get-TargetResource
         $EdgeBlocked,
 
         [Parameter()]
-        [ValidateSet("userDefined", "allow", "blockThirdparty","blockAll")]
+        [ValidateSet('userDefined', 'allow', 'blockThirdparty', 'blockAll')]
         [System.String]
         $EdgeCookiePolicy,
 
@@ -207,7 +207,7 @@ function Get-TargetResource
         $DefenderSignatureUpdateIntervalInHours,
 
         [Parameter()]
-        [ValidateSet("userDefined", "disable", "monitorAllFiles","monitorIncomingFilesOnly","monitorOutgoingFilesOnly")]
+        [ValidateSet('userDefined', 'disable', 'monitorAllFiles', 'monitorIncomingFilesOnly', 'monitorOutgoingFilesOnly')]
         [System.String]
         $DefenderMonitorFileActivity,
 
@@ -244,12 +244,12 @@ function Get-TargetResource
         $DefenderRequireCloudProtection,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "high", "highPlus","zeroTolerance")]
+        [ValidateSet('notConfigured', 'high', 'highPlus', 'zeroTolerance')]
         [System.String]
         $DefenderCloudBlockLevel,
 
         [Parameter()]
-        [ValidateSet("userDefined", "alwaysPrompt", "promptBeforeSendingPersonalData","neverSendData","sendAllDataWithoutPrompting")]
+        [ValidateSet('userDefined', 'alwaysPrompt', 'promptBeforeSendingPersonalData', 'neverSendData', 'sendAllDataWithoutPrompting')]
         [System.String]
         $DefenderPromptForSampleSubmission,
 
@@ -258,7 +258,7 @@ function Get-TargetResource
         $DefenderScheduledQuickScanTime,
 
         [Parameter()]
-        [ValidateSet("userDefined", "disabled", "quick","full")]
+        [ValidateSet('userDefined', 'disabled', 'quick', 'full')]
         [System.String]
         $DefenderScanType,
 
@@ -339,7 +339,7 @@ function Get-TargetResource
         $PasswordRequireWhenResumeFromIdleState,
 
         [Parameter()]
-        [ValidateSet("deviceDefault", "alphanumeric", "numeric")]
+        [ValidateSet('deviceDefault', 'alphanumeric', 'numeric')]
         [System.String]
         $PasswordRequiredType,
 
@@ -348,7 +348,7 @@ function Get-TargetResource
         $PasswordSignInFailureCountBeforeFactoryReset,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "blocked", "allowed")]
+        [ValidateSet('notConfigured', 'blocked', 'allowed')]
         [System.String]
         $PrivacyAdvertisingId,
 
@@ -365,7 +365,7 @@ function Get-TargetResource
         $StartBlockUnpinningAppsFromTaskbar,
 
         [Parameter()]
-        [ValidateSet("userDefined", "collapse", "remove","disableSettingsApp")]
+        [ValidateSet('userDefined', 'collapse', 'remove', 'disableSettingsApp')]
         [System.String]
         $StartMenuAppListVisibility,
 
@@ -430,57 +430,57 @@ function Get-TargetResource
         $StartMenuLayoutXml,
 
         [Parameter()]
-        [ValidateSet("userDefined", "fullScreen", "nonFullScreen")]
+        [ValidateSet('userDefined', 'fullScreen', 'nonFullScreen')]
         [System.String]
         $StartMenuMode,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderDocuments,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderDownloads,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderFileExplorer,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderHomeGroup,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderMusic,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderNetwork,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderPersonalFolder,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderPictures,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderSettings,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderVideos,
 
@@ -561,7 +561,7 @@ function Get-TargetResource
         $WindowsSpotlightBlockWindowsTips,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "disabled", "enabled")]
+        [ValidateSet('notConfigured', 'disabled', 'enabled')]
         [System.String]
         $WindowsSpotlightConfigureOnLockScreen,
 
@@ -622,7 +622,7 @@ function Get-TargetResource
         $DeviceManagementBlockManualUnenroll,
 
         [Parameter()]
-        [ValidateSet("userDefined", "strict", "moderate")]
+        [ValidateSet('userDefined', 'strict', 'moderate')]
         [System.String]
         $SafeSearchFilter,
 
@@ -784,7 +784,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("notConfigured", "blocked", "allowed")]
+        [ValidateSet('notConfigured', 'blocked', 'allowed')]
         $AppsAllowTrustedAppsSideloading,
 
         [Parameter()]
@@ -792,7 +792,7 @@ function Get-TargetResource
         $WindowsStoreBlockAutoUpdate,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "blocked", "allowed")]
+        [ValidateSet('notConfigured', 'blocked', 'allowed')]
         [System.String]
         $DeveloperUnlockSetting,
 
@@ -863,7 +863,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Checking for the Intune Device Configuration Policy {$DisplayName}"
@@ -874,8 +878,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -887,7 +891,7 @@ function Get-TargetResource
 
     try
     {
-        $policy = Get-MGDeviceManagementDeviceConfiguration -Filter "displayName eq '$DisplayName'" `
+        $policy = Get-MgDeviceManagementDeviceConfiguration -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10GeneralConfiguration' }
 
         if ($null -eq $policy)
@@ -912,215 +916,216 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found Device Configuration Policy {$DisplayName}"
         return @{
-            Description                                             = $policy.Description
-            DisplayName                                             = $policy.DisplayName
-            EnterpriseCloudPrintDiscoveryEndPoint                   = $policy.AdditionalProperties.enterpriseCloudPrintDiscoveryEndPoint
-            EnterpriseCloudPrintOAuthAuthority                      = $policy.AdditionalProperties.enterpriseCloudPrintOAuthAuthority
-            EnterpriseCloudPrintOAuthClientIdentifier               = $policy.AdditionalProperties.enterpriseCloudPrintOAuthClientIdentifier
-            EnterpriseCloudPrintResourceIdentifier                  = $policy.AdditionalProperties.enterpriseCloudPrintResourceIdentifier
-            EnterpriseCloudPrintDiscoveryMaxLimit                   = $policy.AdditionalProperties.enterpriseCloudPrintDiscoveryMaxLimit
-            EnterpriseCloudPrintMopriaDiscoveryResourceIdentifier   = $policy.AdditionalProperties.enterpriseCloudPrintMopriaDiscoveryResourceIdentifier
-            SearchBlockDiacritics                                   = $policy.AdditionalProperties.searchBlockDiacritics
-            SearchDisableAutoLanguageDetection                      = $policy.AdditionalProperties.searchDisableAutoLanguageDetection
-            SearchDisableIndexingEncryptedItems                     = $policy.AdditionalProperties.searchDisableIndexingEncryptedItems
-            SearchEnableRemoteQueries                               = $policy.AdditionalProperties.searchEnableRemoteQueries
-            SearchDisableIndexerBackoff                             = $policy.AdditionalProperties.searchDisableIndexerBackoff
-            SearchDisableIndexingRemovableDrive                     = $policy.AdditionalProperties.searchDisableIndexingRemovableDrive
-            SearchEnableAutomaticIndexSizeManangement               = $policy.AdditionalProperties.searchEnableAutomaticIndexSizeManangement
-            DiagnosticsDataSubmissionMode                           = $policy.AdditionalProperties.diagnosticsDataSubmissionMode
-            OneDriveDisableFileSync                                 = $policy.AdditionalProperties.oneDriveDisableFileSync
-            SmartScreenEnableAppInstallControl                      = $policy.AdditionalProperties.smartScreenEnableAppInstallControl
-            PersonalizationDesktopImageUrl                          = $policy.AdditionalProperties.personalizationDesktopImageUrl
-            PersonalizationLockScreenImageUrl                       = $policy.AdditionalProperties.personalizationLockScreenImageUrl
-            BluetoothAllowedServices                                = $policy.AdditionalProperties.bluetoothAllowedServices
-            BluetoothBlockAdvertising                               = $policy.AdditionalProperties.bluetoothBlockAdvertising
-            BluetoothBlockDiscoverableMode                          = $policy.AdditionalProperties.bluetoothBlockDiscoverableMode
-            BluetoothBlockPrePairing                                = $policy.AdditionalProperties.bluetoothBlockPrePairing
-            EdgeBlockAutofill                                       = $policy.AdditionalProperties.edgeBlockAutofill
-            EdgeBlocked                                             = $policy.AdditionalProperties.edgeBlocked
-            EdgeCookiePolicy                                        = $policy.AdditionalProperties.edgeCookiePolicy
-            EdgeBlockDeveloperTools                                 = $policy.AdditionalProperties.edgeBlockDeveloperTools
-            EdgeBlockSendingDoNotTrackHeader                        = $policy.AdditionalProperties.edgeBlockSendingDoNotTrackHeader
-            EdgeBlockExtensions                                     = $policy.AdditionalProperties.edgeBlockExtensions
-            EdgeBlockInPrivateBrowsing                              = $policy.AdditionalProperties.edgeBlockInPrivateBrowsing
-            EdgeBlockJavaScript                                     = $policy.AdditionalProperties.edgeBlockJavaScript
-            EdgeBlockPasswordManager                                = $policy.AdditionalProperties.edgeBlockPasswordManager
-            EdgeBlockAddressBarDropdown                             = $policy.AdditionalProperties.edgeBlockAddressBarDropdown
-            EdgeBlockCompatibilityList                              = $policy.AdditionalProperties.edgeBlockCompatibilityList
-            EdgeClearBrowsingDataOnExit                             = $policy.AdditionalProperties.edgeClearBrowsingDataOnExit
-            EdgeAllowStartPagesModification                         = $policy.AdditionalProperties.edgeAllowStartPagesModification
-            EdgeDisableFirstRunPage                                 = $policy.AdditionalProperties.edgeDisableFirstRunPage
-            EdgeBlockLiveTileDataCollection                         = $policy.AdditionalProperties.edgeBlockLiveTileDataCollection
-            EdgeSyncFavoritesWithInternetExplorer                   = $policy.AdditionalProperties.edgeSyncFavoritesWithInternetExplorer
-            CellularBlockDataWhenRoaming                            = $policy.AdditionalProperties.cellularBlockDataWhenRoaming
-            CellularBlockVpn                                        = $policy.AdditionalProperties.cellularBlockVpn
-            CellularBlockVpnWhenRoaming                             = $policy.AdditionalProperties.cellularBlockVpnWhenRoaming
-            DefenderRequireRealTimeMonitoring                       = $policy.AdditionalProperties.defenderRequireRealTimeMonitoring
-            DefenderRequireBehaviorMonitoring                       = $policy.AdditionalProperties.defenderRequireBehaviorMonitoring
-            DefenderRequireNetworkInspectionSystem                  = $policy.AdditionalProperties.defenderRequireNetworkInspectionSystem
-            DefenderScanDownloads                                   = $policy.AdditionalProperties.defenderScanDownloads
-            DefenderScanScriptsLoadedInInternetExplorer             = $policy.AdditionalProperties.defenderScanScriptsLoadedInInternetExplorer
-            DefenderBlockEndUserAccess                              = $policy.AdditionalProperties.defenderBlockEndUserAccess
-            DefenderSignatureUpdateIntervalInHours                  = $policy.AdditionalProperties.defenderSignatureUpdateIntervalInHours
-            DefenderMonitorFileActivity                             = $policy.AdditionalProperties.defenderMonitorFileActivity
-            DefenderDaysBeforeDeletingQuarantinedMalware            = $policy.AdditionalProperties.defenderDaysBeforeDeletingQuarantinedMalware
-            DefenderScanMaxCpu                                      = $policy.AdditionalProperties.defenderScanMaxCpu
-            DefenderScanArchiveFiles                                = $policy.AdditionalProperties.defenderScanArchiveFiles
-            DefenderScanIncomingMail                                = $policy.AdditionalProperties.defenderScanIncomingMail
-            DefenderScanRemovableDrivesDuringFullScan               = $policy.AdditionalProperties.defenderScanRemovableDrivesDuringFullScan
-            DefenderScanMappedNetworkDrivesDuringFullScan           = $policy.AdditionalProperties.defenderScanMappedNetworkDrivesDuringFullScan
-            DefenderScanNetworkFiles                                = $policy.AdditionalProperties.defenderScanNetworkFiles
-            DefenderRequireCloudProtection                          = $policy.AdditionalProperties.defenderRequireCloudProtection
-            DefenderCloudBlockLevel                                 = $policy.AdditionalProperties.defenderCloudBlockLevel
-            DefenderPromptForSampleSubmission                       = $policy.AdditionalProperties.defenderPromptForSampleSubmission
-            DefenderScheduledQuickScanTime                          = $policy.AdditionalProperties.defenderScheduledQuickScanTime
-            DefenderScanType                                        = $policy.AdditionalProperties.defenderScanType
-            DefenderSystemScanSchedule                              = $policy.AdditionalProperties.defenderSystemScanSchedule
-            DefenderScheduledScanTime                               = $policy.AdditionalProperties.defenderScheduledScanTime
-            DefenderDetectedMalwareActions                          = $DefenderDetectedMalwareActionsValues
-            DefenderFileExtensionsToExclude                         = $policy.AdditionalProperties.defenderFileExtensionsToExclude
-            DefenderFilesAndFoldersToExclude                        = $policy.AdditionalProperties.defenderFilesAndFoldersToExclude
-            DefenderProcessesToExclude                              = $policy.AdditionalProperties.defenderProcessesToExclude
-            LockScreenAllowTimeoutConfiguration                     = $policy.AdditionalProperties.lockScreenAllowTimeoutConfiguration
-            LockScreenBlockActionCenterNotifications                = $policy.AdditionalProperties.lockScreenBlockActionCenterNotifications
-            LockScreenBlockCortana                                  = $policy.AdditionalProperties.lockScreenBlockCortana
-            LockScreenBlockToastNotifications                       = $policy.AdditionalProperties.lockScreenBlockToastNotifications
-            LockScreenTimeoutInSeconds                              = $policy.AdditionalProperties.lockScreenTimeoutInSeconds
-            PasswordBlockSimple                                     = $policy.AdditionalProperties.passwordBlockSimple
-            PasswordExpirationDays                                  = $policy.AdditionalProperties.passwordExpirationDays
-            PasswordMinimumLength                                   = $policy.AdditionalProperties.passwordMinimumLength
-            PasswordMinutesOfInactivityBeforeScreenTimeout          = $policy.AdditionalProperties.passwordMinutesOfInactivityBeforeScreenTimeout
-            PasswordMinimumCharacterSetCount                        = $policy.AdditionalProperties.passwordMinimumCharacterSetCount
-            PasswordPreviousPasswordBlockCount                      = $policy.AdditionalProperties.passwordPreviousPasswordBlockCount
-            PasswordRequired                                        = $policy.AdditionalProperties.passwordRequired
-            PasswordRequireWhenResumeFromIdleState                  = $policy.AdditionalProperties.passwordRequireWhenResumeFromIdleState
-            PasswordRequiredType                                    = $policy.AdditionalProperties.passwordRequiredType
-            PasswordSignInFailureCountBeforeFactoryReset            = $policy.AdditionalProperties.passwordSignInFailureCountBeforeFactoryReset
-            PrivacyAdvertisingId                                    = $policy.AdditionalProperties.privacyAdvertisingId
-            PrivacyAutoAcceptPairingAndConsentPrompts               = $policy.AdditionalProperties.privacyAutoAcceptPairingAndConsentPrompts
-            PrivacyBlockInputPersonalization                        = $policy.AdditionalProperties.privacyBlockInputPersonalization
-            StartBlockUnpinningAppsFromTaskbar                      = $policy.AdditionalProperties.startBlockUnpinningAppsFromTaskbar
-            StartMenuAppListVisibility                              = $policy.AdditionalProperties.startMenuAppListVisibility
-            StartMenuHideChangeAccountSettings                      = $policy.AdditionalProperties.startMenuHideChangeAccountSettings
-            StartMenuHideFrequentlyUsedApps                         = $policy.AdditionalProperties.startMenuHideFrequentlyUsedApps
-            StartMenuHideHibernate                                  = $policy.AdditionalProperties.startMenuHideHibernate
-            StartMenuHideLock                                       = $policy.AdditionalProperties.startMenuHideLock
-            StartMenuHidePowerButton                                = $policy.AdditionalProperties.startMenuHidePowerButton
-            StartMenuHideRecentJumpLists                            = $policy.AdditionalProperties.startMenuHideRecentJumpLists
-            StartMenuHideRecentlyAddedApps                          = $policy.AdditionalProperties.startMenuHideRecentlyAddedApps
-            StartMenuHideRestartOptions                             = $policy.AdditionalProperties.startMenuHideRestartOptions
-            StartMenuHideShutDown                                   = $policy.AdditionalProperties.startMenuHideShutDown
-            StartMenuHideSignOut                                    = $policy.AdditionalProperties.startMenuHideSignOut
-            StartMenuHideSleep                                      = $policy.AdditionalProperties.startMenuHideSleep
-            StartMenuHideSwitchAccount                              = $policy.AdditionalProperties.startMenuHideSwitchAccount
-            StartMenuHideUserTile                                   = $policy.AdditionalProperties.startMenuHideUserTile
-            StartMenuLayoutEdgeAssetsXml                            = $policy.AdditionalProperties.startMenuLayoutEdgeAssetsXml
-            StartMenuLayoutXml                                      = $policy.AdditionalProperties.startMenuLayoutXml
-            StartMenuMode                                           = $policy.AdditionalProperties.startMenuMode
-            StartMenuPinnedFolderDocuments                          = $policy.AdditionalProperties.startMenuPinnedFolderDocuments
-            StartMenuPinnedFolderDownloads                          = $policy.AdditionalProperties.startMenuPinnedFolderDownloads
-            StartMenuPinnedFolderFileExplorer                       = $policy.AdditionalProperties.startMenuPinnedFolderFileExplorer
-            StartMenuPinnedFolderHomeGroup                          = $policy.AdditionalProperties.startMenuPinnedFolderHomeGroup
-            StartMenuPinnedFolderMusic                              = $policy.AdditionalProperties.startMenuPinnedFolderMusic
-            StartMenuPinnedFolderNetwork                            = $policy.AdditionalProperties.startMenuPinnedFolderNetwork
-            StartMenuPinnedFolderPersonalFolder                     = $policy.AdditionalProperties.startMenuPinnedFolderPersonalFolder
-            StartMenuPinnedFolderPictures                           = $policy.AdditionalProperties.startMenuPinnedFolderPictures
-            StartMenuPinnedFolderSettings                           = $policy.AdditionalProperties.startMenuPinnedFolderSettings
-            StartMenuPinnedFolderVideos                             = $policy.AdditionalProperties.startMenuPinnedFolderVideos
-            SettingsBlockSettingsApp                                = $policy.AdditionalProperties.settingsBlockSettingsApp
-            SettingsBlockSystemPage                                 = $policy.AdditionalProperties.settingsBlockSystemPage
-            SettingsBlockDevicesPage                                = $policy.AdditionalProperties.settingsBlockDevicesPage
-            SettingsBlockNetworkInternetPage                        = $policy.AdditionalProperties.settingsBlockNetworkInternetPage
-            SettingsBlockPersonalizationPage                        = $policy.AdditionalProperties.settingsBlockPersonalizationPage
-            SettingsBlockAccountsPage                               = $policy.AdditionalProperties.settingsBlockAccountsPage
-            SettingsBlockTimeLanguagePage                           = $policy.AdditionalProperties.settingsBlockTimeLanguagePage
-            SettingsBlockEaseOfAccessPage                           = $policy.AdditionalProperties.settingsBlockEaseOfAccessPage
-            SettingsBlockPrivacyPage                                = $policy.AdditionalProperties.settingsBlockPrivacyPage
-            SettingsBlockUpdateSecurityPage                         = $policy.AdditionalProperties.settingsBlockUpdateSecurityPage
-            SettingsBlockAppsPage                                   = $policy.AdditionalProperties.settingsBlockAppsPage
-            SettingsBlockGamingPage                                 = $policy.AdditionalProperties.settingsBlockGamingPage
-            WindowsSpotlightBlockConsumerSpecificFeatures           = $policy.AdditionalProperties.windowsSpotlightBlockConsumerSpecificFeatures
-            WindowsSpotlightBlocked                                 = $policy.AdditionalProperties.windowsSpotlightBlocked
-            WindowsSpotlightBlockOnActionCenter                     = $policy.AdditionalProperties.windowsSpotlightBlockOnActionCenter
-            WindowsSpotlightBlockTailoredExperiences                = $policy.AdditionalProperties.windowsSpotlightBlockTailoredExperiences
-            WindowsSpotlightBlockThirdPartyNotifications            = $policy.AdditionalProperties.windowsSpotlightBlockThirdPartyNotifications
-            WindowsSpotlightBlockWelcomeExperience                  = $policy.AdditionalProperties.windowsSpotlightBlockWelcomeExperience
-            WindowsSpotlightBlockWindowsTips                        = $policy.AdditionalProperties.windowsSpotlightBlockWindowsTips
-            WindowsSpotlightConfigureOnLockScreen                   = $policy.AdditionalProperties.windowsSpotlightConfigureOnLockScreen
-            NetworkProxyApplySettingsDeviceWide                     = $policy.AdditionalProperties.networkProxyApplySettingsDeviceWide
-            NetworkProxyDisableAutoDetect                           = $policy.AdditionalProperties.networkProxyDisableAutoDetect
-            NetworkProxyAutomaticConfigurationUrl                   = $policy.AdditionalProperties.networkProxyAutomaticConfigurationUrl
-            NetworkProxyServer                                      = $policy.AdditionalProperties.networkProxyServer
-            AccountsBlockAddingNonMicrosoftAccountEmail             = $policy.AdditionalProperties.accountsBlockAddingNonMicrosoftAccountEmail
-            AntiTheftModeBlocked                                    = $policy.AdditionalProperties.antiTheftModeBlocked
-            BluetoothBlocked                                        = $policy.AdditionalProperties.bluetoothBlocked
-            CameraBlocked                                           = $policy.AdditionalProperties.cameraBlocked
-            ConnectedDevicesServiceBlocked                          = $policy.AdditionalProperties.connectedDevicesServiceBlocked
-            CertificatesBlockManualRootCertificateInstallation      = $policy.AdditionalProperties.certificatesBlockManualRootCertificateInstallation
-            CopyPasteBlocked                                        = $policy.AdditionalProperties.copyPasteBlocked
-            CortanaBlocked                                          = $policy.AdditionalProperties.cortanaBlocked
-            DeviceManagementBlockFactoryResetOnMobile               = $policy.AdditionalProperties.deviceManagementBlockFactoryResetOnMobile
-            DeviceManagementBlockManualUnenroll                     = $policy.AdditionalProperties.deviceManagementBlockManualUnenroll
-            SafeSearchFilter                                        = $policy.AdditionalProperties.safeSearchFilter
-            EdgeBlockPopups                                         = $policy.AdditionalProperties.edgeBlockPopups
-            EdgeBlockSearchSuggestions                              = $policy.AdditionalProperties.edgeBlockSearchSuggestions
-            EdgeBlockSendingIntranetTrafficToInternetExplorer       = $policy.AdditionalProperties.edgeBlockSendingIntranetTrafficToInternetExplorer
-            EdgeSendIntranetTrafficToInternetExplorer               = $policy.AdditionalProperties.edgeSendIntranetTrafficToInternetExplorer
-            EdgeRequireSmartScreen                                  = $policy.AdditionalProperties.edgeRequireSmartScreen
-            EdgeEnterpriseModeSiteListLocation                      = $policy.AdditionalProperties.edgeEnterpriseModeSiteListLocation
-            EdgeFirstRunUrl                                         = $policy.AdditionalProperties.edgeFirstRunUrl
-            EdgeSearchEngine                                        = $policy.AdditionalProperties.edgeSearchEngine.edgeSearchEngineType
-            EdgeHomepageUrls                                        = $policy.AdditionalProperties.edgeHomepageUrls
-            EdgeBlockAccessToAboutFlags                             = $policy.AdditionalProperties.edgeBlockAccessToAboutFlags
-            SmartScreenBlockPromptOverride                          = $policy.AdditionalProperties.smartScreenBlockPromptOverride
-            SmartScreenBlockPromptOverrideForFiles                  = $policy.AdditionalProperties.smartScreenBlockPromptOverrideForFiles
-            WebRtcBlockLocalhostIpAddress                           = $policy.AdditionalProperties.webRtcBlockLocalhostIpAddress
-            InternetSharingBlocked                                  = $policy.AdditionalProperties.internetSharingBlocked
-            SettingsBlockAddProvisioningPackage                     = $policy.AdditionalProperties.settingsBlockAddProvisioningPackage
-            SettingsBlockRemoveProvisioningPackage                  = $policy.AdditionalProperties.settingsBlockRemoveProvisioningPackage
-            SettingsBlockChangeSystemTime                           = $policy.AdditionalProperties.settingsBlockChangeSystemTime
-            SettingsBlockEditDeviceName                             = $policy.AdditionalProperties.settingsBlockEditDeviceName
-            SettingsBlockChangeRegion                               = $policy.AdditionalProperties.settingsBlockChangeRegion
-            SettingsBlockChangeLanguage                             = $policy.AdditionalProperties.settingsBlockChangeLanguage
-            SettingsBlockChangePowerSleep                           = $policy.AdditionalProperties.settingsBlockChangePowerSleep
-            LocationServicesBlocked                                 = $policy.AdditionalProperties.locationServicesBlocked
-            MicrosoftAccountBlocked                                 = $policy.AdditionalProperties.microsoftAccountBlocked
-            MicrosoftAccountBlockSettingsSync                       = $policy.AdditionalProperties.microsoftAccountBlockSettingsSync
-            NfcBlocked                                              = $policy.AdditionalProperties.nfcBlocked
-            ResetProtectionModeBlocked                              = $policy.AdditionalProperties.resetProtectionModeBlocked
-            ScreenCaptureBlocked                                    = $policy.AdditionalProperties.screenCaptureBlocked
-            StorageBlockRemovableStorage                            = $policy.AdditionalProperties.storageBlockRemovableStorage
-            StorageRequireMobileDeviceEncryption                    = $policy.AdditionalProperties.storageRequireMobileDeviceEncryption
-            UsbBlocked                                              = $policy.AdditionalProperties.usbBlocked
-            VoiceRecordingBlocked                                   = $policy.AdditionalProperties.voiceRecordingBlocked
-            WiFiBlockAutomaticConnectHotspots                       = $policy.AdditionalProperties.wiFiBlockAutomaticConnectHotspots
-            WiFiBlocked                                             = $policy.AdditionalProperties.wiFiBlocked
-            WiFiBlockManualConfiguration                            = $policy.AdditionalProperties.wiFiBlockManualConfiguration
-            WiFiScanInterval                                        = $policy.AdditionalProperties.wiFiScanInterval
-            WirelessDisplayBlockProjectionToThisDevice              = $policy.AdditionalProperties.wirelessDisplayBlockProjectionToThisDevice
-            WirelessDisplayBlockUserInputFromReceiver               = $policy.AdditionalProperties.wirelessDisplayBlockUserInputFromReceiver
-            WirelessDisplayRequirePinForPairing                     = $policy.AdditionalProperties.wirelessDisplayRequirePinForPairing
-            WindowsStoreBlocked                                     = $policy.AdditionalProperties.windowsStoreBlocked
-            AppsAllowTrustedAppsSideloading                         = $policy.AdditionalProperties.appsAllowTrustedAppsSideloading
-            WindowsStoreBlockAutoUpdate                             = $policy.AdditionalProperties.windowsStoreBlockAutoUpdate
-            DeveloperUnlockSetting                                  = $policy.AdditionalProperties.developerUnlockSetting
-            SharedUserAppDataAllowed                                = $policy.AdditionalProperties.sharedUserAppDataAllowed
-            AppsBlockWindowsStoreOriginatedApps                     = $policy.AdditionalProperties.appsBlockWindowsStoreOriginatedApps
-            WindowsStoreEnablePrivateStoreOnly                      = $policy.AdditionalProperties.windowsStoreEnablePrivateStoreOnly
-            StorageRestrictAppDataToSystemVolume                    = $policy.AdditionalProperties.storageRestrictAppDataToSystemVolume
-            StorageRestrictAppInstallToSystemVolume                 = $policy.AdditionalProperties.storageRestrictAppInstallToSystemVolume
-            GameDvrBlocked                                          = $policy.AdditionalProperties.gameDvrBlocked
-            ExperienceBlockDeviceDiscovery                          = $policy.AdditionalProperties.experienceBlockDeviceDiscovery
-            ExperienceBlockErrorDialogWhenNoSIM                     = $policy.AdditionalProperties.experienceBlockErrorDialogWhenNoSIM
-            ExperienceBlockTaskSwitcher                             = $policy.AdditionalProperties.experienceBlockTaskSwitcher
-            LogonBlockFastUserSwitching                             = $policy.AdditionalProperties.logonBlockFastUserSwitching
-            TenantLockdownRequireNetworkDuringOutOfBoxExperience    = $policy.AdditionalProperties.tenantLockdownRequireNetworkDuringOutOfBoxExperience
-            Ensure                                                  = "Present"
-            Credential                                      = $Credential
-            ApplicationId                                           = $ApplicationId
-            TenantId                                                = $TenantId
-            ApplicationSecret                                       = $ApplicationSecret
-            CertificateThumbprint                                   = $CertificateThumbprint
+            Description                                           = $policy.Description
+            DisplayName                                           = $policy.DisplayName
+            EnterpriseCloudPrintDiscoveryEndPoint                 = $policy.AdditionalProperties.enterpriseCloudPrintDiscoveryEndPoint
+            EnterpriseCloudPrintOAuthAuthority                    = $policy.AdditionalProperties.enterpriseCloudPrintOAuthAuthority
+            EnterpriseCloudPrintOAuthClientIdentifier             = $policy.AdditionalProperties.enterpriseCloudPrintOAuthClientIdentifier
+            EnterpriseCloudPrintResourceIdentifier                = $policy.AdditionalProperties.enterpriseCloudPrintResourceIdentifier
+            EnterpriseCloudPrintDiscoveryMaxLimit                 = $policy.AdditionalProperties.enterpriseCloudPrintDiscoveryMaxLimit
+            EnterpriseCloudPrintMopriaDiscoveryResourceIdentifier = $policy.AdditionalProperties.enterpriseCloudPrintMopriaDiscoveryResourceIdentifier
+            SearchBlockDiacritics                                 = $policy.AdditionalProperties.searchBlockDiacritics
+            SearchDisableAutoLanguageDetection                    = $policy.AdditionalProperties.searchDisableAutoLanguageDetection
+            SearchDisableIndexingEncryptedItems                   = $policy.AdditionalProperties.searchDisableIndexingEncryptedItems
+            SearchEnableRemoteQueries                             = $policy.AdditionalProperties.searchEnableRemoteQueries
+            SearchDisableIndexerBackoff                           = $policy.AdditionalProperties.searchDisableIndexerBackoff
+            SearchDisableIndexingRemovableDrive                   = $policy.AdditionalProperties.searchDisableIndexingRemovableDrive
+            SearchEnableAutomaticIndexSizeManangement             = $policy.AdditionalProperties.searchEnableAutomaticIndexSizeManangement
+            DiagnosticsDataSubmissionMode                         = $policy.AdditionalProperties.diagnosticsDataSubmissionMode
+            OneDriveDisableFileSync                               = $policy.AdditionalProperties.oneDriveDisableFileSync
+            SmartScreenEnableAppInstallControl                    = $policy.AdditionalProperties.smartScreenEnableAppInstallControl
+            PersonalizationDesktopImageUrl                        = $policy.AdditionalProperties.personalizationDesktopImageUrl
+            PersonalizationLockScreenImageUrl                     = $policy.AdditionalProperties.personalizationLockScreenImageUrl
+            BluetoothAllowedServices                              = $policy.AdditionalProperties.bluetoothAllowedServices
+            BluetoothBlockAdvertising                             = $policy.AdditionalProperties.bluetoothBlockAdvertising
+            BluetoothBlockDiscoverableMode                        = $policy.AdditionalProperties.bluetoothBlockDiscoverableMode
+            BluetoothBlockPrePairing                              = $policy.AdditionalProperties.bluetoothBlockPrePairing
+            EdgeBlockAutofill                                     = $policy.AdditionalProperties.edgeBlockAutofill
+            EdgeBlocked                                           = $policy.AdditionalProperties.edgeBlocked
+            EdgeCookiePolicy                                      = $policy.AdditionalProperties.edgeCookiePolicy
+            EdgeBlockDeveloperTools                               = $policy.AdditionalProperties.edgeBlockDeveloperTools
+            EdgeBlockSendingDoNotTrackHeader                      = $policy.AdditionalProperties.edgeBlockSendingDoNotTrackHeader
+            EdgeBlockExtensions                                   = $policy.AdditionalProperties.edgeBlockExtensions
+            EdgeBlockInPrivateBrowsing                            = $policy.AdditionalProperties.edgeBlockInPrivateBrowsing
+            EdgeBlockJavaScript                                   = $policy.AdditionalProperties.edgeBlockJavaScript
+            EdgeBlockPasswordManager                              = $policy.AdditionalProperties.edgeBlockPasswordManager
+            EdgeBlockAddressBarDropdown                           = $policy.AdditionalProperties.edgeBlockAddressBarDropdown
+            EdgeBlockCompatibilityList                            = $policy.AdditionalProperties.edgeBlockCompatibilityList
+            EdgeClearBrowsingDataOnExit                           = $policy.AdditionalProperties.edgeClearBrowsingDataOnExit
+            EdgeAllowStartPagesModification                       = $policy.AdditionalProperties.edgeAllowStartPagesModification
+            EdgeDisableFirstRunPage                               = $policy.AdditionalProperties.edgeDisableFirstRunPage
+            EdgeBlockLiveTileDataCollection                       = $policy.AdditionalProperties.edgeBlockLiveTileDataCollection
+            EdgeSyncFavoritesWithInternetExplorer                 = $policy.AdditionalProperties.edgeSyncFavoritesWithInternetExplorer
+            CellularBlockDataWhenRoaming                          = $policy.AdditionalProperties.cellularBlockDataWhenRoaming
+            CellularBlockVpn                                      = $policy.AdditionalProperties.cellularBlockVpn
+            CellularBlockVpnWhenRoaming                           = $policy.AdditionalProperties.cellularBlockVpnWhenRoaming
+            DefenderRequireRealTimeMonitoring                     = $policy.AdditionalProperties.defenderRequireRealTimeMonitoring
+            DefenderRequireBehaviorMonitoring                     = $policy.AdditionalProperties.defenderRequireBehaviorMonitoring
+            DefenderRequireNetworkInspectionSystem                = $policy.AdditionalProperties.defenderRequireNetworkInspectionSystem
+            DefenderScanDownloads                                 = $policy.AdditionalProperties.defenderScanDownloads
+            DefenderScanScriptsLoadedInInternetExplorer           = $policy.AdditionalProperties.defenderScanScriptsLoadedInInternetExplorer
+            DefenderBlockEndUserAccess                            = $policy.AdditionalProperties.defenderBlockEndUserAccess
+            DefenderSignatureUpdateIntervalInHours                = $policy.AdditionalProperties.defenderSignatureUpdateIntervalInHours
+            DefenderMonitorFileActivity                           = $policy.AdditionalProperties.defenderMonitorFileActivity
+            DefenderDaysBeforeDeletingQuarantinedMalware          = $policy.AdditionalProperties.defenderDaysBeforeDeletingQuarantinedMalware
+            DefenderScanMaxCpu                                    = $policy.AdditionalProperties.defenderScanMaxCpu
+            DefenderScanArchiveFiles                              = $policy.AdditionalProperties.defenderScanArchiveFiles
+            DefenderScanIncomingMail                              = $policy.AdditionalProperties.defenderScanIncomingMail
+            DefenderScanRemovableDrivesDuringFullScan             = $policy.AdditionalProperties.defenderScanRemovableDrivesDuringFullScan
+            DefenderScanMappedNetworkDrivesDuringFullScan         = $policy.AdditionalProperties.defenderScanMappedNetworkDrivesDuringFullScan
+            DefenderScanNetworkFiles                              = $policy.AdditionalProperties.defenderScanNetworkFiles
+            DefenderRequireCloudProtection                        = $policy.AdditionalProperties.defenderRequireCloudProtection
+            DefenderCloudBlockLevel                               = $policy.AdditionalProperties.defenderCloudBlockLevel
+            DefenderPromptForSampleSubmission                     = $policy.AdditionalProperties.defenderPromptForSampleSubmission
+            DefenderScheduledQuickScanTime                        = $policy.AdditionalProperties.defenderScheduledQuickScanTime
+            DefenderScanType                                      = $policy.AdditionalProperties.defenderScanType
+            DefenderSystemScanSchedule                            = $policy.AdditionalProperties.defenderSystemScanSchedule
+            DefenderScheduledScanTime                             = $policy.AdditionalProperties.defenderScheduledScanTime
+            DefenderDetectedMalwareActions                        = $DefenderDetectedMalwareActionsValues
+            DefenderFileExtensionsToExclude                       = $policy.AdditionalProperties.defenderFileExtensionsToExclude
+            DefenderFilesAndFoldersToExclude                      = $policy.AdditionalProperties.defenderFilesAndFoldersToExclude
+            DefenderProcessesToExclude                            = $policy.AdditionalProperties.defenderProcessesToExclude
+            LockScreenAllowTimeoutConfiguration                   = $policy.AdditionalProperties.lockScreenAllowTimeoutConfiguration
+            LockScreenBlockActionCenterNotifications              = $policy.AdditionalProperties.lockScreenBlockActionCenterNotifications
+            LockScreenBlockCortana                                = $policy.AdditionalProperties.lockScreenBlockCortana
+            LockScreenBlockToastNotifications                     = $policy.AdditionalProperties.lockScreenBlockToastNotifications
+            LockScreenTimeoutInSeconds                            = $policy.AdditionalProperties.lockScreenTimeoutInSeconds
+            PasswordBlockSimple                                   = $policy.AdditionalProperties.passwordBlockSimple
+            PasswordExpirationDays                                = $policy.AdditionalProperties.passwordExpirationDays
+            PasswordMinimumLength                                 = $policy.AdditionalProperties.passwordMinimumLength
+            PasswordMinutesOfInactivityBeforeScreenTimeout        = $policy.AdditionalProperties.passwordMinutesOfInactivityBeforeScreenTimeout
+            PasswordMinimumCharacterSetCount                      = $policy.AdditionalProperties.passwordMinimumCharacterSetCount
+            PasswordPreviousPasswordBlockCount                    = $policy.AdditionalProperties.passwordPreviousPasswordBlockCount
+            PasswordRequired                                      = $policy.AdditionalProperties.passwordRequired
+            PasswordRequireWhenResumeFromIdleState                = $policy.AdditionalProperties.passwordRequireWhenResumeFromIdleState
+            PasswordRequiredType                                  = $policy.AdditionalProperties.passwordRequiredType
+            PasswordSignInFailureCountBeforeFactoryReset          = $policy.AdditionalProperties.passwordSignInFailureCountBeforeFactoryReset
+            PrivacyAdvertisingId                                  = $policy.AdditionalProperties.privacyAdvertisingId
+            PrivacyAutoAcceptPairingAndConsentPrompts             = $policy.AdditionalProperties.privacyAutoAcceptPairingAndConsentPrompts
+            PrivacyBlockInputPersonalization                      = $policy.AdditionalProperties.privacyBlockInputPersonalization
+            StartBlockUnpinningAppsFromTaskbar                    = $policy.AdditionalProperties.startBlockUnpinningAppsFromTaskbar
+            StartMenuAppListVisibility                            = $policy.AdditionalProperties.startMenuAppListVisibility
+            StartMenuHideChangeAccountSettings                    = $policy.AdditionalProperties.startMenuHideChangeAccountSettings
+            StartMenuHideFrequentlyUsedApps                       = $policy.AdditionalProperties.startMenuHideFrequentlyUsedApps
+            StartMenuHideHibernate                                = $policy.AdditionalProperties.startMenuHideHibernate
+            StartMenuHideLock                                     = $policy.AdditionalProperties.startMenuHideLock
+            StartMenuHidePowerButton                              = $policy.AdditionalProperties.startMenuHidePowerButton
+            StartMenuHideRecentJumpLists                          = $policy.AdditionalProperties.startMenuHideRecentJumpLists
+            StartMenuHideRecentlyAddedApps                        = $policy.AdditionalProperties.startMenuHideRecentlyAddedApps
+            StartMenuHideRestartOptions                           = $policy.AdditionalProperties.startMenuHideRestartOptions
+            StartMenuHideShutDown                                 = $policy.AdditionalProperties.startMenuHideShutDown
+            StartMenuHideSignOut                                  = $policy.AdditionalProperties.startMenuHideSignOut
+            StartMenuHideSleep                                    = $policy.AdditionalProperties.startMenuHideSleep
+            StartMenuHideSwitchAccount                            = $policy.AdditionalProperties.startMenuHideSwitchAccount
+            StartMenuHideUserTile                                 = $policy.AdditionalProperties.startMenuHideUserTile
+            StartMenuLayoutEdgeAssetsXml                          = $policy.AdditionalProperties.startMenuLayoutEdgeAssetsXml
+            StartMenuLayoutXml                                    = $policy.AdditionalProperties.startMenuLayoutXml
+            StartMenuMode                                         = $policy.AdditionalProperties.startMenuMode
+            StartMenuPinnedFolderDocuments                        = $policy.AdditionalProperties.startMenuPinnedFolderDocuments
+            StartMenuPinnedFolderDownloads                        = $policy.AdditionalProperties.startMenuPinnedFolderDownloads
+            StartMenuPinnedFolderFileExplorer                     = $policy.AdditionalProperties.startMenuPinnedFolderFileExplorer
+            StartMenuPinnedFolderHomeGroup                        = $policy.AdditionalProperties.startMenuPinnedFolderHomeGroup
+            StartMenuPinnedFolderMusic                            = $policy.AdditionalProperties.startMenuPinnedFolderMusic
+            StartMenuPinnedFolderNetwork                          = $policy.AdditionalProperties.startMenuPinnedFolderNetwork
+            StartMenuPinnedFolderPersonalFolder                   = $policy.AdditionalProperties.startMenuPinnedFolderPersonalFolder
+            StartMenuPinnedFolderPictures                         = $policy.AdditionalProperties.startMenuPinnedFolderPictures
+            StartMenuPinnedFolderSettings                         = $policy.AdditionalProperties.startMenuPinnedFolderSettings
+            StartMenuPinnedFolderVideos                           = $policy.AdditionalProperties.startMenuPinnedFolderVideos
+            SettingsBlockSettingsApp                              = $policy.AdditionalProperties.settingsBlockSettingsApp
+            SettingsBlockSystemPage                               = $policy.AdditionalProperties.settingsBlockSystemPage
+            SettingsBlockDevicesPage                              = $policy.AdditionalProperties.settingsBlockDevicesPage
+            SettingsBlockNetworkInternetPage                      = $policy.AdditionalProperties.settingsBlockNetworkInternetPage
+            SettingsBlockPersonalizationPage                      = $policy.AdditionalProperties.settingsBlockPersonalizationPage
+            SettingsBlockAccountsPage                             = $policy.AdditionalProperties.settingsBlockAccountsPage
+            SettingsBlockTimeLanguagePage                         = $policy.AdditionalProperties.settingsBlockTimeLanguagePage
+            SettingsBlockEaseOfAccessPage                         = $policy.AdditionalProperties.settingsBlockEaseOfAccessPage
+            SettingsBlockPrivacyPage                              = $policy.AdditionalProperties.settingsBlockPrivacyPage
+            SettingsBlockUpdateSecurityPage                       = $policy.AdditionalProperties.settingsBlockUpdateSecurityPage
+            SettingsBlockAppsPage                                 = $policy.AdditionalProperties.settingsBlockAppsPage
+            SettingsBlockGamingPage                               = $policy.AdditionalProperties.settingsBlockGamingPage
+            WindowsSpotlightBlockConsumerSpecificFeatures         = $policy.AdditionalProperties.windowsSpotlightBlockConsumerSpecificFeatures
+            WindowsSpotlightBlocked                               = $policy.AdditionalProperties.windowsSpotlightBlocked
+            WindowsSpotlightBlockOnActionCenter                   = $policy.AdditionalProperties.windowsSpotlightBlockOnActionCenter
+            WindowsSpotlightBlockTailoredExperiences              = $policy.AdditionalProperties.windowsSpotlightBlockTailoredExperiences
+            WindowsSpotlightBlockThirdPartyNotifications          = $policy.AdditionalProperties.windowsSpotlightBlockThirdPartyNotifications
+            WindowsSpotlightBlockWelcomeExperience                = $policy.AdditionalProperties.windowsSpotlightBlockWelcomeExperience
+            WindowsSpotlightBlockWindowsTips                      = $policy.AdditionalProperties.windowsSpotlightBlockWindowsTips
+            WindowsSpotlightConfigureOnLockScreen                 = $policy.AdditionalProperties.windowsSpotlightConfigureOnLockScreen
+            NetworkProxyApplySettingsDeviceWide                   = $policy.AdditionalProperties.networkProxyApplySettingsDeviceWide
+            NetworkProxyDisableAutoDetect                         = $policy.AdditionalProperties.networkProxyDisableAutoDetect
+            NetworkProxyAutomaticConfigurationUrl                 = $policy.AdditionalProperties.networkProxyAutomaticConfigurationUrl
+            NetworkProxyServer                                    = $policy.AdditionalProperties.networkProxyServer
+            AccountsBlockAddingNonMicrosoftAccountEmail           = $policy.AdditionalProperties.accountsBlockAddingNonMicrosoftAccountEmail
+            AntiTheftModeBlocked                                  = $policy.AdditionalProperties.antiTheftModeBlocked
+            BluetoothBlocked                                      = $policy.AdditionalProperties.bluetoothBlocked
+            CameraBlocked                                         = $policy.AdditionalProperties.cameraBlocked
+            ConnectedDevicesServiceBlocked                        = $policy.AdditionalProperties.connectedDevicesServiceBlocked
+            CertificatesBlockManualRootCertificateInstallation    = $policy.AdditionalProperties.certificatesBlockManualRootCertificateInstallation
+            CopyPasteBlocked                                      = $policy.AdditionalProperties.copyPasteBlocked
+            CortanaBlocked                                        = $policy.AdditionalProperties.cortanaBlocked
+            DeviceManagementBlockFactoryResetOnMobile             = $policy.AdditionalProperties.deviceManagementBlockFactoryResetOnMobile
+            DeviceManagementBlockManualUnenroll                   = $policy.AdditionalProperties.deviceManagementBlockManualUnenroll
+            SafeSearchFilter                                      = $policy.AdditionalProperties.safeSearchFilter
+            EdgeBlockPopups                                       = $policy.AdditionalProperties.edgeBlockPopups
+            EdgeBlockSearchSuggestions                            = $policy.AdditionalProperties.edgeBlockSearchSuggestions
+            EdgeBlockSendingIntranetTrafficToInternetExplorer     = $policy.AdditionalProperties.edgeBlockSendingIntranetTrafficToInternetExplorer
+            EdgeSendIntranetTrafficToInternetExplorer             = $policy.AdditionalProperties.edgeSendIntranetTrafficToInternetExplorer
+            EdgeRequireSmartScreen                                = $policy.AdditionalProperties.edgeRequireSmartScreen
+            EdgeEnterpriseModeSiteListLocation                    = $policy.AdditionalProperties.edgeEnterpriseModeSiteListLocation
+            EdgeFirstRunUrl                                       = $policy.AdditionalProperties.edgeFirstRunUrl
+            EdgeSearchEngine                                      = $policy.AdditionalProperties.edgeSearchEngine.edgeSearchEngineType
+            EdgeHomepageUrls                                      = $policy.AdditionalProperties.edgeHomepageUrls
+            EdgeBlockAccessToAboutFlags                           = $policy.AdditionalProperties.edgeBlockAccessToAboutFlags
+            SmartScreenBlockPromptOverride                        = $policy.AdditionalProperties.smartScreenBlockPromptOverride
+            SmartScreenBlockPromptOverrideForFiles                = $policy.AdditionalProperties.smartScreenBlockPromptOverrideForFiles
+            WebRtcBlockLocalhostIpAddress                         = $policy.AdditionalProperties.webRtcBlockLocalhostIpAddress
+            InternetSharingBlocked                                = $policy.AdditionalProperties.internetSharingBlocked
+            SettingsBlockAddProvisioningPackage                   = $policy.AdditionalProperties.settingsBlockAddProvisioningPackage
+            SettingsBlockRemoveProvisioningPackage                = $policy.AdditionalProperties.settingsBlockRemoveProvisioningPackage
+            SettingsBlockChangeSystemTime                         = $policy.AdditionalProperties.settingsBlockChangeSystemTime
+            SettingsBlockEditDeviceName                           = $policy.AdditionalProperties.settingsBlockEditDeviceName
+            SettingsBlockChangeRegion                             = $policy.AdditionalProperties.settingsBlockChangeRegion
+            SettingsBlockChangeLanguage                           = $policy.AdditionalProperties.settingsBlockChangeLanguage
+            SettingsBlockChangePowerSleep                         = $policy.AdditionalProperties.settingsBlockChangePowerSleep
+            LocationServicesBlocked                               = $policy.AdditionalProperties.locationServicesBlocked
+            MicrosoftAccountBlocked                               = $policy.AdditionalProperties.microsoftAccountBlocked
+            MicrosoftAccountBlockSettingsSync                     = $policy.AdditionalProperties.microsoftAccountBlockSettingsSync
+            NfcBlocked                                            = $policy.AdditionalProperties.nfcBlocked
+            ResetProtectionModeBlocked                            = $policy.AdditionalProperties.resetProtectionModeBlocked
+            ScreenCaptureBlocked                                  = $policy.AdditionalProperties.screenCaptureBlocked
+            StorageBlockRemovableStorage                          = $policy.AdditionalProperties.storageBlockRemovableStorage
+            StorageRequireMobileDeviceEncryption                  = $policy.AdditionalProperties.storageRequireMobileDeviceEncryption
+            UsbBlocked                                            = $policy.AdditionalProperties.usbBlocked
+            VoiceRecordingBlocked                                 = $policy.AdditionalProperties.voiceRecordingBlocked
+            WiFiBlockAutomaticConnectHotspots                     = $policy.AdditionalProperties.wiFiBlockAutomaticConnectHotspots
+            WiFiBlocked                                           = $policy.AdditionalProperties.wiFiBlocked
+            WiFiBlockManualConfiguration                          = $policy.AdditionalProperties.wiFiBlockManualConfiguration
+            WiFiScanInterval                                      = $policy.AdditionalProperties.wiFiScanInterval
+            WirelessDisplayBlockProjectionToThisDevice            = $policy.AdditionalProperties.wirelessDisplayBlockProjectionToThisDevice
+            WirelessDisplayBlockUserInputFromReceiver             = $policy.AdditionalProperties.wirelessDisplayBlockUserInputFromReceiver
+            WirelessDisplayRequirePinForPairing                   = $policy.AdditionalProperties.wirelessDisplayRequirePinForPairing
+            WindowsStoreBlocked                                   = $policy.AdditionalProperties.windowsStoreBlocked
+            AppsAllowTrustedAppsSideloading                       = $policy.AdditionalProperties.appsAllowTrustedAppsSideloading
+            WindowsStoreBlockAutoUpdate                           = $policy.AdditionalProperties.windowsStoreBlockAutoUpdate
+            DeveloperUnlockSetting                                = $policy.AdditionalProperties.developerUnlockSetting
+            SharedUserAppDataAllowed                              = $policy.AdditionalProperties.sharedUserAppDataAllowed
+            AppsBlockWindowsStoreOriginatedApps                   = $policy.AdditionalProperties.appsBlockWindowsStoreOriginatedApps
+            WindowsStoreEnablePrivateStoreOnly                    = $policy.AdditionalProperties.windowsStoreEnablePrivateStoreOnly
+            StorageRestrictAppDataToSystemVolume                  = $policy.AdditionalProperties.storageRestrictAppDataToSystemVolume
+            StorageRestrictAppInstallToSystemVolume               = $policy.AdditionalProperties.storageRestrictAppInstallToSystemVolume
+            GameDvrBlocked                                        = $policy.AdditionalProperties.gameDvrBlocked
+            ExperienceBlockDeviceDiscovery                        = $policy.AdditionalProperties.experienceBlockDeviceDiscovery
+            ExperienceBlockErrorDialogWhenNoSIM                   = $policy.AdditionalProperties.experienceBlockErrorDialogWhenNoSIM
+            ExperienceBlockTaskSwitcher                           = $policy.AdditionalProperties.experienceBlockTaskSwitcher
+            LogonBlockFastUserSwitching                           = $policy.AdditionalProperties.logonBlockFastUserSwitching
+            TenantLockdownRequireNetworkDuringOutOfBoxExperience  = $policy.AdditionalProperties.tenantLockdownRequireNetworkDuringOutOfBoxExperience
+            Ensure                                                = 'Present'
+            Credential                                            = $Credential
+            ApplicationId                                         = $ApplicationId
+            TenantId                                              = $TenantId
+            ApplicationSecret                                     = $ApplicationSecret
+            CertificateThumbprint                                 = $CertificateThumbprint
+            Managedidentity                                       = $ManagedIdentity.IsPresent
         }
     }
     catch
@@ -1128,7 +1133,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             $tenantIdValue = $Credential.UserName.Split('@')[1]
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -1208,7 +1213,7 @@ function Set-TargetResource
         $SearchEnableAutomaticIndexSizeManangement,
 
         [Parameter()]
-        [ValidateSet("userDefined", "none", "basic","enhanced","full")]
+        [ValidateSet('userDefined', 'none', 'basic', 'enhanced', 'full')]
         [System.String]
         $DiagnosticsDataSubmissionMode,
 
@@ -1253,7 +1258,7 @@ function Set-TargetResource
         $EdgeBlocked,
 
         [Parameter()]
-        [ValidateSet("userDefined", "allow", "blockThirdparty","blockAll")]
+        [ValidateSet('userDefined', 'allow', 'blockThirdparty', 'blockAll')]
         [System.String]
         $EdgeCookiePolicy,
 
@@ -1350,7 +1355,7 @@ function Set-TargetResource
         $DefenderSignatureUpdateIntervalInHours,
 
         [Parameter()]
-        [ValidateSet("userDefined", "disable", "monitorAllFiles","monitorIncomingFilesOnly","monitorOutgoingFilesOnly")]
+        [ValidateSet('userDefined', 'disable', 'monitorAllFiles', 'monitorIncomingFilesOnly', 'monitorOutgoingFilesOnly')]
         [System.String]
         $DefenderMonitorFileActivity,
 
@@ -1387,12 +1392,12 @@ function Set-TargetResource
         $DefenderRequireCloudProtection,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "high", "highPlus","zeroTolerance")]
+        [ValidateSet('notConfigured', 'high', 'highPlus', 'zeroTolerance')]
         [System.String]
         $DefenderCloudBlockLevel,
 
         [Parameter()]
-        [ValidateSet("userDefined", "alwaysPrompt", "promptBeforeSendingPersonalData","neverSendData","sendAllDataWithoutPrompting")]
+        [ValidateSet('userDefined', 'alwaysPrompt', 'promptBeforeSendingPersonalData', 'neverSendData', 'sendAllDataWithoutPrompting')]
         [System.String]
         $DefenderPromptForSampleSubmission,
 
@@ -1401,7 +1406,7 @@ function Set-TargetResource
         $DefenderScheduledQuickScanTime,
 
         [Parameter()]
-        [ValidateSet("userDefined", "disabled", "quick","full")]
+        [ValidateSet('userDefined', 'disabled', 'quick', 'full')]
         [System.String]
         $DefenderScanType,
 
@@ -1482,7 +1487,7 @@ function Set-TargetResource
         $PasswordRequireWhenResumeFromIdleState,
 
         [Parameter()]
-        [ValidateSet("deviceDefault", "alphanumeric", "numeric")]
+        [ValidateSet('deviceDefault', 'alphanumeric', 'numeric')]
         [System.String]
         $PasswordRequiredType,
 
@@ -1491,7 +1496,7 @@ function Set-TargetResource
         $PasswordSignInFailureCountBeforeFactoryReset,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "blocked", "allowed")]
+        [ValidateSet('notConfigured', 'blocked', 'allowed')]
         [System.String]
         $PrivacyAdvertisingId,
 
@@ -1508,7 +1513,7 @@ function Set-TargetResource
         $StartBlockUnpinningAppsFromTaskbar,
 
         [Parameter()]
-        [ValidateSet("userDefined", "collapse", "remove","disableSettingsApp")]
+        [ValidateSet('userDefined', 'collapse', 'remove', 'disableSettingsApp')]
         [System.String]
         $StartMenuAppListVisibility,
 
@@ -1573,57 +1578,57 @@ function Set-TargetResource
         $StartMenuLayoutXml,
 
         [Parameter()]
-        [ValidateSet("userDefined", "fullScreen", "nonFullScreen")]
+        [ValidateSet('userDefined', 'fullScreen', 'nonFullScreen')]
         [System.String]
         $StartMenuMode,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderDocuments,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderDownloads,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderFileExplorer,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderHomeGroup,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderMusic,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderNetwork,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderPersonalFolder,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderPictures,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderSettings,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderVideos,
 
@@ -1704,7 +1709,7 @@ function Set-TargetResource
         $WindowsSpotlightBlockWindowsTips,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "disabled", "enabled")]
+        [ValidateSet('notConfigured', 'disabled', 'enabled')]
         [System.String]
         $WindowsSpotlightConfigureOnLockScreen,
 
@@ -1765,7 +1770,7 @@ function Set-TargetResource
         $DeviceManagementBlockManualUnenroll,
 
         [Parameter()]
-        [ValidateSet("userDefined", "strict", "moderate")]
+        [ValidateSet('userDefined', 'strict', 'moderate')]
         [System.String]
         $SafeSearchFilter,
 
@@ -1927,7 +1932,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("notConfigured", "blocked", "allowed")]
+        [ValidateSet('notConfigured', 'blocked', 'allowed')]
         $AppsAllowTrustedAppsSideloading,
 
         [Parameter()]
@@ -1935,7 +1940,7 @@ function Set-TargetResource
         $WindowsStoreBlockAutoUpdate,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "blocked", "allowed")]
+        [ValidateSet('notConfigured', 'blocked', 'allowed')]
         [System.String]
         $DeveloperUnlockSetting,
 
@@ -2006,7 +2011,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -2016,8 +2025,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -2025,26 +2034,26 @@ function Set-TargetResource
     #endregion
 
     $currentPolicy = Get-TargetResource @PSBoundParameters
-    $PSBoundParameters.Remove("Ensure") | Out-Null
-    $PSBoundParameters.Remove("Credential") | Out-Null
-    $PSBoundParameters.Remove("ApplicationId") | Out-Null
-    $PSBoundParameters.Remove("TenantId") | Out-Null
-    $PSBoundParameters.Remove("ApplicationSecret") | Out-Null
+    $PSBoundParameters.Remove('Ensure') | Out-Null
+    $PSBoundParameters.Remove('Credential') | Out-Null
+    $PSBoundParameters.Remove('ApplicationId') | Out-Null
+    $PSBoundParameters.Remove('TenantId') | Out-Null
+    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Device Configuration Policy {$DisplayName}"
         $PSBoundParameters.Remove('DisplayName') | Out-Null
         $PSBoundParameters.Remove('Description') | Out-Null
         $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationPolicyWindowsAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        $AdditionalProperties.DefenderDetectedMalwareActions.Add("@odata.type", "#microsoft.graph.defenderDetectedMalwareActions")
-        New-MGDeviceManagementDeviceConfiguration -DisplayName $DisplayName `
+        $AdditionalProperties.DefenderDetectedMalwareActions.Add('@odata.type', '#microsoft.graph.defenderDetectedMalwareActions')
+        New-MgDeviceManagementDeviceConfiguration -DisplayName $DisplayName `
             -Description $Description `
             -AdditionalProperties $AdditionalProperties
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing Device Configuration Policy {$DisplayName}"
-        $configDevicePolicy = Get-MGDeviceManagementDeviceConfiguration `
+        $configDevicePolicy = Get-MgDeviceManagementDeviceConfiguration `
             -ErrorAction Stop | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10GeneralConfiguration' -and `
                 $_.displayName -eq $($DisplayName) }
@@ -2052,20 +2061,20 @@ function Set-TargetResource
         $PSBoundParameters.Remove('DisplayName') | Out-Null
         $PSBoundParameters.Remove('Description') | Out-Null
         $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationPolicyWindowsAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        $AdditionalProperties.DefenderDetectedMalwareActions.Add("@odata.type", "#microsoft.graph.defenderDetectedMalwareActions")
-        Update-MGDeviceManagementDeviceConfiguration -AdditionalProperties $AdditionalProperties `
+        $AdditionalProperties.DefenderDetectedMalwareActions.Add('@odata.type', '#microsoft.graph.defenderDetectedMalwareActions')
+        Update-MgDeviceManagementDeviceConfiguration -AdditionalProperties $AdditionalProperties `
             -Description $Description `
             -DeviceConfigurationId $configDevicePolicy.Id
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Device Configuration Policy {$DisplayName}"
-        $configDevicePolicy = Get-MGDeviceManagementDeviceConfiguration `
-        -ErrorAction Stop | Where-Object `
-        -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10GeneralConfiguration' -and `
-            $_.displayName -eq $($DisplayName) }
+        $configDevicePolicy = Get-MgDeviceManagementDeviceConfiguration `
+            -ErrorAction Stop | Where-Object `
+            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10GeneralConfiguration' -and `
+                $_.displayName -eq $($DisplayName) }
 
-    Remove-MGDeviceManagementDeviceConfiguration -DeviceConfigurationId $configDevicePolicy.Id
+        Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $configDevicePolicy.Id
     }
 }
 
@@ -2136,7 +2145,7 @@ function Test-TargetResource
         $SearchEnableAutomaticIndexSizeManangement,
 
         [Parameter()]
-        [ValidateSet("userDefined", "none", "basic","enhanced","full")]
+        [ValidateSet('userDefined', 'none', 'basic', 'enhanced', 'full')]
         [System.String]
         $DiagnosticsDataSubmissionMode,
 
@@ -2181,7 +2190,7 @@ function Test-TargetResource
         $EdgeBlocked,
 
         [Parameter()]
-        [ValidateSet("userDefined", "allow", "blockThirdparty","blockAll")]
+        [ValidateSet('userDefined', 'allow', 'blockThirdparty', 'blockAll')]
         [System.String]
         $EdgeCookiePolicy,
 
@@ -2278,7 +2287,7 @@ function Test-TargetResource
         $DefenderSignatureUpdateIntervalInHours,
 
         [Parameter()]
-        [ValidateSet("userDefined", "disable", "monitorAllFiles","monitorIncomingFilesOnly","monitorOutgoingFilesOnly")]
+        [ValidateSet('userDefined', 'disable', 'monitorAllFiles', 'monitorIncomingFilesOnly', 'monitorOutgoingFilesOnly')]
         [System.String]
         $DefenderMonitorFileActivity,
 
@@ -2315,12 +2324,12 @@ function Test-TargetResource
         $DefenderRequireCloudProtection,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "high", "highPlus","zeroTolerance")]
+        [ValidateSet('notConfigured', 'high', 'highPlus', 'zeroTolerance')]
         [System.String]
         $DefenderCloudBlockLevel,
 
         [Parameter()]
-        [ValidateSet("userDefined", "alwaysPrompt", "promptBeforeSendingPersonalData","neverSendData","sendAllDataWithoutPrompting")]
+        [ValidateSet('userDefined', 'alwaysPrompt', 'promptBeforeSendingPersonalData', 'neverSendData', 'sendAllDataWithoutPrompting')]
         [System.String]
         $DefenderPromptForSampleSubmission,
 
@@ -2329,7 +2338,7 @@ function Test-TargetResource
         $DefenderScheduledQuickScanTime,
 
         [Parameter()]
-        [ValidateSet("userDefined", "disabled", "quick","full")]
+        [ValidateSet('userDefined', 'disabled', 'quick', 'full')]
         [System.String]
         $DefenderScanType,
 
@@ -2410,7 +2419,7 @@ function Test-TargetResource
         $PasswordRequireWhenResumeFromIdleState,
 
         [Parameter()]
-        [ValidateSet("deviceDefault", "alphanumeric", "numeric")]
+        [ValidateSet('deviceDefault', 'alphanumeric', 'numeric')]
         [System.String]
         $PasswordRequiredType,
 
@@ -2419,7 +2428,7 @@ function Test-TargetResource
         $PasswordSignInFailureCountBeforeFactoryReset,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "blocked", "allowed")]
+        [ValidateSet('notConfigured', 'blocked', 'allowed')]
         [System.String]
         $PrivacyAdvertisingId,
 
@@ -2436,7 +2445,7 @@ function Test-TargetResource
         $StartBlockUnpinningAppsFromTaskbar,
 
         [Parameter()]
-        [ValidateSet("userDefined", "collapse", "remove","disableSettingsApp")]
+        [ValidateSet('userDefined', 'collapse', 'remove', 'disableSettingsApp')]
         [System.String]
         $StartMenuAppListVisibility,
 
@@ -2501,57 +2510,57 @@ function Test-TargetResource
         $StartMenuLayoutXml,
 
         [Parameter()]
-        [ValidateSet("userDefined", "fullScreen", "nonFullScreen")]
+        [ValidateSet('userDefined', 'fullScreen', 'nonFullScreen')]
         [System.String]
         $StartMenuMode,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderDocuments,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderDownloads,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderFileExplorer,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderHomeGroup,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderMusic,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderNetwork,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderPersonalFolder,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderPictures,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderSettings,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "hide", "show")]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderVideos,
 
@@ -2632,7 +2641,7 @@ function Test-TargetResource
         $WindowsSpotlightBlockWindowsTips,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "disabled", "enabled")]
+        [ValidateSet('notConfigured', 'disabled', 'enabled')]
         [System.String]
         $WindowsSpotlightConfigureOnLockScreen,
 
@@ -2693,7 +2702,7 @@ function Test-TargetResource
         $DeviceManagementBlockManualUnenroll,
 
         [Parameter()]
-        [ValidateSet("userDefined", "strict", "moderate")]
+        [ValidateSet('userDefined', 'strict', 'moderate')]
         [System.String]
         $SafeSearchFilter,
 
@@ -2855,7 +2864,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("notConfigured", "blocked", "allowed")]
+        [ValidateSet('notConfigured', 'blocked', 'allowed')]
         $AppsAllowTrustedAppsSideloading,
 
         [Parameter()]
@@ -2863,7 +2872,7 @@ function Test-TargetResource
         $WindowsStoreBlockAutoUpdate,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "blocked", "allowed")]
+        [ValidateSet('notConfigured', 'blocked', 'allowed')]
         [System.String]
         $DeveloperUnlockSetting,
 
@@ -2934,15 +2943,19 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -2970,7 +2983,7 @@ function Test-TargetResource
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
     }
-    $ValuesToCheck.Remove("DefenderDetectedMalwareActions") | Out-Null
+    $ValuesToCheck.Remove('DefenderDetectedMalwareActions') | Out-Null
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
@@ -3009,7 +3022,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -3019,8 +3036,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -3029,7 +3046,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$policies = Get-MGDeviceManagementDeviceConfiguration `
+        [array]$policies = Get-MgDeviceManagementDeviceConfiguration `
             -ErrorAction Stop -All:$true -Filter $Filter | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10GeneralConfiguration' }
         $i = 1
@@ -3040,7 +3057,7 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
         foreach ($policy in $policies)
         {
@@ -3053,6 +3070,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -3061,12 +3079,12 @@ function Export-TargetResource
             if ($Results.DefenderDetectedMalwareActions)
             {
                 $StringContent = [System.Text.StringBuilder]::new()
-                $StringContent.AppendLine("MSFT_IntuneDefenderDetectedMalwareActions {") | Out-Null
+                $StringContent.AppendLine('MSFT_IntuneDefenderDetectedMalwareActions {') | Out-Null
                 $StringContent.AppendLine("                LowSeverity       = '" + $Results.DefenderDetectedMalwareActions.LowSeverity + "'") | Out-Null
                 $StringContent.AppendLine("                ModerateSeverity  = '" + $Results.DefenderDetectedMalwareActions.ModerateSeverity + "'") | Out-Null
                 $StringContent.AppendLine("                HighSeverity      = '" + $Results.DefenderDetectedMalwareActions.HighSeverity + "'") | Out-Null
                 $StringContent.AppendLine("                SevereSeverity    = '" + $Results.DefenderDetectedMalwareActions.SevereSeverity + "'") | Out-Null
-                $StringContent.AppendLine("            }") | Out-Null
+                $StringContent.AppendLine('            }') | Out-Null
                 $Results.DefenderDetectedMalwareActions = $StringContent.ToString()
             }
 
@@ -3079,7 +3097,7 @@ function Export-TargetResource
             if ($Results.DefenderDetectedMalwareActions)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName "DefenderDetectedMalwareActions"
+                    -ParameterName 'DefenderDetectedMalwareActions'
             }
 
             $dscContent += $currentDSCBlock
@@ -3110,7 +3128,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 
@@ -3124,7 +3142,7 @@ function Get-M365DSCIntuneDeviceConfigurationPolicyWindowsAdditionalProperties
         $Properties
     )
 
-    $results = @{"@odata.type" = "#microsoft.graph.windows10GeneralConfiguration"}
+    $results = @{'@odata.type' = '#microsoft.graph.windows10GeneralConfiguration' }
     foreach ($property in $properties.Keys)
     {
         if ($property -ne 'Verbose')
