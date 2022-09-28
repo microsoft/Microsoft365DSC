@@ -431,7 +431,7 @@ Configuration Master
         #>
         #endregion
         #region O365
-        O365User JohnSmith
+        AADUSer JohnSmith
         {
             UserPrincipalName = "John.Smith@$Domain"
             DisplayName       = "John Smith"
@@ -456,7 +456,7 @@ Configuration Master
                 Members      = @("John.Smith@$Domain")
                 Credential   = $GlobalAdmin
                 Ensure       = "Present"
-                DependsOn    = "[O365User]JohnSmith"
+                DependsOn    = "[AADUSer]JohnSmith"
             }
         }
         #endregion
@@ -957,7 +957,7 @@ Configuration Master
         {
             TeamName   = "Alpha Team"
             User       = "John.Smith@$Domain"
-            DependsOn  = @("[O365User]JohnSmith", "[TeamsTeam]TeamAlpha")
+            DependsOn  = @("[AADUSer]JohnSmith", "[TeamsTeam]TeamAlpha")
             Ensure     = "Present"
             Credential = $GlobalAdmin
         }

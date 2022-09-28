@@ -474,7 +474,6 @@ function Start-M365DSCConfigurationExtract
             $ConnectionParams = @{
                 Workload              = $Workload
                 ApplicationId         = $ApplicationId
-                ApplicationSecret     = $ApplicationSecret
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePath       = $CertificatePath
@@ -482,6 +481,12 @@ function Start-M365DSCConfigurationExtract
                 Credential            = $Credential
                 Identity              = $ManagedIdentity.IsPresent
             }
+
+            if (-not [System.String]::IsNullOrEmpty($ApplicationSecret))
+            {=======
+                $ConnectionParams.Add('ApplicationSecret', (New-Object System.Management.Automation.PSCredential ('ApplicationSecret', (ConvertTo-SecureString $ApplicationSecret -AsPlainText -Force))))
+            }
+
             try
             {
                 Connect-M365Tenant @ConnectionParams | Out-Null
@@ -522,7 +527,8 @@ function Start-M365DSCConfigurationExtract
                 }
                 'ApplicationSecret'
                 {
-                    $parameters.Add('ApplicationSecret', $ApplicationSecret)
+                    $applicationSecretValue = New-Object System.Management.Automation.PSCredential ('ApplicationSecret', (ConvertTo-SecureString $ApplicationSecret -AsPlainText -Force));
+                    $parameters.Add('ApplicationSecret', $applicationSecretValue)
                 }
                 'Credentials'
                 {
