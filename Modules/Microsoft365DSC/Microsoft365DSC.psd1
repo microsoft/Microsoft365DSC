@@ -104,6 +104,7 @@
         'Update-M365DSCAllowedGraphScopes',
         'Update-M365DSCAzureAdApplication',
         'Update-M365DSCDependencies',
+        'Update-M365DSCModule',
         'Update-M365DSCResourceDocumentationPage',
         'Update-M365DSCResourcesSettingsJSON'
     )
