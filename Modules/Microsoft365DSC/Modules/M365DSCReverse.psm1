@@ -483,7 +483,7 @@ function Start-M365DSCConfigurationExtract
             }
 
             if (-not [System.String]::IsNullOrEmpty($ApplicationSecret))
-            { =======
+            {
                 $ConnectionParams.Add('ApplicationSecret', (New-Object System.Management.Automation.PSCredential ('ApplicationSecret', (ConvertTo-SecureString $ApplicationSecret -AsPlainText -Force))))
             }
 
