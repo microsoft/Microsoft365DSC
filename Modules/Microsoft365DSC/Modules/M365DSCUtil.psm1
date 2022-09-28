@@ -5,7 +5,7 @@ $Global:SessionSecurityCompliance = $null
 
 #region Extraction Modes
 $Global:DefaultComponents = @('SPOApp', 'SPOSiteDesign')
-$Global:FullComponents = @('AADMSGroup', 'AADServicePrincipal', 'EXOMailboxSettings', 'EXOManagementRole', 'O365Group', 'O365User', `
+$Global:FullComponents = @('AADGroup', 'AADServicePrincipal', 'EXOMailboxSettings', 'EXOManagementRole', 'O365Group', 'AADUSer', `
         'PlannerPlan', 'PlannerBucket', 'PlannerTask', 'PPPowerAppsEnvironment', 'PPTenantSettings', `
         'SPOSiteAuditSettings', 'SPOSiteGroup', 'SPOSite', 'SPOUserProfileProperty', 'SPOPropertyBag', 'TeamsTeam', 'TeamsChannel', `
         'TeamsUser', 'TeamsChannelTab')
@@ -3310,7 +3310,7 @@ This function returns the used workloads for the specified DSC resources
 Specifies the resources for which the workloads should be determined.
 
 .Example
-Get-M365DSCWorkloadsListFromResourceNames -ResourceNames O365User
+Get-M365DSCWorkloadsListFromResourceNames -ResourceNames AADUSer
 
 .Functionality
 Public

@@ -77,6 +77,10 @@ function Get-TargetResource
         $PreferredLanguage,
 
         [Parameter()]
+        [System.String[]]
+        $Roles,
+
+        [Parameter()]
         [System.String]
         $State,
 
@@ -159,7 +163,7 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
-        $propertiesToRetrieve = @('UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType')
+        $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType')
         $user = Get-MgUser -UserId $UserPrincipalName -Property $propertiesToRetrieve -ErrorAction SilentlyContinue
         if ($null -eq $user)
         {
@@ -179,6 +183,14 @@ function Get-TargetResource
             N = 'PasswordNeverExpires'; E = { $_.PasswordPolicies -contains 'DisablePasswordExpiration' }
         }
         $passwordNeverExpires = $userPasswordPolicyInfo.PasswordNeverExpires
+
+        $assignedRoles = Get-MgRoleManagementDirectoryRoleAssignment -Filter "PrincipalId eq '$($user.Id)'"
+        $rolesValue = @()
+        foreach ($assignedRole in $assignedRoles)
+        {
+            $currentRoleInfo =  Get-MgRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $assignedRole.RoleDefinitionId
+            $rolesValue += $currentRoleInfo.DisplayName
+        }
 
         $results = @{
             UserPrincipalName     = $UserPrincipalName
@@ -202,6 +214,7 @@ function Get-TargetResource
             StreetAddress         = $user.StreetAddress
             Title                 = $user.JobTitle
             UserType              = $user.UserType
+            Roles                 = $rolesValue
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -315,6 +328,10 @@ function Set-TargetResource
         $PreferredLanguage,
 
         [Parameter()]
+        [System.String[]]
+        $Roles,
+
+        [Parameter()]
         [System.String]
         $State,
 
@@ -364,7 +381,7 @@ function Set-TargetResource
     # PreferredDataLocation is no longer an accepted value;
     if (![System.String]::IsNullOrEmpty($PreferredDataLocation))
     {
-        Write-Warning '[DEPRECATED] Property PreferredDataLocation is no longer supported by resource O365USer'
+        Write-Warning '[DEPRECATED] Property PreferredDataLocation is no longer supported by resource AADUser'
     }
 
     Write-Verbose -Message "Setting configuration of Office 365 User $UserPrincipalName"
@@ -424,71 +441,51 @@ function Set-TargetResource
         }
         $CreationParams = Remove-NullEntriesFromHashtable -Hash $CreationParams
 
-        $licenses = @{}
-
-        $SubscribedSku = Get-MgSubscribedSku
-        foreach ($licenseSkuPart in $LicenseAssignment)
+        #region Licenses
+        if ($LicenseAssignment -ne $null)
         {
-            Write-Verbose -Message "Adding License {$licenseSkuPart} to the Queue"
-            $license = @{
-                SkuId = ($SubscribedSku | Where-Object -Property SkuPartNumber -Value $licenseSkuPart -EQ).SkuID
+            [Array] $currentLicenses = $user.LicenseAssignment
+            if ($null -eq $currentLicenses)
+            {
+                $currentLicenses = @()
             }
+            $licenseDifferences  = Compare-Object -ReferenceObject $LicenseAssignment -DifferenceObject $currentLicenses
+            if ($licensesDifferences.Length -gt 0)
+            {
+                $licenses = @{AddLicenses = @(); RemoveLicenses = @();}
 
-            # Set the Office license as the license we want to add in the $licenses object
-            if ($licenses.Keys -NotContains 'AddLicenses')
-            {
-                $licenses.Add('AddLicenses', @($license))
-            }
-            else
-            {
-                $licenses.AddLicenses += $license
+                $SubscribedSku = Get-MgSubscribedSku
+                foreach ($licenseSkuPart in $LicenseAssignment)
+                {
+                    Write-Verbose -Message "Adding License {$licenseSkuPart} to the Queue"
+                    $license = @{
+                        SkuId = ($SubscribedSku | Where-Object -Property SkuPartNumber -Value $licenseSkuPart -EQ).SkuID
+                    }
+
+                    # Set the Office license as the license we want to add in the $licenses object
+                    $licenses.AddLicenses += $license
+                }
+
+                foreach ($currentLicense in $user.LicenseAssignment)
+                {
+                    if ($LicenseAssignment -and -not $LicenseAssignment.Contains($currentLicense))
+                    {
+                        Write-Verbose -Message "Removing {$currentLicense} from user {$UserPrincipalName}"
+                        $license = @{
+                            SkuId = ($SubscribedSku | Where-Object -Property SkuPartNumber -Value $currentLicense -EQ).SkuID
+                        }
+                        $licenses.RemoveLicenses += $license
+                    }
+                }
             }
         }
-
-        foreach ($currentLicense in $user.LicenseAssignment)
-        {
-            if ($LicenseAssignment -and -not $LicenseAssignment.Contains($currentLicense))
-            {
-                Write-Verbose -Message "Removing {$currentLicense} from user {$UserPrincipalName}"
-                $license = @{
-                    SkuId = ($SubscribedSku | Where-Object -Property SkuPartNumber -Value $currentLicense -EQ).SkuID
-                }
-                if ( $licenses.Keys -NotContains 'AddLicenses')
-                {
-                    $licenses.Add('RemoveLicenses', @($license))
-                }
-                else
-                {
-                    $licenses.RemoveLicenses += $license
-                }
-            }
-        }
+        #endregion
 
         if ($user.UserPrincipalName)
         {
-
-            if ($null -ne $licenses -and `
-                ($licenses.AddLicenses.Length -gt 0 -or $licenses.RemoveLicenses.Length -gt 0))
-            {
-                Write-Verbose -Message "Updating License Assignment {$($licenses[0] | Out-String)}"
-                try
-                {
-                    Write-Verbose -Message "Assigning $($licenses.Count) licences to existing user"
-                    Update-MgUser -UserId $UserPrincipalName `
-                        -AssignedLicenses $licenses `
-                        -ErrorAction SilentlyContinue
-                }
-                catch
-                {
-                    $Message = "License {$($LicenseAssignment)} doesn't exist in tenant."
-                    Write-Verbose $Message
-                    New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
-                }
-            }
-
             Write-Verbose -Message "Updating Office 365 User $UserPrincipalName Information"
             $CreationParams.Add('UserId', $UserPrincipalName)
-            $user = Update-MgUser @CreationParams
+            Update-MgUser @CreationParams
         }
         else
         {
@@ -497,11 +494,84 @@ function Set-TargetResource
             $PasswordProfile = @{
                 Password = 'TempP@ss'
             }
-            $CreationParams.Add('AssignedLicenses', $licenses)
             $CreationParams.Add('PasswordProfile', $PasswordProfile)
             $CreationParams.Add('MailNickName', $UserPrincipalName.Split('@')[0])
+            Write-Verbose -Message "Creating new user with values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
             $user = New-MgUser @CreationParams
         }
+
+        #region Assign Licenses
+        try
+        {
+            if ($licensesDifferences.Length -gt 0)
+            {
+                Write-Verbose -Message "Updating License assignments with values: $(Convert-M365DscHashtableToString -Hashtable $licenses)"
+                Set-MgUserLicense -UserId $user.Id -AddLicenses $licenses.AddLicenses -RemoveLicenses $licenses.RemoveLicenses
+            }
+        }
+        catch
+        {
+            try
+            {
+                Write-Verbose -Message $_
+                $tenantIdValue = ''
+                if (-not [System.String]::IsNullOrEmpty($TenantId))
+                {
+                    $tenantIdValue = $TenantId
+                }
+                elseif ($null -ne $Credential)
+                {
+                    $tenantIdValue = $Credential.UserName.Split('@')[1]
+                }
+                Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $tenantIdValue
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+            }
+            return $nullReturn
+        }
+        #endregion
+
+        #region Roles
+        if ($null -ne $Roles)
+        {
+            [Array] $currentRoles = $user.Roles
+            if ($null -eq $currentRoles -or $currentRoles.Length -eq 0)
+            {
+                $currentRoles = @()
+            }
+
+            $diffRoles = Compare-Object -ReferenceObject $Roles -DifferenceObject $currentRoles
+            Write-Verbose -Message "Current Roles: $($currentRoles -join ',')"
+            Write-Verbose -Message "Desired Roles: $($Roles -join ',')"
+
+            foreach ($roleDifference in $diffRoles)
+            {
+                $roleDefinitionId = (Get-MgRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($roleDifference.InputObject)'").Id
+                $userId = (Get-MgUser -UserId $UserPrincipalName).Id
+
+                # Roles to remove
+                if ($roleDifference.SideIndicator -eq '=>')
+                {
+                    $currentAssignment = Get-MgRoleManagementDirectoryRoleAssignment -Filter "PrincipalId eq '$userId' and RoleDefinitionId eq '$roleDefinitionId'"
+
+                    Write-Verbose -Message "Removing role assignment for user {$($user.UserPrincipalName)} for role {$($roleDifference.InputObject)}"
+                    Remove-MgRoleManagementDirectoryRoleAssignment -UnifiedRoleAssignmentId $currentAssignment.Id | Out-Null
+                }
+                # Roles to add
+                elseif ($roleDifference.SideIndicator -eq '<=')
+                {
+                    Write-Verbose -Message "Creating role assignment for user {$($user.UserPrincipalName) for role {$($roleDifference.InputObject)}"
+                    New-MgRoleManagementDirectoryRoleAssignment -PrincipalId $userId `
+                                                                -RoleDefinitionId $roleDefinitionId `
+                                                                -DirectoryScopeId '/' | Out-Null
+                }
+            }
+        }
+        #endregion
     }
 }
 
@@ -582,6 +652,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $PreferredLanguage,
+
+        [Parameter()]
+        [System.String[]]
+        $Roles,
 
         [Parameter()]
         [System.String]
@@ -672,7 +746,8 @@ function Test-TargetResource
             'State', `
             'StreetAddress', `
             'Title', `
-            'UserType')
+            'UserType',
+            'Roles')
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
