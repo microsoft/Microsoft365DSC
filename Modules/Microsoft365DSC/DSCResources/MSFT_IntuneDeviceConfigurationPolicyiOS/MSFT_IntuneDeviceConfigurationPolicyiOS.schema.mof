@@ -1,3 +1,10 @@
+[ClassVersion("1.0.0.0")]
+class MSFT_IntuneMediaContentRating
+{
+    [Write, Description("Allowed rating for movies.")] String MovieRating;
+    [Write, Description("Allowed rating for TV.")] String TVRating;
+};
+
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceConfigurationPolicyiOS")]
 class MSFT_IntuneDeviceConfigurationPolicyiOS : OMI_BaseResource
 {
@@ -85,15 +92,15 @@ class MSFT_IntuneDeviceConfigurationPolicyiOS : OMI_BaseResource
     [Write, Description("N/A")] Boolean LockScreenBlockNotificationView;
     [Write, Description("N/A")] Boolean LockScreenBlockPassbook;
     [Write, Description("N/A")] Boolean LockScreenBlockTodayView;
-    [Write, Description("N/A")] String MediaContentRatingAustralia;
-    [Write, Description("N/A")] String MediaContentRatingCanada;
-    [Write, Description("N/A")] String MediaContentRatingFrance;
-    [Write, Description("N/A")] String MediaContentRatingGermany;
-    [Write, Description("N/A")] String MediaContentRatingIreland;
-    [Write, Description("N/A")] String MediaContentRatingJapan;
-    [Write, Description("N/A")] String MediaContentRatingNewZealand;
-    [Write, Description("N/A")] String MediaContentRatingUnitedKingdom;
-    [Write, Description("N/A")] String MediaContentRatingUnitedStates;
+    [Write, Description("N/A"), EmbeddedInstance("MSFT_IntuneMediaContentRating")] String MediaContentRatingAustralia;
+    [Write, Description("N/A"), EmbeddedInstance("MSFT_IntuneMediaContentRating")] String MediaContentRatingCanada;
+    [Write, Description("N/A"), EmbeddedInstance("MSFT_IntuneMediaContentRating")] String MediaContentRatingFrance;
+    [Write, Description("N/A"), EmbeddedInstance("MSFT_IntuneMediaContentRating")] String MediaContentRatingGermany;
+    [Write, Description("N/A"), EmbeddedInstance("MSFT_IntuneMediaContentRating")] String MediaContentRatingIreland;
+    [Write, Description("N/A"), EmbeddedInstance("MSFT_IntuneMediaContentRating")] String MediaContentRatingJapan;
+    [Write, Description("N/A"), EmbeddedInstance("MSFT_IntuneMediaContentRating")] String MediaContentRatingNewZealand;
+    [Write, Description("N/A"), EmbeddedInstance("MSFT_IntuneMediaContentRating")] String MediaContentRatingUnitedKingdom;
+    [Write, Description("N/A"), EmbeddedInstance("MSFT_IntuneMediaContentRating")] String MediaContentRatingUnitedStates;
     [Write, Description("N/A")] String MediaContentRatingApps;
     [Write, Description("N/A")] Boolean messagesBlocked;
     [Write, Description("N/A")] Boolean NotificationsBlockSettingsModification;
