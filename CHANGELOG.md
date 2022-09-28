@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADGroup
+  * Added properties MemberOf and AssignedToRole
+  Implements [#2301](https://github.com/microsoft/Microsoft365DSC/issues/2301)
 * EXOMailContact
   * Initial Release.
 * EXOMailTips
