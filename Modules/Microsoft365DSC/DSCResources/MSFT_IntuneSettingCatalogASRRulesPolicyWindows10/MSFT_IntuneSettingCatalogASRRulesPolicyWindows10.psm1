@@ -136,7 +136,7 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -222,9 +222,12 @@ function Get-TargetResource
                 }
                 '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
                 {
-                    $settingName = $setting.settingDefinitionId.replace("$settingDefinitionIdBase", '')
-                    [Array]$settingValue = $setting.simpleSettingCollectionValue.value
-                    $returnHashtable.Add($settingName, $settingValue)
+                    if ($null -ne $setting.settingDefinitionId)
+                    {
+                        $settingName = $setting.settingDefinitionId.replace("$settingDefinitionIdBase", '')
+                        [Array]$settingValue = $setting.simpleSettingCollectionValue.value
+                        $returnHashtable.Add($settingName, $settingValue)
+                    }
                 }
                 Default {}
             }
@@ -399,7 +402,7 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -621,7 +624,7 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -689,7 +692,7 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
