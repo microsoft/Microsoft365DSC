@@ -1838,6 +1838,7 @@ function New-M365DSCConnection
         Write-Verbose -Message 'Connecting via managed identity'
         Connect-M365Tenant -Workload $Workload `
             -Identity `
+            -TenantId $InboundParameters.TenantId `
             -SkipModuleReload $Global:CurrentModeIsExport `
             -ProfileName $ProfileName
 
@@ -3776,7 +3777,7 @@ function Test-M365DSCModuleValidity
     {
         Write-Host "There is a newer version of the 'Microsoft365DSC' module available on the gallery."
         Write-Host "To update the module and it's dependencies, run the following command:"
-        Write-Host "Update-M365DSCModule" -ForegroundColor Blue
+        Write-Host 'Update-M365DSCModule' -ForegroundColor Blue
     }
 }
 
