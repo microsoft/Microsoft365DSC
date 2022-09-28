@@ -13,9 +13,18 @@ function Get-TargetResource
         [System.String]
         $Identity = 'Default',
 
+        #DEPRECATED
+        [Parameter()]
+        [Boolean]
+        $AllowClickThrough = $true,
+
         [Parameter()]
         [Boolean]
         $AllowSafeDocsOpen = $false,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockUrls = @(),
 
         [Parameter()]
         [Boolean]
@@ -24,6 +33,16 @@ function Get-TargetResource
         [Parameter()]
         [Boolean]
         $EnableSafeDocs = $false,
+
+        #DEPRECATED
+        [Parameter()]
+        [Boolean]
+        $EnableSafeLinksForO365Clients = $true,
+
+        #DEPRECATED
+        [Parameter()]
+        [Boolean]
+        $TrackClicks = $true,
 
         [Parameter()]
         [ValidateSet('Present')]
@@ -52,7 +71,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration of AtpPolicyForO365 for $Identity"
@@ -74,7 +97,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -96,17 +119,25 @@ function Get-TargetResource
         else
         {
             $result = @{
-                IsSingleInstance              = "Yes"
-                Identity                      = $AtpPolicyForO365.Identity
-                AllowSafeDocsOpen             = $AtpPolicyForO365.AllowSafeDocsOpen
-                EnableATPForSPOTeamsODB       = $AtpPolicyForO365.EnableATPForSPOTeamsODB
-                EnableSafeDocs                = $AtpPolicyForO365.EnableSafeDocs
-                Ensure                        = 'Present'
-                ApplicationId                 = $ApplicationId
-                CertificateThumbprint         = $CertificateThumbprint
-                CertificatePath               = $CertificatePath
-                CertificatePassword           = $CertificatePassword
-                TenantId                      = $TenantId
+                IsSingleInstance        = "Yes"
+                Identity                = $AtpPolicyForO365.Identity
+                #DEPRECATED
+                #AllowClickThrough             = $AtpPolicyForO365.AllowClickThrough
+                AllowSafeDocsOpen       = $AtpPolicyForO365.AllowSafeDocsOpen
+                BlockUrls               = $AtpPolicyForO365.BlockUrls
+                EnableATPForSPOTeamsODB = $AtpPolicyForO365.EnableATPForSPOTeamsODB
+                EnableSafeDocs          = $AtpPolicyForO365.EnableSafeDocs
+                #DEPRECATED
+                #EnableSafeLinksForO365Clients = $AtpPolicyForO365.EnableSafeLinksForO365Clients
+                #DEPRECATED
+                #TrackClicks                   = $AtpPolicyForO365.TrackClicks
+                Ensure                  = 'Present'
+                ApplicationId           = $ApplicationId
+                CertificateThumbprint   = $CertificateThumbprint
+                CertificatePath         = $CertificatePath
+                CertificatePassword     = $CertificatePassword
+                TenantId                = $TenantId
+                Managedidentity         = $ManagedIdentity.IsPresent
             }
 
             Write-Verbose -Message "Found AtpPolicyForO365 $($Identity)"
@@ -154,9 +185,18 @@ function Set-TargetResource
         [System.String]
         $Identity = 'Default',
 
+        #DEPRECATED
+        [Parameter()]
+        [Boolean]
+        $AllowClickThrough = $true,
+
         [Parameter()]
         [Boolean]
         $AllowSafeDocsOpen = $false,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockUrls = @(),
 
         [Parameter()]
         [Boolean]
@@ -165,6 +205,16 @@ function Set-TargetResource
         [Parameter()]
         [Boolean]
         $EnableSafeDocs = $false,
+
+        #DEPRECATED
+        [Parameter()]
+        [Boolean]
+        $EnableSafeLinksForO365Clients = $true,
+
+        #DEPRECATED
+        [Parameter()]
+        [Boolean]
+        $TrackClicks = $true,
 
         [Parameter()]
         [ValidateSet('Present')]
@@ -193,7 +243,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of AtpPolicyForO365 for $Identity"
@@ -203,7 +257,7 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -227,7 +281,20 @@ function Set-TargetResource
     $AtpPolicyParams.Remove('CertificateThumbprint') | Out-Null
     $AtpPolicyParams.Remove('CertificatePath') | Out-Null
     $AtpPolicyParams.Remove('CertificatePassword') | Out-Null
+    $AtpPolicyParams.Remove('ManagedIdentity') | Out-Null
     Write-Verbose -Message "Setting AtpPolicyForO365 $Identity with values: $(Convert-M365DscHashtableToString -Hashtable $AtpPolicyParams)"
+
+    #Deprecated
+    Write-Verbose -Message "Property AllowClickThrough is deprecated."
+    $AtpPolicyParams.Remove('AllowClickThrough') | Out-Null
+
+    #Deprecated
+    Write-Verbose -Message "Property EnableSafeLinksForO365Clients is deprecated."
+    $AtpPolicyParams.Remove('EnableSafeLinksForO365Clients') | Out-Null
+
+    #Deprecated
+    Write-Verbose -Message "Property EnableSafeLinksForO365Clients is deprecated."
+    $AtpPolicyParams.Remove('TrackClicks') | Out-Null
 
     Set-AtpPolicyForO365 @AtpPolicyParams
 }
@@ -247,9 +314,18 @@ function Test-TargetResource
         [System.String]
         $Identity = 'Default',
 
+        #DEPRECATED
+        [Parameter()]
+        [Boolean]
+        $AllowClickThrough = $true,
+
         [Parameter()]
         [Boolean]
         $AllowSafeDocsOpen = $false,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockUrls = @(),
 
         [Parameter()]
         [Boolean]
@@ -258,6 +334,16 @@ function Test-TargetResource
         [Parameter()]
         [Boolean]
         $EnableSafeDocs = $false,
+
+        #DEPRECATED
+        [Parameter()]
+        [Boolean]
+        $EnableSafeLinksForO365Clients = $true,
+
+        #DEPRECATED
+        [Parameter()]
+        [Boolean]
+        $TrackClicks = $true,
 
         [Parameter()]
         [ValidateSet('Present')]
@@ -286,14 +372,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -316,6 +406,12 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+
+    #DEPRECATED
+    $ValuesToCheck.Remove('AllowClickThrough') | Out-Null
+    $ValuesToCheck.Remove('EnableSafeLinksForO365Clients') | Out-Null
+    $ValuesToCheck.Remove('TrackClicks') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -355,7 +451,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -366,7 +466,7 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -400,6 +500,7 @@ function Export-TargetResource
                     CertificateThumbprint = $CertificateThumbprint
                     CertificatePassword   = $CertificatePassword
                     CertificatePath       = $CertificatePath
+                    Managedidentity       = $ManagedIdentity.IsPresent
                 }
                 Write-Host "    |---[$i/$($ATPPolicies.Length)] $($atpPolicy.Identity)" -NoNewline
                 $Results = Get-TargetResource @Params

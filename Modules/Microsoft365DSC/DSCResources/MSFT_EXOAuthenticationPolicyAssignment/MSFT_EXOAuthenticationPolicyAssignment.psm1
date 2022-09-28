@@ -39,7 +39,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting Authentication Policy configuration for $Identity"
@@ -60,7 +64,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -92,6 +96,7 @@ function Get-TargetResource
             CertificatePath          = $CertificatePath
             CertificatePassword      = $CertificatePassword
             TenantId                 = $TenantId
+            Managedidentity          = $ManagedIdentity.IsPresent
         }
 
         return $result
@@ -162,19 +167,23 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting Authentication Policy assignment for $UserName"
 
-    $currentPolicyAssignment= Get-TargetResource @PSBoundParameters
+    $currentPolicyAssignment = Get-TargetResource @PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -239,14 +248,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -299,7 +312,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -310,7 +327,7 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -351,7 +368,7 @@ function Export-TargetResource
             {
                 $allUsers = Get-User -ResultSize 'Unlimited'
             }
-            $assignedUsers = $allUsers | Where-Object -FilterScript {$_.AuthenticationPolicy -eq $AuthenticationPolicy.Identity}
+            $assignedUsers = $allUsers | Where-Object -FilterScript { $_.AuthenticationPolicy -eq $AuthenticationPolicy.Identity }
 
             foreach ($user in $assignedUsers)
             {
@@ -363,6 +380,7 @@ function Export-TargetResource
                     CertificateThumbprint = $CertificateThumbprint
                     CertificatePassword   = $CertificatePassword
                     CertificatePath       = $CertificatePath
+                    Managedidentity       = $ManagedIdentity.IsPresent
                 }
                 $Results = Get-TargetResource @Params
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

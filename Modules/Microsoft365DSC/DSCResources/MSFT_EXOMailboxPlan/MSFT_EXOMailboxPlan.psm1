@@ -67,7 +67,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration of MailboxPlan for $Identity"
@@ -127,6 +131,7 @@ function Get-TargetResource
                 CertificatePath          = $CertificatePath
                 CertificatePassword      = $CertificatePassword
                 TenantId                 = $TenantId
+                Managedidentity          = $ManagedIdentity.IsPresent
             }
 
             Write-Verbose -Message "Found MailboxPlan $($Identity)"
@@ -228,7 +233,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of MailboxPlan for $Identity"
@@ -256,6 +265,7 @@ function Set-TargetResource
     $MailboxPlanParams.Remove('CertificateThumbprint') | Out-Null
     $MailboxPlanParams.Remove('CertificatePath') | Out-Null
     $MailboxPlanParams.Remove('CertificatePassword') | Out-Null
+    $MailboxPlanParams.Remove('ManagedIdentity') | Out-Null
 
     $MailboxPlan = Get-MailboxPlan $Identity
 
@@ -339,7 +349,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -367,6 +381,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -406,7 +421,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -449,6 +468,7 @@ function Export-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
 
             $Results = Get-TargetResource @Params

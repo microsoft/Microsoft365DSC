@@ -65,7 +65,7 @@ function Get-TargetResource
         $SimplifiedClientAccessEncryptOnlyDisabled,
 
         [Parameter()]
-        [ValidateSet("Disabled","Mandatory","Optional")]
+        [ValidateSet("Disabled", "Mandatory", "Optional")]
         [System.String]
         $TransportDecryptionSetting,
 
@@ -96,7 +96,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Getting IRM Configuration"
 
@@ -117,7 +121,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -132,29 +136,30 @@ function Get-TargetResource
         $IRMConfiguration = Get-IRMConfiguration -ErrorAction Stop
 
         $result = @{
-            Identity                                    = $IRMConfiguration.Identity
-            AutomaticServiceUpdateEnabled               = $IRMConfiguration.AutomaticServiceUpdateEnabled
-            AzureRMSLicensingEnabled                    = $IRMConfiguration.AzureRMSLicensingEnabled
-            DecryptAttachmentForEncryptOnly             = $IRMConfiguration.DecryptAttachmentForEncryptOnly
-            EDiscoverySuperUserEnabled                  = $IRMConfiguration.EDiscoverySuperUserEnabled
-            EnablePdfEncryption                         = $IRMConfiguration.EnablePdfEncryption
-            InternalLicensingEnabled                    = $IRMConfiguration.InternalLicensingEnabled
-            JournalReportDecryptionEnabled              = $IRMConfiguration.JournalReportDecryptionEnabled
-            LicensingLocation                           = $IRMConfiguration.LicensingLocation
-            RejectIfRecipientHasNoRights                = $IRMConfiguration.RejectIfRecipientHasNoRights
-            RMSOnlineKeySharingLocation                 = $IRMConfiguration.RMSOnlineKeySharingLocation
-            SearchEnabled                               = $IRMConfiguration.SearchEnabled
-            SimplifiedClientAccessDoNotForwardDisabled  = $IRMConfiguration.SimplifiedClientAccessDoNotForwardDisabled
-            SimplifiedClientAccessEnabled               = $IRMConfiguration.SimplifiedClientAccessEnabled
-            SimplifiedClientAccessEncryptOnlyDisabled   = $IRMConfiguration.SimplifiedClientAccessEncryptOnlyDisabled
-            TransportDecryptionSetting                  = $IRMConfiguration.TransportDecryptionSetting
-            Credential                                  = $Credential
-            Ensure                                      = 'Present'
-            ApplicationId                               = $ApplicationId
-            CertificateThumbprint                       = $CertificateThumbprint
-            CertificatePath                             = $CertificatePath
-            CertificatePassword                         = $CertificatePassword
-            TenantId                                    = $TenantId
+            Identity                                   = $IRMConfiguration.Identity
+            AutomaticServiceUpdateEnabled              = $IRMConfiguration.AutomaticServiceUpdateEnabled
+            AzureRMSLicensingEnabled                   = $IRMConfiguration.AzureRMSLicensingEnabled
+            DecryptAttachmentForEncryptOnly            = $IRMConfiguration.DecryptAttachmentForEncryptOnly
+            EDiscoverySuperUserEnabled                 = $IRMConfiguration.EDiscoverySuperUserEnabled
+            EnablePdfEncryption                        = $IRMConfiguration.EnablePdfEncryption
+            InternalLicensingEnabled                   = $IRMConfiguration.InternalLicensingEnabled
+            JournalReportDecryptionEnabled             = $IRMConfiguration.JournalReportDecryptionEnabled
+            LicensingLocation                          = $IRMConfiguration.LicensingLocation
+            RejectIfRecipientHasNoRights               = $IRMConfiguration.RejectIfRecipientHasNoRights
+            RMSOnlineKeySharingLocation                = $IRMConfiguration.RMSOnlineKeySharingLocation
+            SearchEnabled                              = $IRMConfiguration.SearchEnabled
+            SimplifiedClientAccessDoNotForwardDisabled = $IRMConfiguration.SimplifiedClientAccessDoNotForwardDisabled
+            SimplifiedClientAccessEnabled              = $IRMConfiguration.SimplifiedClientAccessEnabled
+            SimplifiedClientAccessEncryptOnlyDisabled  = $IRMConfiguration.SimplifiedClientAccessEncryptOnlyDisabled
+            TransportDecryptionSetting                 = $IRMConfiguration.TransportDecryptionSetting
+            Credential                                 = $Credential
+            Ensure                                     = 'Present'
+            ApplicationId                              = $ApplicationId
+            CertificateThumbprint                      = $CertificateThumbprint
+            CertificatePath                            = $CertificatePath
+            CertificatePassword                        = $CertificatePassword
+            TenantId                                   = $TenantId
+            Managedidentity                            = $ManagedIdentity.IsPresent
         }
 
         Write-Verbose -Message "Found IRM configuration "
@@ -253,7 +258,7 @@ function Set-TargetResource
         $SimplifiedClientAccessEncryptOnlyDisabled,
 
         [Parameter()]
-        [ValidateSet("Disabled","Mandatory","Optional")]
+        [ValidateSet("Disabled", "Mandatory", "Optional")]
         [System.String]
         $TransportDecryptionSetting,
 
@@ -284,14 +289,18 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -311,6 +320,7 @@ function Set-TargetResource
     $IRMConfigurationParams.Remove('CertificateThumbprint') | Out-Null
     $IRMConfigurationParams.Remove('CertificatePath') | Out-Null
     $IRMConfigurationParams.Remove('CertificatePassword') | Out-Null
+    $IRMConfigurationParams.Remove('ManagedIdentity') | Out-Null
     $IRMConfigurationParams.Remove('Identity') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($Null -ne $IRMConfigurationParams))
@@ -389,7 +399,7 @@ function Test-TargetResource
         $SimplifiedClientAccessEncryptOnlyDisabled,
 
         [Parameter()]
-        [ValidateSet("Disabled","Mandatory","Optional")]
+        [ValidateSet("Disabled", "Mandatory", "Optional")]
         [System.String]
         $TransportDecryptionSetting,
 
@@ -420,14 +430,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -448,6 +462,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -500,7 +515,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' -InboundParameters $PSBoundParameters -SkipModuleReload $true
 
@@ -509,7 +528,7 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -532,6 +551,7 @@ function Export-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
 
         $Results = Get-TargetResource @Params

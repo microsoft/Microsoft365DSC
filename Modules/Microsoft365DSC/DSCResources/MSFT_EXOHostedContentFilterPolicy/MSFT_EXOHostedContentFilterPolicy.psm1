@@ -254,7 +254,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration of HostedContentFilterPolicy for $Identity"
@@ -276,7 +280,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -298,7 +302,7 @@ function Get-TargetResource
         else
         {
             $AllowedSendersValues = $HostedContentFilterPolicy.AllowedSenders.Sender | Select-Object Address -ExpandProperty Address
-            $BlockedSendersValues =  $HostedContentFilterPolicy.BlockedSenders.Sender | Select-Object Address -ExpandProperty Address
+            $BlockedSendersValues = $HostedContentFilterPolicy.BlockedSenders.Sender | Select-Object Address -ExpandProperty Address
             $result = @{
                 Ensure                               = 'Present'
                 Identity                             = $Identity
@@ -354,6 +358,7 @@ function Get-TargetResource
                 CertificatePath                      = $CertificatePath
                 CertificatePassword                  = $CertificatePassword
                 TenantId                             = $TenantId
+                Managedidentity                      = $ManagedIdentity.IsPresent
             }
 
             if ($HostedContentFilterPolicy.IsDefault)
@@ -647,7 +652,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of HostedContentFilterPolicy for $Identity"
@@ -657,7 +666,7 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -680,6 +689,7 @@ function Set-TargetResource
     $HostedContentFilterPolicyParams.Remove('CertificateThumbprint') | Out-Null
     $HostedContentFilterPolicyParams.Remove('CertificatePath') | Out-Null
     $HostedContentFilterPolicyParams.Remove('CertificatePassword') | Out-Null
+    $HostedContentFilterPolicyParams.Remove('ManagedIdentity') | Out-Null
 
     if ($HostedContentFilterPolicyParams.Contains('EndUserSpamNotificationCustomFromAddress'))
     {
@@ -982,14 +992,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -1012,6 +1026,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     if ($null -ne $ValuesToCheck.AllowedSenders -and $ValuesToCheck.AllowedSenders.Length -eq 0)
     {
@@ -1071,7 +1086,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -1083,7 +1102,7 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -1114,6 +1133,7 @@ function Export-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
             Write-Host "    |---[$i/$($HostedContentFilterPolicies.Length)] $($HostedContentFilterPolicy.Identity)" -NoNewline
             $Results = Get-TargetResource @Params

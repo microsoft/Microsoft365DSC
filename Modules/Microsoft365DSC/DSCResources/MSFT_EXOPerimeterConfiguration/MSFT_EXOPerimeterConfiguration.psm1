@@ -39,7 +39,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Getting Perimeter Configuration"
 
@@ -60,7 +64,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -74,21 +78,22 @@ function Get-TargetResource
     {
         #Get-OMEConfiguration do NOT accept ErrorAction parameter
         $PerimeterConfiguration = Get-PerimeterConfig 2>&1
-        if($null -ne ($PerimeterConfiguration |Where-Object {$_.gettype().Name -like "*ErrorRecord*"}))
+        if ($null -ne ($PerimeterConfiguration | Where-Object { $_.gettype().Name -like "*ErrorRecord*" }))
         {
             throw $PerimeterConfiguration
         }
 
         $result = @{
-            Identity                     = $PerimeterConfiguration.Identity
-            GatewayIPAddresses           = $PerimeterConfiguration.GatewayIPAddresses
-            Credential                   = $Credential
-            Ensure                       = 'Present'
-            ApplicationId                = $ApplicationId
-            CertificateThumbprint        = $CertificateThumbprint
-            CertificatePath              = $CertificatePath
-            CertificatePassword          = $CertificatePassword
-            TenantId                     = $TenantId
+            Identity              = $PerimeterConfiguration.Identity
+            GatewayIPAddresses    = $PerimeterConfiguration.GatewayIPAddresses
+            Credential            = $Credential
+            Ensure                = 'Present'
+            ApplicationId         = $ApplicationId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            TenantId              = $TenantId
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
 
         Write-Verbose -Message "Found Perimeter Configuration "
@@ -161,14 +166,18 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -188,6 +197,7 @@ function Set-TargetResource
     $PerimeterConfigurationParams.Remove('CertificateThumbprint') | Out-Null
     $PerimeterConfigurationParams.Remove('CertificatePath') | Out-Null
     $PerimeterConfigurationParams.Remove('CertificatePassword') | Out-Null
+    $PerimeterConfigurationParams.Remove('ManagedIdentity') | Out-Null
     $PerimeterConfigurationParams.Remove('Identity') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($Null -ne $PerimeterConfigurationParams))
@@ -238,14 +248,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -266,6 +280,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -318,7 +333,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' -InboundParameters $PSBoundParameters -SkipModuleReload $true
 
@@ -327,7 +346,7 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -337,7 +356,7 @@ function Export-TargetResource
     try
     {
         $PerimeterConfiguration = Get-PerimeterConfig 2>&1
-        if($null -ne ($PerimeterConfiguration |Where-Object {$_.gettype().Name -like "*ErrorRecord*"}))
+        if ($null -ne ($PerimeterConfiguration | Where-Object { $_.gettype().Name -like "*ErrorRecord*" }))
         {
             throw $PerimeterConfiguration
         }
@@ -354,6 +373,7 @@ function Export-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
 
         $Results = Get-TargetResource @Params
