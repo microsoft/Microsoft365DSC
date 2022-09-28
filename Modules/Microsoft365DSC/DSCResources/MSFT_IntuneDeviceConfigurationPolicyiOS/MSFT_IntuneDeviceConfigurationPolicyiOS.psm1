@@ -676,15 +676,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $SafariBlocked,
+        $SafariBlockPopups,
 
         [Parameter()]
         [System.Boolean]
         $SafariBlockJavaScript,
-
-        [Parameter()]
-        [System.Boolean]
-        $SafariBlockPopups,
 
         [Parameter()]
         [ValidateSet('browserDefault','blockAlways','allowCurrentWebSite','allowFromWebsitesVisited','allowAlways')]
@@ -796,12 +792,16 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
@@ -1048,7 +1048,7 @@ function Get-TargetResource
             WiFiConnectOnlyToConfiguredNetworks = $getValue.AdditionalProperties.wiFiConnectOnlyToConfiguredNetworks
             WiFiConnectToAllowedNetworksOnlyForced = $getValue.AdditionalProperties.wiFiConnectToAllowedNetworksOnlyForced
             WifiPowerOnForced = $getValue.AdditionalProperties.wifiPowerOnForced
-
+            Managedidentity= $ManagedIdentity.IsPresent
 
             Ensure                = 'Present'
             Credential            = $Credential
@@ -1123,6 +1123,7 @@ function Get-TargetResource
             }
             $assignmentResult += $assignmentValue
         }
+
         $results.Add('Assignments',$assignmentResult)
 
         return [System.Collections.Hashtable] $results
@@ -1951,12 +1952,16 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
@@ -2042,7 +2047,8 @@ function Set-TargetResource
             $assignmentsHash+=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
 
-        if($policy.id)        {
+        if($policy.id)
+        {
             Update-DeviceConfigurationPolicyAssignments -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash
         }
@@ -2102,12 +2108,6 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing {$DisplayName}"
-
-
-        #region resource generator code
-        #endregion
-
-
 
         #region resource generator code
         Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
@@ -2915,12 +2915,16 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -3036,12 +3040,16 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -3072,12 +3080,10 @@ function Export-TargetResource
 
         #region resource generator code
         [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
-            -ErrorAction Stop | Where-Object `
+            -ErrorAction Stop -All:$true | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration'  `
             }
-
-
         #endregion
 
 
@@ -3102,6 +3108,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
 
             $Results = Get-TargetResource @Params
@@ -3113,7 +3120,8 @@ function Export-TargetResource
             $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.AppsSingleAppModeList -CIMInstanceName MicrosoftGraphapplistitem
             if ($complexTypeStringResult)
             {
-                $Results.AppsSingleAppModeList = $complexTypeStringResult            }
+                $Results.AppsSingleAppModeList = $complexTypeStringResult
+            }
             else
             {
                 $Results.Remove('AppsSingleAppModeList') | Out-Null
@@ -3271,141 +3279,48 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential
 
-        if ($Results.AppsSingleAppModeList)
-        {
-            $isCIMArray=$false
-            if($Results.AppsSingleAppModeList.getType().Fullname -like "*[[\]]")
+            if ($null -ne $Results.MediaContentRatingAustralia)
             {
-                $isCIMArray=$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingAustralia"
             }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AppsSingleAppModeList" -isCIMArray:$isCIMArray
-        }
-        if ($Results.AppsVisibilityList)
-        {
-            $isCIMArray=$false
-            if($Results.AppsVisibilityList.getType().Fullname -like "*[[\]]")
+            if ($null -ne $Results.MediaContentRatingCanada)
             {
-                $isCIMArray=$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingCanada"
             }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AppsVisibilityList" -isCIMArray:$isCIMArray
-        }
-        if ($Results.CompliantAppsList)
-        {
-            $isCIMArray=$false
-            if($Results.CompliantAppsList.getType().Fullname -like "*[[\]]")
+            if ($null -ne $Results.MediaContentRatingFrance)
             {
-                $isCIMArray=$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingFrance"
             }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CompliantAppsList" -isCIMArray:$isCIMArray
-        }
-        if ($Results.MediaContentRatingAustralia)
-        {
-            $isCIMArray=$false
-            if($Results.MediaContentRatingAustralia.getType().Fullname -like "*[[\]]")
+            if ($null -ne $Results.MediaContentRatingGermany)
             {
-                $isCIMArray=$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingGermany"
             }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingAustralia" -isCIMArray:$isCIMArray
-        }
-        if ($Results.MediaContentRatingCanada)
-        {
-            $isCIMArray=$false
-            if($Results.MediaContentRatingCanada.getType().Fullname -like "*[[\]]")
+            if ($null -ne $Results.MediaContentRatingIreland)
             {
-                $isCIMArray=$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingIreland"
             }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingCanada" -isCIMArray:$isCIMArray
-        }
-        if ($Results.MediaContentRatingFrance)
-        {
-            $isCIMArray=$false
-            if($Results.MediaContentRatingFrance.getType().Fullname -like "*[[\]]")
+            if ($null -ne $Results.MediaContentRatingJapan)
             {
-                $isCIMArray=$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingJapan"
             }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingFrance" -isCIMArray:$isCIMArray
-        }
-        if ($Results.MediaContentRatingGermany)
-        {
-            $isCIMArray=$false
-            if($Results.MediaContentRatingGermany.getType().Fullname -like "*[[\]]")
+            if ($null -ne $Results.MediaContentRatingNewZealand)
             {
-                $isCIMArray=$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingNewZealand"
             }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingGermany" -isCIMArray:$isCIMArray
-        }
-        if ($Results.MediaContentRatingIreland)
-        {
-            $isCIMArray=$false
-            if($Results.MediaContentRatingIreland.getType().Fullname -like "*[[\]]")
+            if ($null -ne $Results.MediaContentRatingUnitedKingdom)
             {
-                $isCIMArray=$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingUnitedKingdom"
             }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingIreland" -isCIMArray:$isCIMArray
-        }
-        if ($Results.MediaContentRatingJapan)
-        {
-            $isCIMArray=$false
-            if($Results.MediaContentRatingJapan.getType().Fullname -like "*[[\]]")
+            if ($null -ne $Results.MediaContentRatingUnitedStates)
             {
-                $isCIMArray=$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingUnitedStates"
             }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingJapan" -isCIMArray:$isCIMArray
-        }
-        if ($Results.MediaContentRatingNewZealand)
-        {
-            $isCIMArray=$false
-            if($Results.MediaContentRatingNewZealand.getType().Fullname -like "*[[\]]")
-            {
-                $isCIMArray=$true
-            }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingNewZealand" -isCIMArray:$isCIMArray
-        }
-        if ($Results.MediaContentRatingUnitedKingdom)
-        {
-            $isCIMArray=$false
-            if($Results.MediaContentRatingUnitedKingdom.getType().Fullname -like "*[[\]]")
-            {
-                $isCIMArray=$true
-            }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingUnitedKingdom" -isCIMArray:$isCIMArray
-        }
-        if ($Results.MediaContentRatingUnitedStates)
-        {
-            $isCIMArray=$false
-            if($Results.MediaContentRatingUnitedStates.getType().Fullname -like "*[[\]]")
-            {
-                $isCIMArray=$true
-            }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingUnitedStates" -isCIMArray:$isCIMArray
-        }
-        if ($Results.NetworkUsageRules)
-        {
-            $isCIMArray=$false
-            if($Results.NetworkUsageRules.getType().Fullname -like "*[[\]]")
-            {
-                $isCIMArray=$true
-            }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "NetworkUsageRules" -isCIMArray:$isCIMArray
-        }
-
-        if ($Results.Assignments)
-        {
-            $isCIMArray=$false
-            if($Results.Assignments.getType().Fullname -like "*[[\]]")
-            {
-                $isCIMArray=$true
-            }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$isCIMArray
-        }
-
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        return $dscContent
     }
     catch
     {
@@ -3430,7 +3345,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 
@@ -3950,6 +3865,7 @@ function Get-M365DSCAdditionalProperties
         if ($property -in ($additionalProperties) )
         {
             $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
+
             if($properties.$property -and $properties.$property.getType().FullName -like "*CIMInstance*")
             {
                 if($properties.$property.getType().FullName -like "*[[\]]")
@@ -3973,6 +3889,18 @@ function Get-M365DSCAdditionalProperties
                 $propertyValue = $properties.$property
             }
 
+            $propertyValue = $properties.$property
+
+            if ($propertyName -like 'MediaContentRating*' -and $propertyName -ne 'MediaContentRatingApps')
+            {
+                $countryName = $propertyName.Replace('MediaContentRating', '')
+                $newValue = @{
+                    '@odata.type' = "microsoft.graph.mediaContentRating$countryName"
+                    tvRating      = $propertyValue.TVRating
+                    movieRating   = $propertyValue.MovieRating
+                }
+                $propertyValue = $newValue
+            }
 
             $results.Add($propertyName, $propertyValue)
 
@@ -4138,8 +4066,6 @@ function Update-DeviceConfigurationPolicyAssignments
         [Parameter(Mandatory = 'true')]
         [System.String]
         $DeviceConfigurationPolicyId,
-
-        [Parameter()]
         [Array]
         $Targets
     )
@@ -4195,4 +4121,4 @@ function Update-DeviceConfigurationPolicyAssignments
 
 
 }
-Export-ModuleMember -Function *-TargetResource
+

@@ -17,8 +17,6 @@ Configuration Example
         EXOAtpPolicyForO365 'ConfigureAntiPhishPolicy'
         {
             IsSingleInstance        = "Yes"
-            AllowClickThrough       = $false
-            BlockUrls               = "https://badurl.contoso.com"
             EnableATPForSPOTeamsODB = $true
             Ensure                  = "Present"
             Credential              = $credsGlobalAdmin

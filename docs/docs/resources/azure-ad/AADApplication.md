@@ -24,10 +24,11 @@
 | **Ensure** | Write | String | Specify if the Azure AD App should exist or not. |Present, Absent|
 | **Credential** | Write | PSCredential | Credentials for the Microsoft Graph delegated permissions. ||
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
-| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory application to authenticate with. ||
+| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory application to authenticate with. ||
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
 | **Permissions** | Write | InstanceArray[] | API permissions for the Azure Active Directory Application. ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
+| **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. ||
 
 # AADApplication
 

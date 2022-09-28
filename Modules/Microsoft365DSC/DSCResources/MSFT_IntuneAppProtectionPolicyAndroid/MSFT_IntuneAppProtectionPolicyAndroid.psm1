@@ -119,7 +119,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("notConfigured","microsoftEdge")]
+        [ValidateSet('notConfigured', 'microsoftEdge')]
         $ManagedBrowser,
 
         [Parameter()]
@@ -168,12 +168,16 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Checking for the Intune Android App Protection Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -ProfileName beta `
@@ -183,8 +187,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -210,7 +214,7 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Multiple Android Policies with name {$DisplayName} were found - Module will only function with unique names, please manually remediate"
             $nullResult.Ensure = 'ERROR'
-            throw "Multiple Policies with same displayname identified - Module currently only functions with unique names"
+            throw 'Multiple Policies with same displayname identified - Module currently only functions with unique names'
         }
 
         Write-Verbose -Message "Found Android App Protection Policy {$DisplayName}"
@@ -248,7 +252,7 @@ function Get-TargetResource
         $policy = @{}
 
         #loop regular parameters and add from $polycyinfo
-        foreach ($param in ($Allparams.keys | Where-Object {$allparams.$_.Type -eq 'Parameter'}) )
+        foreach ($param in ($Allparams.keys | Where-Object { $allparams.$_.Type -eq 'Parameter' }) )
         {
             # we need to process this because reverseDSC doesn't handle certain object types
             switch ($Allparams.$param.ExportFileType)
@@ -261,21 +265,21 @@ function Get-TargetResource
                 'Array'
                 {
                     $tmparray = @()
-                    $policyInfo.$param | foreach { $tmparray += $_.tostring() }
+                    $policyInfo.$param | ForEach-Object { $tmparray += $_.tostring() }
                     $policy.add($param, $tmparray)
                 }
 
                 DEFAULT
-                {$policy.add($param, $policyInfo.$param)}
+                { $policy.add($param, $policyInfo.$param) }
             }
         }
         # loop credential parameters and add them from input params
-        foreach ($param in ($Allparams.keys | Where-Object {$allparams.$_.Type -eq 'Credential'}) )
+        foreach ($param in ($Allparams.keys | Where-Object { $allparams.$_.Type -eq 'Credential' }) )
         {
-            $policy.add($param, (get-variable -name $param).value)
+            $policy.add($param, (Get-Variable -Name $param).value)
         }
         # add complex parameters manually as they all have different requirements - potential to change in future
-        $policy.add('Ensure','Present')
+        $policy.add('Ensure', 'Present')
         $policy.add('Apps', $appsArray)
         $policy.add('Assignments', $assignmentsArray)
         $policy.add('ExcludedGroups', $exclusionArray)
@@ -288,7 +292,7 @@ function Get-TargetResource
     }
     catch
     {
-        write-Verbose -message "ERROR on get-targetresource for $displayName"
+        Write-Verbose -Message "ERROR on get-targetresource for $displayName"
         try
         {
             Write-Verbose -Message $_
@@ -425,7 +429,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("notConfigured","microsoftEdge")]
+        [ValidateSet('notConfigured', 'microsoftEdge')]
         $ManagedBrowser,
 
         [Parameter()]
@@ -474,12 +478,16 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -488,8 +496,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -498,7 +506,7 @@ function Set-TargetResource
 
     $currentPolicy = Get-TargetResource @PSBoundParameters
 
-    if ($currentPolicy.Ensure -eq "ERROR")
+    if ($currentPolicy.Ensure -eq 'ERROR')
     {
 
         Throw 'Error when searching for current policy details - Please check verbose output for further detail'
@@ -521,60 +529,60 @@ function Set-TargetResource
     $Allparams = get-InputParameters
 
     # loop through regular parameters
-    foreach ($param in ($Allparams.keys | Where-Object {$allparams.$_.Type -eq 'Parameter'}) )
+    foreach ($param in ($Allparams.keys | Where-Object { $allparams.$_.Type -eq 'Parameter' }) )
     {
-            if($PSBoundParameters.keys -contains $param )
+        if ($PSBoundParameters.keys -contains $param )
+        {
+            switch ($Allparams.$param.ExportFileType)
             {
-                switch ($Allparams.$param.ExportFileType)
+                'Duration'
                 {
-                    'Duration'
-                    {
-                        $setParams.add($param, (set-TimeSpan -duration $PSBoundParameters.$param))
-                        $configstring += ($param + ':' + ($setParams.$param.tostring()) + "`r`n")
-                    }
+                    $setParams.add($param, (set-TimeSpan -duration $PSBoundParameters.$param))
+                    $configstring += ($param + ':' + ($setParams.$param.tostring()) + "`r`n")
+                }
 
-                    default
-                    {
-                        $setParams.add($param, $psboundparameters.$param)
-                        $configstring += ($param + ':' + $setParams.$param + "`r`n")
-                    }
+                default
+                {
+                    $setParams.add($param, $psboundparameters.$param)
+                    $configstring += ($param + ':' + $setParams.$param + "`r`n")
                 }
             }
-            else
-            {
-                #write-host 'value' $param 'not specified'
-            }
+        }
+        else
+        {
+            #write-host 'value' $param 'not specified'
+        }
     }
 
     # handle complex parameters - manually for now
-    if($PSBoundParameters.keys -contains 'Assignments' )
+    if ($PSBoundParameters.keys -contains 'Assignments' )
     {
-        $PSBoundParameters.Assignments | foreach {
-            if ($_ -ne $null) {$assignmentsArray+= set-JSONstring -id $_ -type 'Assignments'}
+        $PSBoundParameters.Assignments | ForEach-Object {
+            if ($_ -ne $null) { $assignmentsArray += set-JSONstring -id $_ -type 'Assignments' }
         }
-        $configstring += ( 'Assignments' + ":`r`n" +($PSBoundParameters.Assignments | out-string) + "`r`n" )
+        $configstring += ( 'Assignments' + ":`r`n" + ($PSBoundParameters.Assignments | Out-String) + "`r`n" )
     }
-    if($PSBoundParameters.keys -contains 'ExcludedGroups' )
+    if ($PSBoundParameters.keys -contains 'ExcludedGroups' )
     {
-        $PSBoundParameters.ExcludedGroups | foreach {
-            if ($_ -ne $null) {$assignmentsArray+= set-JSONstring -id $_ -type 'ExcludedGroups'}
+        $PSBoundParameters.ExcludedGroups | ForEach-Object {
+            if ($_ -ne $null) { $assignmentsArray += set-JSONstring -id $_ -type 'ExcludedGroups' }
         }
-        $configstring += ( 'ExcludedGroups' + ":`r`n" +($PSBoundParameters.ExcludedGroups | out-string) + "`r`n" )
+        $configstring += ( 'ExcludedGroups' + ":`r`n" + ($PSBoundParameters.ExcludedGroups | Out-String) + "`r`n" )
 
     }
     # set the apps values
     $AppsHash = set-AppsHash -AppGroupType $AppGroupType -apps $apps
-    $appshash.Apps | foreach {
-        if ($_ -ne $null) {$appsarray+= set-JSONstring -id $_ -type 'Apps'}
+    $appshash.Apps | ForEach-Object {
+        if ($_ -ne $null) { $appsarray += set-JSONstring -id $_ -type 'Apps' }
     }
     $configstring += ('AppGroupType:' + $appshash.AppGroupType + "`r`n")
-    $configstring += ('Apps' + ":`r`n" +($appshash.Apps | out-string) + "`r`n" )
+    $configstring += ('Apps' + ":`r`n" + ($appshash.Apps | Out-String) + "`r`n" )
 
 
 
 
 
-    write-verbose -message $configstring
+    Write-Verbose -Message $configstring
 
     if (($Ensure -eq 'Present') -and ($currentPolicy.Ensure -eq 'Absent'))
     {
@@ -591,11 +599,11 @@ function Set-TargetResource
         Update-MgDeviceAppMgtAndroidManagedAppProtection @setParams
 
         Write-Verbose -Message 'Setting Group Assignments...'
-        set-MgDeviceAppMgtTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Assignments $assignmentsArray
+        Set-MgDeviceAppMgtTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Assignments $assignmentsArray
 
     }
     # now we need to set up the apps
-    write-verbose -message ("Setting Application values of type: " + $AppsHash.AppGroupType)
+    Write-Verbose -Message ('Setting Application values of type: ' + $AppsHash.AppGroupType)
     Invoke-MgTargetDeviceAppMgtTargetedManagedAppConfigurationApp -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Apps $appsarray -AppGroupType $AppsHash.AppGroupType
 }
 
@@ -720,7 +728,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("notConfigured","microsoftEdge")]
+        [ValidateSet('notConfigured', 'microsoftEdge')]
         $ManagedBrowser,
 
         [Parameter()]
@@ -769,19 +777,23 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -791,7 +803,7 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    if ($CurrentValues.Ensure -eq "ERROR")
+    if ($CurrentValues.Ensure -eq 'ERROR')
     {
 
         Throw 'Error when searching for current policy details - Please check verbose output for further detail'
@@ -816,53 +828,53 @@ function Test-TargetResource
 
     $Allparams = get-InputParameters
 
-    ($Allparams.keys | Where-Object {$allparams.$_.Type -eq 'Credential'}) | foreach {
-        $CurrentValues.Remove($_) | out-null
+    ($Allparams.keys | Where-Object { $allparams.$_.Type -eq 'Credential' }) | ForEach-Object {
+        $CurrentValues.Remove($_) | Out-Null
     }
 
     # loop through regular parameters
-    foreach ($param in ($Allparams.keys | Where-Object {$allparams.$_.Type -eq 'Parameter'}) )
+    foreach ($param in ($Allparams.keys | Where-Object { $allparams.$_.Type -eq 'Parameter' }) )
     {
-            if($PSBoundParameters.keys -contains $param )
+        if ($PSBoundParameters.keys -contains $param )
+        {
+            switch ($Allparams.$param.ExportFileType)
             {
-                switch ($Allparams.$param.ExportFileType)
+                'Duration'
                 {
-                    'Duration'
-                    {
-                        $targetvalues.add($param, (set-TimeSpan -duration $PSBoundParameters.$param))
-                    }
+                    $targetvalues.add($param, (set-TimeSpan -duration $PSBoundParameters.$param))
+                }
 
-                    default
-                    {
-                        $targetvalues.add($param, $psboundparameters.$param)
-                    }
+                default
+                {
+                    $targetvalues.add($param, $psboundparameters.$param)
                 }
             }
-            else
-            {
-                write-verbose -message ("Unspecified Parameter in Config: " + $param + "  Current Value Will be retained: " + $CurrentValues.$param)
-            }
+        }
+        else
+        {
+            Write-Verbose -Message ('Unspecified Parameter in Config: ' + $param + '  Current Value Will be retained: ' + $CurrentValues.$param)
+        }
     }
 
     # handle complex parameters - manually for now
-    if($PSBoundParameters.keys -contains 'Assignments' )
+    if ($PSBoundParameters.keys -contains 'Assignments' )
     {
         $targetvalues.add('Assignments', $psboundparameters.Assignments)
     }
     else
     {
-        write-host 'Unspecified Parameter in Config: Assignments - Current Value is:' $CurrentValues.Assignments `
-                "`r`nNOTE: Assignments interacts with other values - not specifying may lead to unexpected output"
+        Write-Host 'Unspecified Parameter in Config: Assignments - Current Value is:' $CurrentValues.Assignments `
+            "`r`nNOTE: Assignments interacts with other values - not specifying may lead to unexpected output"
     }
 
-    if($PSBoundParameters.keys -contains 'ExcludedGroups' )
+    if ($PSBoundParameters.keys -contains 'ExcludedGroups' )
     {
         $targetvalues.add('ExcludedGroups', $psboundparameters.ExcludedGroups)
     }
     else
     {
-        write-host 'Unspecified Parameter in Config: ExcludedGroups - Current Value is:' $CurrentValues.ExcludedGroups `
-                "`r`nNOTE: ExcludedGroups interacts with other values - not specifying may lead to unexpected output"
+        Write-Host 'Unspecified Parameter in Config: ExcludedGroups - Current Value is:' $CurrentValues.ExcludedGroups `
+            "`r`nNOTE: ExcludedGroups interacts with other values - not specifying may lead to unexpected output"
     }
 
     # set the apps values
@@ -870,7 +882,7 @@ function Test-TargetResource
     $targetvalues.add('Apps', $AppsHash.Apps)
     $targetvalues.add('AppGroupType', $AppsHash.AppGroupType)
     # wipe out the current apps value if AppGroupType is anything but selectedpublicapps to match the appshash values
-    if ($CurrentValues.AppGroupType -ne 'selectedPublicApps') { $CurrentValues.Apps = @()}
+    if ($CurrentValues.AppGroupType -ne 'selectedPublicApps') { $CurrentValues.Apps = @() }
 
 
     Write-Verbose -Message "Current Values: $((Convert-M365DscHashtableToString -Hashtable $CurrentValues) -replace ';', "`r`n")"
@@ -880,7 +892,7 @@ function Test-TargetResource
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $targetvalues `
         -ValuesToCheck $targetvalues.Keys
-        #-verbose
+    #-verbose
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -910,12 +922,16 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -924,8 +940,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -943,7 +959,7 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
         foreach ($policy in $policies)
         {
@@ -951,15 +967,16 @@ function Export-TargetResource
             $params = @{
                 DisplayName           = $policy.displayName
                 Ensure                = 'Present'
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationID         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
             $Results = Get-TargetResource @Params
             #remove the Id value
-            $Results.remove('Id') | out-null
+            $Results.remove('Id') | Out-Null
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -998,7 +1015,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 
@@ -1076,7 +1093,7 @@ function set-Timespan
     }
     catch
     {
-        throw "Problem converting input to a timespan - If configuration document is using iso8601 string (e.g. PT15M) try using new-timespan (e.g. new-timespan -minutes 15)"
+        throw 'Problem converting input to a timespan - If configuration document is using iso8601 string (e.g. PT15M) try using new-timespan (e.g. new-timespan -minutes 15)'
     }
     return $timespan
 }
@@ -1087,11 +1104,11 @@ function set-AppsHash
         [array]$Apps
     )
 
-   if ($AppGroupType -eq '')
+    if ($AppGroupType -eq '')
     {
         if ($apps.count -eq 0 ) { $AppGroupType = 'allApps' }
         else { $AppGroupType = 'selectedPublicApps' }
-        write-verbose -message "setting AppGroupType to $AppGroupType"
+        Write-Verbose -Message "setting AppGroupType to $AppGroupType"
     }
 
     $appsarray = @()
@@ -1102,7 +1119,7 @@ function set-AppsHash
 
     $AppsHash = @{
         'AppGroupType' = $AppGroupType;
-        'Apps' = $appsarray
+        'Apps'         = $appsarray
     }
 
     return $AppsHash
@@ -1111,49 +1128,50 @@ function set-AppsHash
 function get-InputParameters
 {
     return @{
-        AllowedDataStorageLocations              = @{Type = "Parameter"        ; ExportFileType = "Array"; };
-        AllowedInboundDataTransferSources        = @{Type = "Parameter"        ; ExportFileType = "String"; };
-        AllowedOutboundClipboardSharingLevel     = @{Type = "Parameter"        ; ExportFileType = "String"; };
-        AllowedOutboundDataTransferDestinations  = @{Type = "Parameter"        ; ExportFileType = "String"; };
-        ApplicationId                            = @{Type = "Credential"       ; ExportFileType = "NA"; };
-        ApplicationSecret                        = @{Type = "Credential"       ; ExportFileType = "NA"; };
-        AppGroupType                             = @{Type = "ComplexParameter" ; ExportFileType = "NA"; };
-        Apps                                     = @{Type = "ComplexParameter" ; ExportFileType = "NA"; };
-        Assignments                              = @{Type = "ComplexParameter" ; ExportFileType = "NA"; };
-        CertificateThumbprint                    = @{Type = "Credential"       ; ExportFileType = "NA"; };
-        ContactSyncBlocked                       = @{Type = "Parameter"        ; ExportFileType = "NA"; };
-        Credential                               = @{Type = "Credential"       ; ExportFileType = "NA"; };
-        DataBackupBlocked                        = @{Type = "Parameter"        ; ExportFileType = "NA"; };
-        Description                              = @{Type = "Parameter"        ; ExportFileType = "NA"; };
-        DeviceComplianceRequired                 = @{Type = "Parameter"        ; ExportFileType = "NA"; };
-        DisableAppPinIfDevicePinIsSet            = @{Type = "Parameter"        ; ExportFileType = "NA"; };
-        DisplayName                              = @{Type = "Parameter"        ; ExportFileType = "NA"; };
-        Ensure                                   = @{Type = "ComplexParameter" ; ExportFileType = "NA"; };
-        ExcludedGroups                           = @{Type = "ComplexParameter" ; ExportFileType = "NA"; };
-        FingerprintBlocked                       = @{Type = "Parameter"        ; ExportFileType = "NA"; };
-        IsAssigned                               = @{Type = "ComplexParameter" ; ExportFileType = "NA"; };
-        ManagedBrowser                           = @{Type = "Parameter"        ; ExportFileType = "String"; };
-        ManagedBrowserToOpenLinksRequired        = @{Type = "Parameter"        ; ExportFileType = "NA"; };
-        MaximumPinRetries                        = @{Type = "Parameter"        ; ExportFileType = "NA"; };
-        MinimumPinLength                         = @{Type = "Parameter"        ; ExportFileType = "NA"; };
-        MinimumRequiredAppVersion                = @{Type = "Parameter"        ; ExportFileType = "NA"; };
-        MinimumRequiredOSVersion                 = @{Type = "Parameter"        ; ExportFileType = "NA"; };
-        MinimumRequiredPatchVersion              = @{Type = "Parameter"        ; ExportFileType = "NA"; };
-        MinimumWarningAppVersion                 = @{Type = "Parameter"        ; ExportFileType = "NA"; };
-        MinimumWarningOSVersion                  = @{Type = "Parameter"        ; ExportFileType = "NA"; };
-        MinimumWarningPatchVersion               = @{Type = "Parameter"        ; ExportFileType = "NA"; };
-        OrganizationalCredentialsRequired        = @{Type = "Parameter"        ; ExportFileType = "NA"; };
-        PeriodBeforePinReset                     = @{Type = "Parameter"        ; ExportFileType = "Duration"; };
-        PeriodOfflineBeforeAccessCheck           = @{Type = "Parameter"        ; ExportFileType = "Duration"; };
-        PeriodOfflineBeforeWipeIsEnforced        = @{Type = "Parameter"        ; ExportFileType = "Duration"; };
-        PeriodOnlineBeforeAccessCheck            = @{Type = "Parameter"        ; ExportFileType = "Duration"; };
-        PinCharacterSet                          = @{Type = "Parameter"        ; ExportFileType = "String"; };
-        PinRequired                              = @{Type = "Parameter"        ; ExportFileType = "NA"; };
-        PrintBlocked                             = @{Type = "Parameter"        ; ExportFileType = "NA"; };
-        SaveAsBlocked                            = @{Type = "Parameter"        ; ExportFileType = "NA"; };
-        SimplePinBlocked                         = @{Type = "Parameter"        ; ExportFileType = "NA"; };
-        TenantId                                 = @{Type = "Credential"       ; ExportFileType = "NA"; }
-     }
+        AllowedDataStorageLocations             = @{Type = 'Parameter'        ; ExportFileType = 'Array'; };
+        AllowedInboundDataTransferSources       = @{Type = 'Parameter'        ; ExportFileType = 'String'; };
+        AllowedOutboundClipboardSharingLevel    = @{Type = 'Parameter'        ; ExportFileType = 'String'; };
+        AllowedOutboundDataTransferDestinations = @{Type = 'Parameter'        ; ExportFileType = 'String'; };
+        ApplicationId                           = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
+        ApplicationSecret                       = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
+        AppGroupType                            = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
+        Apps                                    = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
+        Assignments                             = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
+        CertificateThumbprint                   = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
+        Managedidentity                         = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
+        ContactSyncBlocked                      = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        Credential                              = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
+        DataBackupBlocked                       = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        Description                             = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        DeviceComplianceRequired                = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        DisableAppPinIfDevicePinIsSet           = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        DisplayName                             = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        Ensure                                  = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
+        ExcludedGroups                          = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
+        FingerprintBlocked                      = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        IsAssigned                              = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
+        ManagedBrowser                          = @{Type = 'Parameter'        ; ExportFileType = 'String'; };
+        ManagedBrowserToOpenLinksRequired       = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        MaximumPinRetries                       = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        MinimumPinLength                        = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        MinimumRequiredAppVersion               = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        MinimumRequiredOSVersion                = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        MinimumRequiredPatchVersion             = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        MinimumWarningAppVersion                = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        MinimumWarningOSVersion                 = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        MinimumWarningPatchVersion              = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        OrganizationalCredentialsRequired       = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        PeriodBeforePinReset                    = @{Type = 'Parameter'        ; ExportFileType = 'Duration'; };
+        PeriodOfflineBeforeAccessCheck          = @{Type = 'Parameter'        ; ExportFileType = 'Duration'; };
+        PeriodOfflineBeforeWipeIsEnforced       = @{Type = 'Parameter'        ; ExportFileType = 'Duration'; };
+        PeriodOnlineBeforeAccessCheck           = @{Type = 'Parameter'        ; ExportFileType = 'Duration'; };
+        PinCharacterSet                         = @{Type = 'Parameter'        ; ExportFileType = 'String'; };
+        PinRequired                             = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        PrintBlocked                            = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        SaveAsBlocked                           = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        SimplePinBlocked                        = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        TenantId                                = @{Type = 'Credential'       ; ExportFileType = 'NA'; }
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

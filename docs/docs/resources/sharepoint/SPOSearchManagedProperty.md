@@ -26,7 +26,7 @@
 | **Ensure** | Write | String | Present ensures the Search Managed Property exists. |Present|
 | **Credential** | Write | PSCredential | Credentials of the account to authenticate with. ||
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
-| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory application to authenticate with. ||
+| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory application to authenticate with. ||
 | **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for certificatePassword ||
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. ||

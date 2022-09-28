@@ -1,9 +1,70 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.1005.1
+
+* AADUser
+  * Renamed from O365User
+  * Added support for Roles.
+  FIXES [#2288](https://github.com/microsoft/Microsoft365DSC/issues/2288)
+* EXOATPPolicyForO365
+  * [BREAKING] Removed the deprecated BlockURLs, AllowClickThrough, EnableSafeLinksForO365Clients and TrackClicks parameters.
+* EXOMailContact
+  * Initial Release.
+* EXOMailTips
+  * Fixes an issue where MailTips weren't extracted when using CertificateThumbprint to authenticate.
+  FIXES [#2235](https://github.com/microsoft/Microsoft365DSC/issues/2235)
+* O365User
+  * [BREAKING] Resource was renamed to AADUser.
+  FIXES [#2204](https://github.com/microsoft/Microsoft365DSC/issues/2204)
+* IntuneDeviceConfigurationPolicyiOS
+  * [Breaking] Changed all the MediaContentRating properties to be CIMInstances.
+  FIXES [#1871](https://github.com/microsoft/Microsoft365DSC/issues/1871)
+* MISC
+  * [BREAKING] Authentication property ApplicationSecret has been changed across all resources to be of type
+    PSCredential instead of string. This will ensure that the secrets get encrypted in MOF files
+    when compiling with an encryption certificated instead of being exposed as plaintext.
+    FIXES [#1714](https://github.com/microsoft/Microsoft365DSC/issues/1714)
+  * Fixes issue with DSCParser non-existing resources on one tenant weren't properly captured.
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 1.12.1.
+  * Updated MSCloudLoginAssistant dependency to version 1.0.92.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.152.
+  * Added new dependency on Microsoft.Graph.Users.Actions.
+
+# 1.22.921.1
 
 * AADRoleSetting
+  * Fixed an issue if the P2 License is not present on the tenant the Export stop working
+    FIXES [#2227](https://github.com/microsoft/Microsoft365DSC/issues/2227)
+  * Fixed an issue with approver can be a group
+    FIXES [#2283](https://github.com/microsoft/Microsoft365DSC/issues/2283)
+* AADConditionalAccessPolicy
+  * Added support for the CustomAuthenticationFactors parameter.
+  FIXES [#2292](https://github.com/microsoft/Microsoft365DSC/issues/2292)
+* O365User
+  * Improved extraction performance by leveraging StringBuilder instead of re-assigning string.
+* SCAutoSensitivityLabelPolicy
+  * Initial Release.
+* SCAutoSensitivityLabelRule
+  * Initial Release.
+* DEPENDENCIES
+  * Updated the ExchangeOnlineManagement dependency to version 3.0.0.
+  * Updated the MSCloudLoginAssistant dependency to version 1.0.89.
+
+# 1.22.914.1
+
+* AADGroup
+  * Changed behavior where if a group has a dynamic membership rule that is active,
+    we no longer process members from the export, Get and Set functions.
+    FIXES [#2190](https://github.com/microsoft/Microsoft365DSC/issues/2190)
+  * Fixed an issue where if the licenses parameter was omitted and another parameter caused
+    a drift, that the licenses would get stripped from the group.
+    FIXES [#2191](https://github.com/microsoft/Microsoft365DSC/issues/2191)
+* AADRoleSetting
   * Fixed an issue where the export wasn't properly passing credential to the Get function.
+* TeamsCallingPolicy
+  * Added UserOverride as an accepted value for the BusyOnBusyEnabledType parameter.
+  FIXES [#2271](https://github.com/microsoft/Microsoft365DSC/issues/2271)
 
 # 1.22.907.1
 

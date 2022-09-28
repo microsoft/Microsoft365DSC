@@ -38,12 +38,16 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Checking for the Intune App Configuration Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -53,8 +57,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -80,11 +84,12 @@ function Get-TargetResource
             Description           = $configPolicy.Description
             CustomSettings        = $configPolicy.customSettings
             Ensure                = 'Present'
-            Credential    = $Credential
+            Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
         $returnAssignments=@()
         Select-MgProfile -Name beta
@@ -109,7 +114,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -169,12 +174,16 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Intune App Configuration Policy {$DisplayName}"
@@ -186,8 +195,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -206,7 +215,7 @@ function Set-TargetResource
         if ($null -ne $CustomSettings)
         {
             [System.Object[]]$customSettingsValue = ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings -Settings $CustomSettings
-            $creationParams.Add("customSettings", $customSettingsValue)
+            $creationParams.Add('customSettings', $customSettingsValue)
         }
         $policy=New-MgDeviceAppManagementTargetedManagedAppConfiguration @creationParams
 
@@ -237,7 +246,7 @@ function Set-TargetResource
         if ($null -ne $CustomSettings)
         {
             $customSettingsValue = ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings -Settings $CustomSettings
-            $updateParams.Add("customSettings", $customSettingsValue)
+            $updateParams.Add('customSettings', $customSettingsValue)
         }
         Update-MgDeviceAppManagementTargetedManagedAppConfiguration @updateParams
 
@@ -297,19 +306,23 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -408,9 +421,9 @@ function Test-TargetResource
 
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-                                             -Source $($MyInvocation.MyCommand.Source) `
-                                             -DesiredValues $PSBoundParameters `
-                                             -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -440,12 +453,16 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -454,8 +471,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -473,19 +490,20 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
         foreach ($configPolicy in $configPolicies)
         {
-            Write-Host "    |---[$i/$($configPolicies.Count)] $($configPolicy.displayName)" -NoNewLine
+            Write-Host "    |---[$i/$($configPolicies.Count)] $($configPolicy.displayName)" -NoNewline
             $params = @{
                 DisplayName           = $configPolicy.displayName
                 Ensure                = 'Present'
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationID         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
             $Results = Get-TargetResource @params
             if ($Results.CustomSettings.Count -gt 0)
@@ -516,7 +534,7 @@ function Export-TargetResource
                 -Credential $Credential
             if ($null -ne $Results.CustomSettings)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CustomSettings"
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'CustomSettings'
             }
 
             if ($Results.Assignments)
@@ -551,7 +569,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -568,7 +586,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 
@@ -622,29 +640,22 @@ function Get-M365DSCIntuneAppConfigurationPolicyCustomSettingsAsString
         $Settings
     )
 
-    $StringContent = "@(`r`n"
-    $settingCount=$Settings.count
-    $i=0
+    $StringContent = '@('
     foreach ($setting in $Settings)
     {
-        $StringContent += "                MSFT_IntuneAppConfigurationPolicyCustomSetting { `r`n"
-        $StringContent += "                    name  = '" + $setting.name + "'`r`n"
-        $StringContent += "                    value = '" + $setting.value + "'`r`n"
-        $StringContent += "                }"
-        $i++
-        if($i -lt $settingCount)
-        {
-            $StringContent += "`r`n"
-        }
-
+        $StringContent += "MSFT_IntuneAppConfigurationPolicyCustomSetting { `r`n"
+        $StringContent += "                name  = '" + $setting.name + "'`r`n"
+        $StringContent += "                value = '" + $setting.value + "'`r`n"
+        $StringContent += "            }`r`n"
     }
-    $StringContent += ")"
+    $StringContent += '            )'
     return $StringContent
 }
 
-function ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings
+    }
+    $StringContent += '            )'
+    return $StringContent
 {
-    [CmdletBinding()]
     [OutputType([System.Object[]])]
     param(
         [Parameter(Mandatory = $true)]

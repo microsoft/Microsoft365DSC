@@ -17,42 +17,42 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ProcessCreationType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "enable","auditMode")]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode')]
         [System.String]
         $AdvancedRansomewareProtectionType,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $BlockPersistenceThroughWmiType,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptObfuscatedMacroCodeType,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeMacroCodeAllowWin32ImportsType,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsLaunchChildProcessType,
 
         [Parameter()]
-        [ValidateSet("userDefined", "enable","auditMode", "blockDiskModification", "auditDiskModification")]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
         [System.String]
         $GuardMyFoldersType,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedUSBProcessType,
 
@@ -61,22 +61,22 @@ function Get-TargetResource
         $AttackSurfaceReductionExcludedPaths,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedExecutableType,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "enable","auditMode", "warn", "disable")]
+        [ValidateSet('notConfigured', 'enable', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeCommunicationAppsLaunchChildProcess,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $EmailContentExecutionType,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptDownloadedPayloadExecutionType,
 
@@ -85,22 +85,22 @@ function Get-TargetResource
         $AdditionalGuardedFolders,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "enable","auditMode", "warn")]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'warn')]
         [System.String]
         $AdobeReaderLaunchChildProcess,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsExecutableContentCreationOrLaunchType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "enable","auditMode", "warn")]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'warn')]
         [System.String]
         $PreventCredentialStealingType,
 
         [Parameter()]
-        [ValidateSet("userDefined","block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsOtherProcessInjectionType,
 
@@ -115,7 +115,7 @@ function Get-TargetResource
         [Parameter(Mandatory = $True)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -130,12 +130,16 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Checking for the Intune Endpoint Protection Attack Surface Protection rules Policy {$DisplayName}"
@@ -144,20 +148,20 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta' -ErrorAction Stop
 
-    $context=Get-MgContext
-    if($null -eq $context)
+    $context = Get-MgContext
+    if ($null -eq $context)
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters -ProfileName 'beta' -ErrorAction Stop
     }
 
-    Write-Verbose -Message "Select-MgProfile"
+    Write-Verbose -Message 'Select-MgProfile'
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -191,28 +195,29 @@ function Get-TargetResource
             -DeviceManagementIntentId $Identity `
             -ErrorAction Stop
 
-        $definitionIdPrefix="windows10EndpointProtectionConfiguration_defender"
-        $returnHashtable=@{}
-        $returnHashtable.Add("Identity",$Identity)
-        $returnHashtable.Add("DisplayName",$policy.DisplayName)
-        $returnHashtable.Add("Description",$policy.Description)
+        $definitionIdPrefix = 'windows10EndpointProtectionConfiguration_defender'
+        $returnHashtable = @{}
+        $returnHashtable.Add('Identity', $Identity)
+        $returnHashtable.Add('DisplayName', $policy.DisplayName)
+        $returnHashtable.Add('Description', $policy.Description)
 
         foreach ($setting in $settings)
         {
-            $settingName=$setting.definitionId.replace("deviceConfiguration--$definitionIdPrefix","")
-            $settingValue= ($settings|Where-Object `
-                -FilterScript {$_.DefinitionId -like "*$settingName"}).ValueJson| ConvertFrom-Json
-            $returnHashtable.Add($settingName,$settingValue)
+            $settingName = $setting.definitionId.replace("deviceConfiguration--$definitionIdPrefix", '')
+            $settingValue = ($settings | Where-Object `
+                    -FilterScript { $_.DefinitionId -like "*$settingName" }).ValueJson | ConvertFrom-Json
+            $returnHashtable.Add($settingName, $settingValue)
         }
 
         Write-Verbose -Message "Found Endpoint Protection Attack Surface Protection rules Policy {$DisplayName}"
 
-        $returnHashtable.Add("Ensure","Present")
-        $returnHashtable.Add("Credential",$Credential)
-        $returnHashtable.Add("ApplicationId",$ApplicationId)
-        $returnHashtable.Add("TenantId",$TenantId)
-        $returnHashtable.Add("ApplicationSecret",$ApplicationSecret)
-        $returnHashtable.Add("CertificateThumbprint",$CertificateThumbprint)
+        $returnHashtable.Add('Ensure', 'Present')
+        $returnHashtable.Add('Credential', $Credential)
+        $returnHashtable.Add('ApplicationId', $ApplicationId)
+        $returnHashtable.Add('TenantId', $TenantId)
+        $returnHashtable.Add('ApplicationSecret', $ApplicationSecret)
+        $returnHashtable.Add('CertificateThumbprint', $CertificateThumbprint)
+        $returnHashtable.Add('ManagedIdentity', $ManagedIdentity.IsPresent)
 
         $returnAssignments=@()
         $returnAssignments+=Get-MgDeviceManagementIntentAssignment -DeviceManagementIntentId $policy.Id
@@ -236,7 +241,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             $tenantIdValue = $Credential.UserName.Split('@')[1]
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -268,42 +273,42 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ProcessCreationType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "enable","auditMode")]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode')]
         [System.String]
         $AdvancedRansomewareProtectionType,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $BlockPersistenceThroughWmiType,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptObfuscatedMacroCodeType,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeMacroCodeAllowWin32ImportsType,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsLaunchChildProcessType,
 
         [Parameter()]
-        [ValidateSet("userDefined", "enable","auditMode", "blockDiskModification", "auditDiskModification")]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
         [System.String]
         $GuardMyFoldersType,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedUSBProcessType,
 
@@ -312,22 +317,22 @@ function Set-TargetResource
         $AttackSurfaceReductionExcludedPaths,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedExecutableType,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "enable","auditMode", "warn", "disable")]
+        [ValidateSet('notConfigured', 'enable', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeCommunicationAppsLaunchChildProcess,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $EmailContentExecutionType,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptDownloadedPayloadExecutionType,
 
@@ -336,22 +341,22 @@ function Set-TargetResource
         $AdditionalGuardedFolders,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "enable","auditMode", "warn")]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'warn')]
         [System.String]
         $AdobeReaderLaunchChildProcess,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsExecutableContentCreationOrLaunchType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "enable","auditMode", "warn")]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'warn')]
         [System.String]
         $PreventCredentialStealingType,
 
         [Parameter()]
-        [ValidateSet("userDefined","block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsOtherProcessInjectionType,
 
@@ -366,7 +371,7 @@ function Set-TargetResource
         [Parameter(Mandatory = $True)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -381,12 +386,16 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -398,8 +407,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -407,15 +416,16 @@ function Set-TargetResource
     #endregion
 
     $currentPolicy = Get-TargetResource @PSBoundParameters
-    $PSBoundParameters.Remove("Ensure") | Out-Null
-    $PSBoundParameters.Remove("Credential") | Out-Null
-    $PSBoundParameters.Remove("ApplicationId") | Out-Null
-    $PSBoundParameters.Remove("TenantId") | Out-Null
-    $PSBoundParameters.Remove("ApplicationSecret") | Out-Null
-    $PSBoundParameters.Remove("CertificateThumbprint") | Out-Null
+    $PSBoundParameters.Remove('Ensure') | Out-Null
+    $PSBoundParameters.Remove('Credential') | Out-Null
+    $PSBoundParameters.Remove('ApplicationId') | Out-Null
+    $PSBoundParameters.Remove('TenantId') | Out-Null
+    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
+    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
+    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
 
-    $policyTemplateID='0e237410-1367-4844-bd7f-15fb0f08943b'
-    $definitionIdPrefix="windows10EndpointProtectionConfiguration_defender"
+    $policyTemplateID = '0e237410-1367-4844-bd7f-15fb0f08943b'
+    $definitionIdPrefix = 'windows10EndpointProtectionConfiguration_defender'
 
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
@@ -466,14 +476,14 @@ function Set-TargetResource
             -Description $Description `
             -DeviceManagementIntentId $Identity
 
-        $currentSettings=Get-MgDeviceManagementIntentSetting `
+        $currentSettings = Get-MgDeviceManagementIntentSetting `
             -DeviceManagementIntentId $Identity `
             -ErrorAction Stop
 
-        foreach($setting in $settings)
+        foreach ($setting in $settings)
         {
-            $mySetting=$currentSettings|Where-Object{$_.DefinitionId -eq $setting.DefinitionId}
-            $setting.add("id",$mySetting.Id)
+            $mySetting = $currentSettings | Where-Object{ $_.DefinitionId -eq $setting.DefinitionId }
+            $setting.add('id', $mySetting.Id)
         }
         $Uri="https://graph.microsoft.com/beta/deviceManagement/intents/$Identity/updateSettings"
         $body=@{"settings"=$settings}
@@ -516,42 +526,42 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ProcessCreationType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "enable","auditMode")]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode')]
         [System.String]
         $AdvancedRansomewareProtectionType,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $BlockPersistenceThroughWmiType,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptObfuscatedMacroCodeType,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeMacroCodeAllowWin32ImportsType,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsLaunchChildProcessType,
 
         [Parameter()]
-        [ValidateSet("userDefined", "enable","auditMode", "blockDiskModification", "auditDiskModification")]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
         [System.String]
         $GuardMyFoldersType,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedUSBProcessType,
 
@@ -560,22 +570,22 @@ function Test-TargetResource
         $AttackSurfaceReductionExcludedPaths,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedExecutableType,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "enable","auditMode", "warn", "disable")]
+        [ValidateSet('notConfigured', 'enable', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeCommunicationAppsLaunchChildProcess,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $EmailContentExecutionType,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptDownloadedPayloadExecutionType,
 
@@ -584,22 +594,22 @@ function Test-TargetResource
         $AdditionalGuardedFolders,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "enable","auditMode", "warn")]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'warn')]
         [System.String]
         $AdobeReaderLaunchChildProcess,
 
         [Parameter()]
-        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsExecutableContentCreationOrLaunchType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "enable","auditMode", "warn")]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'warn')]
         [System.String]
         $PreventCredentialStealingType,
 
         [Parameter()]
-        [ValidateSet("userDefined","block","auditMode", "warn", "disable")]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsOtherProcessInjectionType,
 
@@ -614,7 +624,7 @@ function Test-TargetResource
         [Parameter(Mandatory = $True)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -629,19 +639,23 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -753,12 +767,16 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -770,8 +788,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -788,7 +806,7 @@ function Export-TargetResource
             -ErrorAction Stop `
             -All:$true `
             -Filter $Filter `
-            | Where-Object -FilterScript {$_.TemplateId -eq $policyTemplateID}
+        | Where-Object -FilterScript { $_.TemplateId -eq $policyTemplateID }
 
         if ($policies.Length -eq 0)
         {
@@ -796,20 +814,21 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
         foreach ($policy in $policies)
         {
             Write-Host "    |---[$i/$($policies.Count)] $($policy.DisplayName)" -NoNewline
 
             $params = @{
-                Identity                            = $policy.Id
-                Ensure                              = 'Present'
-                Credential                          = $Credential
-                ApplicationId                       = $ApplicationId
-                TenantId                            = $TenantId
-                ApplicationSecret                   = $ApplicationSecret
-                CertificateThumbprint               = $CertificateThumbprint
+                Identity              = $policy.Id
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
 
             $Results = Get-TargetResource @params
@@ -877,7 +896,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 
@@ -899,28 +918,29 @@ function Get-M365DSCIntuneDeviceConfigurationSettings
     {
         if ($property -ne 'Verbose')
         {
-            $setting=@{}
-            switch (($properties.$property.gettype()).name) {
-                "String" {$settingType="#microsoft.graph.deviceManagementStringSettingInstance"}
-                "Boolean" {$settingType="#microsoft.graph.deviceManagementBooleanSettingInstance"}
-                "Int32" {$settingType="#microsoft.graph.deviceManagementIntegerSettingInstance"}
-                "String[]" {$settingType="#microsoft.graph.deviceManagementCollectionSettingInstance"}
-                Default {$settingType="#microsoft.graph.deviceManagementComplexSettingInstance"}
-            }
-            $settingDefinitionIdPrefix="deviceConfiguration--$DefinitionIdPrefix"
-            $settingDefinitionId =$settingDefinitionIdPrefix + $property
-            $setting.Add("@odata.type",$settingType)
-            $setting.Add("definitionId", $settingDefinitionId)
-            if("String[]" -eq ($properties.$property.gettype()).name -and $properties.$property.count -eq 0 )
+            $setting = @{}
+            switch (($properties.$property.gettype()).name)
             {
-                $setting.Add("valueJson", "[]")
+                'String' { $settingType = '#microsoft.graph.deviceManagementStringSettingInstance' }
+                'Boolean' { $settingType = '#microsoft.graph.deviceManagementBooleanSettingInstance' }
+                'Int32' { $settingType = '#microsoft.graph.deviceManagementIntegerSettingInstance' }
+                'String[]' { $settingType = '#microsoft.graph.deviceManagementCollectionSettingInstance' }
+                Default { $settingType = '#microsoft.graph.deviceManagementComplexSettingInstance' }
+            }
+            $settingDefinitionIdPrefix = "deviceConfiguration--$DefinitionIdPrefix"
+            $settingDefinitionId = $settingDefinitionIdPrefix + $property
+            $setting.Add('@odata.type', $settingType)
+            $setting.Add('definitionId', $settingDefinitionId)
+            if ('String[]' -eq ($properties.$property.gettype()).name -and $properties.$property.count -eq 0 )
+            {
+                $setting.Add('valueJson', '[]')
             }
             else
             {
-                $setting.Add("valueJson", ($properties.$property|ConvertTo-Json))
+                $setting.Add('valueJson', ($properties.$property | ConvertTo-Json))
             }
 
-            $results+=$setting
+            $results += $setting
         }
     }
     return $results

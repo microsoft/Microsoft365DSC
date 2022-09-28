@@ -25,9 +25,9 @@ function Get-TargetResource
         $Members,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -42,12 +42,16 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Group $DisplayName"
@@ -58,8 +62,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -67,7 +71,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -118,7 +122,7 @@ function Get-TargetResource
                 }
             }
 
-            $description = ""
+            $description = ''
             if ($null -ne $ADGroup[0].Description)
             {
                 $description = $ADGroup[0].Description.ToString()
@@ -135,7 +139,8 @@ function Get-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
-                Ensure                = "Present"
+                Managedidentity       = $ManagedIdentity.IsPresent
+                Ensure                = 'Present'
             }
             return $returnValue
         }
@@ -151,7 +156,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -198,9 +203,9 @@ function Set-TargetResource
         $Members,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -215,12 +220,16 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Group $DisplayName"
@@ -229,8 +238,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -241,17 +250,18 @@ function Set-TargetResource
 
     $currentGroup = Get-TargetResource @PSBoundParameters
 
-    if ($Ensure -eq "Present")
+    if ($Ensure -eq 'Present')
     {
         $CurrentParameters = $PSBoundParameters
-        $CurrentParameters.Remove("Ensure") | Out-Null
-        $CurrentParameters.Remove("Credential") | Out-Null
-        $CurrentParameters.Remove("ApplicationId") | Out-Null
-        $CurrentParameters.Remove("TenantId") | Out-Null
-        $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
-        $CurrentParameters.Remove("ApplicationSecret") | Out-Null
+        $CurrentParameters.Remove('Ensure') | Out-Null
+        $CurrentParameters.Remove('Credential') | Out-Null
+        $CurrentParameters.Remove('ApplicationId') | Out-Null
+        $CurrentParameters.Remove('TenantId') | Out-Null
+        $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
+        $CurrentParameters.Remove('ApplicationSecret') | Out-Null
+        $CurrentParameters.Remove('ManagedIdentity') | Out-Null
 
-        if ($currentGroup.Ensure -eq "Absent")
+        if ($currentGroup.Ensure -eq 'Absent')
         {
             Write-Verbose -Message "Creating Office 365 Group {$DisplayName}"
             $groupParams = @{
@@ -261,15 +271,15 @@ function Set-TargetResource
                 SecurityEnabled = $true
             }
 
-            if ("" -ne $MailNickName)
+            if ('' -ne $MailNickName)
             {
-                $groupParams.Add("mailNickName", $MailNickName)
+                $groupParams.Add('mailNickName', $MailNickName)
             }
-            Write-Verbose -Message "Initiating Group Creation"
+            Write-Verbose -Message 'Initiating Group Creation'
             Write-Verbose -Message "Owner = $($groupParams.Owners)"
             Write-Verbose -Message "Creating New Group with values: $(Convert-M365DscHashtableToString -Hashtable $groupParams)"
-            New-MgGroup @groupParams -GroupTypes @("Unified")
-            Write-Verbose -Message "Group Created"
+            New-MgGroup @groupParams -GroupTypes @('Unified')
+            Write-Verbose -Message 'Group Created'
         }
 
         [array]$ADGroup = Get-MgGroup -All:$true | Where-Object -FilterScript { $_.MailNickName -eq $MailNickName }
@@ -307,19 +317,19 @@ function Set-TargetResource
 
             if ($null -ne $difference.InputObject)
             {
-                Write-Verbose -Message "Detected a difference in the current list of members and the desired one"
+                Write-Verbose -Message 'Detected a difference in the current list of members and the desired one'
                 $membersToRemove = @()
                 $membersToAdd = @()
                 foreach ($diff in $difference)
                 {
                     if (-not $ManagedBy.Contains($diff.InputObject))
                     {
-                        if ($diff.SideIndicator -eq "<=" -and $diff.InputObject -ne $ManagedBy.Split('@')[0])
+                        if ($diff.SideIndicator -eq '<=' -and $diff.InputObject -ne $ManagedBy.Split('@')[0])
                         {
                             Write-Verbose "Will be removing Member: {$($diff.InputObject)}"
                             $membersToRemove += $diff.InputObject
                         }
-                        elseif ($diff.SideIndicator -eq "=>")
+                        elseif ($diff.SideIndicator -eq '=>')
                         {
                             Write-Verbose "Will be adding Member: {$($diff.InputObject)}"
                             $membersToAdd += $diff.InputObject
@@ -364,17 +374,17 @@ function Set-TargetResource
 
             if ($null -ne $difference.InputObject)
             {
-                Write-Verbose -Message "Detected a difference in the current list of members and the desired one"
+                Write-Verbose -Message 'Detected a difference in the current list of members and the desired one'
                 $ownersToRemove = @()
                 $ownersToAdd = @()
                 foreach ($diff in $difference)
                 {
-                    if ($diff.SideIndicator -eq "<=")
+                    if ($diff.SideIndicator -eq '<=')
                     {
-                            Write-Verbose "Will be removing Member: {$($diff.InputObject)}"
-                            $ownersToRemove += $diff.InputObject
+                        Write-Verbose "Will be removing Member: {$($diff.InputObject)}"
+                        $ownersToRemove += $diff.InputObject
                     }
-                    elseif ($diff.SideIndicator -eq "=>")
+                    elseif ($diff.SideIndicator -eq '=>')
                     {
                         Write-Verbose "Will be adding Owner: {$($diff.InputObject)}"
                         $ownersToAdd += $diff.InputObject
@@ -386,7 +396,7 @@ function Set-TargetResource
                     Write-Verbose -Message "Adding Owner {$owner}"
                     $userId = (Get-MgUser -UserId $owner).Id
                     $newGroupOwner = @{
-                        "@odata.id"= "https://graph.microsoft.com/v1.0/users/{$userId}"
+                        '@odata.id' = "https://graph.microsoft.com/v1.0/users/{$userId}"
                     }
 
                     New-MgGroupOwnerByRef -GroupId $ADGroup[0].Id -BodyParameter $newGroupOwner
@@ -405,17 +415,17 @@ function Set-TargetResource
         }
         #endregion
     }
-    elseif ($Ensure -eq "Absent")
+    elseif ($Ensure -eq 'Absent')
     {
         if ($ADGroup.Length -eq 1)
         {
             Write-Verbose -Message "Removing O365Group $($existingO365Group.Name)"
-            Remove-MgGroup -GroupId $ADGroup[0].Id -confirm:$false | Out-Null
+            Remove-MgGroup -GroupId $ADGroup[0].Id -Confirm:$false | Out-Null
         }
         else
         {
             Write-Verbose -Message "There was more than one group identified with the name $($currentGroup.MailNickName)."
-            Write-Verbose -Message "No action taken. Please remove the group manually."
+            Write-Verbose -Message 'No action taken. Please remove the group manually.'
         }
     }
 }
@@ -447,9 +457,9 @@ function Test-TargetResource
         $Members,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -464,19 +474,23 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -522,12 +536,16 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -537,8 +555,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -549,7 +567,7 @@ function Export-TargetResource
     {
         $dscContent = ''
         $groups = Get-MgGroup -All:$true -Filter $Filter | Where-Object -FilterScript {
-            $_.MailNickName -ne "00000000-0000-0000-0000-000000000000"
+            $_.MailNickName -ne '00000000-0000-0000-0000-000000000000'
         }
 
         $i = 1
@@ -562,9 +580,10 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
                 ApplicationSecret     = $ApplicationSecret
                 DisplayName           = $group.DisplayName
-                ManagedBy             = "DummyUser"
+                ManagedBy             = 'DummyUser'
                 MailNickName          = $group.MailNickName
             }
             $Results = Get-TargetResource @Params
@@ -589,7 +608,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -606,7 +625,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 
