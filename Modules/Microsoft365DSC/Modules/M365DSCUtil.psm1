@@ -3775,9 +3775,30 @@ function Test-M365DSCModuleValidity
     if ($latestVersion -gt $localVersion)
     {
         Write-Host "There is a newer version of the 'Microsoft365DSC' module available on the gallery."
-        Write-Host "To update the module and it's dependencies, run the following commands:"
-        Write-Host "Update-Module -Name 'Microsoft365DSC' -Force`nUpdate-M365DSCDependencies -Force`nUninstall-M365DSCOutdatedDependencies" -ForegroundColor Blue
+        Write-Host "To update the module and it's dependencies, run the following command:"
+        Write-Host "Update-M365DSCModule" -ForegroundColor Blue
     }
+}
+
+
+<#
+.Description
+This function updates the module, dependencies and uninstalls outdated dependencies.
+
+.Example
+Update-M365DSCModule
+
+.Functionality
+Public
+#>
+function Update-M365DSCModule
+{
+    [CmdletBinding()]
+    param (
+    )
+    Update-Module -Name 'Microsoft365DSC'
+    Update-M365DSCDependencies
+    Uninstall-M365DSCOutdatedDependencies
 }
 
 Export-ModuleMember -Function @(
@@ -3819,5 +3840,6 @@ Export-ModuleMember -Function @(
     'Uninstall-M365DSCOutdatedDependencies',
     'Update-M365DSCDependencies',
     'Update-M365DSCExportAuthenticationResults',
+    'Update-M365DSCModule',
     'Test-M365DSCModuleValidity'
 )

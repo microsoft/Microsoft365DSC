@@ -341,39 +341,39 @@ function Get-TargetResource
         $LockScreenBlockTodayView,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingAustralia,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingCanada,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingFrance,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingGermany,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingIreland,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingJapan,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingNewZealand,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingUnitedKingdom,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingUnitedStates,
 
         [Parameter()]
@@ -564,6 +564,51 @@ function Get-TargetResource
             return $nullResult
         }
 
+        if (-not [System.String]::IsNullOrEmpty($policy.AdditionalProperties.mediaContentRatingAustralia))
+        {
+            $ConvertedMediaContentRatingAustralia = Get-IntuneMediaContentRating $policy.AdditionalProperties.mediaContentRatingAustralia
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($policy.AdditionalProperties.mediaContentRatingCanada))
+        {
+            $ConvertedMediaContentRatingCanada = Get-IntuneMediaContentRating $policy.AdditionalProperties.mediaContentRatingCanada
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($policy.AdditionalProperties.mdiaContentRatingFrance))
+        {
+            $ConvertedMediaContentRatingFrance = Get-IntuneMediaContentRating $policy.AdditionalProperties.mediaContentRatingFrance
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($policy.AdditionalProperties.mediaContentRatingGermany))
+        {
+            $ConvertedMediaContentRatingGermany = Get-IntuneMediaContentRating $policy.AdditionalProperties.mediaContentRatingGermany
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($policy.AdditionalProperties.mediaContentRatingIreland))
+        {
+            $ConvertedMediaContentRatingIreland = Get-IntuneMediaContentRating $policy.AdditionalProperties.mediaContentRatingIreland
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($policy.AdditionalProperties.mediaContentRatingJapan))
+        {
+            $ConvertedMediaContentRatingJapan = Get-IntuneMediaContentRating $policy.AdditionalProperties.mediaContentRatingJapan
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($policy.AdditionalProperties.mediaContentRatingNewZealand))
+        {
+            $ConvertedMediaContentRatingNewZealand = Get-IntuneMediaContentRating $policy.AdditionalProperties.mediaContentRatingNewZealand
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($policy.AdditionalProperties.mediaContentRatingUnitedKingdom))
+        {
+            $ConvertedMediaContentRatingUnitedKingdom = Get-IntuneMediaContentRating $policy.AdditionalProperties.mediaContentRatingUnitedKingdom
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($policy.AdditionalProperties.mediaContentRatingUnitedStates))
+        {
+            $ConvertedMediaContentRatingUnitedStates = Get-IntuneMediaContentRating $policy.AdditionalProperties.mediaContentRatingUnitedStates
+        }
+
         Write-Verbose -Message "Found Device Configuration Policy {$DisplayName}"
         return @{
             DisplayName                                    = $policy.DisplayName
@@ -650,15 +695,15 @@ function Get-TargetResource
             LockScreenBlockNotificationView                = $policy.AdditionalProperties.lockScreenBlockNotificationView
             LockScreenBlockPassbook                        = $policy.AdditionalProperties.lockScreenBlockPassbook
             LockScreenBlockTodayView                       = $policy.AdditionalProperties.lockScreenBlockTodayView
-            MediaContentRatingAustralia                    = $policy.AdditionalProperties.mediaContentRatingAustralia
-            MediaContentRatingCanada                       = $policy.AdditionalProperties.mediaContentRatingCanada
-            MediaContentRatingFrance                       = $policy.AdditionalProperties.mediaContentRatingFrance
-            MediaContentRatingGermany                      = $policy.AdditionalProperties.mediaContentRatingGermany
-            MediaContentRatingIreland                      = $policy.AdditionalProperties.mediaContentRatingIreland
-            MediaContentRatingJapan                        = $policy.AdditionalProperties.mediaContentRatingJapan
-            MediaContentRatingNewZealand                   = $policy.AdditionalProperties.mediaContentRatingNewZealand
-            MediaContentRatingUnitedKingdom                = $policy.AdditionalProperties.mediaContentRatingUnitedKingdom
-            MediaContentRatingUnitedStates                 = $policy.AdditionalProperties.mediaContentRatingUnitedStates
+            MediaContentRatingAustralia                    = $ConvertedMediaContentRatingAustralia
+            MediaContentRatingCanada                       = $ConvertedMediaContentRatingCanada
+            MediaContentRatingFrance                       = $ConvertedMediaContentRatingFrance
+            MediaContentRatingGermany                      = $ConvertedMediaContentRatingGermany
+            MediaContentRatingIreland                      = $ConvertedMediaContentRatingIreland
+            MediaContentRatingJapan                        = $ConvertedMediaContentRatingJapan
+            MediaContentRatingNewZealand                   = $ConvertedMediaContentRatingNewZealand
+            MediaContentRatingUnitedKingdom                = $ConvertedMediaContentRatingUnitedKingdom
+            MediaContentRatingUnitedStates                 = $ConvertedMediaContentRatingUnitedStates
             MediaContentRatingApps                         = $policy.AdditionalProperties.mediaContentRatingApps
             MessagesBlocked                                = $policy.AdditionalProperties.messagesBlocked
             NotificationsBlockSettingsModification         = $policy.AdditionalProperties.notificationsBlockSettingsModification
@@ -1061,39 +1106,39 @@ function Set-TargetResource
         $LockScreenBlockTodayView,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingAustralia,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingCanada,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingFrance,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingGermany,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingIreland,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingJapan,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingNewZealand,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingUnitedKingdom,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingUnitedStates,
 
         [Parameter()]
@@ -1276,12 +1321,15 @@ function Set-TargetResource
     $PSBoundParameters.Remove('ApplicationId') | Out-Null
     $PSBoundParameters.Remove('TenantId') | Out-Null
     $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
+
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Device Configuration Policy {$DisplayName}"
         $PSBoundParameters.Remove('DisplayName') | Out-Null
         $PSBoundParameters.Remove('Description') | Out-Null
         $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationPolicyiOSAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+
+        Write-Verbose -Message "Additional Properties: $(Convert-M365DscHashtableToString -Hashtable $AdditionalProperties)"
         New-MgDeviceManagementDeviceConfiguration -DisplayName $DisplayName `
             -Description $Description `
             -AdditionalProperties $AdditionalProperties
@@ -1656,19 +1704,19 @@ function Test-TargetResource
         $LockScreenBlockTodayView,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingAustralia,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingCanada,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingFrance,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingGermany,
 
         [Parameter()]
@@ -1676,19 +1724,19 @@ function Test-TargetResource
         $MediaContentRatingIreland,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingJapan,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingNewZealand,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingUnitedKingdom,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MediaContentRatingUnitedStates,
 
         [Parameter()]
@@ -1960,6 +2008,52 @@ function Export-TargetResource
                 Managedidentity       = $ManagedIdentity.IsPresent
             }
             $Results = Get-TargetResource @Params
+
+            if (-not [System.String]::IsNullOrEmpty($Results.MediaContentRatingAustralia))
+            {
+                $Results.MediaContentRatingAustralia = Get-IntuneMediaContentRatingAsString $Results.MediaContentRatingAustralia
+            }
+
+            if (-not [System.String]::IsNullOrEmpty($Results.MediaContentRatingCanada))
+            {
+                $Results.MediaContentRatingCanada = Get-IntuneMediaContentRatingAsString $Results.MediaContentRatingCanada
+            }
+
+            if (-not [System.String]::IsNullOrEmpty($Results.MediaContentRatingFrance))
+            {
+                $Results.MediaContentRatingFrance = Get-IntuneMediaContentRatingAsString $Results.MediaContentRatingFrance
+            }
+
+            if (-not [System.String]::IsNullOrEmpty($Results.MediaContentRatingGermany))
+            {
+                $Results.MediaContentRatingGermany = Get-IntuneMediaContentRatingAsString $Results.MediaContentRatingGermany
+            }
+
+            if (-not [System.String]::IsNullOrEmpty($Results.MediaContentRatingIreland))
+            {
+                $Results.MediaContentRatingIreland = Get-IntuneMediaContentRatingAsString $Results.MediaContentRatingIreland
+            }
+
+            if (-not [System.String]::IsNullOrEmpty($Results.MediaContentRatingJapan))
+            {
+                $Results.MediaContentRatingJapan = Get-IntuneMediaContentRatingAsString $Results.MediaContentRatingJapan
+            }
+
+            if (-not [System.String]::IsNullOrEmpty($Results.MediaContentRatingNewZealand))
+            {
+                $Results.MediaContentRatingNewZealand = Get-IntuneMediaContentRatingAsString $Results.MediaContentRatingNewZealand
+            }
+
+            if (-not [System.String]::IsNullOrEmpty($Results.MediaContentRatingUnitedKingdom))
+            {
+                $Results.MediaContentRatingUnitedKingdom = Get-IntuneMediaContentRatingAsString $Results.MediaContentRatingUnitedKingdom
+            }
+
+            if (-not [System.String]::IsNullOrEmpty($Results.MediaContentRatingUnitedStates))
+            {
+                $Results.MediaContentRatingUnitedStates = Get-IntuneMediaContentRatingAsString $Results.MediaContentRatingUnitedStates
+            }
+
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -1967,6 +2061,43 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
+
+            if ($null -ne $Results.MediaContentRatingAustralia)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingAustralia"
+            }
+            if ($null -ne $Results.MediaContentRatingCanada)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingCanada"
+            }
+            if ($null -ne $Results.MediaContentRatingFrance)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingFrance"
+            }
+            if ($null -ne $Results.MediaContentRatingGermany)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingGermany"
+            }
+            if ($null -ne $Results.MediaContentRatingIreland)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingIreland"
+            }
+            if ($null -ne $Results.MediaContentRatingJapan)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingJapan"
+            }
+            if ($null -ne $Results.MediaContentRatingNewZealand)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingNewZealand"
+            }
+            if ($null -ne $Results.MediaContentRatingUnitedKingdom)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingUnitedKingdom"
+            }
+            if ($null -ne $Results.MediaContentRatingUnitedStates)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingUnitedStates"
+            }
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -2016,10 +2147,55 @@ function Get-M365DSCIntuneDeviceConfigurationPolicyiOSAdditionalProperties
         {
             $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
             $propertyValue = $properties.$property
+
+            if ($propertyName -like 'MediaContentRating*' -and $propertyName -ne 'MediaContentRatingApps')
+            {
+                $countryName = $propertyName.Replace('MediaContentRating', '')
+                $newValue = @{
+                    '@odata.type' = "microsoft.graph.mediaContentRating$countryName"
+                    tvRating      = $propertyValue.TVRating
+                    movieRating   = $propertyValue.MovieRating
+                }
+                $propertyValue = $newValue
+            }
             $results.Add($propertyName, $propertyValue)
         }
     }
     return $results
+}
+
+
+function Get-IntuneMediaContentRating
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Object]
+        $MediaContentRatingInfo
+    )
+
+    $result = @{
+        MovieRating = $MediaContentRatingInfo.movieRating
+        TVRating    = $MediaContentRatingInfo.tvRating
+    }
+
+    return $result
+}
+
+function Get-IntuneMediaContentRatingAsString($params)
+{
+    if ($null -eq $params)
+    {
+        return $null
+    }
+    $currentProperty = "MSFT_IntuneMediaContentRating{`r`n"
+    foreach ($key in $params.Keys)
+    {
+        $currentProperty += "                " + $key + " = '" + $params[$key] + "'`r`n"
+    }
+    $currentProperty += "            }"
+    return $currentProperty
 }
 
 Export-ModuleMember -Function *-TargetResource
