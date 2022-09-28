@@ -11,7 +11,7 @@
 | **Ensure** | Write | String | Only accepted value is 'Present'. |Present|
 | **Credential** | Write | PSCredential | Credentials of the Global Admin. ||
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
-| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory application to authenticate with. ||
+| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory application to authenticate with. ||
 | **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
