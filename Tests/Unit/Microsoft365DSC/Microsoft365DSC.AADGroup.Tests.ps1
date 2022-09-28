@@ -149,8 +149,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgGroup -MockWith {
                     return @{
-                        DisplayName = "DSCGroup"
-                        ID = "12345-12345-12345-12345-12345"
+                        DisplayName                   = "DSCGroup"
+                        ID                            = "12345-12345-12345-12345-12345"
                     }
                 }
             }
@@ -160,7 +160,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Should -Invoke -CommandName "Get-MgGroup" -Exactly 1
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
@@ -239,7 +239,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ID                            = "12345-12345-12345-12345"
                         Description                   = "Microsoft DSC Group"
                         SecurityEnabled               = $True
-                        MailEnabled                   = $False
                         MailNickname                  = "M365DSC"
                         GroupTypes                    = @()
                     }
@@ -402,7 +401,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ID                            = "12345-12345-12345-12345"
                         Description                   = "Microsoft DSC Group"
                         SecurityEnabled               = $True
-                        MailEnabled                   = $False
                         MailNickname                  = "M365DSC"
                         GroupTypes                    = @()
                     }
@@ -414,7 +412,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description                   = "Microsoft DSC MemberOf Group"
                         SecurityEnabled               = $True
                         GroupTypes                    = @()
-                        MailEnabled                   = $False
                         MailNickname                  = "M365DSCM"
                     }
                     # Set-TargetResource expects object-type of answer to contain 'group'
