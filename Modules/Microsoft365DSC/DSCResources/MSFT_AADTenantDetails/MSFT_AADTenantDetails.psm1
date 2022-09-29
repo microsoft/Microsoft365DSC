@@ -200,6 +200,10 @@ function Set-TargetResource
     {
         $currentParameters.Remove('ApplicationId') | Out-Null
     }
+    if ($currentParameters.ContainsKey('ApplicationSecret'))
+    {
+        $currentParameters.Remove('ApplicationSecret') | Out-Null
+    }
     if ($currentParameters.ContainsKey('TenantId'))
     {
         $currentParameters.Remove('TenantId') | Out-Null

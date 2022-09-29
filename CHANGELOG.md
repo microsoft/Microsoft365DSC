@@ -9,6 +9,9 @@
 * AADGroup
   * Added properties MemberOf and AssignedToRole
   Implements [#2301](https://github.com/microsoft/Microsoft365DSC/issues/2301)
+* AADTenantDetails
+  * Fixed an issue where ApplicationSecret was send to Update-MgOrganization
+* FIXES [[#2340](https://github.com/microsoft/Microsoft365DSC/issues/2340)]
 * EXOATPPolicyForO365
   * [BREAKING] Removed the deprecated BlockURLs, AllowClickThrough, EnableSafeLinksForO365Clients and TrackClicks parameters.
 * EXOMailContact
