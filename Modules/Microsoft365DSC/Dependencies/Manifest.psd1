@@ -61,6 +61,10 @@
             RequiredVersion = '1.12.1'
         },
         @{
+            ModuleName      = 'Microsoft.Graph.Users.Actions'
+            RequiredVersion = '1.11.1'
+        },
+        @{
             ModuleName      = 'Microsoft.PowerApps.Administration.PowerShell'
             RequiredVersion = '2.0.152'
         },
@@ -70,7 +74,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.89"
+            RequiredVersion = "1.0.92"
         },
         @{
             ModuleName      = 'PnP.PowerShell'

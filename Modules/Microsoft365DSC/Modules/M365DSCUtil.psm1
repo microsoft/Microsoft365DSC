@@ -5,7 +5,7 @@ $Global:SessionSecurityCompliance = $null
 
 #region Extraction Modes
 $Global:DefaultComponents = @('SPOApp', 'SPOSiteDesign')
-$Global:FullComponents = @('AADMSGroup', 'AADServicePrincipal', 'EXOMailboxSettings', 'EXOManagementRole', 'O365Group', 'O365User', `
+$Global:FullComponents = @('AADGroup', 'AADServicePrincipal', 'EXOMailboxSettings', 'EXOManagementRole', 'O365Group', 'AADUSer', `
         'PlannerPlan', 'PlannerBucket', 'PlannerTask', 'PPPowerAppsEnvironment', 'PPTenantSettings', `
         'SPOSiteAuditSettings', 'SPOSiteGroup', 'SPOSite', 'SPOUserProfileProperty', 'SPOPropertyBag', 'TeamsTeam', 'TeamsChannel', `
         'TeamsUser', 'TeamsChannelTab')
@@ -1838,6 +1838,7 @@ function New-M365DSCConnection
         Write-Verbose -Message 'Connecting via managed identity'
         Connect-M365Tenant -Workload $Workload `
             -Identity `
+            -TenantId $InboundParameters.TenantId `
             -SkipModuleReload $Global:CurrentModeIsExport `
             -ProfileName $ProfileName
 
@@ -2883,7 +2884,7 @@ function Update-M365DSCExportAuthenticationResults
         }
         if (-not [System.String]::IsNullOrEmpty($Results.ApplicationSecret))
         {
-            $Results.ApplicationSecret = "`$ConfigurationData.NonNodeData.ApplicationSecret"
+            $Results.ApplicationSecret = "New-Object System.Management.Automation.PSCredential ('ApplicationSecret', (ConvertTo-SecureString `$ConfigurationData.NonNodeData.ApplicationSecret -AsPlainText -Force))"
         }
         else
         {
@@ -3310,7 +3311,7 @@ This function returns the used workloads for the specified DSC resources
 Specifies the resources for which the workloads should be determined.
 
 .Example
-Get-M365DSCWorkloadsListFromResourceNames -ResourceNames O365User
+Get-M365DSCWorkloadsListFromResourceNames -ResourceNames AADUSer
 
 .Functionality
 Public
@@ -3776,7 +3777,7 @@ function Test-M365DSCModuleValidity
     {
         Write-Host "There is a newer version of the 'Microsoft365DSC' module available on the gallery."
         Write-Host "To update the module and it's dependencies, run the following command:"
-        Write-Host "Update-M365DSCModule" -ForegroundColor Blue
+        Write-Host 'Update-M365DSCModule' -ForegroundColor Blue
     }
 }
 

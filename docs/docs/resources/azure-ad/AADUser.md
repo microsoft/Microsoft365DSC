@@ -1,4 +1,4 @@
-﻿# O365User
+﻿# AADUser
 
 ## Parameters
 
@@ -8,6 +8,7 @@
 | **DisplayName** | Write | String | The display name for the user ||
 | **FirstName** | Write | String | The first name of the user ||
 | **LastName** | Write | String | The last name of the user ||
+| **Roles** | Write | StringArray[] | The list of Azure Active Directory roles assigned to the user. ||
 | **UsageLocation** | Write | String | The country code the user will be assigned to ||
 | **LicenseAssignment** | Write | StringArray[] | The account SKU Id for the license to be assigned to the user ||
 | **Password** | Write | PSCredential | The password for the account. The parameter is a PSCredential object, but only the Password component will be used ||
@@ -34,11 +35,11 @@
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. ||
 
-# O365User
+# AADUser
 
 ### Description
 
-This resource allows users to create Office 365 Users and assign them licenses.
+This resource allows users to create Azure AD Users and assign them licenses.
 
 ## Examples
 
@@ -59,7 +60,7 @@ Configuration Example
 
     node localhost
     {
-        O365User 'ConfigureJohnSMith'
+        AADUser 'ConfigureJohnSMith'
         {
             UserPrincipalName  = "John.Smith@O365DSC1.onmicrosoft.com"
             FirstName          = "John"

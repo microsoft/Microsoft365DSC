@@ -69,9 +69,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                      = 'Default'
                     Credential                    = $Credential
                     AllowSafeDocsOpen             = $false
-                    BlockUrls                     = @()
                     EnableATPForSPOTeamsODB       = $true
-                    TrackClicks                   = $true
                 }
 
                 Mock -CommandName Get-AtpPolicyForO365 -MockWith {
@@ -101,9 +99,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                      = 'Default'
                     Credential                    = $Credential
                     AllowSafeDocsOpen             = $false
-                    BlockUrls                     = @()
                     EnableATPForSPOTeamsODB       = $true
-                    TrackClicks                   = $true
                 }
                 Mock -CommandName Get-AtpPolicyForO365 -MockWith {
                     return @{
@@ -136,16 +132,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                      = 'Invalid'
                     Credential                    = $Credential
                     AllowSafeDocsOpen             = $false
-                    BlockUrls                     = @()
                     EnableATPForSPOTeamsODB       = $true
-                    TrackClicks                   = $true
                 }
                 Mock -CommandName Get-AtpPolicyForO365 -MockWith {
                     return @{
                         Ensure                        = 'Present'
                         Identity                      = 'Default2' # Drift
                         AllowSafeDocsOpen             = $false
-                        BlockUrls                     = @()
                         EnableATPForSPOTeamsODB       = $false
                         TrackClicks                   = $false
                     }
