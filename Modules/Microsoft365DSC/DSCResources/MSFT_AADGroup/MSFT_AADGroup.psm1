@@ -158,7 +158,7 @@ function Get-TargetResource
             Write-Verbose -Message 'Found existing AzureAD Group'
 
             # Owners
-            [Array]$owners = Get-MgGroupOwner -GroupId $Group.Id -All
+            [Array]$owners = Get-MgGroupOwner -GroupId $Group.Id -All:$true
             $OwnersValues = @()
             foreach ($owner in $owners)
             {
@@ -172,7 +172,7 @@ function Get-TargetResource
             if ($Group.MembershipRuleProcessingState -ne 'On')
             {
                 # Members
-                [Array]$members = Get-MgGroupMember -GroupId $Group.Id -All
+                [Array]$members = Get-MgGroupMember -GroupId $Group.Id -All:$true
                 $MembersValues = @()
                 foreach ($member in $members)
                 {
@@ -1017,7 +1017,7 @@ function Export-TargetResource
 
     try
     {
-        [array] $groups = Get-MgGroup -Filter $Filter -All -ErrorAction Stop
+        [array] $groups = Get-MgGroup -Filter $Filter -All:$true -ErrorAction Stop
         $i = 1
         $dscContent = ''
         Write-Host "`r`n" -NoNewline
