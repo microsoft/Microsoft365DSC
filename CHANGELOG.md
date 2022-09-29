@@ -6,6 +6,9 @@
   * Renamed from O365User
   * Added support for Roles.
   FIXES [#2288](https://github.com/microsoft/Microsoft365DSC/issues/2288)
+* AADGroup
+  * Added properties MemberOf and AssignedToRole
+  Implements [#2301](https://github.com/microsoft/Microsoft365DSC/issues/2301)
 * EXOATPPolicyForO365
   * [BREAKING] Removed the deprecated BlockURLs, AllowClickThrough, EnableSafeLinksForO365Clients and TrackClicks parameters.
 * EXOMailContact
