@@ -75,7 +75,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration of SafeAttachmentRule for $Identity"
@@ -96,7 +100,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -142,12 +146,13 @@ function Get-TargetResource
                 RecipientDomainIs         = $SafeAttachmentRule.RecipientDomainIs
                 SentTo                    = $SafeAttachmentRule.SentTo
                 SentToMemberOf            = $SafeAttachmentRule.SentToMemberOf
-                Credential        = $Credential
+                Credential                = $Credential
                 ApplicationId             = $ApplicationId
                 CertificateThumbprint     = $CertificateThumbprint
                 CertificatePath           = $CertificatePath
                 CertificatePassword       = $CertificatePassword
                 TenantId                  = $TenantId
+                Managedidentity           = $ManagedIdentity.IsPresent
             }
             if ('Enabled' -eq $SafeAttachmentRule.State)
             {
@@ -266,7 +271,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of SafeAttachmentRule for $Identity"
@@ -275,7 +284,7 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -295,6 +304,7 @@ function Set-TargetResource
     $SafeAttachmentRuleParams.Remove('CertificateThumbprint') | Out-Null
     $SafeAttachmentRuleParams.Remove('CertificatePath') | Out-Null
     $SafeAttachmentRuleParams.Remove('CertificatePassword') | Out-Null
+    $SafeAttachmentRuleParams.Remove('ManagedIdentity') | Out-Null
 
     if (('Present' -eq $Ensure ) -and (-not $SafeAttachmentRule))
     {
@@ -303,7 +313,7 @@ function Set-TargetResource
 
     elseif (('Present' -eq $Ensure ) -and ($SafeAttachmentRule))
     {
-         if ($SafeAttachmentRuleParams.Enabled -and ('Disabled' -eq $SafeAttachmentRule.State))
+        if ($SafeAttachmentRuleParams.Enabled -and ('Disabled' -eq $SafeAttachmentRule.State))
         {
             # New-SafeAttachmentRule has the Enabled parameter, Set-SafeAttachmentRule does not.
             # There doesn't appear to be any way to change the Enabled state of a rule once created.
@@ -409,14 +419,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -437,6 +451,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -476,7 +491,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -487,7 +506,7 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -517,12 +536,13 @@ function Export-TargetResource
                 $Params = @{
                     Identity              = $SafeAttachmentRule.Identity
                     SafeAttachmentPolicy  = $SafeAttachmentRule.SafeAttachmentPolicy
-                    Credential    = $Credential
+                    Credential            = $Credential
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     CertificatePassword   = $CertificatePassword
                     CertificatePath       = $CertificatePath
+                    Managedidentity       = $ManagedIdentity.IsPresent
                 }
                 $Results = Get-TargetResource @Params
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

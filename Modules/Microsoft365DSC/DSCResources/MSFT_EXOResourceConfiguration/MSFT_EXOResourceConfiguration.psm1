@@ -39,7 +39,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Getting Resource Configuration"
 
@@ -60,7 +64,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -74,21 +78,22 @@ function Get-TargetResource
     {
         #Get-Resourceconfig do NOT accept ErrorAction parameter
         $ResourceConfiguration = Get-ResourceConfig 2>&1
-        if($null -ne ($ResourceConfiguration |Where-Object {$_.gettype().Name -like "*ErrorRecord*"}))
+        if ($null -ne ($ResourceConfiguration | Where-Object { $_.gettype().Name -like "*ErrorRecord*" }))
         {
             throw $ResourceConfiguration
         }
 
         $result = @{
-            Identity                     = $ResourceConfiguration.Identity
-            ResourcePropertySchema       = $ResourceConfiguration.ResourcePropertySchema
-            Credential                   = $Credential
-            Ensure                       = 'Present'
-            ApplicationId                = $ApplicationId
-            CertificateThumbprint        = $CertificateThumbprint
-            CertificatePath              = $CertificatePath
-            CertificatePassword          = $CertificatePassword
-            TenantId                     = $TenantId
+            Identity               = $ResourceConfiguration.Identity
+            ResourcePropertySchema = $ResourceConfiguration.ResourcePropertySchema
+            Credential             = $Credential
+            Ensure                 = 'Present'
+            ApplicationId          = $ApplicationId
+            CertificateThumbprint  = $CertificateThumbprint
+            CertificatePath        = $CertificatePath
+            CertificatePassword    = $CertificatePassword
+            TenantId               = $TenantId
+            Managedidentity        = $ManagedIdentity.IsPresent
         }
 
         Write-Verbose -Message "Found resource configuration "
@@ -161,14 +166,18 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -188,6 +197,7 @@ function Set-TargetResource
     $ResourceConfigurationParams.Remove('CertificateThumbprint') | Out-Null
     $ResourceConfigurationParams.Remove('CertificatePath') | Out-Null
     $ResourceConfigurationParams.Remove('CertificatePassword') | Out-Null
+    $ResourceConfigurationParams.Remove('ManagedIdentity') | Out-Null
     $ResourceConfigurationParams.Remove('Identity') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($Null -ne $ResourceConfigurationParams))
@@ -238,14 +248,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -266,6 +280,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -318,7 +333,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' -InboundParameters $PSBoundParameters -SkipModuleReload $true
 
@@ -327,7 +346,7 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -337,7 +356,7 @@ function Export-TargetResource
     try
     {
         $ResourceConfiguration = Get-ResourceConfig 2>&1
-        if($null -ne ($ResourceConfiguration |Where-Object {$_.gettype().Name -like "*ErrorRecord*"}))
+        if ($null -ne ($ResourceConfiguration | Where-Object { $_.gettype().Name -like "*ErrorRecord*" }))
         {
             throw $ResourceConfiguration
         }
@@ -355,6 +374,7 @@ function Export-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
 
         $Results = Get-TargetResource @Params

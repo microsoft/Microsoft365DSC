@@ -159,7 +159,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration of AntiPhishPolicy for $Identity"
@@ -250,6 +254,7 @@ function Get-TargetResource
                 CertificatePath                               = $CertificatePath
                 CertificatePassword                           = $CertificatePassword
                 TenantId                                      = $TenantId
+                Managedidentity           = $ManagedIdentity.IsPresent
             }
 
             Write-Verbose -Message "Found AntiPhishPolicy $($Identity)"
@@ -443,7 +448,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     if ($EnableAntispoofEnforcement)
@@ -483,6 +492,7 @@ function Set-TargetResource
     $PSBoundParameters.Remove("CertificatePassword") | Out-Null
     $PSBoundParameters.Remove("CertificatePath") | Out-Null
     $PSBoundParameters.Remove("Credential") | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     if (('Present' -eq $Ensure ) -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -668,7 +678,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -731,7 +745,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -775,6 +793,7 @@ function Export-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
+                Managedidentity           = $ManagedIdentity.IsPresent
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

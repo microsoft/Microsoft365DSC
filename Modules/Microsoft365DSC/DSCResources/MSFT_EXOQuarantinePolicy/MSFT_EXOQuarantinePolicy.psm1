@@ -59,7 +59,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration of QuarantinePolicy for $($Identity)"
@@ -103,7 +107,8 @@ function Get-TargetResource
         else
         {
             $EndUserQuarantinePermissionsValueDecimal = 0
-            if ($QuarantinePolicy.EndUserQuarantinePermissions) {
+            if ($QuarantinePolicy.EndUserQuarantinePermissions)
+            {
                 # Convert string output of EndUserQuarantinePermissions to binary value and then to decimal value
                 # needed for EndUserQuarantinePermissionsValue attribute of New-/Set-QuarantinePolicy cmdlet.
                 # This parameter uses a decimal value that's converted from a binary value.
@@ -196,6 +201,7 @@ function Get-TargetResource
                 CertificatePath                   = $CertificatePath
                 CertificatePassword               = $CertificatePassword
                 TenantId                          = $TenantId
+                Managedidentity                   = $ManagedIdentity.IsPresent
             }
 
             Write-Verbose -Message "Found QuarantinePolicy $($Identity)"
@@ -289,7 +295,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -317,6 +327,7 @@ function Set-TargetResource
     $QuarantinePolicyParams.Remove('CertificateThumbprint') | Out-Null
     $QuarantinePolicyParams.Remove('CertificatePath') | Out-Null
     $QuarantinePolicyParams.Remove('CertificatePassword') | Out-Null
+    $QuarantinePolicyParams.Remove('ManagedIdentity') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($null -eq $QuarantinePolicy))
     {
@@ -398,7 +409,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -426,6 +441,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -465,7 +481,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -508,6 +528,7 @@ function Export-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
 
             $Results = Get-TargetResource @Params

@@ -101,7 +101,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Getting configuration of InboundConnector for $($Identity)"
 
@@ -174,6 +178,7 @@ function Get-TargetResource
                 CertificatePath              = $CertificatePath
                 CertificatePassword          = $CertificatePassword
                 TenantId                     = $TenantId
+                Managedidentity              = $ManagedIdentity.IsPresent
             }
 
             Write-Verbose -Message "Found InboundConnector $($Identity)"
@@ -309,7 +314,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -338,6 +347,7 @@ function Set-TargetResource
     $InboundConnectorParams.Remove('CertificateThumbprint') | Out-Null
     $InboundConnectorParams.Remove('CertificatePath') | Out-Null
     $InboundConnectorParams.Remove('CertificatePassword') | Out-Null
+    $InboundConnectorParams.Remove('ManagedIdentity') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($null -eq $InboundConnector))
     {
@@ -461,7 +471,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -479,10 +493,14 @@ function Test-TargetResource
 
     #check syntax of SenderDomains parameter
     $senderDomains = @()
-    foreach($domain in $PSBoundParameters.SenderDomains) {
-        if($domain -notlike "smtp:*") {
+    foreach ($domain in $PSBoundParameters.SenderDomains)
+    {
+        if ($domain -notlike "smtp:*")
+        {
             $senderDomains += "smtp:" + $domain + ";1"
-        } else {
+        }
+        else
+        {
             $senderDomains += $domain
         }
     }
@@ -493,7 +511,8 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    if($senderDomains.Length -gt 0) {
+    if ($senderDomains.Length -gt 0)
+    {
         $ValuesToCheck.SenderDomains = $senderDomains
     }
     $ValuesToCheck.Remove('Credential') | Out-Null
@@ -502,6 +521,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -541,7 +561,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -584,6 +608,7 @@ function Export-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
 
             $Results = Get-TargetResource @Params
