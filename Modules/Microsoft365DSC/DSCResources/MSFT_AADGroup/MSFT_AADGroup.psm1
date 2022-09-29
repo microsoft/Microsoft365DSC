@@ -158,7 +158,7 @@ function Get-TargetResource
             Write-Verbose -Message 'Found existing AzureAD Group'
 
             # Owners
-            [Array]$owners = Get-MgGroupOwner -GroupId $Group.Id
+            [Array]$owners = Get-MgGroupOwner -GroupId $Group.Id -All
             $OwnersValues = @()
             foreach ($owner in $owners)
             {
@@ -172,7 +172,7 @@ function Get-TargetResource
             if ($Group.MembershipRuleProcessingState -ne 'On')
             {
                 # Members
-                [Array]$members = Get-MgGroupMember -GroupId $Group.Id
+                [Array]$members = Get-MgGroupMember -GroupId $Group.Id -All
                 $MembersValues = @()
                 foreach ($member in $members)
                 {
@@ -184,7 +184,7 @@ function Get-TargetResource
             }
 
             # MemberOf
-            [Array]$memberOf = Get-MgGroupMemberOf -GroupId $Group.Id # result also used for/by AssignedToRole
+            [Array]$memberOf = Get-MgGroupMemberOf -GroupId $Group.Id -All # result also used for/by AssignedToRole
             $MemberOfValues = @()
             # Note: only process security-groups that this group is a member of and not directory roles (if any)
             foreach ($member in ($memberOf  | Where-Object -FilterScript {$_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.group"}))
@@ -1017,7 +1017,7 @@ function Export-TargetResource
 
     try
     {
-        [array] $groups = Get-MgGroup -Filter $Filter -ErrorAction Stop
+        [array] $groups = Get-MgGroup -Filter $Filter -All -ErrorAction Stop
         $i = 1
         $dscContent = ''
         Write-Host "`r`n" -NoNewline
