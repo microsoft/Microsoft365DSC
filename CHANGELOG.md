@@ -32,9 +32,9 @@
     FIXES [#1714](https://github.com/microsoft/Microsoft365DSC/issues/1714)
   * Fixes issue with DSCParser non-existing resources on one tenant weren't properly captured.
 * DEPENDENCIES
-  * Updated Microsoft.Graph dependencies to version 1.12.1.
-  * Updated MSCloudLoginAssistant dependency to version 1.0.92.
-  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.152.
+  * Updated Microsoft.Graph dependencies to version 1.12.2.
+  * Updated MSCloudLoginAssistant dependency to version 1.0.93.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.153.
   * Added new dependency on Microsoft.Graph.Users.Actions.
 
 # 1.22.921.1
