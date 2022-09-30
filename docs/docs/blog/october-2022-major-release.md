@@ -29,6 +29,7 @@ The O365User resource was one of the very first resource to be released as part 
 
 ## Removing Deprecated Parameters from EXOATPPolicyForO365
 For the past few releases, the following properties of the EXOATPPolicyForO365 resource have been marked as deprecated:
+
 *	AllowClickThrough
 *	BlockURLs
 *	EnableSafeLinksForO365Clients
