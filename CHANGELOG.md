@@ -6,6 +6,12 @@
   * Renamed from O365User
   * Added support for Roles.
   FIXES [#2288](https://github.com/microsoft/Microsoft365DSC/issues/2288)
+* AADGroup
+  * Added properties MemberOf and AssignedToRole
+  Implements [#2301](https://github.com/microsoft/Microsoft365DSC/issues/2301)
+* AADTenantDetails
+  * Fixed an issue where ApplicationSecret was send to Update-MgOrganization
+* FIXES [[#2340](https://github.com/microsoft/Microsoft365DSC/issues/2340)]
 * EXOATPPolicyForO365
   * [BREAKING] Removed the deprecated BlockURLs, AllowClickThrough, EnableSafeLinksForO365Clients and TrackClicks parameters.
 * EXOMailContact
@@ -26,9 +32,9 @@
     FIXES [#1714](https://github.com/microsoft/Microsoft365DSC/issues/1714)
   * Fixes issue with DSCParser non-existing resources on one tenant weren't properly captured.
 * DEPENDENCIES
-  * Updated Microsoft.Graph dependencies to version 1.12.1.
-  * Updated MSCloudLoginAssistant dependency to version 1.0.92.
-  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.152.
+  * Updated Microsoft.Graph dependencies to version 1.12.2.
+  * Updated MSCloudLoginAssistant dependency to version 1.0.94.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.153.
   * Added new dependency on Microsoft.Graph.Users.Actions.
 
 # 1.22.921.1
