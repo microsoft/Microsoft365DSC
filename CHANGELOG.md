@@ -30,7 +30,7 @@
   * Fixes issue with DSCParser non-existing resources on one tenant weren't properly captured.
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 1.12.1.
-  * Updated MSCloudLoginAssistant dependency to version 1.0.92.
+  * Updated MSCloudLoginAssistant dependency to version 1.0.94.
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.152.
   * Added new dependency on Microsoft.Graph.Users.Actions.
 
