@@ -247,8 +247,7 @@ function Start-M365DSCConfigurationExtract
         elseif ($AuthMethods -contains 'ManagedIdentity')
         {
             $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters @{'ManagedIdentity' = $true; 'TenantId' = $TenantId }
-            $TenantId = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.TenantId
-            $organization = $TenantId
+            $organization = Get-M365DSCTenantDomain -TenantId $TenantId -ManagedIdentity
         }
 
         $AzureAutomation = $false
