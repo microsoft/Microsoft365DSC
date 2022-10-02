@@ -1508,6 +1508,12 @@ function New-M365DSCConnection
     $data.Add('Source', 'M365DSCUtil')
     $data.Add('Platform', $Workload)
 
+    # Get the ApplicationSecret parameter back as a string.
+    if ($InboundParameters.ApplicationSecret)
+    {
+        $InboundParameters.ApplicationSecret = $InboundParameters.ApplicationSecret.GetNetworkCredential().Password
+    }
+
     # Case both authentication methods are attempted
     if ($null -ne $InboundParameters.Credential -and `
         (-not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -or `
