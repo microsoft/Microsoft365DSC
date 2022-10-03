@@ -44,7 +44,7 @@ To authenticate via Microsoft Graph, this resource required the following Applic
 * **Export**
   * Policy.Read.All
 
-NOTE: All permisions listed above require admin consent.
+NOTE: All permissions listed above require admin consent.
 
 ## Examples
 
