@@ -246,7 +246,7 @@ function Start-M365DSCConfigurationExtract
         }
         elseif ($AuthMethods -contains 'ManagedIdentity')
         {
-            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters @{'ManagedIdentity' = $true }
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters @{'ManagedIdentity' = $true; 'TenantId' = $TenantId }
             $TenantId = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.TenantId
             $organization = $TenantId
         }
@@ -482,6 +482,7 @@ function Start-M365DSCConfigurationExtract
                 Credential            = $Credential
                 Identity              = $ManagedIdentity.IsPresent
             }
+
             try
             {
                 Connect-M365Tenant @ConnectionParams | Out-Null
@@ -522,7 +523,8 @@ function Start-M365DSCConfigurationExtract
                 }
                 'ApplicationSecret'
                 {
-                    $parameters.Add('ApplicationSecret', $ApplicationSecret)
+                    $applicationSecretValue = New-Object System.Management.Automation.PSCredential ('ApplicationSecret', (ConvertTo-SecureString $ApplicationSecret -AsPlainText -Force));
+                    $parameters.Add('ApplicationSecret', $applicationSecretValue)
                 }
                 'Credentials'
                 {
@@ -547,11 +549,11 @@ function Start-M365DSCConfigurationExtract
 
             if ($ComponentsToSkip -notcontains $resourceName)
             {
-                Write-Host "[$i/$($ResourcesToExport.Length)] Extracting [" -NoNewLine
-                Write-Host $resourceName -ForegroundColor Green -NoNewLine
-                Write-Host "] using {" -NoNewLine
+                Write-Host "[$i/$($ResourcesToExport.Length)] Extracting [" -NoNewline
+                Write-Host $resourceName -ForegroundColor Green -NoNewline
+                Write-Host '] using {' -NoNewline
                 Write-Host $mostSecureAuthMethod -ForegroundColor Cyan -NoNewline
-                Write-Host "}..." -NoNewline
+                Write-Host '}...' -NoNewline
                 $exportString = [System.Text.StringBuilder]::New()
                 if ($GenerateInfo)
                 {

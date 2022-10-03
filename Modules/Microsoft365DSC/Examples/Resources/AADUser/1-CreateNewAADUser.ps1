@@ -14,7 +14,7 @@ Configuration Example
 
     node localhost
     {
-        O365User 'ConfigureJohnSMith'
+        AADUser 'ConfigureJohnSMith'
         {
             UserPrincipalName  = "John.Smith@O365DSC1.onmicrosoft.com"
             FirstName          = "John"
