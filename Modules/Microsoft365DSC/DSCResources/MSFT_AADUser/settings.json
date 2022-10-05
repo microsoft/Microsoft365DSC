@@ -1,5 +1,5 @@
 ﻿{
-    "resourceName": "O365User",
+    "resourceName": "AADUser",
     "description": "",
     "permissions": {
         "graph": {

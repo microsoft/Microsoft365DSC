@@ -44,7 +44,7 @@
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin. ||
 | **ApplicationId** | Write | String | ID of the Azure Active Directory application to authenticate with. ||
 | **TenantId** | Write | String | ID of the Azure Active Directory tenant used for authentication. ||
-| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory tenant used for authentication. ||
+| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. ||
 

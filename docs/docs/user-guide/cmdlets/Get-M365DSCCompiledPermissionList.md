@@ -23,11 +23,11 @@ This function outputs information as the following type:
 
 -------------------------- EXAMPLE 1 --------------------------
 
-`Get-M365DSCCompiledPermissionList -ResourceNameList @('O365User', 'AADApplication') -Source 'Graph' -PermissionsType 'Delegated'`
+`Get-M365DSCCompiledPermissionList -ResourceNameList @('AADUser', 'AADApplication') -Source 'Graph' -PermissionsType 'Delegated'`
 
 -------------------------- EXAMPLE 2 --------------------------
 
-`Get-M365DSCCompiledPermissionList -ResourceNameList @('O365User', 'AADApplication') -Source 'Graph' -PermissionsType 'Application'`
+`Get-M365DSCCompiledPermissionList -ResourceNameList @('AADUser', 'AADApplication') -Source 'Graph' -PermissionsType 'Application'`
 
 -------------------------- EXAMPLE 3 --------------------------
 
