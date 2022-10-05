@@ -1363,8 +1363,9 @@ Internal
 #>
 function Get-M365DSCTenantDomain
 {
+    [CmdletBinding(DefaultParameterSetName = 'AppId')]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(ParameterSetName = 'AppId', Mandatory = $true)]
         [System.String]
         $ApplicationId,
 
@@ -1372,25 +1373,30 @@ function Get-M365DSCTenantDomain
         [System.String]
         $TenantId,
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'AppId')]
         [System.String]
         $ApplicationSecret,
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'AppId')]
         [System.String]
         $CertificateThumbprint,
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'AppId')]
         [System.String]
-        $CertificatePath
+        $CertificatePath,
+
+        [Parameter(ParameterSetName = 'MID')]
+        [Switch]
+        $ManagedIdentity
+
     )
 
-    if ($null -eq $CertificatePath)
+    if ([System.String]::IsNullOrEmpty($CertificatePath))
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
         $tenantDetails = Get-MgOrganization
-        $defaultDomain = $tenantDetails.VerifiedDomains | Where-Object -FilterScript { $_.Initial }
+        $defaultDomain = $tenantDetails.VerifiedDomains | Where-Object -FilterScript { $_.IsInitial }
         return $defaultDomain.Name
     }
     if ($TenantId.Contains('onmicrosoft'))
