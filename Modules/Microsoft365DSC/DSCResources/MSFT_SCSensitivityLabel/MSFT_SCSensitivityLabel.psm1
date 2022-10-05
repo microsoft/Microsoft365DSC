@@ -1059,7 +1059,7 @@ function Convert-JSONToLocaleSettings
             }
             $settings += $entry
         }
-        $result.Add("Settings", $settings)
+        $result.Add("LabelSettings", $settings)
         $settings = @()
         $entries += $result
         $result = @{ }
@@ -1162,7 +1162,7 @@ function Convert-CIMToLocaleSettings
             localeKey = $localset.LocaleKey
         }
         $settings = @()
-        foreach ($setting in $localset.Settings)
+        foreach ($setting in $localset.LabelSettings)
         {
             $settingEntry = @{
                 Key   = $setting.Key
@@ -1224,7 +1224,7 @@ function Test-LocaleSettings
     foreach ($desiredSetting in $DesiredProperty)
     {
         $foundKey = $CurrentProperty | Where-Object { $_.LocaleKey -eq $desiredSetting.localeKey }
-        foreach ($setting in $desiredSetting.Settings)
+        foreach ($setting in $desiredSetting.LabelSettings)
         {
             if ($null -ne $foundKey)
             {
@@ -1287,8 +1287,8 @@ function ConvertTo-LocaleSettingsString
         $StringContent += "                MSFT_SCLabelLocaleSettings`r`n"
         $StringContent += "                {`r`n"
         $StringContent += "                    LocaleKey = '$($LocaleSetting.LocaleKey.Replace("'", "''"))'`r`n"
-        $StringContent += "                    Settings  = @(`r`n"
-        foreach ($Setting in $LocaleSetting.Settings)
+        $StringContent += "                    LabelSettings  = @(`r`n"
+        foreach ($Setting in $LocaleSetting.LabelSettings)
         {
             $StringContent += "                        MSFT_SCLabelSetting`r`n"
             $StringContent += "                        {`r`n"
