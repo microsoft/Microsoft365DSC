@@ -25,6 +25,8 @@
 * IntuneDeviceConfigurationPolicyiOS
   * [Breaking] Changed all the MediaContentRating properties to be CIMInstances.
   FIXES [#1871](https://github.com/microsoft/Microsoft365DSC/issues/1871)
+* SCSensitivityLabel
+  [BREAKING] Changed Setting attribute in MSFT_SCLabelLocaleSettings to LabelSetting since its resevered word and breaking reporting.
 * MISC
   * [BREAKING] Authentication property ApplicationSecret has been changed across all resources to be of type
     PSCredential instead of string. This will ensure that the secrets get encrypted in MOF files
