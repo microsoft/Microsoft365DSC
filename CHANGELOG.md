@@ -10,6 +10,8 @@
   * Fixed issue where the locations weren't properly returned.
   FIXES [#2338](https://github.com/microsoft/Microsoft365DSC/issues/2338)
   FIXES [#2339](https://github.com/microsoft/Microsoft365DSC/issues/2339)
+* MISC
+  * Fixed an issue in in Export-M365DSCConfiguration when used with Service Principal
 
 # 1.22.1005.1
 
@@ -22,7 +24,7 @@
   Implements [#2301](https://github.com/microsoft/Microsoft365DSC/issues/2301)
 * AADTenantDetails
   * Fixed an issue where ApplicationSecret was send to Update-MgOrganization
-* FIXES [[#2340](https://github.com/microsoft/Microsoft365DSC/issues/2340)]
+    FIXES [[#2340](https://github.com/microsoft/Microsoft365DSC/issues/2340)]
 * EXOATPPolicyForO365
   * [BREAKING] Removed the deprecated BlockURLs, AllowClickThrough, EnableSafeLinksForO365Clients and TrackClicks parameters.
 * EXOMailContact
@@ -439,7 +441,7 @@
 # 1.22.511.1
 
 * AADNamedLocationPolicy
- * Added error handling in the Get-TargetResource function.
+* Added error handling in the Get-TargetResource function.
 * EXOIRMConfiguration
   * Initial release.
 * EXOMessageClassification
@@ -831,7 +833,7 @@ MISC
 
 # 1.21.1013.1
 
-  * Obfuscating Authentication Secrets from the Verbose output;
+* Obfuscating Authentication Secrets from the Verbose output;
 
 # 1.21.1006.3
 
@@ -1056,7 +1058,7 @@ MISC
 # 1.21.526.2
 
 *  EXOSafeAttachmentRule
-  * Fixed issue #1213 Policy X already has rule Y associated with it
+* Fixed issue #1213 Policy X already has rule Y associated with it
     if rule exists already
 * MSFT_IntuneDeviceCompliancePolicyAndroid
   * New resource
@@ -1085,7 +1087,7 @@ MISC
   * Forces a Global load of the new MicrosoftTeams module for
     Teams resources;
 
-#1.21.519.1
+# 1.21.519.1
 
 * TeamsClientConfiguration
   * Fixed an issue where the RestrictedSenderList was not properly
