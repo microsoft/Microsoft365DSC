@@ -7,7 +7,7 @@
 | **Key** | Write | String | Advanced settings key. ||
 | **Value** | Write | StringArray[] | Advanced settings value. ||
 | **localeKey** | Write | String | Name of the Local key. ||
-| **Settings** | Write | InstanceArray[] | The locale settings display names. ||
+| **LabelSettings** | Write | InstanceArray[] | The locale settings display names. ||
 | **Name** | Key | String | The Name parameter specifies the unique name for the sensitivity label. The maximum length is 64 characters. If the value contains spaces, enclose the value in quotation marks. ||
 | **Ensure** | Write | String | Specify if this rule should exist or not. |Present, Absent|
 | **Comment** | Write | String | The Comment parameter specifies an optional comment. ||
@@ -118,7 +118,7 @@ Configuration Example
                 MSFT_SCLabelLocaleSettings
                 {
                     LocaleKey = "DisplayName"
-                    Settings  = @(
+                    LabelSettings  = @(
                         MSFT_SCLabelSetting
                         {
                             Key   = "en-us"
@@ -134,7 +134,7 @@ Configuration Example
                 MSFT_SCLabelLocaleSettings
                 {
                     LocaleKey = "StopColor"
-                    Settings  = @(
+                    LabelSettings  = @(
                         MSFT_SCLabelSetting
                         {
                             Key   = "en-us"
