@@ -68,7 +68,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
@@ -76,7 +80,6 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
             -ProfileName 'beta'
-        $context=Get-MgContext
     }
     catch
     {
@@ -109,11 +112,7 @@ function Get-TargetResource
 
         if (-not $getValue -and -Not [string]::IsNullOrEmpty($DisplayName))
         {
-            [array]$getValue = Get-MgDirectoryAdministrativeUnit `
-                -ErrorAction Stop | Where-Object `
-            -FilterScript { `
-                $_.DisplayName -eq $DisplayName `
-            }
+            $getValue = Get-MgDirectoryAdministrativeUnit -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
         }
         #endregion
 
@@ -131,81 +130,108 @@ function Get-TargetResource
             #region resource generator code
             Id = $getValue.Id
             #DeletedDateTime = $getValue.DeletedDateTime
-            Description = $getValue.Description
-            DisplayName = $getValue.DisplayName
-            Visibility = $getValue.Visibility
-
-
-            Ensure                = 'Present'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            ApplicationSecret     = $ApplicationSecret
-            CertificateThumbprint = $CertificateThumbprint
+            Description                   = $getValue.Description
+            DisplayName                   = $getValue.DisplayName
+            Extensions                    = $getValue.Extensions
+            MembershipType                = $getValue.MembershipType
+            MembershipRule                = $getValue.MembershipRule
+            MembershipRuleProcessingState = $getValue.MembershipRuleProcessingState
+            Visibility                    = $getValue.Visibility
+            Ensure                        = 'Present'
+            Credential                    = $Credential
+            ApplicationId                 = $ApplicationId
+            TenantId                      = $TenantId
+            ApplicationSecret             = $ApplicationSecret
+            CertificateThumbprint         = $CertificateThumbprint
+            ManagedIdentity               = $ManagedIdentity.IsPresent
         }
 
-        $graphValue = Invoke-MgGraphRequest -Method Get -Uri "https://graph.microsoft.com/beta/directory/administrativeUnits/($getValue.Id))"
-
-        if ($graphValue.MembershipType -eq 'Dynamic')
+        if ($getValue.MembershipType -eq 'Dynamic')
         {
-            $results.Add('MembershipType', 'Dynamic')
-            $results.Add('MembershipRule', $graphValue.MembershipRule)
-            $results.Add('MembershipRuleProcessingState', $graphValue.MembershipRuleProcessingState)
+            $memberSpec = $null
         }
         else
         {
-            $results.Add('MembershipType', 'Static')
-            $results.Add('MembershipRule', $null)
-            $results.Add('MembershipRuleProcessingState', $null)
-        }
-        $auMembers = Get-MgDirectoryAdministrativeUnitMember -AdministrativeUnitId $getValue.Id
-        $memberSpec = @()
-        foreach ($getMember in $auMembers)
-        {
-            # get graph object regardless of type
-            $graphMemberObject = Invoke-MgGraphRequest -Method Get -Uri "https://graph.microsoft.com/v1.0/directoryObjects/$($getMember.Id)"
-            if ($graphMemberObject.'@odata.type' -match 'user')
+            $memberSpec = @()
+            $auMembers = Get-MgDirectoryAdministrativeUnitMember -AdministrativeUnitId $getValue.Id -All
+            foreach ($getMember in $auMembers) # .RoleMemberInfo ??
             {
-                $memberSpec += @{Type = 'User'; Identity = $graphMemberObject.UserPrincipalName}
-            }
-            elseif ($graphMemberObject.'@odata.type' -match 'group')
-            {
-                $memberSpec += @{Type = 'Group'; Identity = $graphMemberObject.DisplayName}
-            }
-            else
-            {
-                $memberSpec += @{Type = 'ServicePrincipal'; Identity = $graphMemberObject.DisplayName}
+                # get object regardless of type
+                $graphMemberObject = Invoke-MgGraphRequest -Method Get -Uri "https://graph.microsoft.com/v1.0/directoryObjects/$($getMember.Id)"
+                switch -regex ([regex]::Escape($graphMemberObject.'@odata.type'))
+                {
+                    'group'     {
+                                    $memberSpec += @{
+                                        Identity = $graphMemberObject.DisplayName;
+                                        Type     = 'Group'
+                                    }
+                                }
+                    'user'      {
+                                    $memberSpec += @{
+                                        Identity = $graphMemberObject.UserPrincipalName;
+                                        Type     = 'User'
+                                    }
+                                }
+                    'device'    {
+                                    $memberSpec += @{
+                                        Identity = $graphMemberObject.DisplayName;
+                                        Type     = 'Device'
+                                    }
+                                }
+                }
             }
         }
         $results.Add("Members", $memberSpec)
 
-        $auScopedRoleMembers = Get-MgDirectoryAdministrativeUnitScopedRoleMembers -AdministrativeUnitId $getValue.Id
-        $scopedRoleMemberSpec = @()
-        foreach ($getMember in $auScopedRoleMembers)
+        $auScopedRoleMembers = Get-MgDirectoryAdministrativeUnitScopedRoleMembers -AdministrativeUnitId $getValue.Id -All
+        $scopedRoleMemberSpec = $null
+        if ($auScopedRoleMembers)
         {
-            $graphRole = Get-MgDirectoryRole -DirectoryRoleId $getMember.RoleId
-            # get graph object regardless of type
-            $graphRoleMemberObject = Invoke-MgGraphRequest -Method Get -Uri "https://graph.microsoft.com/v1.0/directoryObjects/$($getMember.RoleMemberInfo.Id)"
-            if ($graphRoleMemberObject.'@odata.type' -match 'user')
+            $scopedRoleMemberSpec = @()
+            foreach ($getMember in $auScopedRoleMembers)
             {
-                $scopedRoleMemberSpec += @{RoleName = $graphRole.DisplayName; Type = 'User'; Identity = $graphRoleMemberObject.UserPrincipalName}
-            }
-            elseif ($graphMemberObject.'@odata.type' -match 'group')
-            {
-                $scopedRoleMemberSpec += @{RoleName = $graphRole.DisplayName; Type = 'Group'; Identity = $graphRoleMemberObject.DisplayName}
-            }
-            else
-            {
-                $scopedRoleMemberSpec += @{RoleName = $graphRole.DisplayName; Type = 'ServicePrincipal'; Identity = $graphRoleMemberObject.DisplayName}
+                $graphRole = Get-MgDirectoryRole -DirectoryRoleId $getMember.RoleId
+                # get object regardless of type
+                $graphRoleMemberObject = Invoke-MgGraphRequest -Method Get -Uri "https://graph.microsoft.com/v1.0/directoryObjects/$($roleMember.Id)"
+                if ([regex]::Escape($graphRoleMemberObject.'@odata.type') -match 'user')
+                {
+                    $memberType     = 'User'
+                    $memberIdentity = $graphRoleMemberObject.UserPrincipalName
+                }
+                else
+                {
+                    if ([regex]::Escape($graphRoleMemberObject.'@odata.type') -match 'group')
+                    {
+                        $memberType = 'Group';
+                    }
+                    else {
+                        $memberType = 'ServicePrincipal';
+                    }
+                    $memberIdentity = $graphRoleMemberObject.DisplayName
+                }
+                $scopedRoleMemberInfo = @{
+                    RoleName       = $graphRole.DisplayName;
+                    RoleMemberInfo = @{
+                        Identity   = $memberIdentity
+                        Type       = $memberType
+                    }
+                }
+                $scopedRoleMemberSpec += $scopedRoleMemberInfo
             }
         }
         $results.Add("ScopedRoleMembers", $scopedRoleMemberSpec)
 
-        if ($getValue.Extensions)
+        $auExtensions = Get-MgDirectoryAdministrativeUnitExtension -AdministrativeUnitId $getValue.Id -All
+        $extensionsSpec = $null
+        if ($auExtensions)
         {
-            $results.Add("Extensions", (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.Extensions))
+            $extensionSpec = @()
+            foreach ($auExtension in $auExtensions)
+            {
+                $extensionsSpec += @{Id = $auExtensions.Id}
+            }
         }
-
+        $results.Add("Extensions", $extensionsSpec)
 
         return [System.Collections.Hashtable] $results
     }
@@ -305,25 +331,22 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
-            -ProfileName 'v1.0'
-        $context=Get-MgContext
-        if($null -eq $context)
-        {
-            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-                -InboundParameters $PSBoundParameters -ProfileName 'beta'
-        }
-        Select-MgProfile 'v1.0' -ErrorAction Stop
+            -ProfileName 'beta'
     }
     catch
     {
-        Write-Verbose -Message $_
+        Write-Verbose -Message "Reloading2"
     }
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -340,18 +363,25 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
 
-    $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
+    $currentParameters = $PSBoundParameters
+    $currentParameters.Remove('Ensure') | Out-Null
+    $currentParameters.Remove('Credential') | Out-Null
+    $currentParameters.Remove('ApplicationId') | Out-Null
+    $currentParameters.Remove('ApplicationSecret') | Out-Null
+    $currentParameters.Remove('TenantId') | Out-Null
+    $currentParameters.Remove('CertificateThumbprint') | Out-Null
+    $currentParameters.Remove('ManagedIdentity') | Out-Null
+
+    $backCurrentMembers = $currentInstance.Members
+    $backCurrentScopedRoleMembers = $currentInstance.ScopedRoleMembers
+    $currentInstance.Remove('Members') | Out-Null
+    $currentInstance.Remove('ScopedRoleMembers') | Out-Null
 
     if ($Ensure -eq 'Present')
     {
         # Resolve Members Type/Identity to user or group id
         $memberSpecification = @()
-        if ($CreateParameters.Members.Count -gt 0)
+        if ($currentParameter.Members)
         {
             foreach ($Member in $Members)
             {
@@ -381,7 +411,7 @@ function Set-TargetResource
                 }
                 else
                 {
-                    throw "Invalid type {$($Member.Type)} specified for Member-Identity {$($Member.Identity)}"
+                    throw "Member {$($Member.Identity)} has invalid type {$($Member.Type)}"
                 }
             }
             $CreateParameters.Members = $memberSpecification
@@ -390,14 +420,69 @@ function Set-TargetResource
         {
             $CreateParameters.Remove('Members') | Out-Null
         }
-        $memberSpecification = @()
+
+        # Resolve ScopedRoleMembers Type/Identity to user, group or service principal
+        $scopedRoleMemberSpecification = $null
+        if ($currentParameters.ScopedRoleMembers)
+        {
+            $scopedRoleMemberSpecification = @()
+            foreach ($roleMember in $ScopedRoleMembers)
+            {
+                $graphRole = Get-MgDirectoryRole -Filter "DisplayName eq '$($roleMember.RoleName)'" -ErrorAction stop
+                if ($null -eq $graphRole)
+                {
+                    throw "Invalid RoleName {$($roleMember.RoleName)}"
+                }
+                if ($roleMember.RoleMemberInfo.Type -eq 'User')
+                {
+                    $roleMemberIdentity = Get-MgUser -Filter "UserPrincipalName eq '$($roleMember.RoleMemberInfo.Identity)'" -ErrorAction Stop
+                    if ($null -eq $roleMemberIdentity)
+                    {
+                        throw "User {$($roleMember.RoleMemberInfo.Identity)} does not exist"
+                    }
+                }
+                elseif ($roleMember.RoleMemberInfo.Type -eq 'Group')
+                {
+                    $roleMemberIdentity = Get-MgGroup -Filter "displayName eq '$($roleMember.RoleMemberInfo.Identity)'" -ErrorAction Stop
+                    if ($null -eq $roleMemberIdentity)
+                    {
+                        throw "Group {$($roleMember.RoleMemberInfo.Identity)} does not exist"
+                    }
+                }
+                elseif ($roleMember.RoleMemberInfo.Type -eq 'ServicePrincipal')
+                {
+                    $roleMemberIdentity = Get-MgServicePrincipal -Filter "displayName eq '$($roleMember.RoleMemberInfo.Identity)'" -ErrorAction Stop
+                    if ($null -eq $roleMemberIdentity)
+                    {
+                        throw "ServicePrincipal {$($roleMember.RoleMemberInfo.Identity)} does not exist"
+                    }
+                }
+                else
+                {
+                    throw "Invalid ScopedRoleMember.RoleMemberInfo.Type {$($roleMember.RolememberInfo.Type)}"
+                }
+                $scopedRoleMemberSpecification += @{
+                    RoleId               = $graphRole.Id
+                    RoleMemberInfo = @{
+                        Identity = $roleMemberIdentity.Id
+                        Type     = $roleMember.RoleMemberInfo.Type
+                    }
+                }
+            }
+            #$CreateParameters.ScopedRoleMembers = $scopedRoleMemberSpecification
+            # ScopedRoleMember-info is added after the AU is created
+        }
+        else
+        {
+            $CreateParameters.Remove('ScopedRoleMembers') | Out-Null
+        }
     }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating {$DisplayName}"
 
-        $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
+        $CreateParameters = ([Hashtable]$PSBoundParameters).Clone()
         $CreateParameters=Rename-M365DSCCimInstanceODataParameter -Properties $CreateParameters
 
         $CreateParameters.Remove("Id") | Out-Null
@@ -530,7 +615,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -651,7 +740,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -681,7 +774,7 @@ function Export-TargetResource
     {
 
         #region resource generator code
-        [array]$getValue = Get-MgDirectoryAdministrativeUnit `
+        [array]$getValue = Get-MgDirectoryAdministrativeUnit -All `
             -ErrorAction Stop
 
         #endregion
@@ -701,54 +794,53 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($getValue.Count)] $($config.id)" -NoNewline
             $params = @{
-                id           = $config.id
+                id                    = $config.id
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                ManagedIdentity       = $ManagedIdentity
             }
 
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
 
-        if ($Results.Members)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Members -CIMInstanceName MicrosoftGraphdirectoryobject
-            if ($complexTypeStringResult)
+            if ($Results.Members)
             {
-                $Results.Members = $complexTypeStringResult            }
-            else
-            {
-                $Results.Remove('Members') | Out-Null
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Members -CIMInstanceName   MicrosoftGraphdirectoryobject
+                if ($complexTypeStringResult)
+                {
+                    $Results.Members = $complexTypeStringResult            }
+                else
+                {
+                    $Results.Remove('Members') | Out-Null
+                }
             }
-        }
-        if ($Results.ScopedRoleMembers)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.ScopedRoleMembers -CIMInstanceName MicrosoftGraphscopedrolemembership
-            if ($complexTypeStringResult)
+            if ($Results.ScopedRoleMembers)
             {
-                $Results.ScopedRoleMembers = $complexTypeStringResult            }
-            else
-            {
-                $Results.Remove('ScopedRoleMembers') | Out-Null
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.ScopedRoleMembers -CIMInstanceName     MicrosoftGraphscopedrolemembership
+                if ($complexTypeStringResult)
+                {
+                    $Results.ScopedRoleMembers = $complexTypeStringResult            }
+                else
+                {
+                    $Results.Remove('ScopedRoleMembers') | Out-Null
+                }
             }
-        }
-        if ($Results.Extensions)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Extensions -CIMInstanceName MicrosoftGraphextension
-            if ($complexTypeStringResult)
+            if ($Results.Extensions)
             {
-                $Results.Extensions = $complexTypeStringResult            }
-            else
-            {
-                $Results.Remove('Extensions') | Out-Null
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Extensions -CIMInstanceName    MicrosoftGraphextension
+                if ($complexTypeStringResult)
+                {
+                    $Results.Extensions = $complexTypeStringResult            }
+                else
+                {
+                    $Results.Remove('Extensions') | Out-Null
+                }
             }
-        }
-
-
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
@@ -756,35 +848,33 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential
 
-        if ($Results.Members)
-        {
-            $isCIMArray=$false
-            if($Results.Members.getType().Fullname -like "*[[\]]")
+            if ($Results.Members)
             {
-                $isCIMArray=$true
+                $isCIMArray=$false
+                if($Results.Members.getType().Fullname -like "*[[\]]")
+                {
+                    $isCIMArray=$true
+                }
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Members" -isCIMArray:$isCIMArray
             }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Members" -isCIMArray:$isCIMArray
-        }
-        if ($Results.ScopedRoleMembers)
-        {
-            $isCIMArray=$false
-            if($Results.ScopedRoleMembers.getType().Fullname -like "*[[\]]")
+            if ($Results.ScopedRoleMembers)
             {
-                $isCIMArray=$true
+                $isCIMArray=$false
+                if($Results.ScopedRoleMembers.getType().Fullname -like "*[[\]]")
+                {
+                    $isCIMArray=$true
+                }
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ScopedRoleMembers"   -isCIMArray:$isCIMArray
             }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ScopedRoleMembers" -isCIMArray:$isCIMArray
-        }
-        if ($Results.Extensions)
-        {
-            $isCIMArray=$false
-            if($Results.Extensions.getType().Fullname -like "*[[\]]")
+            if ($Results.Extensions)
             {
-                $isCIMArray=$true
+                $isCIMArray=$false
+                if($Results.Extensions.getType().Fullname -like "*[[\]]")
+                {
+                    $isCIMArray=$true
+                }
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Extensions" -isCIMArray:$isCIMArray
             }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Extensions" -isCIMArray:$isCIMArray
-        }
-
-
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -796,7 +886,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_
