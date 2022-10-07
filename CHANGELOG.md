@@ -18,10 +18,10 @@
 * AADUser
   * Renamed from O365User
   * Added support for Roles.
-  FIXES [#2288](https://github.com/microsoft/Microsoft365DSC/issues/2288)
+    FIXES [#2288](https://github.com/microsoft/Microsoft365DSC/issues/2288)
 * AADGroup
   * Added properties MemberOf and AssignedToRole
-  Implements [#2301](https://github.com/microsoft/Microsoft365DSC/issues/2301)
+    Implements [#2301](https://github.com/microsoft/Microsoft365DSC/issues/2301)
 * AADTenantDetails
   * Fixed an issue where ApplicationSecret was send to Update-MgOrganization
     FIXES [[#2340](https://github.com/microsoft/Microsoft365DSC/issues/2340)]
@@ -31,13 +31,13 @@
   * Initial Release.
 * EXOMailTips
   * Fixes an issue where MailTips weren't extracted when using CertificateThumbprint to authenticate.
-  FIXES [#2235](https://github.com/microsoft/Microsoft365DSC/issues/2235)
+    FIXES [#2235](https://github.com/microsoft/Microsoft365DSC/issues/2235)
 * O365User
   * [BREAKING] Resource was renamed to AADUser.
-  FIXES [#2204](https://github.com/microsoft/Microsoft365DSC/issues/2204)
+    FIXES [#2204](https://github.com/microsoft/Microsoft365DSC/issues/2204)
 * IntuneDeviceConfigurationPolicyiOS
   * [Breaking] Changed all the MediaContentRating properties to be CIMInstances.
-  FIXES [#1871](https://github.com/microsoft/Microsoft365DSC/issues/1871)
+    FIXES [#1871](https://github.com/microsoft/Microsoft365DSC/issues/1871)
 * SCSensitivityLabel
   [BREAKING] Changed Setting attribute in MSFT_SCLabelLocaleSettings to LabelSetting since its resevered word and breaking reporting.
   FIXES #2314
@@ -62,7 +62,7 @@
     FIXES [#2283](https://github.com/microsoft/Microsoft365DSC/issues/2283)
 * AADConditionalAccessPolicy
   * Added support for the CustomAuthenticationFactors parameter.
-  FIXES [#2292](https://github.com/microsoft/Microsoft365DSC/issues/2292)
+    FIXES [#2292](https://github.com/microsoft/Microsoft365DSC/issues/2292)
 * O365User
   * Improved extraction performance by leveraging StringBuilder instead of re-assigning string.
 * SCAutoSensitivityLabelPolicy
@@ -98,7 +98,7 @@
     and TeamsChannelLocationException properties were not properly set on Update.
     FIXES #2173
 * SCRetentionComplianceRule
-  * Fixes an issue when trying to create new compliancerule for Teams based policies where invalid
+  * Fixes an issue when trying to create new compliance rule for Teams based policies where invalid
     parameters were passed.
     FIXES #2181
 * DEPENDENCIES
@@ -114,7 +114,7 @@
   * Ignore precanned filters if recipient filter is used. Precanned filters and recipient filter cannot be used at the same time.
     FIXES [#2194](https://github.com/microsoft/Microsoft365DSC/issues/2194)
 * EXOSafeLinksPolicy
-  * Add Suport for EnableSafeLinksForEmail and DisableUrlRewrite
+  * Add Support for EnableSafeLinksForEmail and DisableUrlRewrite
 * EXOInboundConnector
   * Add support for different syntax of SenderDomains parameter
   FIXES [#2180](https://github.com/microsoft/Microsoft365DSC/issues/2180)
@@ -314,17 +314,17 @@
 * EXOSafeLinksPolicy
   * Deprecated properties DoNotAllowClickThrough, DoNotTrackUserClicks & IsEnabled.
 * IntuneAppProtectionPolicyiOS
-   * Fixed issue with creation a new policies where it was complaining about invalid minimum versions.
-   * Fixed issues where creating new policies threw an error complaining about an invalid duration format.
+  * Fixed issue with creation a new policies where it was complaining about invalid minimum versions.
+  * Fixed issues where creating new policies threw an error complaining about an invalid duration format.
      FIXES [#2019](https://github.com/microsoft/Microsoft365DSC/issues/2019)
-   * Added the CustomBrowserProtocol paramters.
+  * Added the CustomBrowserProtocol paramters.
      FIXES [#2009](https://github.com/microsoft/Microsoft365DSC/issues/2009)
 * IntuneDeviceAndAppManagementAssignmentFilter
   * Initial release.
 * SCComplianceTag
   * Fixed issue where FilePlanProperty was not properly applied unless another child property was also modified.
 * SPOSharingSettings
-    * Updated code to remove None as valid value for DefaultLinkPermission. If value is set to None default to Edit.
+  * Updated code to remove None as valid value for DefaultLinkPermission. If value is set to None default to Edit.
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.150.
   * Updated MSCloudLoginAssistant to version 1.0.87.
@@ -366,7 +366,7 @@
 # 1.22.622.1
 
 * TeamsMessagingPolicy
-    * Removed the -force deprecated parameter on New/Set/Remove
+  * Removed the -force deprecated parameter on New/Set/Remove
 * MISC
   * Modified the dependency installation functions to for the AllUsers scope.
 
@@ -1057,8 +1057,8 @@ MISC
 
 # 1.21.526.2
 
-*  EXOSafeAttachmentRule
-* Fixed issue #1213 Policy X already has rule Y associated with it
+* EXOSafeAttachmentRule
+  * Fixed issue #1213 Policy X already has rule Y associated with it
     if rule exists already
 * MSFT_IntuneDeviceCompliancePolicyAndroid
   * New resource
@@ -1098,7 +1098,7 @@ MISC
 
 # 1.21.512.1
 
-* EXOOfflineAddresBook
+* EXOOfflineAddressBook
   * Fixed issue in Set-TargetResource where ConfiguredAttributes
     was passed and resulted in an error.
 * SCDLPComplianceRule
@@ -1110,7 +1110,7 @@ MISC
 * EXOTransportRule
   * Adding ExceptIfSCLOver and SCLOver.
   * Fixes SubjectOrBodyContainsWords parameter not being an array.
-  * Fixes DateTime formating on ExpiryDate and ActivationDate
+  * Fixes DateTime formatting on ExpiryDate and ActivationDate
 
 # 1.21.428.2
 
@@ -1201,7 +1201,7 @@ MISC
 * SPOSiteDesign
   * Added support for GrouplessTeamSite web template.
 * SPOSiteScript
-  * Fixed issue where an existin site script could not be updated.
+  * Fixed issue where an existing site script could not be updated.
   * Made parameter GlobalAdminAccount in Get-TargetResource
     optional.
 * SPOTheme
