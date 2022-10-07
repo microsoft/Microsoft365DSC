@@ -1,5 +1,16 @@
 # Change log for Microsoft365DSC
 
+# 1.22.1012.1
+
+* EXOManagementRoleAssignment
+  * Initial Release
+  FIXES [#2355](https://github.com/microsoft/Microsoft365DSC/issues/2355)
+  FIXES [#2356](https://github.com/microsoft/Microsoft365DSC/issues/2356)
+* SCRetentionCompliancePolicy
+  * Fixed issue where the locations weren't properly returned.
+  FIXES [#2338](https://github.com/microsoft/Microsoft365DSC/issues/2338)
+  FIXES [#2339](https://github.com/microsoft/Microsoft365DSC/issues/2339)
+
 # 1.22.1005.1
 
 * AADUser
@@ -25,6 +36,9 @@
 * IntuneDeviceConfigurationPolicyiOS
   * [Breaking] Changed all the MediaContentRating properties to be CIMInstances.
   FIXES [#1871](https://github.com/microsoft/Microsoft365DSC/issues/1871)
+* SCSensitivityLabel
+  [BREAKING] Changed Setting attribute in MSFT_SCLabelLocaleSettings to LabelSetting since its resevered word and breaking reporting.
+  FIXES #2314
 * MISC
   * [BREAKING] Authentication property ApplicationSecret has been changed across all resources to be of type
     PSCredential instead of string. This will ensure that the secrets get encrypted in MOF files
@@ -32,7 +46,7 @@
     FIXES [#1714](https://github.com/microsoft/Microsoft365DSC/issues/1714)
   * Fixes issue with DSCParser non-existing resources on one tenant weren't properly captured.
 * DEPENDENCIES
-  * Updated Microsoft.Graph dependencies to version 1.12.2.
+  * Updated Microsoft.Graph dependencies to version 1.12.3.
   * Updated MSCloudLoginAssistant dependency to version 1.0.94.
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.153.
   * Added new dependency on Microsoft.Graph.Users.Actions.

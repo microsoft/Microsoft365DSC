@@ -79,7 +79,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         } -clientOnly)
                     LocaleSettings     = (New-CimInstance -ClassName MSFT_SCLabelLocaleSettings -Property @{
                             LocaleKey = "DisplayName"
-                            Settings  = (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
+                            LabelSettings  = (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
                                     Key   = "en-us"
                                     Value = "English DisplayName"
                                 } -ClientOnly)
@@ -122,7 +122,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                     LocaleSettings     = (New-CimInstance -ClassName MSFT_SCLabelLocaleSettings -Property @{
                             LocaleKey = "DisplayName"
-                            Settings  = (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
+                            LabelSettings  = (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
                                     Key   = "en-us"
                                     Value = "English DisplayName"
                                 } -ClientOnly)
@@ -143,7 +143,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Settings       = '{"Key": "LabelStatus",
                                             "Value": "Enabled"}'
                         LocaleSettings = '{"LocaleKey":"DisplayName",
-                                            "Settings":[
+                                            "LabelSettings":[
                                             {"Key":"en-us","Value":"English Display Names"}]}'
 
                     }
@@ -211,7 +211,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Settings       = '{"Key": "LabelStatus",
                                             "Value": "Enabled"}'
                         LocaleSettings = '{"LocaleKey":"DisplayName",
-                                            "Settings":[
+                                            "LabelSettings":[
                                             {"Key":"en-us","Value":"English Display Names"}]}'
                     }
                 }
