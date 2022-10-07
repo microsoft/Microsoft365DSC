@@ -63,7 +63,7 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -326,7 +326,7 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -480,7 +480,7 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating {$DisplayName}"
+        Write-Verbose -Message "Creating AU {$DisplayName}"
 
         $CreateParameters = ([Hashtable]$PSBoundParameters).Clone()
         $CreateParameters=Rename-M365DSCCimInstanceODataParameter -Properties $CreateParameters
@@ -497,16 +497,21 @@ function Set-TargetResource
         }
 
         #region resource generator code
-        $policy=New-MgDirectoryAdministrativeUnit @CreateParameters
+        $policy=New-MgAdministrativeUnit @CreateParameters
 
         #endregion
+
+        foreach ($scopedRoleMember in $scopedRoleMemberSpecification)
+        {
+            New-MgAdministrativeUnitScopedRoleMember -AdministrativeUnitId $policy.Id -BodyParameter $scopedRoleMember
+        }
 
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating {$DisplayName}"
+        Write-Verbose -Message "Updating AU {$DisplayName}"
 
-        $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
+        $UpdateParameters = ([Hashtable]$PSBoundParameters).Clone()
         $UpdateParameters=Rename-M365DSCCimInstanceODataParameter -Properties $UpdateParameters
 
         $UpdateParameters.Remove("Id") | Out-Null
@@ -610,7 +615,7 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -735,7 +740,7 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
