@@ -123,7 +123,7 @@ function Get-TargetResource
     $nullReturn.Ensure = 'Absent'
     try
     {
-        $PolicyObject = Get-RetentionCompliancePolicy $Name -ErrorAction SilentlyContinue
+        $PolicyObject = Get-RetentionCompliancePolicy $Name -DistributionDetail -ErrorAction SilentlyContinue
 
         if ($null -eq $PolicyObject)
         {
@@ -146,7 +146,7 @@ function Get-TargetResource
                     TeamsChannelLocationException = $PolicyObject.TeamsChannelLocationException
                     TeamsChatLocation             = [array]$PolicyObject.TeamsChatLocation
                     TeamsChatLocationException    = $PolicyObject.TeamsChatLocationException
-                    Credential            = $Credential
+                    Credential                    = $Credential
                 }
             }
             else
