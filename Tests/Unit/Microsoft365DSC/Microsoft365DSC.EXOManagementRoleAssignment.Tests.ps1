@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "EXOManagementRole" -GenericStubModule $GenericStubPath
+    -DscResource "EXOManagementRoleAssignment" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -43,39 +43,36 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
+            Mock -CommandName New-ManagementRoleAssignment -MockWith {
+
+            }
+
+            Mock -CommandName Set-ManagementRoleAssignment -MockWith {
+
+            }
+
+            Mock -CommandName Remove-ManagementRoleAssignment -MockWith {
+
+            }
+
             Mock -CommandName Remove-PSSession -MockWith {
 
             }
         }
 
         # Test contexts
-        Context -Name "Management Role should exist. Management Role is missing. Test should fail." -Fixture {
+        Context -Name "Management Role Assignment should exist, but it is not." -Fixture {
             BeforeAll {
                 $testParams = @{
                     Name               = "Contoso Management Role"
-                    Parent             = "Journaling"
-                    Description        = "This is the Contoso Management Role"
+                    Role               = "MyRole"
+                    User               = "John.Smith"
                     Ensure             = 'Present'
-                    Credential = $Credential
+                    Credential         = $Credential
                 }
 
-                Mock -CommandName Get-ManagementRole -MockWith {
-                    return @{
-                        Name                = "Contoso Differet Management Role"
-                        Parent              = "Journaling"
-                        Description         = "This is the Different Contoso Management Role"
-                        FreeBusyAccessLevel = 'AvailabilityOnly'
-                    }
-                }
-
-                Mock -CommandName New-ManagementRole -MockWith {
-                    return @{
-                        Name               = "Contoso Management Role"
-                        Parent             = "Journaling"
-                        Description        = "This is the Contoso Management Role"
-                        Ensure             = 'Present'
-                        Credential = $Credential
-                    }
+                Mock -CommandName Get-ManagementRoleAssignment -MockWith {
+                    return $null
                 }
             }
 
@@ -85,6 +82,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the Set method" {
                 Set-TargetResource @testParams
+                Assert-MockCalled -CommandName New-ManagementRoleAssignment -Exactly 1
             }
 
             It "Should return Absent from the Get method" {
@@ -92,21 +90,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Management Role should exist. Management Role exists. Test should pass." -Fixture {
+        Context -Name "Management Role Assignment exists and is in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
                     Name               = "Contoso Management Role"
-                    Parent             = "Journaling"
-                    Description        = "This is the Contoso Management Role"
+                    Role               = "MyRole"
+                    User               = "John.Smith"
                     Ensure             = 'Present'
-                    Credential = $Credential
+                    Credential         = $Credential
                 }
 
-                Mock -CommandName Get-ManagementRole -MockWith {
+                Mock -CommandName Get-ManagementRoleAssignment -MockWith {
                     return @{
-                        Name        = "Contoso Management Role"
-                        Parent      = "Journaling"
-                        Description = "This is the Contoso Management Role"
+                        Name             = "Contoso Management Role"
+                        Role             = "MyRole"
+                        RoleAssignee     = "John.Smith"
+                        RoleAssigneeType = "User"
                     }
                 }
             }
@@ -120,41 +119,72 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Management Role should exist. Management Role exists, Description mismatch. Test should fail." -Fixture {
+        Context -Name "Management Role Assignment exists and is NOT the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Name               = "Contoso Management Role"
-                    Parent             = "Journaling"
-                    Description        = "This is the Contoso Management Role"
-                    Ensure             = 'Present'
-                    Credential = $Credential
+                    Name                             = "Contoso Management Role"
+                    Role                             = "MyRole"
+                    User                             = "Bob.Houle"
+                    RecipientOrganizationalUnitScope = "contoso.com/Legal/Users"
+                    Ensure                           = 'Present'
+                    Credential                       = $Credential
                 }
 
-                Mock -CommandName Get-ManagementRole -MockWith {
+                Mock -CommandName Get-ManagementRoleAssignment -MockWith {
                     return @{
-                        Name        = "Contoso Management Role"
-                        Parent      = "Journaling"
-                        Description = "This is the Different Contoso Management Role"
-                    }
-                }
-
-                Mock -CommandName New-ManagementRole -MockWith {
-                    return @{
-                        Name               = "Contoso Management Role"
-                        Parent             = "Journaling"
-                        Description        = "This is the Contoso Management Role"
-                        Ensure             = 'Present'
-                        Credential = $Credential
+                        Name                             = "Contoso Management Role"
+                        Role                             = "MyRole"
+                        RecipientOrganizationalUnitScope = "contoso.com/Drift/Users"
+                        RoleAssignee                     = "Bob.Houle"
+                        RoleAssigneeType                 = "User"
                     }
                 }
             }
 
-            It 'Should return false from the Test method' {
+            It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should return Present from the Get Method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
             }
 
             It "Should call the Set method" {
                 Set-TargetResource @testParams
+                Assert-MockCalled -CommandName Set-ManagementRoleAssignment -Exactly 1
+            }
+        }
+
+        Context -Name "Management Role Assignment exists and it SHOULD NOT." -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Name               = "Contoso Management Role"
+                    Role               = "MyRole"
+                    Ensure             = 'Absent'
+                    Credential         = $Credential
+                }
+
+                Mock -CommandName Get-ManagementRoleAssignment -MockWith {
+                    return @{
+                        Name             = "Contoso Management Role"
+                        Role             = "MyRole"
+                        RoleAssignee     = "Bob.Houle"
+                        RoleAssigneeType = "User"
+                    }
+                }
+            }
+
+            It 'Should return true from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should return Present from the Get Method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+            }
+
+            It "Should call the Set method" {
+                Set-TargetResource @testParams
+                Assert-MockCalled -CommandName Remove-ManagementRoleAssignment -Exactly 1
             }
         }
 
@@ -166,12 +196,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 $ManagementRole = @{
-                    Name        = "Contoso Management Role"
-                    Parent      = "Journaling"
-                    Description = "This is the Contoso Management Role"
+                    Name        = "Contoso Management Role Assignment"
+                    Parent      = "MyRole"
                 }
-                Mock -CommandName Get-ManagementRole -MockWith {
-                    return $ManagementRole
+
+                Mock -CommandName Get-ManagementRoleAssignment -MockWith {
+                    return @{
+                        Name             = "Contoso Management Role"
+                        Role             = "MyRole"
+                        RoleAssignee     = "Bob.Houle"
+                        RoleAssigneeType = "User"
+                    }
                 }
             }
 

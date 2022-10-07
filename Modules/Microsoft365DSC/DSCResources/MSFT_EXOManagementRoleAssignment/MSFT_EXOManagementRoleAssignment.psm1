@@ -30,6 +30,30 @@ function Get-TargetResource
         $User,
 
         [Parameter()]
+        [System.String]
+        $CustomRecipientWriteScope,
+
+        [Parameter()]
+        [System.String]
+        $CustomResourceScope,
+
+        [Parameter()]
+        [System.String]
+        $ExclusiveRecipientWriteScope,
+
+        [Parameter()]
+        [System.String]
+        $RecipientAdministrativeUnitScope,
+
+        [Parameter()]
+        [System.String]
+        $RecipientOrganizationalUnitScope,
+
+        [Parameter()]
+        [System.String]
+        $RecipientRelativeWriteScope,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -99,23 +123,41 @@ function Get-TargetResource
         else
         {
             $result = @{
-                Name                  = $ManagementRole.Name
-                Role                  = $ManagementRole.Role
-                Ensure                = 'Present'
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePath       = $CertificatePath
-                CertificatePassword   = $CertificatePassword
-                TenantId              = $TenantId
+                Name                             = $roleAssignment.Name
+                CustomRecipientWriteScope        = $roleAssignment.CustomRecipientWriteScope
+                CustomResourceScope              = $roleAssignment.CustomResourceScope
+                ExclusiveRecipientWriteScope     = $roleAssignment.ExclusiveRecipientWriteScope
+                RecipientAdministrativeUnitScope = $roleAssignment.RecipientAdministrativeUnitScope
+                RecipientOrganizationalUnitScope = $roleAssignment.RecipientOrganizationalUnitScope
+                RecipientRelativeWriteScope      = $roleAssignment.RecipientRelativeWriteScope
+                Role                             = $roleAssignment.Role
+                Ensure                           = 'Present'
+                Credential                       = $Credential
+                ApplicationId                    = $ApplicationId
+                CertificateThumbprint            = $CertificateThumbprint
+                CertificatePath                  = $CertificatePath
+                CertificatePassword              = $CertificatePassword
+                TenantId                         = $TenantId
             }
 
             if ($roleAssignment.RoleAssigneeType -eq 'SecurityGroup')
             {
                 $result.Add("SecurityGroup", $roleAssignment.RoleAssignee)
             }
+            elseif ($roleAssignment.RoleAssigneeType -eq 'RoleAssignmentPolicy')
+            {
+                $result.Add("Policy", $roleAssignment.RoleAssignee)
+            }
+            elseif ($roleAssignment.RoleAssigneeType -eq 'ServicePrincipal')
+            {
+                $result.Add("App", $roleAssignment.RoleAssignee)
+            }
+            elseif ($roleAssignment.RoleAssigneeType -eq 'User')
+            {
+                $result.Add("User", $roleAssignment.RoleAssignee)
+            }
 
-            Write-Verbose -Message "Found Management Role $($Name)"
+            Write-Verbose -Message "Found Management Role Assignment $($Name)"
             return $result
         }
     }
@@ -176,6 +218,30 @@ function Set-TargetResource
         $User,
 
         [Parameter()]
+        [System.String]
+        $CustomRecipientWriteScope,
+
+        [Parameter()]
+        [System.String]
+        $CustomResourceScope,
+
+        [Parameter()]
+        [System.String]
+        $ExclusiveRecipientWriteScope,
+
+        [Parameter()]
+        [System.String]
+        $RecipientAdministrativeUnitScope,
+
+        [Parameter()]
+        [System.String]
+        $RecipientOrganizationalUnitScope,
+
+        [Parameter()]
+        [System.String]
+        $RecipientRelativeWriteScope,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -205,7 +271,7 @@ function Set-TargetResource
         $CertificatePassword
     )
 
-    Write-Verbose -Message "Setting Management Role configuration for $Name"
+    Write-Verbose -Message "Setting Management Role Assignment for $Name"
 
     $currentManagementRoleConfig = Get-TargetResource @PSBoundParameters
 
@@ -224,35 +290,36 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $NewManagementRoleParams = @{
-        Name        = $Name
-        Parent      = $Parent
-        Description = $Description
-        Confirm     = $false
-    }
+    $NewManagementRoleParams = $PSBoundParameters
+    $NewManagementRoleParams.Remove("Ensure") | Out-Null
+    $NewManagementRoleParams.Remove("Credential") | Out-Null
+    $NewManagementRoleParams.Remove("ApplicationId") | Out-Null
+    $NewManagementRoleParams.Remove("TenantId") | Out-Null
+    $NewManagementRoleParams.Remove("CertificateThumbprint") | Out-Null
+    $NewManagementRoleParams.Remove("CertificatePath") | Out-Null
+    $NewManagementRoleParams.Remove("CertificatePassword") | Out-Null
 
     # CASE: Management Role doesn't exist but should;
     if ($Ensure -eq "Present" -and $currentManagementRoleConfig.Ensure -eq "Absent")
     {
-        Write-Verbose -Message "Management Role '$($Name)' does not exist but it should. Create and configure it."
+        Write-Verbose -Message "Management Role Assignment'$($Name)' does not exist but it should. Create and configure it."
         # Create Management Role
-        New-ManagementRole @NewManagementRoleParams
+        New-ManagementRoleAssignment @NewManagementRoleParams
 
     }
     # CASE: Management Role exists but it shouldn't;
     elseif ($Ensure -eq "Absent" -and $currentManagementRoleConfig.Ensure -eq "Present")
     {
-        Write-Verbose -Message "Management Role '$($Name)' exists but it shouldn't. Remove it."
-        Remove-ManagementRole -Identity $Name -Confirm:$false -Force
+        Write-Verbose -Message "Management Role Assignment'$($Name)' exists but it shouldn't. Remove it."
+        Remove-ManagementRoleAssignment -Identity $Name -Confirm:$false -Force
     }
     # CASE: Management Role exists and it should, but has different values than the desired ones
     elseif ($Ensure -eq "Present" -and $currentManagementRoleConfig.Ensure -eq "Present")
     {
-        Write-Verbose -Message "Management Role '$($Name)' already exists, but needs updating. Re-create management role."
-        Write-Verbose -Message "Setting Management Role $($Name) with values: $(Convert-M365DscHashtableToString -Hashtable $NewManagementRoleParams)"
-        # Since there is no Set-ManagementRole cmdlet available, remove management role and re-create it
-        Remove-ManagementRole -Identity $Name -Confirm:$false -Force
-        New-ManagementRole @NewManagementRoleParams
+        Write-Verbose -Message "Management Role Assignment'$($Name)' already exists, but needs updating."
+        $NewManagementRoleParams.Add("Identity", $Name)
+        $NewManagementRoleParams.Remove("Name") | Out-Null
+        Set-ManagementRoleAssignment @NewManagementRoleParams
     }
 }
 
@@ -288,6 +355,30 @@ function Test-TargetResource
         $User,
 
         [Parameter()]
+        [System.String]
+        $CustomRecipientWriteScope,
+
+        [Parameter()]
+        [System.String]
+        $CustomResourceScope,
+
+        [Parameter()]
+        [System.String]
+        $ExclusiveRecipientWriteScope,
+
+        [Parameter()]
+        [System.String]
+        $RecipientAdministrativeUnitScope,
+
+        [Parameter()]
+        [System.String]
+        $RecipientOrganizationalUnitScope,
+
+        [Parameter()]
+        [System.String]
+        $RecipientRelativeWriteScope,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -328,7 +419,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing Management Role configuration for $Name"
+    Write-Verbose -Message "Testing Management Role Assignment for $Name"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -401,11 +492,12 @@ function Export-TargetResource
 
     try
     {
-        [array]$AllManagementRoles = Get-ManagementRole | Where-Object -FilterScript {$_.Parent -ne $null}
+        [array]$roleAssignments = Get-ManagementRoleAssignment | Where-Object -FilterScript {$_.RoleAssigneeType -eq 'ServicePrincipal' -or `
+            $_.RoleAssigneeType -eq 'User' -or $_.RoleAssigneeType -eq 'RoleAssignmentPolicy' -or $_.RoleAssigneeType -eq 'SecurityGroup'}
 
         $dscContent = ""
 
-        if ($AllManagementRoles.Length -eq 0)
+        if ($roleAssignments.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
@@ -414,19 +506,19 @@ function Export-TargetResource
             Write-Host "`r`n" -NoNewline
         }
         $i = 1
-        foreach ($ManagementRole in $AllManagementRoles)
+        foreach ($assignment in $roleAssignments)
         {
-            Write-Host "    |---[$i/$($AllManagementRoles.Count)] $($ManagementRole.Name)" -NoNewline
+            Write-Host "    |---[$i/$($roleAssignments.Count)] $($assignment.Name)" -NoNewline
 
             $Params = @{
-                Name                  = $ManagementRole.Name
-                Credential    = $Credential
+                Name                  = $assignment.Name
+                Role                  = $assignment.Role
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
-                Parent                = $ManagementRole.Parent
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

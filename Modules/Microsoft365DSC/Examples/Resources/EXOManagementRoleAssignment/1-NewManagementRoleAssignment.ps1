@@ -8,19 +8,19 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $credsCredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
-        EXOManagementRole 'ConfigureManagementRole'
+        EXOManagementRoleAssignment 'AssignManagementRole'
         {
-            Name                 = "MyDisplayName"
-            Description          = ""
-            Parent               = "contoso.onmicrosoft.com\MyProfileInformation"
-            Ensure               = "Present"
-            Credential           = $credsGlobalAdmin
+            Credential           = $credsCredential;
+            Ensure               = "Present";
+            Name                 = "MyManagementRoleAssignment";
+            Role                 = "UserApplication";
+            User                 = "John.Smith";
         }
     }
 }
