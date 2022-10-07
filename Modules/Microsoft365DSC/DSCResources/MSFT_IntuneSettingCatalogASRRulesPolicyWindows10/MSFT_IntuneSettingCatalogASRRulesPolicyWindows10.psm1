@@ -158,13 +158,7 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta' -ErrorAction Stop
 
-    $context = Get-MgContext
-    if ($null -eq $context)
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters -ErrorAction Stop -ProfileName 'beta'
-    }
-
+    Select-MgProfile -Name beta
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -478,7 +472,7 @@ function Set-TargetResource
             -DSCParams ([System.Collections.Hashtable]$PSBoundParameters) `
             -TemplateReferenceId $templateReferenceId
 
-        $policy=New-DeviceConfigurationPolicy `
+        $policy=New-IntuneDeviceConfigurationPolicy `
             -Name $DisplayName `
             -Description $Description `
             -Platforms "windows10" `
@@ -512,7 +506,7 @@ function Set-TargetResource
 
         #write-verbose -message ($settings|convertto-json -Depth 20)
 
-        Update-DeviceConfigurationPolicy `
+        Update-IntuneDeviceConfigurationPolicy `
             -DeviceConfigurationPolicyId $Identity `
             -Name $DisplayName `
             -Description $Description `
@@ -955,7 +949,16 @@ function Format-M365DSCParamsToSettingInstance
         $DSCParams,
 
         [Parameter()]
-        $TemplateSetting
+        $TemplateSetting,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeSettingInstanceTemplateId=$true,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeSettingValueTemplateId=$true
+
     )
 
     $DSCParams.Remove('Verbose') | Out-Null
@@ -965,7 +968,7 @@ function Format-M365DSCParamsToSettingInstance
     {
         $settingInstance=[ordered]@{}
         $settingInstance.add("settingDefinitionId",$templateSetting.settingDefinitionId)
-        if(-Not [string]::IsNullOrEmpty($templateSetting.settingInstanceTemplateId))
+        if($IncludeSettingInstanceTemplateId -and -Not [string]::IsNullOrEmpty($templateSetting.settingInstanceTemplateId))
         {
             $settingInstance.add("settingInstanceTemplateReference",@{"settingInstanceTemplateId"=$templateSetting.settingInstanceTemplateId})
         }
@@ -985,8 +988,8 @@ function Format-M365DSCParamsToSettingInstance
                 $choiceSettingValue=[ordered]@{}
                 $choiceSettingValue.add("@odata.type","#microsoft.graph.deviceManagementConfigurationChoiceSettingValue")
                 $choiceSettingValue.add("children",@())
-                $settingValueTemplateId=$templateSetting.choiceSettingValueTemplate.settingValueTemplateId
-                if(-Not [string]::IsNullOrEmpty($settingValueTemplateId))
+                $settingValueTemplateId=$templateSetting.AdditionalProperties.choiceSettingValueTemplate.settingValueTemplateId
+                if($IncludeSettingValueTemplateId -and -Not [string]::IsNullOrEmpty($settingValueTemplateId))
                 {
                     $choiceSettingValue.add('settingValueTemplateReference', @{'settingValueTemplateId' = $SettingValueTemplateId })
                 }
@@ -1002,9 +1005,9 @@ function Format-M365DSCParamsToSettingInstance
                 {
                     $simpleSettingCollectionValue=@{}
                     $settingValueTemplateId=$templateSetting.AdditionalProperties.simpleSettingCollectionValueTemplate.settingValueTemplateId
-                    if(-Not [string]::IsNullOrEmpty($settingValueTemplateId))
+                    if($IncludeSettingValueTemplateId -and -Not [string]::IsNullOrEmpty($settingValueTemplateId))
                     {
-                        #$simpleSettingCollectionValue.add("settingValueTemplateReference",@{"settingValueTemplateId"=$SettingValueTemplateId})
+                        $simpleSettingCollectionValue.add("settingValueTemplateReference",@{"settingValueTemplateId"=$SettingValueTemplateId})
                     }
                     $settingValueDataType=$templateSetting.AdditionalProperties.simpleSettingCollectionValueTemplate."@odata.type".replace("Template","")
                     $simpleSettingCollectionValue.add("@odata.type",$settingValueDataType)
@@ -1015,7 +1018,7 @@ function Format-M365DSCParamsToSettingInstance
 
                 $results+=$settingInstance
             }
-            "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance"
+            "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstanceTemplate"
             {
                 $simpleSettingValue=@{}
                 $SettingValueType=$templateSetting.AdditionalProperties.simpleSettingValueTemplate."@odata.type"
@@ -1086,11 +1089,11 @@ function Format-M365DSCIntuneSettingCatalogASRRulesPolicySettings
         }
     }
 
+    #Prepare attacksurfacereductionrules groupCollectionTemplateSettings
     $groupCollectionTemplateSettings=@()
     $groupCollectionTemplateSettings+=$templateSettings.SettingInstanceTemplate|Where-Object -FilterScript `
             {$_.AdditionalProperties."@odata.type" -eq "#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstanceTemplate"}
 
-    #Prepare attacksurfacereductionrules
     foreach ($groupCollectionTemplateSetting in $groupCollectionTemplateSettings)
     {
         $setting=@{}
@@ -1104,20 +1107,6 @@ function Format-M365DSCIntuneSettingCatalogASRRulesPolicySettings
         })
         $groupSettingCollectionValues=@()
         $groupSettingCollectionValueChildren=@()
-        foreach ($key in $DSCParams.keys)
-        {
-            $templateValue=$groupCollectionTemplateSetting.AdditionalProperties.groupSettingCollectionValueTemplate.children|where-object `
-                -filterScript {$_.settingDefinitionId -like "*$key"}
-            if($templateValue)
-            {
-                $groupSettingCollectionValueChild= Format-M365DSCParamsToSettingInstance `
-                    -DSCParams @{$key=$DSCParams."$key"} `
-                    -TemplateSetting $templateValue
-
-                $groupSettingCollectionValueChildren+=$groupSettingCollectionValueChild
-            }
-        }
-
         $groupSettingCollectionValue=@{}
         $groupSettingCollectionValue.add("@odata.type","#microsoft.graph.deviceManagementConfigurationGroupSettingValue")
 
@@ -1126,18 +1115,37 @@ function Format-M365DSCIntuneSettingCatalogASRRulesPolicySettings
         {
             $groupSettingCollectionValue.add("settingValueTemplateReference",@{"settingValueTemplateId"=$SettingValueTemplateId})
         }
+
+        foreach ($key in $DSCParams.keys)
+        {
+            $templateValue=$groupCollectionTemplateSetting.AdditionalProperties.groupSettingCollectionValueTemplate.children|where-object `
+                -filterScript {$_.settingDefinitionId -like "*$key"}
+            if($templateValue)
+            {
+                $groupSettingCollectionValueChild= Format-M365DSCParamsToSettingInstance `
+                    -DSCParams @{$key=$DSCParams."$key"} `
+                    -TemplateSetting $templateValue `
+                    -IncludeSettingValueTemplateId $false `
+                    -IncludeSettingInstanceTemplateId $false
+
+                $groupSettingCollectionValueChildren+=$groupSettingCollectionValueChild
+            }
+        }
         $groupSettingCollectionValue.add("children",$groupSettingCollectionValueChildren)
         $groupSettingCollectionValues+=$groupSettingCollectionValue
         $settingInstance.add("groupSettingCollectionValue",$groupSettingCollectionValues)
-
         $setting.add('settingInstance',$settingInstance)
-        $settings+=$setting
+
+        if($setting.settingInstance.groupSettingCollectionValue.children.count -gt 0)
+        {
+            $settings+=$setting
+        }
     }
 
     return $settings
 }
 
-function New-DeviceConfigurationPolicy
+function New-IntuneDeviceConfigurationPolicy
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -1205,7 +1213,7 @@ function New-DeviceConfigurationPolicy
 
 
 }
-function Update-DeviceConfigurationPolicy
+function Update-IntuneDeviceConfigurationPolicy
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -1346,6 +1354,7 @@ function Update-DeviceConfigurationPolicyAssignments
 function Get-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
+    [OutputType([hashtable],[hashtable[]])]
     param(
         [Parameter()]
         $ComplexObject
@@ -1355,6 +1364,17 @@ function Get-M365DSCDRGComplexTypeToHashtable
     {
         return $null
     }
+
+
+    if($ComplexObject.getType().Fullname -like "*hashtable")
+    {
+        return $ComplexObject
+    }
+    if($ComplexObject.getType().Fullname -like "*hashtable[[\]]")
+    {
+        return [hashtable[]]$ComplexObject
+    }
+
 
     if($ComplexObject.gettype().fullname -like "*[[\]]")
     {
@@ -1368,11 +1388,11 @@ function Get-M365DSCDRGComplexTypeToHashtable
                 $results+=$hash
             }
         }
-        if($results.count -eq 0)
-        {
-            return $null
-        }
-        return $results
+
+        # PowerShell returns all non-captured stream output, not just the argument of the return statement.
+        #An empty array is mangled into $null in the process.
+        #However, an array can be preserved on return by prepending it with the array construction operator (,)
+        return ,[hashtable[]]$results
     }
 
     $results = @{}
@@ -1380,16 +1400,25 @@ function Get-M365DSCDRGComplexTypeToHashtable
 
     foreach ($key in $keys)
     {
+
         if($ComplexObject.$($key.Name))
         {
-            $results.Add($key.Name, $ComplexObject.$($key.Name))
+            $keyName = $key.Name[0].ToString().ToLower() + $key.Name.Substring(1, $key.Name.Length - 1)
+
+            if($ComplexObject.$($key.Name).gettype().fullname -like "*CimInstance*")
+            {
+                $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$($key.Name)
+
+                $results.Add($keyName, $hash)
+            }
+            else
+            {
+                $results.Add($keyName, $ComplexObject.$($key.Name))
+            }
         }
     }
-    if($results.count -eq 0)
-    {
-        return $null
-    }
-    return $results
+
+    return [hashtable]$results
 }
 
 function Get-M365DSCDRGComplexTypeToString
@@ -1405,6 +1434,10 @@ function Get-M365DSCDRGComplexTypeToString
         $CIMInstanceName,
 
         [Parameter()]
+        [Array]
+        $ComplexTypeMapping,
+
+        [Parameter()]
         [System.String]
         $Whitespace="",
 
@@ -1412,6 +1445,7 @@ function Get-M365DSCDRGComplexTypeToString
         [switch]
         $isArray=$false
     )
+
     if ($null -eq $ComplexObject)
     {
         return $null
@@ -1423,26 +1457,26 @@ function Get-M365DSCDRGComplexTypeToString
         $currentProperty=@()
         foreach ($item in $ComplexObject)
         {
-            $currentProperty += Get-M365DSCDRGComplexTypeToString `
-                -ComplexObject $item `
-                -isArray:$true `
-                -CIMInstanceName $CIMInstanceName `
-                -Whitespace "                "
+            $split=@{
+                'ComplexObject'=$item
+                'CIMInstanceName'=$CIMInstanceName
+                'Whitespace'="                $whitespace"
+            }
+            if ($ComplexTypeMapping)
+            {
+                $split.add('ComplexTypeMapping',$ComplexTypeMapping)
+            }
+
+            $currentProperty += Get-M365DSCDRGComplexTypeToString -isArray:$true @split
 
         }
-        if ([string]::IsNullOrEmpty($currentProperty))
-        {
-            return $null
-        }
-        return $currentProperty
 
+        # PowerShell returns all non-captured stream output, not just the argument of the return statement.
+        #An empty array is mangled into $null in the process.
+        #However, an array can be preserved on return by prepending it with the array construction operator (,)
+        return ,$currentProperty
     }
 
-    #If ComplexObject is a single CIM Instance
-    if(-Not (Test-M365DSCComplexObjectHasValues -ComplexObject $ComplexObject))
-    {
-        return $null
-    }
     $currentProperty=""
     if($isArray)
     {
@@ -1452,28 +1486,55 @@ function Get-M365DSCDRGComplexTypeToString
     $keyNotNull = 0
     foreach ($key in $ComplexObject.Keys)
     {
+
         if ($ComplexObject[$key])
         {
             $keyNotNull++
-
-            if ($ComplexObject[$key].GetType().FullName -like "Microsoft.Graph.PowerShell.Models.*")
+            if ($ComplexObject[$key].GetType().FullName -like "Microsoft.Graph.PowerShell.Models.*" -or $key -in $ComplexTypeMapping.Name)
             {
                 $hashPropertyType=$ComplexObject[$key].GetType().Name.tolower()
-                $hashProperty=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key]
 
-                if (Test-M365DSCComplexObjectHasValues -ComplexObject $hashProperty)
+                #overwrite type if object defined in mapping complextypemapping
+                if($key -in $ComplexTypeMapping.Name)
+                {
+                    $hashPropertyType=($ComplexTypeMapping|Where-Object -FilterScript {$_.Name -eq $key}).CimInstanceName
+                    $hashProperty=$ComplexObject[$key]
+                }
+                else
+                {
+                    $hashProperty=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key]
+                }
+
+                if($key -notin $ComplexTypeMapping.Name)
                 {
                     $Whitespace+="            "
-                    if(-not $isArray)
-                    {
-                        $currentProperty += "                " + $key + " = "
-                    }
-                    $currentProperty += Get-M365DSCDRGComplexTypeToString `
-                                    -ComplexObject $hashProperty `
-                                    -CIMInstanceName $hashPropertyType `
-                                    -Whitespace $Whitespace
                 }
-            }
+
+                if(-not $isArray -or ($isArray -and $key -in $ComplexTypeMapping.Name ))
+                {
+                    $currentProperty += $whitespace + $key + " = "
+                    if($ComplexObject[$key].GetType().FullName -like "*[[\]]")
+                    {
+                        $currentProperty += "@("
+                    }
+                }
+
+                if($key -in $ComplexTypeMapping.Name)
+                {
+                    $Whitespace=""
+
+                }
+                $currentProperty += Get-M365DSCDRGComplexTypeToString `
+                                -ComplexObject $hashProperty `
+                                -CIMInstanceName $hashPropertyType `
+                                -Whitespace $Whitespace `
+                                -ComplexTypeMapping $ComplexTypeMapping
+
+                if($ComplexObject[$key].GetType().FullName -like "*[[\]]")
+                {
+                    $currentProperty += ")"
+                }
+        }
             else
             {
                 if(-not $isArray)
@@ -1483,49 +1544,28 @@ function Get-M365DSCDRGComplexTypeToString
                 $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $ComplexObject[$key] -Space ($Whitespace+"    ")
             }
         }
-    }
-    $currentProperty += "            }"
-
-    if ($keyNotNull -eq 0)
-    {
-        $currentProperty = $null
-    }
-
-    return $currentProperty
-}
-function Test-M365DSCComplexObjectHasValues
-{
-    [CmdletBinding()]
-    [OutputType([System.Boolean])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Collections.Hashtable]
-        $ComplexObject
-    )
-    $keys=$ComplexObject.keys
-    $hasValue=$false
-    foreach($key in $keys)
-    {
-        if($ComplexObject[$key])
+        else
         {
-            if($ComplexObject[$key].GetType().FullName -like "Microsoft.Graph.PowerShell.Models.*")
+            $mappedKey=$ComplexTypeMapping|where-object -filterscript {$_.name -eq $key}
+
+            if($mappedKey -and $mappedKey.isRequired)
             {
-                $hash=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key]
-                if(-Not $hash)
+                if($mappedKey.isArray)
                 {
-                    return $false
+                    $currentProperty += "$Whitespace    $key = @()`r`n"
                 }
-                $hasValue=Test-M365DSCComplexObjectHasValues -ComplexObject ($hash)
-            }
-            else
-            {
-                $hasValue=$true
-                return $hasValue
+                else
+                {
+                    $currentProperty += "$Whitespace    $key = `$null`r`n"
+                }
             }
         }
     }
-    return $hasValue
+    $currentProperty += "$Whitespace}"
+
+    return $currentProperty
 }
+
 Function Get-M365DSCDRGSimpleObjectTypeToString
 {
     [CmdletBinding()]
@@ -1609,89 +1649,132 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
     }
     return $returnValue
 }
+
 function Compare-M365DSCComplexObject
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param(
         [Parameter()]
-        [System.Collections.Hashtable]
         $Source,
         [Parameter()]
-        [System.Collections.Hashtable]
         $Target
     )
+
+    #Comparing full objects
+    if($null -eq  $Source  -and $null -eq $Target)
+    {
+        return $true
+    }
+
+    $sourceValue=""
+    $targetValue=""
+    if (($null -eq $Source) -xor ($null -eq $Target))
+    {
+        if($null -eq $Source)
+        {
+            $sourceValue="Source is null"
+        }
+
+        if($null -eq $Target)
+        {
+            $targetValue="Target is null"
+        }
+        Write-Verbose -Message "Configuration drift - Complex object: {$sourceValue$targetValue}"
+        return $false
+    }
+
+    if($Source.getType().FullName -like "*CimInstance[[\]]" -or $Source.getType().FullName -like "*Hashtable[[\]]")
+    {
+        if($source.count -ne $target.count)
+        {
+            Write-Verbose -Message "Configuration drift - The complex array have different number of items: Source {$($source.count)} Target {$($target.count)}"
+            return $false
+        }
+        if($source.count -eq 0)
+        {
+            return $true
+        }
+
+        $i=0
+        foreach($item in $Source)
+        {
+
+            $compareResult= Compare-M365DSCComplexObject `
+                    -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Source[$i]) `
+                    -Target $Target[$i]
+
+            if(-not $compareResult)
+            {
+                Write-Verbose -Message "Configuration drift - The complex array items are not identical"
+                return $false
+            }
+            $i++
+        }
+        return $true
+    }
 
     $keys= $Source.Keys|Where-Object -FilterScript {$_ -ne "PSComputerName"}
     foreach ($key in $keys)
     {
-        write-verbose -message "Comparing key: {$key}"
+        #write-verbose -message "Comparing key: {$key}"
+        #Matching possible key names between Source and Target
         $skey=$key
+        $tkey=$key
         if($key -eq 'odataType')
         {
             $skey='@odata.type'
         }
-
-        #Marking Target[key] to null if empty complex object or array
-        if($null -ne $Target[$key])
+        else
         {
-            switch -Wildcard ($Target[$key].getType().Fullname )
+            $tmpkey=$Target.keys|Where-Object -FilterScript {$_ -eq "$key"}
+            if($tkey)
             {
-                "Microsoft.Graph.PowerShell.Models.*"
-                {
-                    $hashProperty=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Target[$key]
-                    if(-not (Test-M365DSCComplexObjectHasValues -ComplexObject $hashProperty))
-                    {
-                        $Target[$key]=$null
-                    }
-                }
-                "*[[\]]"
-                {
-                    if($Target[$key].count -eq 0)
-                    {
-                        $Target[$key]=$null
-                    }
-                }
+                $tkey=$tmpkey|Select-Object -First 1
             }
         }
-        $sourceValue=$Source[$key]
-        $targetValue=$Target[$key]
-        #One of the item is null
-        if (($null -eq $Source[$skey]) -xor ($null -eq $Target[$key]))
+
+        $sourceValue=$Source.$key
+        $targetValue=$Target.$tkey
+        #One of the item is null and not the other
+        if (($null -eq $Source.$skey) -xor ($null -eq $Target.$tkey))
         {
-            if($null -eq $Source[$skey])
+
+            if($null -eq $Source.$skey)
             {
                 $sourceValue="null"
             }
 
-            if($null -eq $Target[$key])
+            if($null -eq $Target.$tkey)
             {
                 $targetValue="null"
             }
-            Write-Verbose -Message "Configuration drift - key: $key Source{$sourceValue} Target{$targetValue}"
+
+            Write-Verbose -Message "Configuration drift - key: $key Source {$sourceValue} Target {$targetValue}"
             return $false
         }
-        #Both source and target aren't null or empty
-        if(($null -ne $Source[$skey]) -and ($null -ne $Target[$key]))
+
+        #Both keys aren't null or empty
+        if(($null -ne $Source.$skey) -and ($null -ne $Target.$tkey))
         {
-            if($Source[$skey].getType().FullName -like "*CimInstance*")
+            if($Source.$skey.getType().FullName -like "*CimInstance*" -or $Source.$skey.getType().FullName -like "*hashtable*"  )
             {
                 #Recursive call for complex object
                 $compareResult= Compare-M365DSCComplexObject `
-                    -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Source[$skey]) `
-                    -Target (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Target[$key])
+                    -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Source.$skey) `
+                    -Target $Target.$tkey
 
                 if(-not $compareResult)
                 {
-                    Write-Verbose -Message "Configuration drift - key: $key Source{$sourceValue} Target{$targetValue}"
+                    Write-Verbose -Message "Configuration drift - complex object key: $key Source {$sourceValue} Target {$targetValue}"
                     return $false
                 }
             }
             else
             {
                 #Simple object comparison
-                $referenceObject=$Target[$key]
-                $differenceObject=$Source[$skey]
+                $referenceObject=$Target.$tkey
+                $differenceObject=$Source.$skey
 
                 $compareResult = Compare-Object `
                     -ReferenceObject ($referenceObject) `
@@ -1699,24 +1782,26 @@ function Compare-M365DSCComplexObject
 
                 if ($null -ne $compareResult)
                 {
-                    Write-Verbose -Message "Configuration drift - key: $key Source{$sourceValue} Target{$targetValue}"
+                    Write-Verbose -Message "Configuration drift - simple object key: $key Source {$sourceValue} Target {$targetValue}"
                     return $false
                 }
 
             }
+
         }
     }
 
     return $true
 }
-
 function Convert-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
+    [OutputType([hashtable],[hashtable[]])]
     param(
         [Parameter(Mandatory = 'true')]
         $ComplexObject
     )
+
 
     if($ComplexObject.getType().Fullname -like "*[[\]]")
     {
@@ -1724,36 +1809,38 @@ function Convert-M365DSCDRGComplexTypeToHashtable
         foreach($item in $ComplexObject)
         {
             $hash=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
-            if(Test-M365DSCComplexObjectHasValues -ComplexObject $hash)
-            {
-                $results+=$hash
-            }
+            $results+=$hash
         }
-        if($results.count -eq 0)
-        {
-            return $null
-        }
-        return $Results
+
+        #Write-Verbose -Message ("Convert-M365DSCDRGComplexTypeToHashtable >>> results: "+(convertTo-JSON $results -Depth 20))
+        # PowerShell returns all non-captured stream output, not just the argument of the return statement.
+        #An empty array is mangled into $null in the process.
+        #However, an array can be preserved on return by prepending it with the array construction operator (,)
+        return ,[hashtable[]]$results
     }
     $hashComplexObject = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject
+
     if($hashComplexObject)
     {
+
         $results=$hashComplexObject.clone()
         $keys=$hashComplexObject.Keys|Where-Object -FilterScript {$_ -ne 'PSComputerName'}
         foreach ($key in $keys)
         {
-            if(($null -ne $hashComplexObject[$key]) -and ($hashComplexObject[$key].getType().Fullname -like "*CimInstance*"))
+            if($hashComplexObject[$key] -and $hashComplexObject[$key].getType().Fullname -like "*CimInstance*")
             {
                 $results[$key]=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $hashComplexObject[$key]
             }
-            if($null -eq $results[$key])
+            else
             {
+                $propertyName = $key[0].ToString().ToLower() + $key.Substring(1, $key.Length - 1)
+                $propertyValue=$results[$key]
                 $results.remove($key)|out-null
+                $results.add($propertyName,$propertyValue)
             }
-
         }
     }
-    return $results
+    return [hashtable]$results
 }
 
 Export-ModuleMember -Function *-TargetResource

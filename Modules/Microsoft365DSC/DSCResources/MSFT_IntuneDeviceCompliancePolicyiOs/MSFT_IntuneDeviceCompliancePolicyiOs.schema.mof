@@ -8,6 +8,16 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
  [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
 };
 
+[ClassVersion("1.0.0.0")]
+class MSFT_appListItem
+{
+ [Write, Description("The application name.")] String name;
+ [Write, Description("The publisher of the application.")] String publisher;
+ [Write, Description("The Store URL of the application.")] String appStoreUrl;
+ [Write, Description("The application or bundle identifier of the application.")] String appId;
+};
+
+
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceCompliancePolicyiOs")]
 class MSFT_IntuneDeviceCompliancePolicyiOs : OMI_BaseResource
 {
@@ -15,19 +25,24 @@ class MSFT_IntuneDeviceCompliancePolicyiOs : OMI_BaseResource
     [Write, Description("Description of the iOS device compliance policy.")] String Description;
     [Write, Description("Assignments of the Intune Policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];
     [Write, Description("PasscodeBlockSimple of the iOS device compliance policy.")] Boolean PasscodeBlockSimple;
-    [Write, Description("PasscodeExpirationDays of the iOS device compliance policy.")] Uint64 PasscodeExpirationDays;
-    [Write, Description("PasscodeMinimumLength of the iOS device compliance policy.")] Uint64 PasscodeMinimumLength;
-    [Write, Description("PasscodeMinutesOfInactivityBeforeLock of the iOS device compliance policy.")] Uint64 PasscodeMinutesOfInactivityBeforeLock;
-    [Write, Description("PasscodePreviousPasscodeBlockCount of the iOS device compliance policy.")] Uint64 PasscodePreviousPasscodeBlockCount;
-    [Write, Description("PasscodeMinimumCharacterSetCount of the iOS device compliance policy.")] Uint64 PasscodeMinimumCharacterSetCount;
-    [Write, Description("PasscodeRequiredType of the iOS device compliance policy.")] String PasscodeRequiredType;
+    [Write, Description("PasscodeExpirationDays of the iOS device compliance policy.")] Uint32 PasscodeExpirationDays;
+    [Write, Description("PasscodeMinimumLength of the iOS device compliance policy.")] Uint32 PasscodeMinimumLength;
+    [Write, Description("PasscodeMinutesOfInactivityBeforeLock of the iOS device compliance policy.")] Uint32 PasscodeMinutesOfInactivityBeforeLock;
+    [Write, Description("Minutes of inactivity before the screen times out.")] Uint32 PasscodeMinutesOfInactivityBeforeScreenTimeout;
+    [Write, Description("PasscodePreviousPasscodeBlockCount of the iOS device compliance policy.")] Uint32 PasscodePreviousPasscodeBlockCount;
+    [Write, Description("PasscodeMinimumCharacterSetCount of the iOS device compliance policy.")] Uint32 PasscodeMinimumCharacterSetCount;
+    [Write, Description("PasscodeRequiredType of the iOS device compliance policy."), ValueMap{"deviceDefault","alphanumeric","numeric"}, Values{"deviceDefault","alphanumeric","numeric"}] String PasscodeRequiredType;
     [Write, Description("PasscodeRequired of the iOS device compliance policy.")] Boolean PasscodeRequired;
     [Write, Description("OsMinimumVersion of the iOS device compliance policy.")] String OsMinimumVersion;
     [Write, Description("OsMaximumVersion of the iOS device compliance policy.")] String OsMaximumVersion;
+    [Write, Description("Minimum IOS build version.")] String OsMinimumBuildVersion;
+    [Write, Description("Maximum IOS build version.")] String OsMaximumBuildVersion;
     [Write, Description("SecurityBlockJailbrokenDevices of the iOS device compliance policy.")] Boolean SecurityBlockJailbrokenDevices;
     [Write, Description("DeviceThreatProtectionEnabled of the iOS device compliance policy.")] Boolean DeviceThreatProtectionEnabled;
-    [Write, Description("DeviceThreatProtectionRequiredSecurityLevel of the iOS device compliance policy.")] String DeviceThreatProtectionRequiredSecurityLevel;
+    [Write, Description("Require Mobile Threat Protection minimum risk level to report noncompliance."), ValueMap{"unavailable", "secured", "low", "medium", "high", "notSet"}, Values{"unavailable", "secured", "low", "medium", "high", "notSet"}] String DeviceThreatProtectionRequiredSecurityLevel;
+    [Write, Description("MDATP Require Mobile Threat Protection minimum risk level to report noncompliance."), ValueMap{"unavailable", "secured", "low", "medium", "high", "notSet"}, Values{"unavailable", "secured", "low", "medium", "high", "notSet"}] String AdvancedThreatProtectionRequiredSecurityLevel;
     [Write, Description("ManagedEmailProfileRequired of the iOS device compliance policy.")] Boolean ManagedEmailProfileRequired;
+    [Write, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_appListItem")] string RestrictedApps[];
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
     [Write, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

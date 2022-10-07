@@ -14,7 +14,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $PasswordBlockFaceUnlock,
+
+        [Parameter()]
+        [System.Boolean]
         $PasswordBlockFingerprintUnlock,
+
+        [Parameter()]
+        [System.Boolean]
+        $PasswordBlockIrisUnlock,
 
         [Parameter()]
         [System.Boolean]
@@ -23,7 +31,6 @@ function Get-TargetResource
         [Parameter()]
         [System.Int32]
         $PasswordExpirationDays,
-
 
         [Parameter()]
         [System.Int32]
@@ -45,6 +52,15 @@ function Get-TargetResource
         [System.String]
         [ValidateSet('deviceDefault', 'lowSecurityBiometric', 'required', 'atLeastNumeric', 'numericComplex', 'atLeastAlphabetic', 'atLeastAlphanumeric', 'alphanumericWithSymbols')]
         $PasswordRequiredType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('none', 'low', 'medium', 'high')]
+        $RequiredPasswordComplexity,
+
+        [Parameter()]
+        [System.Boolean]
+        $WorkProfileAllowAppInstallsFromUnknownSources,
 
         [Parameter()]
         [System.String]
@@ -90,7 +106,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $WorkProfilePasswordBlockFaceUnlock,
+
+        [Parameter()]
+        [System.Boolean]
         $WorkProfilePasswordBlockFingerprintUnlock,
+
+        [Parameter()]
+        [System.Boolean]
+        $WorkProfilePasswordBlockIrisUnlock,
 
         [Parameter()]
         [System.Boolean]
@@ -146,12 +170,33 @@ function Get-TargetResource
         $WorkProfilePasswordRequiredType,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet('none', 'low', 'medium', 'high')]
+        $WorkProfileRequiredPasswordComplexity,
+
+        [Parameter()]
         [System.Boolean]
         $WorkProfileRequirePassword,
 
         [Parameter()]
         [System.Boolean]
         $SecurityRequireVerifyApps,
+
+        [Parameter()]
+        [System.String]
+        $VpnAlwaysOnPackageIdentifier,
+
+        [Parameter()]
+        [System.Boolean]
+        $VpnEnableAlwaysOnLockdownMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $WorkProfileAllowWidgets,
+
+        [Parameter()]
+        [System.Boolean]
+        $WorkProfileBlockPersonalAppInstallsFromUnknownSources,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -227,10 +272,12 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Found Device Configuration Policy {$DisplayName}"
-        return @{
+        $results= @{
             Description                                               = $policy.Description
             DisplayName                                               = $policy.DisplayName
+            PasswordBlockFaceUnlock                                   = $policy.AdditionalProperties.passwordBlockFaceUnlock
             PasswordBlockFingerprintUnlock                            = $policy.AdditionalProperties.passwordBlockFingerprintUnlock
+            PasswordBlockIrisUnlock                                   = $policy.AdditionalProperties.passwordBlockIrisUnlock
             PasswordBlockTrustAgents                                  = $policy.AdditionalProperties.passwordBlockTrustAgents
             PasswordExpirationDays                                    = $policy.AdditionalProperties.passwordExpirationDays
             PasswordMinimumLength                                     = $policy.AdditionalProperties.passwordMinimumLength
@@ -238,8 +285,10 @@ function Get-TargetResource
             PasswordPreviousPasswordBlockCount                        = $policy.AdditionalProperties.passwordPreviousPasswordBlockCount
             PasswordSignInFailureCountBeforeFactoryReset              = $policy.AdditionalProperties.passwordSignInFailureCountBeforeFactoryReset
             PasswordRequiredType                                      = $policy.AdditionalProperties.passwordRequiredType
+            RequiredPasswordComplexity                                = $policy.AdditionalProperties.requiredPasswordComplexity
+            WorkProfileAllowAppInstallsFromUnknownSources             = $policy.AdditionalProperties.workProfileAllowAppInstallsFromUnknownSources
             WorkProfileDataSharingType                                = $policy.AdditionalProperties.workProfileDataSharingType
-            WorkProfileBlockNotificationsWhileDeviceLocked            = $policy.AdditionalProperties.workProfileBlockAddingAccounts
+            WorkProfileBlockNotificationsWhileDeviceLocked            = $policy.AdditionalProperties.WorkProfileBlockNotificationsWhileDeviceLocked
             WorkProfileBlockAddingAccounts                            = $policy.AdditionalProperties.workProfileBlockAddingAccounts
             WorkProfileBluetoothEnableContactSharing                  = $policy.AdditionalProperties.workProfileBluetoothEnableContactSharing
             WorkProfileBlockScreenCapture                             = $policy.AdditionalProperties.workProfileBlockScreenCapture
@@ -248,7 +297,9 @@ function Get-TargetResource
             WorkProfileBlockCrossProfileContactsSearch                = $policy.AdditionalProperties.workProfileBlockCrossProfileContactsSearch
             WorkProfileBlockCrossProfileCopyPaste                     = $policy.AdditionalProperties.workProfileBlockCrossProfileCopyPaste
             WorkProfileDefaultAppPermissionPolicy                     = $policy.AdditionalProperties.workProfileDefaultAppPermissionPolicy
+            WorkProfilePasswordBlockFaceUnlock                        = $policy.AdditionalProperties.workProfilePasswordBlockFaceUnlock
             WorkProfilePasswordBlockFingerprintUnlock                 = $policy.AdditionalProperties.workProfilePasswordBlockFingerprintUnlock
+            WorkProfilePasswordBlockIrisUnlock                        = $policy.AdditionalProperties.workProfilePasswordBlockIrisUnlock
             WorkProfilePasswordBlockTrustAgents                       = $policy.AdditionalProperties.workProfilePasswordBlockTrustAgents
             WorkProfilePasswordExpirationDays                         = $policy.AdditionalProperties.workProfilePasswordExpirationDays
             WorkProfilePasswordMinimumLength                          = $policy.AdditionalProperties.workProfilePasswordMinimumLength
@@ -262,8 +313,13 @@ function Get-TargetResource
             WorkProfilePasswordPreviousPasswordBlockCount             = $policy.AdditionalProperties.workProfilePasswordPreviousPasswordBlockCount
             WorkProfilePasswordSignInFailureCountBeforeFactoryReset   = $policy.AdditionalProperties.workProfilePasswordSignInFailureCountBeforeFactoryReset
             WorkProfilePasswordRequiredType                           = $policy.AdditionalProperties.workProfilePasswordRequiredType
+            WorkProfileRequiredPasswordComplexity                     = $policy.AdditionalProperties.workProfileRequiredPasswordComplexity
             WorkProfileRequirePassword                                = $policy.AdditionalProperties.workProfileRequirePassword
             SecurityRequireVerifyApps                                 = $policy.AdditionalProperties.securityRequireVerifyApps
+            VpnAlwaysOnPackageIdentifier                              = $policy.AdditionalProperties.vpnAlwaysOnPackageIdentifier
+            VpnEnableAlwaysOnLockdownMode                             = $policy.AdditionalProperties.vpnEnableAlwaysOnLockdownMode
+            WorkProfileAllowWidgets                                   = $policy.AdditionalProperties.workProfileAllowWidgets
+            WorkProfileBlockPersonalAppInstallsFromUnknownSources     = $policy.AdditionalProperties.workProfileBlockPersonalAppInstallsFromUnknownSources
             Ensure                                                    = 'Present'
             Credential                                                = $Credential
             ApplicationId                                             = $ApplicationId
@@ -274,7 +330,7 @@ function Get-TargetResource
         }
 
         $returnAssignments=@()
-        $returnAssignments+=Get-MGDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId   $policy.Id
+        $returnAssignments+=Get-MgDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId   $policy.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $returnAssignments)
         {
@@ -324,7 +380,15 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $PasswordBlockFaceUnlock,
+
+        [Parameter()]
+        [System.Boolean]
         $PasswordBlockFingerprintUnlock,
+
+        [Parameter()]
+        [System.Boolean]
+        $PasswordBlockIrisUnlock,
 
         [Parameter()]
         [System.Boolean]
@@ -333,7 +397,6 @@ function Set-TargetResource
         [Parameter()]
         [System.Int32]
         $PasswordExpirationDays,
-
 
         [Parameter()]
         [System.Int32]
@@ -355,6 +418,15 @@ function Set-TargetResource
         [System.String]
         [ValidateSet('deviceDefault', 'lowSecurityBiometric', 'required', 'atLeastNumeric', 'numericComplex', 'atLeastAlphabetic', 'atLeastAlphanumeric', 'alphanumericWithSymbols')]
         $PasswordRequiredType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('none', 'low', 'medium', 'high')]
+        $RequiredPasswordComplexity,
+
+        [Parameter()]
+        [System.Boolean]
+        $WorkProfileAllowAppInstallsFromUnknownSources,
 
         [Parameter()]
         [System.String]
@@ -400,7 +472,15 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $WorkProfilePasswordBlockFaceUnlock,
+
+        [Parameter()]
+        [System.Boolean]
         $WorkProfilePasswordBlockFingerprintUnlock,
+
+        [Parameter()]
+        [System.Boolean]
+        $WorkProfilePasswordBlockIrisUnlock,
 
         [Parameter()]
         [System.Boolean]
@@ -456,6 +536,11 @@ function Set-TargetResource
         $WorkProfilePasswordRequiredType,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet('none', 'low', 'medium', 'high')]
+        $WorkProfileRequiredPasswordComplexity,
+
+        [Parameter()]
         [System.Boolean]
         $WorkProfileRequirePassword,
 
@@ -464,10 +549,26 @@ function Set-TargetResource
         $SecurityRequireVerifyApps,
 
         [Parameter()]
+        [System.String]
+        $VpnAlwaysOnPackageIdentifier,
+
+        [Parameter()]
+        [System.Boolean]
+        $VpnEnableAlwaysOnLockdownMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $WorkProfileAllowWidgets,
+
+        [Parameter()]
+        [System.Boolean]
+        $WorkProfileBlockPersonalAppInstallsFromUnknownSources,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
-        [Parameter(Mandatory = $True)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = $true,
@@ -596,7 +697,7 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $True)]
         [System.String]
         $DisplayName,
 
@@ -606,7 +707,15 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $PasswordBlockFaceUnlock,
+
+        [Parameter()]
+        [System.Boolean]
         $PasswordBlockFingerprintUnlock,
+
+        [Parameter()]
+        [System.Boolean]
+        $PasswordBlockIrisUnlock,
 
         [Parameter()]
         [System.Boolean]
@@ -615,7 +724,6 @@ function Test-TargetResource
         [Parameter()]
         [System.Int32]
         $PasswordExpirationDays,
-
 
         [Parameter()]
         [System.Int32]
@@ -637,6 +745,15 @@ function Test-TargetResource
         [System.String]
         [ValidateSet('deviceDefault', 'lowSecurityBiometric', 'required', 'atLeastNumeric', 'numericComplex', 'atLeastAlphabetic', 'atLeastAlphanumeric', 'alphanumericWithSymbols')]
         $PasswordRequiredType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('none', 'low', 'medium', 'high')]
+        $RequiredPasswordComplexity,
+
+        [Parameter()]
+        [System.Boolean]
+        $WorkProfileAllowAppInstallsFromUnknownSources,
 
         [Parameter()]
         [System.String]
@@ -682,7 +799,15 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $WorkProfilePasswordBlockFaceUnlock,
+
+        [Parameter()]
+        [System.Boolean]
         $WorkProfilePasswordBlockFingerprintUnlock,
+
+        [Parameter()]
+        [System.Boolean]
+        $WorkProfilePasswordBlockIrisUnlock,
 
         [Parameter()]
         [System.Boolean]
@@ -738,12 +863,33 @@ function Test-TargetResource
         $WorkProfilePasswordRequiredType,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet('none', 'low', 'medium', 'high')]
+        $WorkProfileRequiredPasswordComplexity,
+
+        [Parameter()]
         [System.Boolean]
         $WorkProfileRequirePassword,
 
         [Parameter()]
         [System.Boolean]
         $SecurityRequireVerifyApps,
+
+        [Parameter()]
+        [System.String]
+        $VpnAlwaysOnPackageIdentifier,
+
+        [Parameter()]
+        [System.Boolean]
+        $VpnEnableAlwaysOnLockdownMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $WorkProfileAllowWidgets,
+
+        [Parameter()]
+        [System.Boolean]
+        $WorkProfileBlockPersonalAppInstallsFromUnknownSources,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -977,6 +1123,7 @@ function Export-TargetResource
 
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
+
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `

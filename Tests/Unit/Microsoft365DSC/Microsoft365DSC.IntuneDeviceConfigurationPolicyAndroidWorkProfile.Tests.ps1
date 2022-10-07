@@ -30,7 +30,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
             }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
@@ -52,7 +51,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgDeviceManagementDeviceConfiguration -MockWith {
             }
             Mock -CommandName Get-MgDeviceManagementDeviceConfigurationAssignment -MockWith {
-
                 return @()
             }
         }
@@ -436,6 +434,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             securityRequireVerifyApps                                   = $False;
                         }
                     }
+                }
+
+                Mock -CommandName Get-M365DSCExportContentForResource  -MockWith {
+                    return "myDSCBlock"
                 }
             }
 

@@ -418,10 +418,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         @{
                             Id = "12345-12345-12345-12345-12345"
                             DefinitionId = "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderOfficeAppsOtherProcessInjectionType"
-                            ValueJson = '"warn"'
+                            ValueJson = '"block"'
                             AdditionalProperties = @{
-                                "@odata.type" = '#microsoft.graph.deviceManagementStringSettingInstance'
-                                value = "warn"
+                                '@odata.type' = '#microsoft.graph.deviceManagementStringSettingInstance'
+                                value = "auditMode"
                             }
                         },
                         @{

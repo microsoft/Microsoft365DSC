@@ -37,6 +37,7 @@ class MSFT_IntuneDeviceCompliancePolicyAndroidWorkProfile : OMI_BaseResource
     [Write, Description("SecurityRequireGooglePlayServices of the AndroidWorkProfile device compliance policy.")] Boolean SecurityRequireGooglePlayServices;
     [Write, Description("SecurityRequireUpToDateSecurityProviders of the AndroidWorkProfile device compliance policy.")] Boolean SecurityRequireUpToDateSecurityProviders;
     [Write, Description("SecurityRequireCompanyPortalAppIntegrity of the AndroidWorkProfile device compliance policy.")] Boolean SecurityRequireCompanyPortalAppIntegrity;
+    [Write, Description("Require a specific SafetyNet evaluation type for compliance."), ValueMap{"basic","hardwareBacked"}, Values{"basic","hardwareBacked"}] String SecurityRequiredAndroidSafetyNetEvaluationType;
     [Write, Description("RoleScopeTagIds of the AndroidWorkProfile device compliance policy.")] String RoleScopeTagIds;
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
     [Write, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;

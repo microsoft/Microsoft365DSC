@@ -24,10 +24,14 @@ class MSFT_IntuneDeviceCompliancePolicyMacOS : OMI_BaseResource
     [Write, Description("PasswordRequiredType of the MacOS device compliance policy."), ValueMap{"DeviceDefault","Alphanumeric","Numeric"}, Values{"DeviceDefault","Alphanumeric","Numeric"}] String PasswordRequiredType;
     [Write, Description("OsMinimumVersion of the MacOS device compliance policy.")] String OsMinimumVersion;
     [Write, Description("OsMaximumVersion of the MacOS device compliance policy.")] String OsMaximumVersion;
+    [Write, Description("Minimum MacOS build version.")] String OsMinimumBuildVersion;
+    [Write, Description("Maximum MacOS build version.")] String OsMaximumBuildVersion;
     [Write, Description("SystemIntegrityProtectionEnabled of the MacOS device compliance policy.")] Boolean SystemIntegrityProtectionEnabled;
     [Write, Description("DeviceThreatProtectionEnabled of the MacOS device compliance policy.")] Boolean DeviceThreatProtectionEnabled;
     [Write, Description("DeviceThreatProtectionRequiredSecurityLevel of the MacOS device compliance policy."), ValueMap{"Unavailable","Secured","Low", "Medium","High","NotSet"}, Values{"Unavailable","Secured","Low", "Medium","High","NotSet"}] String DeviceThreatProtectionRequiredSecurityLevel;
+    [Write, Description("AdvancedThreatProtectionRequiredSecurityLevel of the MacOS device compliance policy."), ValueMap{"Unavailable","Secured","Low", "Medium","High","NotSet"}, Values{"Unavailable","Secured","Low", "Medium","High","NotSet"}] String AdvancedThreatProtectionRequiredSecurityLevel;
     [Write, Description("StorageRequireEncryption of the MacOS device compliance policy.")] Boolean StorageRequireEncryption;
+    [Write, Description("System and Privacy setting that determines which download locations apps can be run from on a macOS device."), ValueMap{"notConfigured", "macAppStore", "macAppStoreAndIdentifiedDevelopers", "anywhere"}, Values{"notConfigured", "macAppStore", "macAppStoreAndIdentifiedDevelopers", "anywhere"}] String GatekeeperAllowedAppSource;
     [Write, Description("FirewallEnabled of the MacOS device compliance policy.")] Boolean FirewallEnabled;
     [Write, Description("FirewallBlockAllIncoming of the MacOS device compliance policy.")] Boolean FirewallBlockAllIncoming;
     [Write, Description("FirewallEnableStealthMode of the MacOS device compliance policy.")] Boolean FirewallEnableStealthMode;

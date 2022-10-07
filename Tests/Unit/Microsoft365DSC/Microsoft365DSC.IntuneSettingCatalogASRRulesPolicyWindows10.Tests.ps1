@@ -39,10 +39,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
             }
-
-            Mock -CommandName New-DeviceConfigurationPolicy -MockWith {
+            Mock -CommandName Invoke-MgGraphRequest -MockWith {
             }
-            Mock -CommandName Update-DeviceConfigurationPolicy -MockWith {
+            Mock -CommandName New-IntuneDeviceConfigurationPolicy -MockWith {
+            }
+            Mock -CommandName Update-IntuneDeviceConfigurationPolicy -MockWith {
             }
             Mock -CommandName Remove-MgDeviceManagementConfigurationPolicy -MockWith {
             }
@@ -62,6 +63,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     blockallofficeapplicationsfromcreatingchildprocesses              = "warn";
                     blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem = "warn";
                     blockwin32apicallsfromofficemacros                                = "block";
+                    Assignments                                                       = @();
                     Credential                                                        = $Credential;
                     Description                                                       = "My Test";
                     DisplayName                                                       = "asdfads";
@@ -150,7 +152,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should create the policy from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-DeviceConfigurationPolicy" -Exactly 1
+                Should -Invoke -CommandName New-IntuneDeviceConfigurationPolicy -Exactly 1
             }
         }
 
@@ -304,7 +306,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should update the policy from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-DeviceConfigurationPolicy -Exactly 1
+                Should -Invoke -CommandName Update-IntuneDeviceConfigurationPolicy -Exactly 1
             }
         }
 

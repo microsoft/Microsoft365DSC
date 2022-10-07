@@ -148,14 +148,6 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta' -ErrorAction Stop
 
-    $context = Get-MgContext
-    if ($null -eq $context)
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters -ProfileName 'beta' -ErrorAction Stop
-    }
-
-    Write-Verbose -Message 'Select-MgProfile'
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -204,8 +196,8 @@ function Get-TargetResource
         foreach ($setting in $settings)
         {
             $settingName = $setting.definitionId.replace("deviceConfiguration--$definitionIdPrefix", '')
-            $settingValue = ($settings | Where-Object `
-                    -FilterScript { $_.DefinitionId -like "*$settingName" }).ValueJson | ConvertFrom-Json
+            $settingValue = $setting.ValueJson | ConvertFrom-Json
+
             $returnHashtable.Add($settingName, $settingValue)
         }
 
@@ -225,10 +217,10 @@ function Get-TargetResource
         foreach ($assignmentEntry in $returnAssignments)
         {
             $assignmentValue = @{
-                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.toString()
-                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
+                dataType                                     = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+                deviceAndAppManagementAssignmentFilterType   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.toString()
+                deviceAndAppManagementAssignmentFilterId     = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
+                groupId                                      = $assignmentEntry.Target.AdditionalProperties.groupId
             }
             $assignmentResult += $assignmentValue
         }
@@ -487,7 +479,7 @@ function Set-TargetResource
         }
         $Uri="https://graph.microsoft.com/beta/deviceManagement/intents/$Identity/updateSettings"
         $body=@{"settings"=$settings}
-        write-verbose -message ($body|ConvertTo-Json -Depth 20)
+        #write-verbose -message ($body|ConvertTo-Json -Depth 20)
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body ($body|ConvertTo-Json -Depth 20) -ContentType "application/json" -ErrorAction Stop
 
         #region Assignments
@@ -855,6 +847,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
+
 
             if ($Results.Assignments)
             {
@@ -1294,7 +1287,6 @@ function Compare-M365DSCComplexObject
     $keys= $Source.Keys|Where-Object -FilterScript {$_ -ne "PSComputerName"}
     foreach ($key in $keys)
     {
-        write-verbose -message "Comparing key: {$key}"
         $skey=$key
         if($key -eq 'odataType')
         {

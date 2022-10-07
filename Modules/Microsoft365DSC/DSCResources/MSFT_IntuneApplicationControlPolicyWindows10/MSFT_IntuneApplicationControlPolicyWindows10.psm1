@@ -999,7 +999,7 @@ function Compare-M365DSCComplexObject
     $keys= $Source.Keys|Where-Object -FilterScript {$_ -ne "PSComputerName"}
     foreach ($key in $keys)
     {
-        write-verbose -message "Comparing key: {$key}"
+        #write-verbose -message "Comparing key: {$key}"
         $skey=$key
         if($key -eq 'odataType')
         {

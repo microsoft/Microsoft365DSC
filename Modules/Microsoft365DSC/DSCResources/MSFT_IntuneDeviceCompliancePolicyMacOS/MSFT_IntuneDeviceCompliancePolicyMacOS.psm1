@@ -54,6 +54,14 @@ function Get-TargetResource
         $OsMaximumVersion,
 
         [Parameter()]
+        [System.String]
+        $OsMinimumBuildVersion,
+
+        [Parameter()]
+        [System.String]
+        $OsMaximumBuildVersion,
+
+        [Parameter()]
         [System.Boolean]
         $SystemIntegrityProtectionEnabled,
 
@@ -67,8 +75,18 @@ function Get-TargetResource
         $DeviceThreatProtectionRequiredSecurityLevel,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet('Unavailable', 'Secured', 'Low', 'Medium', 'High', 'NotSet')]
+        $AdvancedThreatProtectionRequiredSecurityLevel,
+
+        [Parameter()]
         [System.Boolean]
         $StorageRequireEncryption,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('notConfigured', 'macAppStore', 'macAppStoreAndIdentifiedDevelopers', 'anywhere')]
+        $GatekeeperAllowedAppSource,
 
         [Parameter()]
         [System.Boolean]
@@ -121,6 +139,8 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters `
         -profilename beta
 
+    Select-MgProfile -Name beta
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -150,36 +170,40 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found MacOS Device Compliance Policy with displayName {$DisplayName}"
         $results = @{
-            DisplayName                                 = $devicePolicy.DisplayName
-            Description                                 = $devicePolicy.Description
-            PasswordRequired                            = $devicePolicy.AdditionalProperties.passwordRequired
-            PasswordBlockSimple                         = $devicePolicy.AdditionalProperties.passwordBlockSimple
-            PasswordExpirationDays                      = $devicePolicy.AdditionalProperties.passwordExpirationDays
-            PasswordMinimumLength                       = $devicePolicy.AdditionalProperties.passwordMinimumLength
-            PasswordMinutesOfInactivityBeforeLock       = $devicePolicy.AdditionalProperties.passwordMinutesOfInactivityBeforeLock
-            PasswordPreviousPasswordBlockCount          = $devicePolicy.AdditionalProperties.passwordPreviousPasswordBlockCount
-            PasswordMinimumCharacterSetCount            = $devicePolicy.AdditionalProperties.passwordMinimumCharacterSetCount
-            PasswordRequiredType                        = $devicePolicy.AdditionalProperties.passwordRequiredType
-            OsMinimumVersion                            = $devicePolicy.AdditionalProperties.osMinimumVersion
-            OsMaximumVersion                            = $devicePolicy.AdditionalProperties.osMaximumVersion
-            SystemIntegrityProtectionEnabled            = $devicePolicy.AdditionalProperties.systemIntegrityProtectionEnabled
-            DeviceThreatProtectionEnabled               = $devicePolicy.AdditionalProperties.deviceThreatProtectionEnabled
-            DeviceThreatProtectionRequiredSecurityLevel = $devicePolicy.AdditionalProperties.deviceThreatProtectionRequiredSecurityLevel
-            StorageRequireEncryption                    = $devicePolicy.AdditionalProperties.storageRequireEncryption
-            FirewallEnabled                             = $devicePolicy.AdditionalProperties.firewallEnabled
-            FirewallBlockAllIncoming                    = $devicePolicy.AdditionalProperties.firewallBlockAllIncoming
-            FirewallEnableStealthMode                   = $devicePolicy.AdditionalProperties.firewallEnableStealthMode
-            Ensure                                      = 'Present'
-            Credential                                  = $Credential
-            ApplicationId                               = $ApplicationId
-            TenantId                                    = $TenantId
-            ApplicationSecret                           = $ApplicationSecret
-            CertificateThumbprint                       = $CertificateThumbprint
-            Managedidentity                             = $ManagedIdentity.IsPresent
+            DisplayName                                   = $devicePolicy.DisplayName
+            Description                                   = $devicePolicy.Description
+            PasswordRequired                              = $devicePolicy.AdditionalProperties.passwordRequired
+            PasswordBlockSimple                           = $devicePolicy.AdditionalProperties.passwordBlockSimple
+            PasswordExpirationDays                        = $devicePolicy.AdditionalProperties.passwordExpirationDays
+            PasswordMinimumLength                         = $devicePolicy.AdditionalProperties.passwordMinimumLength
+            PasswordMinutesOfInactivityBeforeLock         = $devicePolicy.AdditionalProperties.passwordMinutesOfInactivityBeforeLock
+            PasswordPreviousPasswordBlockCount            = $devicePolicy.AdditionalProperties.passwordPreviousPasswordBlockCount
+            PasswordMinimumCharacterSetCount              = $devicePolicy.AdditionalProperties.passwordMinimumCharacterSetCount
+            PasswordRequiredType                          = $devicePolicy.AdditionalProperties.passwordRequiredType
+            OsMinimumVersion                              = $devicePolicy.AdditionalProperties.osMinimumVersion
+            OsMaximumVersion                              = $devicePolicy.AdditionalProperties.osMaximumVersion
+            OsMinimumBuildVersion                         = $devicePolicy.AdditionalProperties.osMinimumBuildVersion
+            OsMaximumBuildVersion                         = $devicePolicy.AdditionalProperties.osMaximumBuildVersion
+            SystemIntegrityProtectionEnabled              = $devicePolicy.AdditionalProperties.systemIntegrityProtectionEnabled
+            DeviceThreatProtectionEnabled                 = $devicePolicy.AdditionalProperties.deviceThreatProtectionEnabled
+            DeviceThreatProtectionRequiredSecurityLevel   = $devicePolicy.AdditionalProperties.deviceThreatProtectionRequiredSecurityLevel
+            AdvancedThreatProtectionRequiredSecurityLevel = $devicePolicy.AdditionalProperties.advancedThreatProtectionRequiredSecurityLevel
+            StorageRequireEncryption                      = $devicePolicy.AdditionalProperties.storageRequireEncryption
+            GatekeeperAllowedAppSource                    = $devicePolicy.AdditionalProperties.gatekeeperAllowedAppSource
+            FirewallEnabled                               = $devicePolicy.AdditionalProperties.firewallEnabled
+            FirewallBlockAllIncoming                      = $devicePolicy.AdditionalProperties.firewallBlockAllIncoming
+            FirewallEnableStealthMode                     = $devicePolicy.AdditionalProperties.firewallEnableStealthMode
+            Ensure                                        = 'Present'
+            Credential                                    = $Credential
+            ApplicationId                                 = $ApplicationId
+            TenantId                                      = $TenantId
+            ApplicationSecret                             = $ApplicationSecret
+            CertificateThumbprint                         = $CertificateThumbprint
+            Managedidentity                               = $ManagedIdentity.IsPresent
         }
 
         $returnAssignments=@()
-        $returnAssignments+=Get-MGDeviceManagementDeviceCompliancePolicyAssignment -DeviceCompliancePolicyId  $devicePolicy.Id
+        $returnAssignments+=Get-MgDeviceManagementDeviceCompliancePolicyAssignment -DeviceCompliancePolicyId  $devicePolicy.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $returnAssignments)
         {
@@ -276,6 +300,14 @@ function Set-TargetResource
         $OsMaximumVersion,
 
         [Parameter()]
+        [System.String]
+        $OsMinimumBuildVersion,
+
+        [Parameter()]
+        [System.String]
+        $OsMaximumBuildVersion,
+
+        [Parameter()]
         [System.Boolean]
         $SystemIntegrityProtectionEnabled,
 
@@ -289,8 +321,18 @@ function Set-TargetResource
         $DeviceThreatProtectionRequiredSecurityLevel,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet('Unavailable', 'Secured', 'Low', 'Medium', 'High', 'NotSet')]
+        $AdvancedThreatProtectionRequiredSecurityLevel,
+
+        [Parameter()]
         [System.Boolean]
         $StorageRequireEncryption,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('notConfigured', 'macAppStore', 'macAppStoreAndIdentifiedDevelopers', 'anywhere')]
+        $GatekeeperAllowedAppSource,
 
         [Parameter()]
         [System.Boolean]
@@ -342,7 +384,7 @@ function Set-TargetResource
     Write-Verbose -Message "Intune Device Compliance MacOS Policy {$DisplayName}"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters -ProfileName beta
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -494,6 +536,14 @@ function Test-TargetResource
         $OsMaximumVersion,
 
         [Parameter()]
+        [System.String]
+        $OsMinimumBuildVersion,
+
+        [Parameter()]
+        [System.String]
+        $OsMaximumBuildVersion,
+
+        [Parameter()]
         [System.Boolean]
         $SystemIntegrityProtectionEnabled,
 
@@ -507,8 +557,18 @@ function Test-TargetResource
         $DeviceThreatProtectionRequiredSecurityLevel,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet('Unavailable', 'Secured', 'Low', 'Medium', 'High', 'NotSet')]
+        $AdvancedThreatProtectionRequiredSecurityLevel,
+
+        [Parameter()]
         [System.Boolean]
         $StorageRequireEncryption,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('notConfigured', 'macAppStore', 'macAppStoreAndIdentifiedDevelopers', 'anywhere')]
+        $GatekeeperAllowedAppSource,
 
         [Parameter()]
         [System.Boolean]
@@ -555,7 +615,6 @@ function Test-TargetResource
         [Switch]
         $ManagedIdentity
     )
-
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -687,7 +746,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters -ProfileName beta
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -729,38 +788,6 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
-            }
-            $results = Get-TargetResource @params
-
-            if ($Results.Assignments)
-            {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Assignments) -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
-
-                if ($complexTypeStringResult)
-                {
-                    $Results.Assignments = $complexTypeStringResult
-                }
-                else
-                {
-                    $Results.Remove('Assignments') | Out-Null
-                }
-            }
-
-            $results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -Credential $Credential
-
-            if ($Results.Assignments)
-            {
-                $isCIMArray=$false
-                if($Results.Assignments.getType().Fullname -like "*[[\]]")
-                {
-                    $isCIMArray=$true
             }
             $results = Get-TargetResource @params
 

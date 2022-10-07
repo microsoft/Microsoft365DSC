@@ -641,20 +641,30 @@ function Get-M365DSCIntuneAppConfigurationPolicyCustomSettingsAsString
     )
 
     $StringContent = '@('
+    $space="                "
+    $indent="    "
+
+    $i=1
     foreach ($setting in $Settings)
     {
+        if($Settings.Count -gt 1)
+        {
+            $StringContent += "`r`n"
+            $StringContent += "$space"
+        }
         $StringContent += "MSFT_IntuneAppConfigurationPolicyCustomSetting { `r`n"
-        $StringContent += "                name  = '" + $setting.name + "'`r`n"
-        $StringContent += "                value = '" + $setting.value + "'`r`n"
-        $StringContent += "            }`r`n"
+        $StringContent += "$($space)$($indent)name  = '" + $setting.name + "'`r`n"
+        $StringContent += "$($space)$($indent)value = '" + $setting.value + "'`r`n"
+        $StringContent += "$space}"
+
+        $i++
     }
-    $StringContent += '            )'
+
+    $StringContent += ")"
     return $StringContent
 }
 
-    }
-    $StringContent += '            )'
-    return $StringContent
+function ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings
 {
     [OutputType([System.Object[]])]
     param(

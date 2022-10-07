@@ -112,6 +112,12 @@ function Get-TargetResource
         $SecurityRequireCompanyPortalAppIntegrity,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet('basic', 'hardwareBacked')]
+        $SecurityRequiredAndroidSafetyNetEvaluationType,
+
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
@@ -147,8 +153,10 @@ function Get-TargetResource
 
     Write-Verbose -Message "Checking for the Intune Android Work Profile Device Compliance Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName beta
+        -InboundParameters $PSBoundParameters -ProfileName 'beta'
+
+    #Enforcing beta profile as New-M365DSCConnection returns v1.0 unexpectedly: M365DSC module version 1.22.921.1
+    Select-MgProfile -Name beta
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -184,7 +192,6 @@ function Get-TargetResource
             PasswordRequired                                   = $devicePolicy.AdditionalProperties.passwordRequired
             PasswordMinimumLength                              = $devicePolicy.AdditionalProperties.passwordMinimumLength
             PasswordRequiredType                               = $devicePolicy.AdditionalProperties.passwordRequiredType
-            RequiredPasswordComplexity                         = $devicePolicy.AdditionalProperties.requiredPasswordComplexity
             PasswordMinutesOfInactivityBeforeLock              = $devicePolicy.AdditionalProperties.passwordMinutesOfInactivityBeforeLock
             PasswordExpirationDays                             = $devicePolicy.AdditionalProperties.passwordExpirationDays
             PasswordPreviousPasswordBlockCount                 = $devicePolicy.AdditionalProperties.passwordPreviousPasswordBlockCount
@@ -198,12 +205,15 @@ function Get-TargetResource
             SecurityBlockJailbrokenDevices                     = $devicePolicy.AdditionalProperties.securityBlockJailbrokenDevices
             OsMinimumVersion                                   = $devicePolicy.AdditionalProperties.osMinimumVersion
             OsMaximumVersion                                   = $devicePolicy.AdditionalProperties.osMaximumVersion
+            MinAndroidSecurityPatchLevel                       = $devicePolicy.AdditionalProperties.minAndroidSecurityPatchLevel
             StorageRequireEncryption                           = $devicePolicy.AdditionalProperties.storageRequireEncryption
             SecurityRequireSafetyNetAttestationBasicIntegrity  = $devicePolicy.AdditionalProperties.securityRequireSafetyNetAttestationBasicIntegrity
             SecurityRequireSafetyNetAttestationCertifiedDevice = $devicePolicy.AdditionalProperties.securityRequireSafetyNetAttestationCertifiedDevice
             SecurityRequireGooglePlayServices                  = $devicePolicy.AdditionalProperties.securityRequireGooglePlayServices
             SecurityRequireUpToDateSecurityProviders           = $devicePolicy.AdditionalProperties.securityRequireUpToDateSecurityProviders
             SecurityRequireCompanyPortalAppIntegrity           = $devicePolicy.AdditionalProperties.securityRequireCompanyPortalAppIntegrity
+            SecurityRequiredAndroidSafetyNetEvaluationType     = $devicePolicy.AdditionalProperties.securityRequiredAndroidSafetyNetEvaluationType
+
             RoleScopeTagIds                                    = $devicePolicy.AdditionalProperties.roleScopeTagIds
             Ensure                                             = 'Present'
             Credential                                         = $Credential
@@ -370,6 +380,11 @@ function Set-TargetResource
         $SecurityRequireCompanyPortalAppIntegrity,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet('basic', 'hardwareBacked')]
+        $SecurityRequiredAndroidSafetyNetEvaluationType,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
@@ -406,7 +421,7 @@ function Set-TargetResource
     Write-Verbose -Message "Intune Android Work Profile Device Compliance Policy {$DisplayName}"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters -ProfileName beta
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -618,6 +633,11 @@ function Test-TargetResource
         $SecurityRequireCompanyPortalAppIntegrity,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet('basic', 'hardwareBacked')]
+        $SecurityRequiredAndroidSafetyNetEvaluationType,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
@@ -738,7 +758,7 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+        -ValuesToCheck $ValuesToCheck.Keys -verbose
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -781,7 +801,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters -ProfileName beta
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
