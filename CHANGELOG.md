@@ -16,6 +16,8 @@
   * Initial Release
 * TeamsUserCallingSettings
   * InitialRelease
+* MISC
+  * Fixed an issue in in Export-M365DSCConfiguration when used with Service Principal
 
 # 1.22.1005.1
 
@@ -28,7 +30,7 @@
   Implements [#2301](https://github.com/microsoft/Microsoft365DSC/issues/2301)
 * AADTenantDetails
   * Fixed an issue where ApplicationSecret was send to Update-MgOrganization
-* FIXES [[#2340](https://github.com/microsoft/Microsoft365DSC/issues/2340)]
+    FIXES [[#2340](https://github.com/microsoft/Microsoft365DSC/issues/2340)]
 * EXOATPPolicyForO365
   * [BREAKING] Removed the deprecated BlockURLs, AllowClickThrough, EnableSafeLinksForO365Clients and TrackClicks parameters.
 * EXOMailContact
@@ -102,7 +104,7 @@
     and TeamsChannelLocationException properties were not properly set on Update.
     FIXES #2173
 * SCRetentionComplianceRule
-  * Fixes an issue when trying to create new compliancerule for Teams based policies where invalid
+  * Fixes an issue when trying to create new compliance rule for Teams based policies where invalid
     parameters were passed.
     FIXES #2181
 * DEPENDENCIES
@@ -118,7 +120,7 @@
   * Ignore precanned filters if recipient filter is used. Precanned filters and recipient filter cannot be used at the same time.
     FIXES [#2194](https://github.com/microsoft/Microsoft365DSC/issues/2194)
 * EXOSafeLinksPolicy
-  * Add Suport for EnableSafeLinksForEmail and DisableUrlRewrite
+  * Add Support for EnableSafeLinksForEmail and DisableUrlRewrite
 * EXOInboundConnector
   * Add support for different syntax of SenderDomains parameter
   FIXES [#2180](https://github.com/microsoft/Microsoft365DSC/issues/2180)
@@ -445,7 +447,7 @@
 # 1.22.511.1
 
 * AADNamedLocationPolicy
- * Added error handling in the Get-TargetResource function.
+* Added error handling in the Get-TargetResource function.
 * EXOIRMConfiguration
   * Initial release.
 * EXOMessageClassification
@@ -837,7 +839,7 @@ MISC
 
 # 1.21.1013.1
 
-  * Obfuscating Authentication Secrets from the Verbose output;
+* Obfuscating Authentication Secrets from the Verbose output;
 
 # 1.21.1006.3
 
@@ -1091,7 +1093,7 @@ MISC
   * Forces a Global load of the new MicrosoftTeams module for
     Teams resources;
 
-#1.21.519.1
+# 1.21.519.1
 
 * TeamsClientConfiguration
   * Fixed an issue where the RestrictedSenderList was not properly
@@ -1102,7 +1104,7 @@ MISC
 
 # 1.21.512.1
 
-* EXOOfflineAddresBook
+* EXOOfflineAddressBook
   * Fixed issue in Set-TargetResource where ConfiguredAttributes
     was passed and resulted in an error.
 * SCDLPComplianceRule
@@ -1114,7 +1116,7 @@ MISC
 * EXOTransportRule
   * Adding ExceptIfSCLOver and SCLOver.
   * Fixes SubjectOrBodyContainsWords parameter not being an array.
-  * Fixes DateTime formating on ExpiryDate and ActivationDate
+  * Fixes DateTime formatting on ExpiryDate and ActivationDate
 
 # 1.21.428.2
 
@@ -1205,7 +1207,7 @@ MISC
 * SPOSiteDesign
   * Added support for GrouplessTeamSite web template.
 * SPOSiteScript
-  * Fixed issue where an existin site script could not be updated.
+  * Fixed issue where an existing site script could not be updated.
   * Made parameter GlobalAdminAccount in Get-TargetResource
     optional.
 * SPOTheme
@@ -1843,10 +1845,10 @@ MISC
 * SPOPropertyBag
   * Fixed an issue where false positive drifts were being detected;
 * SPOSiteAuditSettings
-  * Generalized the URL not to capture hardcoded dmomains;
+  * Generalized the URL not to capture hardcoded domains;
 * SPOSiteGroup
   * Fixed an issue where now, groups with Null owners are not extracted;
-  * Generalized the URL not to capture hardcoded dmomains;
+  * Generalized the URL not to capture hardcoded domains;
 * TeamsCallingPolicy
   * Removed the AllowCalling parameter since it is no longer supported;
   * Fixed an issue with Policies without tags in their name (e.g. Global);
@@ -1878,7 +1880,7 @@ MISC
 * TeamsGuestMessagingConfiguration
   * Added value NoRestriction for GiphyRatingValues;
 * Metadata
-  * Removed dependencyon MSOnline;
+  * Removed dependency on MSOnline;
   * Updated MSCloudLoginAssistant dependency to 1.0.2;
   * Updated SharePointPnPPowerShellOnline dependency to 3.18.2002.0;
   * Updated Microsoft.PowerApps.Administration.PowerShell
