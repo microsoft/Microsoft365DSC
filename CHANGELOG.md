@@ -1,5 +1,16 @@
 # Change log for Microsoft365DSC
 
+# 1.22.1012.1
+
+* EXOManagementRoleAssignment
+  * Initial Release
+  FIXES [#2355](https://github.com/microsoft/Microsoft365DSC/issues/2355)
+  FIXES [#2356](https://github.com/microsoft/Microsoft365DSC/issues/2356)
+* SCRetentionCompliancePolicy
+  * Fixed issue where the locations weren't properly returned.
+  FIXES [#2338](https://github.com/microsoft/Microsoft365DSC/issues/2338)
+  FIXES [#2339](https://github.com/microsoft/Microsoft365DSC/issues/2339)
+
 # 1.22.1005.1
 
 * AADUser
