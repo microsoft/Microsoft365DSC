@@ -4,6 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
+| **MovieRating** | Write | String | Allowed rating for movies. ||
+| **TVRating** | Write | String | Allowed rating for TV. ||
 | **DisplayName** | Key | String | Display name of the device configuration policy for iOS. ||
 | **Description** | Write | String | Description of the device configuration policy for iOS. ||
 | **AccountBlockModification** | Write | Boolean | N/A ||
@@ -88,15 +90,15 @@
 | **LockScreenBlockNotificationView** | Write | Boolean | N/A ||
 | **LockScreenBlockPassbook** | Write | Boolean | N/A ||
 | **LockScreenBlockTodayView** | Write | Boolean | N/A ||
-| **MediaContentRatingAustralia** | Write | String | N/A ||
-| **MediaContentRatingCanada** | Write | String | N/A ||
-| **MediaContentRatingFrance** | Write | String | N/A ||
-| **MediaContentRatingGermany** | Write | String | N/A ||
-| **MediaContentRatingIreland** | Write | String | N/A ||
-| **MediaContentRatingJapan** | Write | String | N/A ||
-| **MediaContentRatingNewZealand** | Write | String | N/A ||
-| **MediaContentRatingUnitedKingdom** | Write | String | N/A ||
-| **MediaContentRatingUnitedStates** | Write | String | N/A ||
+| **MediaContentRatingAustralia** | Write | Instance | N/A ||
+| **MediaContentRatingCanada** | Write | Instance | N/A ||
+| **MediaContentRatingFrance** | Write | Instance | N/A ||
+| **MediaContentRatingGermany** | Write | Instance | N/A ||
+| **MediaContentRatingIreland** | Write | Instance | N/A ||
+| **MediaContentRatingJapan** | Write | Instance | N/A ||
+| **MediaContentRatingNewZealand** | Write | Instance | N/A ||
+| **MediaContentRatingUnitedKingdom** | Write | Instance | N/A ||
+| **MediaContentRatingUnitedStates** | Write | Instance | N/A ||
 | **MediaContentRatingApps** | Write | String | N/A ||
 | **messagesBlocked** | Write | Boolean | N/A ||
 | **NotificationsBlockSettingsModification** | Write | Boolean | N/A ||
@@ -133,7 +135,7 @@
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin ||
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
-| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory tenant used for authentication. ||
+| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. ||
 

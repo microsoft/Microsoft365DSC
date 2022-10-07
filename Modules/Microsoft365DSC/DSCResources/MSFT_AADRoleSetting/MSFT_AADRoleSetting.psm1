@@ -165,6 +165,11 @@ function Get-TargetResource
         $EligibleAssignmentAssigneeNotificationOnlyCritical,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -177,7 +182,7 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -212,25 +217,32 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     #get role
     [string]$Filter = $null
     $Filter = "scopeId eq '/' and scopeType eq 'DirectoryRole' and RoleDefinitionId eq '" + $Id + "'"
     #$Policy = Get-MgPolicyRoleManagementPolicyAssignment -Filter $Filter
 
-    try{
+    try
+    {
         $Policy = Get-MgPolicyRoleManagementPolicyAssignment -Filter $Filter -ErrorAction Stop
     }
-    catch{
-        if($_ -match "The tenant needs an AAD Premium 2 license"){
-            Write-Warning -Message "WARNING: AAD Premium License is required to get the role"
+    catch
+    {
+        if ($_ -match 'The tenant needs an AAD Premium 2 license')
+        {
+            Write-Warning -Message 'WARNING: AAD Premium License is required to get the role'
             return $nullReturn
         }
     }
 
-
+    if ($null -eq $Policy)
+    {
+        return $nullReturn
+    }
     $RoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $Id
+
     #get Policyrule
     $role = Get-MgPolicyRoleManagementPolicyRule -UnifiedRoleManagementPolicyId $Policy.Policyid
 
@@ -244,16 +256,20 @@ function Get-TargetResource
     [string[]]$ActivateApprover = @()
     foreach ($Item in $ActivateApprovers.id)
     {
-        try{
+        try
+        {
             $user = Get-MgUser -UserId $Item -ErrorAction Stop
             $ActivateApprover += $user.UserPrincipalName
         }
-        catch{
-            try{
-                $group = get-mggroup -GroupId $Item -ErrorAction stop
+        catch
+        {
+            try
+            {
+                $group = Get-MgGroup -GroupId $Item -ErrorAction stop
                 $ActivateApprover += $group.DisplayName
             }
-            catch{
+            catch
+            {
                 Write-Verbose -Message "Error: $($Error[0])"
             }
         }
@@ -335,6 +351,9 @@ function Get-TargetResource
             EligibleAssignmentAssigneeNotificationDefaultRecipient    = $EligibleAssignmentAssigneeNotificationDefaultRecipient
             EligibleAssignmentAssigneeNotificationAdditionalRecipient = [System.String[]]$EligibleAssignmentAssigneeNotificationAdditionalRecipient
             EligibleAssignmentAssigneeNotificationOnlyCritical        = $EligibleAssignmentAssigneeNotificationOnlyCritical
+            Ensure                                                    = 'Present'
+            Managedidentity                                           = $ManagedIdentity.IsPresent
+            TenantId                                                  = $TenantId
         }
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
@@ -527,6 +546,11 @@ function Set-TargetResource
         $EligibleAssignmentAssigneeNotificationOnlyCritical,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -539,7 +563,7 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -872,35 +896,43 @@ function Set-TargetResource
                 if ($ActivateApprover.count -gt 0)
                 {
                     $primaryApprovers = @()
-                    foreach ($item in $ActivateApprover){
+                    foreach ($item in $ActivateApprover)
+                    {
                         #is not a guid try with user
                         $Filter = "UserPrincipalName eq '" + $item + "'"
-                        try{
+                        try
+                        {
                             $user = Get-MgUser -Filter $Filter -ErrorAction Stop
                         }
-                        catch{
-                            Write-Verbose -Message "User not found, try with group"
+                        catch
+                        {
+                            Write-Verbose -Message 'User not found, try with group'
                         }
-                        if($user.length -gt 0){
+                        if ($user.length -gt 0)
+                        {
                             $ActivateApprovers = @{}
-                            $ActivateApprovers.Add("@odata.type", "#microsoft.graph.singleUser")
-                            $ActivateApprovers.Add("userId", $user.Id)
+                            $ActivateApprovers.Add('@odata.type', '#microsoft.graph.singleUser')
+                            $ActivateApprovers.Add('userId', $user.Id)
                             $primaryApprovers += $ActivateApprovers
                             $user = $null
                         }
-                        else{
+                        else
+                        {
                             #try with group
                             $Filter = "Displayname eq '" + $item + "'"
-                            try{
+                            try
+                            {
                                 $group = Get-MgGroup -Filter $Filter -ErrorAction Stop
                             }
-                            catch{
-                                Write-Verbose -Message "Group not found"
+                            catch
+                            {
+                                Write-Verbose -Message 'Group not found'
                             }
-                            if($group.length -gt 0){
+                            if ($group.length -gt 0)
+                            {
                                 $ActivateApprovers = @{}
-                                $ActivateApprovers.Add("@odata.type", "#microsoft.graph.groupMembers")
-                                $ActivateApprovers.Add("groupId", $group.Id)
+                                $ActivateApprovers.Add('@odata.type', '#microsoft.graph.groupMembers')
+                                $ActivateApprovers.Add('groupId', $group.Id)
                                 $primaryApprovers += $ActivateApprovers
                                 $group = $null
                             }
@@ -1216,6 +1248,11 @@ function Test-TargetResource
         $EligibleAssignmentAssigneeNotificationOnlyCritical,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -1228,7 +1265,7 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -1263,6 +1300,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
     $ValuesToCheck.Remove('Id') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -1297,7 +1335,7 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -1328,11 +1366,14 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    try{
-        Get-MgPolicyRoleManagementPolicyAssignment -Filter "scopeId eq '/' and scopeType eq 'DirectoryRole'" -ErrorAction Stop
+    try
+    {
+        Get-MgPolicyRoleManagementPolicyAssignment -Filter "scopeId eq '/' and scopeType eq 'DirectoryRole'" -ErrorAction Stop | Out-Null
     }
-    catch{
-        if($_ -match "The tenant needs an AAD Premium 2 license"){
+    catch
+    {
+        if ($_ -match 'The tenant needs an AAD Premium 2 license')
+        {
             Write-Host -Message "`nWARNING: AAD Premium License is required to get the role" -ForegroundColor Yellow
             continue
         }
@@ -1352,20 +1393,25 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
+                ApplicationSecret     = $ApplicationSecret
                 Credential            = $Credential
             }
-            $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -Credential $Credential
-            $dscContent += $currentDSCBlock
-            Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
 
+            $Results = Get-TargetResource @Params
+
+            if ($Results.Ensure -eq 'Present')
+            {
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -Credential $Credential
+                $dscContent += $currentDSCBlock
+                Save-M365DSCPartialExport -Content $currentDSCBlock `
+                    -FileName $Global:PartialExportFileName
+            }
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }

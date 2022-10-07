@@ -51,7 +51,7 @@ Configuration Example
                 MSFT_SCLabelLocaleSettings
                 {
                     LocaleKey = "DisplayName"
-                    Settings  = @(
+                    LabelSettings  = @(
                         MSFT_SCLabelSetting
                         {
                             Key   = "en-us"
@@ -67,7 +67,7 @@ Configuration Example
                 MSFT_SCLabelLocaleSettings
                 {
                     LocaleKey = "StopColor"
-                    Settings  = @(
+                    LabelSettings  = @(
                         MSFT_SCLabelSetting
                         {
                             Key   = "en-us"

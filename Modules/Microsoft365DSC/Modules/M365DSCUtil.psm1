@@ -5,7 +5,7 @@ $Global:SessionSecurityCompliance = $null
 
 #region Extraction Modes
 $Global:DefaultComponents = @('SPOApp', 'SPOSiteDesign')
-$Global:FullComponents = @('AADMSGroup', 'AADServicePrincipal', 'EXOMailboxSettings', 'EXOManagementRole', 'O365Group', 'O365User', `
+$Global:FullComponents = @('AADGroup', 'AADServicePrincipal', 'EXOMailboxSettings', 'EXOManagementRole', 'O365Group', 'AADUSer', `
         'PlannerPlan', 'PlannerBucket', 'PlannerTask', 'PPPowerAppsEnvironment', 'PPTenantSettings', `
         'SPOSiteAuditSettings', 'SPOSiteGroup', 'SPOSite', 'SPOUserProfileProperty', 'SPOPropertyBag', 'TeamsTeam', 'TeamsChannel', `
         'TeamsUser', 'TeamsChannelTab')
@@ -1363,8 +1363,9 @@ Internal
 #>
 function Get-M365DSCTenantDomain
 {
+    [CmdletBinding(DefaultParameterSetName = 'AppId')]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(ParameterSetName = 'AppId', Mandatory = $true)]
         [System.String]
         $ApplicationId,
 
@@ -1372,25 +1373,30 @@ function Get-M365DSCTenantDomain
         [System.String]
         $TenantId,
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'AppId')]
         [System.String]
         $ApplicationSecret,
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'AppId')]
         [System.String]
         $CertificateThumbprint,
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'AppId')]
         [System.String]
-        $CertificatePath
+        $CertificatePath,
+
+        [Parameter(ParameterSetName = 'MID')]
+        [Switch]
+        $ManagedIdentity
+
     )
 
-    if ($null -eq $CertificatePath)
+    if ([System.String]::IsNullOrEmpty($CertificatePath))
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
         $tenantDetails = Get-MgOrganization
-        $defaultDomain = $tenantDetails.VerifiedDomains | Where-Object -FilterScript { $_.Initial }
+        $defaultDomain = $tenantDetails.VerifiedDomains | Where-Object -FilterScript { $_.IsInitial }
         return $defaultDomain.Name
     }
     if ($TenantId.Contains('onmicrosoft'))
@@ -1507,6 +1513,12 @@ function New-M365DSCConnection
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add('Source', 'M365DSCUtil')
     $data.Add('Platform', $Workload)
+
+    # Get the ApplicationSecret parameter back as a string.
+    if ($InboundParameters.ApplicationSecret)
+    {
+        $InboundParameters.ApplicationSecret = $InboundParameters.ApplicationSecret.GetNetworkCredential().Password
+    }
 
     # Case both authentication methods are attempted
     if ($null -ne $InboundParameters.Credential -and `
@@ -1838,6 +1850,7 @@ function New-M365DSCConnection
         Write-Verbose -Message 'Connecting via managed identity'
         Connect-M365Tenant -Workload $Workload `
             -Identity `
+            -TenantId $InboundParameters.TenantId `
             -SkipModuleReload $Global:CurrentModeIsExport `
             -ProfileName $ProfileName
 
@@ -2883,7 +2896,7 @@ function Update-M365DSCExportAuthenticationResults
         }
         if (-not [System.String]::IsNullOrEmpty($Results.ApplicationSecret))
         {
-            $Results.ApplicationSecret = "`$ConfigurationData.NonNodeData.ApplicationSecret"
+            $Results.ApplicationSecret = "New-Object System.Management.Automation.PSCredential ('ApplicationSecret', (ConvertTo-SecureString `$ConfigurationData.NonNodeData.ApplicationSecret -AsPlainText -Force))"
         }
         else
         {
@@ -3310,7 +3323,7 @@ This function returns the used workloads for the specified DSC resources
 Specifies the resources for which the workloads should be determined.
 
 .Example
-Get-M365DSCWorkloadsListFromResourceNames -ResourceNames O365User
+Get-M365DSCWorkloadsListFromResourceNames -ResourceNames AADUSer
 
 .Functionality
 Public
@@ -3775,9 +3788,30 @@ function Test-M365DSCModuleValidity
     if ($latestVersion -gt $localVersion)
     {
         Write-Host "There is a newer version of the 'Microsoft365DSC' module available on the gallery."
-        Write-Host "To update the module and it's dependencies, run the following commands:"
-        Write-Host "Update-Module -Name 'Microsoft365DSC' -Force`nUpdate-M365DSCDependencies -Force`nUninstall-M365DSCOutdatedDependencies" -ForegroundColor Blue
+        Write-Host "To update the module and it's dependencies, run the following command:"
+        Write-Host 'Update-M365DSCModule' -ForegroundColor Blue
     }
+}
+
+
+<#
+.Description
+This function updates the module, dependencies and uninstalls outdated dependencies.
+
+.Example
+Update-M365DSCModule
+
+.Functionality
+Public
+#>
+function Update-M365DSCModule
+{
+    [CmdletBinding()]
+    param (
+    )
+    Update-Module -Name 'Microsoft365DSC'
+    Update-M365DSCDependencies
+    Uninstall-M365DSCOutdatedDependencies
 }
 
 Export-ModuleMember -Function @(
@@ -3819,5 +3853,6 @@ Export-ModuleMember -Function @(
     'Uninstall-M365DSCOutdatedDependencies',
     'Update-M365DSCDependencies',
     'Update-M365DSCExportAuthenticationResults',
+    'Update-M365DSCModule',
     'Test-M365DSCModuleValidity'
 )

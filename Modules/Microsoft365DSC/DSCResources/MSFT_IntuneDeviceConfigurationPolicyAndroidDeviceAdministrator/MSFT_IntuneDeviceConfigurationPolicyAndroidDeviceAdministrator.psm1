@@ -246,7 +246,7 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -684,7 +684,7 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -1106,7 +1106,7 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -1231,7 +1231,7 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -1311,7 +1311,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.AppsHideList -CIMInstanceName MicrosoftGraphapplistitem
                 if ($complexTypeStringResult)
                 {
-                    $Results.AppsHideList = $complexTypeStringResult            
+                    $Results.AppsHideList = $complexTypeStringResult
                 }
                 else
                 {
@@ -1323,7 +1323,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.AppsInstallAllowList -CIMInstanceName MicrosoftGraphapplistitem
                 if ($complexTypeStringResult)
                 {
-                    $Results.AppsInstallAllowList = $complexTypeStringResult            
+                    $Results.AppsInstallAllowList = $complexTypeStringResult
                 }
                 else
                 {
@@ -1335,7 +1335,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.AppsLaunchBlockList -CIMInstanceName MicrosoftGraphapplistitem
                 if ($complexTypeStringResult)
                 {
-                    $Results.AppsLaunchBlockList = $complexTypeStringResult            
+                    $Results.AppsLaunchBlockList = $complexTypeStringResult
                 }
                 else
                 {
@@ -1347,7 +1347,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.CompliantAppsList -CIMInstanceName MicrosoftGraphapplistitem
                 if ($complexTypeStringResult)
                 {
-                    $Results.CompliantAppsList = $complexTypeStringResult            
+                    $Results.CompliantAppsList = $complexTypeStringResult
                 }
                 else
                 {
@@ -1359,7 +1359,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.KioskModeApps -CIMInstanceName MicrosoftGraphapplistitem
                 if ($complexTypeStringResult)
                 {
-                    $Results.KioskModeApps = $complexTypeStringResult            
+                    $Results.KioskModeApps = $complexTypeStringResult
                 }
                 else
                 {

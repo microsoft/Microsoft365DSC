@@ -8,7 +8,7 @@ class MSFT_SCLabelSetting
 class MSFT_SCLabelLocaleSettings
 {
     [Write, Description("Name of the Local key.")] String localeKey;
-    [Write, Description("The locale settings display names."),EmbeddedInstance("MSFT_SCLabelSetting")] String Settings[];
+    [Write, Description("The locale settings display names."),EmbeddedInstance("MSFT_SCLabelSetting")] String LabelSettings[];
 };
 [ClassVersion("1.0.0.0"), FriendlyName("SCSensitivityLabel")]
 class MSFT_SCSensitivityLabel : OMI_BaseResource
