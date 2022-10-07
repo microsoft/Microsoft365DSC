@@ -2981,7 +2981,7 @@ function Get-M365DSCExportContentForResource
     if ($ConnectionMode -eq 'Credentials')
     {
         $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
-            -ParameterName 'Credential'
+            -ParameterName 'Credential '
     }
     else
     {
