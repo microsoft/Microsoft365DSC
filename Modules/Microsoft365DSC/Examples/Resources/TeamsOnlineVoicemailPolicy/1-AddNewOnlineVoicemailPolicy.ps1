@@ -7,34 +7,23 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $credsCredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
-        TeamsMeetingPolicy 'ConfigureMeetingPolicy'
+        TeamsOnlineVoicemailPolicy 'NewOnlineVoicemailPolicy'
         {
-            Identity                                   = "Demo Policy"
-            AllowAnonymousUsersToStartMeeting          = $False
-            AllowChannelMeetingScheduling              = $True
-            AllowCloudRecording                        = $True
-            AllowExternalParticipantGiveRequestControl = $False
-            AllowIPVideo                               = $True
-            AllowMeetNow                               = $True
-            AllowOutlookAddIn                          = $True
-            AllowParticipantGiveRequestControl         = $True
-            AllowPowerPointSharing                     = $True
-            AllowPrivateMeetingScheduling              = $True
-            AllowSharedNotes                           = $True
-            AllowTranscription                         = $False
-            AllowWhiteboard                            = $True
-            AutoAdmittedUsers                          = "Everyone"
-            Description                                = "My Demo Meeting Policy"
-            MediaBitRateKb                             = 50000
-            ScreenSharingMode                          = "EntireScreen"
-            Ensure                                     = "Present"
-            Credential                                 = $credsglobaladmin
+            Credential                          = $credsCredential;
+            EnableEditingCallAnswerRulesSetting = $True;
+            EnableTranscription                 = $True;
+            EnableTranscriptionProfanityMasking = $False;
+            EnableTranscriptionTranslation      = $True;
+            Ensure                              = "Present";
+            Identity                            = "MyPolicy";
+            MaximumRecordingLength              = "00:10:00";
+            ShareData                           = "Defer";
         }
     }
 }

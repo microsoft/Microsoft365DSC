@@ -1,8 +1,8 @@
 
-# TeamsMeetingPolicy
+# TeamsOnlinceVoicemailPolicy
 
 ## Description
 
-This resource configures the Teams Meeting Policies.
+This resource configures the Teams Online Voicemail Policies.
 
-More information: https://docs.microsoft.com/en-us/microsoftteams/meeting-policies-overview
+More information: https://learn.microsoft.com/en-us/microsoftteams/manage-voicemail-policies

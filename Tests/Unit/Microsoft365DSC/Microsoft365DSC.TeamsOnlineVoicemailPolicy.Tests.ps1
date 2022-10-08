@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "TeamsMeetingPolicy" -GenericStubModule $GenericStubPath
+    -DscResource "TeamsOnlineVoicemailPolicy" -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -40,44 +40,32 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            Mock -CommandName New-CsTeamsMeetingPolicy -MockWith {
+            Mock -CommandName New-CsOnlineVoicemailPolicy -MockWith {
             }
 
-            Mock -CommandName Set-CsTeamsMeetingPolicy -MockWith {
+            Mock -CommandName Set-CsOnlineVoicemailPolicy -MockWith {
             }
 
-            Mock -CommandName Remove-CsTeamsMeetingPolicy -MockWith {
+            Mock -CommandName Remove-CsOnlineVoicemailPolicy -MockWith {
             }
         }
 
         # Test contexts
-        Context -Name "When Meeting Policy doesn't exist but should" -Fixture {
+        Context -Name "When the Policy doesn't exist but should" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity                                   = "Test Policy";
-                    AllowAnonymousUsersToStartMeeting          = $False;
-                    AllowChannelMeetingScheduling              = $True;
-                    AllowCloudRecording                        = $True;
-                    AllowExternalParticipantGiveRequestControl = $False;
-                    AllowIPVideo                               = $True;
-                    AllowMeetNow                               = $True;
-                    AllowOutlookAddIn                          = $True;
-                    AllowParticipantGiveRequestControl         = $True;
-                    AllowPowerPointSharing                     = $True;
-                    AllowPrivateMeetingScheduling              = $True;
-                    AllowSharedNotes                           = $True;
-                    AllowTranscription                         = $False;
-                    AllowWhiteboard                            = $True;
-                    AutoAdmittedUsers                          = "Everyone";
-                    Description                                = $null;
-                    MediaBitRateKb                             = 50000;
-                    ScreenSharingMode                          = "EntireScreen";
-                    WhoCanRegister                             = "EveryoneInCompany"
-                    Ensure                                     = 'Present'
-                    Credential                                 = $Credential
+                    Credential                          = $Credential;
+                    EnableEditingCallAnswerRulesSetting = $True;
+                    EnableTranscription                 = $True;
+                    EnableTranscriptionProfanityMasking = $False;
+                    EnableTranscriptionTranslation      = $True;
+                    Ensure                              = "Present";
+                    Identity                            = "TestPolicy";
+                    MaximumRecordingLength              = "00:10:00";
+                    ShareData                           = "Defer";
                 }
 
-                Mock -CommandName Get-CsTeamsMeetingPolicy -MockWith {
+                Mock -CommandName Get-CsOnlineVoicemailPolicy -MockWith {
                     return $null
                 }
             }
@@ -92,57 +80,33 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should create the policy in the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-CsTeamsMeetingPolicy -Exactly 1
+                Should -Invoke -CommandName New-CsOnlineVoicemailPolicy -Exactly 1
             }
         }
 
         Context -Name "Policy exists but is not in the Desired State" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity                                   = "Test Policy";
-                    AllowAnonymousUsersToStartMeeting          = $False;
-                    AllowChannelMeetingScheduling              = $True;
-                    AllowCloudRecording                        = $True;
-                    AllowExternalParticipantGiveRequestControl = $False;
-                    AllowIPVideo                               = $True;
-                    AllowMeetNow                               = $True;
-                    AllowOutlookAddIn                          = $True;
-                    AllowParticipantGiveRequestControl         = $True;
-                    AllowPowerPointSharing                     = $True;
-                    AllowPrivateMeetingScheduling              = $True;
-                    AllowSharedNotes                           = $True;
-                    AllowTranscription                         = $False;
-                    AllowWhiteboard                            = $True;
-                    AutoAdmittedUsers                          = "Everyone";
-                    Description                                = $null;
-                    MediaBitRateKb                             = 50000;
-                    ScreenSharingMode                          = "EntireScreen";
-                    WhoCanRegister                             = "EveryoneInCompany"
-                    Ensure                                     = 'Present'
-                    Credential                                 = $Credential
+                    Credential                          = $Credential;
+                    EnableEditingCallAnswerRulesSetting = $True;
+                    EnableTranscription                 = $True;
+                    EnableTranscriptionProfanityMasking = $False;
+                    EnableTranscriptionTranslation      = $True;
+                    Ensure                              = "Present";
+                    Identity                            = "TestPolicy";
+                    MaximumRecordingLength              = "00:10:00";
+                    ShareData                           = "Defer";
                 }
 
-                Mock -CommandName Get-CsTeamsMeetingPolicy -MockWith {
+                Mock -CommandName Get-CsOnlineVoicemailPolicy -MockWith {
                     return @{
-                        Identity                                   = "Test Policy";
-                        AllowAnonymousUsersToStartMeeting          = $False;
-                        AllowChannelMeetingScheduling              = $True;
-                        AllowCloudRecording                        = $True;
-                        AllowExternalParticipantGiveRequestControl = $False;
-                        AllowIPVideo                               = $True;
-                        AllowMeetNow                               = $True;
-                        AllowOutlookAddIn                          = $True;
-                        AllowParticipantGiveRequestControl         = $True;
-                        AllowPowerPointSharing                     = $True;
-                        AllowPrivateMeetingScheduling              = $True;
-                        AllowSharedNotes                           = $True;
-                        AllowTranscription                         = $False;
-                        AllowWhiteboard                            = $False; #Variant
-                        AutoAdmittedUsers                          = "Everyone";
-                        WhoCanRegister                             = "EveryoneInCompany"
-                        Description                                = $null;
-                        MediaBitRateKb                             = 50000;
-                        ScreenSharingMode                          = "EntireScreen";
+                        EnableEditingCallAnswerRulesSetting = $True;
+                        EnableTranscription                 = $True;
+                        EnableTranscriptionProfanityMasking = $False;
+                        EnableTranscriptionTranslation      = $True;
+                        Identity                            = "TestPolicy";
+                        MaximumRecordingLength              = "00:05:00"; #Drift
+                        ShareData                           = "Defer";
                     }
                 }
             }
@@ -157,58 +121,34 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should update the settings from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-CsTeamsMeetingPolicy -Exactly 1
-                Should -Invoke -CommandName New-CSTeamsMeetingPolicy -Exactly 0
+                Should -Invoke -CommandName Set-CsOnlineVoicemailPolicy -Exactly 1
+                Should -Invoke -CommandName New-CsOnlineVoicemailPolicy -Exactly 0
             }
         }
 
         Context -Name "Policy exists and is already in the Desired State" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity                                   = "Test Policy";
-                    AllowAnonymousUsersToStartMeeting          = $False;
-                    AllowChannelMeetingScheduling              = $True;
-                    AllowCloudRecording                        = $True;
-                    AllowExternalParticipantGiveRequestControl = $False;
-                    AllowIPVideo                               = $True;
-                    AllowMeetNow                               = $True;
-                    AllowOutlookAddIn                          = $True;
-                    AllowParticipantGiveRequestControl         = $True;
-                    AllowPowerPointSharing                     = $True;
-                    AllowPrivateMeetingScheduling              = $True;
-                    AllowSharedNotes                           = $True;
-                    AllowTranscription                         = $False;
-                    AllowWhiteboard                            = $True;
-                    AutoAdmittedUsers                          = "Everyone";
-                    Description                                = $null;
-                    MediaBitRateKb                             = 50000;
-                    ScreenSharingMode                          = "EntireScreen";
-                    WhoCanRegister                             = "EveryoneInCompany"
-                    Ensure                                     = 'Present'
-                    Credential                         = $Credential
+                    Credential                          = $Credential;
+                    EnableEditingCallAnswerRulesSetting = $True;
+                    EnableTranscription                 = $True;
+                    EnableTranscriptionProfanityMasking = $False;
+                    EnableTranscriptionTranslation      = $True;
+                    Ensure                              = "Present";
+                    Identity                            = "TestPolicy";
+                    MaximumRecordingLength              = "00:10:00";
+                    ShareData                           = "Defer";
                 }
 
-                Mock -CommandName Get-CsTeamsMeetingPolicy -MockWith {
+                Mock -CommandName Get-CsOnlineVoicemailPolicy -MockWith {
                     return @{
-                        Identity                                   = "Test Policy";
-                        AllowAnonymousUsersToStartMeeting          = $False;
-                        AllowChannelMeetingScheduling              = $True;
-                        AllowCloudRecording                        = $True;
-                        AllowExternalParticipantGiveRequestControl = $False;
-                        AllowIPVideo                               = $True;
-                        AllowMeetNow                               = $True;
-                        AllowOutlookAddIn                          = $True;
-                        AllowParticipantGiveRequestControl         = $True;
-                        AllowPowerPointSharing                     = $True;
-                        AllowPrivateMeetingScheduling              = $True;
-                        AllowSharedNotes                           = $True;
-                        AllowTranscription                         = $False;
-                        AllowWhiteboard                            = $True;
-                        AutoAdmittedUsers                          = "Everyone";
-                        Description                                = $null;
-                        MediaBitRateKb                             = 50000;
-                        ScreenSharingMode                          = "EntireScreen";
-                        WhoCanRegister                             = "EveryoneInCompany"
+                        EnableEditingCallAnswerRulesSetting = $True;
+                        EnableTranscription                 = $True;
+                        EnableTranscriptionProfanityMasking = $False;
+                        EnableTranscriptionTranslation      = $True;
+                        Identity                            = "TestPolicy";
+                        MaximumRecordingLength              = "00:10:00";
+                        ShareData                           = "Defer";
                     }
                 }
             }
@@ -225,50 +165,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Policy exists but it should not" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity                                   = "Test Policy";
-                    AllowAnonymousUsersToStartMeeting          = $False;
-                    AllowChannelMeetingScheduling              = $True;
-                    AllowCloudRecording                        = $True;
-                    AllowExternalParticipantGiveRequestControl = $False;
-                    AllowIPVideo                               = $True;
-                    AllowMeetNow                               = $True;
-                    AllowOutlookAddIn                          = $True;
-                    AllowParticipantGiveRequestControl         = $True;
-                    AllowPowerPointSharing                     = $True;
-                    AllowPrivateMeetingScheduling              = $True;
-                    AllowSharedNotes                           = $True;
-                    AllowTranscription                         = $False;
-                    AllowWhiteboard                            = $True;
-                    AutoAdmittedUsers                          = "Everyone";
-                    Description                                = $null;
-                    MediaBitRateKb                             = 50000;
-                    ScreenSharingMode                          = "EntireScreen";
-                    WhoCanRegister                             = "EveryoneInCompany"
-                    Ensure                                     = 'Absent'
-                    Credential                                 = $Credential
+                    Credential                          = $Credential;
+                    EnableEditingCallAnswerRulesSetting = $True;
+                    EnableTranscription                 = $True;
+                    EnableTranscriptionProfanityMasking = $False;
+                    EnableTranscriptionTranslation      = $True;
+                    Ensure                              = "Absent";
+                    Identity                            = "TestPolicy";
+                    MaximumRecordingLength              = "00:10:00";
+                    ShareData                           = "Defer";
                 }
 
-                Mock -CommandName Get-CsTeamsMeetingPolicy -MockWith {
+                Mock -CommandName Get-CsOnlineVoicemailPolicy -MockWith {
                     return @{
-                        Identity                                   = "Test Policy";
-                        AllowAnonymousUsersToStartMeeting          = $False;
-                        AllowChannelMeetingScheduling              = $True;
-                        AllowCloudRecording                        = $True;
-                        AllowExternalParticipantGiveRequestControl = $False;
-                        AllowIPVideo                               = $True;
-                        AllowMeetNow                               = $True;
-                        AllowOutlookAddIn                          = $True;
-                        AllowParticipantGiveRequestControl         = $True;
-                        AllowPowerPointSharing                     = $True;
-                        AllowPrivateMeetingScheduling              = $True;
-                        AllowSharedNotes                           = $True;
-                        AllowTranscription                         = $False;
-                        AllowWhiteboard                            = $False; #Variant
-                        AutoAdmittedUsers                          = "Everyone";
-                        Description                                = $null;
-                        MediaBitRateKb                             = 50000;
-                        ScreenSharingMode                          = "EntireScreen";
-                        WhoCanRegister                             = "EveryoneInCompany"
+                        EnableEditingCallAnswerRulesSetting = $True;
+                        EnableTranscription                 = $True;
+                        EnableTranscriptionProfanityMasking = $False;
+                        EnableTranscriptionTranslation      = $True;
+                        Identity                            = "TestPolicy";
+                        MaximumRecordingLength              = "00:10:00";
+                        ShareData                           = "Defer";
                     }
                 }
             }
@@ -283,7 +199,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should remove the policy from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-CsTeamsMeetingPolicy -Exactly 1
+                Should -Invoke -CommandName Remove-CsOnlineVoicemailPolicy -Exactly 1
             }
         }
 
@@ -294,27 +210,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-CsTeamsMeetingPolicy -MockWith {
+                Mock -CommandName Get-CsOnlineVoicemailPolicy -MockWith {
                     return @{
-                        Identity                                   = "Test Policy";
-                        AllowAnonymousUsersToStartMeeting          = $False;
-                        AllowChannelMeetingScheduling              = $True;
-                        AllowCloudRecording                        = $True;
-                        AllowExternalParticipantGiveRequestControl = $False;
-                        AllowIPVideo                               = $True;
-                        AllowMeetNow                               = $True;
-                        AllowOutlookAddIn                          = $True;
-                        AllowParticipantGiveRequestControl         = $True;
-                        AllowPowerPointSharing                     = $True;
-                        AllowPrivateMeetingScheduling              = $True;
-                        AllowSharedNotes                           = $True;
-                        AllowTranscription                         = $False;
-                        AllowWhiteboard                            = $False; #Variant
-                        AutoAdmittedUsers                          = "Everyone";
-                        Description                                = $null;
-                        MediaBitRateKb                             = 50000;
-                        ScreenSharingMode                          = "EntireScreen";
-                        WhoCanRegister                             = "EveryoneInCompany"
+                        EnableEditingCallAnswerRulesSetting = $True;
+                        EnableTranscription                 = $True;
+                        EnableTranscriptionProfanityMasking = $False;
+                        EnableTranscriptionTranslation      = $True;
+                        Identity                            = "TestPolicy";
+                        MaximumRecordingLength              = "00:10:00";
+                        ShareData                           = "Defer";
                     }
                 }
             }

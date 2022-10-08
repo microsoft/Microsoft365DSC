@@ -1,5 +1,5 @@
 ﻿{
-    "resourceName": "TeamsMeetingPolicy",
+    "resourceName": "TeamsOnlineVoicemailPolicy",
     "description": "",
     "permissions": {
         "graph": {
