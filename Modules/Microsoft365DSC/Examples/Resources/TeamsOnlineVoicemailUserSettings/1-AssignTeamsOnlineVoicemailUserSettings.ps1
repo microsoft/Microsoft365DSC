@@ -13,13 +13,19 @@ Configuration Example
 
     node localhost
     {
-        TeamsUserCallingSettings 'AssignCallingSettings'
+        TeamsOnlineVoicemailUserSettings 'AssignOnlineVoicemailUserSettings'
         {
-            CallGroupOrder       = "Simultaneous";
-            Credential           = $credsCredential;
-            Ensure               = "Present";
-            Identity             = "John.Smith@contoso.com";
-            UnansweredDelay      = "00:00:20";
+            CallAnswerRule                           = "RegularVoicemail";
+            Credential                               = $credsCredential;
+            DefaultGreetingPromptOverwrite           = "Hellow World!";
+            Ensure                                   = "Present";
+            Identity                                 = "John.Smith@contoso.com";
+            OofGreetingEnabled                       = $False;
+            OofGreetingFollowAutomaticRepliesEnabled = $False;
+            OofGreetingFollowCalendarEnabled         = $False;
+            PromptLanguage                           = "en-US";
+            ShareData                                = $False;
+            VoicemailEnabled                         = $True;
         }
     }
 }

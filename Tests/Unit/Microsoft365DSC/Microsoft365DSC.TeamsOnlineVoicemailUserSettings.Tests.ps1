@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "TeamsUserCallingSettings" -GenericStubModule $GenericStubPath
+    -DscResource "TeamsOnlineVoicemailUserSettings" -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -42,7 +42,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            Mock -CommandName Set-CsUserCallingSettings -MockWith {
+            Mock -CommandName Set-CsOnlineVoicemailUserSettings -MockWith {
             }
         }
 
@@ -50,14 +50,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When no settings are assigned to a user" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity        = 'Test Settings'
-                    CallGroupOrder  = "Simultaneous";
-                    Ensure          = 'Present'
-                    Credential      = $Credential
-                    UnansweredDelay = "00:00:20";
+                    CallAnswerRule                           = "RegularVoicemail";
+                    Credential                               = $Credential;
+                    DefaultGreetingPromptOverwrite           = "Hellow World!";
+                    Ensure                                   = "Present";
+                    Identity                                 = "John.Smith@contoso.com";
+                    OofGreetingEnabled                       = $False;
+                    OofGreetingFollowAutomaticRepliesEnabled = $False;
+                    OofGreetingFollowCalendarEnabled         = $False;
+                    PromptLanguage                           = "en-US";
+                    ShareData                                = $False;
+                    VoicemailEnabled                         = $True;
                 }
 
-                Mock -CommandName Get-CsUserCallingSettings -MockWith {
+                Mock -CommandName Get-CsOnlineVoicemailUserSettings -MockWith {
                     return $null
                 }
             }
@@ -72,24 +78,37 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should assign settings in the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-CsUserCallingSettings -Exactly 1
+                Should -Invoke -CommandName Set-CsOnlineVoicemailUserSettings -Exactly 1
             }
         }
 
         Context -Name "Settings exists but is not in the Desired State" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity        = 'Test Settings'
-                    CallGroupOrder  = "Simultaneous";
-                    Ensure          = 'Present'
-                    Credential      = $Credential
-                    UnansweredDelay = "00:00:20";
+                    CallAnswerRule                           = "RegularVoicemail";
+                    Credential                               = $Credential;
+                    DefaultGreetingPromptOverwrite           = "Hellow World!";
+                    Ensure                                   = "Present";
+                    Identity                                 = "John.Smith@contoso.com";
+                    OofGreetingEnabled                       = $False;
+                    OofGreetingFollowAutomaticRepliesEnabled = $False;
+                    OofGreetingFollowCalendarEnabled         = $False;
+                    PromptLanguage                           = "en-US";
+                    ShareData                                = $False;
+                    VoicemailEnabled                         = $True;
                 }
 
-                Mock -CommandName Get-CsUserCallingSettings -MockWith {
+                Mock -CommandName Get-CsOnlineVoicemailUserSettings -MockWith {
                     return @{
-                        CallGroupOrder  = "Simultaneous";
-                        UnansweredDelay = "00:00:30"; # Drift
+                        CallAnswerRule                           = "RegularVoicemail";
+                        DefaultGreetingPromptOverwrite           = "Hellow World!";
+                        Identity                                 = "John.Smith@contoso.com";
+                        OofGreetingEnabled                       = $False;
+                        OofGreetingFollowAutomaticRepliesEnabled = $True; #Drift
+                        OofGreetingFollowCalendarEnabled         = $False;
+                        PromptLanguage                           = "en-US";
+                        ShareData                                = $False;
+                        VoicemailEnabled                         = $True;
                     }
                 }
             }
@@ -104,24 +123,37 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should update the settings from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-CsUserCallingSettings -Exactly 1
+                Should -Invoke -CommandName Set-CsOnlineVoicemailUserSettings -Exactly 1
             }
         }
 
         Context -Name "Settings exists and is already in the Desired State" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity        = 'Test Settings'
-                    CallGroupOrder  = "Simultaneous";
-                    Ensure          = 'Present'
-                    Credential      = $Credential
-                    UnansweredDelay = "00:00:20";
+                    CallAnswerRule                           = "RegularVoicemail";
+                    Credential                               = $Credential;
+                    DefaultGreetingPromptOverwrite           = "Hellow World!";
+                    Ensure                                   = "Present";
+                    Identity                                 = "John.Smith@contoso.com";
+                    OofGreetingEnabled                       = $False;
+                    OofGreetingFollowAutomaticRepliesEnabled = $False;
+                    OofGreetingFollowCalendarEnabled         = $False;
+                    PromptLanguage                           = "en-US";
+                    ShareData                                = $False;
+                    VoicemailEnabled                         = $True;
                 }
 
-                Mock -CommandName Get-CsUserCallingSettings -MockWith {
+                Mock -CommandName Get-CsOnlineVoicemailUserSettings -MockWith {
                     return @{
-                        CallGroupOrder  = "Simultaneous";
-                        UnansweredDelay = "00:00:20";
+                        CallAnswerRule                           = "RegularVoicemail";
+                        DefaultGreetingPromptOverwrite           = "Hellow World!";
+                        Identity                                 = "John.Smith@contoso.com";
+                        OofGreetingEnabled                       = $False;
+                        OofGreetingFollowAutomaticRepliesEnabled = $False;
+                        OofGreetingFollowCalendarEnabled         = $False;
+                        PromptLanguage                           = "en-US";
+                        ShareData                                = $False;
+                        VoicemailEnabled                         = $True;
                     }
                 }
             }
@@ -142,10 +174,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-CsUserCallingSettings -MockWith {
+                Mock -CommandName Get-CsOnlineVoicemailUserSettings -MockWith {
                     return @{
-                        CallGroupOrder  = "Simultaneous";
-                        UnansweredDelay = "00:00:20";
+                        CallAnswerRule                           = "RegularVoicemail";
+                        DefaultGreetingPromptOverwrite           = "Hellow World!";
+                        Identity                                 = "John.Smith@contoso.com";
+                        OofGreetingEnabled                       = $False;
+                        OofGreetingFollowAutomaticRepliesEnabled = $False;
+                        OofGreetingFollowCalendarEnabled         = $False;
+                        PromptLanguage                           = "en-US";
+                        ShareData                                = $False;
+                        VoicemailEnabled                         = $True;
                     }
                 }
             }

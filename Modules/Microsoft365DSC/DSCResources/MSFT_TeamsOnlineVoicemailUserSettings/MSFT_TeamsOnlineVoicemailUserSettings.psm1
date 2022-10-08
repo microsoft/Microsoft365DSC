@@ -81,7 +81,7 @@ function Get-TargetResource
 
     try
     {
-        $instance = Get-CsUserCallingSettings -Identity $Identity -ErrorAction 'SilentlyContinue'
+        $instance = Get-CsOnlineVoicemailUserSettings -Identity $Identity -ErrorAction 'SilentlyContinue'
 
         if ($null -eq $instance)
         {

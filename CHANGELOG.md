@@ -10,6 +10,12 @@
   * Fixed issue where the locations weren't properly returned.
   FIXES [#2338](https://github.com/microsoft/Microsoft365DSC/issues/2338)
   FIXES [#2339](https://github.com/microsoft/Microsoft365DSC/issues/2339)
+* TeamsOnlineVoicemailPolicy
+  * Initial Release
+* TeamsOnlineVoicemailUserSettings
+  * Initial Release
+* TeamsUserCallingSettings
+  * InitialRelease
 
 # 1.22.1005.1
 
