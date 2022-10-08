@@ -5,56 +5,49 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
+        [string]
         $Identity,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Ring","Mute","Banner")]
-        $GroupNotificationOverride,
+        [ValidateSet("DeclineCall", "PromptOnly", "PromptOnlyWithTransfer", "RegularVoicemail", "VoicemailWithTransferOption")]
+        $CallAnswerRule,
 
         [Parameter()]
         [System.String]
-        $CallGroupOrder,
+        $DefaultGreetingPromptOverwrite,
 
         [Parameter()]
-        [System.String[]]
-        $CallGroupTargets,
+        [System.String]
+        $DefaultOofGreetingPromptOverwrite,
 
         [Parameter()]
         [System.Boolean]
-        $IsUnansweredEnabled,
-
-        [Parameter()]
-        [System.String]
-        $UnansweredDelay,
-
-        [Parameter()]
-        [System.String]
-        $UnansweredTarget,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("Group","MyDelegates","SingleTarget","Voicemail")]
-        $UnansweredTargetType,
+        $OofGreetingEnabled,
 
         [Parameter()]
         [System.Boolean]
-        $IsForwardingEnabled,
+        $OofGreetingFollowAutomaticRepliesEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OofGreetingFollowCalendarEnabled,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Immediate","Simultaneous")]
-        $ForwardingType,
+        $PromptLanguage,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShareData,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Group","MyDelegates","SingleTarget","Voicemail")]
-        $ForwardingTargetType,
+        $TransferTarget,
 
         [Parameter()]
-        [System.String]
-        $ForwardingTarget,
+        [System.Boolean]
+        $VoicemailEnabled,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -66,7 +59,7 @@ function Get-TargetResource
         $Credential
     )
 
-    Write-Verbose -Message "Getting the Teams Calling Policy $($Identity)"
+    Write-Verbose -Message "Getting the Teams Online Voicemail User Settings $($Identity)"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -88,29 +81,28 @@ function Get-TargetResource
 
     try
     {
-        $instance = Get-CsUserCallingSettings -Identity $Identity -ErrorAction 'SilentlyContinue'
+        $instance = Get-CsOnlineVoicemailUserSettings -Identity $Identity -ErrorAction 'SilentlyContinue'
 
         if ($null -eq $instance)
         {
-            Write-Verbose -Message "Could not find Teams User Calling Settings for ${$Identity}"
+            Write-Verbose -Message "Could not find Teams Online Voicemail User Settings for ${$Identity}"
             return $nullReturn
         }
-        Write-Verbose -Message "Found Teams User Calling Settings for {$Identity}"
+        Write-Verbose -Message "Found Teams Online Voicemail User Settings for {$Identity}"
         return @{
-            Identity                  = $Identity
-            GroupNotificationOverride = $instance.GroupNotificationOverride
-            CallGroupOrder            = $instance.CallGroupOrder
-            CallGroupTargets          = $instance.CallGroupTargets
-            IsUnansweredEnabled       = $instance.IsUnansweredEnabled
-            UnansweredDelay           = $instance.UnansweredDelay
-            UnansweredTarget          = $instance.UnansweredTarget
-            UnansweredTargetType      = $instance.UnansweredTargetType
-            IsForwardingEnabled       = $instance.IsForwardingEnabled
-            ForwardingType            = $instance.ForwardingType
-            ForwardingTargetType      = $instance.ForwardingTargetType
-            ForwardingTarget          = $instance.ForwardingTarget
-            Ensure                    = 'Present'
-            Credential                = $Credential
+            Identity                                 = $Identity
+            CallAnswerRule                           = $instance.CallAnswerRule
+            DefaultGreetingPromptOverwrite           = $instance.DefaultGreetingPromptOverwrite
+            DefaultOofGreetingPromptOverwrite        = $instance.DefaultOofGreetingPromptOverwrite
+            OofGreetingEnabled                       = $instance.OofGreetingEnabled
+            OofGreetingFollowAutomaticRepliesEnabled = $instance.OofGreetingFollowAutomaticRepliesEnabled
+            OofGreetingFollowCalendarEnabled         = $instance.OofGreetingFollowCalendarEnabled
+            PromptLanguage                           = $instance.PromptLanguage
+            ShareData                                = $instance.ShareData
+            TransferTarget                           = $instance.TransferTarget
+            VoicemailEnabled                         = $instance.VoicemailEnabled
+            Ensure                                   = 'Present'
+            Credential                               = $Credential
         }
     }
     catch
@@ -145,56 +137,49 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
+        [string]
         $Identity,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Ring","Mute","Banner")]
-        $GroupNotificationOverride,
+        [ValidateSet("DeclineCall", "PromptOnly", "PromptOnlyWithTransfer", "RegularVoicemail", "VoicemailWithTransferOption")]
+        $CallAnswerRule,
 
         [Parameter()]
         [System.String]
-        $CallGroupOrder,
+        $DefaultGreetingPromptOverwrite,
 
         [Parameter()]
-        [System.String[]]
-        $CallGroupTargets,
+        [System.String]
+        $DefaultOofGreetingPromptOverwrite,
 
         [Parameter()]
         [System.Boolean]
-        $IsUnansweredEnabled,
-
-        [Parameter()]
-        [System.String]
-        $UnansweredDelay,
-
-        [Parameter()]
-        [System.String]
-        $UnansweredTarget,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("Group","MyDelegates","SingleTarget","Voicemail")]
-        $UnansweredTargetType,
+        $OofGreetingEnabled,
 
         [Parameter()]
         [System.Boolean]
-        $IsForwardingEnabled,
+        $OofGreetingFollowAutomaticRepliesEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OofGreetingFollowCalendarEnabled,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Immediate","Simultaneous")]
-        $ForwardingType,
+        $PromptLanguage,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShareData,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Group","MyDelegates","SingleTarget","Voicemail")]
-        $ForwardingTargetType,
+        $TransferTarget,
 
         [Parameter()]
-        [System.String]
-        $ForwardingTarget,
+        [System.Boolean]
+        $VoicemailEnabled,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -206,7 +191,7 @@ function Set-TargetResource
         $Credential
     )
 
-    Write-Verbose -Message "Setting Teams User Calling Settings"
+    Write-Verbose -Message "Setting Teams Online Voicemail User Settings"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -231,12 +216,7 @@ function Set-TargetResource
 
     try
     {
-        if ($CallGroupOrder -ne $CurrentValues.CallGroupOrder -or $CallGroupTargets -ne $CurrentValues.CallGroupTargets)
-        {
-            Set-CsUserCallingSettings -Identity $Identity -CallGroupOrder $CallGroupOrder -CallGroupTargets $CallGroupTargets
-            $SetParameters.Remove("CallGroupOrder") | Out-Null
-        }
-        Set-CsUserCallingSettings @SetParameters
+        Set-CsOnlineVoicemailUserSettings @SetParameters
     }
     catch
     {
@@ -270,56 +250,49 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
+        [string]
         $Identity,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Ring","Mute","Banner")]
-        $GroupNotificationOverride,
+        [ValidateSet("DeclineCall", "PromptOnly", "PromptOnlyWithTransfer", "RegularVoicemail", "VoicemailWithTransferOption")]
+        $CallAnswerRule,
 
         [Parameter()]
         [System.String]
-        $CallGroupOrder,
+        $DefaultGreetingPromptOverwrite,
 
         [Parameter()]
-        [System.String[]]
-        $CallGroupTargets,
+        [System.String]
+        $DefaultOofGreetingPromptOverwrite,
 
         [Parameter()]
         [System.Boolean]
-        $IsUnansweredEnabled,
-
-        [Parameter()]
-        [System.String]
-        $UnansweredDelay,
-
-        [Parameter()]
-        [System.String]
-        $UnansweredTarget,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("Group","MyDelegates","SingleTarget","Voicemail")]
-        $UnansweredTargetType,
+        $OofGreetingEnabled,
 
         [Parameter()]
         [System.Boolean]
-        $IsForwardingEnabled,
+        $OofGreetingFollowAutomaticRepliesEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OofGreetingFollowCalendarEnabled,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Immediate","Simultaneous")]
-        $ForwardingType,
+        $PromptLanguage,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShareData,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Group","MyDelegates","SingleTarget","Voicemail")]
-        $ForwardingTargetType,
+        $TransferTarget,
 
         [Parameter()]
-        [System.String]
-        $ForwardingTarget,
+        [System.Boolean]
+        $VoicemailEnabled,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -342,7 +315,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Team User Calling Settings {$Identity}"
+    Write-Verbose -Message "Testing configuration of Team Online Voicemail User Settings {$Identity}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
