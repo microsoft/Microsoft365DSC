@@ -1,5 +1,5 @@
 ﻿{
-    "resourceName": "EXOManagementRoleAssignment",
+    "resourceName": "TeamsUserCallingSettings",
     "description": "",
     "permissions": {
         "graph": {
@@ -11,13 +11,6 @@
                 "read": [],
                 "update": []
             }
-        },
-        "exchange": {
-            "requiredroles": [
-                "Role Management",
-                "View-Only Configuration"
-            ],
-            "requiredrolegroups": "Organization Management"
         }
     }
 }

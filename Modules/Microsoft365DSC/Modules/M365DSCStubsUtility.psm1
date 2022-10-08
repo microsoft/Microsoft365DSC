@@ -198,6 +198,10 @@ function New-M365DSCStubFiles
                             {
                                 $ParamType = "PSObject"
                             }
+                            elseif ($ParamType.StartsWith("Microsoft.Teams."))
+                            {
+                                $ParamType = "PSObject"
+                            }
                             $StubContent += "        [$ParamType]`r`n"
                             $StubContent += "        `$$($param.Name),`r`n`r`n"
                         }
