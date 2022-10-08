@@ -134,10 +134,17 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
-    Set-CsPhoneNumberAssignment -Identity $Identity `
-        -PhoneNumber $TelephoneNumber `
-        -PhoneNumberType 'Calling' `
-        -LocationId $LocationID | Out-Null
+        if ($Ensure -eq 'Present')
+        {
+            Set-CsPhoneNumberAssignment -Identity $Identity `
+                -PhoneNumber $TelephoneNumber `
+                -PhoneNumberType 'Calling' `
+                -LocationId $LocationID | Out-Null
+        }
+        else
+        {
+            Remove-CsPhoneNumberAssignment -Identity $Identity -RemoveAll | Out-Null
+        }
 }
 
 function Test-TargetResource

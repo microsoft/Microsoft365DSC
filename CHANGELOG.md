@@ -14,6 +14,8 @@
   * Initial Release
 * TeamsOnlineVoicemailUserSettings
   * Initial Release
+* TeamsOnlineVoiceUser
+  * Initial Release
 * TeamsUserCallingSettings
   * InitialRelease
 
