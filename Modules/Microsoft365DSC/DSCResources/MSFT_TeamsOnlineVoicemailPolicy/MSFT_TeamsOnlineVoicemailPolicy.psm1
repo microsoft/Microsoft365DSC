@@ -4,7 +4,7 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
@@ -25,7 +25,7 @@ function Get-TargetResource
         $EnableTranscriptionTranslation,
 
         [Parameter()]
-        [System.Uint32]
+        [System.String]
         $MaximumRecordingLength,
 
         [Parameter()]
@@ -82,15 +82,15 @@ function Get-TargetResource
         }
         Write-Verbose -Message "Found Teams Online Voicemail Policy {$Identity}"
         return @{
-            Identity                            = $instance.Identity
-            EnableEditingCallAnswerRulesSetting = $instance.EnableEditingCallAnswerRulesSetting
-            EnableTranscription                 = $instance.EnableTranscription
-            EnableTranscriptionProfanityMasking = $instance.EnableTranscriptionProfanityMasking
-            EnableTranscriptionTranslation      = $instance.EnableTranscriptionTranslation
-            MaximumRecordingLength              = $instance.MaximumRecordingLength
-            PrimarySystemPromptLanguage         = $instance.PrimarySystemPromptLanguage
-            SecondarySystemPromptLanguage       = $instance.SecondarySystemPromptLanguage
-            ShareData                           = $instance.ShareData
+            Identity                            = $policy.Identity.Replace("Tag:","")
+            EnableEditingCallAnswerRulesSetting = $policy.EnableEditingCallAnswerRulesSetting
+            EnableTranscription                 = $policy.EnableTranscription
+            EnableTranscriptionProfanityMasking = $policy.EnableTranscriptionProfanityMasking
+            EnableTranscriptionTranslation      = $policy.EnableTranscriptionTranslation
+            MaximumRecordingLength              = $policy.MaximumRecordingLength
+            PrimarySystemPromptLanguage         = $policy.PrimarySystemPromptLanguage
+            SecondarySystemPromptLanguage       = $policy.SecondarySystemPromptLanguage
+            ShareData                           = $policy.ShareData
             Ensure                              = 'Present'
             Credential                          = $Credential
         }
@@ -126,7 +126,7 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
@@ -147,7 +147,7 @@ function Set-TargetResource
         $EnableTranscriptionTranslation,
 
         [Parameter()]
-        [System.Uint32]
+        [System.String]
         $MaximumRecordingLength,
 
         [Parameter()]
@@ -195,6 +195,10 @@ function Set-TargetResource
     $SetParameters.Remove('Ensure') | Out-Null
     $SetParameters.Remove('Credential') | Out-Null
 
+    # Convert the MaximumRecordingLength back to a timespan object.
+    $timespan = [TimeSpan]$MaximumRecordingLength
+    $SetParameters.MaximumRecordingLength = $timespan
+
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating a new Teams Online Voicemail Policy {$Identity}"
@@ -210,7 +214,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing existing Teams Online Voicemail Policy {$Identity}"
-        Remove-CsOnlineVoicemailPolicy -Identity $Identity -Confirm:$false
+        Remove-CsOnlineVoicemailPolicy -Identity $Identity
     }
 }
 
@@ -220,7 +224,7 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
@@ -241,7 +245,7 @@ function Test-TargetResource
         $EnableTranscriptionTranslation,
 
         [Parameter()]
-        [System.Uint32]
+        [System.String]
         $MaximumRecordingLength,
 
         [Parameter()]
