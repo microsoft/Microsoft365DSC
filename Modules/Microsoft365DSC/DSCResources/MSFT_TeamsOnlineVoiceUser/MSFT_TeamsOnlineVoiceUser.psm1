@@ -9,7 +9,7 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.Nullable[guid]]
+        [System.String]
         $LocationID,
 
         [Parameter()]
@@ -100,7 +100,7 @@ function Set-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.Nullable[guid]]
+        [System.String]
         $LocationID,
 
         [Parameter()]
@@ -158,7 +158,7 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.Nullable[guid]]
+        [System.String]
         $LocationID,
 
         [Parameter()]
