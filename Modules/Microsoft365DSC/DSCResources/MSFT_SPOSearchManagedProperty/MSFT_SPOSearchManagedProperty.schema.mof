@@ -23,7 +23,7 @@ class MSFT_SPOSearchManagedProperty : OMI_BaseResource
     [Write, Description("Present ensures the Search Managed Property exists."), ValueMap{"Present"}, Values{"Present"}] string Ensure;
     [Write, Description("Credentials of the account to authenticate with."), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
-    [Write, Description("Secret of the Azure Active Directory application to authenticate with.")] String ApplicationSecret;
+    [Write, Description("Secret of the Azure Active Directory application to authenticate with."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
     [Write, Description("Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com")] String TenantId;
     [Write, Description("Username can be made up to anything but password will be used for certificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
     [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;

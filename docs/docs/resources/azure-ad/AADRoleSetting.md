@@ -44,10 +44,11 @@
 | **EligibleAssignmentAssigneeNotificationDefaultRecipient** | Write | Boolean | Send notifications when eligible members activate this role: Notification to activated user (requestor), default recipient (True/False) ||
 | **EligibleAssignmentAssigneeNotificationAdditionalRecipient** | Write | StringArray[] | Send notifications when eligible members activate this role: Notification to activated user (requestor), additional recipient (UPN) ||
 | **EligibleAssignmentAssigneeNotificationOnlyCritical** | Write | Boolean | Send notifications when eligible members activate this role: Notification to activated user (requestor), only critical Email (True/False) ||
+| **Ensure** | Write | String | Specify if the Azure AD role setting should exist or not. |Present, Absent|
 | **Credential** | Write | PSCredential | Credentials for the Microsoft Graph delegated permissions. ||
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
-| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory application to authenticate with. ||
+| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory application to authenticate with. ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. ||
 

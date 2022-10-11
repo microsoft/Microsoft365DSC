@@ -21,7 +21,7 @@
 | **Credential** | Write | PSCredential | Credentials for the Microsoft Graph delegated permissions. ||
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
-| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory application to authenticate with. ||
+| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory application to authenticate with. ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. ||
 
@@ -44,7 +44,7 @@ To authenticate via Microsoft Graph, this resource required the following Applic
 * **Export**
   * Policy.Read.All
 
-NOTE: All permisions listed above require admin consent.
+NOTE: All permissions listed above require admin consent.
 
 ## Examples
 

@@ -37,7 +37,7 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -162,7 +162,7 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -199,6 +199,10 @@ function Set-TargetResource
     if ($currentParameters.ContainsKey('ApplicationId'))
     {
         $currentParameters.Remove('ApplicationId') | Out-Null
+    }
+    if ($currentParameters.ContainsKey('ApplicationSecret'))
+    {
+        $currentParameters.Remove('ApplicationSecret') | Out-Null
     }
     if ($currentParameters.ContainsKey('TenantId'))
     {
@@ -262,7 +266,7 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -327,7 +331,7 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
