@@ -30,7 +30,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
+                return "Content"
             }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
@@ -46,6 +46,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-MgDeviceAppManagementTargetedManagedAppConfiguration -MockWith {
             }
             Mock -CommandName Remove-MgDeviceAppManagementTargetedManagedAppConfiguration -MockWith {
+            }
+            Mock -CommandName Get-MgDeviceAppManagementTargetedManagedAppConfigurationAssignment -MockWith {
+                return @()
             }
         }
 
@@ -113,7 +116,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When the policy already exists and IS in the Desired State" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName        = 'Test App Configuration Policy'
+                    DisplayName        = 'Test App Configuration Policy Desire State'
                     Description        = 'Test Definition'
                     Ensure             = 'Present'
                     Credential = $Credential;
@@ -121,10 +124,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDeviceAppManagementTargetedManagedAppConfiguration -MockWith {
                     return @{
-                        DisplayName = 'Test App Configuration Policy'
+                        DisplayName = 'Test App Configuration Policy Desire State'
                         Description = 'Test Definition'
+                        Id          = 'A_19dbaff5-9aff-48b0-a60d-d0471ddaf141'
                     }
                 }
+                Mock -CommandName Get-MgDeviceAppManagementTargetedManagedAppConfigurationAssignment -MockWith {
+                    return @()
+                }
+
             }
 
             It "Should return true from the Test method" {
@@ -175,6 +183,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         DisplayName = 'Test App Configuration Policy'
                         Description = 'Test Definition'
+                        Id          = 'A_19dbaff5-9aff-48b0-a60d-d0471ddaf141'
                     }
                 }
             }

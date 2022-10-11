@@ -82,7 +82,7 @@
         },
         @{
             ModuleName      = 'ReverseDSC'
-            RequiredVersion = '2.0.0.12'
+            RequiredVersion = '2.0.0.13'
         }
     )
 }
