@@ -1275,6 +1275,7 @@ function Update-M365DSCAzureAdApplication
 
     $graphSvcprincipal = Get-AzADServicePrincipal | Where-Object -FilterScript { $_.DisplayName -eq "Microsoft Graph" }
     $spSvcprincipal = Get-AzADServicePrincipal | Where-Object -FilterScript { $_.DisplayName -eq "Office 365 SharePoint Online" }
+    $exSvcprincipal = Get-AzADServicePrincipal | Where-Object -FilterScript { $_.DisplayName -eq "Office 365 Exchange Online" }
 
     Write-LogEntry " "
     Write-LogEntry "Checking existance of AD Application"
@@ -1295,7 +1296,7 @@ function Update-M365DSCAzureAdApplication
         $permissionsSet = $false
         foreach ($permission in $Permissions)
         {
-            if ($permission.Api -eq $null -or $permission.Api -notin @("Graph", "SharePoint"))
+            if ($permission.Api -eq $null -or $permission.Api -notin @("Graph", "SharePoint", "Exchange"))
             {
                 Write-LogEntry "Specified permission is invalid $(Convert-M365DscHashtableToString -Hashtable $permission)" -Type Warning
                 continue
@@ -1311,6 +1312,10 @@ function Update-M365DSCAzureAdApplication
                 "SharePoint"
                 {
                     $svcprincipal = $spSvcprincipal
+                }
+                "Exchange"
+                {
+                    $svcprincipal = $exSvcprincipal
                 }
             }
 
