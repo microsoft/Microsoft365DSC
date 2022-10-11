@@ -1,7 +1,8 @@
 @{
-    Severity = @('Error',
-                 'Warning')
+    Severity     = @('Error',
+        'Warning')
     ExcludeRules = @('PSMissingModuleManifestField',
-                     'PSUseShouldProcessForStateChangingFunctions',
-                     'PSAvoidGlobalVars')
+        'PSUseShouldProcessForStateChangingFunctions',
+        'PSAvoidGlobalVars',
+        'PSAvoidUsingWriteHost')
 }
