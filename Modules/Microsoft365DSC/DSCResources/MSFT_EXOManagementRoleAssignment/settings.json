@@ -1,5 +1,5 @@
 ﻿{
-    "resourceName": "EXOManagementRole",
+    "resourceName": "EXOManagementRoleAssignment",
     "description": "",
     "permissions": {
         "graph": {
