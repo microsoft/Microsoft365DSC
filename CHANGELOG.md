@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* EXO Workload
+  * Add support for Managed Identity authentication
+
 # 1.22.1012.1
 
 * EXOManagementRoleAssignment
