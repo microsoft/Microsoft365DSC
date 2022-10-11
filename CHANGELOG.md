@@ -23,6 +23,9 @@
   FIXES [#2270](https://github.com/microsoft/Microsoft365DSC/issues/2270)
 * MISC
   * Fixed an issue in in Export-M365DSCConfiguration when used with Service Principal
+    FIXES [2374](https://github.com/microsoft/Microsoft365DSC/issues/2374)
+    FIXES [2379](https://github.com/microsoft/Microsoft365DSC/issues/2379)
+  * Added support for Exchange to the Update-M365DSCAzureAdApplication cmdlet
 
 # 1.22.1005.1
 
