@@ -1,6 +1,6 @@
 
-# IntuneDeviceConfigurationPolicyiOS
+# IntuneDeviceConfigurationPolicyIOS
 
 ## Description
 
-This resource configures an Intune device configuration profile for an iOS Device.
+This resource configures an Intune Device Configuration Policy for iOS.
