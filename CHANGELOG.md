@@ -16,7 +16,8 @@
   * Initial Release
 * TeamsUserCallingSettings
   * InitialRelease
-
+* MISC
+  * Added support for Exchange to the Update-M365DSCAzureAdApplication cmdlet
 # 1.22.1005.1
 
 * AADUser
