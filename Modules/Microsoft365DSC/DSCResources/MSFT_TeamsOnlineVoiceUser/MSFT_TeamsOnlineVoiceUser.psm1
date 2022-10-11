@@ -47,17 +47,17 @@ function Get-TargetResource
     $nullReturn.Ensure = 'Absent'
     try
     {
-        $policy = Get-CsOnlineVOiceUser -Identity $Identity `
+        $instance = Get-CsOnlineVoiceUser -Identity $Identity `
             -ErrorAction 'SilentlyContinue'
 
-        if ($null -eq $policy)
+        if ($null -eq $instance)
         {
             Write-Verbose -Message "Could not find Teams Online Voice User ${$Identity}"
             return $nullReturn
         }
         Write-Verbose -Message "Found Teams Online Voicemail Policy {$Identity}"
         return @{
-            Identity        = $policy.Identity
+            Identity        = $Identity
             LocationID      = $instance.LocationID
             TelephoneNumber = $instance.TelephoneNumber
             Ensure          = 'Present'

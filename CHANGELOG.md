@@ -18,6 +18,9 @@
   * Initial Release
 * TeamsUserCallingSettings
   * InitialRelease
+* DEPENDENCIES
+  * Updated ReverseDSC to version 2.0.0.13;
+  FIXES [#2270](https://github.com/microsoft/Microsoft365DSC/issues/2270)
 
 # 1.22.1005.1
 

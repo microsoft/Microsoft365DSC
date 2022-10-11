@@ -40,24 +40,23 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            Mock -CommandName Set-CsOnlinePstnUsage -MockWith {
+            Mock -CommandName Set-CsPhoneNumberAssignment -MockWith {
             }
         }
 
         # Test contexts
-        Context -Name "When the policy doesn't already exist" -Fixture {
+        Context -Name "When the user isn't assigned" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Usage               = 'Local'
-                    Ensure              = 'Present'
-                    Credential  = $Credential;
+                    Identity        = "John.Smith@Contoso.com"
+                    TelephoneNumber = '+14255043920'
+                    LocationId      = "c7c5a17f-00d7-47c0-9ddb-3383229d606b"
+                    Ensure          = 'Present'
+                    Credential      = $Credential;
                 }
 
-                Mock -CommandName Get-CsOnlinePstnUsage -MockWith {
-                    return New-Object PSObject -Property @{
-                        Identity               = 'Global'
-                        Usage                  = @()
-                    }
+                Mock -CommandName Get-CsOnlineVOiceUser -MockWith {
+                    return $null
                 }
             }
 
@@ -71,22 +70,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should create the policy from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Set-CsOnlinePstnUsage' -Exactly 1
+                Should -Invoke -CommandName 'Set-CsPhoneNumberAssignment' -Exactly 1
             }
         }
 
-        Context -Name 'When the policy already exists and IS in the Desired State' -Fixture {
+        Context -Name 'When the assignment already exists and IS in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Usage               = 'Local'
-                    Ensure              = 'Present'
-                    Credential  = $Credential;
+                    Identity        = "John.Smith@Contoso.com"
+                    TelephoneNumber = '+14255043920'
+                    LocationId      = "c7c5a17f-00d7-47c0-9ddb-3383229d606b"
+                    Ensure          = 'Present'
+                    Credential      = $Credential;
                 }
 
-                Mock -CommandName Get-CsOnlinePstnUsage -MockWith {
-                    return New-Object PSObject -Property @{
-                        Identity               = 'Global'
-                        Usage                  = @('Local')
+                Mock -CommandName Get-CsOnlineVOiceUser -MockWith {
+                    return @{
+                        TelephoneNumber = '+14255043920'
+                        LocationId      = "c7c5a17f-00d7-47c0-9ddb-3383229d606b"
                     }
                 }
             }
@@ -96,18 +97,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'When the policy already exists but it SHOULD NOT' -Fixture {
+        Context -Name 'When the assignment already exists but is NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Usage                  = 'Local'
-                    Ensure                 = 'Absent'
-                    Credential     = $Credential;
+                    Identity        = "John.Smith@Contoso.com"
+                    TelephoneNumber = '+14255043920'
+                    LocationId      = "c7c5a17f-00d7-47c0-9ddb-3383229d606b"
+                    Ensure          = 'Present'
+                    Credential      = $Credential;
                 }
 
-                Mock -CommandName Get-CsOnlinePstnUsage -MockWith {
-                    return New-Object PSObject -Property @{
-                        Identity               = 'Global'
-                        Usage                  = @('Local')
+                Mock -CommandName Get-CsOnlineVOiceUser -MockWith {
+                    return @{
+                        TelephoneNumber = '+15555555555' #Drift
+                        LocationId      = "c7c5a17f-00d7-47c0-9ddb-3383229d606b"
                     }
                 }
             }
@@ -122,7 +125,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-CsOnlinePstnUsage -Exactly 1
+                Should -Invoke -CommandName Set-CsPhoneNumberAssignment -Exactly 1
             }
         }
 
@@ -132,10 +135,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential     = $Credential;
                 }
 
-                Mock -CommandName Get-CsOnlinePstnUsage -MockWith {
-                    return New-Object PSObject -Property @{
-                        Identity               = 'Global'
-                        Usage                  = @('Local')
+                Mock -CommandName Get-CsOnlineVOiceUser -MockWith {
+                    return @{
+                        TelephoneNumber = '+14255043920'
+                        LocationId      = "c7c5a17f-00d7-47c0-9ddb-3383229d606b"
                     }
                 }
             }
