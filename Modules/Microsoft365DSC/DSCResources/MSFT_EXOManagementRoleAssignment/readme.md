@@ -1,5 +1,5 @@
-# EXOManagementRole
+# EXOManagementRoleAssignment
 
 ## Description
 
-This resource configures RBAC Management Roles in Exchange Online.
+This resource configures RBAC Management Roles Assignments in Exchange Online.

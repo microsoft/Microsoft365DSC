@@ -7921,14 +7921,6 @@ function Set-ManagementRoleAssignment
         $CustomRecipientWriteScope,
 
         [Parameter()]
-        [System.String]
-        $User,
-
-        [Parameter()]
-        [System.String]
-        $Role,
-
-        [Parameter()]
         [System.Object]
         $RecipientAdministrativeUnitScope,
 
@@ -13138,6 +13130,38 @@ function New-MgDeviceManagementDeviceCompliancePolicy
         $HttpPipelineAppend
     )
 }
+function New-IntuneDeviceConfigurationPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param (
+
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Platforms,
+
+        [Parameter()]
+        [System.String]
+        $Technologies,
+
+        [Parameter()]
+        [System.String]
+        $TemplateReferenceId,
+
+        [Parameter()]
+        [Array]
+        $Settings
+
+    )
+}
 function New-MgDeviceManagementDeviceConfiguration
 {
     [CmdletBinding()]
@@ -13392,6 +13416,41 @@ function Remove-MgDeviceManagementDeviceConfiguration
         [Parameter()]
         [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
         $HttpPipelineAppend
+    )
+}
+function Update-IntuneDeviceConfigurationPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceConfigurationPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Platforms,
+
+        [Parameter()]
+        [System.String]
+        $Technologies,
+
+        [Parameter()]
+        [System.String]
+        $TemplateReferenceId,
+
+        [Parameter()]
+        [Array]
+        $Settings
+
     )
 }
 function Update-MgDeviceManagement
@@ -14819,6 +14878,88 @@ function Get-MgDeviceManagementConfigurationPolicyTemplate
         $HttpPipelineAppend
     )
 }
+
+function Get-MgDeviceManagementConfigurationPolicyTemplateSettingTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.String]
+        $DeviceManagementConfigurationPolicyTemplateId,
+
+        [Parameter()]
+        [System.String]
+        $DeviceManagementConfigurationSettingTemplateId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
 function Get-MgDeviceManagementConfigurationSetting
 {
     [CmdletBinding()]
@@ -15052,6 +15193,89 @@ function Get-MgDeviceManagementIntentSetting
         [Parameter()]
         [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
         $HttpPipelineAppend
+    )
+}
+
+function Get-MgDeviceManagementIntentAssignment
+{
+    [CmdletBinding()]
+    param(
+
+        [Parameter()]
+        [System.String]
+        $DeviceManagementIntentAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $DeviceManagementIntentId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $all,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable
     )
 }
 function New-MgDeviceManagementAssignmentFilter
@@ -27047,6 +27271,10 @@ function New-AutoSensitivityLabelPolicy
         $PolicyTemplateInfo,
 
         [Parameter()]
+        [System.Object]
+        $PolicyRBACScopes,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Force,
 
@@ -27852,7 +28080,7 @@ function New-DlpCompliancePolicy
 
         [Parameter()]
         [System.Object]
-        $OneDriveSharedByMemberOf,
+        $PolicyRBACScopes,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -27909,6 +28137,10 @@ function New-DlpCompliancePolicy
         [Parameter()]
         [System.Object]
         $PowerBIDlpLocation,
+
+        [Parameter()]
+        [System.Object]
+        $OneDriveSharedByMemberOf,
 
         [Parameter()]
         [System.Object]
@@ -28880,6 +29112,10 @@ function New-LabelPolicy
         $AdvancedSettings,
 
         [Parameter()]
+        [System.Object]
+        $PolicyRBACScopes,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Force,
 
@@ -29797,6 +30033,10 @@ function Set-AutoSensitivityLabelPolicy
         $ExchangeSenderException,
 
         [Parameter()]
+        [System.Object]
+        $PolicyRBACScopes,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Force,
 
@@ -30541,7 +30781,7 @@ function Set-DlpCompliancePolicy
 
         [Parameter()]
         [System.Object]
-        $RemoveThirdPartyAppDlpLocationException,
+        $PolicyTemplateInfo,
 
         [Parameter()]
         [System.Object]
@@ -30557,7 +30797,7 @@ function Set-DlpCompliancePolicy
 
         [Parameter()]
         [System.Object]
-        $PolicyTemplateInfo,
+        $AddThirdPartyAppDlpLocation,
 
         [Parameter()]
         [System.Object]
@@ -30565,7 +30805,7 @@ function Set-DlpCompliancePolicy
 
         [Parameter()]
         [System.Object]
-        $AddTeamsLocation,
+        $PolicyRBACScopes,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -30613,6 +30853,10 @@ function Set-DlpCompliancePolicy
 
         [Parameter()]
         [System.Object]
+        $AddTeamsLocation,
+
+        [Parameter()]
+        [System.Object]
         $AddEndpointDlpLocation,
 
         [Parameter()]
@@ -30626,10 +30870,6 @@ function Set-DlpCompliancePolicy
         [Parameter()]
         [System.Object]
         $AddPowerBIDlpLocation,
-
-        [Parameter()]
-        [System.Object]
-        $AddThirdPartyAppDlpLocation,
 
         [Parameter()]
         [System.Object]
@@ -30690,6 +30930,10 @@ function Set-DlpCompliancePolicy
         [Parameter()]
         [System.Object]
         $RemoveOnPremisesScannerDlpLocation,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveThirdPartyAppDlpLocationException,
 
         [Parameter()]
         [System.Object]
@@ -31525,7 +31769,7 @@ function Set-LabelPolicy
     param(
         [Parameter()]
         [System.Object]
-        $Settings,
+        $RemoveModernGroupLocation,
 
         [Parameter()]
         [System.Object]
@@ -31565,7 +31809,7 @@ function Set-LabelPolicy
 
         [Parameter()]
         [System.Object]
-        $AddSharePointLocation,
+        $RemoveLabels,
 
         [Parameter()]
         [System.Object]
@@ -31573,7 +31817,7 @@ function Set-LabelPolicy
 
         [Parameter()]
         [System.Object]
-        $RemoveModernGroupLocation,
+        $PolicyRBACScopes,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -31625,6 +31869,14 @@ function Set-LabelPolicy
 
         [Parameter()]
         [System.Object]
+        $Settings,
+
+        [Parameter()]
+        [System.Object]
+        $AddSharePointLocation,
+
+        [Parameter()]
+        [System.Object]
         $AddSharePointLocationException,
 
         [Parameter()]
@@ -31658,10 +31910,6 @@ function Set-LabelPolicy
         [Parameter()]
         [System.Object]
         $AddSkypeLocationException,
-
-        [Parameter()]
-        [System.Object]
-        $RemoveLabels,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -34822,6 +35070,67 @@ function Set-TeamChannel
         $NewDisplayName
     )
 }
+function Get-CsOnlineLisLocation
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $CountryOrRegion,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $AssignmentStatus,
+
+        [Parameter()]
+        [System.Int32]
+        $NumberOfResultsToSkip,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PopulateNumberOfVoiceUsers,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PopulateNumberOfTelephoneNumbers,
+
+        [Parameter()]
+        [System.Nullable`1[System.Guid]]
+        $CivicAddressId,
+
+        [Parameter()]
+        [System.String]
+        $Location,
+
+        [Parameter()]
+        [System.Int64]
+        $ResultSize,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Nullable`1[System.Guid]]
+        $LocationId,
+
+        [Parameter()]
+        [System.String]
+        $City,
+
+        [Parameter()]
+        [System.String]
+        $ValidationStatus,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
 function Get-CsOnlinePSTNGateway
 {
     [CmdletBinding()]
@@ -34865,7 +35174,7 @@ function Get-CsOnlineUser
         $SkipUserPolicies,
 
         [Parameter()]
-        [Microsoft.Teams.ConfigAPI.Cmdlets.Models.AccountType]
+        [PSObject]
         $AccountType,
 
         [Parameter()]
@@ -34913,6 +35222,40 @@ function Get-CsOnlineUser
         $UsePreferredDC
     )
 }
+function Get-CsOnlineVoicemailPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Get-CsOnlineVoicemailUserSettings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
 function Get-CsOnlineVoiceRoute
 {
     [CmdletBinding()]
@@ -34945,6 +35288,71 @@ function Get-CsOnlineVoiceRoutingPolicy
         [Parameter()]
         [System.String]
         $MsftInternalProcessingMode
+    )
+}
+function Get-CsOnlineVoiceUser
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $First,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $NumberAssigned,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $GetFromAAD,
+
+        [Parameter()]
+        [System.Object]
+        $EnterpriseVoiceStatus,
+
+        [Parameter()]
+        [System.String]
+        $SearchQuery,
+
+        [Parameter()]
+        [System.Nullable`1[System.Guid]]
+        $CivicAddressId,
+
+        [Parameter()]
+        [System.Object]
+        $PSTNConnectivity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $NumberNotAssigned,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ExpandLocation,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Nullable`1[System.Guid]]
+        $LocationId,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $GetPendingUsers,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
     )
 }
 function Get-CsTeamsCallingPolicy
@@ -35295,6 +35703,43 @@ function Get-CsTenantFederationConfiguration
         $MsftInternalProcessingMode
     )
 }
+function Get-CsUserCallingSettings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
 function Grant-CsTeamsUpgradePolicy
 {
     [CmdletBinding()]
@@ -35330,6 +35775,55 @@ function Grant-CsTeamsUpgradePolicy
         [Parameter()]
         [System.String]
         $Group,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function New-CsOnlineVoicemailPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $PrimarySystemPromptLanguage,
+
+        [Parameter()]
+        [System.String]
+        $ShareData,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $MaximumRecordingLength,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTranscription,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableEditingCallAnswerRulesSetting,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTranscriptionProfanityMasking,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTranscriptionTranslation,
+
+        [Parameter()]
+        [System.String]
+        $SecondarySystemPromptLanguage,
 
         [Parameter()]
         [System.String]
@@ -36242,6 +36736,23 @@ function New-CsVoiceNormalizationRule
         $IsInternalExtension
     )
 }
+function Remove-CsOnlineVoicemailPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
 function Remove-CsOnlineVoiceRoute
 {
     [CmdletBinding()]
@@ -36274,6 +36785,31 @@ function Remove-CsOnlineVoiceRoutingPolicy
         [Parameter()]
         [System.String]
         $MsftInternalProcessingMode
+    )
+}
+function Remove-CsPhoneNumberAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RemoveAll,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $PhoneNumberType,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $PhoneNumber
     )
 }
 function Remove-CsTeamsCallingPolicy
@@ -36467,6 +37003,116 @@ function Set-CsOnlinePstnUsage
         $MsftInternalProcessingMode
     )
 }
+function Set-CsOnlineVoicemailPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $PrimarySystemPromptLanguage,
+
+        [Parameter()]
+        [System.String]
+        $ShareData,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $MaximumRecordingLength,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTranscription,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableEditingCallAnswerRulesSetting,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTranscriptionProfanityMasking,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTranscriptionTranslation,
+
+        [Parameter()]
+        [System.String]
+        $SecondarySystemPromptLanguage,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Set-CsOnlineVoicemailUserSettings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Boolean]
+        $OofGreetingEnabled,
+
+        [Parameter()]
+        [System.String]
+        $PromptLanguage,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShareData,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $DefaultOofGreetingPromptOverwrite,
+
+        [Parameter()]
+        [System.String]
+        $TransferTarget,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $VoicemailEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OofGreetingFollowCalendarEnabled,
+
+        [Parameter()]
+        [System.String]
+        $DefaultGreetingPromptOverwrite,
+
+        [Parameter()]
+        [System.Boolean]
+        $OofGreetingFollowAutomaticRepliesEnabled,
+
+        [Parameter()]
+        [Microsoft.Rtc.Management.Hosted.Voicemail.Models.CallAnswerRules]
+        $CallAnswerRule
+    )
+}
 function Set-CsOnlineVoiceRoute
 {
     [CmdletBinding()]
@@ -36535,6 +37181,35 @@ function Set-CsOnlineVoiceRoutingPolicy
         [Parameter()]
         [System.String]
         $MsftInternalProcessingMode
+    )
+}
+function Set-CsPhoneNumberAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnterpriseVoiceEnabled,
+
+        [Parameter()]
+        [System.String]
+        $PhoneNumberType,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $LocationId,
+
+        [Parameter()]
+        [System.String]
+        $PhoneNumber
     )
 }
 function Set-CsTeamsCallingPolicy
@@ -37685,6 +38360,136 @@ function Set-CsTenantFederationConfiguration
         [Parameter()]
         [System.Boolean]
         $RestrictTeamsConsumerToExternalUserProfiles
+    )
+}
+function Set-CsUser
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $RemoteCallControlTelephonyEnabled,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $ExchangeArchivingPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.String]
+        $LineServerURI,
+
+        [Parameter()]
+        [System.String]
+        $OnPremLineURI,
+
+        [Parameter()]
+        [System.Object]
+        $AcpInfo,
+
+        [Parameter()]
+        [System.String]
+        $SipAddress,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AudioVideoDisabled,
+
+        [Parameter()]
+        [System.String]
+        $PrivateLine,
+
+        [Parameter()]
+        [System.Boolean]
+        $HostedVoiceMail,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnterpriseVoiceEnabled,
+
+        [Parameter()]
+        [System.String]
+        $LineURI
+    )
+}
+function Set-CsUserCallingSettings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $UnansweredTarget,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Array]
+        $CallGroupTargets,
+
+        [Parameter()]
+        [PSObject]
+        $GroupMembershipDetails,
+
+        [Parameter()]
+        [System.String]
+        $ForwardingTarget,
+
+        [Parameter()]
+        [System.String]
+        $ForwardingType,
+
+        [Parameter()]
+        [System.String]
+        $UnansweredDelay,
+
+        [Parameter()]
+        [System.String]
+        $UnansweredTargetType,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsForwardingEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsUnansweredEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ForwardingTargetType,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $CallGroupOrder,
+
+        [Parameter()]
+        [System.String]
+        $GroupNotificationOverride
     )
 }
 #endregion

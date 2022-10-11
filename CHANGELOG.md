@@ -10,6 +10,19 @@
   * Fixed issue where the locations weren't properly returned.
   FIXES [#2338](https://github.com/microsoft/Microsoft365DSC/issues/2338)
   FIXES [#2339](https://github.com/microsoft/Microsoft365DSC/issues/2339)
+* TeamsOnlineVoicemailPolicy
+  * Initial Release
+* TeamsOnlineVoicemailUserSettings
+  * Initial Release
+* TeamsOnlineVoiceUser
+  * Initial Release
+* TeamsUserCallingSettings
+  * InitialRelease
+* DEPENDENCIES
+  * Updated ReverseDSC to version 2.0.0.13;
+  FIXES [#2270](https://github.com/microsoft/Microsoft365DSC/issues/2270)
+* MISC
+  * Added support for Exchange to the Update-M365DSCAzureAdApplication cmdlet
 
 # 1.22.1005.1
 

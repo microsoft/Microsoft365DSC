@@ -319,6 +319,12 @@ function Set-TargetResource
         Write-Verbose -Message "Management Role Assignment'$($Name)' already exists, but needs updating."
         $NewManagementRoleParams.Add("Identity", $Name)
         $NewManagementRoleParams.Remove("Name") | Out-Null
+        $NewManagementRoleParams.Remove("User") | Out-Null
+        $NewManagementRoleParams.Remove("Computer") | Out-Null
+        $NewManagementRoleParams.Remove("SecurityGroup") | Out-Null
+        $NewManagementRoleParams.Remove("App") | Out-Null
+        $NewManagementRoleParams.Remove("Policy") | Out-Null
+        $NewManagementRoleParams.Remove("Role") | Out-Null
         Set-ManagementRoleAssignment @NewManagementRoleParams
     }
 }
