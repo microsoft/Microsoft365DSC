@@ -14,8 +14,13 @@
   * Initial Release
 * TeamsOnlineVoicemailUserSettings
   * Initial Release
+* TeamsOnlineVoiceUser
+  * Initial Release
 * TeamsUserCallingSettings
   * InitialRelease
+* DEPENDENCIES
+  * Updated ReverseDSC to version 2.0.0.13;
+  FIXES [#2270](https://github.com/microsoft/Microsoft365DSC/issues/2270)
 * MISC
   * Fixed an issue in in Export-M365DSCConfiguration when used with Service Principal
 
