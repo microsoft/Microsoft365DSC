@@ -24,11 +24,11 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword ||
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. ||
 
-# EXOManagementRole
+# EXOManagementRoleAssignment
 
 ### Description
 
-This resource configures RBAC Management Roles in Exchange Online.
+This resource configures RBAC Management Roles Assignments in Exchange Online.
 
 ## Examples
 
