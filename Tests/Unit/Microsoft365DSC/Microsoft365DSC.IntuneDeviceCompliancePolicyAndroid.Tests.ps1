@@ -47,6 +47,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Remove-MgDeviceManagementDeviceCompliancePolicy -MockWith {
             }
+            Mock -CommandName Get-MGDeviceManagementDeviceCompliancePolicyAssignment -MockWith {
+
+                return @()
+            }
+
         }
             # Test contexts
             Context -Name "When the Android Device Compliance Policy doesn't already exist" -Fixture {
