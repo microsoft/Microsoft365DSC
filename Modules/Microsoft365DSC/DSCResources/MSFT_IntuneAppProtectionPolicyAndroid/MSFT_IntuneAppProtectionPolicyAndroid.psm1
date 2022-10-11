@@ -105,6 +105,14 @@ function Get-TargetResource
         $DisableAppEncryptionIfDeviceEncryptionIsEnabled,
 
         [Parameter()]
+        [System.String]
+        $CustomBrowserDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $CustomBrowserPackageId,
+
+        [Parameter()]
         [System.String[]]
         $Apps,
 
@@ -295,7 +303,7 @@ function Get-TargetResource
         $policy.add('Apps', $appsArray)
         $policy.add('Assignments', $assignmentsArray)
         $policy.add('ExcludedGroups', $exclusionArray)
-        $policy.add('AppGroupType', $policyInfo.AppGroupType)
+        $policy.add('AppGroupType', $policyInfo.AppGroupType.toString())
         # add Id for use in set function
         $policy.add('Id', $policyInfo.Id)
 
@@ -425,6 +433,14 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $DisableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $CustomBrowserDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $CustomBrowserPackageId,
 
         [Parameter()]
         [System.String[]]
@@ -736,6 +752,14 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $DisableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $CustomBrowserDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $CustomBrowserPackageId,
 
         [Parameter()]
         [System.String[]]
@@ -1161,6 +1185,61 @@ function set-AppsHash
     return $AppsHash
 }
 
+Function set-ManagedBrowserValues
+{
+    param (
+        [string]$ManagedBrowser,
+        [switch]$ManagedBrowserToOpenLinksRequired,
+        [string]$CustomBrowserDisplayName,
+        [string]$CustomBrowserPackageId
+    )
+
+   # a lot of testing has shown the gui always uses a string for the id values, even if they're blank yopu will get a blank string rather than no value
+   # via the gui there are only 3 possible configs, we need to ensure we always set to one of those:
+   # edge - edge, true, empty id strings
+   # any app - not configured, false, empty strings
+   # unmanaged browser not configured, true, strings must not be empty
+   # cmdlets will set whatever we tell them to and pull them back as we set them - but GUI interprets them in its own way
+   # the ManagedBrowserToOpenLinksRequired is the controlling value when you view things in gui - if it is false then the browser is set to any app regardless of other settings
+   # if edge is set but there are also non-empty strings for the ids it displays unmanaged browser.
+   # due to this we will treat the switch as the controlling factor and alter other values to reflect this.
+   # but we do need to factor in if the switch is set to false or not present....  because if not present and set to edge then I think we assime it should have been true...
+
+   if (!$ManagedBrowserToOpenLinksRequired)
+   {
+
+
+   }
+   else
+   {
+    <# Action when all if and elseif conditions are false #>
+   }
+
+
+    switch ($ManagedBrowser)
+    {
+
+        'microsoftEdge'
+        {}
+
+        'notConfigured'
+        {
+
+
+        }
+
+        default
+        {
+            # this should mean it is blank as it's a validated set
+
+        }
+
+
+
+    }
+}
+
+
 function get-InputParameters
 {
     return @{
@@ -1170,13 +1249,15 @@ function get-InputParameters
         AllowedOutboundDataTransferDestinations         = @{Type = 'Parameter'        ; ExportFileType = 'String'; };
         ApplicationId                                   = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
         ApplicationSecret                               = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
-        AppGroupType                                    = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
+        AppGroupType                                    = @{Type = 'ComplexParameter' ; ExportFileType = 'String'; };
         Apps                                            = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
         Assignments                                     = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
         CertificateThumbprint                           = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
         Managedidentity                                 = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
         ContactSyncBlocked                              = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         Credential                                      = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
+        CustomBrowserDisplayName                        = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        CustomBrowserPackageId                          = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         DataBackupBlocked                               = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         Description                                     = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         DeviceComplianceRequired                        = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
