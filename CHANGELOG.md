@@ -1,4 +1,7 @@
 # Change log for Microsoft365DSC
+# Unreleased
+* EXO workload
+  * Add Managed Identity support to resources
 
 # 1.22.1012.1
 
