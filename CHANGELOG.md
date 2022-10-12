@@ -4,6 +4,8 @@
 
 * EXO Workload
   * Add support for Managed Identity authentication
+* EXOAntiPhishPolicy
+  * Add new parameters: MailboxIntelligenceQuarantineTag, SpoofQuarantineTag, TargetedDomainQuarantineTag, TargetedUserQuarantineTag
 
 # 1.22.1012.1
 
