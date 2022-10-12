@@ -4,6 +4,8 @@
 
 * EXO Workload
   * Add support for Managed Identity authentication
+* EXOAtpPolicyForO365
+  * Add support for BlockUrls parameter
 
 # 1.22.1012.1
 

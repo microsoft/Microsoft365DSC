@@ -18,6 +18,10 @@ function Get-TargetResource
         $AllowSafeDocsOpen = $false,
 
         [Parameter()]
+        [System.String[]]
+        $BlockUrls = @(),
+
+        [Parameter()]
         [Boolean]
         $EnableATPForSPOTeamsODB = $false,
 
@@ -103,6 +107,7 @@ function Get-TargetResource
                 IsSingleInstance        = 'Yes'
                 Identity                = $AtpPolicyForO365.Identity
                 AllowSafeDocsOpen       = $AtpPolicyForO365.AllowSafeDocsOpen
+                BlockUrls               = $AtpPolicyForO365.BlockUrls
                 EnableATPForSPOTeamsODB = $AtpPolicyForO365.EnableATPForSPOTeamsODB
                 EnableSafeDocs          = $AtpPolicyForO365.EnableSafeDocs
                 Ensure                  = 'Present'
@@ -162,6 +167,10 @@ function Set-TargetResource
         [Parameter()]
         [Boolean]
         $AllowSafeDocsOpen = $false,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockUrls = @(),
 
         [Parameter()]
         [Boolean]
@@ -260,6 +269,10 @@ function Test-TargetResource
         [Parameter()]
         [Boolean]
         $AllowSafeDocsOpen = $false,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockUrls = @(),
 
         [Parameter()]
         [Boolean]
