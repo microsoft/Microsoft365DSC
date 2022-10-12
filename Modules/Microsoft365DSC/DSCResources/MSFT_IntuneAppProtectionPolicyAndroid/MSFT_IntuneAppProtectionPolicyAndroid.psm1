@@ -304,6 +304,12 @@ function Get-TargetResource
         $policy.add('Assignments', $assignmentsArray)
         $policy.add('ExcludedGroups', $exclusionArray)
         $policy.add('AppGroupType', $policyInfo.AppGroupType.toString())
+        #managed browser settings - export as is, when re-applying function will correct
+        $policy.add('ManagedBrowser', $policyInfo.ManagedBrowser.toString())
+        $policy.add('ManagedBrowserToOpenLinksRequired', $policyInfo.ManagedBrowserToOpenLinksRequired)
+        $policy.add('CustomBrowserDisplayName', $policyInfo.CustomBrowserDisplayName)
+        $policy.add('CustomBrowserPackageId', $policyInfo.CustomBrowserPackageId)
+
         # add Id for use in set function
         $policy.add('Id', $policyInfo.Id)
 
@@ -618,7 +624,13 @@ function Set-TargetResource
     $configstring += ('AppGroupType:' + $appshash.AppGroupType + "`r`n")
     $configstring += ('Apps' + ":`r`n" + ($appshash.Apps | Out-String) + "`r`n" )
 
-
+    # Set the managedbrowser values
+    $ManagedBrowserValuesHash = set-ManagedBrowserValues @PSBoundParameters
+    foreach ($param in $ManagedBrowserValuesHash.keys)
+    {
+        $setParams.add($param, $ManagedBrowserValuesHash.$param)
+        $configstring += ($param + ':' + $setParams.$param + "`r`n")
+    }
 
 
 
@@ -1194,7 +1206,6 @@ Function set-ManagedBrowserValues
         [string]$CustomBrowserPackageId
     )
 
-   # a lot of testing has shown the gui always uses a string for the id values, even if they're blank yopu will get a blank string rather than no value
    # via the gui there are only 3 possible configs, we need to ensure we always set to one of those:
    # edge - edge, true, empty id strings
    # any app - not configured, false, empty strings
@@ -1202,41 +1213,57 @@ Function set-ManagedBrowserValues
    # cmdlets will set whatever we tell them to and pull them back as we set them - but GUI interprets them in its own way
    # the ManagedBrowserToOpenLinksRequired is the controlling value when you view things in gui - if it is false then the browser is set to any app regardless of other settings
    # if edge is set but there are also non-empty strings for the ids it displays unmanaged browser.
-   # due to this we will treat the switch as the controlling factor and alter other values to reflect this.
-   # but we do need to factor in if the switch is set to false or not present....  because if not present and set to edge then I think we assime it should have been true...
+
+   #($PSBoundParameters.keys -contains $param )
+   write-host 'Setting Managed Browser Properties'
 
    if (!$ManagedBrowserToOpenLinksRequired)
    {
-
+        # no matter what else is specified, if ManagedBrowserToOpenLinksRequired is false or not specified in the config the gui interprets this as any app so we will do the same
+        # might want to modify in future to try and assume desired config based on other values but for now I will stick with the gui interpretation
+        write-host 'Setting Managed Browser to Any App'
+        $ManagedBrowser = 'notConfigured'
+        $ManagedBrowserToOpenLinksRequired = $false
+        $CustomBrowserDisplayName = ''
+        $CustomBrowserPackageId = ''
 
    }
    else
    {
-    <# Action when all if and elseif conditions are false #>
+        if(($CustomBrowserDisplayName -ne '') -and ($CustomBrowserPackageId -ne ''))
+        {
+            # in gui the custom browser values override the edge settings so assuming they are both specified we will use these values
+            write-host 'Setting Managed Browser to Custom Browser'
+            $ManagedBrowser = 'notConfigured'
+            $ManagedBrowserToOpenLinksRequired = $true
+            $CustomBrowserDisplayName = $CustomBrowserDisplayName
+            $CustomBrowserPackageId = $CustomBrowserPackageId
+        }
+        else
+        {
+            # otherwise we have specified a managed browser so it has to be edge
+            write-host 'Setting Managed Browser to Microsoft Edge'
+            $ManagedBrowser = 'microsoftEdge'
+            $ManagedBrowserToOpenLinksRequired = $true
+            $CustomBrowserDisplayName = ''
+            $CustomBrowserPackageId = ''
+        }
+
    }
 
 
-    switch ($ManagedBrowser)
-    {
-
-        'microsoftEdge'
-        {}
-
-        'notConfigured'
-        {
-
-
-        }
-
-        default
-        {
-            # this should mean it is blank as it's a validated set
-
-        }
-
-
-
+    $ManagedBrowserHash = @{
+        'ManagedBrowser' = $ManagedBrowser;
+        'ManagedBrowserToOpenLinksRequired' = $ManagedBrowserToOpenLinksRequired;
+        'CustomBrowserDisplayName' = $CustomBrowserDisplayName;
+        'CustomBrowserPackageId' = $CustomBrowserPackageId
     }
+
+    return $ManagedBrowserHash
+
+
+
+
 }
 
 
@@ -1256,8 +1283,8 @@ function get-InputParameters
         Managedidentity                                 = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
         ContactSyncBlocked                              = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         Credential                                      = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
-        CustomBrowserDisplayName                        = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        CustomBrowserPackageId                          = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        CustomBrowserDisplayName                        = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
+        CustomBrowserPackageId                          = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
         DataBackupBlocked                               = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         Description                                     = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         DeviceComplianceRequired                        = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
@@ -1269,8 +1296,8 @@ function get-InputParameters
         ExcludedGroups                                  = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
         FingerprintBlocked                              = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         IsAssigned                                      = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
-        ManagedBrowser                                  = @{Type = 'Parameter'        ; ExportFileType = 'String'; };
-        ManagedBrowserToOpenLinksRequired               = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        ManagedBrowser                                  = @{Type = 'ComplexParameter' ; ExportFileType = 'String'; };
+        ManagedBrowserToOpenLinksRequired               = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
         MaximumPinRetries                               = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         MinimumPinLength                                = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         MinimumRequiredAppVersion                       = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };

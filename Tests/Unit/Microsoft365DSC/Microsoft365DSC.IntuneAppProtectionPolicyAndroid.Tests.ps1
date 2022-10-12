@@ -64,7 +64,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SaveAsBlocked                                   = $True;
                     SimplePinBlocked                                = $False;
                     ScreenCaptureBlocked                            = $False;
-                    ManagedBrowser                                  = "notConfigured";
+                    ManagedBrowser                                  = "microsoftEdge";
                     MinimumRequiredAppVersion                       = "1.2";
                     MinimumRequiredOSVersion                        = "1.1";
                     MinimumRequiredPatchVersion                     = "2020-07-13";
@@ -72,6 +72,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MinimumWarningOSVersion                         = "1.5";
                     MinimumWarningPatchVersion                      = "2021-07-13";
                     IsAssigned                                      = $True;
+                    CustomBrowserPackageId                          = "";
+                    CustomBrowserDisplayName                        = "";
                 }
 
             }
@@ -161,7 +163,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SaveAsBlocked                                   = $True;
                     SimplePinBlocked                                = $False;
                     ScreenCaptureBlocked                            = $False;
-                    ManagedBrowser                                  = "notConfigured";
+                    ManagedBrowser                                  = "microsoftEdge";
                     MinimumRequiredAppVersion                       = "1.2";
                     MinimumRequiredOSVersion                        = "1.1";
                     MinimumRequiredPatchVersion                     = "2020-07-13";
@@ -169,6 +171,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MinimumWarningOSVersion                         = "1.5";
                     MinimumWarningPatchVersion                      = "2021-07-13";
                     IsAssigned                                      = $True;
+                    CustomBrowserPackageId                          = "";
+                    CustomBrowserDisplayName                        = "";
                 }
             }
 
@@ -244,7 +248,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When the policy already exists and is NOT in the Desired State" -Fixture {
             BeforeAll {
                 $testParams = get-DefaultTestParams
-                $testParams.ManagedBrowserToOpenLinksRequired       = $False #Drift
+                $testParams.FingerprintBlocked       = $true #Drift
 
 
                 Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
