@@ -40,7 +40,31 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AutodiscoverPartialDirSync,
+
+        [Parameter()]
+        [System.Boolean]
         $AutoExpandingArchive,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockMoveMessagesForGroupFolders,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsAddressEntryRestricted,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsAuthEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsBlockedWordsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsCreationOfCustomQuestionsRestricted,
 
         [Parameter()]
         [System.Boolean]
@@ -48,7 +72,51 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $BookingsExposureOfStaffDetailsRestricted,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsMembershipApprovalRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsNamingPolicyEnabled,
+
+        [Parameter()]
+        [System.String]
+        $BookingsNamingPolicyPrefix,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsNamingPolicyPrefixEnabled,
+
+        [Parameter()]
+        [System.String]
+        $BookingsNamingPolicySuffix,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsNamingPolicySuffixEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsNotesEntryRestricted,
+
+        [Parameter()]
+        [System.Boolean]
         $BookingsPaymentsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsPhoneNumberEntryRestricted,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsSearchEngineIndexDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsSmsMicrosoftEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -57,6 +125,10 @@ function Get-TargetResource
         [Parameter()]
         [System.UInt32]
         $ByteEncoderTypeFor7BitCharsets,
+
+        [Parameter()]
+        [System.Boolean]
+        $ComplianceMLBgdCrawlEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -94,6 +166,16 @@ function Get-TargetResource
         [ValidateSet('Private', 'Public')]
         [System.String]
         $DefaultGroupAccessType,
+
+        [Parameter()]
+        [ValidateRange(0, 29)]
+        [System.UInt32]
+        $DefaultMinutesToReduceLongEventsBy,
+
+        [Parameter()]
+        [ValidateRange(0, 29)]
+        [System.UInt32]
+        $DefaultMinutesToReduceShortEventsBy,
 
         [Parameter()]
         [System.String]
@@ -152,6 +234,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $EnableOutlookEvents,
+
+        [Parameter()]
+        [System.Boolean]
         $EwsAllowEntourage,
 
         [Parameter()]
@@ -189,6 +275,22 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $FindTimeAttendeeAuthenticationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FindTimeAutoScheduleDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FindTimeLockPollForAttendeesEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FindTimeOnlineMeetingOptionDisabled,
+
+        [Parameter()]
+        [System.Boolean]
         $FocusedInboxOn,
 
         [Parameter()]
@@ -198,6 +300,14 @@ function Get-TargetResource
         [Parameter()]
         [System.String[]]
         $IPListBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsGroupFoldersAndRulesEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsGroupMemberAllowedToEditContent,
 
         [Parameter()]
         [System.Boolean]
@@ -229,6 +339,18 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $MaskClientIpInReceivedHeadersEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MatchSenderOrganizerProperties,
+
+        [Parameter()]
+        [System.Boolean]
+        $MessageHighlightsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $MessageRemindersEnabled,
 
         [Parameter()]
@@ -257,6 +379,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $OutlookTextPredictionDisabled,
+
+        [Parameter()]
+        [System.Boolean]
         $PublicComputersDetectionEnabled,
 
         [Parameter()]
@@ -273,12 +399,24 @@ function Get-TargetResource
         $ReadTrackingEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $RecallReadMessagesEnabled,
+
+        [Parameter()]
         [System.String[]]
         $RemotePublicFolderMailboxes,
 
         [Parameter()]
         [System.Boolean]
         $SendFromAliasEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SharedDomainEmailAddressFlowEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ShortenEventScopeDefault,
 
         [Parameter()]
         [System.String]
@@ -299,6 +437,10 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $WebSuggestedRepliesDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $WorkspaceTenantEnabled,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -369,11 +511,29 @@ function Get-TargetResource
             AppsForOfficeEnabled                                      = $ConfigSettings.AppsForOfficeEnabled
             AsyncSendEnabled                                          = $ConfigSettings.AsyncSendEnabled
             AuditDisabled                                             = $ConfigSettings.AuditDisabled
+            AutodiscoverPartialDirSync                                = $ConfigSettings.AutodiscoverPartialDirSync
             AutoExpandingArchive                                      = $ConfigSettings.AutoExpandingArchiveEnabled
+            BlockMoveMessagesForGroupFolders                          = $ConfigSettings.BlockMoveMessagesForGroupFolders
+            BookingsAddressEntryRestricted                            = $ConfigSettings.BookingsAddressEntryRestricted
+            BookingsAuthEnabled                                       = $ConfigSettings.BookingsAuthEnabled
+            BookingsBlockedWordsEnabled                               = $ConfigSettings.BookingsBlockedWordsEnabled
+            BookingsCreationOfCustomQuestionsRestricted               = $ConfigSettings.BookingsCreationOfCustomQuestionsRestricted
             BookingsEnabled                                           = $ConfigSettings.BookingsEnabled
+            BookingsExposureOfStaffDetailsRestricted                  = $ConfigSettings.BookingsExposureOfStaffDetailsRestricted
+            BookingsMembershipApprovalRequired                        = $ConfigSettings.BookingsMembershipApprovalRequired
+            BookingsNamingPolicyEnabled                               = $ConfigSettings.BookingsNamingPolicyEnabled
+            BookingsNamingPolicyPrefix                                = $ConfigSettings.BookingsNamingPolicyPrefix
+            BookingsNamingPolicyPrefixEnabled                         = $ConfigSettings.BookingsNamingPolicyPrefixEnabled
+            BookingsNamingPolicySuffix                                = $ConfigSettings.BookingsNamingPolicySuffix
+            BookingsNamingPolicySuffixEnabled                         = $ConfigSettings.BookingsNamingPolicySuffixEnabled
+            BookingsNotesEntryRestricted                              = $ConfigSettings.BookingsNotesEntryRestricted
             BookingsPaymentsEnabled                                   = $ConfigSettings.BookingsPaymentsEnabled
+            BookingsPhoneNumberEntryRestricted                        = $ConfigSettings.BookingsPhoneNumberEntryRestricted
+            BookingsSearchEngineIndexDisabled                         = $ConfigSettings.BookingsSearchEngineIndexDisabled
+            BookingsSmsMicrosoftEnabled                               = $ConfigSettings.BookingsSmsMicrosoftEnabled
             BookingsSocialSharingRestricted                           = $ConfigSettings.BookingsSocialSharingRestricted
             ByteEncoderTypeFor7BitCharsets                            = $ConfigSettings.ByteEncoderTypeFor7BitCharsets
+            ComplianceMLBgdCrawlEnabled                               = $ConfigSettings.ComplianceMLBgdCrawlEnabled
             ConnectorsActionableMessagesEnabled                       = $ConfigSettings.ConnectorsActionableMessagesEnabled
             ConnectorsEnabled                                         = $ConfigSettings.ConnectorsEnabled
             ConnectorsEnabledForOutlook                               = $ConfigSettings.ConnectorsEnabledForOutlook
@@ -383,6 +543,8 @@ function Get-TargetResource
             CustomerLockboxEnabled                                    = $ConfigSettings.CustomerLockboxEnabled
             DefaultAuthenticationPolicy                               = $ConfigSettings.DefaultAuthenticationPolicy
             DefaultGroupAccessType                                    = $ConfigSettings.DefaultGroupAccessType
+            DefaultMinutesToReduceLongEventsBy                        = $ConfigSettings.DefaultMinutesToReduceLongEventsBy
+            DefaultMinutesToReduceShortEventsBy                       = $ConfigSettings.DefaultMinutesToReduceShortEventsBy
             DefaultPublicFolderAgeLimit                               = $ConfigSettings.DefaultPublicFolderAgeLimit
             DefaultPublicFolderDeletedItemRetention                   = $ConfigSettings.DefaultPublicFolderDeletedItemRetention
             DefaultPublicFolderIssueWarningQuota                      = $ConfigSettings.DefaultPublicFolderIssueWarningQuota
@@ -395,6 +557,7 @@ function Get-TargetResource
             DistributionGroupNameBlockedWordsList                     = $ConfigSettings.DistributionGroupNameBlockedWordsList
             DistributionGroupNamingPolicy                             = $ConfigSettings.DistributionGroupNamingPolicy
             ElcProcessingDisabled                                     = $ConfigSettings.ElcProcessingDisabled
+            EnableOutlookEvents                                       = $ConfigSettings.EnableOutlookEvents
             EndUserDLUpgradeFlowsDisabled                             = $ConfigSettings.EndUserDLUpgradeFlowsDisabled
             EwsAllowEntourage                                         = $ConfigSettings.EwsAllowEntourage
             EwsAllowList                                              = $ConfigSettings.EwsAllowList
@@ -405,9 +568,15 @@ function Get-TargetResource
             EwsEnabled                                                = $ConfigSettings.EwsEnabled
             ExchangeNotificationEnabled                               = $ConfigSettings.ExchangeNotificationEnabled
             ExchangeNotificationRecipients                            = $ConfigSettings.ExchangeNotificationRecipients
+            FindTimeAttendeeAuthenticationEnabled                     = $ConfigSettings.FindTimeAttendeeAuthenticationEnabled
+            FindTimeAutoScheduleDisabled                              = $ConfigSettings.FindTimeAutoScheduleDisabled
+            FindTimeLockPollForAttendeesEnabled                       = $ConfigSettings.FindTimeLockPollForAttendeesEnabled
+            FindTimeOnlineMeetingOptionDisabled                       = $ConfigSettings.FindTimeOnlineMeetingOptionDisabled
             FocusedInboxOn                                            = $ConfigSettings.FocusedInboxOn
             HierarchicalAddressBookRoot                               = $ConfigSettings.HierarchicalAddressBookRoot
             IPListBlocked                                             = $ConfigSettings.IPListBlocked
+            IsGroupFoldersAndRulesEnabled                             = $ConfigSettings.IsGroupFoldersAndRulesEnabled
+            IsGroupMemberAllowedToEditContent                         = $ConfigSettings.IsGroupMemberAllowedToEditContent
             LeanPopoutEnabled                                         = $ConfigSettings.LeanPopoutEnabled
             LinkPreviewEnabled                                        = $ConfigSettings.LinkPreviewEnabled
             MailTipsAllTipsEnabled                                    = $ConfigSettings.MailTipsAllTipsEnabled
@@ -415,6 +584,9 @@ function Get-TargetResource
             MailTipsGroupMetricsEnabled                               = $ConfigSettings.MailTipsGroupMetricsEnabled
             MailTipsLargeAudienceThreshold                            = $ConfigSettings.MailTipsLargeAudienceThreshold
             MailTipsMailboxSourcedTipsEnabled                         = $ConfigSettings.MailTipsMailboxSourcedTipsEnabled
+            MaskClientIpInReceivedHeadersEnabled                      = $ConfigSettings.MaskClientIpInReceivedHeadersEnabled
+            MatchSenderOrganizerProperties                            = $ConfigSettings.MatchSenderOrganizerProperties
+            MessageHighlightsEnabled                                  = $ConfigSettings.MessageHighlightsEnabled
             MessageRemindersEnabled                                   = $ConfigSettings.MessageRemindersEnabled
             MobileAppEducationEnabled                                 = $ConfigSettings.MobileAppEducationEnabled
             OAuth2ClientProfileEnabled                                = $ConfigSettings.OAuth2ClientProfileEnabled
@@ -422,17 +594,22 @@ function Get-TargetResource
             OutlookMobileGCCRestrictionsEnabled                       = $ConfigSettings.OutlookMobileGCCRestrictionsEnabled
             OutlookGifPickerDisabled                                  = $ConfigSettings.OutlookGifPickerDisabled
             OutlookPayEnabled                                         = $ConfigSettings.OutlookPayEnabled
+            OutlookTextPredictionDisabled                             = $ConfigSettings.OutlookTextPredictionDisabled
             PublicComputersDetectionEnabled                           = $ConfigSettings.PublicComputersDetectionEnabled
             PublicFoldersEnabled                                      = $ConfigSettings.PublicFoldersEnabled
             PublicFolderShowClientControl                             = $ConfigSettings.PublicFolderShowClientControl
             ReadTrackingEnabled                                       = $ConfigSettings.ReadTrackingEnabled
+            RecallReadMessagesEnabled                                 = $ConfigSettings.RecallReadMessagesEnabled
             RemotePublicFolderMailboxes                               = $ConfigSettings.RemotePublicFolderMailboxes
             SendFromAliasEnabled                                      = $ConfigSettings.SendFromAliasEnabled
+            SharedDomainEmailAddressFlowEnabled                       = $ConfigSettings.SharedDomainEmailAddressFlowEnabled
+            ShortenEventScopeDefault                                  = $ConfigSettings.ShortenEventScopeDefault
             SiteMailboxCreationURL                                    = $ConfigSettings.SiteMailboxCreationURL
             SmtpActionableMessagesEnabled                             = $ConfigSettings.SmtpActionableMessagesEnabled
             VisibleMeetingUpdateProperties                            = $ConfigSettings.VisibleMeetingUpdateProperties
             WebPushNotificationsDisabled                              = $ConfigSettings.WebPushNotificationsDisabled
             WebSuggestedRepliesDisabled                               = $ConfigSettings.WebSuggestedRepliesDisabled
+            WorkspaceTenantEnabled                                    = $ConfigSettings.WorkspaceTenantEnabled
             Credential                                                = $Credential
             ApplicationId                                             = $ApplicationId
             CertificateThumbprint                                     = $CertificateThumbprint
@@ -514,11 +691,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllowPlusAddressInRecipients,
+        $AppsForOfficeEnabled,
 
         [Parameter()]
         [System.Boolean]
-        $AppsForOfficeEnabled,
+        $AllowPlusAddressInRecipients,
 
         [Parameter()]
         [System.Boolean]
@@ -530,7 +707,31 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AutodiscoverPartialDirSync,
+
+        [Parameter()]
+        [System.Boolean]
         $AutoExpandingArchive,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockMoveMessagesForGroupFolders,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsAddressEntryRestricted,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsAuthEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsBlockedWordsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsCreationOfCustomQuestionsRestricted,
 
         [Parameter()]
         [System.Boolean]
@@ -538,7 +739,51 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $BookingsExposureOfStaffDetailsRestricted,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsMembershipApprovalRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsNamingPolicyEnabled,
+
+        [Parameter()]
+        [System.String]
+        $BookingsNamingPolicyPrefix,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsNamingPolicyPrefixEnabled,
+
+        [Parameter()]
+        [System.String]
+        $BookingsNamingPolicySuffix,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsNamingPolicySuffixEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsNotesEntryRestricted,
+
+        [Parameter()]
+        [System.Boolean]
         $BookingsPaymentsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsPhoneNumberEntryRestricted,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsSearchEngineIndexDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsSmsMicrosoftEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -547,6 +792,10 @@ function Set-TargetResource
         [Parameter()]
         [System.UInt32]
         $ByteEncoderTypeFor7BitCharsets,
+
+        [Parameter()]
+        [System.Boolean]
+        $ComplianceMLBgdCrawlEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -584,6 +833,16 @@ function Set-TargetResource
         [ValidateSet('Private', 'Public')]
         [System.String]
         $DefaultGroupAccessType,
+
+        [Parameter()]
+        [ValidateRange(0, 29)]
+        [System.UInt32]
+        $DefaultMinutesToReduceLongEventsBy,
+
+        [Parameter()]
+        [ValidateRange(0, 29)]
+        [System.UInt32]
+        $DefaultMinutesToReduceShortEventsBy,
 
         [Parameter()]
         [System.String]
@@ -642,6 +901,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $EnableOutlookEvents,
+
+        [Parameter()]
+        [System.Boolean]
         $EwsAllowEntourage,
 
         [Parameter()]
@@ -679,6 +942,22 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $FindTimeAttendeeAuthenticationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FindTimeAutoScheduleDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FindTimeLockPollForAttendeesEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FindTimeOnlineMeetingOptionDisabled,
+
+        [Parameter()]
+        [System.Boolean]
         $FocusedInboxOn,
 
         [Parameter()]
@@ -688,6 +967,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $IPListBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsGroupFoldersAndRulesEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsGroupMemberAllowedToEditContent,
 
         [Parameter()]
         [System.Boolean]
@@ -719,6 +1006,18 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $MaskClientIpInReceivedHeadersEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MatchSenderOrganizerProperties,
+
+        [Parameter()]
+        [System.Boolean]
+        $MessageHighlightsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $MessageRemindersEnabled,
 
         [Parameter()]
@@ -747,6 +1046,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $OutlookTextPredictionDisabled,
+
+        [Parameter()]
+        [System.Boolean]
         $PublicComputersDetectionEnabled,
 
         [Parameter()]
@@ -763,12 +1066,24 @@ function Set-TargetResource
         $ReadTrackingEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $RecallReadMessagesEnabled,
+
+        [Parameter()]
         [System.String[]]
         $RemotePublicFolderMailboxes,
 
         [Parameter()]
         [System.Boolean]
         $SendFromAliasEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SharedDomainEmailAddressFlowEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ShortenEventScopeDefault,
 
         [Parameter()]
         [System.String]
@@ -789,6 +1104,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $WebSuggestedRepliesDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $WorkspaceTenantEnabled,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -883,11 +1202,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllowPlusAddressInRecipients,
+        $AppsForOfficeEnabled,
 
         [Parameter()]
         [System.Boolean]
-        $AppsForOfficeEnabled,
+        $AllowPlusAddressInRecipients,
 
         [Parameter()]
         [System.Boolean]
@@ -899,7 +1218,31 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AutodiscoverPartialDirSync,
+
+        [Parameter()]
+        [System.Boolean]
         $AutoExpandingArchive,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockMoveMessagesForGroupFolders,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsAddressEntryRestricted,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsAuthEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsBlockedWordsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsCreationOfCustomQuestionsRestricted,
 
         [Parameter()]
         [System.Boolean]
@@ -907,7 +1250,51 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $BookingsExposureOfStaffDetailsRestricted,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsMembershipApprovalRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsNamingPolicyEnabled,
+
+        [Parameter()]
+        [System.String]
+        $BookingsNamingPolicyPrefix,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsNamingPolicyPrefixEnabled,
+
+        [Parameter()]
+        [System.String]
+        $BookingsNamingPolicySuffix,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsNamingPolicySuffixEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsNotesEntryRestricted,
+
+        [Parameter()]
+        [System.Boolean]
         $BookingsPaymentsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsPhoneNumberEntryRestricted,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsSearchEngineIndexDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsSmsMicrosoftEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -916,6 +1303,10 @@ function Test-TargetResource
         [Parameter()]
         [System.UInt32]
         $ByteEncoderTypeFor7BitCharsets,
+
+        [Parameter()]
+        [System.Boolean]
+        $ComplianceMLBgdCrawlEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -953,6 +1344,16 @@ function Test-TargetResource
         [ValidateSet('Private', 'Public')]
         [System.String]
         $DefaultGroupAccessType,
+
+        [Parameter()]
+        [ValidateRange(0, 29)]
+        [System.UInt32]
+        $DefaultMinutesToReduceLongEventsBy,
+
+        [Parameter()]
+        [ValidateRange(0, 29)]
+        [System.UInt32]
+        $DefaultMinutesToReduceShortEventsBy,
 
         [Parameter()]
         [System.String]
@@ -1011,6 +1412,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $EnableOutlookEvents,
+
+        [Parameter()]
+        [System.Boolean]
         $EwsAllowEntourage,
 
         [Parameter()]
@@ -1048,6 +1453,22 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $FindTimeAttendeeAuthenticationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FindTimeAutoScheduleDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FindTimeLockPollForAttendeesEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FindTimeOnlineMeetingOptionDisabled,
+
+        [Parameter()]
+        [System.Boolean]
         $FocusedInboxOn,
 
         [Parameter()]
@@ -1057,6 +1478,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $IPListBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsGroupFoldersAndRulesEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsGroupMemberAllowedToEditContent,
 
         [Parameter()]
         [System.Boolean]
@@ -1088,6 +1517,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $MaskClientIpInReceivedHeadersEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MatchSenderOrganizerProperties,
+
+        [Parameter()]
+        [System.Boolean]
+        $MessageHighlightsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $MessageRemindersEnabled,
 
         [Parameter()]
@@ -1116,6 +1557,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $OutlookTextPredictionDisabled,
+
+        [Parameter()]
+        [System.Boolean]
         $PublicComputersDetectionEnabled,
 
         [Parameter()]
@@ -1132,12 +1577,24 @@ function Test-TargetResource
         $ReadTrackingEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $RecallReadMessagesEnabled,
+
+        [Parameter()]
         [System.String[]]
         $RemotePublicFolderMailboxes,
 
         [Parameter()]
         [System.Boolean]
         $SendFromAliasEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SharedDomainEmailAddressFlowEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ShortenEventScopeDefault,
 
         [Parameter()]
         [System.String]
@@ -1158,6 +1615,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $WebSuggestedRepliesDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $WorkspaceTenantEnabled,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
