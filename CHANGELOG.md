@@ -18,6 +18,9 @@
   * Initial Release
 * TeamsUserCallingSettings
   * InitialRelease
+* EXOOrganizationConfig
+  * Added 35 new parameters.
+  * Set AllowPlusAddressInRecipients parameter to deprecated. Use DisablePlusAddressInRecipients instead.
 * DEPENDENCIES
   * Updated ReverseDSC to version 2.0.0.13;
   FIXES [#2270](https://github.com/microsoft/Microsoft365DSC/issues/2270)
