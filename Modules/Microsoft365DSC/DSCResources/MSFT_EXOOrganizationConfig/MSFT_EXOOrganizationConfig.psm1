@@ -26,6 +26,7 @@ function Get-TargetResource
         [System.Boolean]
         $AppsForOfficeEnabled,
 
+        # DEPRECATED
         [Parameter()]
         [System.Boolean]
         $AllowPlusAddressInRecipients,
@@ -507,7 +508,6 @@ function Get-TargetResource
             ActivityBasedAuthenticationTimeoutEnabled                 = $ConfigSettings.ActivityBasedAuthenticationTimeoutEnabled
             ActivityBasedAuthenticationTimeoutInterval                = $ConfigSettings.ActivityBasedAuthenticationTimeoutInterval
             ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled = $ConfigSettings.ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled
-            AllowPlusAddressInRecipients                              = $ConfigSettings.AllowPlusAddressInRecipients
             AppsForOfficeEnabled                                      = $ConfigSettings.AppsForOfficeEnabled
             AsyncSendEnabled                                          = $ConfigSettings.AsyncSendEnabled
             AuditDisabled                                             = $ConfigSettings.AuditDisabled
@@ -693,6 +693,7 @@ function Set-TargetResource
         [System.Boolean]
         $AppsForOfficeEnabled,
 
+        # DEPRECATED
         [Parameter()]
         [System.Boolean]
         $AllowPlusAddressInRecipients,
@@ -1145,6 +1146,12 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    # Warning for deprecated parameters
+    if ($PSBoundParameters.ContainsKey("AllowPlusAddressInRecipients"))
+    {
+        Write-Warning "AllowPlusAddressInRecipients is deprecated. Please remove this parameter from your configuration. Use DisablePlusAddressInRecipients instead."
+    }
+
     if ($null -ne $EwsAllowList -and $null -ne $EwsBlockList)
     {
         throw "You can't specify both EWSAllowList and EWSBlockList properties."
@@ -1204,6 +1211,7 @@ function Test-TargetResource
         [System.Boolean]
         $AppsForOfficeEnabled,
 
+        # DEPRECATED
         [Parameter()]
         [System.Boolean]
         $AllowPlusAddressInRecipients,
