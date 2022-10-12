@@ -10,59 +10,59 @@
         },
         @{
             ModuleName      = 'Microsoft.Graph.Applications'
-            RequiredVersion = '1.12.3'
+            RequiredVersion = '1.13.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Authentication'
-            RequiredVersion = '1.12.3'
+            RequiredVersion = '1.13.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.DeviceManagement'
-            RequiredVersion = '1.12.3'
+            RequiredVersion = '1.13.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.DeviceManagement.Administration'
-            RequiredVersion = '1.12.3'
+            RequiredVersion = '1.13.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.DeviceManagement.Enrolment'
-            RequiredVersion = '1.12.3'
+            RequiredVersion = '1.13.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Devices.CorporateManagement'
-            RequiredVersion = '1.12.3'
+            RequiredVersion = '1.13.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Groups'
-            RequiredVersion = '1.12.3'
+            RequiredVersion = '1.13.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Identity.DirectoryManagement'
-            RequiredVersion = '1.12.3'
+            RequiredVersion = '1.13.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Identity.Governance'
-            RequiredVersion = '1.12.3'
+            RequiredVersion = '1.13.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Identity.SignIns'
-            RequiredVersion = '1.12.3'
+            RequiredVersion = '1.13.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Planner'
-            RequiredVersion = '1.12.3'
+            RequiredVersion = '1.13.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Teams'
-            RequiredVersion = '1.12.3'
+            RequiredVersion = '1.13.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Users'
-            RequiredVersion = '1.12.3'
+            RequiredVersion = '1.13.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Users.Actions'
-            RequiredVersion = '1.12.3'
+            RequiredVersion = '1.13.0'
         },
         @{
             ModuleName      = 'Microsoft.PowerApps.Administration.PowerShell'
@@ -70,7 +70,7 @@
         },
         @{
             ModuleName      = 'MicrosoftTeams'
-            RequiredVersion = '4.7.0'
+            RequiredVersion = '4.8.0'
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
