@@ -106,7 +106,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting Organization Relationship configuration for $Name"
@@ -126,8 +130,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -135,7 +139,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -166,48 +170,49 @@ function Get-TargetResource
                 OrganizationContact   = $OrganizationRelationship.OrganizationContact
                 PhotosEnabled         = $OrganizationRelationship.PhotosEnabled
                 Ensure                = 'Present'
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePath       = $CertificatePath
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 TenantId              = $TenantId
             }
 
             if ($OrganizationRelationship.TargetApplicationUri)
             {
-                $result.Add("TargetApplicationUri", $($OrganizationRelationship.TargetApplicationUri.ToString()))
+                $result.Add('TargetApplicationUri', $($OrganizationRelationship.TargetApplicationUri.ToString()))
             }
             else
             {
-                $result.Add("TargetApplicationUri", "")
+                $result.Add('TargetApplicationUri', '')
             }
 
             if ($OrganizationRelationship.TargetAutodiscoverEpr)
             {
-                $result.Add("TargetAutodiscoverEpr", $($OrganizationRelationship.TargetAutodiscoverEpr.ToString()))
+                $result.Add('TargetAutodiscoverEpr', $($OrganizationRelationship.TargetAutodiscoverEpr.ToString()))
             }
             else
             {
-                $result.Add("TargetAutodiscoverEpr", "")
+                $result.Add('TargetAutodiscoverEpr', '')
             }
 
             if ($OrganizationRelationship.TargetSharingEpr)
             {
-                $result.Add("TargetSharingEpr", $($OrganizationRelationship.TargetSharingEpr.ToString()))
+                $result.Add('TargetSharingEpr', $($OrganizationRelationship.TargetSharingEpr.ToString()))
             }
             else
             {
-                $result.Add("TargetSharingEpr", "")
+                $result.Add('TargetSharingEpr', '')
             }
 
             if ($OrganizationRelationship.TargetOwaURL)
             {
-                $result.Add("TargetOwaURL", $($OrganizationRelationship.TargetOwaURL.ToString()))
+                $result.Add('TargetOwaURL', $($OrganizationRelationship.TargetOwaURL.ToString()))
             }
             else
             {
-                $result.Add("TargetOwaURL", "")
+                $result.Add('TargetOwaURL', '')
             }
 
             Write-Verbose -Message "Found Organization Relationship configuration for $($Name)"
@@ -219,7 +224,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -347,7 +352,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting Organization Relationship configuration for $Name"
@@ -358,8 +367,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -418,20 +427,20 @@ function Set-TargetResource
     Remove-EmptyValue -Splat $SetOrganizationRelationshipParams
 
     # CASE: Organization Relationship doesn't exist but should;
-    if ($Ensure -eq "Present" -and $currentOrgRelationshipConfig.Ensure -eq "Absent")
+    if ($Ensure -eq 'Present' -and $currentOrgRelationshipConfig.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Organization Relationship '$($Name)' does not exist but it should. Create and configure it."
         # Create Organization Relationship
         New-OrganizationRelationship @NewOrganizationRelationshipParams
     }
     # CASE: Organization Relationship exists but it shouldn't;
-    elseif ($Ensure -eq "Absent" -and $currentOrgRelationshipConfig.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Absent' -and $currentOrgRelationshipConfig.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Organization Relationship '$($Name)' exists but it shouldn't. Remove it."
         Remove-OrganizationRelationship -Identity $Name -Confirm:$false
     }
     # CASE: Organization Relationship exists and it should, but has different values than the desired ones
-    elseif ($Ensure -eq "Present" -and $currentOrgRelationshipConfig.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Present' -and $currentOrgRelationshipConfig.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Organization Relationship '$($Name)' already exists, but needs updating."
         Write-Verbose -Message "Setting Organization Relationship  $($Name) with values: $(Convert-M365DscHashtableToString -Hashtable $SetOrganizationRelationshipParams)"
@@ -547,14 +556,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -575,6 +588,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('Managedidentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -614,7 +628,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -624,8 +642,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -636,7 +654,7 @@ function Export-TargetResource
     {
         [array]$AllOrgRelationships = Get-OrganizationRelationship -ErrorAction Stop
 
-        $dscContent = ""
+        $dscContent = ''
 
         if ($AllOrganizationRelationships.Length -eq 0)
         {
@@ -653,11 +671,12 @@ function Export-TargetResource
 
             $Params = @{
                 Name                  = $relationship.Name
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
             $Results = Get-TargetResource @Params
@@ -681,7 +700,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -698,7 +717,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 

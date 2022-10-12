@@ -49,7 +49,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
 
     )
     Write-Verbose -Message "Getting configuration of Accepted Domain for $Identity"
@@ -70,7 +74,7 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -79,7 +83,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
     try
     {
         Write-Verbose -Message 'Getting all Accepted Domain'
@@ -107,6 +111,7 @@ function Get-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePath       = $CertificatePath
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
 
             Write-Verbose -Message "Found AcceptedDomain configuration for $($Identity)"
@@ -118,7 +123,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -191,7 +196,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of Accepted Domain for $Identity"
@@ -200,7 +209,7 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -208,14 +217,14 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    if ($MatchSubDomains -eq $true -and $DomainType -ne "InternalRelay")
+    if ($MatchSubDomains -eq $true -and $DomainType -ne 'InternalRelay')
     {
-        throw "MatchSubDomains can only be enabled on an InternalRelay domain."
+        throw 'MatchSubDomains can only be enabled on an InternalRelay domain.'
     }
 
-    if ($OutboundOnly -eq $true -and $DomainType -eq "ExternalRelay")
+    if ($OutboundOnly -eq $true -and $DomainType -eq 'ExternalRelay')
     {
-        throw "OutboundOnly can only be enabled if the DomainType parameter is set to Authoritative or InternalRelay."
+        throw 'OutboundOnly can only be enabled if the DomainType parameter is set to Authoritative or InternalRelay.'
     }
 
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -283,13 +292,17 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -345,7 +358,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -355,7 +372,7 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -367,7 +384,7 @@ function Export-TargetResource
     {
         [array]$AllAcceptedDomains = Get-AcceptedDomain -ErrorAction Stop
 
-        $dscContent = ""
+        $dscContent = ''
         $i = 1
         if ($AllAcceptedDomains.Length -eq 0)
         {
@@ -389,6 +406,7 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 Credential            = $Credential
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -412,7 +430,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -429,7 +447,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 
