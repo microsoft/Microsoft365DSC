@@ -4,6 +4,8 @@
 
 * EXO Workload
   * Add support for Managed Identity authentication
+* EXOOrganizationRelationship
+  * Add support for new cross-tenant mailbox migration parameters: MailboxMoveCapability, MailboxMovePublishedScopes, OauthApplicationId
 
 # 1.22.1012.1
 
