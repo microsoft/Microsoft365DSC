@@ -72,9 +72,9 @@ function Get-TargetResource
         $ValidationRecipients = @(),
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -98,7 +98,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Getting configuration of OutBoundConnector for $($Identity)"
 
@@ -118,8 +122,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -164,12 +168,13 @@ function Get-TargetResource
                 TlsSettings                   = $OutBoundConnector.TlsSettings
                 UseMxRecord                   = $OutBoundConnector.UseMxRecord
                 ValidationRecipients          = $OutBoundConnector.ValidationRecipients
-                Credential            = $Credential
+                Credential                    = $Credential
                 Ensure                        = 'Present'
                 ApplicationId                 = $ApplicationId
                 CertificateThumbprint         = $CertificateThumbprint
                 CertificatePath               = $CertificatePath
                 CertificatePassword           = $CertificatePassword
+                Managedidentity               = $ManagedIdentity.IsPresent
                 TenantId                      = $TenantId
             }
 
@@ -183,7 +188,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -304,14 +309,18 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -333,19 +342,20 @@ function Set-TargetResource
     $OutBoundConnectorParams.Remove('CertificateThumbprint') | Out-Null
     $OutBoundConnectorParams.Remove('CertificatePath') | Out-Null
     $OutBoundConnectorParams.Remove('CertificatePassword') | Out-Null
+    $OutBoundConnectorParams.Remove('Managedidentity') | Out-Null
 
 
     if (('Present' -eq $Ensure ) -and ($null -eq $OutBoundConnector))
     {
         Write-Verbose -Message "Creating OutBoundConnector $($Identity)."
-        $OutBoundConnectorParams.Add("Name", $Identity)
+        $OutBoundConnectorParams.Add('Name', $Identity)
         $OutBoundConnectorParams.Remove('Identity') | Out-Null
-        $OutBoundConnectorParams.Remove("ValidationRecipients") | Out-Null
+        $OutBoundConnectorParams.Remove('ValidationRecipients') | Out-Null
         New-OutBoundConnector @OutBoundConnectorParams
 
         if ($null -ne $ValidationRecipients)
         {
-            Write-Verbose -Message "Updating ValidationRecipients"
+            Write-Verbose -Message 'Updating ValidationRecipients'
             Set-OutboundConnector -Identity $Identity -ValidationRecipients $ValidationRecipients -Confirm:$false
         }
     }
@@ -435,9 +445,9 @@ function Test-TargetResource
         $ValidationRecipients = @(),
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -461,14 +471,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -489,6 +503,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('Managedidentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -529,7 +544,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -539,8 +558,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -558,7 +577,7 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
-        $dscContent = ""
+        $dscContent = ''
         $i = 1
         foreach ($OutboundConnector in $OutboundConnectors)
         {
@@ -566,11 +585,12 @@ function Export-TargetResource
 
             $Params = @{
                 Identity              = $OutboundConnector.Identity
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
             $Results = Get-TargetResource @Params
@@ -594,7 +614,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -611,7 +631,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 Export-ModuleMember -Function *-TargetResource

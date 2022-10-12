@@ -52,7 +52,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting Offline Address Book configuration for $Name"
@@ -71,7 +75,7 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -80,7 +84,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -112,6 +116,7 @@ function Get-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePath       = $CertificatePath
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 TenantId              = $TenantId
             }
 
@@ -124,7 +129,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -198,7 +203,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting Offline Address Book configuration for $Name"
@@ -208,7 +217,7 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -238,7 +247,7 @@ function Set-TargetResource
     }
 
     # CASE: Offline Address Book doesn't exist but should;
-    if ($Ensure -eq "Present" -and $currentOfflineAddressBookConfig.Ensure -eq "Absent")
+    if ($Ensure -eq 'Present' -and $currentOfflineAddressBookConfig.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Offline Address Book '$($Name)' does not exist but it should. Create and configure it."
         # Create Offline Address Book
@@ -246,13 +255,13 @@ function Set-TargetResource
 
     }
     # CASE: Offline Address Book exists but it shouldn't;
-    elseif ($Ensure -eq "Absent" -and $currentOfflineAddressBookConfig.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Absent' -and $currentOfflineAddressBookConfig.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Offline Address Book '$($Name)' exists but it shouldn't. Remove it."
         Remove-OfflineAddressBook -Identity $Name -Confirm:$false -Force
     }
     # CASE: Offline Address Book exists and it should, but has different values than the desired ones
-    elseif ($Ensure -eq "Present" -and $currentOfflineAddressBookConfig.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Present' -and $currentOfflineAddressBookConfig.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Offline Address Book '$($Name)' already exists, but needs updating."
         Write-Verbose -Message "Setting Offline Address Book $($Name) with values: $(Convert-M365DscHashtableToString -Hashtable $SetOfflineAddressBookParams)"
@@ -314,13 +323,17 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -342,6 +355,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('Managedidentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -381,7 +395,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -391,7 +409,7 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -409,7 +427,7 @@ function Export-TargetResource
     {
         [array]$AllOfflineAddressBooks = Get-OfflineAddressBook -ErrorAction Stop
 
-        $dscContent = ""
+        $dscContent = ''
 
         if ($AllOfflineAddressBooks.Length -eq 0)
         {
@@ -431,6 +449,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
             $Results = Get-TargetResource @Params
@@ -454,7 +473,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -471,7 +490,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 

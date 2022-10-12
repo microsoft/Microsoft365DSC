@@ -29,9 +29,9 @@ function Get-TargetResource
         $Name,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -55,7 +55,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Getting Data classification policy for $($Identity)"
 
@@ -75,8 +79,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -97,28 +101,29 @@ function Get-TargetResource
         else
         {
 
-            $currentDefaultCultureName=([system.globalization.cultureinfo]$DataClassification.DefaultCulture).Name
-            $DataClassificationLocale=$currentDefaultCultureName
-            $DataClassificationIsDefault=$false
+            $currentDefaultCultureName = ([system.globalization.cultureinfo]$DataClassification.DefaultCulture).Name
+            $DataClassificationLocale = $currentDefaultCultureName
+            $DataClassificationIsDefault = $false
             if (([String]::IsNullOrEmpty($Locale)) -or ($Locale -eq $currentDefaultCultureName))
             {
-                $DataClassificationIsDefault=$true
+                $DataClassificationIsDefault = $true
             }
 
             $result = @{
-                Identity                    = $Identity
-                Description                 = $DataClassification.Description
-                Fingerprints                = $DataClassification.Fingerprints
-                IsDefault                   = $DataClassificationIsDefault
-                Locale                      = $DataClassificationLocale
-                Name                        = $DataClassification.Name
-                Credential                  = $Credential
-                Ensure                      = 'Present'
-                ApplicationId               = $ApplicationId
-                CertificateThumbprint       = $CertificateThumbprint
-                CertificatePath             = $CertificatePath
-                CertificatePassword         = $CertificatePassword
-                TenantId                    = $TenantId
+                Identity              = $Identity
+                Description           = $DataClassification.Description
+                Fingerprints          = $DataClassification.Fingerprints
+                IsDefault             = $DataClassificationIsDefault
+                Locale                = $DataClassificationLocale
+                Name                  = $DataClassification.Name
+                Credential            = $Credential
+                Ensure                = 'Present'
+                ApplicationId         = $ApplicationId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
+                TenantId              = $TenantId
             }
 
             Write-Verbose -Message "Found Data classification policy $($Identity)"
@@ -131,7 +136,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -182,9 +187,9 @@ function Set-TargetResource
         $Name,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -208,14 +213,18 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -238,6 +247,7 @@ function Set-TargetResource
     $DataClassificationParams.Remove('CertificateThumbprint') | Out-Null
     $DataClassificationParams.Remove('CertificatePath') | Out-Null
     $DataClassificationParams.Remove('CertificatePassword') | Out-Null
+    $DataClassificationParams.Remove('Managedidentity') | Out-Null
 
 
     if (('Present' -eq $Ensure ) -and ($null -eq $DataClassification))
@@ -247,34 +257,34 @@ function Set-TargetResource
         $DataClassificationParams.Remove('IsDefault') | Out-Null
         if (-Not [String]::IsNullOrEmpty($DataClassificationParams.Locale))
         {
-            $DataClassificationParams.Locale=New-Object system.globalization.cultureinfo($DataClassificationParams.Locale)
+            $DataClassificationParams.Locale = New-Object system.globalization.cultureinfo($DataClassificationParams.Locale)
         }
 
         New-DataClassification @DataClassificationParams
-        Write-Verbose -Message "Data classification policy created successfully."
+        Write-Verbose -Message 'Data classification policy created successfully.'
     }
     elseif (('Present' -eq $Ensure ) -and ($Null -ne $DataClassification))
     {
-        $verboseMessage= "Setting Data classification policy $($Identity) with values:"+ `
+        $verboseMessage = "Setting Data classification policy $($Identity) with values:" + `
             " $(Convert-M365DscHashtableToString -Hashtable $DataClassificationParams)"
         Write-Verbose -Message $verboseMessage
         if (-Not [String]::IsNullOrEmpty($Locale))
         {
-            $DataClassificationParams.Locale=New-Object system.globalization.cultureinfo($Locale)
+            $DataClassificationParams.Locale = New-Object system.globalization.cultureinfo($Locale)
         }
         $DataClassificationParams.Remove('IsDefault') | Out-Null
         if ($null -eq $IsDefault)
         {
-            $IsDefault=$false
+            $IsDefault = $false
         }
         Set-DataClassification @DataClassificationParams -IsDefault:$IsDefault -Confirm:$false
-        Write-Verbose -Message "Data classification policy updated successfully."
+        Write-Verbose -Message 'Data classification policy updated successfully.'
     }
     elseif (('Absent' -eq $Ensure ) -and ($null -ne $DataClassification))
     {
         Write-Verbose -Message "Removing Data classification policy $($Identity)"
         Remove-DataClassification -Identity $Identity -Confirm:$false
-        Write-Verbose -Message "Data classification policy removed successfully."
+        Write-Verbose -Message 'Data classification policy removed successfully.'
     }
 }
 
@@ -309,9 +319,9 @@ function Test-TargetResource
         $Name,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -335,14 +345,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -363,6 +377,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('Managedidentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -402,7 +417,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -412,8 +431,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -445,6 +464,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
 
@@ -469,7 +489,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -486,7 +506,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 Export-ModuleMember -Function *-TargetResource

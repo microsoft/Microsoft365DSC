@@ -75,9 +75,9 @@ function Get-TargetResource
         $TreatMessagesAsInternal,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -101,7 +101,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Getting configuration of InboundConnector for $($Identity)"
 
@@ -121,7 +125,7 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -173,6 +177,7 @@ function Get-TargetResource
                 CertificateThumbprint        = $CertificateThumbprint
                 CertificatePath              = $CertificatePath
                 CertificatePassword          = $CertificatePassword
+                Managedidentity              = $ManagedIdentity.IsPresent
                 TenantId                     = $TenantId
             }
 
@@ -186,7 +191,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -283,9 +288,9 @@ function Set-TargetResource
         $TreatMessagesAsInternal,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -309,13 +314,17 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -338,11 +347,12 @@ function Set-TargetResource
     $InboundConnectorParams.Remove('CertificateThumbprint') | Out-Null
     $InboundConnectorParams.Remove('CertificatePath') | Out-Null
     $InboundConnectorParams.Remove('CertificatePassword') | Out-Null
+    $InboundConnectorParams.Remove('Managedidentity') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($null -eq $InboundConnector))
     {
         Write-Verbose -Message "Creating InboundConnector $($Identity)."
-        $InboundConnectorParams.Add("Name", $Identity)
+        $InboundConnectorParams.Add('Name', $Identity)
         $InboundConnectorParams.Remove('Identity') | Out-Null
         New-InboundConnector @InboundConnectorParams
     }
@@ -435,9 +445,9 @@ function Test-TargetResource
         $TreatMessagesAsInternal,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -461,13 +471,17 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -479,10 +493,14 @@ function Test-TargetResource
 
     #check syntax of SenderDomains parameter
     $senderDomains = @()
-    foreach($domain in $PSBoundParameters.SenderDomains) {
-        if($domain -notlike "smtp:*") {
-            $senderDomains += "smtp:" + $domain + ";1"
-        } else {
+    foreach ($domain in $PSBoundParameters.SenderDomains)
+    {
+        if ($domain -notlike 'smtp:*')
+        {
+            $senderDomains += 'smtp:' + $domain + ';1'
+        }
+        else
+        {
             $senderDomains += $domain
         }
     }
@@ -493,7 +511,8 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    if($senderDomains.Length -gt 0) {
+    if ($senderDomains.Length -gt 0)
+    {
         $ValuesToCheck.SenderDomains = $senderDomains
     }
     $ValuesToCheck.Remove('Credential') | Out-Null
@@ -502,6 +521,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('Managedidentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -541,7 +561,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -551,7 +575,7 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -561,7 +585,7 @@ function Export-TargetResource
     try
     {
         [array]$InboundConnectors = Get-InboundConnector -ErrorAction Stop
-        $dscContent = ""
+        $dscContent = ''
 
         if ($InboundConnectors.Length -eq 0)
         {
@@ -583,6 +607,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
 
@@ -607,7 +632,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -624,7 +649,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 Export-ModuleMember -Function *-TargetResource

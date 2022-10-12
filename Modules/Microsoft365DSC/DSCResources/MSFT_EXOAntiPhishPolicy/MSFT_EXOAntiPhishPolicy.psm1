@@ -159,7 +159,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration of AntiPhishPolicy for $Identity"
@@ -180,8 +184,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -249,6 +253,7 @@ function Get-TargetResource
                 CertificateThumbprint                         = $CertificateThumbprint
                 CertificatePath                               = $CertificatePath
                 CertificatePassword                           = $CertificatePassword
+                Managedidentity                               = $ManagedIdentity.IsPresent
                 TenantId                                      = $TenantId
             }
 
@@ -262,7 +267,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -443,19 +448,23 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     if ($EnableAntispoofEnforcement)
     {
-        Write-Verbose -Message ("The EnableAntispoofEnforcement parameter is now deprecated. " + `
-        "It will be removed in the next major release. Please update your configuraton.")
+        Write-Verbose -Message ('The EnableAntispoofEnforcement parameter is now deprecated. ' + `
+                'It will be removed in the next major release. Please update your configuraton.')
     }
 
     if ($TargetedDomainProtectionAction)
     {
-        Write-Verbose -Message ("The TargetedDomainProtectionAction parameter is now deprecated. "+ `
-        "It will be removed in the next major release. Please update your configuraton.")
+        Write-Verbose -Message ('The TargetedDomainProtectionAction parameter is now deprecated. ' + `
+                'It will be removed in the next major release. Please update your configuraton.')
     }
 
     Write-Verbose -Message "Setting configuration of AntiPhishPolicy for $Identity"
@@ -464,8 +473,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -477,27 +486,28 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
 
-    $PSBoundParameters.Remove("ApplicationId") | Out-Null
-    $PSBoundParameters.Remove("TenantId") | Out-Null
-    $PSBoundParameters.Remove("CertificateThumbprint") | Out-Null
-    $PSBoundParameters.Remove("CertificatePassword") | Out-Null
-    $PSBoundParameters.Remove("CertificatePath") | Out-Null
-    $PSBoundParameters.Remove("Credential") | Out-Null
+    $PSBoundParameters.Remove('ApplicationId') | Out-Null
+    $PSBoundParameters.Remove('TenantId') | Out-Null
+    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
+    $PSBoundParameters.Remove('CertificatePassword') | Out-Null
+    $PSBoundParameters.Remove('Managedidentity') | Out-Null
+    $PSBoundParameters.Remove('CertificatePath') | Out-Null
+    $PSBoundParameters.Remove('Credential') | Out-Null
 
     if (('Present' -eq $Ensure ) -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new instance of AntiPhish Policy {$Identity}"
         $CreateParams = $PSBoundParameters
-        $CreateParams.Remove("Ensure") | Out-Null
-        $createParams.Add("Name", $Identity)
-        $createParams.Remove("Identity") | Out-Null
+        $CreateParams.Remove('Ensure') | Out-Null
+        $createParams.Add('Name', $Identity)
+        $createParams.Remove('Identity') | Out-Null
         New-AntiPhishPolicy @PSBoundParameters
     }
     elseif (('Present' -eq $Ensure ) -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing AntiPhishPolicy {$Identity}"
         $UpdateParams = $PSBoundParameters
-        $UpdateParams.Remove("Ensure") | Out-Null
+        $UpdateParams.Remove('Ensure') | Out-Null
         Set-AntiphishPolicy @UpdateParams
     }
     elseif (('Absent' -eq $Ensure ) -and $currentInstance.Ensure -eq 'Present')
@@ -668,15 +678,19 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -731,7 +745,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -741,8 +759,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -752,7 +770,7 @@ function Export-TargetResource
     try
     {
         [array]$AntiPhishPolicies = Get-AntiPhishPolicy -ErrorAction Stop
-        $dscContent = ""
+        $dscContent = ''
         $i = 1
 
         if ($AntiphishPolicies.Length -eq 0)
@@ -774,6 +792,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
             $Results = Get-TargetResource @Params
@@ -798,7 +817,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -815,7 +834,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 Export-ModuleMember -Function *-TargetResource
