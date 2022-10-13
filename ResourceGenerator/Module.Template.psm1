@@ -54,7 +54,7 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message 'Reloading1'
+        Write-Verbose -Message "Connection to the workload failed."
     }
 
     #Ensure the proper dependencies are installed in the current environment.

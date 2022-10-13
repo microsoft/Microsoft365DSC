@@ -44,5 +44,5 @@ We've updated the IntuneDeviceConfigurationPolicyiOS resource's MediaContentRati
 
 Updating existing configurations that leveraged the string based properties will require you to rewrite the properties values following the format shown in the screen capture above.
 
-# SCSensitivityLabel - Renaming the Settings Parameter to LabelSettings
+## SCSensitivityLabel - Renaming the Settings Parameter to LabelSettings
 Settings is a reserved keyword in PowerShell and is causing issues when trying to generate reports if present. We are renaming this parameter to LabelSettings to ensure it doesn't get threated as a reserved keyword by the reporting and assessments engine. In order to update your existing configurations, simply rename the Settings property to LabelSettings in each instance of the SCSensitivityLabel resource.

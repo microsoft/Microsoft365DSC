@@ -17,9 +17,9 @@ function Get-TargetResource
         $Locale,
 
         [Parameter()]
-        [ValidateSet("Present")]
+        [ValidateSet('Present')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -43,7 +43,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration of Office 365 Mailbox Settings for $DisplayName"
@@ -64,8 +68,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -73,7 +77,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -94,12 +98,13 @@ function Get-TargetResource
         DisplayName           = $DisplayName
         TimeZone              = $mailboxSettings.TimeZone
         Locale                = $mailboxSettings.Language.Name
-        Ensure                = "Present"
-        Credential    = $Credential
+        Ensure                = 'Present'
+        Credential            = $Credential
         ApplicationId         = $ApplicationId
         CertificateThumbprint = $CertificateThumbprint
         CertificatePath       = $CertificatePath
         CertificatePassword   = $CertificatePassword
+        Managedidentity       = $ManagedIdentity.IsPresent
         TenantId              = $TenantId
     }
     Write-Verbose -Message "Found an existing instance of Mailbox '$($DisplayName)'"
@@ -124,9 +129,9 @@ function Set-TargetResource
         $Locale,
 
         [Parameter()]
-        [ValidateSet("Present")]
+        [ValidateSet('Present')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -150,7 +155,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Mailbox Settings for $DisplayName"
@@ -159,8 +168,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -172,13 +181,13 @@ function Set-TargetResource
     $currentMailbox = Get-TargetResource @PSBoundParameters
 
     # CASE: Mailbox doesn't exist but should;
-    if ($Ensure -eq "Present" -and $currentMailbox.Ensure -eq "Absent")
+    if ($Ensure -eq 'Present' -and $currentMailbox.Ensure -eq 'Absent')
     {
         throw "The specified mailbox {$($DisplayName)} does not exist."
     }
 
-    $AllowedTimeZones = (Get-ChildItem "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Time zones" | `
-            ForEach-Object { Get-ItemProperty $_.PSPath }).PSChildName
+    $AllowedTimeZones = (Get-ChildItem 'HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Time zones' | `
+                ForEach-Object { Get-ItemProperty $_.PSPath }).PSChildName
 
     if ($AllowedTimeZones.Contains($TimeZone) -eq $false)
     {
@@ -210,9 +219,9 @@ function Test-TargetResource
         $Locale,
 
         [Parameter()]
-        [ValidateSet("Present")]
+        [ValidateSet('Present')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -236,14 +245,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -260,10 +273,10 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure", `
-            "DisplayName", `
-            "TimeZone", `
-            "Locale")
+        -ValuesToCheck @('Ensure', `
+            'DisplayName', `
+            'TimeZone', `
+            'Locale')
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -298,7 +311,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -308,8 +325,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -335,12 +352,13 @@ function Export-TargetResource
         if (![System.String]::IsNullOrEmpty($mailboxName))
         {
             $Params = @{
-                Credential    = $Credential
+                Credential            = $Credential
                 DisplayName           = $mailbox.Name
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
             $Results = Get-TargetResource @Params
