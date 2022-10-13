@@ -86,8 +86,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-CsOnlineVOiceUser -MockWith {
                     return @{
-                        TelephoneNumber = '+14255043920'
-                        LocationId      = "c7c5a17f-00d7-47c0-9ddb-3383229d606b"
+                        Number = '+14255043920'
+                        Location      = "c7c5a17f-00d7-47c0-9ddb-3383229d606b"
                     }
                 }
             }
@@ -109,8 +109,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-CsOnlineVOiceUser -MockWith {
                     return @{
-                        TelephoneNumber = '+15555555555' #Drift
-                        LocationId      = "c7c5a17f-00d7-47c0-9ddb-3383229d606b"
+                        Number   = '+15555555555' #Drift
+                        Location = "c7c5a17f-00d7-47c0-9ddb-3383229d606b"
                     }
                 }
             }
@@ -137,8 +137,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-CsOnlineVOiceUser -MockWith {
                     return @{
-                        TelephoneNumber = '+14255043920'
-                        LocationId      = "c7c5a17f-00d7-47c0-9ddb-3383229d606b"
+                        Number = '+14255043920'
+                        Location      = "c7c5a17f-00d7-47c0-9ddb-3383229d606b"
                     }
                 }
             }
