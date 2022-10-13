@@ -1,5 +1,9 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* EXOAntiPhishPolicy
+  * Add new parameters: MailboxIntelligenceQuarantineTag, SpoofQuarantineTag, TargetedDomainQuarantineTag, TargetedUserQuarantine
 # 1.22.1012.1
 
 * EXOManagementRoleAssignment
