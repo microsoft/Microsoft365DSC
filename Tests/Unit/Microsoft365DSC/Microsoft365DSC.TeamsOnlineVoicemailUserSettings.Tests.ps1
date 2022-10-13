@@ -47,20 +47,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts
-        Context -Name "When no settings are assigned to a user" -Fixture {
+        Context -Name "When no instances exist" -Fixture {
             BeforeAll {
                 $testParams = @{
                     CallAnswerRule                           = "RegularVoicemail";
-                    Credential                               = $Credential;
-                    DefaultGreetingPromptOverwrite           = "Hellow World!";
-                    Ensure                                   = "Present";
-                    Identity                                 = "John.Smith@contoso.com";
+                    Identity                                 = "JohnSmith@Contoso.com";
                     OofGreetingEnabled                       = $False;
                     OofGreetingFollowAutomaticRepliesEnabled = $False;
                     OofGreetingFollowCalendarEnabled         = $False;
                     PromptLanguage                           = "en-US";
                     ShareData                                = $False;
                     VoicemailEnabled                         = $True;
+                    Ensure                                   = "Present"
+                    Credential                               = $Credential
                 }
 
                 Mock -CommandName Get-CsOnlineVoicemailUserSettings -MockWith {
@@ -82,30 +81,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Settings exists but is not in the Desired State" -Fixture {
+        Context -Name "User exists but is not in the Desired State" -Fixture {
             BeforeAll {
                 $testParams = @{
                     CallAnswerRule                           = "RegularVoicemail";
-                    Credential                               = $Credential;
-                    DefaultGreetingPromptOverwrite           = "Hellow World!";
-                    Ensure                                   = "Present";
-                    Identity                                 = "John.Smith@contoso.com";
+                    Identity                                 = "JohnSmith@Contoso.com";
                     OofGreetingEnabled                       = $False;
                     OofGreetingFollowAutomaticRepliesEnabled = $False;
                     OofGreetingFollowCalendarEnabled         = $False;
                     PromptLanguage                           = "en-US";
                     ShareData                                = $False;
                     VoicemailEnabled                         = $True;
+                    Ensure                                   = "Present"
+                    Credential                               = $Credential
                 }
 
                 Mock -CommandName Get-CsOnlineVoicemailUserSettings -MockWith {
                     return @{
                         CallAnswerRule                           = "RegularVoicemail";
-                        DefaultGreetingPromptOverwrite           = "Hellow World!";
-                        Identity                                 = "John.Smith@contoso.com";
+                        Identity                                 = "JohnSmith@Contoso.com";
                         OofGreetingEnabled                       = $False;
-                        OofGreetingFollowAutomaticRepliesEnabled = $True; #Drift
-                        OofGreetingFollowCalendarEnabled         = $False;
+                        OofGreetingFollowAutomaticRepliesEnabled = $False;
+                        OofGreetingFollowCalendarEnabled         = $True; #Drift
                         PromptLanguage                           = "en-US";
                         ShareData                                = $False;
                         VoicemailEnabled                         = $True;
@@ -127,30 +124,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Settings exists and is already in the Desired State" -Fixture {
+        Context -Name "Instance exists and is already in the Desired State" -Fixture {
             BeforeAll {
                 $testParams = @{
                     CallAnswerRule                           = "RegularVoicemail";
-                    Credential                               = $Credential;
-                    DefaultGreetingPromptOverwrite           = "Hellow World!";
-                    Ensure                                   = "Present";
-                    Identity                                 = "John.Smith@contoso.com";
+                    Identity                                 = "JohnSmith@Contoso.com";
                     OofGreetingEnabled                       = $False;
                     OofGreetingFollowAutomaticRepliesEnabled = $False;
                     OofGreetingFollowCalendarEnabled         = $False;
                     PromptLanguage                           = "en-US";
                     ShareData                                = $False;
                     VoicemailEnabled                         = $True;
+                    Ensure                                   = "Present"
+                    Credential                               = $Credential
                 }
 
                 Mock -CommandName Get-CsOnlineVoicemailUserSettings -MockWith {
                     return @{
                         CallAnswerRule                           = "RegularVoicemail";
-                        DefaultGreetingPromptOverwrite           = "Hellow World!";
-                        Identity                                 = "John.Smith@contoso.com";
+                        Identity                                 = "JohnSmith@Contoso.com";
                         OofGreetingEnabled                       = $False;
                         OofGreetingFollowAutomaticRepliesEnabled = $False;
-                        OofGreetingFollowCalendarEnabled         = $False;
+                        OofGreetingFollowCalendarEnabled         = $False
                         PromptLanguage                           = "en-US";
                         ShareData                                = $False;
                         VoicemailEnabled                         = $True;
@@ -177,11 +172,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-CsOnlineVoicemailUserSettings -MockWith {
                     return @{
                         CallAnswerRule                           = "RegularVoicemail";
-                        DefaultGreetingPromptOverwrite           = "Hellow World!";
-                        Identity                                 = "John.Smith@contoso.com";
+                        Identity                                 = "JohnSmith@Contoso.com";
                         OofGreetingEnabled                       = $False;
                         OofGreetingFollowAutomaticRepliesEnabled = $False;
-                        OofGreetingFollowCalendarEnabled         = $False;
+                        OofGreetingFollowCalendarEnabled         = $False
                         PromptLanguage                           = "en-US";
                         ShareData                                = $False;
                         VoicemailEnabled                         = $True;

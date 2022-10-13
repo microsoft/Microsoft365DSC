@@ -39,7 +39,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting Authentication Policy configuration for $Identity"
@@ -59,8 +63,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -68,7 +72,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -91,6 +95,7 @@ function Get-TargetResource
             CertificateThumbprint    = $CertificateThumbprint
             CertificatePath          = $CertificatePath
             CertificatePassword      = $CertificatePassword
+            Managedidentity          = $ManagedIdentity.IsPresent
             TenantId                 = $TenantId
         }
 
@@ -101,7 +106,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -162,19 +167,23 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting Authentication Policy assignment for $UserName"
 
-    $currentPolicyAssignment= Get-TargetResource @PSBoundParameters
+    $currentPolicyAssignment = Get-TargetResource @PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -185,13 +194,13 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     # CASE: Authentication Policy doesn't exist but should;
-    if ($Ensure -eq "Present")
+    if ($Ensure -eq 'Present')
     {
         Write-Verbose -Message "Assigning authentication policy {$AuthenticationPolicyName} to {$UserName}."
         Set-User -Identity $UserName -AuthenticationPolicy $AuthenticationPolicyName | Out-Null
     }
     # CASE: Authentication Policy exists but it shouldn't;
-    elseif ($Ensure -eq "Absent" -and $currentPolicyAssignment.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Absent' -and $currentPolicyAssignment.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing authentication policy assignment {$AuthenticationPolicyName} for {$UserName}."
         Set-User -Identity $UserName -AuthenticationPolicy $null | Out-Null
@@ -239,14 +248,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -299,7 +312,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -309,8 +326,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -328,12 +345,12 @@ function Export-TargetResource
             if ($_.Exception -like "*The operation couldn't be performed because object*")
             {
                 Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for Authentication Policies"
-                return ""
+                return ''
             }
             throw $_
         }
 
-        $dscContent = ""
+        $dscContent = ''
         if ($AllAuthenticationPolicies.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
@@ -351,7 +368,7 @@ function Export-TargetResource
             {
                 $allUsers = Get-User -ResultSize 'Unlimited'
             }
-            $assignedUsers = $allUsers | Where-Object -FilterScript {$_.AuthenticationPolicy -eq $AuthenticationPolicy.Identity}
+            $assignedUsers = $allUsers | Where-Object -FilterScript { $_.AuthenticationPolicy -eq $AuthenticationPolicy.Identity }
 
             foreach ($user in $assignedUsers)
             {
@@ -362,6 +379,7 @@ function Export-TargetResource
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     CertificatePassword   = $CertificatePassword
+                    Managedidentity       = $ManagedIdentity.IsPresent
                     CertificatePath       = $CertificatePath
                 }
                 $Results = Get-TargetResource @Params
@@ -387,7 +405,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -404,7 +422,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 

@@ -17,9 +17,9 @@ function Get-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [ValidateSet("Highest","Higher","High","MediumHigh","Medium","MediumLow","Low","Lower","Lowest")]
+        [ValidateSet('Highest', 'Higher', 'High', 'MediumHigh', 'Medium', 'MediumLow', 'Low', 'Lower', 'Lowest')]
         [System.String]
-        $DisplayPrecedence="Medium",
+        $DisplayPrecedence = 'Medium',
 
         [Parameter()]
         [System.String]
@@ -42,9 +42,9 @@ function Get-TargetResource
         $SenderDescription,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -68,8 +68,12 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
-        )
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
+    )
 
     Write-Verbose -Message "Getting Message Classification Configuration for $($Identity)"
     if ($Global:CurrentModeIsExport)
@@ -88,8 +92,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -112,22 +116,23 @@ function Get-TargetResource
         else
         {
             $result = @{
-                Identity                     = $Identity
-                ClassificationID             = $MessageClassification.ClassificationID
-                DisplayName                  = $MessageClassification.DisplayName
-                DisplayPrecedence            = $MessageClassification.DisplayPrecedence
-                Name                         = $MessageClassification.Name
-                PermissionMenuVisible        = $MessageClassification.PermissionMenuVisible
-                RecipientDescription         = $MessageClassification.RecipientDescription
-                RetainClassificationEnabled  = $MessageClassification.RetainClassificationEnabled
-                SenderDescription            = $MessageClassification.SenderDescription
-                Credential                   = $Credential
-                Ensure                       = 'Present'
-                ApplicationId                = $ApplicationId
-                CertificateThumbprint        = $CertificateThumbprint
-                CertificatePath              = $CertificatePath
-                CertificatePassword          = $CertificatePassword
-                TenantId                     = $TenantId
+                Identity                    = $Identity
+                ClassificationID            = $MessageClassification.ClassificationID
+                DisplayName                 = $MessageClassification.DisplayName
+                DisplayPrecedence           = $MessageClassification.DisplayPrecedence
+                Name                        = $MessageClassification.Name
+                PermissionMenuVisible       = $MessageClassification.PermissionMenuVisible
+                RecipientDescription        = $MessageClassification.RecipientDescription
+                RetainClassificationEnabled = $MessageClassification.RetainClassificationEnabled
+                SenderDescription           = $MessageClassification.SenderDescription
+                Credential                  = $Credential
+                Ensure                      = 'Present'
+                ApplicationId               = $ApplicationId
+                CertificateThumbprint       = $CertificateThumbprint
+                CertificatePath             = $CertificatePath
+                CertificatePassword         = $CertificatePassword
+                Managedidentity             = $ManagedIdentity.IsPresent
+                TenantId                    = $TenantId
             }
 
             Write-Verbose -Message "Found Message Classification policy $($Identity)"
@@ -140,7 +145,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -179,9 +184,9 @@ function Set-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [ValidateSet("Highest","Higher","High","MediumHigh","Medium","MediumLow","Low","Lower","Lowest")]
+        [ValidateSet('Highest', 'Higher', 'High', 'MediumHigh', 'Medium', 'MediumLow', 'Low', 'Lower', 'Lowest')]
         [System.String]
-        $DisplayPrecedence="Medium",
+        $DisplayPrecedence = 'Medium',
 
         [Parameter()]
         [System.String]
@@ -204,9 +209,9 @@ function Set-TargetResource
         $SenderDescription,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -230,15 +235,19 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -259,6 +268,7 @@ function Set-TargetResource
     $MessageClassificationParams.Remove('CertificateThumbprint') | Out-Null
     $MessageClassificationParams.Remove('CertificatePath') | Out-Null
     $MessageClassificationParams.Remove('CertificatePassword') | Out-Null
+    $MessageClassificationParams.Remove('Managedidentity') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($null -eq $MessageClassification))
     {
@@ -297,9 +307,9 @@ function Test-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [ValidateSet("Highest","Higher","High","MediumHigh","Medium","MediumLow","Low","Lower","Lowest")]
+        [ValidateSet('Highest', 'Higher', 'High', 'MediumHigh', 'Medium', 'MediumLow', 'Low', 'Lower', 'Lowest')]
         [System.String]
-        $DisplayPrecedence="Medium",
+        $DisplayPrecedence = 'Medium',
 
         [Parameter()]
         [System.String]
@@ -322,9 +332,9 @@ function Test-TargetResource
         $SenderDescription,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -348,14 +358,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -376,6 +390,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('Managedidentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -403,9 +418,9 @@ function Export-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [ValidateSet("Highest","Higher","High","MediumHigh","Medium","MediumLow","Low","Lower","Lowest")]
+        [ValidateSet('Highest', 'Higher', 'High', 'MediumHigh', 'Medium', 'MediumLow', 'Low', 'Lower', 'Lowest')]
         [System.String]
-        $DisplayPrecedence="Medium",
+        $DisplayPrecedence = 'Medium',
 
         [Parameter()]
         [System.String]
@@ -428,9 +443,9 @@ function Export-TargetResource
         $SenderDescription,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -454,7 +469,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' -InboundParameters $PSBoundParameters -SkipModuleReload $true
 
@@ -462,8 +481,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -474,7 +493,7 @@ function Export-TargetResource
     {
 
         [Array]$MessageClassifications = Get-MessageClassification -ErrorAction Stop
-        $dscContent = ""
+        $dscContent = ''
         if ($MessageClassifications.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
@@ -495,6 +514,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
 
@@ -519,7 +539,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -536,7 +556,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 Export-ModuleMember -Function *-TargetResource

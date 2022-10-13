@@ -30,7 +30,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
             }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
@@ -49,6 +48,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
             }
+
         }
 
         # Test contexts
@@ -86,6 +86,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
                 Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
                     return $null
+                }
+                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                    return @()
                 }
             }
 
@@ -189,6 +192,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                     )
                 }
+                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                    return @()
+                }
             }
 
             It "Should return Present from the Get method" {
@@ -276,6 +282,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             }
                         }
                     )
+                }
+                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                    return @()
                 }
             }
 
@@ -370,6 +379,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                     )
                 }
+                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                    return @()
+                }
             }
 
             It "Should return Present from the Get method" {
@@ -388,7 +400,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
-                $Global:CurrentModeIsExport = $true
                 $testParams = @{
                     Credential = $Credential;
                 }
@@ -407,10 +418,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         @{
                             Id = "12345-12345-12345-12345-12345"
                             DefinitionId = "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderOfficeAppsOtherProcessInjectionType"
-                            ValueJson = '"warn"'
+                            ValueJson = '"block"'
                             AdditionalProperties = @{
-                                "@odata.type" = '#microsoft.graph.deviceManagementStringSettingInstance'
-                                value = "warn"
+                                '@odata.type' = '#microsoft.graph.deviceManagementStringSettingInstance'
+                                value = "auditMode"
                             }
                         },
                         @{
@@ -450,10 +461,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                     )
                 }
+                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                    return @()
+                }
             }
 
             It "Should Reverse Engineer resource from the Export method" {
-                Export-TargetResource @testParams
+                Export-TargetResource @testParams -verbose
             }
         }
     }

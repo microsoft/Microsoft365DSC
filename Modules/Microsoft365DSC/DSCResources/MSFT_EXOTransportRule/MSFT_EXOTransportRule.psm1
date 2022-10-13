@@ -723,7 +723,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting Transport Rule configuration for $Name"
@@ -744,8 +748,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -761,7 +765,7 @@ function Get-TargetResource
     {
         Write-Verbose -Message "Transport Rule $($Name) does not exist."
         $nullReturn = $PSBoundParameters
-        $nullReturn.Ensure = "Absent"
+        $nullReturn.Ensure = 'Absent'
         return $nullReturn
     }
     else
@@ -945,6 +949,7 @@ function Get-TargetResource
             CertificateThumbprint                         = $CertificateThumbprint
             CertificatePath                               = $CertificatePath
             CertificatePassword                           = $CertificatePassword
+            Managedidentity                               = $ManagedIdentity.IsPresent
             TenantId                                      = $TenantId
         }
 
@@ -1687,7 +1692,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting Transport Rule configuration for $Name"
@@ -1698,8 +1707,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -1717,13 +1726,14 @@ function Set-TargetResource
     $NewTransportRuleParams.Remove('CertificateThumbprint') | Out-Null
     $NewTransportRuleParams.Remove('CertificatePath') | Out-Null
     $NewTransportRuleParams.Remove('CertificatePassword') | Out-Null
+    $NewTransportRuleParams.Remove('Managedidentity') | Out-Null
 
     $SetTransportRuleParams = $NewTransportRuleParams.Clone()
     $SetTransportRuleParams.Add('Identity', $Name)
-    $SetTransportRuleParams.Remove("Enabled") | Out-Null
+    $SetTransportRuleParams.Remove('Enabled') | Out-Null
 
     # CASE: Transport Rule doesn't exist but should;
-    if ($Ensure -eq "Present" -and $currentTransportRuleConfig.Ensure -eq "Absent")
+    if ($Ensure -eq 'Present' -and $currentTransportRuleConfig.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Transport Rule '$($Name)' does not exist but it should. Create and configure it."
         # Create Transport Rule
@@ -1731,13 +1741,13 @@ function Set-TargetResource
 
     }
     # CASE: Transport Rule exists but it shouldn't;
-    elseif ($Ensure -eq "Absent" -and $currentTransportRuleConfig.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Absent' -and $currentTransportRuleConfig.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Transport Rule '$($Name)' exists but it shouldn't. Remove it."
         Remove-TransportRule -Identity $Name -Confirm:$false
     }
     # CASE: Transport Rule exists and it should, but has different values than the desired ones
-    elseif ($Ensure -eq "Present" -and $currentTransportRuleConfig.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Present' -and $currentTransportRuleConfig.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Transport Rule '$($Name)' already exists, but needs updating."
         Write-Verbose -Message "Setting Transport Rule $($Name) with values: $(Convert-M365DscHashtableToString -Hashtable $SetTransportRuleParams)"
@@ -2470,15 +2480,19 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -2489,8 +2503,8 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString  -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString  -Hashtable $PSBoundParameters)"
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('Credential') | Out-Null
@@ -2498,6 +2512,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('Managedidentity') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
@@ -2537,7 +2552,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $InformationPreference = 'Continue'
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -2548,8 +2567,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -2559,7 +2578,7 @@ function Export-TargetResource
     try
     {
         [array]$AllTransportRules = Get-TransportRule
-        $dscContent = ""
+        $dscContent = ''
         $i = 1
         if ($AllTransportRules.Length -eq 0)
         {
@@ -2567,18 +2586,19 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
         foreach ($TransportRule in $AllTransportRules)
         {
             Write-Host "    |---[$i/$($AllTransportRules.Count)] $($TransportRule.Name)" -NoNewline
             $Params = @{
                 Name                  = $TransportRule.Name
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
             $Results = Get-TargetResource @Params
@@ -2603,7 +2623,7 @@ function Export-TargetResource
         {
             Write-Host $Global:M365DSCEmojiRedX
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -2620,7 +2640,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 
 }

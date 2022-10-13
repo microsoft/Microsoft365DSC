@@ -235,7 +235,10 @@ function Start-M365DSCConfigurationExtract
                 $AuthMethods -contains 'ApplicationWithSecret')
         {
             $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
-                -TenantId $TenantId
+                -TenantId $TenantId `
+                -CertificateThumbprint $CertificateThumbprint `
+                -ApplicationSecret $ApplicationSecret `
+                -CertificatePath $CertificatePath
         }
         elseif ($AuthMethods -Contains 'Credentials')
         {
@@ -253,7 +256,7 @@ function Start-M365DSCConfigurationExtract
         $AzureAutomation = $false
         if ($organization.IndexOf('.') -gt 0)
         {
-            $principal = $organization.Split('.')[0]
+            $organization = $organization.Split('.')[0]
         }
 
         [array] $version = Get-Module 'Microsoft365DSC'
