@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* EXOOrganizationRelationship
+  * Add support for new cross-tenant mailbox migration parameters: MailboxMoveCapability, MailboxMovePublishedScopes, OauthApplicationId
+
 # 1.22.1012.1
 
 * EXOManagementRoleAssignment
