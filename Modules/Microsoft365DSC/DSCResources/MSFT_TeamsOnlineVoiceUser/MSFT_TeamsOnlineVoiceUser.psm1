@@ -58,8 +58,8 @@ function Get-TargetResource
         Write-Verbose -Message "Found Teams Online Voicemail Policy {$Identity}"
         return @{
             Identity        = $Identity
-            LocationID      = $instance.LocationID
-            TelephoneNumber = $instance.TelephoneNumber
+            LocationID      = $instance.Location
+            TelephoneNumber = $instance.Number
             Ensure          = 'Present'
             Credential      = $Credential
         }
@@ -217,6 +217,9 @@ function Export-TargetResource
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
+    
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -233,14 +236,15 @@ function Export-TargetResource
     try
     {
         $i = 1
-        [array]$policies = Get-CsOnlineVoiceUser -ErrorAction Stop
+        [array]$users = Get-CsOnlineVoiceUser -ErrorAction Stop
         $dscContent = ''
         Write-Host "`r`n" -NoNewline
-        foreach ($policy in $policies)
+        foreach ($user in $users)
         {
-            Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewline
+            Write-Host "    |---[$i/$($users.Count)] $($user.Name)" -NoNewline
+            $userEntry = Get-MgUser -UserId $user.Id
             $params = @{
-                Identity           = $policy.Identity
+                Identity   = $userEntry.UserPrincipalName
                 Credential = $Credential
             }
             $Results = Get-TargetResource @Params
