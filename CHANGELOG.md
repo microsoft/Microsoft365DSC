@@ -1,12 +1,5 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
-
-* EXO Workload
-  * Add support for Managed Identity authentication
-* EXOOrganizationRelationship
-  * Add support for new cross-tenant mailbox migration parameters: MailboxMoveCapability, MailboxMovePublishedScopes, OauthApplicationId
-
 # 1.22.1012.1
 
 * EXOManagementRoleAssignment
@@ -29,13 +22,18 @@
   * Added 35 new parameters.
   * Set AllowPlusAddressInRecipients parameter to deprecated. Use DisablePlusAddressInRecipients instead.
 * DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 1.13.0.
+  * Updates MicrosoftTeams to version 4.8.0;
   * Updated ReverseDSC to version 2.0.0.13;
   FIXES [#2270](https://github.com/microsoft/Microsoft365DSC/issues/2270)
 * MISC
+  * EXO Workload
+    * Add support for Managed Identity authentication
   * Fixed an issue in in Export-M365DSCConfiguration when used with Service Principal
     FIXES [2374](https://github.com/microsoft/Microsoft365DSC/issues/2374)
     FIXES [2379](https://github.com/microsoft/Microsoft365DSC/issues/2379)
   * Added support for Exchange to the Update-M365DSCAzureAdApplication cmdlet
+  * Fixes an issue where filters were ignored on export when specifying the Workloads parameter.
 
 # 1.22.1005.1
 
