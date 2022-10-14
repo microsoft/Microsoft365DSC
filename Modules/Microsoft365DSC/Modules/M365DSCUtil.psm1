@@ -1158,6 +1158,7 @@ function Export-M365DSCConfiguration
 
     # Clear the Connection Cache from MSCloudLoginAssistant
     $Global:MsCloudLoginConnectionProfile = $null
+    $Global:MSCloudLoginTriedGetEnvironment = $false
 
     # Make sure we are not connected to Microsoft Graph on another tenant
     try
