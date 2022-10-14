@@ -49,9 +49,9 @@ function Get-TargetResource
         $SocialIdSignIn,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -75,7 +75,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Getting OME Configuration for $($Identity)"
 
@@ -95,8 +99,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -110,7 +114,7 @@ function Get-TargetResource
     {
         #Get-OMEConfiguration do NOT accept ErrorAction parameter
         $OMEConfigurations = Get-OMEConfiguration 2>&1
-        if($null -ne ($OMEConfigurations |Where-Object {$_.gettype().Name -like "*ErrorRecord*"}))
+        if ($null -ne ($OMEConfigurations | Where-Object { $_.gettype().Name -like '*ErrorRecord*' }))
         {
             throw $OMEConfigurations
         }
@@ -124,25 +128,26 @@ function Get-TargetResource
         else
         {
             $result = @{
-                Identity                     = $Identity
-                BackgroundColor              = $OMEConfiguration.BackgroundColor
-                DisclaimerText               = $OMEConfiguration.DisclaimerText
-                EmailText                    = $OMEConfiguration.EmailText
-                ExternalMailExpiryInDays     = $OMEConfiguration.ExternalMailExpiryInDays
-#                Image                        = $OMEConfiguration.Image
-                IntroductionText             = $OMEConfiguration.IntroductionText
-                OTPEnabled                   = $OMEConfiguration.OTPEnabled
-                PortalText                   = $OMEConfiguration.PortalText
-                PrivacyStatementUrl          = $OMEConfiguration.PrivacyStatementUrl
-                ReadButtonText               = $OMEConfiguration.ReadButtonText
-                SocialIdSignIn               = $OMEConfiguration.SocialIdSignIn
-                Credential                   = $Credential
-                Ensure                       = 'Present'
-                ApplicationId                = $ApplicationId
-                CertificateThumbprint        = $CertificateThumbprint
-                CertificatePath              = $CertificatePath
-                CertificatePassword          = $CertificatePassword
-                TenantId                     = $TenantId
+                Identity                 = $Identity
+                BackgroundColor          = $OMEConfiguration.BackgroundColor
+                DisclaimerText           = $OMEConfiguration.DisclaimerText
+                EmailText                = $OMEConfiguration.EmailText
+                ExternalMailExpiryInDays = $OMEConfiguration.ExternalMailExpiryInDays
+                #                Image                        = $OMEConfiguration.Image
+                IntroductionText         = $OMEConfiguration.IntroductionText
+                OTPEnabled               = $OMEConfiguration.OTPEnabled
+                PortalText               = $OMEConfiguration.PortalText
+                PrivacyStatementUrl      = $OMEConfiguration.PrivacyStatementUrl
+                ReadButtonText           = $OMEConfiguration.ReadButtonText
+                SocialIdSignIn           = $OMEConfiguration.SocialIdSignIn
+                Credential               = $Credential
+                Ensure                   = 'Present'
+                ApplicationId            = $ApplicationId
+                CertificateThumbprint    = $CertificateThumbprint
+                CertificatePath          = $CertificatePath
+                CertificatePassword      = $CertificatePassword
+                Managedidentity          = $ManagedIdentity.IsPresent
+                TenantId                 = $TenantId
             }
 
             Write-Verbose -Message "Found OME Configuration $($Identity)"
@@ -155,7 +160,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -226,9 +231,9 @@ function Set-TargetResource
         $SocialIdSignIn,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -252,14 +257,18 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -281,9 +290,10 @@ function Set-TargetResource
     $OMEConfigurationParams.Remove('CertificateThumbprint') | Out-Null
     $OMEConfigurationParams.Remove('CertificatePath') | Out-Null
     $OMEConfigurationParams.Remove('CertificatePassword') | Out-Null
+    $OMEConfigurationParams.Remove('Managedidentity') | Out-Null
 
     #ExternalMailExpiryInDays cannot be updated in the default OME configuration
-    if("OME Configuration" -eq $Identity)
+    if ('OME Configuration' -eq $Identity)
     {
         $OMEConfigurationParams.Remove('ExternalMailExpiryInDays') | Out-Null
     }
@@ -355,9 +365,9 @@ function Test-TargetResource
         $SocialIdSignIn,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -381,14 +391,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -409,6 +423,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('Managedidentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -448,7 +463,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' -InboundParameters $PSBoundParameters -SkipModuleReload $true
 
@@ -456,8 +475,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -468,13 +487,13 @@ function Export-TargetResource
     {
         #Using 2>&1 to redirect Error stream to variable because Set-Perimeter do not inlude ErrorAction
         $OMEConfigurations = Get-OMEConfiguration 2>&1
-        if($null -ne ($OMEConfigurations |Where-Object {$_.gettype().Name -like "*ErrorRecord*"}))
+        if ($null -ne ($OMEConfigurations | Where-Object { $_.gettype().Name -like '*ErrorRecord*' }))
         {
             throw $OMEConfigurations
         }
 
-        [Array]$OMEConfigurations=$OMEConfigurations
-        $dscContent = ""
+        [Array]$OMEConfigurations = $OMEConfigurations
+        $dscContent = ''
 
         if ($OMEConfigurations.Length -eq 0)
         {
@@ -496,6 +515,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
 
@@ -520,7 +540,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -537,7 +557,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 Export-ModuleMember -Function *-TargetResource

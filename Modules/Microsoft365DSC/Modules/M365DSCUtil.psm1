@@ -8,7 +8,7 @@ $Global:DefaultComponents = @('SPOApp', 'SPOSiteDesign')
 $Global:FullComponents = @('AADGroup', 'AADServicePrincipal', 'EXOMailboxSettings', 'EXOManagementRole', 'O365Group', 'AADUSer', `
         'PlannerPlan', 'PlannerBucket', 'PlannerTask', 'PPPowerAppsEnvironment', 'PPTenantSettings', `
         'SPOSiteAuditSettings', 'SPOSiteGroup', 'SPOSite', 'SPOUserProfileProperty', 'SPOPropertyBag', 'TeamsTeam', 'TeamsChannel', `
-        'TeamsUser', 'TeamsChannelTab')
+        'TeamsUser', 'TeamsChannelTab', 'TeamsOnlineVoicemailUserSettings', 'TeamsUserCallingSettings')
 #endregion
 
 <#
@@ -1158,6 +1158,7 @@ function Export-M365DSCConfiguration
 
     # Clear the Connection Cache from MSCloudLoginAssistant
     $Global:MsCloudLoginConnectionProfile = $null
+    $Global:MSCloudLoginTriedGetEnvironment = $false
 
     # Make sure we are not connected to Microsoft Graph on another tenant
     try
@@ -1200,7 +1201,8 @@ function Export-M365DSCConfiguration
             -CertificatePath $CertificatePath `
             -CertificatePassword $CertificatePassword `
             -ManagedIdentity:$ManagedIdentity `
-            -GenerateInfo $GenerateInfo
+            -GenerateInfo $GenerateInfo `
+            -Filters $Filters
     }
     elseif ($null -ne $Components)
     {
