@@ -75,7 +75,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration of HostedOutboundSpamFilterRule for $Identity"
@@ -84,8 +88,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -105,7 +109,7 @@ function Get-TargetResource
     }
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
     try
     {
         try
@@ -114,7 +118,7 @@ function Get-TargetResource
         }
         catch
         {
-            $Message = "Error calling {Get-HostedOutboundSpamFilterRule}"
+            $Message = 'Error calling {Get-HostedOutboundSpamFilterRule}'
             New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
         }
 
@@ -144,6 +148,7 @@ function Get-TargetResource
                 CertificateThumbprint          = $CertificateThumbprint
                 CertificatePath                = $CertificatePath
                 CertificatePassword            = $CertificatePassword
+                Managedidentity                = $ManagedIdentity.IsPresent
                 TenantId                       = $TenantId
             }
 
@@ -167,7 +172,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -264,7 +269,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of HostedOutboundSpamFilterRule for $Identity"
@@ -273,8 +282,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -297,13 +306,14 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove("Ensure") | Out-Null
-        $CreationParams.Remove("Credential") | Out-Null
+        $CreationParams.Remove('Ensure') | Out-Null
+        $CreationParams.Remove('Credential') | Out-Null
         $CreationParams.Remove('ApplicationId') | Out-Null
         $CreationParams.Remove('TenantId') | Out-Null
         $CreationParams.Remove('CertificateThumbprint') | Out-Null
         $CreationParams.Remove('CertificatePath') | Out-Null
         $CreationParams.Remove('CertificatePassword') | Out-Null
+        $CreationParams.Remove('Managedidentity') | Out-Null
         if ($Enabled -and ('Disabled' -eq $CurrentValues.State))
         {
             # New-HostedOutboundSpamFilterRule has the Enabled parameter, Set-HostedOutboundSpamFilterRule does not.
@@ -312,20 +322,21 @@ function Set-TargetResource
             Remove-HostedOutboundSpamFilterRule -Identity $Identity -Confirm:$false
         }
         Write-Verbose -Message "Creating new HostedOutboundSpamFilterRule {$Identity}"
-        $CreationParams.Add("Name", $Identity)
-        $CreationParams.Remove("Identity") | Out-Null
+        $CreationParams.Add('Name', $Identity)
+        $CreationParams.Remove('Identity') | Out-Null
         New-HostedOutboundSpamFilterRule @CreationParams
     }
     elseif ($Ensure -eq 'Present' -and $CurrentValues -eq 'Present')
     {
         $UpdateParams = [System.Collections.Hashtable]($PSBoundParameters)
-        $UpdateParams.Remove("Ensure") | Out-Null
-        $UpdateParams.Remove("Credential") | Out-Null
+        $UpdateParams.Remove('Ensure') | Out-Null
+        $UpdateParams.Remove('Credential') | Out-Null
         $UpdateParams.Remove('ApplicationId') | Out-Null
         $UpdateParams.Remove('TenantId') | Out-Null
         $UpdateParams.Remove('CertificateThumbprint') | Out-Null
         $UpdateParams.Remove('CertificatePath') | Out-Null
         $UpdateParams.Remove('CertificatePassword') | Out-Null
+        $UpdateParams.Remove('Managedidentity') | Out-Null
         Write-Verbose -Message "Updating HostedOutboundSpamFilterRule {$Identity}"
         Set-HostedOutboundSpamFilterRule @UpdateParams
     }
@@ -413,15 +424,19 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -442,6 +457,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('Managedidentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -481,15 +497,19 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -525,6 +545,7 @@ function Export-TargetResource
                 TenantId                       = $TenantId
                 CertificateThumbprint          = $CertificateThumbprint
                 CertificatePassword            = $CertificatePassword
+                Managedidentity                = $ManagedIdentity.IsPresent
                 CertificatePath                = $CertificatePath
             }
             $Results = Get-TargetResource @Params
@@ -548,7 +569,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -565,7 +586,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 

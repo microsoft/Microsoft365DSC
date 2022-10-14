@@ -117,7 +117,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting Global Address List configuration for $Name"
@@ -137,8 +141,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -146,7 +150,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     if ($null -eq (Get-Command 'Get-GlobalAddressList' -ErrorAction SilentlyContinue))
     {
@@ -168,7 +172,7 @@ function Get-TargetResource
         {
             if ($null -eq $GlobalAddressList.IncludedRecipients)
             {
-                $IncludedRecipients = "".ToString()
+                $IncludedRecipients = ''.ToString()
             }
             else
             {
@@ -203,6 +207,7 @@ function Get-TargetResource
                 CertificateThumbprint        = $CertificateThumbprint
                 CertificatePath              = $CertificatePath
                 CertificatePassword          = $CertificatePassword
+                Managedidentity              = $ManagedIdentity.IsPresent
                 TenantId                     = $TenantId
             }
 
@@ -215,7 +220,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -354,7 +359,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting Global Address List configuration for $Name"
@@ -365,8 +374,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -448,7 +457,7 @@ function Set-TargetResource
     }
 
     # CASE: Global Address List doesn't exist but should;
-    if ($Ensure -eq "Present" -and $currentGlobalAddressListConfig.Ensure -eq "Absent")
+    if ($Ensure -eq 'Present' -and $currentGlobalAddressListConfig.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Global Address List '$($Name)' does not exist but it should. Create and configure it."
         # Create Global Address List
@@ -456,13 +465,13 @@ function Set-TargetResource
 
     }
     # CASE: Global Address List exists but it shouldn't;
-    elseif ($Ensure -eq "Absent" -and $currentGlobalAddressListConfig.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Absent' -and $currentGlobalAddressListConfig.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Global Address List '$($Name)' exists but it shouldn't. Remove it."
         Remove-GlobalAddressList -Identity $Name -Confirm:$false
     }
     # CASE: Global Address List exists and it should, but has different values than the desired ones
-    elseif ($Ensure -eq "Present" -and $currentGlobalAddressListConfig.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Present' -and $currentGlobalAddressListConfig.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Global Address List '$($Name)' already exists, but needs updating."
         Write-Verbose -Message "Setting Global Address List $($Name) with values: $(Convert-M365DscHashtableToString -Hashtable $SetGlobalAddressListParams)"
@@ -589,14 +598,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -617,6 +630,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('Managedidentity') | Out-Null
 
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
@@ -657,7 +671,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -667,8 +685,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -678,14 +696,14 @@ function Export-TargetResource
     if ($null -eq (Get-Command 'Get-GlobalAddressList' -ErrorAction SilentlyContinue))
     {
         Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for Global Address List"
-        return ""
+        return ''
     }
 
     try
     {
         [array]$AllGlobalAddressLists = Get-GlobalAddressList -ErrorAction Stop
 
-        $dscContent = ""
+        $dscContent = ''
         if ($AllGlobalAddressLists.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
@@ -706,6 +724,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
             $Results = Get-TargetResource @Params
@@ -729,7 +748,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -746,7 +765,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 
