@@ -1239,10 +1239,6 @@ function New-AntiPhishPolicy
         $PhishThresholdLevel,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.Boolean]
         $EnableTargetedDomainsProtection,
 
@@ -1255,8 +1251,8 @@ function New-AntiPhishPolicy
         $EnableViaTag,
 
         [Parameter()]
-        [System.String]
-        $Name,
+        [System.Object]
+        $MailboxIntelligenceProtectionAction,
 
         [Parameter()]
         [System.Object]
@@ -1275,8 +1271,8 @@ function New-AntiPhishPolicy
         $ExcludedDomains,
 
         [Parameter()]
-        [System.Object]
-        $MailboxIntelligenceProtectionAction,
+        [System.String]
+        $PolicyTag,
 
         [Parameter()]
         [System.Object]
@@ -1300,6 +1296,10 @@ function New-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
+        $MailboxIntelligenceProtectionActionRecipients,
+
+        [Parameter()]
+        [System.Object]
         $TargetedDomainProtectionAction,
 
         [Parameter()]
@@ -1319,8 +1319,8 @@ function New-AntiPhishPolicy
         $RecommendedPolicyType,
 
         [Parameter()]
-        [System.Object]
-        $MailboxIntelligenceProtectionActionRecipients,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.String]
@@ -1344,10 +1344,6 @@ function New-AntiPhishPolicy
 
         [Parameter()]
         [System.String]
-        $PolicyTag,
-
-        [Parameter()]
-        [System.String]
         $TargetedUserQuarantineTag,
 
         [Parameter()]
@@ -1361,6 +1357,10 @@ function New-AntiPhishPolicy
         [Parameter()]
         [System.Boolean]
         $EnableUnusualCharactersSafetyTips,
+
+        [Parameter()]
+        [System.String]
+        $Name,
 
         [Parameter()]
         [System.Boolean]
@@ -1392,12 +1392,12 @@ function New-AntiPhishRule
         $Name,
 
         [Parameter()]
-        [System.Object]
-        $AntiPhishPolicy,
-
-        [Parameter()]
         [System.Object[]]
         $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $AntiPhishPolicy,
 
         [Parameter()]
         [System.Object[]]
@@ -1618,6 +1618,10 @@ function New-ClientAccessRule
     param(
         [Parameter()]
         [System.Object]
+        $ExceptAnyOfClientIPAddressesOrRanges,
+
+        [Parameter()]
+        [System.Object]
         $Action,
 
         [Parameter()]
@@ -1629,8 +1633,8 @@ function New-ClientAccessRule
         $Enabled,
 
         [Parameter()]
-        [System.Object]
-        $ExceptAnyOfClientIPAddressesOrRanges,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.String]
@@ -1655,10 +1659,6 @@ function New-ClientAccessRule
         [Parameter()]
         [System.Object]
         $UsernameMatchesAnyOfPatterns,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
 
         [Parameter()]
         [System.Object]
@@ -1845,12 +1845,12 @@ function New-DkimSigningConfig
         $BodyCanonicalization,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.Object]
         $HeaderCanonicalization,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.UInt16]
@@ -1936,16 +1936,12 @@ function New-HostedContentFilterPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.Boolean]
         $InlineSafetyTipsEnabled,
 
         [Parameter()]
         [System.Object]
-        $BulkSpamAction,
+        $RegionBlockList,
 
         [Parameter()]
         [System.String]
@@ -1954,6 +1950,10 @@ function New-HostedContentFilterPolicy
         [Parameter()]
         [System.Int32]
         $EndUserSpamNotificationFrequency,
+
+        [Parameter()]
+        [System.Int32]
+        $QuarantineRetentionPeriod,
 
         [Parameter()]
         [System.Int32]
@@ -2045,10 +2045,6 @@ function New-HostedContentFilterPolicy
 
         [Parameter()]
         [System.Object]
-        $RegionBlockList,
-
-        [Parameter()]
-        [System.Object]
         $MarkAsSpamFromAddressAuthFail,
 
         [Parameter()]
@@ -2073,6 +2069,10 @@ function New-HostedContentFilterPolicy
 
         [Parameter()]
         [System.Object]
+        $BulkSpamAction,
+
+        [Parameter()]
+        [System.Object]
         $EndUserSpamNotificationLanguage,
 
         [Parameter()]
@@ -2080,8 +2080,8 @@ function New-HostedContentFilterPolicy
         $IncreaseScoreWithRedirectToOtherPort,
 
         [Parameter()]
-        [System.Int32]
-        $QuarantineRetentionPeriod,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Object]
@@ -2258,12 +2258,12 @@ function New-HostedOutboundSpamFilterRule
         $From,
 
         [Parameter()]
-        [System.Boolean]
-        $Enabled,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm
+        [System.Boolean]
+        $Enabled
     )
 }
 function New-InboundConnector
@@ -2434,10 +2434,6 @@ function New-Mailbox
         $ModerationEnabled,
 
         [Parameter()]
-        [System.Boolean]
-        $EnableRoomMailboxAccount,
-
-        [Parameter()]
         [System.String]
         $Office,
 
@@ -2556,6 +2552,10 @@ function New-Mailbox
         [Parameter()]
         [System.Boolean]
         $ResetPasswordOnNextLogon,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableRoomMailboxAccount,
 
         [Parameter()]
         [System.String]
@@ -2765,12 +2765,12 @@ function New-MalwareFilterRule
         $RecipientDomainIs,
 
         [Parameter()]
-        [System.Object]
-        $MalwareFilterPolicy,
-
-        [Parameter()]
         [System.Object[]]
         $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $MalwareFilterPolicy,
 
         [Parameter()]
         [System.Object[]]
@@ -2827,10 +2827,6 @@ function New-ManagementRoleAssignment
         $CustomRecipientWriteScope,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.String]
         $Name,
 
@@ -2857,6 +2853,10 @@ function New-ManagementRoleAssignment
         [Parameter()]
         [System.Object]
         $RecipientRelativeWriteScope,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Object]
@@ -2913,10 +2913,6 @@ function New-MessageClassification
 
         [Parameter()]
         [System.Boolean]
-        $RetainClassificationEnabled,
-
-        [Parameter()]
-        [System.Boolean]
         $PermissionMenuVisible,
 
         [Parameter()]
@@ -2925,7 +2921,11 @@ function New-MessageClassification
 
         [Parameter()]
         [System.Object]
-        $DisplayPrecedence
+        $DisplayPrecedence,
+
+        [Parameter()]
+        [System.Boolean]
+        $RetainClassificationEnabled
     )
 }
 function New-MobileDeviceMailboxPolicy
@@ -2943,10 +2943,6 @@ function New-MobileDeviceMailboxPolicy
         [Parameter()]
         [System.Boolean]
         $AllowUnsignedInstallationPackages,
-
-        [Parameter()]
-        [System.Object]
-        $MaxPasswordFailedAttempts,
 
         [Parameter()]
         [System.Boolean]
@@ -3049,6 +3045,10 @@ function New-MobileDeviceMailboxPolicy
         $AllowBluetooth,
 
         [Parameter()]
+        [System.Boolean]
+        $WSSAccessEnabled,
+
+        [Parameter()]
         [System.Object]
         $RequireEncryptionSMIMEAlgorithm,
 
@@ -3086,15 +3086,15 @@ function New-MobileDeviceMailboxPolicy
 
         [Parameter()]
         [System.Boolean]
+        $PasswordRecoveryEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $RequireStorageCardEncryption,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
-
-        [Parameter()]
-        [System.Boolean]
-        $AttachmentsEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -3106,7 +3106,7 @@ function New-MobileDeviceMailboxPolicy
 
         [Parameter()]
         [System.Boolean]
-        $PasswordRecoveryEnabled,
+        $AttachmentsEnabled,
 
         [Parameter()]
         [System.Object]
@@ -3141,8 +3141,8 @@ function New-MobileDeviceMailboxPolicy
         $AllowTextMessaging,
 
         [Parameter()]
-        [System.Boolean]
-        $WSSAccessEnabled,
+        [System.Object]
+        $MaxPasswordFailedAttempts,
 
         [Parameter()]
         [System.Boolean]
@@ -3467,12 +3467,12 @@ function New-PartnerApplication
         $AcceptSecurityIdentifierInformation,
 
         [Parameter()]
-        [System.Boolean]
-        $Enabled,
+        [System.Object]
+        $AccountType,
 
         [Parameter()]
-        [System.Object]
-        $AccountType
+        [System.Boolean]
+        $Enabled
     )
 }
 function New-PolicyTipConfig
@@ -3652,12 +3652,12 @@ function New-SafeAttachmentPolicy
         $RedirectAddress,
 
         [Parameter()]
-        [System.String]
-        $QuarantineTag,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $QuarantineTag,
 
         [Parameter()]
         [System.Boolean]
@@ -4057,6 +4057,10 @@ function New-TransportRule
         $RuleSubType,
 
         [Parameter()]
+        [System.Object[]]
+        $AnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
         [System.Object]
         $SentToScope,
 
@@ -4425,10 +4429,6 @@ function New-TransportRule
         $ExceptIfRecipientADAttributeMatchesPatterns,
 
         [Parameter()]
-        [System.Boolean]
-        $StopRuleProcessing,
-
-        [Parameter()]
         [System.Object[]]
         $RecipientADAttributeContainsWords,
 
@@ -4565,8 +4565,8 @@ function New-TransportRule
         $ExceptIfAttachmentPropertyContainsWords,
 
         [Parameter()]
-        [System.Object[]]
-        $AnyOfRecipientAddressMatchesPatterns,
+        [System.Boolean]
+        $StopRuleProcessing,
 
         [Parameter()]
         [System.Object]
@@ -4605,15 +4605,15 @@ function Remove-AntiPhishPolicy
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Force,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Object]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
     )
 }
 function Remove-AntiPhishRule
@@ -4868,10 +4868,6 @@ function Remove-Mailbox
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Force,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $PublicFolder,
 
         [Parameter()]
@@ -4892,7 +4888,11 @@ function Remove-Mailbox
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Migration
+        $Migration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
     )
 }
 function Remove-MailContact
@@ -4940,8 +4940,25 @@ function Remove-ManagementRole
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Force,
+        $Confirm,
 
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Recurse,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
+function Remove-ManagementRoleAssignment
+{
+    [CmdletBinding()]
+    param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
@@ -4952,24 +4969,7 @@ function Remove-ManagementRole
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Recurse
-    )
-}
-function Remove-ManagementRoleAssignment
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $Identity
+        $Force
     )
 }
 function Remove-MessageClassification
@@ -5004,15 +5004,15 @@ function Remove-MobileDeviceMailboxPolicy
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Force,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Object]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
     )
 }
 function Remove-OMEConfiguration
@@ -5073,15 +5073,15 @@ function Remove-OwaMailboxPolicy
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Force,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Object]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
     )
 }
 function Remove-PartnerApplication
@@ -5155,15 +5155,15 @@ function Remove-SafeAttachmentPolicy
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Force,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Object]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
     )
 }
 function Remove-SafeAttachmentRule
@@ -5185,15 +5185,15 @@ function Remove-SafeLinksPolicy
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Force,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Object]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
     )
 }
 function Remove-SafeLinksRule
@@ -5241,31 +5241,31 @@ function Set-AcceptedDomain
     param(
         [Parameter()]
         [System.Boolean]
-        $CanHaveCloudCache,
-
-        [Parameter()]
-        [System.Boolean]
         $EnableNego2Authentication,
 
         [Parameter()]
         [System.Boolean]
-        $OutboundOnly,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        $CanHaveCloudCache,
 
         [Parameter()]
         [System.Object]
         $Identity,
 
         [Parameter()]
+        [System.Object]
+        $DomainType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
         [System.Boolean]
         $MatchSubDomains,
 
         [Parameter()]
-        [System.Object]
-        $DomainType
+        [System.Boolean]
+        $OutboundOnly
     )
 }
 function Set-ActiveSyncDeviceAccessRule
@@ -5291,15 +5291,15 @@ function Set-AdminAuditLogConfig
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Force,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Boolean]
-        $UnifiedAuditLogIngestionEnabled
+        $UnifiedAuditLogIngestionEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
     )
 }
 function Set-AntiPhishPolicy
@@ -5317,10 +5317,6 @@ function Set-AntiPhishPolicy
         [Parameter()]
         [System.Int32]
         $PhishThresholdLevel,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
 
         [Parameter()]
         [System.Boolean]
@@ -5384,6 +5380,10 @@ function Set-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
+        $MailboxIntelligenceProtectionActionRecipients,
+
+        [Parameter()]
+        [System.Object]
         $TargetedDomainProtectionAction,
 
         [Parameter()]
@@ -5392,19 +5392,19 @@ function Set-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
-        $TargetedUserProtectionAction,
+        $TargetedUsersToProtect,
 
         [Parameter()]
         [System.Object]
-        $MailboxIntelligenceProtectionActionRecipients,
+        $TargetedUserProtectionAction,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.String]
         $MailboxIntelligenceQuarantineTag,
-
-        [Parameter()]
-        [System.Object]
-        $TargetedUsersToProtect,
 
         [Parameter()]
         [System.String]
@@ -5505,12 +5505,12 @@ function Set-App
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.Object]
         $UserList,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PrivateCatalog,
 
         [Parameter()]
         [System.Object]
@@ -5525,16 +5525,16 @@ function Set-App
         $OrganizationApp,
 
         [Parameter()]
-        [System.Boolean]
-        $Enabled,
+        [System.Object]
+        $ProvidedTo,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $PrivateCatalog,
+        $Confirm,
 
         [Parameter()]
-        [System.Object]
-        $ProvidedTo
+        [System.Boolean]
+        $Enabled
     )
 }
 function Set-ApplicationAccessPolicy
@@ -5819,16 +5819,16 @@ function set-CASMailboxPlan
         $ImapEnabled,
 
         [Parameter()]
+        [System.Object]
+        $OwaMailboxPolicy,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Object]
         $Identity,
-
-        [Parameter()]
-        [System.Object]
-        $OwaMailboxPolicy,
 
         [Parameter()]
         [System.Boolean]
@@ -5880,6 +5880,10 @@ function Set-ClientAccessRule
         $ExceptAnyOfProtocols,
 
         [Parameter()]
+        [System.Object]
+        $AnyOfProtocols,
+
+        [Parameter()]
         [System.Int32]
         $Priority,
 
@@ -5888,16 +5892,12 @@ function Set-ClientAccessRule
         $ExceptUsernameMatchesAnyOfPatterns,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.Object]
         $AnyOfAuthenticationTypes,
 
         [Parameter()]
-        [System.Object]
-        $AnyOfProtocols,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Object]
@@ -5929,16 +5929,16 @@ function Set-DataClassification
         $Confirm,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsDefault,
-
-        [Parameter()]
         [System.Object]
         $Fingerprints,
 
         [Parameter()]
         [System.Object]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsDefault
     )
 }
 function Set-DataEncryptionPolicy
@@ -5978,16 +5978,16 @@ function Set-DataEncryptionPolicy
         $PermanentDataPurgeReason,
 
         [Parameter()]
-        [System.Boolean]
-        $Enabled,
-
-        [Parameter()]
         [System.String]
         $PermanentDataPurgeContact,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Refresh
+        $Refresh,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled
     )
 }
 function Set-DistributionGroup
@@ -6244,10 +6244,6 @@ function Set-DkimSigningConfig
         $BodyCanonicalization,
 
         [Parameter()]
-        [System.Object]
-        $HeaderCanonicalization,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
@@ -6261,7 +6257,11 @@ function Set-DkimSigningConfig
 
         [Parameter()]
         [System.Boolean]
-        $Enabled
+        $Enabled,
+
+        [Parameter()]
+        [System.Object]
+        $HeaderCanonicalization
     )
 }
 function Set-EmailAddressPolicy
@@ -6339,16 +6339,12 @@ function Set-HostedContentFilterPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.Boolean]
         $InlineSafetyTipsEnabled,
 
         [Parameter()]
         [System.Object]
-        $BulkSpamAction,
+        $RegionBlockList,
 
         [Parameter()]
         [System.String]
@@ -6357,6 +6353,10 @@ function Set-HostedContentFilterPolicy
         [Parameter()]
         [System.Int32]
         $EndUserSpamNotificationFrequency,
+
+        [Parameter()]
+        [System.Int32]
+        $QuarantineRetentionPeriod,
 
         [Parameter()]
         [System.Int32]
@@ -6452,10 +6452,6 @@ function Set-HostedContentFilterPolicy
 
         [Parameter()]
         [System.Object]
-        $RegionBlockList,
-
-        [Parameter()]
-        [System.Object]
         $MarkAsSpamFromAddressAuthFail,
 
         [Parameter()]
@@ -6476,6 +6472,10 @@ function Set-HostedContentFilterPolicy
 
         [Parameter()]
         [System.Object]
+        $BulkSpamAction,
+
+        [Parameter()]
+        [System.Object]
         $EndUserSpamNotificationLanguage,
 
         [Parameter()]
@@ -6483,8 +6483,8 @@ function Set-HostedContentFilterPolicy
         $IncreaseScoreWithRedirectToOtherPort,
 
         [Parameter()]
-        [System.Int32]
-        $QuarantineRetentionPeriod,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Object]
@@ -6938,10 +6938,6 @@ function Set-JournalRule
         $Name,
 
         [Parameter()]
-        [System.Object]
-        $Scope,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
@@ -6951,11 +6947,15 @@ function Set-JournalRule
 
         [Parameter()]
         [System.Object]
+        $Recipient,
+
+        [Parameter()]
+        [System.Object]
         $Identity,
 
         [Parameter()]
         [System.Object]
-        $Recipient
+        $Scope
     )
 }
 function Set-Mailbox
@@ -7191,6 +7191,10 @@ function Set-Mailbox
         $CalendarRepairDisabled,
 
         [Parameter()]
+        [System.Object]
+        $AddressBookPolicy,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $RemoveMailboxProvisioningConstraint,
 
@@ -7256,15 +7260,15 @@ function Set-Mailbox
 
         [Parameter()]
         [System.Object]
+        $ExternalOofOptions,
+
+        [Parameter()]
+        [System.Object]
         $ExtensionCustomAttribute4,
 
         [Parameter()]
         [System.Object]
         $LitigationHoldDate,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
 
         [Parameter()]
         [System.Boolean]
@@ -7315,8 +7319,8 @@ function Set-Mailbox
         $RemoveDelayHoldApplied,
 
         [Parameter()]
-        [System.Object]
-        $ExternalOofOptions,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Object]
@@ -7361,10 +7365,6 @@ function Set-Mailbox
         [Parameter()]
         [System.Object]
         $RecipientLimits,
-
-        [Parameter()]
-        [System.Object]
-        $AddressBookPolicy,
 
         [Parameter()]
         [System.Boolean]
@@ -7481,11 +7481,11 @@ function Set-MailboxPlan
 
         [Parameter()]
         [System.Object]
-        $MaxSendSize,
+        $ProhibitSendReceiveQuota,
 
         [Parameter()]
         [System.Object]
-        $ProhibitSendReceiveQuota,
+        $MaxSendSize,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -7606,12 +7606,12 @@ function Set-MailContact
         $DisplayName,
 
         [Parameter()]
-        [System.String]
-        $CustomAttribute3,
+        [System.Object]
+        $RejectMessagesFromDLMembers,
 
         [Parameter()]
-        [System.Object]
-        $RejectMessagesFrom,
+        [System.String]
+        $CustomAttribute3,
 
         [Parameter()]
         [System.String]
@@ -7670,10 +7670,6 @@ function Set-MailContact
         $ModeratedBy,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.String]
         $CustomAttribute14,
 
@@ -7699,6 +7695,10 @@ function Set-MailContact
 
         [Parameter()]
         [System.Object]
+        $RejectMessagesFrom,
+
+        [Parameter()]
+        [System.Object]
         $ExtensionCustomAttribute1,
 
         [Parameter()]
@@ -7706,8 +7706,8 @@ function Set-MailContact
         $MessageFormat,
 
         [Parameter()]
-        [System.Object]
-        $RejectMessagesFromDLMembers,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Object]
@@ -7979,10 +7979,6 @@ function Set-MessageClassification
 
         [Parameter()]
         [System.Boolean]
-        $RetainClassificationEnabled,
-
-        [Parameter()]
-        [System.Boolean]
         $PermissionMenuVisible,
 
         [Parameter()]
@@ -7995,7 +7991,11 @@ function Set-MessageClassification
 
         [Parameter()]
         [System.Object]
-        $DisplayPrecedence
+        $DisplayPrecedence,
+
+        [Parameter()]
+        [System.Boolean]
+        $RetainClassificationEnabled
     )
 }
 function Set-MobileDeviceMailboxPolicy
@@ -8013,10 +8013,6 @@ function Set-MobileDeviceMailboxPolicy
         [Parameter()]
         [System.Boolean]
         $AllowUnsignedInstallationPackages,
-
-        [Parameter()]
-        [System.Object]
-        $MaxPasswordFailedAttempts,
 
         [Parameter()]
         [System.Boolean]
@@ -8119,6 +8115,10 @@ function Set-MobileDeviceMailboxPolicy
         $AllowBluetooth,
 
         [Parameter()]
+        [System.Boolean]
+        $WSSAccessEnabled,
+
+        [Parameter()]
         [System.Object]
         $RequireEncryptionSMIMEAlgorithm,
 
@@ -8211,8 +8211,8 @@ function Set-MobileDeviceMailboxPolicy
         $AllowTextMessaging,
 
         [Parameter()]
-        [System.Boolean]
-        $WSSAccessEnabled,
+        [System.Object]
+        $MaxPasswordFailedAttempts,
 
         [Parameter()]
         [System.Boolean]
@@ -8331,15 +8331,15 @@ function Set-Organization
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Force,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Boolean]
-        $UnifiedAuditLogIngestionEnabled
+        $UnifiedAuditLogIngestionEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
     )
 }
 function Set-OrganizationConfig
@@ -8365,6 +8365,10 @@ function Set-OrganizationConfig
         [Parameter()]
         [System.Object]
         $PublicFoldersEnabled,
+
+        [Parameter()]
+        [System.Int32]
+        $DefaultMinutesToReduceShortEventsBy,
 
         [Parameter()]
         [System.Boolean]
@@ -8428,6 +8432,10 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Boolean]
+        $ActivityBasedAuthenticationTimeoutEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $SmtpActionableMessagesEnabled,
 
         [Parameter()]
@@ -8451,8 +8459,8 @@ function Set-OrganizationConfig
         $BlockMoveMessagesForGroupFolders,
 
         [Parameter()]
-        [System.Int32]
-        $DefaultMinutesToReduceShortEventsBy,
+        [System.Object]
+        $DefaultPublicFolderDeletedItemRetention,
 
         [Parameter()]
         [System.Object]
@@ -8465,10 +8473,6 @@ function Set-OrganizationConfig
         [Parameter()]
         [System.Object]
         $OnlineMeetingsByDefaultEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $ConnectorsEnabledForOutlook,
 
         [Parameter()]
         [System.Object]
@@ -8499,10 +8503,6 @@ function Set-OrganizationConfig
         $OutlookMobileGCCRestrictionsEnabled,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.Boolean]
         $BookingsCreationOfCustomQuestionsRestricted,
 
@@ -8516,7 +8516,7 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Boolean]
-        $ActivityBasedAuthenticationTimeoutEnabled,
+        $ConnectorsEnabledForOutlook,
 
         [Parameter()]
         [System.Boolean]
@@ -8527,8 +8527,8 @@ function Set-OrganizationConfig
         $BookingsNamingPolicyPrefix,
 
         [Parameter()]
-        [System.Object]
-        $DefaultPublicFolderDeletedItemRetention,
+        [System.Boolean]
+        $IsGroupMemberAllowedToEditContent,
 
         [Parameter()]
         [System.Int32]
@@ -8663,8 +8663,8 @@ function Set-OrganizationConfig
         $BookingsMembershipApprovalRequired,
 
         [Parameter()]
-        [System.Boolean]
-        $IsGroupMemberAllowedToEditContent,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Object]
@@ -8949,8 +8949,8 @@ function Set-OutboundConnector
         $AllAcceptedDomains,
 
         [Parameter()]
-        [System.Object]
-        $TlsDomain,
+        [System.Boolean]
+        $TestMode,
 
         [Parameter()]
         [System.String]
@@ -8997,8 +8997,8 @@ function Set-OutboundConnector
         $SenderRewritingEnabled,
 
         [Parameter()]
-        [System.Boolean]
-        $TestMode,
+        [System.Object]
+        $TlsDomain,
 
         [Parameter()]
         [System.Object]
@@ -9009,10 +9009,6 @@ function Set-OwaMailboxPolicy
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
         [Parameter()]
         [System.Int32]
         $DefaultClientLanguage,
@@ -9072,6 +9068,10 @@ function Set-OwaMailboxPolicy
         [Parameter()]
         [System.String]
         $BookingsMailboxDomain,
+
+        [Parameter()]
+        [System.Boolean]
+        $WeatherEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -9258,8 +9258,8 @@ function Set-OwaMailboxPolicy
         $UseISO885915,
 
         [Parameter()]
-        [System.Boolean]
-        $RecoverDeletedItemsEnabled,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Boolean]
@@ -9339,7 +9339,7 @@ function Set-OwaMailboxPolicy
 
         [Parameter()]
         [System.Boolean]
-        $WeatherEnabled,
+        $RecoverDeletedItemsEnabled,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -9459,12 +9459,12 @@ function Set-PartnerApplication
         $ActAsPermissions,
 
         [Parameter()]
-        [System.Boolean]
-        $Enabled,
+        [System.Object]
+        $AccountType,
 
         [Parameter()]
-        [System.Object]
-        $AccountType
+        [System.Boolean]
+        $Enabled
     )
 }
 function Set-PerimeterConfig
@@ -9668,11 +9668,11 @@ function Set-RemoteDomain
 
         [Parameter()]
         [System.Boolean]
-        $NDREnabled,
+        $NDRDiagnosticInfoEnabled,
 
         [Parameter()]
         [System.Boolean]
-        $NDRDiagnosticInfoEnabled,
+        $NDREnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -9713,12 +9713,12 @@ function Set-RoleAssignmentPolicy
         $Confirm,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsDefault,
+        [System.Object]
+        $Identity,
 
         [Parameter()]
-        [System.Object]
-        $Identity
+        [System.Management.Automation.SwitchParameter]
+        $IsDefault
     )
 }
 function Set-SafeAttachmentPolicy
@@ -9991,10 +9991,6 @@ function Set-TransportConfig
         $SmtpClientAuthenticationDisabled,
 
         [Parameter()]
-        [System.Globalization.CultureInfo]
-        $InternalDsnDefaultLanguage,
-
-        [Parameter()]
         [System.Object]
         $MessageExpiration,
 
@@ -10005,10 +10001,6 @@ function Set-TransportConfig
         [Parameter()]
         [System.Boolean]
         $ReplyAllStormProtectionEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $InternalDsnLanguageDetectionEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -10027,16 +10019,16 @@ function Set-TransportConfig
         $Rfc2231EncodingEnabled,
 
         [Parameter()]
-        [System.Object]
-        $HeaderPromotionModeSetting,
+        [System.Boolean]
+        $InternalDsnLanguageDetectionEnabled,
 
         [Parameter()]
         [System.Boolean]
         $VoicemailJournalingEnabled,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Object]
+        $HeaderPromotionModeSetting,
 
         [Parameter()]
         [System.Object]
@@ -10055,6 +10047,10 @@ function Set-TransportConfig
         $JournalMessageExpirationDays,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
         [System.Object]
         $MaxRecipientEnvelopeLimit,
 
@@ -10069,6 +10065,10 @@ function Set-TransportConfig
         [Parameter()]
         [System.Globalization.CultureInfo]
         $ExternalDsnDefaultLanguage,
+
+        [Parameter()]
+        [System.Globalization.CultureInfo]
+        $InternalDsnDefaultLanguage,
 
         [Parameter()]
         [System.Object]
@@ -10853,6 +10853,10 @@ function Set-User
         $LastName,
 
         [Parameter()]
+        [System.Object]
+        $StsRefreshTokensValidFrom,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $RemoveMailboxProvisioningConstraint,
 
@@ -10889,20 +10893,12 @@ function Set-User
         $AssistantName,
 
         [Parameter()]
-        [System.Object]
-        $OtherHomePhone,
-
-        [Parameter()]
         [System.String]
         $StateOrProvince,
 
         [Parameter()]
         [System.String]
         $Initials,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
 
         [Parameter()]
         [System.String]
@@ -10925,8 +10921,8 @@ function Set-User
         $Manager,
 
         [Parameter()]
-        [System.Object]
-        $StsRefreshTokensValidFrom,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Object]
@@ -10947,6 +10943,10 @@ function Set-User
         [Parameter()]
         [System.String]
         $Department,
+
+        [Parameter()]
+        [System.Object]
+        $OtherHomePhone,
 
         [Parameter()]
         [System.String]
@@ -11321,10 +11321,6 @@ function New-MgApplication
     param(
         [Parameter()]
         [PSObject]
-        $OptionalClaims,
-
-        [Parameter()]
-        [PSObject]
         $HomeRealmDiscoveryPolicies,
 
         [Parameter()]
@@ -11332,8 +11328,8 @@ function New-MgApplication
         $Spa,
 
         [Parameter()]
-        [PSObject]
-        $Synchronization,
+        [System.String[]]
+        $Tags,
 
         [Parameter()]
         [System.String]
@@ -11354,6 +11350,10 @@ function New-MgApplication
         [Parameter()]
         [PSObject]
         $VerifiedPublisher,
+
+        [Parameter()]
+        [PSObject]
+        $OptionalClaims,
 
         [Parameter()]
         [System.String[]]
@@ -11397,11 +11397,11 @@ function New-MgApplication
 
         [Parameter()]
         [System.String]
-        $Id,
+        $SamlMetadataUrl,
 
         [Parameter()]
-        [System.String[]]
-        $Tags,
+        [System.String]
+        $Id,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
@@ -11461,7 +11461,7 @@ function New-MgApplication
 
         [Parameter()]
         [PSObject]
-        $AddIns,
+        $Synchronization,
 
         [Parameter()]
         [System.DateTime]
@@ -11488,10 +11488,6 @@ function New-MgApplication
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [System.String]
-        $ServiceManagementReference,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
@@ -11509,11 +11505,19 @@ function New-MgApplication
 
         [Parameter()]
         [PSObject]
+        $CreatedOnBehalfOf,
+
+        [Parameter()]
+        [PSObject]
         $ConnectorGroup,
 
         [Parameter()]
         [PSObject]
-        $CreatedOnBehalfOf,
+        $ServicePrincipalLockConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $ServiceManagementReference,
 
         [Parameter()]
         [PSObject]
@@ -11528,8 +11532,8 @@ function New-MgApplication
         $OnPremisesPublishing,
 
         [Parameter()]
-        [System.String]
-        $SamlMetadataUrl,
+        [PSObject]
+        $AddIns,
 
         [Parameter()]
         [PSObject]
@@ -12055,10 +12059,6 @@ function Update-MgApplication
     param(
         [Parameter()]
         [PSObject]
-        $OptionalClaims,
-
-        [Parameter()]
-        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -12070,8 +12070,8 @@ function Update-MgApplication
         $Spa,
 
         [Parameter()]
-        [System.String[]]
-        $Tags,
+        [PSObject]
+        $Synchronization,
 
         [Parameter()]
         [System.String]
@@ -12092,6 +12092,10 @@ function Update-MgApplication
         [Parameter()]
         [PSObject]
         $VerifiedPublisher,
+
+        [Parameter()]
+        [PSObject]
+        $OptionalClaims,
 
         [Parameter()]
         [System.String[]]
@@ -12138,6 +12142,10 @@ function Update-MgApplication
         $Id,
 
         [Parameter()]
+        [System.String[]]
+        $Tags,
+
+        [Parameter()]
         [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
         $HttpPipelineAppend,
 
@@ -12170,6 +12178,10 @@ function Update-MgApplication
         $PublicClient,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Oauth2RequirePostResponse,
+
+        [Parameter()]
         [System.String]
         $Notes,
 
@@ -12199,7 +12211,7 @@ function Update-MgApplication
 
         [Parameter()]
         [PSObject]
-        $Synchronization,
+        $AddIns,
 
         [Parameter()]
         [System.DateTime]
@@ -12230,10 +12242,6 @@ function Update-MgApplication
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [System.String]
-        $ServiceManagementReference,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
@@ -12251,15 +12259,19 @@ function Update-MgApplication
 
         [Parameter()]
         [PSObject]
+        $CreatedOnBehalfOf,
+
+        [Parameter()]
+        [PSObject]
         $ConnectorGroup,
 
         [Parameter()]
         [PSObject]
-        $AddIns,
+        $ServicePrincipalLockConfiguration,
 
         [Parameter()]
-        [PSObject]
-        $CreatedOnBehalfOf,
+        [System.String]
+        $ServiceManagementReference,
 
         [Parameter()]
         [PSObject]
@@ -12284,10 +12296,6 @@ function Update-MgApplication
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Oauth2RequirePostResponse,
 
         [Parameter()]
         [PSObject]
@@ -12899,6 +12907,87 @@ function Get-MgDeviceManagementDeviceCompliancePolicy
         $DeviceCompliancePolicyId
     )
 }
+function Get-MgDeviceManagementDeviceCompliancePolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.String]
+        $DeviceCompliancePolicyAssignmentId,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.String]
+        $DeviceCompliancePolicyId
+    )
+}
 function Get-MgDeviceManagementDeviceConfiguration
 {
     [CmdletBinding()]
@@ -12946,6 +13035,87 @@ function Get-MgDeviceManagementDeviceConfiguration
         [Parameter()]
         [System.String[]]
         $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgDeviceManagementDeviceConfigurationAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $DeviceConfigurationId,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.String]
+        $DeviceConfigurationAssignmentId,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -13128,38 +13298,6 @@ function New-MgDeviceManagementDeviceCompliancePolicy
         [Parameter()]
         [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
         $HttpPipelineAppend
-    )
-}
-function New-IntuneDeviceConfigurationPolicy
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param (
-
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $Name,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $Platforms,
-
-        [Parameter()]
-        [System.String]
-        $Technologies,
-
-        [Parameter()]
-        [System.String]
-        $TemplateReferenceId,
-
-        [Parameter()]
-        [Array]
-        $Settings
-
     )
 }
 function New-MgDeviceManagementDeviceConfiguration
@@ -13418,41 +13556,6 @@ function Remove-MgDeviceManagementDeviceConfiguration
         $HttpPipelineAppend
     )
 }
-function Update-IntuneDeviceConfigurationPolicy
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param (
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $DeviceConfigurationPolicyId,
-
-        [Parameter()]
-        [System.String]
-        $Name,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $Platforms,
-
-        [Parameter()]
-        [System.String]
-        $Technologies,
-
-        [Parameter()]
-        [System.String]
-        $TemplateReferenceId,
-
-        [Parameter()]
-        [Array]
-        $Settings
-
-    )
-}
 function Update-MgDeviceManagement
 {
     [CmdletBinding()]
@@ -13479,6 +13582,10 @@ function Update-MgDeviceManagement
 
         [Parameter()]
         [PSObject]
+        $TroubleshootingEvents,
+
+        [Parameter()]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -13488,10 +13595,6 @@ function Update-MgDeviceManagement
         [Parameter()]
         [PSObject]
         $WindowsAutopilotDeploymentProfiles,
-
-        [Parameter()]
-        [PSObject]
-        $ResourceOperations,
 
         [Parameter()]
         [PSObject]
@@ -13519,11 +13622,19 @@ function Update-MgDeviceManagement
 
         [Parameter()]
         [PSObject]
+        $DomainJoinConnectors,
+
+        [Parameter()]
+        [PSObject]
         $ManagedDeviceEncryptionStates,
 
         [Parameter()]
         [PSObject]
         $MicrosoftTunnelSites,
+
+        [Parameter()]
+        [PSObject]
+        $UserExperienceAnalyticsRegressionSummary,
 
         [Parameter()]
         [PSObject]
@@ -13548,6 +13659,10 @@ function Update-MgDeviceManagement
         [Parameter()]
         [PSObject]
         $ReusableSettings,
+
+        [Parameter()]
+        [PSObject]
+        $UserExperienceAnalyticsAnomalySeverityOverview,
 
         [Parameter()]
         [PSObject]
@@ -13591,7 +13706,7 @@ function Update-MgDeviceManagement
 
         [Parameter()]
         [PSObject]
-        $ImportedWindowsAutopilotDeviceIdentities,
+        $NotificationMessageTemplates,
 
         [Parameter()]
         [PSObject]
@@ -13608,6 +13723,10 @@ function Update-MgDeviceManagement
         [Parameter()]
         [PSObject]
         $GroupPolicyDefinitionFiles,
+
+        [Parameter()]
+        [PSObject]
+        $UserExperienceAnalyticsDevicePerformance,
 
         [Parameter()]
         [PSObject]
@@ -13695,7 +13814,15 @@ function Update-MgDeviceManagement
 
         [Parameter()]
         [PSObject]
+        $UserExperienceAnalyticsAnomaly,
+
+        [Parameter()]
+        [PSObject]
         $GroupPolicyConfigurations,
+
+        [Parameter()]
+        [PSObject]
+        $DeviceCategories,
 
         [Parameter()]
         [System.Collections.Hashtable]
@@ -13723,15 +13850,11 @@ function Update-MgDeviceManagement
 
         [Parameter()]
         [PSObject]
-        $DeviceShellScripts,
+        $ApplePushNotificationCertificate,
 
         [Parameter()]
         [PSObject]
         $UserExperienceAnalyticsDeviceMetricHistory,
-
-        [Parameter()]
-        [PSObject]
-        $UserExperienceAnalyticsAppHealthOSVersionPerformance,
 
         [Parameter()]
         [PSObject]
@@ -13746,8 +13869,8 @@ function Update-MgDeviceManagement
         $ComplianceManagementPartners,
 
         [Parameter()]
-        [PSObject]
-        $TroubleshootingEvents,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [PSObject]
@@ -13755,7 +13878,7 @@ function Update-MgDeviceManagement
 
         [Parameter()]
         [PSObject]
-        $ManagedDeviceOverview,
+        $DeviceManagementPartners,
 
         [Parameter()]
         [PSObject]
@@ -13763,7 +13886,7 @@ function Update-MgDeviceManagement
 
         [Parameter()]
         [PSObject]
-        $DeviceManagementPartners,
+        $UserExperienceAnalyticsAnomalyDevice,
 
         [Parameter()]
         [PSObject]
@@ -13784,10 +13907,6 @@ function Update-MgDeviceManagement
         [Parameter()]
         [PSObject]
         $ComplianceCategories,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
 
         [Parameter()]
         [PSObject]
@@ -13890,10 +14009,6 @@ function Update-MgDeviceManagement
         $AndroidForWorkAppConfigurationSchemas,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
         [PSObject]
         $SettingDefinitions,
 
@@ -13924,10 +14039,6 @@ function Update-MgDeviceManagement
         [Parameter()]
         [PSObject]
         $UserExperienceAnalyticsAppHealthApplicationPerformanceByAppVersionDetails,
-
-        [Parameter()]
-        [PSObject]
-        $OemWarrantyInformationOnboarding,
 
         [Parameter()]
         [PSObject]
@@ -13967,6 +14078,10 @@ function Update-MgDeviceManagement
 
         [Parameter()]
         [PSObject]
+        $ExchangeOnPremisesPolicies,
+
+        [Parameter()]
+        [PSObject]
         $MobileAppTroubleshootingEvents,
 
         [Parameter()]
@@ -13983,11 +14098,11 @@ function Update-MgDeviceManagement
 
         [Parameter()]
         [PSObject]
-        $ApplePushNotificationCertificate,
+        $DeviceShellScripts,
 
         [Parameter()]
         [PSObject]
-        $DeviceCategories,
+        $ImportedWindowsAutopilotDeviceIdentities,
 
         [Parameter()]
         [PSObject]
@@ -14011,11 +14126,11 @@ function Update-MgDeviceManagement
 
         [Parameter()]
         [PSObject]
-        $UserExperienceAnalyticsRegressionSummary,
+        $OemWarrantyInformationOnboarding,
 
         [Parameter()]
         [PSObject]
-        $NotificationMessageTemplates,
+        $ManagedDeviceOverview,
 
         [Parameter()]
         [PSObject]
@@ -14147,15 +14262,15 @@ function Update-MgDeviceManagement
 
         [Parameter()]
         [PSObject]
-        $DomainJoinConnectors,
+        $ResourceOperations,
 
         [Parameter()]
         [PSObject]
         $Categories,
 
         [Parameter()]
-        [PSObject]
-        $ExchangeOnPremisesPolicies,
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
 
         [Parameter()]
         [PSObject]
@@ -14167,7 +14282,7 @@ function Update-MgDeviceManagement
 
         [Parameter()]
         [PSObject]
-        $UserExperienceAnalyticsDevicePerformance,
+        $UserExperienceAnalyticsAppHealthOSVersionPerformance,
 
         [Parameter()]
         [PSObject]
@@ -14878,11 +14993,14 @@ function Get-MgDeviceManagementConfigurationPolicyTemplate
         $HttpPipelineAppend
     )
 }
-
 function Get-MgDeviceManagementConfigurationPolicyTemplateSettingTemplate
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.String]
+        $DeviceManagementConfigurationSettingTemplateId,
+
         [Parameter()]
         [System.String[]]
         $Property,
@@ -14942,10 +15060,6 @@ function Get-MgDeviceManagementConfigurationPolicyTemplateSettingTemplate
         [Parameter()]
         [System.String]
         $DeviceManagementConfigurationPolicyTemplateId,
-
-        [Parameter()]
-        [System.String]
-        $DeviceManagementConfigurationSettingTemplateId,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -15114,6 +15228,87 @@ function Get-MgDeviceManagementIntent
         $HttpPipelineAppend
     )
 }
+function Get-MgDeviceManagementIntentAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.String]
+        $DeviceManagementIntentAssignmentId,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.String]
+        $DeviceManagementIntentId,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
 function Get-MgDeviceManagementIntentSetting
 {
     [CmdletBinding()]
@@ -15195,89 +15390,6 @@ function Get-MgDeviceManagementIntentSetting
         $HttpPipelineAppend
     )
 }
-
-function Get-MgDeviceManagementIntentAssignment
-{
-    [CmdletBinding()]
-    param(
-
-        [Parameter()]
-        [System.String]
-        $DeviceManagementIntentAssignmentId,
-
-        [Parameter()]
-        [System.String]
-        $DeviceManagementIntentId,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [System.String[]]
-        $Property,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.String]
-        $Search,
-
-        [Parameter()]
-        [System.Int32]
-        $Skip,
-
-        [Parameter()]
-        [System.String[]]
-        $Sort,
-
-        [Parameter()]
-        [System.Int32]
-        $Top,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Int32]
-        $PageSize,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $all,
-
-        [Parameter()]
-        [System.String]
-        $CountVariable
-    )
-}
 function New-MgDeviceManagementAssignmentFilter
 {
     [CmdletBinding()]
@@ -15285,6 +15397,10 @@ function New-MgDeviceManagementAssignmentFilter
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [PSObject]
+        $Payloads,
 
         [Parameter()]
         [System.DateTime]
@@ -15386,6 +15502,10 @@ function New-MgDeviceManagementConfigurationPolicy
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $PriorityMetaData,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
@@ -15673,15 +15793,15 @@ function Remove-MgDeviceManagementIntent
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
         [System.String]
         $DeviceManagementIntentId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -15699,6 +15819,10 @@ function Update-MgDeviceManagementAssignmentFilter
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [PSObject]
+        $Payloads,
 
         [Parameter()]
         [System.DateTime]
@@ -15848,6 +15972,10 @@ function Update-MgDeviceManagementConfigurationPolicy
         [Parameter()]
         [System.String]
         $Id,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $PriorityMetaData,
 
         [Parameter()]
         [System.String]
@@ -16858,10 +16986,6 @@ function Remove-MgRoleManagementDirectoryRoleDefinition
 
         [Parameter()]
         [System.String]
-        $UnifiedRoleDefinitionId,
-
-        [Parameter()]
-        [System.String]
         $IfMatch,
 
         [Parameter()]
@@ -16875,6 +16999,10 @@ function Remove-MgRoleManagementDirectoryRoleDefinition
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $UnifiedRoleDefinitionId,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -17077,10 +17205,6 @@ function Update-MgRoleManagementDirectory
 
         [Parameter()]
         [PSObject]
-        $RoleEligibilityScheduleInstances,
-
-        [Parameter()]
-        [PSObject]
         $RoleEligibilityScheduleRequests,
 
         [Parameter()]
@@ -17114,6 +17238,10 @@ function Update-MgRoleManagementDirectory
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $RoleEligibilityScheduleInstances,
 
         [Parameter()]
         [PSObject]
@@ -17294,15 +17422,11 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        $FingerprintBlocked,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
         $AppActionIfDevicePasscodeComplexityLessThanHigh,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $DisableAppPinIfDevicePinIsSet,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Support.ManagedAppDeviceThreatLevel]
@@ -17329,12 +17453,16 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $DisableAppEncryptionIfDeviceEncryptionIsEnabled,
 
         [Parameter()]
-        [System.Int32]
-        $MinimumPinLength,
+        [Microsoft.Graph.PowerShell.Support.MobileThreatDefensePartnerPriority]
+        $MobileThreatDefensePartnerPriority,
 
         [Parameter()]
         [System.DateTime]
         $CreatedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $DeploymentSummary,
 
         [Parameter()]
         [System.String]
@@ -17362,6 +17490,10 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
 
         [Parameter()]
         [System.TimeSpan]
+        $PinRequiredInsteadOfBiometricTimeout,
+
+        [Parameter()]
+        [System.TimeSpan]
         $PeriodBeforePinReset,
 
         [Parameter()]
@@ -17382,11 +17514,15 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $SaveAsBlocked,
+        $PrintBlocked,
 
         [Parameter()]
         [System.String]
         $CustomDialerAppDisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $AllowedAndroidDeviceModels,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Support.ManagedAppDataIngestionLocation[]]
@@ -17405,10 +17541,6 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $NotificationRestriction,
 
         [Parameter()]
-        [System.String[]]
-        $RoleScopeTagIds,
-
-        [Parameter()]
         [System.String]
         $CustomBrowserPackageId,
 
@@ -17423,6 +17555,10 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         [Parameter()]
         [System.String]
         $Id,
+
+        [Parameter()]
+        [PSObject]
+        $ApprovedKeyboards,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -17449,10 +17585,6 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $RequirePinAfterBiometricChange,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $DataBackupBlocked,
-
-        [Parameter()]
         [System.String]
         $MaximumRequiredOSVersion,
 
@@ -17463,10 +17595,6 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ContactSyncBlocked,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppClipboardSharingLevel]
-        $AllowedOutboundClipboardSharingLevel,
 
         [Parameter()]
         [System.Int32]
@@ -17549,16 +17677,16 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $MinimumWipeOSVersion,
 
         [Parameter()]
-        [PSObject]
-        $ApprovedKeyboards,
+        [System.Management.Automation.SwitchParameter]
+        $DataBackupBlocked,
 
         [Parameter()]
         [System.TimeSpan]
         $PeriodOfflineBeforeWipeIsEnforced,
 
         [Parameter()]
-        [System.TimeSpan]
-        $PinRequiredInsteadOfBiometricTimeout,
+        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        $AppActionIfDevicePasscodeComplexityLessThanLow,
 
         [Parameter()]
         [System.String]
@@ -17573,12 +17701,16 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $MobileThreatDefenseRemediationAction,
 
         [Parameter()]
+        [PSObject]
+        $ExemptedAppPackages,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $KeyboardsRestricted,
 
         [Parameter()]
-        [PSObject]
-        $DeploymentSummary,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [PSObject]
@@ -17589,10 +17721,6 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $ScreenCaptureBlocked,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppPinCharacterSet]
-        $PinCharacterSet,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ManagedBrowserToOpenLinksRequired,
 
@@ -17601,12 +17729,8 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $MaximumWipeOSVersion,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PrintBlocked,
-
-        [Parameter()]
-        [System.TimeSpan]
-        $GracePeriodToBlockAppsDuringOffClockHours,
+        [System.Int32]
+        $MinimumPinLength,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -17649,16 +17773,24 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $WarnAfterCompanyPortalUpdateDeferralInDays,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
-        $AppActionIfDevicePasscodeComplexityLessThanLow,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $FingerprintBlocked,
+        $FingerprintAndBiometricEnabled,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
         $AppActionIfDeviceLockNotSet,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SaveAsBlocked,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $GracePeriodToBlockAppsDuringOffClockHours,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.String]
@@ -17686,11 +17818,7 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $FingerprintAndBiometricEnabled,
-
-        [Parameter()]
-        [System.String[]]
-        $AllowedAndroidDeviceModels,
+        $DisableAppPinIfDevicePinIsSet,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -17701,6 +17829,10 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $BodyParameter,
 
         [Parameter()]
+        [Microsoft.Graph.PowerShell.Support.ManagedAppClipboardSharingLevel]
+        $AllowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $DeviceLockRequired,
 
@@ -17709,8 +17841,8 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $Break,
 
         [Parameter()]
-        [PSObject]
-        $ExemptedAppPackages,
+        [Microsoft.Graph.PowerShell.Support.ManagedAppPinCharacterSet]
+        $PinCharacterSet,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Support.AppManagementLevel]
@@ -17953,15 +18085,15 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        $FingerprintBlocked,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
         $AppActionIfDevicePasscodeComplexityLessThanHigh,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $DisableAppPinIfDevicePinIsSet,
+        [System.String]
+        $AndroidManagedAppProtectionId,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Support.ManagedAppDeviceThreatLevel]
@@ -17988,8 +18120,8 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $DisableAppEncryptionIfDeviceEncryptionIsEnabled,
 
         [Parameter()]
-        [System.Int32]
-        $MinimumPinLength,
+        [Microsoft.Graph.PowerShell.Support.MobileThreatDefensePartnerPriority]
+        $MobileThreatDefensePartnerPriority,
 
         [Parameter()]
         [System.DateTime]
@@ -17998,10 +18130,6 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         [Parameter()]
         [PSObject]
         $DeploymentSummary,
-
-        [Parameter()]
-        [System.String]
-        $MinimumWarningAppVersion,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Support.ManagedBrowserType]
@@ -18041,11 +18169,15 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $SaveAsBlocked,
+        $PrintBlocked,
 
         [Parameter()]
         [System.String]
         $CustomDialerAppDisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $AllowedAndroidDeviceModels,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Support.ManagedAppDataIngestionLocation[]]
@@ -18068,16 +18200,16 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $CustomBrowserPackageId,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $BiometricAuthenticationBlocked,
+
+        [Parameter()]
         [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
         $AppActionIfDevicePasscodeComplexityLessThanMedium,
 
         [Parameter()]
         [System.String]
         $Id,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.AndroidManagedAppSafetyNetAppsVerificationType]
-        $RequiredAndroidSafetyNetAppsVerificationType,
 
         [Parameter()]
         [PSObject]
@@ -18112,6 +18244,10 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $MaximumRequiredOSVersion,
 
         [Parameter()]
+        [System.String]
+        $MinimumWipePatchVersion,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ContactSyncBlocked,
 
@@ -18124,16 +18260,12 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $Description,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
-        $AppActionIfDevicePasscodeComplexityLessThanLow,
+        [Microsoft.Graph.PowerShell.Support.AndroidManagedAppSafetyNetAppsVerificationType]
+        $RequiredAndroidSafetyNetAppsVerificationType,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
         $AppActionIfMaximumPinRetriesExceeded,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
 
         [Parameter()]
         [System.String]
@@ -18141,7 +18273,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
 
         [Parameter()]
         [System.String]
-        $AndroidManagedAppProtectionId,
+        $Version,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Support.ManagedAppDataTransferLevel]
@@ -18154,6 +18286,10 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         [Parameter()]
         [System.String]
         $MinimumWipeAppVersion,
+
+        [Parameter()]
+        [System.Int32]
+        $AllowedOutboundClipboardSharingExceptionLength,
 
         [Parameter()]
         [System.String]
@@ -18172,8 +18308,8 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $AllowedDataStorageLocations,
 
         [Parameter()]
-        [System.String]
-        $MinimumWipePatchVersion,
+        [System.Int32]
+        $BlockAfterCompanyPortalUpdateDeferralInDays,
 
         [Parameter()]
         [System.String]
@@ -18192,16 +18328,16 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $DialerRestrictionLevel,
 
         [Parameter()]
-        [System.Int32]
-        $AllowedOutboundClipboardSharingExceptionLength,
+        [System.String]
+        $MinimumWarningAppVersion,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
         $AppActionIfAndroidSafetyNetDeviceAttestationFailed,
 
         [Parameter()]
-        [System.String]
-        $Version,
+        [System.Int32]
+        $MaximumPinRetries,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
@@ -18236,12 +18372,16 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $MobileThreatDefenseRemediationAction,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $BiometricAuthenticationBlocked,
+        [PSObject]
+        $ExemptedAppPackages,
 
         [Parameter()]
-        [System.String[]]
-        $RoleScopeTagIds,
+        [System.Management.Automation.SwitchParameter]
+        $KeyboardsRestricted,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [PSObject]
@@ -18252,14 +18392,6 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $ScreenCaptureBlocked,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.AndroidManagedAppSafetyNetDeviceAttestationType]
-        $RequiredAndroidSafetyNetDeviceAttestationType,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppPinCharacterSet]
-        $PinCharacterSet,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ManagedBrowserToOpenLinksRequired,
 
@@ -18268,8 +18400,8 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $MaximumWipeOSVersion,
 
         [Parameter()]
-        [System.TimeSpan]
-        $GracePeriodToBlockAppsDuringOffClockHours,
+        [System.Int32]
+        $MinimumPinLength,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -18288,8 +18420,8 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $EncryptAppData,
 
         [Parameter()]
-        [System.Int32]
-        $MaximumPinRetries,
+        [System.TimeSpan]
+        $GracePeriodToBlockAppsDuringOffClockHours,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -18298,10 +18430,6 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         [Parameter()]
         [System.Int32]
         $WipeAfterCompanyPortalUpdateDeferralInDays,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.AppManagementLevel]
-        $TargetedAppManagementLevels,
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Support.AndroidManagedAppSafetyNetEvaluationType]
@@ -18317,15 +18445,23 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
 
         [Parameter()]
         [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        $AppActionIfDevicePasscodeComplexityLessThanLow,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
         $AppActionIfDeviceLockNotSet,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $FingerprintBlocked,
+        $SaveAsBlocked,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $ProxyCredential,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.String]
@@ -18348,16 +18484,16 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $AllowedInboundDataTransferSources,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $KeyboardsRestricted,
+        [Microsoft.Graph.PowerShell.Support.AndroidManagedAppSafetyNetDeviceAttestationType]
+        $RequiredAndroidSafetyNetDeviceAttestationType,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $FingerprintAndBiometricEnabled,
 
         [Parameter()]
-        [System.String[]]
-        $AllowedAndroidDeviceModels,
+        [System.Management.Automation.SwitchParameter]
+        $DisableAppPinIfDevicePinIsSet,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -18368,8 +18504,8 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $BodyParameter,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PrintBlocked,
+        [PSObject]
+        $InputObject,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -18380,12 +18516,12 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $Break,
 
         [Parameter()]
-        [PSObject]
-        $ExemptedAppPackages,
+        [Microsoft.Graph.PowerShell.Support.ManagedAppPinCharacterSet]
+        $PinCharacterSet,
 
         [Parameter()]
-        [System.Int32]
-        $BlockAfterCompanyPortalUpdateDeferralInDays
+        [Microsoft.Graph.PowerShell.Support.AppManagementLevel]
+        $TargetedAppManagementLevels
     )
 }
 function Get-MgDeviceAppManagement
@@ -18656,6 +18792,87 @@ function Get-MgDeviceAppManagementTargetedManagedAppConfiguration
         $HttpPipelineAppend
     )
 }
+function Get-MgDeviceAppManagementTargetedManagedAppConfigurationAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $TargetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.String]
+        $TargetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        $HttpPipelineAppend
+    )
+}
 function New-MgDeviceAppManagementTargetedManagedAppConfiguration
 {
     [CmdletBinding()]
@@ -18778,10 +18995,6 @@ function Remove-MgDeviceAppManagementAndroidManagedAppProtection
         $IfMatch,
 
         [Parameter()]
-        [System.String]
-        $AndroidManagedAppProtectionId,
-
-        [Parameter()]
         [PSObject]
         $InputObject,
 
@@ -18792,6 +19005,10 @@ function Remove-MgDeviceAppManagementAndroidManagedAppProtection
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $AndroidManagedAppProtectionId,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -18856,10 +19073,6 @@ function Remove-MgDeviceAppManagementTargetedManagedAppConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $TargetedManagedAppConfigurationId,
-
-        [Parameter()]
         [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
         $HttpPipelinePrepend,
 
@@ -18894,6 +19107,10 @@ function Remove-MgDeviceAppManagementTargetedManagedAppConfiguration
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $TargetedManagedAppConfigurationId,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -18937,10 +19154,6 @@ function Update-MgDeviceAppManagement
         $DeviceAppManagementTasks,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [PSObject]
         $ManagedAppStatuses,
 
@@ -18981,6 +19194,10 @@ function Update-MgDeviceAppManagement
         $WindowsInformationProtectionWipeActions,
 
         [Parameter()]
+        [PSObject]
+        $MobileAppCategories,
+
+        [Parameter()]
         [System.String]
         $MicrosoftStoreForBusinessLanguage,
 
@@ -19017,8 +19234,8 @@ function Update-MgDeviceAppManagement
         $Id,
 
         [Parameter()]
-        [PSObject]
-        $MobileAppCategories,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -19102,10 +19319,6 @@ function Update-MgDeviceAppManagementTargetedManagedAppConfiguration
         $DisplayName,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [PSObject]
         $InputObject,
 
@@ -19158,8 +19371,8 @@ function Update-MgDeviceAppManagementTargetedManagedAppConfiguration
         $Id,
 
         [Parameter()]
-        [PSObject]
-        $Apps,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.String]
@@ -19168,6 +19381,10 @@ function Update-MgDeviceAppManagementTargetedManagedAppConfiguration
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $Apps,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -19586,10 +19803,6 @@ function New-MgGroup
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.String]
         $Mail,
 
@@ -19843,7 +20056,7 @@ function New-MgGroup
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $IsArchived,
+        $Confirm,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -19916,6 +20129,10 @@ function New-MgGroup
         [Parameter()]
         [System.String]
         $PreferredDataLocation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsArchived,
 
         [Parameter()]
         [System.DateTime]
@@ -20485,10 +20702,6 @@ function Update-MgGroup
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.String]
         $Mail,
 
@@ -20754,7 +20967,7 @@ function Update-MgGroup
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $IsArchived,
+        $Confirm,
 
         [Parameter()]
         [PSObject]
@@ -20829,6 +21042,10 @@ function Update-MgGroup
         $IsFavorite,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsArchived,
+
+        [Parameter()]
         [System.DateTime]
         $CreatedDateTime,
 
@@ -20857,10 +21074,6 @@ function Update-MgGroupLifecyclePolicy
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
         [Parameter()]
         [System.Collections.Hashtable]
         $AdditionalProperties,
@@ -20912,6 +21125,10 @@ function Update-MgGroupLifecyclePolicy
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -22279,6 +22496,10 @@ function Update-MgOrganization
         $ProxyCredential,
 
         [Parameter()]
+        [System.DateTime]
+        $DeletedDateTime,
+
+        [Parameter()]
         [PSObject]
         $ProvisionedPlans,
 
@@ -22293,10 +22514,6 @@ function Update-MgOrganization
         [Parameter()]
         [PSObject]
         $Branding,
-
-        [Parameter()]
-        [System.DateTime]
-        $DeletedDateTime,
 
         [Parameter()]
         [System.String]
@@ -36155,6 +36372,10 @@ function New-CsTeamsEventsPolicy
 
         [Parameter()]
         [System.String]
+        $ForceStreamingAttendeeMode,
+
+        [Parameter()]
+        [System.String]
         $Identity,
 
         [Parameter()]
@@ -36245,6 +36466,10 @@ function New-CsTeamsMeetingPolicy
 
         [Parameter()]
         [System.Boolean]
+        $AllowAnnotations,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowNetworkConfigurationSettingsLookup,
 
         [Parameter()]
@@ -36312,6 +36537,10 @@ function New-CsTeamsMeetingPolicy
         $AllowWatermarkForCameraVideo,
 
         [Parameter()]
+        [System.Boolean]
+        $AllowWatermarkForScreenSharing,
+
+        [Parameter()]
         [System.String]
         $PreferredMeetingProviderForIslandsMode,
 
@@ -36376,8 +36605,8 @@ function New-CsTeamsMeetingPolicy
         $AllowCloudRecording,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowWatermarkForScreenSharing,
+        [System.String]
+        $AllowedStreamingMediaInput,
 
         [Parameter()]
         [System.Boolean]
@@ -36462,6 +36691,10 @@ function New-CsTeamsMeetingPolicy
         [Parameter()]
         [System.Boolean]
         $AllowBreakoutRooms,
+
+        [Parameter()]
+        [System.String]
+        $AllowDocumentCollaboration,
 
         [Parameter()]
         [System.Boolean]
@@ -37109,7 +37342,7 @@ function Set-CsOnlineVoicemailUserSettings
         $OofGreetingFollowAutomaticRepliesEnabled,
 
         [Parameter()]
-        [Microsoft.Rtc.Management.Hosted.Voicemail.Models.CallAnswerRules]
+        [PSObject]
         $CallAnswerRule
     )
 }
@@ -37519,6 +37752,10 @@ function Set-CsTeamsEventsPolicy
 
         [Parameter()]
         [System.String]
+        $ForceStreamingAttendeeMode,
+
+        [Parameter()]
+        [System.String]
         $Identity,
 
         [Parameter()]
@@ -37610,10 +37847,6 @@ function Set-CsTeamsGuestMessagingConfiguration
 
         [Parameter()]
         [System.Boolean]
-        $AllowUserDeleteMessage,
-
-        [Parameter()]
-        [System.Boolean]
         $AllowGiphy,
 
         [Parameter()]
@@ -37623,6 +37856,10 @@ function Set-CsTeamsGuestMessagingConfiguration
         [Parameter()]
         [System.Boolean]
         $AllowUserEditMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserDeleteMessage,
 
         [Parameter()]
         [System.String]
@@ -37671,10 +37908,6 @@ function Set-CsTeamsMeetingBroadcastConfiguration
 
         [Parameter()]
         [System.String]
-        $SdnLicenseId,
-
-        [Parameter()]
-        [System.String]
         $SupportURL,
 
         [Parameter()]
@@ -37687,7 +37920,11 @@ function Set-CsTeamsMeetingBroadcastConfiguration
 
         [Parameter()]
         [System.String]
-        $SdnApiTemplateUrl
+        $SdnApiTemplateUrl,
+
+        [Parameter()]
+        [System.String]
+        $SdnLicenseId
     )
 }
 function Set-CsTeamsMeetingBroadcastPolicy
@@ -37838,6 +38075,10 @@ function Set-CsTeamsMeetingPolicy
 
         [Parameter()]
         [System.Boolean]
+        $AllowAnnotations,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowNetworkConfigurationSettingsLookup,
 
         [Parameter()]
@@ -37905,6 +38146,10 @@ function Set-CsTeamsMeetingPolicy
         $AllowWatermarkForCameraVideo,
 
         [Parameter()]
+        [System.Boolean]
+        $AllowWatermarkForScreenSharing,
+
+        [Parameter()]
         [System.String]
         $PreferredMeetingProviderForIslandsMode,
 
@@ -37969,8 +38214,8 @@ function Set-CsTeamsMeetingPolicy
         $AllowCloudRecording,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowWatermarkForScreenSharing,
+        [System.String]
+        $AllowedStreamingMediaInput,
 
         [Parameter()]
         [System.Boolean]
@@ -38055,6 +38300,10 @@ function Set-CsTeamsMeetingPolicy
         [Parameter()]
         [System.Boolean]
         $AllowBreakoutRooms,
+
+        [Parameter()]
+        [System.String]
+        $AllowDocumentCollaboration,
 
         [Parameter()]
         [System.Boolean]
@@ -38248,6 +38497,10 @@ function Set-CsTeamsUpgradeConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.String]
+        $SfBMeetingJoinUx,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
@@ -38258,10 +38511,6 @@ function Set-CsTeamsUpgradeConfiguration
         [Parameter()]
         [System.String]
         $Identity,
-
-        [Parameter()]
-        [System.String]
-        $SfBMeetingJoinUx,
 
         [Parameter()]
         [System.String]
@@ -38310,12 +38559,16 @@ function Set-CsTenantFederationConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
-        $AllowTeamsConsumerInbound,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Boolean]
         $SharedSipAddressSpace,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTeamsConsumerInbound,
 
         [Parameter()]
         [System.Object]
@@ -38324,10 +38577,6 @@ function Set-CsTenantFederationConfiguration
         [Parameter()]
         [System.Boolean]
         $TreatDiscoveredPartnersAsUnverified,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
 
         [Parameter()]
         [System.Boolean]

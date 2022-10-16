@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "TeamsOnlineVoiceuser" -GenericStubModule $GenericStubPath
+    -DscResource "TeamsOnlineVoicemailUserSettings" -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -42,10 +42,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            Mock -CommandName Set-CsPhoneNumberAssignment -MockWith {
-            }
-
-            Mock -CommandName Remove-CsPhoneNumberAssignment -MockWith {
+            Mock -CommandName Set-CsOnlineVoicemailUserSettings -MockWith {
             }
         }
 
@@ -53,11 +50,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When no instances exist" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity        = 'John.Smith@Contoso.com'
-                    TelephoneNumber = "1800-555-1234"
-                    LocationId      = "c7c5a17f-00d7-47c0-9ddb-3383229d606"
-                    Ensure          = "Present"
-                    Credential      = $Credential
+                    CallAnswerRule                           = "RegularVoicemail";
+                    Identity                                 = "JohnSmith@Contoso.com";
+                    OofGreetingEnabled                       = $False;
+                    OofGreetingFollowAutomaticRepliesEnabled = $False;
+                    OofGreetingFollowCalendarEnabled         = $False;
+                    PromptLanguage                           = "en-US";
+                    ShareData                                = $False;
+                    VoicemailEnabled                         = $True;
+                    Ensure                                   = "Present"
+                    Credential                               = $Credential
                 }
 
                 Mock -CommandName Get-CsOnlineVoicemailUserSettings -MockWith {
@@ -75,25 +77,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should assign settings in the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-CsPhoneNumberAssignment -Exactly 1
+                Should -Invoke -CommandName Set-CsOnlineVoicemailUserSettings -Exactly 1
             }
         }
 
         Context -Name "User exists but is not in the Desired State" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity        = 'John.Smith@Contoso.com'
-                    TelephoneNumber = "1800-555-1234"
-                    LocationId      = "c7c5a17f-00d7-47c0-9ddb-3383229d606"
-                    Ensure          = "Present"
-                    Credential      = $Credential
+                    CallAnswerRule                           = "RegularVoicemail";
+                    Identity                                 = "JohnSmith@Contoso.com";
+                    OofGreetingEnabled                       = $False;
+                    OofGreetingFollowAutomaticRepliesEnabled = $False;
+                    OofGreetingFollowCalendarEnabled         = $False;
+                    PromptLanguage                           = "en-US";
+                    ShareData                                = $False;
+                    VoicemailEnabled                         = $True;
+                    Ensure                                   = "Present"
+                    Credential                               = $Credential
                 }
 
-                Mock -CommandName Get-CsOnlineVoiceUser -MockWith {
+                Mock -CommandName Get-CsOnlineVoicemailUserSettings -MockWith {
                     return @{
-                        Identity        = 'John.Smith@Contoso.com'
-                        TelephoneNumber = "1800-555-0000" #Drift
-                        LocationId      = "c7c5a17f-00d7-47c0-9ddb-3383229d606"
+                        CallAnswerRule                           = "RegularVoicemail";
+                        Identity                                 = "JohnSmith@Contoso.com";
+                        OofGreetingEnabled                       = $False;
+                        OofGreetingFollowAutomaticRepliesEnabled = $False;
+                        OofGreetingFollowCalendarEnabled         = $True; #Drift
+                        PromptLanguage                           = "en-US";
+                        ShareData                                = $False;
+                        VoicemailEnabled                         = $True;
                     }
                 }
             }
@@ -108,25 +120,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should update the settings from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-CsPhoneNumberAssignment -Exactly 1
+                Should -Invoke -CommandName Set-CsOnlineVoicemailUserSettings -Exactly 1
             }
         }
 
         Context -Name "Instance exists and is already in the Desired State" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity        = 'John.Smith@Contoso.com'
-                    TelephoneNumber = "1800-555-1234"
-                    LocationId      = "c7c5a17f-00d7-47c0-9ddb-3383229d606"
-                    Ensure          = "Present"
-                    Credential      = $Credential
+                    CallAnswerRule                           = "RegularVoicemail";
+                    Identity                                 = "JohnSmith@Contoso.com";
+                    OofGreetingEnabled                       = $False;
+                    OofGreetingFollowAutomaticRepliesEnabled = $False;
+                    OofGreetingFollowCalendarEnabled         = $False;
+                    PromptLanguage                           = "en-US";
+                    ShareData                                = $False;
+                    VoicemailEnabled                         = $True;
+                    Ensure                                   = "Present"
+                    Credential                               = $Credential
                 }
 
-                Mock -CommandName Get-CsOnlineVoiceUser -MockWith {
+                Mock -CommandName Get-CsOnlineVoicemailUserSettings -MockWith {
                     return @{
-                        Identity        = 'John.Smith@Contoso.com'
-                        TelephoneNumber = "1800-555-1234"
-                        LocationId      = "c7c5a17f-00d7-47c0-9ddb-3383229d606"
+                        CallAnswerRule                           = "RegularVoicemail";
+                        Identity                                 = "JohnSmith@Contoso.com";
+                        OofGreetingEnabled                       = $False;
+                        OofGreetingFollowAutomaticRepliesEnabled = $False;
+                        OofGreetingFollowCalendarEnabled         = $False
+                        PromptLanguage                           = "en-US";
+                        ShareData                                = $False;
+                        VoicemailEnabled                         = $True;
                     }
                 }
             }
@@ -147,11 +169,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-CsOnlineVoiceUser -MockWith {
+                Mock -CommandName Get-CsOnlineVoicemailUserSettings -MockWith {
                     return @{
-                        Identity        = 'John.Smith@Contoso.com'
-                        TelephoneNumber = "1800-555-1234"
-                        LocationId      = "c7c5a17f-00d7-47c0-9ddb-3383229d606"
+                        CallAnswerRule                           = "RegularVoicemail";
+                        Identity                                 = "JohnSmith@Contoso.com";
+                        OofGreetingEnabled                       = $False;
+                        OofGreetingFollowAutomaticRepliesEnabled = $False;
+                        OofGreetingFollowCalendarEnabled         = $False
+                        PromptLanguage                           = "en-US";
+                        ShareData                                = $False;
+                        VoicemailEnabled                         = $True;
                     }
                 }
             }
