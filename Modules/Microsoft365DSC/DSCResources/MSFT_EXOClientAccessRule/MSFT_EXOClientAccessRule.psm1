@@ -93,7 +93,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Getting configuration of ClientAccessRule for $Identity"
     if ($Global:CurrentModeIsExport)
@@ -112,8 +116,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -155,12 +159,13 @@ function Get-TargetResource
                 CertificateThumbprint                = $CertificateThumbprint
                 CertificatePath                      = $CertificatePath
                 CertificatePassword                  = $CertificatePassword
+                Managedidentity                      = $ManagedIdentity.IsPresent
                 TenantId                             = $TenantId
             }
 
             if (-not [System.String]::IsNullOrEmpty($ClientAccessRule.RuleScope))
             {
-                $result.Add("RuleScope", $ClientAccessRule.RuleScope)
+                $result.Add('RuleScope', $ClientAccessRule.RuleScope)
             }
 
             Write-Verbose -Message "Found ClientAccessRule $($Identity)"
@@ -173,7 +178,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -288,7 +293,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of ClientAccessRule for $Identity"
@@ -297,8 +306,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -328,6 +337,7 @@ function Set-TargetResource
     $ClientAccessRuleParams.Remove('CertificateThumbprint') | Out-Null
     $ClientAccessRuleParams.Remove('CertificatePath') | Out-Null
     $ClientAccessRuleParams.Remove('CertificatePassword') | Out-Null
+    $ClientAccessRuleParams.Remove('Managedidentity') | Out-Null
     if ($ClientAccessRuleParams.RuleScope)
     {
         $ClientAccessRuleParams += @{
@@ -339,7 +349,7 @@ function Set-TargetResource
     if (('Present' -eq $Ensure ) -and ($null -eq $ClientAccessRule))
     {
         Write-Verbose -Message "Creating ClientAccessRule $($Identity)."
-        $ClientAccessRuleParams.Add("Name", $Identity)
+        $ClientAccessRuleParams.Add('Name', $Identity)
         $ClientAccessRuleParams.Remove('Identity') | Out-Null
         New-ClientAccessRule @ClientAccessRuleParams
     }
@@ -450,14 +460,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -478,6 +492,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('Managedidentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -517,7 +532,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -527,15 +546,15 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $dscContent = ""
+    $dscContent = ''
     try
     {
         if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-ClientAccessRule)
@@ -561,6 +580,7 @@ function Export-TargetResource
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     CertificatePassword   = $CertificatePassword
+                    Managedidentity       = $ManagedIdentity.IsPresent
                     CertificatePath       = $CertificatePath
                 }
                 $Results = Get-TargetResource @Params
@@ -590,7 +610,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -607,7 +627,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 

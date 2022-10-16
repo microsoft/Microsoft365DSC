@@ -26,9 +26,9 @@ function Get-TargetResource
         $Recipient,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -52,7 +52,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration of Journal Rule for {$Name}"
@@ -72,8 +76,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -81,7 +85,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -94,18 +98,19 @@ function Get-TargetResource
         }
 
         $result = @{
-            Name                                  = $Name
-            JournalEmailAddress                   = $rule.JournalEmailAddress
-            Enabled                               = $rule.Enabled
-            Recipient                             = $rule.Recipient
-            RuleScope                             = $rule.Scope
-            Ensure                                = "Present"
-            Credential                            = $Credential
-            ApplicationId                         = $ApplicationId
-            CertificateThumbprint                 = $CertificateThumbprint
-            CertificatePath                       = $CertificatePath
-            CertificatePassword                   = $CertificatePassword
-            TenantId                              = $TenantId
+            Name                  = $Name
+            JournalEmailAddress   = $rule.JournalEmailAddress
+            Enabled               = $rule.Enabled
+            Recipient             = $rule.Recipient
+            RuleScope             = $rule.Scope
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            Managedidentity       = $ManagedIdentity.IsPresent
+            TenantId              = $TenantId
         }
 
         Write-Verbose -Message "Found configuration of the Journal Rule {$Name}}"
@@ -116,7 +121,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -165,7 +170,7 @@ function Set-TargetResource
         $Recipient,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = $true,
 
@@ -191,7 +196,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of Journal Rule {$Name}}"
@@ -200,8 +209,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -214,15 +223,16 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     $opsParams = $PSBoundParameters
-    $opsParams.Remove("Credential") | Out-Null
+    $opsParams.Remove('Credential') | Out-Null
     $opsParams.Remove('CertificateThumbprint') | Out-Null
     $opsParams.Remove('CertificatePath') | Out-Null
     $opsParams.Remove('CertificatePassword') | Out-Null
+    $opsParams.Remove('Managedidentity') | Out-Null
     $opsParams.Remove('ApplicationId') | Out-Null
     $opsParams.Remove('TenantId') | Out-Null
-    $opsParams.Add("Scope", $RuleScope) | Out-Null
-    $opsParams.Remove("RuleScope") | Out-Null
-    $opsParams.Remove("Ensure") | Out-Null
+    $opsParams.Add('Scope', $RuleScope) | Out-Null
+    $opsParams.Remove('RuleScope') | Out-Null
+    $opsParams.Remove('Ensure') | Out-Null
 
     # If the Rule should exist, but it doesn't - Create the Rule
     if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
@@ -234,8 +244,8 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Journal Rule {$Name}"
-        $opsParams.Add("Identity", $Name) | Out-Null
-        $opsParams.Remove("Enabled") | Out-Null
+        $opsParams.Add('Identity', $Name) | Out-Null
+        $opsParams.Remove('Enabled') | Out-Null
 
         Set-JournalRule @opsParams | Out-Null
 
@@ -289,7 +299,7 @@ function Test-TargetResource
         $Recipient,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = $true,
 
@@ -315,14 +325,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -341,6 +355,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('Managedidentity') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
 
@@ -382,7 +397,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -392,8 +411,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -405,7 +424,7 @@ function Export-TargetResource
         [array]$allRules = Get-JournalRule
 
         $i = 1
-        $dscContent = ""
+        $dscContent = ''
         if ($allRules.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
@@ -418,13 +437,14 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($allRules.Length)] $($rule.Name)" -NoNewline
             $Params = @{
-                Credential    = $Credential
+                Credential            = $Credential
                 Name                  = $Rule.name
                 JournalEmailAddress   = $Rule.JournalEmailAddress
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
             $Results = Get-TargetResource @Params
@@ -448,7 +468,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -465,7 +485,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 

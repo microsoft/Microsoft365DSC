@@ -94,7 +94,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration of SafeLinksPolicy for $Identity"
@@ -114,8 +118,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -123,10 +127,10 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
     try
     {
-        Write-Verbose -Message "Global ExchangeOnlineSession status:"
+        Write-Verbose -Message 'Global ExchangeOnlineSession status:'
         Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
 
         try
@@ -136,7 +140,7 @@ function Get-TargetResource
         catch
         {
             Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-            $Message = "Error calling {Get-SafeLinksPolicy}"
+            $Message = 'Error calling {Get-SafeLinksPolicy}'
             New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
         }
 
@@ -173,6 +177,7 @@ function Get-TargetResource
                 CertificateThumbprint         = $CertificateThumbprint
                 CertificatePath               = $CertificatePath
                 CertificatePassword           = $CertificatePassword
+                Managedidentity               = $ManagedIdentity.IsPresent
                 TenantId                      = $TenantId
             }
 
@@ -186,7 +191,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -302,7 +307,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of SafeLinksPolicy for $Identity"
@@ -310,8 +319,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -332,6 +341,7 @@ function Set-TargetResource
     $SafeLinksPolicyParams.Remove('CertificateThumbprint') | Out-Null
     $SafeLinksPolicyParams.Remove('CertificatePath') | Out-Null
     $SafeLinksPolicyParams.Remove('CertificatePassword') | Out-Null
+    $SafeLinksPolicyParams.Remove('Managedidentity') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($null -eq $SafeLinksPolicy))
     {
@@ -341,14 +351,14 @@ function Set-TargetResource
         $SafeLinksPolicyParams.Remove('Identity') | Out-Null
         Write-Verbose -Message "Creating SafeLinksPolicy $($Identity)"
 
-        Write-Verbose -Message "Property DoNotTrackUserClicks is deprecated and will be ignored."
-        $SafeLinksPolicyParams.Remove("DoNotTrackUserClicks") | Out-Null
+        Write-Verbose -Message 'Property DoNotTrackUserClicks is deprecated and will be ignored.'
+        $SafeLinksPolicyParams.Remove('DoNotTrackUserClicks') | Out-Null
 
-        Write-Verbose -Message "Property DoNotAllowClickThrough is deprecated and will be ignored."
-        $SafeLinksPolicyParams.Remove("DoNotAllowClickThrough") | Out-Null
+        Write-Verbose -Message 'Property DoNotAllowClickThrough is deprecated and will be ignored.'
+        $SafeLinksPolicyParams.Remove('DoNotAllowClickThrough') | Out-Null
 
-        Write-Verbose -Message "Property IsEnabled is deprecated and will be ignored."
-        $SafeLinksPolicyParams.Remove("IsEnabled") | Out-Null
+        Write-Verbose -Message 'Property IsEnabled is deprecated and will be ignored.'
+        $SafeLinksPolicyParams.Remove('IsEnabled') | Out-Null
 
         New-SafeLinksPolicy @SafeLinksPolicyParams
     }
@@ -356,14 +366,14 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Setting SafeLinksPolicy $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $SafeLinksPolicyParams)"
 
-        Write-Verbose -Message "Property DoNotTrackUserClicks is deprecated and will be ignored."
-        $SafeLinksPolicyParams.Remove("DoNotTrackUserClicks") | Out-Null
+        Write-Verbose -Message 'Property DoNotTrackUserClicks is deprecated and will be ignored.'
+        $SafeLinksPolicyParams.Remove('DoNotTrackUserClicks') | Out-Null
 
-        Write-Verbose -Message "Property DoNotAllowClickThrough is deprecated and will be ignored."
-        $SafeLinksPolicyParams.Remove("DoNotAllowClickThrough") | Out-Null
+        Write-Verbose -Message 'Property DoNotAllowClickThrough is deprecated and will be ignored.'
+        $SafeLinksPolicyParams.Remove('DoNotAllowClickThrough') | Out-Null
 
-        Write-Verbose -Message "Property IsEnabled is deprecated and will be ignored."
-        $SafeLinksPolicyParams.Remove("IsEnabled") | Out-Null
+        Write-Verbose -Message 'Property IsEnabled is deprecated and will be ignored.'
+        $SafeLinksPolicyParams.Remove('IsEnabled') | Out-Null
 
         Set-SafeLinksPolicy @SafeLinksPolicyParams -Confirm:$false
     }
@@ -470,14 +480,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -500,6 +514,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('Managedidentity') | Out-Null
 
     #DEPRECATED
     $ValuesToCheck.Remove('DoNotAllowClickThrough') | Out-Null
@@ -544,7 +559,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -554,8 +573,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -583,12 +602,13 @@ function Export-TargetResource
             {
                 Write-Host "    |---[$i/$($SafeLinksPolicies.Length)] $($SafeLinksPolicy.Name)" -NoNewline
                 $Params = @{
-                    Credential    = $Credential
+                    Credential            = $Credential
                     Identity              = $SafeLinksPolicy.Identity
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     CertificatePassword   = $CertificatePassword
+                    Managedidentity       = $ManagedIdentity.IsPresent
                     CertificatePath       = $CertificatePath
                 }
                 $Results = Get-TargetResource @Params
@@ -617,7 +637,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -634,7 +654,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 
