@@ -3850,11 +3850,11 @@ Export-ModuleMember -Function @(
     'Set-EXOSafeLinksRule',
     'Split-ArrayByParts',
     'Test-M365DSCDependenciesForNewVersions',
+    'Test-M365DSCModuleValidity',
     'Test-M365DSCNewVersionAvailable',
     'Test-M365DSCParameterState',
     'Uninstall-M365DSCOutdatedDependencies',
     'Update-M365DSCDependencies',
     'Update-M365DSCExportAuthenticationResults',
-    'Update-M365DSCModule',
-    'Test-M365DSCModuleValidity'
+    'Update-M365DSCModule'
 )
