@@ -1,28 +1,39 @@
+[ClassVersion("1.0.0.0")]
+class MSFT_DeviceManagementConfigurationPolicyAssignments
+{
+ [Write, Description("The type of the target assignment."), ValueMap{"#microsoft.graph.groupAssignmentTarget","#microsoft.graph.allLicensedUsersAssignmentTarget","#microsoft.graph.allDevicesAssignmentTarget","#microsoft.graph.exclusionGroupAssignmentTarget","#microsoft.graph.configurationManagerCollectionAssignmentTarget"}, Values{"#microsoft.graph.groupAssignmentTarget","#microsoft.graph.allLicensedUsersAssignmentTarget","#microsoft.graph.allDevicesAssignmentTarget","#microsoft.graph.exclusionGroupAssignmentTarget","#microsoft.graph.configurationManagerCollectionAssignmentTarget"}] String dataType;
+ [Write, Description("The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude."), ValueMap{"none","include","exclude"}, Values{"none","include","exclude"}] String deviceAndAppManagementAssignmentFilterType;
+ [Write, Description("The Id of the filter for the target assignment.")] String deviceAndAppManagementAssignmentFilterId;
+ [Write, Description("The group Id that is the target of the assignment.")] String groupId;
+ [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
+};
+
+[ClassVersion("1.0.0.0")]
+class MSFT_DeviceEnrollmentPlatformRestriction
+{
+ [Write, Description("Block the platform from enrolling.")] Boolean PlatformBlocked;
+ [Write, Description("Block personally owned devices from enrolling.")] Boolean PersonalDeviceEnrollmentBlocked;
+ [Write, Description("Min OS version supported.")] String OsMinimumVersion;
+ [Write, Description("Max OS version supported.")] String OsMaximumVersion;
+ [Write, Description("Collection of blocked Manufacturers.")] String BlockedManufacturers[];
+ [Write, Description("Collection of blocked Skus.")] String BlockedSkus[];
+};
+
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceEnrollmentPlatformRestriction")]
 class MSFT_IntuneDeviceEnrollmentPlatformRestriction : OMI_BaseResource
 {
-    [Key, Description("Display name of the device enrollment platform restriction.")] String DisplayName;
+    [Write, Description("Identity of the device enrollment platform restriction.")] String Identity;
+    [Write, Description("Display name of the device enrollment platform restriction.")] String DisplayName;
     [Write, Description("Description of the device enrollment platform restriction.")] String Description;
-    [Write, Description("N/A")] Boolean AndroidPlatformBlocked;
-    [Write, Description("N/A")] Boolean AndroidPersonalDeviceEnrollmentBlocked;
-    [Write, Description("N/A")] String AndroidOSMinimumVersion;
-    [Write, Description("N/A")] String AndroidOSMaximumVersion;
-    [Write, Description("N/A")] Boolean iOSPlatformBlocked;
-    [Write, Description("N/A")] Boolean iOSPersonalDeviceEnrollmentBlocked;
-    [Write, Description("N/A")] String iOSOSMinimumVersion;
-    [Write, Description("N/A")] String iOSOSMaximumVersion;
-    [Write, Description("N/A")] Boolean MacPlatformBlocked;
-    [Write, Description("N/A")] Boolean MacPersonalDeviceEnrollmentBlocked;
-    [Write, Description("N/A")] String MacOSMinimumVersion;
-    [Write, Description("N/A")] String MacOSMaximumVersion;
-    [Write, Description("N/A")] Boolean WindowsPlatformBlocked;
-    [Write, Description("N/A")] Boolean WindowsPersonalDeviceEnrollmentBlocked;
-    [Write, Description("N/A")] String WindowsOSMinimumVersion;
-    [Write, Description("N/A")] String WindowsOSMaximumVersion;
-    [Write, Description("N/A")] Boolean WindowsMobilePlatformBlocked;
-    [Write, Description("N/A")] Boolean WindowsMobilePersonalDeviceEnrollmentBlocked;
-    [Write, Description("N/A")] String WindowsMobileOSMinimumVersion;
-    [Write, Description("N/A")] String WindowsMobileOSMaximumVersion;
+    [Write, Description("Ios restrictions based on platform, platform operating system version, and device ownership."), EmbeddedInstance("MSFT_DeviceEnrollmentPlatformRestriction")] string IosRestriction;
+    [Write, Description("Windows restrictions based on platform, platform operating system version, and device ownership."), EmbeddedInstance("MSFT_DeviceEnrollmentPlatformRestriction")] string WindowsRestriction;
+    [Write, Description("Windows home Sku restrictions based on platform, platform operating system version, and device ownership."), EmbeddedInstance("MSFT_DeviceEnrollmentPlatformRestriction")] string WindowsHomeSkuRestriction;
+    [Write, Description("Windows Mobile restrictions based on platform, platform operating system version, and device ownership."), EmbeddedInstance("MSFT_DeviceEnrollmentPlatformRestriction")] string WindowsMobileRestriction;
+    [Write, Description("Android Device Administrator restrictions based on platform, platform operating system version, and device ownership."), EmbeddedInstance("MSFT_DeviceEnrollmentPlatformRestriction")] string AndroidRestriction;
+    [Write, Description("Android Entreprise restrictions based on platform, platform operating system version, and device ownership."), EmbeddedInstance("MSFT_DeviceEnrollmentPlatformRestriction")] string AndroidForWorkRestriction;
+    [Write, Description("Mac restrictions based on platform, platform operating system version, and device ownership."), EmbeddedInstance("MSFT_DeviceEnrollmentPlatformRestriction")] string MacRestriction;
+    [Write, Description("Mac OS restrictions based on platform, platform operating system version, and device ownership."), EmbeddedInstance("MSFT_DeviceEnrollmentPlatformRestriction")] string MacOSRestriction;
+    [Write, Description("Assignments of the policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] string Assignments[];
     [Write, Description("Present ensures the restriction exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
     [Write, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

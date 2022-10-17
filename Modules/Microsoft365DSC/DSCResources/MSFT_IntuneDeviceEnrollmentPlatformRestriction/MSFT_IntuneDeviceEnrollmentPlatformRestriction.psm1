@@ -4,7 +4,11 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
         [System.String]
         $DisplayName,
 
@@ -13,84 +17,40 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [System.Boolean]
-        $AndroidPlatformBlocked,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $IosRestriction,
 
         [Parameter()]
-        [System.Boolean]
-        $AndroidPersonalDeviceEnrollmentBlocked,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $WindowsRestriction,
 
         [Parameter()]
-        [System.String]
-        $AndroidOSMinimumVersion,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $WindowsHomeSkuRestriction,
 
         [Parameter()]
-        [System.String]
-        $AndroidOSMaximumVersion,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $WindowsMobileRestriction,
 
         [Parameter()]
-        [System.Boolean]
-        $iOSPlatformBlocked,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AndroidRestriction,
 
         [Parameter()]
-        [System.Boolean]
-        $iOSPersonalDeviceEnrollmentBlocked,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AndroidForWorkRestriction,
 
         [Parameter()]
-        [System.String]
-        $iOSOSMinimumVersion,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $MacRestriction,
 
         [Parameter()]
-        [System.String]
-        $iOSOSMaximumVersion,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $MacOSRestriction,
 
         [Parameter()]
-        [System.Boolean]
-        $MacPlatformBlocked,
-
-        [Parameter()]
-        [System.Boolean]
-        $MacPersonalDeviceEnrollmentBlocked,
-
-        [Parameter()]
-        [System.String]
-        $MacOSMinimumVersion,
-
-        [Parameter()]
-        [System.String]
-        $MacOSMaximumVersion,
-
-        [Parameter()]
-        [System.Boolean]
-        $WindowsPlatformBlocked,
-
-        [Parameter()]
-        [System.Boolean]
-        $WindowsPersonalDeviceEnrollmentBlocked,
-
-        [Parameter()]
-        [System.String]
-        $WindowsOSMinimumVersion,
-
-        [Parameter()]
-        [System.String]
-        $WindowsOSMaximumVersion,
-
-        [Parameter()]
-        [System.Boolean]
-        $WindowsMobilePlatformBlocked,
-
-        [Parameter()]
-        [System.Boolean]
-        $WindowsMobilePersonalDeviceEnrollmentBlocked,
-
-        [Parameter()]
-        [System.String]
-        $WindowsMobileOSMinimumVersion,
-
-        [Parameter()]
-        [System.String]
-        $WindowsMobileOSMaximumVersion,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -123,7 +83,8 @@ function Get-TargetResource
     )
     Write-Verbose -Message "Checking for the Intune Device Enrollment Restriction {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters -ProfileName beta
+    Select-MgProfile -Name beta
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -142,7 +103,17 @@ function Get-TargetResource
 
     try
     {
-        $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration' }
+
+        $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Identity -ErrorAction silentlyContinue
+
+        if ($null -eq $config)
+        {
+            Write-Verbose -Message "No Device Enrollment Platform Restriction {$Identity} was found"
+
+            $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" -ErrorAction silentlyContinue| Where-Object -FilterScript { `
+                    $_.AdditionalProperties.'@odata.type' -like '#microsoft.graph.deviceEnrollmentPlatform*Configuration' }
+        }
+
 
         if ($null -eq $config)
         {
@@ -150,30 +121,11 @@ function Get-TargetResource
             return $nullResult
         }
 
-        Write-Verbose -Message "Found Device Enrollment Platform Restriction with Name {$DisplayName}"
-        return @{
+        Write-Verbose -Message "Found Device Enrollment Platform Restriction with Name {$($config.DisplayName)}"
+        $results= @{
+            Identity                                     = $config.Id
             DisplayName                                  = $config.DisplayName
             Description                                  = $config.Description
-            AndroidPlatformBlocked                       = $config.AdditionalProperties.androidRestriction.platformBlocked
-            AndroidPersonalDeviceEnrollmentBlocked       = $config.AdditionalProperties.androidRestriction.personalDeviceEnrollmentBlocked
-            AndroidOSMinimumVersion                      = $config.AdditionalProperties.androidRestriction.osMinimumVersion
-            AndroidOSMaximumVersion                      = $config.AdditionalProperties.androidRestriction.osMaximumVersion
-            iOSPlatformBlocked                           = $config.AdditionalProperties.iosRestriction.platformBlocked
-            iOSPersonalDeviceEnrollmentBlocked           = $config.AdditionalProperties.iosRestriction.personalDeviceEnrollmentBlocked
-            iOSOSMinimumVersion                          = $config.AdditionalProperties.iosRestriction.osMinimumVersion
-            iOSOSMaximumVersion                          = $config.AdditionalProperties.iosRestriction.osMaximumVersion
-            MacPlatformBlocked                           = $config.AdditionalProperties.macOSRestriction.platformBlocked
-            MacPersonalDeviceEnrollmentBlocked           = $config.AdditionalProperties.macOSRestriction.personalDeviceEnrollmentBlocked
-            MacOSMinimumVersion                          = $config.AdditionalProperties.macOSRestriction.minimumVersion
-            MacOSMaximumVersion                          = $config.AdditionalProperties.macOSRestriction.osMaximumVersion
-            WindowsPlatformBlocked                       = $config.AdditionalProperties.windowsRestriction.platformBlocked
-            WindowsPersonalDeviceEnrollmentBlocked       = $config.AdditionalProperties.windowsRestriction.personalDeviceEnrollmentBlocked
-            WindowsOSMinimumVersion                      = $config.AdditionalProperties.windowsRestriction.osMinimumVersion
-            WindowsOSMaximumVersion                      = $config.AdditionalProperties.windowsRestriction.osMaximumVersion
-            WindowsMobilePlatformBlocked                 = $config.AdditionalProperties.windowsMobileRestriction.platformBlocked
-            WindowsMobilePersonalDeviceEnrollmentBlocked = $config.AdditionalProperties.windowsMobileRestriction.personalDeviceEnrollmentBlocked
-            WindowsMobileOSMinimumVersion                = $config.AdditionalProperties.windowsMobileRestriction.osMinimumVersion
-            WindowsMobileOSMaximumVersion                = $config.AdditionalProperties.windowsMobileRestriction.osMaximumVersion
             Ensure                                       = 'Present'
             Credential                                   = $Credential
             ApplicationId                                = $ApplicationId
@@ -182,6 +134,24 @@ function Get-TargetResource
             CertificateThumbprint                        = $CertificateThumbprint
             Managedidentity                              = $ManagedIdentity.IsPresent
         }
+
+        $results+=get-DevicePlatformRestrictionSetting -Properties $config.AdditionalProperties
+        $AssignmentsValues=Get-MgDeviceManagementDeviceEnrollmentConfigurationAssignment -DeviceEnrollmentConfigurationId $config.Id
+        $assignmentResult = @()
+        foreach ($assignmentEntry in $AssignmentsValues)
+        {
+            $assignmentValue = @{
+                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+                deviceAndAppManagementAssignmentFilterType = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()
+                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
+                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
+            }
+            $assignmentResult += $assignmentValue
+        }
+        $results.Add('Assignments', $assignmentResult)
+
+        return $results
+
     }
     catch
     {
@@ -206,7 +176,11 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
         [System.String]
         $DisplayName,
 
@@ -215,84 +189,40 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [System.Boolean]
-        $AndroidPlatformBlocked,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $IosRestriction,
 
         [Parameter()]
-        [System.Boolean]
-        $AndroidPersonalDeviceEnrollmentBlocked,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $WindowsRestriction,
 
         [Parameter()]
-        [System.String]
-        $AndroidOSMinimumVersion,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $WindowsHomeSkuRestriction,
 
         [Parameter()]
-        [System.String]
-        $AndroidOSMaximumVersion,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $WindowsMobileRestriction,
 
         [Parameter()]
-        [System.Boolean]
-        $iOSPlatformBlocked,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AndroidRestriction,
 
         [Parameter()]
-        [System.Boolean]
-        $iOSPersonalDeviceEnrollmentBlocked,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AndroidForWorkRestriction,
 
         [Parameter()]
-        [System.String]
-        $iOSOSMinimumVersion,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $MacRestriction,
 
         [Parameter()]
-        [System.String]
-        $iOSOSMaximumVersion,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $MacOSRestriction,
 
         [Parameter()]
-        [System.Boolean]
-        $MacPlatformBlocked,
-
-        [Parameter()]
-        [System.Boolean]
-        $MacPersonalDeviceEnrollmentBlocked,
-
-        [Parameter()]
-        [System.String]
-        $MacOSMinimumVersion,
-
-        [Parameter()]
-        [System.String]
-        $MacOSMaximumVersion,
-
-        [Parameter()]
-        [System.Boolean]
-        $WindowsPlatformBlocked,
-
-        [Parameter()]
-        [System.Boolean]
-        $WindowsPersonalDeviceEnrollmentBlocked,
-
-        [Parameter()]
-        [System.String]
-        $WindowsOSMinimumVersion,
-
-        [Parameter()]
-        [System.String]
-        $WindowsOSMaximumVersion,
-
-        [Parameter()]
-        [System.Boolean]
-        $WindowsMobilePlatformBlocked,
-
-        [Parameter()]
-        [System.Boolean]
-        $WindowsMobilePersonalDeviceEnrollmentBlocked,
-
-        [Parameter()]
-        [System.String]
-        $WindowsMobileOSMinimumVersion,
-
-        [Parameter()]
-        [System.String]
-        $WindowsMobileOSMaximumVersion,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -384,7 +314,11 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
         [System.String]
         $DisplayName,
 
@@ -393,84 +327,40 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [System.Boolean]
-        $AndroidPlatformBlocked,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $IosRestriction,
 
         [Parameter()]
-        [System.Boolean]
-        $AndroidPersonalDeviceEnrollmentBlocked,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $WindowsRestriction,
 
         [Parameter()]
-        [System.String]
-        $AndroidOSMinimumVersion,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $WindowsHomeSkuRestriction,
 
         [Parameter()]
-        [System.String]
-        $AndroidOSMaximumVersion,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $WindowsMobileRestriction,
 
         [Parameter()]
-        [System.Boolean]
-        $iOSPlatformBlocked,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AndroidRestriction,
 
         [Parameter()]
-        [System.Boolean]
-        $iOSPersonalDeviceEnrollmentBlocked,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AndroidForWorkRestriction,
 
         [Parameter()]
-        [System.String]
-        $iOSOSMinimumVersion,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $MacRestriction,
 
         [Parameter()]
-        [System.String]
-        $iOSOSMaximumVersion,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $MacOSRestriction,
 
         [Parameter()]
-        [System.Boolean]
-        $MacPlatformBlocked,
-
-        [Parameter()]
-        [System.Boolean]
-        $MacPersonalDeviceEnrollmentBlocked,
-
-        [Parameter()]
-        [System.String]
-        $MacOSMinimumVersion,
-
-        [Parameter()]
-        [System.String]
-        $MacOSMaximumVersion,
-
-        [Parameter()]
-        [System.Boolean]
-        $WindowsPlatformBlocked,
-
-        [Parameter()]
-        [System.Boolean]
-        $WindowsPersonalDeviceEnrollmentBlocked,
-
-        [Parameter()]
-        [System.String]
-        $WindowsOSMinimumVersion,
-
-        [Parameter()]
-        [System.String]
-        $WindowsOSMaximumVersion,
-
-        [Parameter()]
-        [System.Boolean]
-        $WindowsMobilePlatformBlocked,
-
-        [Parameter()]
-        [System.Boolean]
-        $WindowsMobilePersonalDeviceEnrollmentBlocked,
-
-        [Parameter()]
-        [System.String]
-        $WindowsMobileOSMinimumVersion,
-
-        [Parameter()]
-        [System.String]
-        $WindowsMobileOSMaximumVersion,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -515,20 +405,66 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of Device Enrollment Platform Restriction {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+    if($CurrentValues.Ensure -eq "Absent")
+    {
+        Write-Verbose -Message "Test-TargetResource returned $false"
+        return $false
+    }
+    $testResult=$true
 
-    $ValuesToCheck = $PSBoundParameters
+    #Compare Cim instances
+    foreach($key in $PSBoundParameters.Keys)
+    {
+        $source=$PSBoundParameters.$key
+        $target=$CurrentValues.$key
+        if($source.getType().Name -like "*CimInstance*")
+        {
+            $source=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
+
+            $testResult=Compare-M365DSCComplexObject `
+                -Source ($source) `
+                -Target ($target)
+
+            if(-Not $testResult)
+            {
+                $testResult=$false
+                break;
+            }
+
+            $ValuesToCheck.Remove($key)|Out-Null
+
+        }
+    }
+
     $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
 
-    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+    #Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    #Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+
+    #Convert any DateTime to String
+    foreach ($key in $ValuesToCheck.Keys)
+    {
+        if(($null -ne $CurrentValues[$key]) `
+            -and ($CurrentValues[$key].getType().Name -eq 'DateTime'))
+        {
+            $CurrentValues[$key]=$CurrentValues[$key].toString()
+        }
+    }
+
+    #Compare basic parameters
+    if($testResult)
+    {
+        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $ValuesToCheck.Keys
+    }
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -570,7 +506,8 @@ function Export-TargetResource
         $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters -ProfileName beta
+    Select-MgProfile -Name beta
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -587,7 +524,8 @@ function Export-TargetResource
     try
     {
         [array]$configs = Get-MgDeviceManagementDeviceEnrollmentConfiguration -All:$true -Filter $Filter -ErrorAction Stop `
-        | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration' }
+        | Where-Object -FilterScript {$_.AdditionalProperties.'@odata.type' -like '#microsoft.graph.deviceEnrollmentPlatform*Configuration'}
+
         $i = 1
         $dscContent = ''
         if ($configs.Length -eq 0)
@@ -602,6 +540,7 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($configs.Count)] $($config.displayName)" -NoNewline
             $params = @{
+                Identity              = $config.id
                 DisplayName           = $config.displayName
                 Ensure                = 'Present'
                 Credential            = $Credential
@@ -612,6 +551,124 @@ function Export-TargetResource
                 Managedidentity       = $ManagedIdentity.IsPresent
             }
             $Results = Get-TargetResource @Params
+
+            if ($Results.Assignments)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Assignments) -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
+                if ($complexTypeStringResult)
+                {
+                    $Results.Assignments = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Assignments') | Out-Null
+                }
+            }
+
+            if ($Results.IosRestriction)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ($Results.IosRestriction) -CIMInstanceName DeviceEnrollmentPlatformRestriction
+                if ($complexTypeStringResult)
+                {
+                    $Results.IosRestriction = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('IosRestriction') | Out-Null
+                }
+            }
+
+            if ($Results.WindowsRestriction)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ($Results.WindowsRestriction) -CIMInstanceName DeviceEnrollmentPlatformRestriction
+                if ($complexTypeStringResult)
+                {
+                    $Results.WindowsRestriction = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('WindowsRestriction') | Out-Null
+                }
+            }
+
+            if ($Results.WindowsHomeSkuRestriction)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ($Results.WindowsHomeSkuRestriction) -CIMInstanceName DeviceEnrollmentPlatformRestriction
+                if ($complexTypeStringResult)
+                {
+                    $Results.WindowsHomeSkuRestriction = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('WindowsHomeSkuRestriction') | Out-Null
+                }
+            }
+            if ($Results.WindowsMobileRestriction)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ($Results.WindowsMobileRestriction) -CIMInstanceName DeviceEnrollmentPlatformRestriction
+                if ($complexTypeStringResult)
+                {
+                    $Results.WindowsMobileRestriction = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('WindowsMobileRestriction') | Out-Null
+                }
+            }
+
+            if ($Results.AndroidRestriction)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ($Results.AndroidRestriction) -CIMInstanceName DeviceEnrollmentPlatformRestriction
+                if ($complexTypeStringResult)
+                {
+                    $Results.AndroidRestriction = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('AndroidRestriction') | Out-Null
+                }
+            }
+
+            if ($Results.AndroidForWorkRestriction)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ($Results.AndroidForWorkRestriction) -CIMInstanceName DeviceEnrollmentPlatformRestriction
+                if ($complexTypeStringResult)
+                {
+                    $Results.AndroidForWorkRestriction = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('AndroidForWorkRestriction') | Out-Null
+                }
+            }
+
+            if ($Results.MacRestriction)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ($Results.MacRestriction) -CIMInstanceName DeviceEnrollmentPlatformRestriction
+                if ($complexTypeStringResult)
+                {
+                    $Results.MacRestriction = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('MacRestriction') | Out-Null
+                }
+            }
+
+            if ($Results.MacOSRestriction)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ($Results.MacOSRestriction) -CIMInstanceName DeviceEnrollmentPlatformRestriction
+                if ($complexTypeStringResult)
+                {
+                    $Results.MacOSRestriction = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('MacOSRestriction') | Out-Null
+                }
+            }
+
+
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -619,6 +676,57 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
+
+
+            if ($Results.Assignments)
+            {
+                $isCIMArray = $false
+                if ($Results.Assignments.getType().Fullname -like '*[[\]]')
+                {
+                    $isCIMArray = $true
+                }
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$isCIMArray
+            }
+
+            if ($Results.IosRestriction)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'IosRestriction'
+            }
+
+            if ($Results.WindowsRestriction)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'WindowsRestriction'
+            }
+
+            if ($Results.WindowsHomeSkuRestriction)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'WindowsHomeSkuRestriction'
+            }
+            if ($Results.WindowsMobileRestriction)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'WindowsMobileRestriction'
+            }
+
+            if ($Results.AndroidRestriction)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AndroidRestriction'
+            }
+
+            if ($Results.AndroidForWorkRestriction)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AndroidForWorkRestriction'
+            }
+
+            if ($Results.MacRestriction)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'MacRestriction'
+            }
+
+            if ($Results.MacOSRestriction)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'MacOSRestriction'
+            }
+
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -629,6 +737,8 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $_
+
         Write-Host $Global:M365DSCEmojiRedX
         if ($_.Exception -like '*401*')
         {
@@ -650,7 +760,100 @@ function Export-TargetResource
     }
 }
 
+function Get-DevicePlatformRestrictionSetting
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = 'true')]
+        [System.Collections.Hashtable]
+        $Properties
+    )
 
+    $results=@{}
+
+    if($null -ne $Properties.platformType)
+    {
+        $keyName=($Properties.platformType).Substring(0,1).toUpper()+($Properties.platformType).substring(1,$Properties.platformType.length-1)+'Restriction'
+        $keyValue=[Hashtable]::new($Properties.platformRestriction)
+        $hash=@{}
+        foreach($key in $keyValue.Keys)
+        {
+            if($null -ne $keyValue.$key)
+            {
+                switch -Wildcard ($keyValue.$key.getType().name)
+                {
+                    "*[[\]]"
+                    {
+                        if($keyValue.$key.count -gt 0)
+                        {
+                            $hash.add($key,$keyValue.$key)
+                        }
+                    }
+                    "String"
+                    {
+                        if(-Not [String]::IsNullOrEmpty($keyValue.$key))
+                        {
+                            $hash.add($key,$keyValue.$key)
+                        }
+                    }
+                    Default
+                    {
+                        $hash.add($key,$keyValue.$key)
+                    }
+                }
+            }
+        }
+        $results.add($keyName,$hash)
+    }
+    else
+    {
+        $platformRestrictions=[Hashtable]::new($Properties)
+        $platformRestrictions.remove('@odata.type')
+        $platformRestrictions.remove('@odata.context')
+        foreach($key in $platformRestrictions.Keys)
+        {
+            $keyName=$key.Substring(0,1).toUpper()+$key.substring(1,$key.length-1)
+            $keyValue=[Hashtable]::new($platformRestrictions.$key)
+            $hash=@{}
+            foreach($key in $keyValue.Keys)
+            {
+                if($null -ne $keyValue.$key)
+                {
+                    switch -Wildcard ($keyValue.$key.getType().name)
+                    {
+                        "*[[\]]"
+                        {
+                            if($keyValue.$key.count -gt 0)
+                            {
+                                $hash.add($key,$keyValue.$key)
+                            }
+                        }
+                        "String"
+                        {
+                            if(-Not [String]::IsNullOrEmpty($keyValue.$key))
+                            {
+                                $hash.add($key,$keyValue.$key)
+                            }
+                        }
+                        Default
+                        {
+                            $hash.add($key,$keyValue.$key)
+                        }
+                    }
+
+                }
+            }
+            $results.add($keyName,$hash)
+
+            #$results.add($keyName,[Hashtable]::new($platformRestrictions.$key))
+        }
+
+    }
+
+    return $results
+
+}
 function Get-M365DSCIntuneDeviceEnrollmentPlatformRestrictionAdditionalProperties
 {
     [CmdletBinding()]
@@ -696,5 +899,566 @@ function Get-M365DSCIntuneDeviceEnrollmentPlatformRestrictionAdditionalPropertie
     }
     return $results
 }
+function Update-DeviceConfigurationPolicyAssignments
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceConfigurationPolicyId,
 
-Export-ModuleMember -Function *-TargetResource
+        [Parameter()]
+        [Array]
+        $Targets
+    )
+    try
+    {
+        $configurationPolicyAssignments = @()
+
+        $Uri="https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/$DeviceConfigurationPolicyId/assign"
+
+        foreach ($target in $targets)
+        {
+            $formattedTarget = @{'@odata.type' = $target.dataType }
+            if ($target.groupId)
+            {
+                $formattedTarget.Add('groupId', $target.groupId)
+            }
+            if ($target.collectionId)
+            {
+                $formattedTarget.Add('collectionId', $target.collectionId)
+            }
+            if ($target.deviceAndAppManagementAssignmentFilterType)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType', $target.deviceAndAppManagementAssignmentFilterType)
+            }
+            if ($target.deviceAndAppManagementAssignmentFilterId)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId', $target.deviceAndAppManagementAssignmentFilterId)
+            }
+            $configurationPolicyAssignments += @{'target' = $formattedTarget }
+        }
+        $body = @{'assignments' = $configurationPolicyAssignments } | ConvertTo-Json -Depth 20
+        #write-verbose -Message $body
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
+
+    }
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ''
+            $tenantIdValue = $Credential.UserName.Split('@')[1]
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return $null
+    }
+
+
+}
+
+function Get-M365DSCDRGComplexTypeToHashtable
+{
+    [CmdletBinding()]
+    [OutputType([hashtable],[hashtable[]])]
+    param(
+        [Parameter()]
+        $ComplexObject
+    )
+
+    if($null -eq $ComplexObject)
+    {
+        return $null
+    }
+
+
+    if($ComplexObject.getType().Fullname -like "*hashtable")
+    {
+        return $ComplexObject
+    }
+    if($ComplexObject.getType().Fullname -like "*hashtable[[\]]")
+    {
+        return ,[hashtable[]]$ComplexObject
+    }
+
+
+    if($ComplexObject.gettype().fullname -like "*[[\]]")
+    {
+        $results=@()
+
+        foreach($item in $ComplexObject)
+        {
+            if($item)
+            {
+                $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
+                $results+=$hash
+            }
+        }
+
+        # PowerShell returns all non-captured stream output, not just the argument of the return statement.
+        #An empty array is mangled into $null in the process.
+        #However, an array can be preserved on return by prepending it with the array construction operator (,)
+        return ,[hashtable[]]$results
+    }
+
+    $results = @{}
+    $keys = $ComplexObject | Get-Member | Where-Object -FilterScript {$_.MemberType -eq 'Property' -and $_.Name -ne 'AdditionalProperties'}
+
+    foreach ($key in $keys)
+    {
+
+        if($ComplexObject.$($key.Name))
+        {
+            $keyName = $key.Name[0].ToString().ToLower() + $key.Name.Substring(1, $key.Name.Length - 1)
+
+            if($ComplexObject.$($key.Name).gettype().fullname -like "*CimInstance*")
+            {
+                $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$($key.Name)
+
+                $results.Add($keyName, $hash)
+            }
+            else
+            {
+                $results.Add($keyName, $ComplexObject.$($key.Name))
+            }
+        }
+    }
+
+    return [hashtable]$results
+}
+
+function Get-M365DSCDRGComplexTypeToString
+{
+    [CmdletBinding()]
+    #[OutputType([System.String])]
+    param(
+        [Parameter()]
+        $ComplexObject,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $CIMInstanceName,
+
+        [Parameter()]
+        [Array]
+        $ComplexTypeMapping,
+
+        [Parameter()]
+        [System.String]
+        $Whitespace="",
+
+        [Parameter()]
+        [switch]
+        $isArray=$false
+    )
+
+    if ($null -eq $ComplexObject)
+    {
+        return $null
+    }
+
+    #If ComplexObject  is an Array
+    if ($ComplexObject.GetType().FullName -like "*[[\]]")
+    {
+        $currentProperty=@()
+        foreach ($item in $ComplexObject)
+        {
+            $split=@{
+                'ComplexObject'=$item
+                'CIMInstanceName'=$CIMInstanceName
+                'Whitespace'="                $whitespace"
+            }
+            if ($ComplexTypeMapping)
+            {
+                $split.add('ComplexTypeMapping',$ComplexTypeMapping)
+            }
+
+            $currentProperty += Get-M365DSCDRGComplexTypeToString -isArray:$true @split
+
+        }
+
+        # PowerShell returns all non-captured stream output, not just the argument of the return statement.
+        #An empty array is mangled into $null in the process.
+        #However, an array can be preserved on return by prepending it with the array construction operator (,)
+        return ,$currentProperty
+    }
+
+    $currentProperty=""
+    if($isArray)
+    {
+        $currentProperty += "`r`n"
+    }
+    $currentProperty += "$whitespace`MSFT_$CIMInstanceName{`r`n"
+    $keyNotNull = 0
+    foreach ($key in $ComplexObject.Keys)
+    {
+        if ($null -ne $ComplexObject.$key)
+        {
+            $keyNotNull++
+            if ($ComplexObject.$key.GetType().FullName -like "Microsoft.Graph.PowerShell.Models.*" -or $key -in $ComplexTypeMapping.Name)
+            {
+                $hashPropertyType=$ComplexObject[$key].GetType().Name.tolower()
+
+                #overwrite type if object defined in mapping complextypemapping
+                if($key -in $ComplexTypeMapping.Name)
+                {
+                    $hashPropertyType=($ComplexTypeMapping|Where-Object -FilterScript {$_.Name -eq $key}).CimInstanceName
+                    $hashProperty=$ComplexObject[$key]
+                }
+                else
+                {
+                    $hashProperty=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key]
+                }
+
+                if($key -notin $ComplexTypeMapping.Name)
+                {
+                    $Whitespace+="            "
+                }
+
+                if(-not $isArray -or ($isArray -and $key -in $ComplexTypeMapping.Name ))
+                {
+                    $currentProperty += $whitespace + $key + " = "
+                    if($ComplexObject[$key].GetType().FullName -like "*[[\]]")
+                    {
+                        $currentProperty += "@("
+                    }
+                }
+
+                if($key -in $ComplexTypeMapping.Name)
+                {
+                    $Whitespace=""
+
+                }
+                $currentProperty += Get-M365DSCDRGComplexTypeToString `
+                                -ComplexObject $hashProperty `
+                                -CIMInstanceName $hashPropertyType `
+                                -Whitespace $Whitespace `
+                                -ComplexTypeMapping $ComplexTypeMapping
+
+                if($ComplexObject.$key.GetType().FullName -like "*[[\]]")
+                {
+                    $currentProperty += ")"
+                }
+            }
+            else
+            {
+                if(-not $isArray)
+                {
+                    $Whitespace= "            "
+                }
+                $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $ComplexObject[$key] -Space ($Whitespace+"    ")
+            }
+        }
+        else
+        {
+            $mappedKey=$ComplexTypeMapping|where-object -filterscript {$_.name -eq $key}
+
+            if($mappedKey -and $mappedKey.isRequired)
+            {
+                if($mappedKey.isArray)
+                {
+                    $currentProperty += "$Whitespace    $key = @()`r`n"
+                }
+                else
+                {
+                    $currentProperty += "$Whitespace    $key = `$null`r`n"
+                }
+            }
+        }
+    }
+    $currentProperty += "$Whitespace}"
+
+    return $currentProperty
+}
+
+Function Get-M365DSCDRGSimpleObjectTypeToString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $Key,
+
+        [Parameter(Mandatory = 'true')]
+        $Value,
+
+        [Parameter()]
+        [System.String]
+        $Space="                "
+
+    )
+
+    $returnValue=""
+    switch -Wildcard ($Value.GetType().Fullname )
+    {
+        "*.Boolean"
+        {
+            $returnValue= $Space + $Key + " = `$" + $Value.ToString() + "`r`n"
+        }
+        "*.String"
+        {
+            if($key -eq '@odata.type')
+            {
+                $key='odataType'
+            }
+            $returnValue= $Space + $Key + " = '" + $Value + "'`r`n"
+        }
+        "*.DateTime"
+        {
+            $returnValue= $Space + $Key + " = '" + $Value + "'`r`n"
+        }
+        "*[[\]]"
+        {
+            $returnValue= $Space + $key + " = @("
+            $whitespace=""
+            $newline=""
+            if($Value.count -gt 1)
+            {
+                $returnValue += "`r`n"
+                $whitespace=$Space+"    "
+                $newline="`r`n"
+            }
+            foreach ($item in $Value)
+            {
+                switch -Wildcard ($item.GetType().Fullname )
+                {
+                    "*.String"
+                    {
+                        $returnValue += "$whitespace'$item'$newline"
+                    }
+                    "*.DateTime"
+                    {
+                        $returnValue += "$whitespace'$item'$newline"
+                    }
+                    Default
+                    {
+                        $returnValue += "$whitespace$item$newline"
+                    }
+                }
+            }
+            if($Value.count -gt 1)
+            {
+                $returnValue += "$Space)`r`n"
+            }
+            else
+            {
+                $returnValue += ")`r`n"
+
+            }
+        }
+        Default
+        {
+            $returnValue= $Space + $Key + " = " + $Value + "`r`n"
+        }
+    }
+    return $returnValue
+}
+
+function Compare-M365DSCComplexObject
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param(
+        [Parameter()]
+        $Source,
+        [Parameter()]
+        $Target
+    )
+
+    #Comparing full objects
+    if($null -eq  $Source  -and $null -eq $Target)
+    {
+        return $true
+    }
+
+    $sourceValue=""
+    $targetValue=""
+    if (($null -eq $Source) -xor ($null -eq $Target))
+    {
+        if($null -eq $Source)
+        {
+            $sourceValue="Source is null"
+        }
+
+        if($null -eq $Target)
+        {
+            $targetValue="Target is null"
+        }
+        Write-Verbose -Message "Configuration drift - Complex object: {$sourceValue$targetValue}"
+        return $false
+    }
+
+    if($Source.getType().FullName -like "*CimInstance[[\]]" -or $Source.getType().FullName -like "*Hashtable[[\]]")
+    {
+        if($source.count -ne $target.count)
+        {
+            write-verbose ("source")
+            write-verbose ($source|fl|out-string)
+
+            write-verbose ("Target")
+            write-verbose ($target|fl|out-string)
+
+            Write-Verbose -Message "Configuration drift - The complex array have different number of items: Source {$($source.count)} Target {$($target.count)}"
+            return $false
+        }
+        if($source.count -eq 0)
+        {
+            return $true
+        }
+
+        $i=0
+        foreach($item in $Source)
+        {
+
+            $compareResult= Compare-M365DSCComplexObject `
+                    -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Source[$i]) `
+                    -Target $Target[$i]
+
+            if(-not $compareResult)
+            {
+                Write-Verbose -Message "Configuration drift - The complex array items are not identical"
+                return $false
+            }
+            $i++
+        }
+        return $true
+    }
+
+    $keys= $Source.Keys|Where-Object -FilterScript {$_ -ne "PSComputerName"}
+    foreach ($key in $keys)
+    {
+        #write-verbose -message "Comparing key: {$key}"
+        #Matching possible key names between Source and Target
+        $skey=$key
+        $tkey=$key
+        if($key -eq 'odataType')
+        {
+            $skey='@odata.type'
+        }
+        else
+        {
+            $tmpkey=$Target.keys|Where-Object -FilterScript {$_ -eq "$key"}
+            if($tkey)
+            {
+                $tkey=$tmpkey|Select-Object -First 1
+            }
+        }
+
+        $sourceValue=$Source.$key
+        $targetValue=$Target.$tkey
+        #One of the item is null and not the other
+        if (($null -eq $Source.$skey) -xor ($null -eq $Target.$tkey))
+        {
+
+            if($null -eq $Source.$skey)
+            {
+                $sourceValue="null"
+            }
+
+            if($null -eq $Target.$tkey)
+            {
+                $targetValue="null"
+            }
+
+            Write-Verbose -Message "Configuration drift - key: $key Source {$sourceValue} Target {$targetValue}"
+            return $false
+        }
+
+        #Both keys aren't null or empty
+        if(($null -ne $Source.$skey) -and ($null -ne $Target.$tkey))
+        {
+            if($Source.$skey.getType().FullName -like "*CimInstance*" -or $Source.$skey.getType().FullName -like "*hashtable*"  )
+            {
+                #Recursive call for complex object
+                $compareResult= Compare-M365DSCComplexObject `
+                    -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Source.$skey) `
+                    -Target $Target.$tkey
+
+                if(-not $compareResult)
+                {
+                    Write-Verbose -Message "Configuration drift - complex object key: $key Source {$sourceValue} Target {$targetValue}"
+                    return $false
+                }
+            }
+            else
+            {
+                #Simple object comparison
+                $referenceObject=$Target.$tkey
+                $differenceObject=$Source.$skey
+
+                $compareResult = Compare-Object `
+                    -ReferenceObject ($referenceObject) `
+                    -DifferenceObject ($differenceObject)
+
+                if ($null -ne $compareResult)
+                {
+                    Write-Verbose -Message "Configuration drift - simple object key: $key Source {$sourceValue} Target {$targetValue}"
+                    return $false
+                }
+
+            }
+
+        }
+    }
+
+    return $true
+}
+function Convert-M365DSCDRGComplexTypeToHashtable
+{
+    [CmdletBinding()]
+    [OutputType([hashtable],[hashtable[]])]
+    param(
+        [Parameter(Mandatory = 'true')]
+        $ComplexObject
+    )
+
+
+    if($ComplexObject.getType().Fullname -like "*[[\]]")
+    {
+        $results=@()
+        foreach($item in $ComplexObject)
+        {
+            $hash=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
+            $results+=$hash
+        }
+
+        #Write-Verbose -Message ("Convert-M365DSCDRGComplexTypeToHashtable >>> results: "+(convertTo-JSON $results -Depth 20))
+        # PowerShell returns all non-captured stream output, not just the argument of the return statement.
+        #An empty array is mangled into $null in the process.
+        #However, an array can be preserved on return by prepending it with the array construction operator (,)
+        return ,[hashtable[]]$results
+    }
+    $hashComplexObject = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject
+
+    if($hashComplexObject)
+    {
+
+        $results=$hashComplexObject.clone()
+        $keys=$hashComplexObject.Keys|Where-Object -FilterScript {$_ -ne 'PSComputerName'}
+        foreach ($key in $keys)
+        {
+            if($hashComplexObject[$key] -and $hashComplexObject[$key].getType().Fullname -like "*CimInstance*")
+            {
+                $results[$key]=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $hashComplexObject[$key]
+            }
+            else
+            {
+                $propertyName = $key[0].ToString().ToLower() + $key.Substring(1, $key.Length - 1)
+                $propertyValue=$results[$key]
+                $results.remove($key)|out-null
+                $results.add($propertyName,$propertyValue)
+            }
+        }
+    }
+    return [hashtable]$results
+}
+Export-ModuleMember -Function *-TargetResource,*
