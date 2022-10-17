@@ -683,12 +683,13 @@ function Get-M365DSCResourceKey
         [System.Collections.Hashtable]
         $Resource
     )
-
-    if ($Resource.Contains("IsSingleInstance"))
+    $resourceInfo = Get-DscResource ("MSFT_$($Resource.ResourceName)") -Module 'Microsoft365DSC'
+    [Array]$mandatoryParameters = $resourceInfo.Properties | Where-Object -FilterScript {$_.IsMandatory}
+    if ($Resource.Contains("IsSingleInstance") -and $mandatoryParameters.Name.Contains("IsSingleInstance"))
     {
         return @("IsSingleInstance")
     }
-    elseif ($Resource.Contains("DisplayName"))
+    elseif ($Resource.Contains("DisplayName") -and $mandatoryParameters.Name.Contains("DisplayName"))
     {
         if ($Resource.ResourceName -eq 'AADMSGroup' -and -not [System.String]::IsNullOrEmpty($Resource.Id))
         {
@@ -706,51 +707,51 @@ function Get-M365DSCResourceKey
         }
         return @("DisplayName")
     }
-    elseif ($Resource.Contains("Identity"))
+    elseif ($Resource.Contains("Identity") -and $mandatoryParameters.Name.Contains("Identity"))
     {
         return @("Identity")
     }
-    elseif ($Resource.Contains("Name"))
+    elseif ($Resource.Contains("Name") -and $mandatoryParameters.Name.Contains("Name"))
     {
         return @("Name")
     }
-    elseif ($Resource.Contains("Url"))
+    elseif ($Resource.Contains("Url") -and $mandatoryParameters.Name.Contains("Url"))
     {
         return @("Url")
     }
-    elseif ($Resource.Contains("Organization"))
+    elseif ($Resource.Contains("Organization") -and $mandatoryParameters.Name.Contains("Organization"))
     {
         return @("Organization")
     }
-    elseif ($Resource.Contains("CDNType"))
+    elseif ($Resource.Contains("CDNType") -and $mandatoryParameters.Name.Contains("CDNType"))
     {
         return @("CDNType")
     }
-    elseif ($Resource.Contains("Action") -and $Resource.ResourceName -eq 'SCComplianceSearchAction')
+    elseif ($Resource.Contains("Action") -and $Resource.ResourceName -eq 'SCComplianceSearchAction' -and $mandatoryParameters.Name.Contains("Action"))
     {
         return @("SearchName", "Action")
     }
-    elseif ($Resource.Contains("Workload") -and $Resource.ResourceName -eq 'SCAuditConfigurationPolicy')
+    elseif ($Resource.Contains("Workload") -and $Resource.ResourceName -eq 'SCAuditConfigurationPolicy' -and $mandatoryParameters.Name.Contains("Workload"))
     {
         return @("Workload")
     }
-    elseif ($Resource.Contains("Title") -and $Resource.ResourceName -eq 'SPOSiteDesign')
+    elseif ($Resource.Contains("Title") -and $Resource.ResourceName -eq 'SPOSiteDesign' -and $mandatoryParameters.Name.Contains("Title"))
     {
         return @("Title")
     }
-    elseif ($Resource.Contains("SiteDesignTitle"))
+    elseif ($Resource.Contains("SiteDesignTitle") -and $mandatoryParameters.Name.Contains("SiteDesignTitle"))
     {
         return @("SiteDesignTitle")
     }
-    elseif ($Resource.Contains("Key") -and $Resource.ResourceName -eq 'SPOStorageEntity')
+    elseif ($Resource.Contains("Key") -and $Resource.ResourceName -eq 'SPOStorageEntity' -and $mandatoryParameters.Name.Contains("Key"))
     {
         return @("Key")
     }
-    elseif ($Resource.Contains("Usage"))
+    elseif ($Resource.Contains("Usage") -and $mandatoryParameters.Name.Contains("Usage"))
     {
         return @("Usage")
     }
-    elseif ($Resource.Contains("OrgWideAccount"))
+    elseif ($Resource.Contains("OrgWideAccount") -and $mandatoryParameters.Name.Contains("OrgWideAccount"))
     {
         return @("OrgWideAccount")
     }
