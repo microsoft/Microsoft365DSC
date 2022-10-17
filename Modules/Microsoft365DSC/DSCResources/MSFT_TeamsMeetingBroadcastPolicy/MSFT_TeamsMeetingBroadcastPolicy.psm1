@@ -68,7 +68,7 @@ function Get-TargetResource
                 BroadcastAttendeeVisibilityMode = $config.BroadcastAttendeeVisibilityMode
                 BroadcastRecordingMode          = $config.BroadcastRecordingMode
                 Ensure                          = 'Present'
-                Credential              = $Credential
+                Credential                      = $Credential
             }
         }
         return $nullReturn

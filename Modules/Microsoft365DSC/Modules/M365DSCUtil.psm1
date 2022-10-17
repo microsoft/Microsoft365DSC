@@ -888,7 +888,7 @@ function Test-M365DSCParameterState
         $EventMessage += "    </DesiredValues>`r`n"
         $EventMessage += '</M365DSCEvent>'
 
-        Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+        Add-M365DSCEvent -Message $EventMessage -EventType 'Drift' -EntryType 'Warning' `
             -EventID 1 -Source $Source
     }
 

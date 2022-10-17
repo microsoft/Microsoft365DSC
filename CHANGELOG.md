@@ -18,7 +18,6 @@
   * Standardizing the functions to test versions of the module and dependencies.
   FIXES [#2232](https://github.com/microsoft/Microsoft365DSC/issues/2232)
 
-
 # 1.22.1012.1
 
 * EXOManagementRoleAssignment
