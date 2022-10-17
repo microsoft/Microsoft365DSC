@@ -47,7 +47,6 @@ nav:
           - 'Test-M365DSCAgent': 'user-guide/cmdlets/Test-M365DSCAgent.md'
           - 'Test-M365DSCDependenciesForNewVersions': 'user-guide/cmdlets/Test-M365DSCDependenciesForNewVersions.md'
           - 'Test-M365DSCModuleValidity': 'user-guide/cmdlets/Test-M365DSCModuleValidity.md'
-          - 'Test-M365DSCNewVersionAvailable': 'user-guide/cmdlets/Test-M365DSCNewVersionAvailable.md'
           - 'Uninstall-M365DSCOutdatedDependencies': 'user-guide/cmdlets/Uninstall-M365DSCOutdatedDependencies.md'
           - 'Update-M365DSCAllowedGraphScopes': 'user-guide/cmdlets/Update-M365DSCAllowedGraphScopes.md'
           - 'Update-M365DSCAzureAdApplication': 'user-guide/cmdlets/Update-M365DSCAzureAdApplication.md'

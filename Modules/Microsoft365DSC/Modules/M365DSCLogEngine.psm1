@@ -144,13 +144,20 @@ function Add-M365DSCEvent
             $message = $message.Substring(0, 32766)
         }
 
-        Write-EventLog -LogName $LogName -Source $Source `
-            -EventId $EventID -Message $Message -EntryType $EntryType
-
         if (-not [System.String]::IsNullOrEmpty($EventType))
         {
             Send-M365DSCNotificationEndPointMessage -EventDetails $Message `
                 -EventType $EventType
+        }
+
+        try
+        {
+            Write-EventLog -LogName $LogName -Source $Source `
+                -EventId $EventID -Message $Message -EntryType $EntryType -ErrorAction Stop
+        }
+        catch
+        {
+            Write-Verbose $_
         }
     }
     catch
