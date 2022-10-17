@@ -2,6 +2,9 @@
 
 # Unreleased
 
+* AADConditionalAccessPolicy
+  * Fixed issue where if ExcludePlatforms was specified and the IncludePlatforms is empty, we need to set the latest to 'all';
+  FIXES [#2337](https://github.com/microsoft/Microsoft365DSC/issues/2337)
 * EXOOrganizationRelationship
   * Add support for new cross-tenant mailbox migration parameters: MailboxMoveCapability, MailboxMovePublishedScopes, OauthApplicationId
 * DEPENDENCIES
@@ -14,7 +17,6 @@
   FIXES [#2236](https://github.com/microsoft/Microsoft365DSC/issues/2236)
   * Standardizing the functions to test versions of the module and dependencies.
   FIXES [#2232](https://github.com/microsoft/Microsoft365DSC/issues/2232)
-
 
 # 1.22.1012.1
 
