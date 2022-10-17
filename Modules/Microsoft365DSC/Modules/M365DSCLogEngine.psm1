@@ -46,6 +46,7 @@ function New-M365DSCLogEntry
             $driftedData.Add("TenantId", $TenantId)
         }
         Add-M365DSCTelemetryEvent -Type "Error" -Data $driftedData
+        Add-M365DSCEvent -EventType "Error" Source $Source -Message $Message -EntryType 'Error'
         #endregion
 
         # Obtain the ID of the current PowerShell session. While this may
@@ -104,9 +105,13 @@ function Add-M365DSCEvent
 
         [Parameter()]
         [System.String]
+        [ValidateSet('Drift', 'Error', 'Warning')]
+        $EventType,
+
+        [Parameter()]
+        [System.String]
         $TenantId
     )
-
     $LogName = 'M365DSC'
 
     try
@@ -137,6 +142,12 @@ function Add-M365DSCEvent
         if ($message.Length -gt 32766)
         {
             $message = $message.Substring(0, 32766)
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($EventType))
+        {
+            Send-M365DSCNotificationEndPointMessage -EventDetails $Message `
+                -EventType $EventType
         }
 
         try
@@ -318,8 +329,239 @@ function Export-M365DSCDiagnosticData
     Write-Host ('Completed with export. Information exported to {0}' -f $ExportFilePath) -ForegroundColor Yellow
 }
 
+<#
+.Description
+This function attempts to register a new notification endpoint in registry.
+
+.Parameter Url
+Represents the Url of the endpoint to be contacted when events are detected.
+
+.Parameter EventType
+Represents the type of events that need to be reported to the endpoint.
+
+.Functionality
+Public
+#>
+function New-M365DSCNotificationEndPointRegistration
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Url,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('Drift','Error','Warning')]
+        $EventType
+    )
+
+    # Get current notification endpoint registrations from registry and parse them into an object.
+    $CurrentNotificationEndpoints = ([System.Environment]::GetEnvironmentVariable('M365DSCNotificationEndPointRegistrations', `
+                [System.EnvironmentVariableTarget]::Machine))
+    if ($null -ne $CurrentNotificationEndpoints)
+    {
+        $template = '{Url*:https://contoso.com}|{EventType:Error};{Url*:https://contoso.com}|{EventType:Error};'
+        $CurrentNotificationEndpointsAsObject = ConvertFrom-String $CurrentNotificationEndpoints -TemplateContent $template
+    }
+
+    # Check to see if a notification endpoint registration with the same url and for the same event type already exists or not
+    $existingInstance = $CurrentNotificationEndpointsAsObject | Where-Object -FilterScript {$_.Url -eq $url -and $_.EventType -eq $EventType}
+    if ($null -ne $existingInstance)
+    {
+        throw "An existing endpoint notification registration on {$url} for {$EventType} already exists."
+    }
+
+    # If no exisiting instances, add the current one to the registry entry
+    $CurrentNotificationEndpoints += "$($Url.Replace('|','').Replace(';',''))|$EventType;"
+    [System.Environment]::SetEnvironmentVariable('M365DSCNotificationEndPointRegistrations', $CurrentNotificationEndpoints, `
+                [System.EnvironmentVariableTarget]::Machine)
+}
+
+<#
+.Description
+This function attempts to remove a new notification endpoint in registry.
+
+.Parameter Url
+Represents the Url of the endpoint to be contacted when events are detected.
+
+.Parameter EventType
+Represents the type of events that need to be reported to the endpoint.
+
+.Functionality
+Public
+#>
+function Remove-M365DSCNotificationEndPointRegistration
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Url,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('Drift','Error','Warning')]
+        $EventType
+    )
+
+    # Get current notification endpoint registrations from registry and parse them into an object.
+    $CurrentNotificationEndpoints = ([System.Environment]::GetEnvironmentVariable('M365DSCNotificationEndPointRegistrations', `
+        [System.EnvironmentVariableTarget]::Machine))
+    if ($null -ne $CurrentNotificationEndpoints)
+    {
+        $template = '{Url*:https://contoso.com}|{EventType:Error};{Url*:https://contoso.com}|{EventType:Error};'
+        $CurrentNotificationEndpointsAsObject = ConvertFrom-String $CurrentNotificationEndpoints -TemplateContent $template
+    }
+
+    # Check to see if a notification endpoint registration with the same url and for the same event type already exists or not
+    $existingInstance = $CurrentNotificationEndpointsAsObject | Where-Object -FilterScript {$_.Url -eq $url -and $_.EventType -eq $EventType}
+    if ($null -eq $existingInstance)
+    {
+        throw "No existing endpoint notification registration on {$url} for {$EventType} were found."
+    }
+
+    $valueToRemove += "$($Url.Replace('|','').Replace(';',''))|$EventType;"
+    $CurrentNotificationEndpoints = $CurrentNotificationEndpoints.Replace($valueToRemove, '')
+
+    # If we found an exisiting instance, remove it from registry entry's value.
+    [System.Environment]::SetEnvironmentVariable('M365DSCNotificationEndPointRegistrations', $CurrentNotificationEndpoints, `
+                [System.EnvironmentVariableTarget]::Machine)
+}
+
+<#
+.Description
+This function returns all or a specific notification endpoint registration.
+
+.Parameter Url
+Represents the Url of the endpoint to be contacted when events are detected.
+
+.Parameter EventType
+Represents the type of events that need to be reported to the endpoint.
+
+.Functionality
+Public
+#>
+function Get-M365DSCNotificationEndPointRegistration
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Drift','Error','Warning')]
+        $EventType
+    )
+
+    # Get current notification endpoint registrations from registry and parse them into an object.
+    $CurrentNotificationEndpoints = ([System.Environment]::GetEnvironmentVariable('M365DSCNotificationEndPointRegistrations', `
+                [System.EnvironmentVariableTarget]::Machine))
+    if ($null -ne $CurrentNotificationEndpoints)
+    {
+        $template = '{Url*:https://contoso.com}|{EventType:Error};{Url*:https://contoso.com}|{EventType:Error};'
+        $CurrentNotificationEndpointsAsObject = ConvertFrom-String $CurrentNotificationEndpoints -TemplateContent $template
+
+        # If both Url and EventType are null, return all endpoints
+        if ([System.String]::IsNullOrEmpty($Url) -and [System.String]::IsNullOrEmpty($EventType))
+        {
+            return $CurrentNotificationEndpointsAsObject
+        }
+        elseif([System.String]::IsNullOrEmpty($EventType) -and -not[System.String]::IsNullOrEmpty($Url))
+        {
+            # If Url is specified but EventType is null, return all endpoints on the given Url, no matter the EventType.
+            return $CurrentNotificationEndpointsAsObject | Where-Object -FilterScript {$_.Url -eq $Url}
+        }
+        elseif(-not [System.String]::IsNullOrEmpty($EventType) -and [System.String]::IsNullOrEmpty($Url))
+        {
+            # If EventType is specified but $Url is null, return all endpoints matching the specified EventType.
+            return $CurrentNotificationEndpointsAsObject | Where-Object -FilterScript {$_.EventType -eq $EventType}
+        }
+        elseif(-not [System.String]::IsNullOrEmpty($EventType) -and -not [System.String]::IsNullOrEmpty($Url))
+        {
+            # If both Url and EventType are specified, return endpoints that match both.
+            return $CurrentNotificationEndpointsAsObject | Where-Object -FilterScript {$_.EventType -eq $EventType -and $Url -eq $Url}
+        }
+    }
+    return $null
+}
+
+<#
+.Description
+This function receives an event, will loop through all registered notification endpoints
+and will send a message to them if they have a registration on the given EventType of
+the message.
+
+.Functionality
+Private
+#>
+function Send-M365DSCNotificationEndPointMessage
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $EventDetails,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Drift','Error','Warning')]
+        $EventType
+    )
+
+    # Get all notification endpoints that are registered for the given EventType
+    [Array]$endpointsToContact = Get-M365DSCNotificationEndPointRegistration -EventType $EventType
+
+    $messageBody = @{
+        Details   = $EventDetails
+        EventType = $EventType
+    }
+
+    $Parameters = @{
+        Method      = 'POST'
+        Uri         = ''
+        Body        = ($messageBody | ConvertTo-Json)
+        Headers     = $null
+        ContentType = 'application/json'
+    }
+
+    foreach($endpoint in $endpointsToContact)
+    {
+        try
+        {
+            $variableValue = Get-Variable -Name ("M365DSCNotificationEndpointBearer" + $domain) -Scope Global -ErrorAction SilentlyContinue
+
+            if (-not [System.String]::IsNullOrEMpty($variableValue))
+            {
+                $domain = $endpoint.Url.Replace('https://', '').Replace('http://', '').Split('/')[0].Split('.')[0]
+                $bearerTokenValue = (Get-Variable -Name ("M365DSCNotificationEndpointBearer" + $domain) -Scope Global).Value
+                $Parameters.Headers = @{'Authorization' = "Bearer $bearerTokenValue"}
+            }
+            else
+            {
+                $Parameters.Headers = $null
+            }
+            $Parameters.Uri = $endpoint.url
+            Invoke-RestMethod @Parameters | Out-Null
+        }
+        catch
+        {
+            Write-Verbose -Message "$_"
+        }
+    }
+}
+
 Export-ModuleMember -Function @(
     'Add-M365DSCEvent',
     'Export-M365DSCDiagnosticData',
-    'New-M365DSCLogEntry'
+    'New-M365DSCLogEntry',
+    'Get-M365DSCNotificationEndPointRegistration',
+    'New-M365DSCNotificationEndPointRegistration',
+    'Remove-M365DSCNotificationEndPointRegistration'
 )
