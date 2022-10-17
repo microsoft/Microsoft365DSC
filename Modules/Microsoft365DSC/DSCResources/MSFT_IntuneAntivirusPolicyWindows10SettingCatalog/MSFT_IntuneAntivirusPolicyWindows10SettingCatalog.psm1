@@ -356,7 +356,7 @@ function Get-TargetResource
         $returnHashtable.Add('CertificateThumbprint', $CertificateThumbprint)
         $returnHashtable.Add('ManagedIdentity', $ManagedIdentity.IsPresent)
 
-        return ,$returnHashtable
+        return $returnHashtable
     }
     catch
     {
