@@ -2791,7 +2791,7 @@ Internal
 function Update-M365DSCExportAuthenticationResults
 {
     [CmdletBinding()]
-    [OutputType([System.String])]
+    [OutputType([System.Collections.Hashtable])]
     param(
         [Parameter(Mandatory = $true)]
         [System.String]

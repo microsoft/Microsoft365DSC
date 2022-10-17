@@ -23,15 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
-
-            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
-                return @{}
-            }
-
-            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
-            }
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin@mydomain.com", $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
 
@@ -41,9 +33,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            Mock -CommandName Update-MgDeviceManagementConfigurationPolicy -MockWith {
+            Mock -CommandName Update-IntuneDeviceConfigurationPolicy -MockWith {
             }
-            Mock -CommandName New-MgDeviceManagementConfigurationPolicy -MockWith {
+            Mock -CommandName New-IntuneDeviceConfigurationPolicy -MockWith {
                 return @{
                     Id             = "619bd4a4-3b3b-4441-bd6f-3f4c0c444870";
                 }
@@ -86,7 +78,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DeviceAndAppManagementAssignmentFilterType = "none"
                             DeviceAndAppManagementAssignmentFilterId = "12345-12345-12345-12345-12345"
                             GroupId = "26d60dd1-fab6-47bf-8656-358194c1a49d"
-                            CollectionId = "12345-12345-12345-12345-12345"
                         } -ClientOnly)
                     )
                     Credential           = $Credential;
@@ -111,7 +102,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should create the instance from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-MgDeviceManagementConfigurationPolicy" -Exactly 1
+                Should -Invoke -CommandName New-IntuneDeviceConfigurationPolicy -Exactly 1
             }
         }
 
@@ -125,7 +116,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DeviceAndAppManagementAssignmentFilterType = "none"
                             DeviceAndAppManagementAssignmentFilterId = "12345-12345-12345-12345-12345"
                             GroupId = "26d60dd1-fab6-47bf-8656-358194c1a49d"
-                            CollectionId = "12345-12345-12345-12345-12345"
                         } -ClientOnly)
                     )
                     Credential           = $Credential;
@@ -137,7 +127,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDeviceManagementConfigurationPolicy -MockWith {
                     return @{
-                        Identity    = "619bd4a4-3b3b-4441-bd6f-3f4c0c444870"
+                        Id   = "619bd4a4-3b3b-4441-bd6f-3f4c0c444870"
                         Description = "My Test Description";
                         Name        = "My Test";
                     }
@@ -181,7 +171,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should update the instance from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgDeviceManagementConfigurationPolicy -Exactly 1
+                Should -Invoke -CommandName Update-IntuneDeviceConfigurationPolicy -Exactly 1
             }
         }
 
@@ -195,7 +185,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DeviceAndAppManagementAssignmentFilterType = "none"
                             DeviceAndAppManagementAssignmentFilterId = "12345-12345-12345-12345-12345"
                             GroupId = "26d60dd1-fab6-47bf-8656-358194c1a49d"
-                            CollectionId = "12345-12345-12345-12345-12345"
                         } -ClientOnly)
                     )
                     Credential           = $Credential;
@@ -207,7 +196,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDeviceManagementConfigurationPolicy -MockWith {
                     return @{
-                        Identity    = "619bd4a4-3b3b-4441-bd6f-3f4c0c444870"
+                        Id   = "619bd4a4-3b3b-4441-bd6f-3f4c0c444870"
                         Description = "My Test Description";
                         Name        = "My Test";
                     }
@@ -256,7 +245,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DeviceAndAppManagementAssignmentFilterType = "none"
                             DeviceAndAppManagementAssignmentFilterId = "12345-12345-12345-12345-12345"
                             GroupId = "26d60dd1-fab6-47bf-8656-358194c1a49d"
-                            CollectionId = "12345-12345-12345-12345-12345"
                         } -ClientOnly)
                     )
                     Credential           = $Credential;
@@ -268,7 +256,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDeviceManagementConfigurationPolicy -MockWith {
                     return @{
-                        Identity    = "619bd4a4-3b3b-4441-bd6f-3f4c0c444870"
+                        Id   = "619bd4a4-3b3b-4441-bd6f-3f4c0c444870"
                         Description = "My Test Description";
                         Name        = "My Test";
                     }
@@ -325,9 +313,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDeviceManagementConfigurationPolicy -MockWith {
                     return @{
-                        Identity    = "619bd4a4-3b3b-4441-bd6f-3f4c0c444870"
+                        Id    = "619bd4a4-3b3b-4441-bd6f-3f4c0c444870"
                         Description = "My Test Description";
                         Name        = "My Test";
+                        TemplateReference=@{TemplateId='804339ad-1553-4478-a742-138fb5807418_1'}
                     }
                 }
 
