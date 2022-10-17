@@ -43,6 +43,15 @@ function Get-TargetResource
         $MailboxMoveEnabled,
 
         [Parameter()]
+        [ValidateSet('Inbound', 'Outbound', 'RemoteInbound', 'RemoteOutbound')]
+        [System.String]
+        $MailboxMoveCapability,
+
+        [Parameter()]
+        [System.String[]]
+        $MailboxMovePublishedScopes = @(),
+
+        [Parameter()]
         [System.Boolean]
         $MailTipsAccessEnabled,
 
@@ -54,6 +63,10 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $MailTipsAccessScope,
+
+        [Parameter()]
+        [System.String]
+        $OauthApplicationId,
 
         [Parameter()]
         [System.String]
@@ -155,28 +168,31 @@ function Get-TargetResource
         else
         {
             $result = @{
-                ArchiveAccessEnabled  = $OrganizationRelationship.ArchiveAccessEnabled
-                DeliveryReportEnabled = $OrganizationRelationship.DeliveryReportEnabled
-                DomainNames           = $OrganizationRelationship.DomainNames
-                Enabled               = $OrganizationRelationship.Enabled
-                FreeBusyAccessEnabled = $OrganizationRelationship.FreeBusyAccessEnabled
-                FreeBusyAccessLevel   = $OrganizationRelationship.FreeBusyAccessLevel
-                FreeBusyAccessScope   = $OrganizationRelationship.FreeBusyAccessScope
-                MailboxMoveEnabled    = $OrganizationRelationship.MailboxMoveEnabled
-                MailTipsAccessEnabled = $OrganizationRelationship.MailTipsAccessEnabled
-                MailTipsAccessLevel   = $OrganizationRelationship.MailTipsAccessLevel
-                MailTipsAccessScope   = $OrganizationRelationship.MailTipsAccessScope
-                Name                  = $OrganizationRelationship.Name
-                OrganizationContact   = $OrganizationRelationship.OrganizationContact
-                PhotosEnabled         = $OrganizationRelationship.PhotosEnabled
-                Ensure                = 'Present'
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePath       = $CertificatePath
-                CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
-                TenantId              = $TenantId
+                ArchiveAccessEnabled       = $OrganizationRelationship.ArchiveAccessEnabled
+                DeliveryReportEnabled      = $OrganizationRelationship.DeliveryReportEnabled
+                DomainNames                = $OrganizationRelationship.DomainNames
+                Enabled                    = $OrganizationRelationship.Enabled
+                FreeBusyAccessEnabled      = $OrganizationRelationship.FreeBusyAccessEnabled
+                FreeBusyAccessLevel        = $OrganizationRelationship.FreeBusyAccessLevel
+                FreeBusyAccessScope        = $OrganizationRelationship.FreeBusyAccessScope
+                MailboxMoveEnabled         = $OrganizationRelationship.MailboxMoveEnabled
+                MailboxMoveCapability      = $OrganizationRelationship.MailboxMoveCapability
+                MailboxMovePublishedScopes = $OrganizationRelationship.MailboxMovePublishedScopes
+                MailTipsAccessEnabled      = $OrganizationRelationship.MailTipsAccessEnabled
+                MailTipsAccessLevel        = $OrganizationRelationship.MailTipsAccessLevel
+                MailTipsAccessScope        = $OrganizationRelationship.MailTipsAccessScope
+                Name                       = $OrganizationRelationship.Name
+                OauthApplicationId         = $OrganizationRelationship.OauthApplicationId
+                OrganizationContact        = $OrganizationRelationship.OrganizationContact
+                PhotosEnabled              = $OrganizationRelationship.PhotosEnabled
+                Ensure                     = 'Present'
+                Credential                 = $Credential
+                ApplicationId              = $ApplicationId
+                CertificateThumbprint      = $CertificateThumbprint
+                CertificatePath            = $CertificatePath
+                CertificatePassword        = $CertificatePassword
+                Managedidentity            = $ManagedIdentity.IsPresent
+                TenantId                   = $TenantId
             }
 
             if ($OrganizationRelationship.TargetApplicationUri)
@@ -289,6 +305,15 @@ function Set-TargetResource
         $MailboxMoveEnabled,
 
         [Parameter()]
+        [ValidateSet('Inbound', 'Outbound', 'RemoteInbound', 'RemoteOutbound')]
+        [System.String]
+        $MailboxMoveCapability,
+
+        [Parameter()]
+        [System.String[]]
+        $MailboxMovePublishedScopes = @(),
+
+        [Parameter()]
         [System.Boolean]
         $MailTipsAccessEnabled,
 
@@ -300,6 +325,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $MailTipsAccessScope,
+
+        [Parameter()]
+        [System.String]
+        $OauthApplicationId,
 
         [Parameter()]
         [System.String]
@@ -379,49 +408,55 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     $NewOrganizationRelationshipParams = @{
-        ArchiveAccessEnabled  = $ArchiveAccessEnabled
-        DeliveryReportEnabled = $DeliveryReportEnabled
-        DomainNames           = $DomainNames
-        Enabled               = $Enabled
-        FreeBusyAccessEnabled = $FreeBusyAccessEnabled
-        FreeBusyAccessLevel   = $FreeBusyAccessLevel
-        FreeBusyAccessScope   = $FreeBusyAccessScope
-        MailboxMoveEnabled    = $MailboxMoveEnabled
-        MailTipsAccessEnabled = $MailTipsAccessEnabled
-        MailTipsAccessLevel   = $MailTipsAccessLevel
-        MailTipsAccessScope   = $MailTipsAccessScope
-        Name                  = $Name
-        OrganizationContact   = $OrganizationContact
-        PhotosEnabled         = $PhotosEnabled
-        TargetApplicationUri  = $TargetApplicationUri
-        TargetAutodiscoverEpr = $TargetAutodiscoverEpr
-        TargetOwaURL          = $TargetOwaURL
-        TargetSharingEpr      = $TargetSharingEpr
-        Confirm               = $false
+        ArchiveAccessEnabled       = $ArchiveAccessEnabled
+        DeliveryReportEnabled      = $DeliveryReportEnabled
+        DomainNames                = $DomainNames
+        Enabled                    = $Enabled
+        FreeBusyAccessEnabled      = $FreeBusyAccessEnabled
+        FreeBusyAccessLevel        = $FreeBusyAccessLevel
+        FreeBusyAccessScope        = $FreeBusyAccessScope
+        MailboxMoveEnabled         = $MailboxMoveEnabled
+        MailboxMoveCapability      = $MailboxMoveCapability
+        MailboxMovePublishedScopes = $MailboxMovePublishedScopes
+        MailTipsAccessEnabled      = $MailTipsAccessEnabled
+        MailTipsAccessLevel        = $MailTipsAccessLevel
+        MailTipsAccessScope        = $MailTipsAccessScope
+        Name                       = $Name
+        OauthApplicationId         = $OauthApplicationId
+        OrganizationContact        = $OrganizationContact
+        PhotosEnabled              = $PhotosEnabled
+        TargetApplicationUri       = $TargetApplicationUri
+        TargetAutodiscoverEpr      = $TargetAutodiscoverEpr
+        TargetOwaURL               = $TargetOwaURL
+        TargetSharingEpr           = $TargetSharingEpr
+        Confirm                    = $false
     }
     # Removes empty properties from Splat to prevent function throwing errors if parameter is null or empty
     Remove-EmptyValue -Splat $NewOrganizationRelationshipParams
 
     $SetOrganizationRelationshipParams = @{
-        ArchiveAccessEnabled  = $ArchiveAccessEnabled
-        DeliveryReportEnabled = $DeliveryReportEnabled
-        DomainNames           = $DomainNames
-        Enabled               = $Enabled
-        FreeBusyAccessEnabled = $FreeBusyAccessEnabled
-        FreeBusyAccessLevel   = $FreeBusyAccessLevel
-        FreeBusyAccessScope   = $FreeBusyAccessScope
-        MailboxMoveEnabled    = $MailboxMoveEnabled
-        MailTipsAccessEnabled = $MailTipsAccessEnabled
-        MailTipsAccessLevel   = $MailTipsAccessLevel
-        MailTipsAccessScope   = $MailTipsAccessScope
-        Identity              = $Name
-        OrganizationContact   = $OrganizationContact
-        PhotosEnabled         = $PhotosEnabled
-        TargetApplicationUri  = $TargetApplicationUri
-        TargetAutodiscoverEpr = $TargetAutodiscoverEpr
-        TargetOwaURL          = $TargetOwaURL
-        TargetSharingEpr      = $TargetSharingEpr
-        Confirm               = $false
+        ArchiveAccessEnabled       = $ArchiveAccessEnabled
+        DeliveryReportEnabled      = $DeliveryReportEnabled
+        DomainNames                = $DomainNames
+        Enabled                    = $Enabled
+        FreeBusyAccessEnabled      = $FreeBusyAccessEnabled
+        FreeBusyAccessLevel        = $FreeBusyAccessLevel
+        FreeBusyAccessScope        = $FreeBusyAccessScope
+        MailboxMoveEnabled         = $MailboxMoveEnabled
+        MailboxMoveCapability      = $MailboxMoveCapability
+        MailboxMovePublishedScopes = $MailboxMovePublishedScopes
+        MailTipsAccessEnabled      = $MailTipsAccessEnabled
+        MailTipsAccessLevel        = $MailTipsAccessLevel
+        MailTipsAccessScope        = $MailTipsAccessScope
+        Identity                   = $Name
+        OauthApplicationId         = $OauthApplicationId
+        OrganizationContact        = $OrganizationContact
+        PhotosEnabled              = $PhotosEnabled
+        TargetApplicationUri       = $TargetApplicationUri
+        TargetAutodiscoverEpr      = $TargetAutodiscoverEpr
+        TargetOwaURL               = $TargetOwaURL
+        TargetSharingEpr           = $TargetSharingEpr
+        Confirm                    = $false
     }
     # Removes empty properties from Splat to prevent function throwing errors if parameter is null or empty
     Remove-EmptyValue -Splat $SetOrganizationRelationshipParams
@@ -493,6 +528,15 @@ function Test-TargetResource
         $MailboxMoveEnabled,
 
         [Parameter()]
+        [ValidateSet('Inbound', 'Outbound', 'RemoteInbound', 'RemoteOutbound')]
+        [System.String]
+        $MailboxMoveCapability,
+
+        [Parameter()]
+        [System.String[]]
+        $MailboxMovePublishedScopes = @(),
+
+        [Parameter()]
         [System.Boolean]
         $MailTipsAccessEnabled,
 
@@ -504,6 +548,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $MailTipsAccessScope,
+
+        [Parameter()]
+        [System.String]
+        $OauthApplicationId,
 
         [Parameter()]
         [System.String]
