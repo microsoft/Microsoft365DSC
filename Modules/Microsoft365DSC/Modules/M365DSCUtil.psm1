@@ -3751,8 +3751,8 @@ Export-ModuleMember -Function @(
     'Set-EXOSafeAttachmentRule',
     'Set-EXOSafeLinksRule',
     'Split-ArrayByParts',
-    'Test-M365DSCDependenciesForNewVersions',,
-    'Test-M365DSCModuleValidity'
+    'Test-M365DSCDependenciesForNewVersions',
+    'Test-M365DSCModuleValidity',
     'Test-M365DSCParameterState',
     'Uninstall-M365DSCOutdatedDependencies',
     'Update-M365DSCDependencies',
