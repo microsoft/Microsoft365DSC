@@ -10,6 +10,8 @@
   * Added support to register, list and remove custom notification endpoints.
   * Fixes issue with delta report where wrong primary key was detected.
   FIXES [#2008](https://github.com/microsoft/Microsoft365DSC/issues/2008)
+  * Fixed an issue where the log engine was throwing an error when trying to write to the event log from an Azure runbook.
+  FIXES [#2236](https://github.com/microsoft/Microsoft365DSC/issues/2236)
 
 # 1.22.1012.1
 

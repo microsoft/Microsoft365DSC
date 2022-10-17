@@ -591,6 +591,7 @@ function Set-TargetResource
 
     if (('Present' -eq $Ensure) -and ('Absent' -eq $label.Ensure))
     {
+        Write-Verbose -Message "Label {$Name} doesn't already exist, creating it from the Set-TargetResource function."
         $CreationParams = $PSBoundParameters
 
         if ($PSBoundParameters.ContainsKey("AdvancedSettings"))
@@ -610,15 +611,15 @@ function Set-TargetResource
         $CreationParams.Remove("Priority")
         $CreationParams.Remove("Disabled")
 
-        Write-Verbose "Creating new Sensitivity label $Name calling the New-Label cmdlet."
-
         try
         {
+            Write-Verbose -Message "Creating Label {$Name}"
             New-Label @CreationParams
             ## Can't set priority until label created
             if ($PSBoundParameters.ContainsKey("Priority"))
             {
                 Start-Sleep 5
+                Write-Verbose -Message "Updating the priority for newly created label {$Name}"
                 Set-label -Identity $Name -priority $Priority
             }
         }
@@ -629,6 +630,7 @@ function Set-TargetResource
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $label.Ensure))
     {
+        Write-Verbose -Message "Label {$Name} already exist, updating it from the Set-TargetResource function."
         $SetParams = $PSBoundParameters
 
         if ($PSBoundParameters.ContainsKey("AdvancedSettings"))
@@ -897,7 +899,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('LocaleSettings') | Out-Null
     $ValuesToCheck.Remove('Disabled') | Out-Null
 
-    if ($null -ne $AdvancedSettings)
+    if ($null -ne $AdvancedSettings -and $null -ne $CurrentValues.AdvancedSettings)
     {
         $TestAdvancedSettings = Test-AdvancedSettings -DesiredProperty $AdvancedSettings -CurrentProperty $CurrentValues.AdvancedSettings
         if ($false -eq $TestAdvancedSettings)
@@ -906,7 +908,7 @@ function Test-TargetResource
         }
     }
 
-    if ($null -ne $LocaleSettings)
+    if ($null -ne $LocaleSettings -and $null -ne $CurrentValues.LocaleSettings)
     {
         $localeSettingsSame = Test-LocaleSettings -DesiredProperty $LocaleSettings -CurrentProperty $CurrentValues.LocaleSettings
         if ($false -eq $localeSettingsSame)
