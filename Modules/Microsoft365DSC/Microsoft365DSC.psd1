@@ -97,7 +97,6 @@
         'Set-M365DSCAgentCertificateConfiguration',
         'Start-M365DSCConfiguration',
         'Test-M365DSCAgent',
-        'Test-M365DSCDependencies',
         'Test-M365DSCDependenciesForNewVersions',
         'Test-M365DSCModuleValidity',
         'Uninstall-M365DSCOutdatedDependencies',
