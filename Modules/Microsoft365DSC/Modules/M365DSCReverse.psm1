@@ -90,11 +90,11 @@ function Start-M365DSCConfigurationExtract
     # PowerShell Gallery
     try
     {
-        Test-M365DSCNewVersionAvailable
+        Test-M365DSCModuleValidity
     }
     catch
     {
-        Add-M365DSCEvent -Message $_ -Source 'M365DSCReverse::Test-M365DSCNewVersionAvailable'
+        Add-M365DSCEvent -Message $_ -Source 'M365DSCReverse::Test-M365DSCModuleValidity'
     }
     try
     {
