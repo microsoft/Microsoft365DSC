@@ -11,6 +11,8 @@
   * Add support for quarantine tags
 * EXOOrganizationRelationship
   * Add support for new cross-tenant mailbox migration parameters: MailboxMoveCapability, MailboxMovePublishedScopes, OauthApplicationId
+* EXOOutboundConnector
+  * Add support for SenderRewritingEnabled parameter
 * EXOSafeAttachmentPolicy
   * Add support for QuarantineTag
 * EXOSafeLinksPolicy
