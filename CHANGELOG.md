@@ -19,6 +19,8 @@
   * Add support for QuarantineTag
 * EXOSafeLinksPolicy
   * Add new parameters: AllowClickThrough, EnableSafeLinksForOffice, TrackClicks
+* TeamsCallingPolicy
+  * Add new parameters: AllowCallRedirect, AllowSIPDevicesCalling, CallRecordingExpirationDays
 * TeamsEmergencyCallingPolicy
   * Add new parameters: EnhancedEmergencyServiceDisclaimer, ExternalLocationLookupMode
 * DEPENDENCIES
