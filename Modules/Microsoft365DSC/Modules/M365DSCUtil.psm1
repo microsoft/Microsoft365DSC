@@ -2316,41 +2316,6 @@ function Remove-NullEntriesFromHashtable
 
 <#
 .Description
-This function is to be deprecated in future release
-
-.Functionality
-Internal
-#>
-function Assert-M365DSCTemplate
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $TemplatePath,
-
-        [Parameter()]
-        [System.String]
-        $TemplateName
-    )
-    $InformationPreference = 'SilentlyContinue'
-    $WarningPreference = 'SilentlyContinue'
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add('Event', 'AssertTemplate')
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    Write-Host $Global:M365DSCEmojiYellowCircle -NoNewline
-    Write-Host ' Assert-M365DSCTemplate is deprecated. Please use the new improved Assert-M365DSCBlueprint cmdlet instead.' -ForegroundColor Yellow
-}
-
-<#
-.Description
 This function compares a created export with the specified M365DSC Blueprint
 
 .Parameter BluePrintUrl
@@ -2392,7 +2357,12 @@ function Assert-M365DSCBlueprint
 
         [Parameter()]
         [System.String]
-        $HeaderFilePath
+        $HeaderFilePath,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('HTML', 'JSON')]
+        $Type = 'HTML'
     )
     $InformationPreference = 'SilentlyContinue'
     $WarningPreference = 'SilentlyContinue'
@@ -2475,7 +2445,8 @@ function Assert-M365DSCBlueprint
             -OutputPath $OutputReportPath `
             -DriftOnly:$true `
             -IsBlueprintAssessment:$true `
-            -HeaderFilePath $HeaderFilePath
+            -HeaderFilePath $HeaderFilePath `
+            -Type $Type
     }
     else
     {
