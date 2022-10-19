@@ -7,12 +7,22 @@
   FIXES [#2337](https://github.com/microsoft/Microsoft365DSC/issues/2337)
 * EXOAntiPhishPolicy
   * Add new parameters: MailboxIntelligenceQuarantineTag, SpoofQuarantineTag, TargetedDomainQuarantineTag, TargetedUserQuarantine
-* EXOOrganizationRelationship
-  * Add support for new cross-tenant mailbox migration parameters: MailboxMoveCapability, MailboxMovePublishedScopes, OauthApplicationId
 * EXOHostedContentFilterPolicy
   * Add support for quarantine tags
+* EXOOrganizationRelationship
+  * Add support for new cross-tenant mailbox migration parameters: MailboxMoveCapability, MailboxMovePublishedScopes, OauthApplicationId
+* EXOOutboundConnector
+  * Add support for SenderRewritingEnabled parameter
+* EXORemoteDomain
+  * Add NDREnabled parameter
+* EXOSafeAttachmentPolicy
+  * Add support for QuarantineTag
+* EXOSafeLinksPolicy
+  * Add new parameters: AllowClickThrough, EnableSafeLinksForOffice, TrackClicks
 * TeamsCallingPolicy
   * Add new parameters: AllowCallRedirect, AllowSIPDevicesCalling, CallRecordingExpirationDays
+* TeamsEmergencyCallingPolicy
+  * Add new parameters: EnhancedEmergencyServiceDisclaimer, ExternalLocationLookupMode
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.154.
 * MISC

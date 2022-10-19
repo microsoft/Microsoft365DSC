@@ -14,6 +14,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $EnhancedEmergencyServiceDisclaimer,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled')]
+        $ExternalLocationLookupMode,
+
+        [Parameter()]
+        [System.String]
         [ValidatePattern("^(?:\+)?[0-9]*$")]
         $NotificationDialOutNumber,
 
@@ -67,13 +76,15 @@ function Get-TargetResource
         }
         Write-Verbose -Message "Found Teams Emergency Calling Policy {$Identity}"
         $result = @{
-            Identity                  = $Identity
-            Description               = $policy.Description
-            NotificationDialOutNumber = $policy.NotificationDialOutNumber
-            NotificationGroup         = $policy.NotificationGroup
-            NotificationMode          = $policy.NotificationMode
-            Ensure                    = "Present"
-            Credential        = $Credential
+            Identity                           = $Identity
+            Description                        = $policy.Description
+            EnhancedEmergencyServiceDisclaimer = $policy.EnhancedEmergencyServiceDisclaimer
+            ExternalLocationLookupMode         = $policy.ExternalLocationLookupMode
+            NotificationDialOutNumber          = $policy.NotificationDialOutNumber
+            NotificationGroup                  = $policy.NotificationGroup
+            NotificationMode                   = $policy.NotificationMode
+            Ensure                             = "Present"
+            Credential                         = $Credential
         }
 
         if ([System.String]::IsNullOrEmpty($result.NotificationMode))
@@ -121,6 +132,15 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String]
+        $EnhancedEmergencyServiceDisclaimer,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled')]
+        $ExternalLocationLookupMode,
 
         [Parameter()]
         [System.String]
@@ -218,6 +238,15 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String]
+        $EnhancedEmergencyServiceDisclaimer,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled')]
+        $ExternalLocationLookupMode,
 
         [Parameter()]
         [System.String]
