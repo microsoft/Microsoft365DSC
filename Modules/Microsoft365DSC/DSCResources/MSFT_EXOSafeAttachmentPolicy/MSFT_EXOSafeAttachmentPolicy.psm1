@@ -26,6 +26,10 @@ function Get-TargetResource
         $Enable = $false,
 
         [Parameter()]
+        [System.String]
+        $QuarantineTag,
+
+        [Parameter()]
         [Boolean]
         $Redirect = $false,
 
@@ -114,6 +118,7 @@ function Get-TargetResource
                 ActionOnError         = $SafeAttachmentPolicy.ActionOnError
                 AdminDisplayName      = $SafeAttachmentPolicy.AdminDisplayName
                 Enable                = $SafeAttachmentPolicy.Enable
+                QuarantineTag         = $SafeAttachmentPolicy.QuarantineTag
                 Redirect              = $SafeAttachmentPolicy.Redirect
                 RedirectAddress       = $SafeAttachmentPolicy.RedirectAddress
                 Credential            = $Credential
@@ -181,6 +186,10 @@ function Set-TargetResource
         [Parameter()]
         [Boolean]
         $Enable = $false,
+
+        [Parameter()]
+        [System.String]
+        $QuarantineTag,
 
         [Parameter()]
         [Boolean]
@@ -377,6 +386,10 @@ function Test-TargetResource
         [Parameter()]
         [Boolean]
         $Enable = $false,
+
+        [Parameter()]
+        [System.String]
+        $QuarantineTag,
 
         [Parameter()]
         [Boolean]
