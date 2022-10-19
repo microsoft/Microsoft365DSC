@@ -11,6 +11,8 @@
   * Add support for new cross-tenant mailbox migration parameters: MailboxMoveCapability, MailboxMovePublishedScopes, OauthApplicationId
 * EXOHostedContentFilterPolicy
   * Add support for quarantine tags
+* TeamsCallingPolicy
+  * Add new parameters: AllowCallRedirect, AllowSIPDevicesCalling, CallRecordingExpirationDays
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.154.
 * MISC
