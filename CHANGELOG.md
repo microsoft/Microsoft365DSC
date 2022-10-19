@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
+# 1.22.1019.1
 
 * AADConditionalAccessPolicy
   * Fixed issue where if ExcludePlatforms was specified and the IncludePlatforms is empty, we need to set the latest to 'all';
