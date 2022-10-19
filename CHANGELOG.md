@@ -14,11 +14,15 @@
 * MISC
   * Added support to register, list and remove custom notification endpoints.
   * Fixes issue with delta report where wrong primary key was detected.
-  FIXES [#2008](https://github.com/microsoft/Microsoft365DSC/issues/2008)
+    FIXES [#2008](https://github.com/microsoft/Microsoft365DSC/issues/2008)
   * Fixed an issue where the log engine was throwing an error when trying to write to the event log from an Azure runbook.
-  FIXES [#2236](https://github.com/microsoft/Microsoft365DSC/issues/2236)
+    FIXES [#2236](https://github.com/microsoft/Microsoft365DSC/issues/2236)
   * Standardizing the functions to test versions of the module and dependencies.
-  FIXES [#2232](https://github.com/microsoft/Microsoft365DSC/issues/2232)
+    FIXES [#2232](https://github.com/microsoft/Microsoft365DSC/issues/2232)
+  * Remove the Assert-M365DSCTemplate cmdlet that has been deprecated for several releases.
+  * Added support to generate report in JSON format for the New-M365DSCDeltaReport and Assert-M365DSCBlueprint cmdlets.
+    FIXES [#2345](https://github.com/microsoft/Microsoft365DSC/issues/2345)
+  * Changed the default behavior of the New-M365DSCDeltaReport cmdlet not to automatically open the file when OutputPath is provided
 
 # 1.22.1012.1
 
