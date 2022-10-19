@@ -1411,10 +1411,17 @@ function Set-TargetResource
             else
             {
                 $conditions.Platforms.Add('ExcludePlatforms', @())
-                $conditions.Platforms.Add('IncludePlatform', @())
+                $conditions.Platforms.Add('IncludePlatforms', @())
             }
             Write-Verbose -Message "Set-Targetresource: IncludePlatforms: $IncludePlatforms"
-            $conditions.Platforms.IncludePlatforms = @() + $IncludePlatforms
+            if (([Array]$IncludePlatforms).Length -eq 0)
+            {
+                $conditions.Platforms.IncludePlatforms = @("all")
+            }
+            else
+            {
+                $conditions.Platforms.IncludePlatforms = @() + $IncludePlatforms
+            }
             #no translation or conversion needed
             Write-Verbose -Message "Set-Targetresource: ExcludePlatforms: $ExcludePlatforms"
             $conditions.Platforms.ExcludePlatforms = @() + $ExcludePlatforms

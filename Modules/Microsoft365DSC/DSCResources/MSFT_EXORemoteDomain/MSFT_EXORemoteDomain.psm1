@@ -71,6 +71,10 @@ function Get-TargetResource
         $Name,
 
         [Parameter()]
+        [System.Boolean]
+        $NDREnabled,
+
+        [Parameter()]
         [System.String]
         $NonMimeCharacterSet,
 
@@ -186,6 +190,7 @@ function Get-TargetResource
                 LineWrapSize                         = $RemoteDomain.LineWrapSize
                 MeetingForwardNotificationEnabled    = $RemoteDomain.MeetingForwardNotificationEnabled
                 Name                                 = $RemoteDomain.Name
+                NDREnabled                           = $RemoteDomain.NDREnabled
                 NonMimeCharacterSet                  = $RemoteDomain.NonMimeCharacterSet
                 PreferredInternetCodePageForShiftJis = $RemoteDomain.PreferredInternetCodePageForShiftJis
                 RequiredCharsetCoverage              = $RemoteDomain.RequiredCharsetCoverage
@@ -303,6 +308,10 @@ function Set-TargetResource
         [ValidateLength(1, 64)]
         [System.String]
         $Name,
+
+        [Parameter()]
+        [System.Boolean]
+        $NDREnabled,
 
         [Parameter()]
         [System.String]
@@ -496,6 +505,10 @@ function Test-TargetResource
         [ValidateLength(1, 64)]
         [System.String]
         $Name,
+
+        [Parameter()]
+        [System.Boolean]
+        $NDREnabled,
 
         [Parameter()]
         [System.String]
