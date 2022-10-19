@@ -7,6 +7,8 @@
   FIXES [#2337](https://github.com/microsoft/Microsoft365DSC/issues/2337)
 * EXOAntiPhishPolicy
   * Add new parameters: MailboxIntelligenceQuarantineTag, SpoofQuarantineTag, TargetedDomainQuarantineTag, TargetedUserQuarantine
+* EXOHostedContentFilterPolicy
+  * Add support for quarantine tags
 * EXOOrganizationRelationship
   * Add support for new cross-tenant mailbox migration parameters: MailboxMoveCapability, MailboxMovePublishedScopes, OauthApplicationId
 * TeamsEmergencyCallingPolicy
