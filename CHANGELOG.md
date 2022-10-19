@@ -13,6 +13,8 @@
   * Add support for new cross-tenant mailbox migration parameters: MailboxMoveCapability, MailboxMovePublishedScopes, OauthApplicationId
 * EXOSafeAttachmentPolicy
   * Add support for QuarantineTag
+* EXOSafeLinksPolicy
+  * Add new parameters: AllowClickThrough, EnableSafeLinksForOffice, TrackClicks
 * TeamsEmergencyCallingPolicy
   * Add new parameters: EnhancedEmergencyServiceDisclaimer, ExternalLocationLookupMode
 * DEPENDENCIES
