@@ -11,6 +11,8 @@
   * Add support for quarantine tags
 * EXOOrganizationRelationship
   * Add support for new cross-tenant mailbox migration parameters: MailboxMoveCapability, MailboxMovePublishedScopes, OauthApplicationId
+* EXOSafeAttachmentPolicy
+  * Add support for QuarantineTag
 * TeamsEmergencyCallingPolicy
   * Add new parameters: EnhancedEmergencyServiceDisclaimer, ExternalLocationLookupMode
 * DEPENDENCIES
