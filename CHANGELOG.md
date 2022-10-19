@@ -13,6 +13,8 @@
   * Add support for new cross-tenant mailbox migration parameters: MailboxMoveCapability, MailboxMovePublishedScopes, OauthApplicationId
 * EXOOutboundConnector
   * Add support for SenderRewritingEnabled parameter
+* EXORemoteDomain
+  * Add NDREnabled parameter
 * EXOSafeAttachmentPolicy
   * Add support for QuarantineTag
 * EXOSafeLinksPolicy
