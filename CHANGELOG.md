@@ -9,6 +9,8 @@
   * Add new parameters: MailboxIntelligenceQuarantineTag, SpoofQuarantineTag, TargetedDomainQuarantineTag, TargetedUserQuarantine
 * EXOOrganizationRelationship
   * Add support for new cross-tenant mailbox migration parameters: MailboxMoveCapability, MailboxMovePublishedScopes, OauthApplicationId
+* TeamsEmergencyCallingPolicy
+  * Add new parameters: EnhancedEmergencyServiceDisclaimer, ExternalLocationLookupMode
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.154.
 * MISC
