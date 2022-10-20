@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* SPO and OD workloads
+  * Add support for ManagedIdentity
+
 # 1.22.1019.1
 
 * AADConditionalAccessPolicy
