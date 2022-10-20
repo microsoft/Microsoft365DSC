@@ -1,9 +1,11 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
+# UNRELEASED
 
-* SPO and OD workloads
-  * Add support for ManagedIdentity
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.95;
+* MISC
+  * Add support for ManagedIdentity to the SPo and OD resources.
 
 # 1.22.1019.1
 
