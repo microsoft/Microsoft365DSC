@@ -13,6 +13,10 @@ function Get-TargetResource
         $AdminDisplayName,
 
         [Parameter()]
+        [Boolean]
+        $AllowClickThrough,
+
+        [Parameter()]
         [System.String]
         $CustomNotificationText,
 
@@ -44,6 +48,10 @@ function Get-TargetResource
 
         [Parameter()]
         [Boolean]
+        $EnableSafeLinksForOffice,
+
+        [Parameter()]
+        [Boolean]
         $EnableSafeLinksForTeams = $false,
 
         [Parameter()]
@@ -62,6 +70,10 @@ function Get-TargetResource
         [Parameter()]
         [Boolean]
         $ScanUrls = $false,
+
+        [Parameter()]
+        [Boolean]
+        $TrackClicks,
 
         [Parameter()]
         [Boolean]
@@ -155,6 +167,7 @@ function Get-TargetResource
             $result = @{
                 Identity                      = $SafeLinksPolicy.Identity
                 AdminDisplayName              = $SafeLinksPolicy.AdminDisplayName
+                AllowClickThrough             = $SafeLinksPolicy.AllowClickThrough
                 CustomNotificationText        = $SafeLinksPolicy.CustomNotificationText
                 DeliverMessageAfterScan       = $SafeLinksPolicy.DeliverMessageAfterScan
                 #Deprecated
@@ -166,10 +179,12 @@ function Get-TargetResource
                 EnableOrganizationBranding    = $SafeLinksPolicy.EnableOrganizationBranding
                 EnableSafeLinksForTeams       = $SafeLinksPolicy.EnableSafeLinksForTeams
                 EnableSafeLinksForEmail       = $SafeLinksPolicy.EnableSafeLinksForEmail
+                EnableSafeLinksForOffice      = $SafeLinksPolicy.EnableSafeLinksForOffice
                 DisableUrlRewrite             = $SafeLinksPolicy.DisableUrlRewrite
                 #Deprecated
                 #IsEnabled                     = $SafeLinksPolicy.IsEnabled
                 ScanUrls                      = $SafeLinksPolicy.ScanUrls
+                TrackClicks                   = $SafeLinksPolicy.TrackClicks
                 UseTranslatedNotificationText = $SafeLinksPolicy.UseTranslatedNotificationText
                 Ensure                        = 'Present'
                 Credential                    = $Credential
@@ -226,6 +241,10 @@ function Set-TargetResource
         $AdminDisplayName,
 
         [Parameter()]
+        [Boolean]
+        $AllowClickThrough,
+
+        [Parameter()]
         [System.String]
         $CustomNotificationText,
 
@@ -257,6 +276,10 @@ function Set-TargetResource
 
         [Parameter()]
         [Boolean]
+        $EnableSafeLinksForOffice,
+
+        [Parameter()]
+        [Boolean]
         $EnableSafeLinksForTeams = $false,
 
         [Parameter()]
@@ -275,6 +298,10 @@ function Set-TargetResource
         [Parameter()]
         [Boolean]
         $ScanUrls = $false,
+
+        [Parameter()]
+        [Boolean]
+        $TrackClicks,
 
         [Parameter()]
         [Boolean]
@@ -399,6 +426,10 @@ function Test-TargetResource
         $AdminDisplayName,
 
         [Parameter()]
+        [Boolean]
+        $AllowClickThrough,
+
+        [Parameter()]
         [System.String]
         $CustomNotificationText,
 
@@ -430,6 +461,10 @@ function Test-TargetResource
 
         [Parameter()]
         [Boolean]
+        $EnableSafeLinksForOffice,
+
+        [Parameter()]
+        [Boolean]
         $EnableSafeLinksForTeams = $false,
 
         [Parameter()]
@@ -448,6 +483,10 @@ function Test-TargetResource
         [Parameter()]
         [Boolean]
         $ScanUrls = $false,
+
+        [Parameter()]
+        [Boolean]
+        $TrackClicks,
 
         [Parameter()]
         [Boolean]
