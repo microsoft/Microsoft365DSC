@@ -9,6 +9,7 @@
 | **ActionOnError** | Write | Boolean | The ActionOnError parameter specifies the error handling option for Safe Attachments scanning (what to do if scanning times out or an error occurs). Valid values are: $true: The action specified by the Action parameter is applied to messages even when the attachments aren't successfully scanned. $false: The action specified by the Action parameter isn't applied to messages when the attachments aren't successfully scanned. This is the default value. ||
 | **AdminDisplayName** | Write | String | The AdminDisplayName parameter specifies a description for the policy. ||
 | **Enable** | Write | Boolean | Specify if this policy should be enabled. Default is $true. ||
+| **QuarantineTag** | Write | String | The QuarantineTag specifies the quarantine policy that's used on messages that are quarantined as malware by Safe Attachments. ||
 | **Redirect** | Write | Boolean | The Redirect parameter specifies whether to send detected malware attachments to another email address. Valid values are: $true: Malware attachments are sent to the email address specified by the RedirectAddress parameter. $false: Malware attachments aren't sent to another email address. This is the default value. ||
 | **RedirectAddress** | Write | String | The RedirectAddress parameter specifies the email address where detected malware attachments are sent when the Redirect parameter is set to the value $true. ||
 | **Ensure** | Write | String | Specify if this policy should exist or not. |Present, Absent|
