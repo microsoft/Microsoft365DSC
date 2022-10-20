@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
+# 1.22.1019.1
 
 * AADConditionalAccessPolicy
   * Fixed issue where if ExcludePlatforms was specified and the IncludePlatforms is empty, we need to set the latest to 'all';
@@ -11,6 +11,16 @@
   * Add support for quarantine tags
 * EXOOrganizationRelationship
   * Add support for new cross-tenant mailbox migration parameters: MailboxMoveCapability, MailboxMovePublishedScopes, OauthApplicationId
+* EXOOutboundConnector
+  * Add support for SenderRewritingEnabled parameter
+* EXORemoteDomain
+  * Add NDREnabled parameter
+* EXOSafeAttachmentPolicy
+  * Add support for QuarantineTag
+* EXOSafeLinksPolicy
+  * Add new parameters: AllowClickThrough, EnableSafeLinksForOffice, TrackClicks
+* TeamsCallingPolicy
+  * Add new parameters: AllowCallRedirect, AllowSIPDevicesCalling, CallRecordingExpirationDays
 * TeamsEmergencyCallingPolicy
   * Add new parameters: EnhancedEmergencyServiceDisclaimer, ExternalLocationLookupMode
 * DEPENDENCIES
