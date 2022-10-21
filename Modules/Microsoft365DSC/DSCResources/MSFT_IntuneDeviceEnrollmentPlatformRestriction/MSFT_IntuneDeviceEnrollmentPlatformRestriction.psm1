@@ -17,35 +17,40 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [ValidateSet("singlePlatformRestriction","platformRestrictions")]
+        [System.String]
+        $DeviceEnrollmentConfigurationType,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $IosRestriction,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $WindowsRestriction,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $WindowsHomeSkuRestriction,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $WindowsMobileRestriction,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $AndroidRestriction,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $AndroidForWorkRestriction,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MacRestriction,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MacOSRestriction,
 
         [Parameter()]
@@ -106,6 +111,12 @@ function Get-TargetResource
 
         $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Identity -ErrorAction silentlyContinue
 
+
+        <#
+        Not using the DisplayName as a key due to android profiles
+        Android profile are generated using 2 singlePlatformRestriction policies: 1 for android and 1 for androidForWork
+        Both policies have the same name
+
         if ($null -eq $config)
         {
             Write-Verbose -Message "No Device Enrollment Platform Restriction {$Identity} was found"
@@ -113,11 +124,12 @@ function Get-TargetResource
             $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" -ErrorAction silentlyContinue| Where-Object -FilterScript { `
                     $_.AdditionalProperties.'@odata.type' -like '#microsoft.graph.deviceEnrollmentPlatform*Configuration' }
         }
+        #>
 
 
         if ($null -eq $config)
         {
-            Write-Verbose -Message "No Device Enrollment Platform Restriction {$DisplayName} was found"
+            Write-Verbose -Message "No Device Enrollment Platform Restriction {$Identity} was found"
             return $nullResult
         }
 
@@ -126,6 +138,7 @@ function Get-TargetResource
             Identity                                     = $config.Id
             DisplayName                                  = $config.DisplayName
             Description                                  = $config.Description
+            DeviceEnrollmentConfigurationType            = $config.DeviceEnrollmentConfigurationType
             Ensure                                       = 'Present'
             Credential                                   = $Credential
             ApplicationId                                = $ApplicationId
@@ -189,35 +202,40 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [ValidateSet("singlePlatformRestriction","platformRestrictions")]
+        [System.String]
+        $DeviceEnrollmentConfigurationType,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $IosRestriction,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $WindowsRestriction,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $WindowsHomeSkuRestriction,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $WindowsMobileRestriction,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $AndroidRestriction,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $AndroidForWorkRestriction,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MacRestriction,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MacOSRestriction,
 
         [Parameter()]
@@ -274,29 +292,103 @@ function Set-TargetResource
     $PSBoundParameters.Remove('ApplicationId') | Out-Null
     $PSBoundParameters.Remove('TenantId') | Out-Null
     $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
-    $PSBoundParameters.Remove('DisplayName') | Out-Null
-    $PSBoundParameters.Remove('Description') | Out-Null
+    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
+    $PSBoundParameters.Remove('Ensure') | Out-Null
+    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
+    $PSBoundParameters.Remove('Verbose') | Out-Null
+    $PSBoundParameters.Remove('Identity') | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Device Enrollment Platform Restriction {$DisplayName}"
 
-        $AdditionalProperties = Get-M365DSCIntuneDeviceEnrollmentPlatformRestrictionAdditionalProperties -Properties $PSBoundParameters
+        $PSBoundParameters.Remove('Assignments') | Out-Null
 
-        New-MgDeviceManagementDeviceEnrollmentConfiguration -DisplayName $DisplayName `
-            -Description $Description `
-            -AdditionalProperties $AdditionalProperties
+        $keys=(([Hashtable]$PSBoundParameters).clone()).Keys
+        foreach($key in $keys)
+        {
+            $keyName=$key.substring(0,1).toLower()+$key.substring(1,$key.length-1)
+            $keyValue= $PSBoundParameters.$key
+            if($null -ne $PSBoundParameters.$key -and $PSBoundParameters.$key.getType().Name -like "*cimInstance*")
+            {
+                $keyValue= Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters.$key
+                if($DeviceEnrollmentConfigurationType -eq 'singlePlatformRestriction' )
+                {
+                    $keyName='platformRestriction'
+                    $PSBoundParameters.add('platformType',($key.replace("Restriction","")))
+                }
+            }
+            $PSBoundParameters.remove($key)
+            $PSBoundParameters.add($keyName,$keyValue)
+        }
+
+        $policyType="#microsoft.graph.deviceEnrollmentPlatformRestrictionConfiguration"
+        if($DeviceEnrollmentConfigurationType -eq 'platformRestrictions' )
+        {
+            $policyType="#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration"
+            $PSBoundParameters.add('deviceEnrollmentConfigurationType ','limit')
+        }
+        $PSBoundParameters.add("@odata.type",$policyType)
+
+        write-verbose ($PSBoundParameters|convertTo-json -depth 20)
+
+        $policy=New-MgDeviceManagementDeviceEnrollmentConfiguration `
+            -BodyParameter $PSBoundParameters
+
+        #Assignments from DefaultPolicy are not editable and will raise an alert
+        if($policy.Id -notlike "*_DefaultPlatformRestrictions")
+        {
+            $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+
+            Update-DeviceConfigurationPolicyAssignments `
+                -DeviceConfigurationPolicyId $policy.Id `
+                -Targets $assignmentsHash
+        }
     }
     elseif ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Device Enrollment Platform Restriction {$DisplayName}"
-        $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
-        | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration' }
-        $AdditionalProperties = Get-M365DSCIntuneDeviceEnrollmentPlatformRestrictionAdditionalProperties -Properties $PSBoundParameters
-        Update-MgDeviceManagementDeviceEnrollmentConfiguration -DisplayName $DisplayName `
-            -Description $Description `
-            -AdditionalProperties $AdditionalProperties `
-            -DeviceEnrollmentConfigurationId $config.id
+
+        $PSBoundParameters.Remove('Assignments') | Out-Null
+
+        $keys=(([Hashtable]$PSBoundParameters).clone()).Keys
+        foreach($key in $keys)
+        {
+            $keyName=$key.substring(0,1).toLower()+$key.substring(1,$key.length-1)
+            $keyValue= $PSBoundParameters.$key
+            if($null -ne $PSBoundParameters.$key -and $PSBoundParameters.$key.getType().Name -like "*cimInstance*")
+            {
+                $keyValue= Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters.$key
+                if($DeviceEnrollmentConfigurationType -eq 'singlePlatformRestriction' )
+                {
+                    $keyName='platformRestriction'
+                }
+            }
+            $PSBoundParameters.remove($key)
+            $PSBoundParameters.add($keyName,$keyValue)
+        }
+
+        $policyType="#microsoft.graph.deviceEnrollmentPlatformRestrictionConfiguration"
+        if($DeviceEnrollmentConfigurationType -eq 'platformRestrictions' )
+        {
+            $policyType="#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration"
+        }
+        $PSBoundParameters.add("@odata.type",$policyType)
+        write-verbose ($PSBoundParameters|convertTo-json -depth 20)
+        Update-MgDeviceManagementDeviceEnrollmentConfiguration `
+            -BodyParameter $PSBoundParameters `
+            -DeviceEnrollmentConfigurationId $Identity
+
+        #Assignments from DefaultPolicy are not editable and will raise an alert
+        if($Identity -notlike "*_DefaultPlatformRestrictions")
+        {
+            $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+
+            Update-DeviceConfigurationPolicyAssignments `
+                -DeviceConfigurationPolicyId $Identity `
+                -Targets $assignmentsHash
+        }
+
     }
     elseif ($Ensure -eq 'Absent' -and $currentCategory.Ensure -eq 'Present')
     {
@@ -327,35 +419,40 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [ValidateSet("singlePlatformRestriction","platformRestrictions")]
+        [System.String]
+        $DeviceEnrollmentConfigurationType,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $IosRestriction,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $WindowsRestriction,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $WindowsHomeSkuRestriction,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $WindowsMobileRestriction,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $AndroidRestriction,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $AndroidForWorkRestriction,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MacRestriction,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $MacOSRestriction,
 
         [Parameter()]
@@ -916,7 +1013,7 @@ function Update-DeviceConfigurationPolicyAssignments
     {
         $configurationPolicyAssignments = @()
 
-        $Uri="https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/$DeviceConfigurationPolicyId/assign"
+        $Uri="https://graph.microsoft.com/beta/deviceManagement/deviceEnrollmentConfigurations/$DeviceConfigurationPolicyId/assign"
 
         foreach ($target in $targets)
         {
@@ -939,7 +1036,7 @@ function Update-DeviceConfigurationPolicyAssignments
             }
             $configurationPolicyAssignments += @{'target' = $formattedTarget }
         }
-        $body = @{'assignments' = $configurationPolicyAssignments } | ConvertTo-Json -Depth 20
+        $body = @{'enrollmentConfigurationAssignments' = $configurationPolicyAssignments } | ConvertTo-Json -Depth 20
         #write-verbose -Message $body
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
 
@@ -1015,7 +1112,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
     foreach ($key in $keys)
     {
 
-        if($ComplexObject.$($key.Name))
+        if($null -ne $ComplexObject.$($key.Name))
         {
             $keyName = $key.Name[0].ToString().ToLower() + $key.Name.Substring(1, $key.Name.Length - 1)
 
@@ -1301,12 +1398,6 @@ function Compare-M365DSCComplexObject
     {
         if($source.count -ne $target.count)
         {
-            write-verbose ("source")
-            write-verbose ($source|fl|out-string)
-
-            write-verbose ("Target")
-            write-verbose ($target|fl|out-string)
-
             Write-Verbose -Message "Configuration drift - The complex array have different number of items: Source {$($source.count)} Target {$($target.count)}"
             return $false
         }
@@ -1385,6 +1476,7 @@ function Compare-M365DSCComplexObject
 
                 if(-not $compareResult)
                 {
+
                     Write-Verbose -Message "Configuration drift - complex object key: $key Source {$sourceValue} Target {$targetValue}"
                     return $false
                 }
@@ -1439,7 +1531,7 @@ function Convert-M365DSCDRGComplexTypeToHashtable
     }
     $hashComplexObject = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject
 
-    if($hashComplexObject)
+    if($null -ne $hashComplexObject)
     {
 
         $results=$hashComplexObject.clone()

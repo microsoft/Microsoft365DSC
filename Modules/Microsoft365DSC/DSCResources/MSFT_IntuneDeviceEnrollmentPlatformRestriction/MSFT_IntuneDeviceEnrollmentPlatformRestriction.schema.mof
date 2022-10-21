@@ -25,6 +25,7 @@ class MSFT_IntuneDeviceEnrollmentPlatformRestriction : OMI_BaseResource
     [Write, Description("Identity of the device enrollment platform restriction.")] String Identity;
     [Write, Description("Display name of the device enrollment platform restriction.")] String DisplayName;
     [Write, Description("Description of the device enrollment platform restriction.")] String Description;
+    [Write, Description("Support for Enrollment Configuration Type Inherited from deviceEnrollmentConfiguration."), ValueMap{"singlePlatformRestriction","platformRestrictions"}, Values{"singlePlatformRestriction","platformRestrictions"}] String DeviceEnrollmentConfigurationType;
     [Write, Description("Ios restrictions based on platform, platform operating system version, and device ownership."), EmbeddedInstance("MSFT_DeviceEnrollmentPlatformRestriction")] string IosRestriction;
     [Write, Description("Windows restrictions based on platform, platform operating system version, and device ownership."), EmbeddedInstance("MSFT_DeviceEnrollmentPlatformRestriction")] string WindowsRestriction;
     [Write, Description("Windows home Sku restrictions based on platform, platform operating system version, and device ownership."), EmbeddedInstance("MSFT_DeviceEnrollmentPlatformRestriction")] string WindowsHomeSkuRestriction;
