@@ -13,9 +13,9 @@ function Get-TargetResource
         $Value,
 
         [Parameter()]
-        [ValidateSet("Tenant", "Site")]
+        [ValidateSet('Tenant', 'Site')]
         [System.String]
-        $EntityScope = "Tenant",
+        $EntityScope = 'Tenant',
 
         [Parameter()]
         [System.String]
@@ -26,9 +26,9 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -60,7 +60,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration for SPO Storage Entity for $Key"
@@ -72,8 +76,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -81,17 +85,17 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
     try
     {
         Write-Verbose -Message "Getting storage entity $Key"
 
         $entityStorageParms = @{ }
-        $entityStorageParms.Add("Key", $Key)
+        $entityStorageParms.Add('Key', $Key)
 
-        if ($null -ne $EntityScope -and "" -ne $EntityScope)
+        if ($null -ne $EntityScope -and '' -ne $EntityScope)
         {
-            $entityStorageParms.Add("Scope", $EntityScope)
+            $entityStorageParms.Add('Scope', $EntityScope)
         }
 
         $Entity = Get-PnPStorageEntity @entityStorageParms -ErrorAction SilentlyContinue
@@ -111,7 +115,7 @@ function Get-TargetResource
             EntityScope           = $EntityScope
             Description           = $Entity.Description
             Comment               = $Entity.Comment
-            Ensure                = "Present"
+            Ensure                = 'Present'
             SiteUrl               = $SiteUrl
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -120,6 +124,7 @@ function Get-TargetResource
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
     }
     catch
@@ -127,7 +132,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -162,9 +167,9 @@ function Set-TargetResource
         $Value,
 
         [Parameter()]
-        [ValidateSet("Tenant", "Site")]
+        [ValidateSet('Tenant', 'Site')]
         [System.String]
-        $EntityScope = "Tenant",
+        $EntityScope = 'Tenant',
 
         [Parameter()]
         [System.String]
@@ -175,9 +180,9 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -209,7 +214,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration for SPO Storage Entity for $Key"
@@ -218,8 +227,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -232,24 +241,25 @@ function Set-TargetResource
     $curStorageEntry = Get-TargetResource @PSBoundParameters
 
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("SiteUrl") | Out-Null
-    $CurrentParameters.Remove("Credential") | Out-Null
-    $CurrentParameters.Remove("Ensure") | Out-Null
-    $CurrentParameters.Remove("EntityScope") | Out-Null
-    $CurrentParameters.Remove("ApplicationId") | Out-Null
-    $CurrentParameters.Remove("TenantId") | Out-Null
-    $CurrentParameters.Remove("CertificatePath") | Out-Null
-    $CurrentParameters.Remove("CertificatePassword") | Out-Null
-    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
-    $CurrentParameters.Remove("ApplicationSecret") | Out-Null
-    $CurrentParameters.Add("Scope", $EntityScope)
+    $CurrentParameters.Remove('SiteUrl') | Out-Null
+    $CurrentParameters.Remove('Credential') | Out-Null
+    $CurrentParameters.Remove('Ensure') | Out-Null
+    $CurrentParameters.Remove('EntityScope') | Out-Null
+    $CurrentParameters.Remove('ApplicationId') | Out-Null
+    $CurrentParameters.Remove('TenantId') | Out-Null
+    $CurrentParameters.Remove('CertificatePath') | Out-Null
+    $CurrentParameters.Remove('CertificatePassword') | Out-Null
+    $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
+    $CurrentParameters.Remove('ManagedIdentity') | Out-Null
+    $CurrentParameters.Remove('ApplicationSecret') | Out-Null
+    $CurrentParameters.Add('Scope', $EntityScope)
 
-    if (($Ensure -eq "Absent" -and $curStorageEntry.Ensure -eq "Present"))
+    if (($Ensure -eq 'Absent' -and $curStorageEntry.Ensure -eq 'Present'))
     {
         Write-Verbose -Message "Removing storage entity $Key"
         Remove-PnPStorageEntity -Key $Key
     }
-    elseif ($Ensure -eq "Present")
+    elseif ($Ensure -eq 'Present')
     {
         try
         {
@@ -258,10 +268,10 @@ function Set-TargetResource
         }
         catch
         {
-            if ($_.Exception -like "*Access denied*")
+            if ($_.Exception -like '*Access denied*')
             {
                 throw "It appears that the account doesn't have access to create an SPO Storage " + `
-                    "Entity or that an App Catalog was not created for the specified location"
+                    'Entity or that an App Catalog was not created for the specified location'
             }
         }
     }
@@ -282,9 +292,9 @@ function Test-TargetResource
         $Value,
 
         [Parameter()]
-        [ValidateSet("Tenant", "Site")]
+        [ValidateSet('Tenant', 'Site')]
         [System.String]
-        $EntityScope = "Tenant",
+        $EntityScope = 'Tenant',
 
         [Parameter()]
         [System.String]
@@ -295,9 +305,9 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -329,14 +339,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -353,13 +367,13 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Key", `
-            "Value", `
-            "Key", `
-            "Comment", `
-            "Description", `
-            "EntityScope", `
-            "Ensure")
+        -ValuesToCheck @('Key', `
+            'Value', `
+            'Key', `
+            'Comment', `
+            'Description', `
+            'EntityScope', `
+            'Ensure')
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -398,7 +412,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
@@ -410,8 +428,8 @@ function Export-TargetResource
         Confirm-M365DSCDependencies
 
         #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-        $CommandName  = $MyInvocation.MyCommand
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
         $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
             -CommandName $CommandName `
             -Parameters $PSBoundParameters
@@ -422,12 +440,12 @@ function Export-TargetResource
 
         $i = 1
         $dscContent = ''
-        $organization = ""
-        $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
+        $organization = ''
+        $principal = '' # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
         $organization = Get-M365DSCOrganization -Credential $Credential -TenantId $Tenantid
-        if ($organization.IndexOf(".") -gt 0)
+        if ($organization.IndexOf('.') -gt 0)
         {
-            $principal = $organization.Split(".")[0]
+            $principal = $organization.Split('.')[0]
         }
 
         # Obtain central administration url from a User Principal Name
@@ -461,6 +479,7 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
             Write-Host "    |---[$i/$($storageEntities.Length)] $($storageEntity.Key)" -NoNewline
             $Results = Get-TargetResource @Params
@@ -495,7 +514,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -512,7 +531,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 
