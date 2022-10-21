@@ -3,7 +3,7 @@
 # UNRELEASED
 
 * DEPENDENCIES
-  * Updated MSCloudLoginAssistant to version 1.0.95;
+  * Updated MSCloudLoginAssistant to version 1.0.96;
 * MISC
   * Add support for ManagedIdentity to the SPo and OD resources.
 
