@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* TeamsDialInConferencingTenantSettings
+  * Initial release;
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.0.96;
 * MISC
