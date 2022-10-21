@@ -14,7 +14,7 @@
                 ],
                 "update": [
                     {
-                        "name": "AdmninistrativeUnit.ReadWrite.All"
+                        "name": "AdministrativeUnit.ReadWrite.All"
                         "name": "Directory.ReadWrite.All"
                         "name": "RoleManagement.ReadWrite.Directory"
                     }

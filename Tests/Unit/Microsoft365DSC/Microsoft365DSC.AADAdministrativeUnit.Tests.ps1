@@ -14,8 +14,12 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
 
+# *-MgAdministrativeUnit* cmdlets are only available in the beta profile
+Select-MgProfile -Name beta
+
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
     -DscResource "AADAdministrativeUnit" -GenericStubModule $GenericStubPath
+
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -37,57 +41,65 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName Update-MgDirectoryAdministrativeUnit -MockWith {
+
+            Mock -CommandName Invoke-MgGraphRequest -MockWith {
+
             }
 
-            Mock -CommandName New-MgDirectoryAdministrativeUnit -MockWith {
+            # Note: The Graph beta profile provides cmdlets xxx-MgAdministrativeUnit(xxx) that accommodate the preview AU membership feature
+            # but the 1.0 profile cmdlets only contains xxx-MgDirectoryAdministrativeUnit(xxx)
+
+            Mock -CommandName Update-MgAdministrativeUnit -MockWith {
+
             }
 
-            Mock -CommandName Remove-MgDirectoryAdministrativeUnit -MockWith {
+            Mock -CommandName Remove-MgAdministrativeUnit -MockWith {
+
+            }
+
+            Mock -CommandName New-MgAdministrativeUnit -MockWith {
+
+            }
+
+            Mock -CommandName New-MgAdministrativeUnitMemberByRef -MockWith {
+
+            }
+
+            Mock -CommandName New-MgAdministrativeUnitScopedRoleMember -MockWith {
+
+            }
+
+            Mock -CommandName Remove-MgAdministrativeUnit -MockWith {
+
+            }
+
+            Mock -CommandName Remove-MgAdministrativeUnitMemberByRef -MockWith {
+
+            }
+
+            Mock -CommandName Remove-MgAdministrativeUnitScopedRoleMember -MockWith {
+
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
+                Select-MgProfile beta
                 return "Credential"
             }
         }
         # Test contexts
-        Context -Name "The AADAdministrativeUnit should exist but it DOES NOT" -Fixture {
+        Context -Name "The AU should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        Extensions =@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphextension -Property @{
-                            CIMType = "MSFT_MicrosoftGraphextension"
-                            Name = "Extensions"
-                            isArray = $True
+                        Description = "FakeStringValue1"
+                        DisplayName = "FakeStringValue1"
+                        Id = "FakeStringValue1"
+                        Visibility = "Public"
 
-                            } -ClientOnly)
-                        )
-                        Id = "FakeStringValue"
-                        Members =@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphdirectoryobject -Property @{
-                            CIMType = "MSFT_MicrosoftGraphdirectoryobject"
-                            Name = "Members"
-                            isArray = $True
+                        Ensure                        = "Present"
+                        Credential                    = $Credential;
+                    }
 
-                            } -ClientOnly)
-                        )
-                        ScopedRoleMembers =@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphscopedrolemembership -Property @{
-                            CIMType = "MSFT_MicrosoftGraphscopedrolemembership"
-                            Name = "ScopedRoleMembers"
-                            isArray = $True
-
-                            } -ClientOnly)
-                        )
-                        Visibility = "FakeStringValue"
-
-                    Ensure                        = "Present"
-                    Credential                    = $Credential;
-                }
-
-                Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
+                Mock -CommandName Get-MgAdministrativeUnit -MockWith {
                     return $null
                 }
             }
@@ -97,80 +109,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
-            It 'Should Create the group from the Set method' {
+            It 'Should Create the AU from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgDirectoryAdministrativeUnit -Exactly 1
+                Should -Invoke -CommandName New-MgAdministrativeUnit -Exactly 1
             }
         }
 
-        Context -Name "The AADAdministrativeUnit exists but it SHOULD NOT" -Fixture {
+        Context -Name "The AU exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        Extensions =@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphextension -Property @{
-                            CIMType = "MSFT_MicrosoftGraphextension"
-                            Name = "Extensions"
-                            isArray = $True
+                        Description = "FakeStringValue2"
+                        DisplayName = "FakeStringValue2"
+                        Id = "FakeStringValue2"
 
-                            } -ClientOnly)
-                        )
-                        Id = "FakeStringValue"
-                        Members =@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphdirectoryobject -Property @{
-                            CIMType = "MSFT_MicrosoftGraphdirectoryobject"
-                            Name = "Members"
-                            isArray = $True
-
-                            } -ClientOnly)
-                        )
-                        ScopedRoleMembers =@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphscopedrolemembership -Property @{
-                            CIMType = "MSFT_MicrosoftGraphscopedrolemembership"
-                            Name = "ScopedRoleMembers"
-                            isArray = $True
-
-                            } -ClientOnly)
-                        )
-                        Visibility = "FakeStringValue"
-
-                    Ensure                        = "Absent"
-                    Credential                    = $Credential;
-                }
-
-                Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
-                    return @{
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        Extensions =@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphextension -Property @{
-                            CIMType = "MSFT_MicrosoftGraphextension"
-                            Name = "Extensions"
-                            isArray = $True
-
-                            } -ClientOnly)
-                        )
-                        Id = "FakeStringValue"
-                        Members =@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphdirectoryobject -Property @{
-                            CIMType = "MSFT_MicrosoftGraphdirectoryobject"
-                            Name = "Members"
-                            isArray = $True
-
-                            } -ClientOnly)
-                        )
-                        ScopedRoleMembers =@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphscopedrolemembership -Property @{
-                            CIMType = "MSFT_MicrosoftGraphscopedrolemembership"
-                            Name = "ScopedRoleMembers"
-                            isArray = $True
-
-                            } -ClientOnly)
-                        )
-                        Visibility = "FakeStringValue"
-
+                        Ensure                        = "Absent"
+                        Credential                    = $Credential;
                     }
+
+                Mock -CommandName Get-MgAdministrativeUnit -MockWith {
+                    return [pscustomobject]@{
+                        Description = "FakeStringValue2"
+                        DisplayName = "FakeStringValue2"
+                        Id = "FakeStringValue2"
+                    }
+                }
+                Mock -CommandName Get-MgAdministrativeUnitMember -MockWith {
+                    return $null
+                }
+                Mock -CommandName Get-MgAdministrativeUnitScopedRoleMember -MockWith {
+                    return $null
                 }
             }
 
@@ -178,163 +145,232 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It 'Should Remove the group from the Set method' {
+            It 'Should Remove the AU from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgDirectoryAdministrativeUnit -Exactly 1
+                Should -Invoke -CommandName Remove-MgAdministrativeUnit -Exactly 1
             }
         }
-        Context -Name "The AADAdministrativeUnit Exists and Values are already in the desired state" -Fixture {
+        Context -Name "The AU Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        Extensions =@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphextension -Property @{
-                            CIMType = "MSFT_MicrosoftGraphextension"
-                            Name = "Extensions"
-                            isArray = $True
-
-                            } -ClientOnly)
-                        )
-                        Id = "FakeStringValue"
+                        Description = "DSCAU"
+                        DisplayName = "DSCAU"
+                        Id = "DSCAU"
                         Members =@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphdirectoryobject -Property @{
-                            CIMType = "MSFT_MicrosoftGraphdirectoryobject"
-                            Name = "Members"
-                            isArray = $True
-
-                            } -ClientOnly)
-                        )
+                                    (New-CimInstance -ClassName MSFT_MicrosoftGraphdirectoryobject -Property @{
+                                            Identity = "John.Doe@mytenant.com"
+                                            Type     = "User"
+                                        } -ClientOnly)
+                                )
                         ScopedRoleMembers =@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphscopedrolemembership -Property @{
-                            CIMType = "MSFT_MicrosoftGraphscopedrolemembership"
-                            Name = "ScopedRoleMembers"
-                            isArray = $True
+                                (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
+                                        RoleName = "User Administrator"
+                                        RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
+                                            Identity = "John.Doe@mytenant.com"
+                                            Type     = "User"
+                                        } -ClientOnly)
+                                    } -ClientOnly)
+                            )
+                        <#
+                        Extensions =@(
+                                (New-CimInstance -ClassName MSFT_MicrosoftGraphExtension -Property @{
+                                    Id = '0123456789'
+                                    Properties = (New-CimInstance -ClassName MSFT_KeyValuePair -Property @{
+                                        SomeAttribute = "somevalue"
+                                    } -ClientOnly)
+                                } -ClientOnly)
+                            )
+                        #>
+                        Visibility = "Public"
 
-                            } -ClientOnly)
-                        )
-                        Visibility = "FakeStringValue"
-
-                    Ensure                        = "Present"
-                    Credential                    = $Credential;
+                        Ensure                        = "Present";
+                        Credential                    = $Credential;
                 }
 
-                Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
-                    return @{
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
+                Mock -CommandName Get-MgAdministrativeUnit -MockWith {
+                    return [pscustomobject]@{
+                        Description = "DSCAU"
+                        DisplayName = "DSCAU"
+                        Id = "DSCAU"
+                        <#
                         Extensions =@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphextension -Property @{
-                            CIMType = "MSFT_MicrosoftGraphextension"
-                            Name = "Extensions"
-                            isArray = $True
-
-                            } -ClientOnly)
+                            [pscustomobject]@{
+                                Id = '0123456789'
+                                SomeAttribute = "somevalue"
+                            }
                         )
-                        Id = "FakeStringValue"
-                        Members =@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphdirectoryobject -Property @{
-                            CIMType = "MSFT_MicrosoftGraphdirectoryobject"
-                            Name = "Members"
-                            isArray = $True
-
-                            } -ClientOnly)
+                        #>
+                        Members = @(
+                            [pscustomobject]@{Id = "1234567890"}
                         )
-                        ScopedRoleMembers =@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphscopedrolemembership -Property @{
-                            CIMType = "MSFT_MicrosoftGraphscopedrolemembership"
-                            Name = "ScopedRoleMembers"
-                            isArray = $True
-
-                            } -ClientOnly)
+                        ScopedRoleMembers = @(
+                            [pscustomobject]@{
+                                RoleId = '12345-67890'
+                                RoleMemberInfo = @(
+                                    [pscustomobject]@{
+                                        DisplayName = "John Doe"
+                                        Id          = "1234567890"
+                                    }
+                                )
+                            }
                         )
-                        Visibility = "FakeStringValue"
-
+                        Visibility = "Public"
                     }
                 }
+
+                Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                    return [pscustomobject]@{
+                        '@odata.type' = "#microsoft.graph.user"
+                        DisplayName = "John Doe"
+                        UserPrincipalName = "John.Doe@mytenant.com"
+                        Id          = "1234567890"
+                    }
+                }
+
+                Mock -CommandName Get-MgAdministrativeUnitMember -MockWith {
+                    return [pscustomobject]{
+                        Id = "1234567890"
+                    }
+                }
+
+                Mock -CommandName Get-MgAdministrativeUnitScopedRoleMember -MockWith {
+                    return [pscustomobject]@{
+                        RoleId = '12345-67890'
+                        RoleMemberINfo = [pscustomobject]@{
+                            DisplayName = "John Doe"
+                            Id          = "1234567890"
+                        }
+                    }
+                }
+
+                Mock -CommandName Get-MgDirectoryRole -MockWith {
+                    return [pscustomobject]@{
+                        Id = '12345-67890'
+                        DisplayName = 'User Administrator'
+                    }
+                }
+
             }
 
+            It "Should return Values from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
 
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
 
-        Context -Name "The AADAdministrativeUnit exists and values are NOT in the desired state" -Fixture {
+        Context -Name "The AU exists and values (Members) are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        Extensions =@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphextension -Property @{
-                            CIMType = "MSFT_MicrosoftGraphextension"
-                            Name = "Extensions"
-                            isArray = $True
-
+                    Description = "DSCAU2"
+                    DisplayName = "DSCAU2"
+                    <#
+                    Extensions =@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphextension -Property @{
+                            Id = '0123456789'
+                            Properties = (New-CimInstance -ClassName MSFT_KeyValuePair -Property @{
+                                SomeAttribute = "somevalue"
                             } -ClientOnly)
-                        )
-                        Id = "FakeStringValue"
-                        Members =@(
+                        } -ClientOnly)
+                    )
+                    #>
+                    Id = "DSCAU2"
+                    Members =@(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphdirectoryobject -Property @{
-                            CIMType = "MSFT_MicrosoftGraphdirectoryobject"
-                            Name = "Members"
-                            isArray = $True
-
-                            } -ClientOnly)
+                                    Identity = "John.Doe@mytenant.com"
+                                    Type     = "User"
+                                } -ClientOnly)
                         )
-                        ScopedRoleMembers =@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphscopedrolemembership -Property @{
-                            CIMType = "MSFT_MicrosoftGraphscopedrolemembership"
-                            Name = "ScopedRoleMembers"
-                            isArray = $True
-
+                    ScopedRoleMembers =@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
+                                RoleName = "User Administrator"
+                                RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
+                                    Identity = "John.Doe@mytenant.com"
+                                    Type     = "User"
+                                } -ClientOnly)
                             } -ClientOnly)
-                        )
-                        Visibility = "FakeStringValue"
+                    )
+                    Visibility = "Public"
 
-                    Ensure                = "Present"
-                    Credential            = $Credential;
+                    Ensure                        = "Present";
+                    Credential                    = $Credential;
                 }
 
-                Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
-                    return @{
-                        AdditionalProperties =@{
-                            Visibility = "FakeStringValue"
-                            ScopedRoleMembers =@(
-                                @{
-                                isArray = $True
-                                Name = "ScopedRoleMembers"
-
-                                }
-                            )
-                            Members =@(
-                                @{
-                                isArray = $True
-                                Name = "Members"
-
-                                }
-                            )
-                            Extensions =@(
-                                @{
-                                isArray = $True
-                                Name = "Extensions"
-
-                                }
-                            )
-                            '@odata.type' = "#microsoft.graph."
-
-                        }
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        Id = "FakeStringValue"
+                Mock -CommandName Get-MgAdministrativeUnit -MockWith {
+                    return [pscustomobject]@{
+                        Description = "DSCAU2"
+                        DisplayName = "DSCAU2"
+                        Id = "DSCAU2"
+                        Visibility = "Public"
+                        Members = $null
+                        ScopedRoleMembers = @(
+                            [pscustomobject]@{
+                                RoleId = '12345-67890'
+                                RoleMemberInfo = [pscustomobject]@(
+                                    @{
+                                        DisplayName = "John Doe"
+                                        Id          = "1234567890"
+                                    }
+                                )
+                            }
+                        )
+                        <#
+                        Extensions =@(
+                            [pscustomobject]@{
+                                Id = "FakeExtensionIdentity"
+                                SomeAttribute = "SomeValue"
+                            }
+                        )
+                        #>
+                        '@odata.type' = "#microsoft.graph.administrativeunit"
 
                     }
                 }
-            }
+
+                Mock -CommandName Get-MgUser -MockWith {
+                    return [pscustomobject]@{
+                        Id                = "1234567890"
+                        DisplayName       = "John Doe"
+                        UserPrincipalName = "John.Doe@mytenant.com"
+                    }
+                }
+
+                Mock -CommandName Get-MgAdministrativeUnitMember -MockWith {
+                    return $null
+                }
+
+                Mock -CommandName Get-MgAdministrativeUnitScopedRoleMember -MockWith {
+                    return [pscustomobject]@{
+                        RoleId = '12345-67890'
+                        RoleMemberINfo = [pscustomobject]@{
+                            DisplayName = "John Doe"
+                            Id          = "1234567890"
+                        }
+                    }
+                }
+
+                Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                    return [pscustomobject]@{
+                        '@odata.type' = "#microsoft.graph.user"
+                        DisplayName       = "John Doe"
+                        UserPrincipalName = "John.Doe@mytenant.com"
+                        Id                = "1234567890"
+                    }
+                }
+
+                Mock -CommandName Get-MgDirectoryRole -MockWith {
+                    return [pscustomobject]@{
+                        Id = '12345-67890'
+                        DisplayName = 'User Administrator'
+                    }
+                }
+           }
 
             It "Should return Values from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
@@ -346,7 +382,121 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgDirectoryAdministrativeUnit -Exactly 1
+                Should -Invoke -CommandName New-MgAdministrativeUnitMemberByRef -Exactly 1
+            }
+        }
+
+        Context -Name "The AU exists and values (ScopedRoleMembers) are NOT in the desired state" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Description = "DSCAU"
+                    DisplayName = "DSCAU"
+                    Id = "DSCAU"
+                    <#
+                    Extensions =@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphextension -Property @{
+                            Id = '0123456789'
+                            Properties = (New-CimInstance -ClassName MSFT_KeyValuePair -Property @{
+                                SomeAttribute = "somevalue"
+                            } -ClientOnly)
+                        } -ClientOnly)
+                    )
+                    #>
+                    Members =@(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphdirectoryobject -Property @{
+                                    Identity = "John.Doe@mytenant.com"
+                                    Type     = "User"
+                                } -ClientOnly)
+                        )
+                    ScopedRoleMembers =@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
+                                RoleName = "User Administrator"
+                                RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
+                                    Identity = "John.Doe@mytenant.com"
+                                    Type     = "User"
+                                } -ClientOnly)
+                            } -ClientOnly)
+                    )
+                    Visibility = "Public"
+                    Ensure                        = "Present";
+                    Credential                    = $Credential;
+                }
+
+                Mock -CommandName Get-MgAdministrativeUnit -MockWith {
+                    return [pscustomobject]@{
+                        Description = "DSCAU"
+                        DisplayName = "DSCAU"
+                        Id = "DSCAU"
+                        Visibility = "Public"
+                        Members = @(
+                            [pscustomobject]@{Id = '1234567890'}
+                        )
+                        ScopedRoleMembers = $null
+                        <#
+                        Extensions =@(
+                            [pscustomobject]@{
+                                Id = "FakeExtensionId"
+                                SomeAttribute = "SomeValue"
+                            }
+                        )
+                        #>
+                        '@odata.type' = "#microsoft.graph."
+                    }
+                }
+
+                Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                    return [pscustomobject]@{
+                        '@odata.type' = "#microsoft.graph.user"
+                        DisplayName = "John Doe"
+                        UserPrincipalName = "John.Doe@mytenant.com"
+                        Id          = "1234567890"
+                    }
+                }
+
+                Mock -CommandName Get-MgAdministrativeUnitMember -MockWith {
+                    return [pscustomobject]@{
+                        Id = "1234567890"
+                    }
+                }
+
+                Mock -CommandName Get-MgUser -MockWith {
+                    return [pscustomobject]@{
+                        Id                = "1234567890"
+                        DisplayName       = "John Doe"
+                        UserPrincipalName = "John.Doe@mytenant.com"
+                    }
+                }
+
+                Mock -CommandName Get-MgAdministrativeUnitScopedRoleMember -MockWith {
+                }
+
+
+                Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                    return [pscustomobject]@{
+                        '@odata.type' = "#microsoft.graph.user"
+                        DisplayName = "John Doe"
+                        UserPrincipalName = "John.Doe@mytenant.com"
+                        Id          = "1234567890"
+                    }
+                }
+
+                Mock -CommandName Get-MgDirectoryRole -MockWith {
+                    return [pscustomobject]@{
+                        Id = '12345-67890'
+                        DisplayName = 'User Administrator'
+                    }
+                }
+            }
+
+            It "Should return Values from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+            It "Should call the Set method" {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName New-MgAdministrativeUnitScopedRoleMember -Exactly 1
             }
         }
 
@@ -357,10 +507,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
-                    return @{
+                Mock -CommandName Get-MgAdministrativeUnit -MockWith {
+                    return [pscustomobject]@{
                         Description = "FakeStringValue"
                         DisplayName = "FakeStringValue"
+                        <#
                         Extensions =@(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphextension -Property @{
                             CIMType = "MSFT_MicrosoftGraphextension"
@@ -369,24 +520,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                             } -ClientOnly)
                         )
+                        #>
                         Id = "FakeStringValue"
-                        Members =@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphdirectoryobject -Property @{
-                            CIMType = "MSFT_MicrosoftGraphdirectoryobject"
-                            Name = "Members"
-                            isArray = $True
-
-                            } -ClientOnly)
+                        Members = @(
+                            [pscustomobject]@{Id = "1234567890"}
                         )
-                        ScopedRoleMembers =@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphscopedrolemembership -Property @{
-                            CIMType = "MSFT_MicrosoftGraphscopedrolemembership"
-                            Name = "ScopedRoleMembers"
-                            isArray = $True
-
-                            } -ClientOnly)
+                        ScopedRoleMembers = @(
+                            [pscustomobject]@{
+                                RoleId = '12345-67890'
+                                RoleMemberInfo = [pscustomobject]@{
+                                    DisplayName = "John Doe"
+                                    Id          = "1234567890"
+                                }
+                            }
                         )
-                        Visibility = "FakeStringValue"
+                        Visibility = "Public"
 
                     }
                 }
