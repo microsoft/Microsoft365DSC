@@ -125,7 +125,7 @@ extra:
   generator: false
   analytics:
     provider: google
-    property: G-TNYC8MCYCT
+    property: UA-246073771-1
 extra_css:
   - stylesheets/extra.css
 repo_url: https://github.com/microsoft/Microsoft365DSC
