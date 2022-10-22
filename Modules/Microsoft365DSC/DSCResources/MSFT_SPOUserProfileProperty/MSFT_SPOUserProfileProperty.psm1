@@ -12,9 +12,9 @@ function Get-TargetResource
         $Properties,
 
         [Parameter()]
-        [ValidateSet("Present")]
+        [ValidateSet('Present')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -34,7 +34,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting SPO Profile Properties for user {$UserName}"
@@ -45,7 +49,7 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -54,7 +58,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -77,11 +81,12 @@ function Get-TargetResource
             UserName              = $UserName
             Properties            = $propertiesValue
             Credential            = $Credential
-            Ensure                = "Present"
+            Ensure                = 'Present'
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -93,7 +98,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -126,9 +131,9 @@ function Set-TargetResource
         $Properties,
 
         [Parameter()]
-        [ValidateSet("Present")]
+        [ValidateSet('Present')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -148,7 +153,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting Profile Properties for user {$UserName}"
@@ -157,7 +166,7 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -200,9 +209,9 @@ function Test-TargetResource
         $Properties,
 
         [Parameter()]
-        [ValidateSet("Present")]
+        [ValidateSet('Present')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -222,13 +231,17 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -236,13 +249,13 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration for SPO Sharing settings"
+    Write-Verbose -Message 'Testing configuration for SPO Sharing settings'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $TestResult = Test-M365DSCParameterState  -DesiredValues $PSBoundParameters `
+    $TestResult = Test-M365DSCParameterState -DesiredValues $PSBoundParameters `
         -Source $($MyInvocation.MyCommand.Source) `
         -CurrentValues $CurrentValues
 
@@ -279,7 +292,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
@@ -291,7 +308,7 @@ function Export-TargetResource
         Confirm-M365DSCDependencies
 
         #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
         $CommandName = $MyInvocation.MyCommand
         $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
             -CommandName $CommandName `
@@ -299,7 +316,7 @@ function Export-TargetResource
         Add-M365DSCTelemetryEvent -Data $data
         #endregion
 
-        $result = ""
+        $result = ''
 
         # Get all instances;
         $instances = Get-MgUser -All:$true
@@ -349,7 +366,11 @@ function Export-TargetResource
 
                     [Parameter()]
                     [System.String]
-                    $CertificateThumbprint
+                    $CertificateThumbprint,
+
+                    [Parameter()]
+                    [Switch]
+                    $ManagedIdentity
                 )
 
 
@@ -357,14 +378,14 @@ function Export-TargetResource
 
                 # Implicitly load the M365DSCUtil.psm1 module in order to be able to call
                 # into the Invoke-O36DSCCommand cmdlet;
-                Import-Module ($ScriptRoot + "\..\..\Modules\M365DSCUtil.psm1") -Force | Out-Null
+                Import-Module ($ScriptRoot + '\..\..\Modules\M365DSCUtil.psm1') -Force | Out-Null
 
                 # Invoke the logic that extracts the all the Property Bag values of the current site using the
                 # the invokation wrapper that handles throttling;
                 $returnValue = Invoke-M365DSCCommand -Arguments $PSBoundParameters -InvokationPath $ScriptRoot -ScriptBlock {
                     $WarningPreference = 'SilentlyContinue'
                     $params = $args[0]
-                    $dscContent = ""
+                    $dscContent = ''
                     foreach ($instance in $params.Instances)
                     {
                         foreach ($user in $instance)
@@ -375,17 +396,18 @@ function Export-TargetResource
                                 TenantId              = $TenantId
                                 ApplicationSecret     = $ApplicationSecret
                                 CertificateThumbprint = $CertificateThumbprint
+                                Managedidentity       = $ManagedIdentity.IsPresent
                                 Credential            = $Credential
                             }
-                            $CurrentModulePath = $params.ScriptRoot + "\MSFT_SPOUserProfileProperty.psm1"
+                            $CurrentModulePath = $params.ScriptRoot + '\MSFT_SPOUserProfileProperty.psm1'
                             Import-Module $CurrentModulePath -Force | Out-Null
 
                             $Results = Get-TargetResource @Params
 
-                            if ($result.Ensure -eq "Present")
+                            if ($result.Ensure -eq 'Present')
                             {
-                                Import-Module ($params.ScriptRoot + "\..\..\Modules\M365DSCUtil.psm1") -Force | Out-Null
-                                Import-Module ($params.ScriptRoot + "\..\..\Modules\M365DSCTelemetryEngine.psm1") -Force | Out-Null
+                                Import-Module ($params.ScriptRoot + '\..\..\Modules\M365DSCUtil.psm1') -Force | Out-Null
+                                Import-Module ($params.ScriptRoot + '\..\..\Modules\M365DSCTelemetryEngine.psm1') -Force | Out-Null
 
                                 $Results.Properties = ConvertTo-SPOUserProfilePropertyInstanceString -Properties $result.Properties
                                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -412,7 +434,7 @@ function Export-TargetResource
         Write-Host "`r`n    Broke extraction process down into {$MaxProcesses} jobs of {$batchSize} item(s) each"
         $totalJobs = $MaxProcesses
         $jobsCompleted = 0
-        $status = "Running..."
+        $status = 'Running...'
         $elapsedTime = 0
         do
         {
@@ -420,7 +442,7 @@ function Export-TargetResource
             $count = $jobs.Length
             foreach ($job in $jobs)
             {
-                if ($job.JobStateInfo.State -eq "Complete")
+                if ($job.JobStateInfo.State -eq 'Complete')
                 {
                     $currentContent = Receive-Job -Name $job.name
                     $result += $currentContent
@@ -436,24 +458,24 @@ function Export-TargetResource
 
                 $status = "Completed $jobsCompleted/$totalJobs jobs in $elapsedTime seconds"
                 $percentCompleted = $jobsCompleted / $totalJobs * 100
-                Write-Progress -Activity "SPOUserProfileProperty Extraction" -PercentComplete $percentCompleted -Status $status
+                Write-Progress -Activity 'SPOUserProfileProperty Extraction' -PercentComplete $percentCompleted -Status $status
             }
             $elapsedTime ++
             Start-Sleep -Seconds 1
         } while ($count -ne 0)
-        Write-Progress -Activity "SPOUserProfileProperty Extraction" -PercentComplete 100 -Status "Completed" -Completed
-        $organization = ""
-        $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
+        Write-Progress -Activity 'SPOUserProfileProperty Extraction' -PercentComplete 100 -Status 'Completed' -Completed
+        $organization = ''
+        $principal = '' # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
         $organization = Get-M365DSCOrganization -Credential $Credential -TenantId $Tenantid
-        if ($organization.IndexOf(".") -gt 0)
+        if ($organization.IndexOf('.') -gt 0)
         {
-            $principal = $organization.Split(".")[0]
+            $principal = $organization.Split('.')[0]
         }
         if ($result.ToLower().Contains($organization.ToLower()) -or `
                 $result.ToLower().Contains($principal.ToLower()))
         {
             $result = $result -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
-            $result = $result -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+            $result = $result -ireplace [regex]::Escape('@' + $organization), "@`$(`$OrganizationName)"
         }
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         return $result
@@ -464,7 +486,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -481,7 +503,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 

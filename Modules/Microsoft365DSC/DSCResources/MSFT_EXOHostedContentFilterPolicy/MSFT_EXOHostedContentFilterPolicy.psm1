@@ -33,6 +33,10 @@ function Get-TargetResource
         $BlockedSenders = @(),
 
         [Parameter()]
+        [System.String]
+        $BulkQuarantineTag,
+
+        [Parameter()]
         [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $BulkSpamAction = 'MoveToJmf',
@@ -87,9 +91,17 @@ function Get-TargetResource
         $HighConfidencePhishAction = 'Quarantine',
 
         [Parameter()]
+        [System.String]
+        $HighConfidencePhishQuarantineTag,
+
+        [Parameter()]
         [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $HighConfidenceSpamAction = 'MoveToJmf',
+
+        [Parameter()]
+        [System.String]
+        $HighConfidenceSpamQuarantineTag,
 
         [Parameter()]
         [System.Boolean]
@@ -186,6 +198,14 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $ModifySubjectValue,
+
+        [Parameter()]
+        [System.String]
+        $PhishQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        $SpamQuarantineTag,
 
         [Parameter()]
         [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
@@ -312,6 +332,7 @@ function Get-TargetResource
                 AllowedSenders                       = $AllowedSendersValues
                 BlockedSenderDomains                 = $HostedContentFilterPolicy.BlockedSenderDomains.Domain
                 BlockedSenders                       = $BlockedSendersValues
+                BulkQuarantineTag                    = $HostedContentFilterPolicy.BulkQuarantineTag
                 BulkSpamAction                       = $HostedContentFilterPolicy.BulkSpamAction
                 BulkThreshold                        = $HostedContentFilterPolicy.BulkThreshold
                 DownloadLink                         = $HostedContentFilterPolicy.DownloadLink
@@ -322,7 +343,9 @@ function Get-TargetResource
                 EndUserSpamNotificationFrequency     = $HostedContentFilterPolicy.EndUserSpamNotificationFrequency
                 EndUserSpamNotificationLanguage      = $HostedContentFilterPolicy.EndUserSpamNotificationLanguage
                 HighConfidencePhishAction            = $HostedContentFilterPolicy.HighConfidencePhishAction
+                HighConfidencePhishQuarantineTag     = $HostedContentFilterPolicy.HighConfidencePhishQuarantineTag
                 HighConfidenceSpamAction             = $HostedContentFilterPolicy.HighConfidenceSpamAction
+                HighConfidenceSpamQuarantineTag      = $HostedContentFilterPolicy.HighConfidenceSpamQuarantineTag
                 InlineSafetyTipsEnabled              = $HostedContentFilterPolicy.InlineSafetyTipsEnabled
                 IncreaseScoreWithBizOrInfoUrls       = $HostedContentFilterPolicy.IncreaseScoreWithBizOrInfoUrls
                 IncreaseScoreWithImageLinks          = $HostedContentFilterPolicy.IncreaseScoreWithImageLinks
@@ -344,6 +367,8 @@ function Get-TargetResource
                 MarkAsSpamWebBugsInHtml              = $HostedContentFilterPolicy.MarkAsSpamWebBugsInHtml
                 ModifySubjectValue                   = $HostedContentFilterPolicy.ModifySubjectValue
                 PhishSpamAction                      = $HostedContentFilterPolicy.PhishSpamAction
+                PhishQuarantineTag                   = $HostedContentFilterPolicy.PhishQuarantineTag
+                SpamQuarantineTag                    = $HostedContentFilterPolicy.SpamQuarantineTag
                 QuarantineRetentionPeriod            = $HostedContentFilterPolicy.QuarantineRetentionPeriod
                 RedirectToRecipients                 = $HostedContentFilterPolicy.RedirectToRecipients
                 RegionBlockList                      = $HostedContentFilterPolicy.RegionBlockList
@@ -431,6 +456,10 @@ function Set-TargetResource
         $BlockedSenders = @(),
 
         [Parameter()]
+        [System.String]
+        $BulkQuarantineTag,
+
+        [Parameter()]
         [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $BulkSpamAction = 'MoveToJmf',
@@ -485,9 +514,17 @@ function Set-TargetResource
         $HighConfidencePhishAction = 'Quarantine',
 
         [Parameter()]
+        [System.String]
+        $HighConfidencePhishQuarantineTag,
+
+        [Parameter()]
         [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $HighConfidenceSpamAction = 'MoveToJmf',
+
+        [Parameter()]
+        [System.String]
+        $HighConfidenceSpamQuarantineTag,
 
         [Parameter()]
         [System.Boolean]
@@ -584,6 +621,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $ModifySubjectValue,
+
+        [Parameter()]
+        [System.String]
+        $PhishQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        $SpamQuarantineTag,
 
         [Parameter()]
         [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
@@ -771,6 +816,10 @@ function Test-TargetResource
         $BlockedSenders = @(),
 
         [Parameter()]
+        [System.String]
+        $BulkQuarantineTag,
+
+        [Parameter()]
         [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $BulkSpamAction = 'MoveToJmf',
@@ -825,9 +874,17 @@ function Test-TargetResource
         $HighConfidencePhishAction = 'Quarantine',
 
         [Parameter()]
+        [System.String]
+        $HighConfidencePhishQuarantineTag,
+
+        [Parameter()]
         [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $HighConfidenceSpamAction = 'MoveToJmf',
+
+        [Parameter()]
+        [System.String]
+        $HighConfidenceSpamQuarantineTag,
 
         [Parameter()]
         [System.Boolean]
@@ -924,6 +981,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $ModifySubjectValue,
+
+        [Parameter()]
+        [System.String]
+        $PhishQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        $SpamQuarantineTag,
 
         [Parameter()]
         [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
