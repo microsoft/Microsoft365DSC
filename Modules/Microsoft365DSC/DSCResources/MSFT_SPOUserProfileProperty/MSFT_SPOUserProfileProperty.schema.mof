@@ -12,7 +12,8 @@ class MSFT_SPOUserProfileProperty : OMI_BaseResource
     [Write, Description("Only accepted value is 'Present'."), ValueMap{"Present"}, Values{"Present"}] String Ensure;
     [Write, Description("Credentials of the Global Admin."), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
-    [Write, Description("Secret of the Azure Active Directory application to authenticate with.")] String ApplicationSecret;
+    [Write, Description("Secret of the Azure Active Directory application to authenticate with."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
     [Write, Description("Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com")] String TenantId;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+	[Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
 };

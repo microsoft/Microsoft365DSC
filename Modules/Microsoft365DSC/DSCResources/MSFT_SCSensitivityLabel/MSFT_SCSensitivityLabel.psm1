@@ -585,12 +585,13 @@ function Set-TargetResource
 
     if ($PSBoundParameters.ContainsKey("Disabled"))
     {
-        Write-Verbose -Message "The Disabled parameter is no longer available and will be depricated."
+        Write-Verbose -Message "The Disabled parameter is no longer available and will be deprecated."
     }
 
 
     if (('Present' -eq $Ensure) -and ('Absent' -eq $label.Ensure))
     {
+        Write-Verbose -Message "Label {$Name} doesn't already exist, creating it from the Set-TargetResource function."
         $CreationParams = $PSBoundParameters
 
         if ($PSBoundParameters.ContainsKey("AdvancedSettings"))
@@ -610,15 +611,15 @@ function Set-TargetResource
         $CreationParams.Remove("Priority")
         $CreationParams.Remove("Disabled")
 
-        Write-Verbose "Creating new Sensitivity label $Name calling the New-Label cmdlet."
-
         try
         {
+            Write-Verbose -Message "Creating Label {$Name}"
             New-Label @CreationParams
             ## Can't set priority until label created
             if ($PSBoundParameters.ContainsKey("Priority"))
             {
                 Start-Sleep 5
+                Write-Verbose -Message "Updating the priority for newly created label {$Name}"
                 Set-label -Identity $Name -priority $Priority
             }
         }
@@ -629,6 +630,7 @@ function Set-TargetResource
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $label.Ensure))
     {
+        Write-Verbose -Message "Label {$Name} already exist, updating it from the Set-TargetResource function."
         $SetParams = $PSBoundParameters
 
         if ($PSBoundParameters.ContainsKey("AdvancedSettings"))
@@ -897,7 +899,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('LocaleSettings') | Out-Null
     $ValuesToCheck.Remove('Disabled') | Out-Null
 
-    if ($null -ne $AdvancedSettings)
+    if ($null -ne $AdvancedSettings -and $null -ne $CurrentValues.AdvancedSettings)
     {
         $TestAdvancedSettings = Test-AdvancedSettings -DesiredProperty $AdvancedSettings -CurrentProperty $CurrentValues.AdvancedSettings
         if ($false -eq $TestAdvancedSettings)
@@ -906,7 +908,7 @@ function Test-TargetResource
         }
     }
 
-    if ($null -ne $LocaleSettings)
+    if ($null -ne $LocaleSettings -and $null -ne $CurrentValues.LocaleSettings)
     {
         $localeSettingsSame = Test-LocaleSettings -DesiredProperty $LocaleSettings -CurrentProperty $CurrentValues.LocaleSettings
         if ($false -eq $localeSettingsSame)
@@ -1059,7 +1061,7 @@ function Convert-JSONToLocaleSettings
             }
             $settings += $entry
         }
-        $result.Add("Settings", $settings)
+        $result.Add("LabelSettings", $settings)
         $settings = @()
         $entries += $result
         $result = @{ }
@@ -1162,7 +1164,7 @@ function Convert-CIMToLocaleSettings
             localeKey = $localset.LocaleKey
         }
         $settings = @()
-        foreach ($setting in $localset.Settings)
+        foreach ($setting in $localset.LabelSettings)
         {
             $settingEntry = @{
                 Key   = $setting.Key
@@ -1224,7 +1226,7 @@ function Test-LocaleSettings
     foreach ($desiredSetting in $DesiredProperty)
     {
         $foundKey = $CurrentProperty | Where-Object { $_.LocaleKey -eq $desiredSetting.localeKey }
-        foreach ($setting in $desiredSetting.Settings)
+        foreach ($setting in $desiredSetting.LabelSettings)
         {
             if ($null -ne $foundKey)
             {
@@ -1287,8 +1289,8 @@ function ConvertTo-LocaleSettingsString
         $StringContent += "                MSFT_SCLabelLocaleSettings`r`n"
         $StringContent += "                {`r`n"
         $StringContent += "                    LocaleKey = '$($LocaleSetting.LocaleKey.Replace("'", "''"))'`r`n"
-        $StringContent += "                    Settings  = @(`r`n"
-        foreach ($Setting in $LocaleSetting.Settings)
+        $StringContent += "                    LabelSettings  = @(`r`n"
+        foreach ($Setting in $LocaleSetting.LabelSettings)
         {
             $StringContent += "                        MSFT_SCLabelSetting`r`n"
             $StringContent += "                        {`r`n"

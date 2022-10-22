@@ -19,6 +19,6 @@ This function outputs information as the following type:
 
 -------------------------- EXAMPLE 1 --------------------------
 
-`Get-M365DSCWorkloadsListFromResourceNames -ResourceNames O365User`
+`Get-M365DSCWorkloadsListFromResourceNames -ResourceNames AADUser`
 
 

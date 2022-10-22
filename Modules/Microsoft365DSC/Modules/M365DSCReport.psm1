@@ -49,7 +49,14 @@ function New-M365DSCConfigurationToHTML
 
         $partHTML = "<div width='100%' style='text-align:center;'><table width='80%' style='margin-left:auto; margin-right:auto;'>"
         $partHTML += "<tr><th rowspan='" + ($resource.Keys.Count) + "' width='20%'>"
-        $partHTML += "<img src='" + (Get-IconPath -ResourceName $resource.ResourceName) + "' />"
+        try
+        {
+            $partHTML += "<img src='" + (Get-IconPath -ResourceName $resource.ResourceName) + "' />"
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         $partHTML += "</th>"
 
         $partHTML += "<th colspan='2' style='background-color:silver;text-align:center;' width='80%'>"
@@ -388,8 +395,8 @@ function New-M365DSCReportFromConfiguration
         }
         "HTML"
         {
-            $templateName = Get-Item $ConfigurationPath
-            $templateName = $TemplateFile.Name.Split('.')[0]
+            $template = Get-Item $ConfigurationPath
+            $templateName = $Template.Name.Split('.')[0]
             New-M365DSCConfigurationToHTML -ParsedContent $parsedContent -OutputPath $OutputPath -TemplateName $templateName
         }
         "JSON"
@@ -402,6 +409,21 @@ function New-M365DSCReportFromConfiguration
 <#
 .Description
 This function compares two provided DSC configuration to determine the delta.
+
+.Parameter Source
+Local path of the source configuration.
+
+.Parameter Destination
+Local path of the destination configuraton.
+
+.Parameter SourceObject
+Array that contains the list of configuration components for the source.
+
+.Parameter DestinationObject
+Array that contains the list of configuration components for the destination. |
+
+.Example
+Compare-M365DSCConfigurations -Source 'C:\DSC\source.ps1' -Destination 'C:\DSC\destination.ps1'
 
 .Functionality
 Public
@@ -587,7 +609,7 @@ function Compare-M365DSCConfigurations
         }
         catch
         {
-            Write-Host "Error: $($sourceResource.ResourceName)"
+            Write-Verbose -Message "Error: $_"
         }
         $i++
     }
@@ -595,36 +617,50 @@ function Compare-M365DSCConfigurations
 
     # Loop through all items in the destination array
     $i = 1
-    foreach ($destinationResource in $DestinationObject)
+    try
     {
-        [System.Collections.HashTable]$currentDestinationResource = ([array]$destinationResource)[0]
-        $key = Get-M365DSCResourceKey -Resource $currentDestinationResource
-        Write-Progress -Activity "Scanning Destination $Destination...[$i/$($DestinationObject.Count)]" -PercentComplete ($i / ($DestinationObject.Count) * 100)
-        $sourceResource = $SourceObject | Where-Object -FilterScript { $_.ResourceName -eq $currentDestinationResource.ResourceName -and $_.($key[0]) -eq $currentDestinationResource.($key[0]) }
-        $currentDestinationKeyValue = $currentDestinationResource.($key[0])
+        foreach ($destinationResource in $DestinationObject)
+        {
+            try
+            {
+                [System.Collections.HashTable]$currentDestinationResource = ([array]$destinationResource)[0]
+                $key = Get-M365DSCResourceKey -Resource $currentDestinationResource
+                Write-Progress -Activity "Scanning Destination $Destination...[$i/$($DestinationObject.Count)]" -PercentComplete ($i / ($DestinationObject.Count) * 100)
+                $sourceResource = $SourceObject | Where-Object -FilterScript { $_.ResourceName -eq $currentDestinationResource.ResourceName -and $_.($key[0]) -eq $currentDestinationResource.($key[0]) }
+                $currentDestinationKeyValue = $currentDestinationResource.($key[0])
 
-        # Filter on the second key
-        if ($key.Count -gt 1)
-        {
-            [array]$sourceResource = $sourceResource | Where-Object -FilterScript { $_.ResourceName -eq $currentDestinationResource.ResourceName -and $_.($key[1]) -eq $currentDestinationResource.($key[1]) }
-            $currentDestinationKeyValue = $currentDestinationResource.($key[0]), $currentDestinationResource.($key[1]) -join '\'
-        }
-        if ($null -eq $sourceResource)
-        {
-            $drift = @{
-                ResourceName = $currentDestinationResource.ResourceName
-                Key          = $keyName
-                KeyValue     = $currentDestinationKeyValue
-                Properties   = @(@{
-                        ParameterName      = 'Ensure'
-                        ValueInSource      = 'Absent'
-                        ValueInDestination = 'Present'
-                    })
+                # Filter on the second key
+                if ($key.Count -gt 1)
+                {
+                    [array]$sourceResource = $sourceResource | Where-Object -FilterScript { $_.ResourceName -eq $currentDestinationResource.ResourceName -and $_.($key[1]) -eq $currentDestinationResource.($key[1]) }
+                    $currentDestinationKeyValue = $currentDestinationResource.($key[0]), $currentDestinationResource.($key[1]) -join '\'
+                }
+                if ($null -eq $sourceResource)
+                {
+                    $drift = @{
+                        ResourceName = $currentDestinationResource.ResourceName
+                        Key          = $keyName
+                        KeyValue     = $currentDestinationKeyValue
+                        Properties   = @(@{
+                                ParameterName      = 'Ensure'
+                                ValueInSource      = 'Absent'
+                                ValueInDestination = 'Present'
+                            })
+                    }
+                    $Delta += , $drift
+                    $drift = $null
+                }
             }
-            $Delta += , $drift
-            $drift = $null
+            catch
+            {
+                Write-Verbose -Message "Error: $_"
+            }
+            $i++
         }
-        $i++
+    }
+    catch
+    {
+        Write-Verbose -Message "Error: $_"
     }
     Write-Progress -Activity "Scanning Destination..." -Completed
 
@@ -647,12 +683,13 @@ function Get-M365DSCResourceKey
         [System.Collections.Hashtable]
         $Resource
     )
-
-    if ($Resource.Contains("IsSingleInstance"))
+    $resourceInfo = Get-DscResource ("MSFT_$($Resource.ResourceName)") -Module 'Microsoft365DSC'
+    [Array]$mandatoryParameters = $resourceInfo.Properties | Where-Object -FilterScript {$_.IsMandatory}
+    if ($Resource.Contains("IsSingleInstance") -and $mandatoryParameters.Name.Contains("IsSingleInstance"))
     {
         return @("IsSingleInstance")
     }
-    elseif ($Resource.Contains("DisplayName"))
+    elseif ($Resource.Contains("DisplayName") -and $mandatoryParameters.Name.Contains("DisplayName"))
     {
         if ($Resource.ResourceName -eq 'AADMSGroup' -and -not [System.String]::IsNullOrEmpty($Resource.Id))
         {
@@ -670,51 +707,51 @@ function Get-M365DSCResourceKey
         }
         return @("DisplayName")
     }
-    elseif ($Resource.Contains("Identity"))
+    elseif ($Resource.Contains("Identity") -and $mandatoryParameters.Name.Contains("Identity"))
     {
         return @("Identity")
     }
-    elseif ($Resource.Contains("Name"))
+    elseif ($Resource.Contains("Name") -and $mandatoryParameters.Name.Contains("Name"))
     {
         return @("Name")
     }
-    elseif ($Resource.Contains("Url"))
+    elseif ($Resource.Contains("Url") -and $mandatoryParameters.Name.Contains("Url"))
     {
         return @("Url")
     }
-    elseif ($Resource.Contains("Organization"))
+    elseif ($Resource.Contains("Organization") -and $mandatoryParameters.Name.Contains("Organization"))
     {
         return @("Organization")
     }
-    elseif ($Resource.Contains("CDNType"))
+    elseif ($Resource.Contains("CDNType") -and $mandatoryParameters.Name.Contains("CDNType"))
     {
         return @("CDNType")
     }
-    elseif ($Resource.Contains("Action") -and $Resource.ResourceName -eq 'SCComplianceSearchAction')
+    elseif ($Resource.Contains("Action") -and $Resource.ResourceName -eq 'SCComplianceSearchAction' -and $mandatoryParameters.Name.Contains("Action"))
     {
         return @("SearchName", "Action")
     }
-    elseif ($Resource.Contains("Workload") -and $Resource.ResourceName -eq 'SCAuditConfigurationPolicy')
+    elseif ($Resource.Contains("Workload") -and $Resource.ResourceName -eq 'SCAuditConfigurationPolicy' -and $mandatoryParameters.Name.Contains("Workload"))
     {
         return @("Workload")
     }
-    elseif ($Resource.Contains("Title") -and $Resource.ResourceName -eq 'SPOSiteDesign')
+    elseif ($Resource.Contains("Title") -and $Resource.ResourceName -eq 'SPOSiteDesign' -and $mandatoryParameters.Name.Contains("Title"))
     {
         return @("Title")
     }
-    elseif ($Resource.Contains("SiteDesignTitle"))
+    elseif ($Resource.Contains("SiteDesignTitle") -and $mandatoryParameters.Name.Contains("SiteDesignTitle"))
     {
         return @("SiteDesignTitle")
     }
-    elseif ($Resource.Contains("Key") -and $Resource.ResourceName -eq 'SPOStorageEntity')
+    elseif ($Resource.Contains("Key") -and $Resource.ResourceName -eq 'SPOStorageEntity' -and $mandatoryParameters.Name.Contains("Key"))
     {
         return @("Key")
     }
-    elseif ($Resource.Contains("Usage"))
+    elseif ($Resource.Contains("Usage") -and $mandatoryParameters.Name.Contains("Usage"))
     {
         return @("Usage")
     }
-    elseif ($Resource.Contains("OrgWideAccount"))
+    elseif ($Resource.Contains("OrgWideAccount") -and $mandatoryParameters.Name.Contains("OrgWideAccount"))
     {
         return @("OrgWideAccount")
     }
@@ -785,7 +822,12 @@ function New-M365DSCDeltaReport
 
         [Parameter()]
         [Array]
-        $Delta
+        $Delta,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('HTML','JSON')]
+        $Type = 'HTML'
     )
 
     # Validate that the latest version of the module is installed.
@@ -840,193 +882,206 @@ function New-M365DSCDeltaReport
         }
     }
 
-    $reportSB = [System.Text.StringBuilder]::new()
-    #region Custom Header
-    if (-not [System.String]::IsNullOrEmpty($HeaderFilePath))
+    if ($Type -eq 'HTML')
     {
-        try
+        $reportSB = [System.Text.StringBuilder]::new()
+        #region Custom Header
+        if (-not [System.String]::IsNullOrEmpty($HeaderFilePath))
         {
-            $headerContent = Get-Content $HeaderFilePath
-            [void]$reportSB.AppendLine($headerContent)
+            try
+            {
+                $headerContent = Get-Content $HeaderFilePath
+                [void]$reportSB.AppendLine($headerContent)
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+                Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                    -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+            }
         }
-        catch
-        {
-            Write-Verbose -Message $_
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
-        }
-    }
-    #endregion
+        #endregion
 
-    $ReportTitle = "Microsoft365DSC - Delta Report"
-    if ($IsBlueprintAssessment)
-    {
-        $ReportTitle = "Microsoft365DSC - Blueprint Assessment Report"
-        [void]$reportSB.AppendLine("<h1>Blueprint Assessment Report</h1>")
-    }
-    else
-    {
-        [void]$reportSB.AppendLine("<h1>Delta Report</h1>")
-        [void]$reportSB.AppendLine("<p><strong>Comparing </strong>$Source <strong>to</strong> $Destination</p>")
-    }
-    [void]$reportSB.AppendLine("<html><head><meta charset='utf-8'><title>$ReportTitle</title></head><body>")
-    [void]$reportSB.AppendLine("<div style='width:100%;text-align:center;'>")
-    [void]$reportSB.AppendLine("<img src='http://Microsoft365DSC.com/Images/Promo.png' alt='Microsoft365DSC Slogan' width='500' />")
-    [void]$ReportSB.AppendLine("</div>")
-
-    [array]$resourcesMissingInSource = $Delta | Where-Object -FilterScript { $_.Properties.ParameterName -eq '_IsInConfiguration_' -and `
-            $_.Properties.ValueInSource -eq 'Absent' }
-    [array]$resourcesMissingInDestination = $Delta | Where-Object -FilterScript { $_.Properties.ParameterName -eq '_IsInConfiguration_' -and `
-            $_.Properties.ValueInDestination -eq 'Absent' }
-    [array]$resourcesInDrift = $Delta | Where-Object -FilterScript { $_.Properties.ParameterName -ne '_IsInConfiguration_' }
-
-    if ($resourcesMissingInSource.Count -eq 0 -and $resourcesMissingInDestination.Count -eq 0 -and `
-            $resourcesInDrift.Count -eq 0)
-    {
-        [void]$reportSB.AppendLine("<p><strong>No discrepancies have been found!</strong></p>")
-    }
-    elseif (-not $DriftOnly)
-    {
-        [void]$reportSB.AppendLine("<h2>Table of Contents</h2>")
-        [void]$reportSB.AppendLine("<ul>")
-        if ($resourcesMissingInSource.Count -gt 0)
+        $ReportTitle = "Microsoft365DSC - Delta Report"
+        if ($IsBlueprintAssessment)
         {
-            [void]$reportSB.AppendLine("<li><a href='#Source'>Resources Missing in the Source</a>")
-            [void]$reportSB.AppendLine(" <strong>(</strong>$($resourcesMissingInSource.Count)<strong>)</strong></li>")
+            $ReportTitle = "Microsoft365DSC - Blueprint Assessment Report"
+            [void]$reportSB.AppendLine("<h1>Blueprint Assessment Report</h1>")
         }
-        if ($resourcesMissingInDestination.Count -gt 0)
+        else
         {
-            [void]$reportSB.AppendLine("<li><a href='#Destination'>Resources Missing in the Destination</a>")
-            [void]$reportSB.AppendLine(" <strong>(</strong>$($resourcesMissingInDestination.Count)<strong>)</strong></li>")
+            [void]$reportSB.AppendLine("<h1>Delta Report</h1>")
+            [void]$reportSB.AppendLine("<p><strong>Comparing </strong>$Source <strong>to</strong> $Destination</p>")
         }
+        [void]$reportSB.AppendLine("<html><head><meta charset='utf-8'><title>$ReportTitle</title></head><body>")
+        [void]$reportSB.AppendLine("<div style='width:100%;text-align:center;'>")
+        [void]$reportSB.AppendLine("<img src='http://Microsoft365DSC.com/Images/Promo.png' alt='Microsoft365DSC Slogan' width='500' />")
+        [void]$ReportSB.AppendLine("</div>")
+
+        [array]$resourcesMissingInSource = $Delta | Where-Object -FilterScript { $_.Properties.ParameterName -eq '_IsInConfiguration_' -and `
+                $_.Properties.ValueInSource -eq 'Absent' }
+        [array]$resourcesMissingInDestination = $Delta | Where-Object -FilterScript { $_.Properties.ParameterName -eq '_IsInConfiguration_' -and `
+                $_.Properties.ValueInDestination -eq 'Absent' }
+        [array]$resourcesInDrift = $Delta | Where-Object -FilterScript { $_.Properties.ParameterName -ne '_IsInConfiguration_' }
+
+        if ($resourcesMissingInSource.Count -eq 0 -and $resourcesMissingInDestination.Count -eq 0 -and `
+                $resourcesInDrift.Count -eq 0)
+        {
+            [void]$reportSB.AppendLine("<p><strong>No discrepancies have been found!</strong></p>")
+        }
+        elseif (-not $DriftOnly)
+        {
+            [void]$reportSB.AppendLine("<h2>Table of Contents</h2>")
+            [void]$reportSB.AppendLine("<ul>")
+            if ($resourcesMissingInSource.Count -gt 0)
+            {
+                [void]$reportSB.AppendLine("<li><a href='#Source'>Resources Missing in the Source</a>")
+                [void]$reportSB.AppendLine(" <strong>(</strong>$($resourcesMissingInSource.Count)<strong>)</strong></li>")
+            }
+            if ($resourcesMissingInDestination.Count -gt 0)
+            {
+                [void]$reportSB.AppendLine("<li><a href='#Destination'>Resources Missing in the Destination</a>")
+                [void]$reportSB.AppendLine(" <strong>(</strong>$($resourcesMissingInDestination.Count)<strong>)</strong></li>")
+            }
+            if ($resourcesInDrift.Count -gt 0)
+            {
+                [void]$reportSB.AppendLine("<li><a href='#Drift'>Resources Configured Differently</a>")
+                [void]$reportSB.AppendLine(" <strong>(</strong>$($resourcesInDrift.Count)<strong>)</strong></li>")
+            }
+            [void]$reportSB.AppendLine("</ul>")
+        }
+
+        if ($resourcesMissingInSource.Count -gt 0 -and -not $DriftOnly)
+        {
+            [void]$reportSB.AppendLine("<br /><hr /><br />")
+            [void]$reportSB.AppendLine("<a id='Source'></a><h2>Resources that are Missing in the Source</h2>")
+            foreach ($resource in $resourcesMissingInSource)
+            {
+                [void]$reportSB.AppendLine("<table width='100%' cellspacing='0' cellpadding='5'>")
+                [void]$reportSB.AppendLine("<tr>")
+                [void]$reportSB.Append("<th style='width:25%;text-align:center;vertical-align:middle;border-left:1px solid black;")
+                [void]$reportSB.Append("border-top:1px solid black;border-bottom:1px solid black;'>")
+                $iconPath = Get-IconPath -ResourceName $resource.ResourceName
+                [void]$reportSB.AppendLine("<img src='$iconPath' />")
+                [void]$reportSB.AppendLine("</th>");
+                [void]$reportSB.AppendLine("<th style='border:1px solid black;text-align:center;'>")
+                [void]$reportSB.AppendLine("<h3>$($resource.ResourceName) - $($resource.Key) = $($resource.KeyValue)</h3>")
+                [void]$reportSB.AppendLine("</th>")
+                [void]$reportSB.AppendLine("</tr>")
+                [void]$reportSB.AppendLine("</table>")
+            }
+        }
+
+        if ($resourcesMissingInDestination.Count -gt 0 -and -not $DriftOnly)
+        {
+            [void]$reportSB.AppendLine("<br /><hr /><br />")
+            [void]$reportSB.AppendLine("<a id='Destination'></a><h2>Resources that are Missing in the Destination</h2>")
+            foreach ($resource in $resourcesMissingInDestination)
+            {
+                [void]$reportSB.AppendLine("<table width='100%' cellspacing='0' cellpadding='5'>")
+                [void]$reportSB.AppendLine("<tr>")
+                [void]$reportSB.Append("<th style='width:25%;text-align:center;vertical-align:middle;border-left:1px solid black;")
+                [void]$reportSB.Append("border-top:1px solid black;border-bottom:1px solid black;'>")
+                $iconPath = Get-IconPath -ResourceName $resource.ResourceName
+                [void]$reportSB.AppendLine("<img src='$iconPath' />")
+                [void]$reportSB.AppendLine("</th>");
+                [void]$reportSB.AppendLine("<th style='border:1px solid black;text-align:center;'>")
+                [void]$reportSB.AppendLine("<h3>$($resource.ResourceName) - $($resource.Key) = $($resource.KeyValue)</h3>")
+                [void]$reportSB.AppendLine("</th>")
+                [void]$reportSB.AppendLine("</tr>")
+                [void]$reportSB.AppendLine("</table>")
+            }
+        }
+
         if ($resourcesInDrift.Count -gt 0)
         {
-            [void]$reportSB.AppendLine("<li><a href='#Drift'>Resources Configured Differently</a>")
-            [void]$reportSB.AppendLine(" <strong>(</strong>$($resourcesInDrift.Count)<strong>)</strong></li>")
-        }
-        [void]$reportSB.AppendLine("</ul>")
-    }
-
-    if ($resourcesMissingInSource.Count -gt 0 -and -not $DriftOnly)
-    {
-        [void]$reportSB.AppendLine("<br /><hr /><br />")
-        [void]$reportSB.AppendLine("<a id='Source'></a><h2>Resources that are Missing in the Source</h2>")
-        foreach ($resource in $resourcesMissingInSource)
-        {
-            [void]$reportSB.AppendLine("<table width='100%' cellspacing='0' cellpadding='5'>")
-            [void]$reportSB.AppendLine("<tr>")
-            [void]$reportSB.Append("<th style='width:25%;text-align:center;vertical-align:middle;border-left:1px solid black;")
-            [void]$reportSB.Append("border-top:1px solid black;border-bottom:1px solid black;'>")
-            $iconPath = Get-IconPath -ResourceName $resource.ResourceName
-            [void]$reportSB.AppendLine("<img src='$iconPath' />")
-            [void]$reportSB.AppendLine("</th>");
-            [void]$reportSB.AppendLine("<th style='border:1px solid black;text-align:center;'>")
-            [void]$reportSB.AppendLine("<h3>$($resource.ResourceName) - $($resource.Key) = $($resource.KeyValue)</h3>")
-            [void]$reportSB.AppendLine("</th>")
-            [void]$reportSB.AppendLine("</tr>")
-            [void]$reportSB.AppendLine("</table>")
-        }
-    }
-
-    if ($resourcesMissingInDestination.Count -gt 0 -and -not $DriftOnly)
-    {
-        [void]$reportSB.AppendLine("<br /><hr /><br />")
-        [void]$reportSB.AppendLine("<a id='Destination'></a><h2>Resources that are Missing in the Destination</h2>")
-        foreach ($resource in $resourcesMissingInDestination)
-        {
-            [void]$reportSB.AppendLine("<table width='100%' cellspacing='0' cellpadding='5'>")
-            [void]$reportSB.AppendLine("<tr>")
-            [void]$reportSB.Append("<th style='width:25%;text-align:center;vertical-align:middle;border-left:1px solid black;")
-            [void]$reportSB.Append("border-top:1px solid black;border-bottom:1px solid black;'>")
-            $iconPath = Get-IconPath -ResourceName $resource.ResourceName
-            [void]$reportSB.AppendLine("<img src='$iconPath' />")
-            [void]$reportSB.AppendLine("</th>");
-            [void]$reportSB.AppendLine("<th style='border:1px solid black;text-align:center;'>")
-            [void]$reportSB.AppendLine("<h3>$($resource.ResourceName) - $($resource.Key) = $($resource.KeyValue)</h3>")
-            [void]$reportSB.AppendLine("</th>")
-            [void]$reportSB.AppendLine("</tr>")
-            [void]$reportSB.AppendLine("</table>")
-        }
-    }
-
-    if ($resourcesInDrift.Count -gt 0)
-    {
-        [void]$reportSB.AppendLine("<br /><hr /><br />")
-        [void]$reportSB.AppendLine("<a id='Drift'></a><h2>Resources that are Configured Differently</h2>")
-        foreach ($resource in $resourcesInDrift)
-        {
-            [void]$reportSB.AppendLine("<table width='100%' cellspacing='0' cellpadding='5'>")
-            [void]$reportSB.AppendLine("<tr>")
-            [void]$reportSB.Append("<th style='width:25%;text-align:center;vertical-align:middle;border:1px solid black;;' ")
-            [void]$reportSB.Append("rowspan='" + ($resource.Properties.Count + 2) + "'>")
-            $iconPath = Get-IconPath -ResourceName $resource.ResourceName
-            [void]$reportSB.AppendLine("<img src='$iconPath' />")
-            [void]$reportSB.AppendLine("</th>");
-            [void]$reportSB.AppendLine("<th style='border:1px solid black;text-align:center;vertical-align:middle;background-color:#CCC' colspan='3'>")
-            [void]$reportSB.AppendLine("<h3>$($resource.ResourceName) - $($resource.Key) = $($resource.KeyValue)</h3>")
-            [void]$reportSB.AppendLine("</th></tr>")
-            [void]$reportSB.AppendLine("<tr>")
-
-            $SourceLabel = "Source Value"
-            $DestinationLabel = "Destination Value"
-            if ($IsBlueprintAssessment)
+            [void]$reportSB.AppendLine("<br /><hr /><br />")
+            [void]$reportSB.AppendLine("<a id='Drift'></a><h2>Resources that are Configured Differently</h2>")
+            foreach ($resource in $resourcesInDrift)
             {
-                $SourceLabel = "Tenant's Current Value"
-                $DestinationLabel = "Blueprint's Value"
-            }
-            [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;background-color:#EEE;' width='45%'><strong>Property</strong></td>")
-            [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;background-color:#EEE;' width='15%'><strong>$SourceLabel</strong></td>")
-            [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;background-color:#EEE;' width='15%'><strong>$DestinationLabel</strong></td>")
-            [void]$reportSB.AppendLine("</tr>")
-            foreach ($drift in $resource.Properties)
-            {
-                if ($drift.ParameterName -notlike '_metadata_*')
+                [void]$reportSB.AppendLine("<table width='100%' cellspacing='0' cellpadding='5'>")
+                [void]$reportSB.AppendLine("<tr>")
+                [void]$reportSB.Append("<th style='width:25%;text-align:center;vertical-align:middle;border:1px solid black;;' ")
+                [void]$reportSB.Append("rowspan='" + ($resource.Properties.Count + 2) + "'>")
+                $iconPath = Get-IconPath -ResourceName $resource.ResourceName
+                [void]$reportSB.AppendLine("<img src='$iconPath' />")
+                [void]$reportSB.AppendLine("</th>");
+                [void]$reportSB.AppendLine("<th style='border:1px solid black;text-align:center;vertical-align:middle;background-color:#CCC' colspan='3'>")
+                [void]$reportSB.AppendLine("<h3>$($resource.ResourceName) - $($resource.Key) = $($resource.KeyValue)</h3>")
+                [void]$reportSB.AppendLine("</th></tr>")
+                [void]$reportSB.AppendLine("<tr>")
+
+                $SourceLabel = "Source Value"
+                $DestinationLabel = "Destination Value"
+                if ($IsBlueprintAssessment)
                 {
-                    $cellStyle = ''
-                    $emoticon = ''
-                    if ($drift._Metadata_Level -eq 'L1')
+                    $SourceLabel = "Tenant's Current Value"
+                    $DestinationLabel = "Blueprint's Value"
+                }
+                [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;background-color:#EEE;' width='45%'><strong>Property</strong></td>")
+                [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;background-color:#EEE;' width='15%'><strong>$SourceLabel</strong></td>")
+                [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;background-color:#EEE;' width='15%'><strong>$DestinationLabel</strong></td>")
+                [void]$reportSB.AppendLine("</tr>")
+                foreach ($drift in $resource.Properties)
+                {
+                    if ($drift.ParameterName -notlike '_metadata_*')
                     {
-                        $cellStyle = "background-color:#F6CECE;"
-                        $emoticon = '&#x1F7E5;'
-                    }
-                    elseif ($drift._Metadata_Level -eq 'L2')
-                    {
-                        $cellStyle = "background-color:#F7F8E0;"
-                        $emoticon = '&#x1F7E8;'
-                    }
-                    elseif ($drift._Metadata_Level -eq 'L3')
-                    {
-                        $cellStyle = "background-color:#FFFFFF;"
-                        $emoticon = '&#x1F7E6;'
-                    }
+                        $cellStyle = ''
+                        $emoticon = ''
+                        if ($drift._Metadata_Level -eq 'L1')
+                        {
+                            $cellStyle = "background-color:#F6CECE;"
+                            $emoticon = '&#x1F7E5;'
+                        }
+                        elseif ($drift._Metadata_Level -eq 'L2')
+                        {
+                            $cellStyle = "background-color:#F7F8E0;"
+                            $emoticon = '&#x1F7E8;'
+                        }
+                        elseif ($drift._Metadata_Level -eq 'L3')
+                        {
+                            $cellStyle = "background-color:#FFFFFF;"
+                            $emoticon = '&#x1F7E6;'
+                        }
 
-                    [void]$reportSB.AppendLine("<tr>")
-                    [void]$reportSB.AppendLine("<td style='border:1px solid black;text-align:right;' width='45%'>")
-                    [void]$reportSB.AppendLine("$($drift.ParameterName)</td>")
-                    [void]$reportSB.AppendLine("<td style='border:1px solid black;$cellStyle' width='15%'>")
-                    [void]$reportSB.AppendLine("$($drift.ValueInSource)</td>")
-                    [void]$reportSB.AppendLine("<td style='border:1px solid black;' width='15%'>")
-                    [void]$reportSB.AppendLine("$($drift.ValueInDestination)</td>")
-                    [void]$reportSB.AppendLine("</tr>")
+                        [void]$reportSB.AppendLine("<tr>")
+                        [void]$reportSB.AppendLine("<td style='border:1px solid black;text-align:right;' width='45%'>")
+                        [void]$reportSB.AppendLine("$($drift.ParameterName)</td>")
+                        [void]$reportSB.AppendLine("<td style='border:1px solid black;$cellStyle' width='15%'>")
+                        [void]$reportSB.AppendLine("$($drift.ValueInSource)</td>")
+                        [void]$reportSB.AppendLine("<td style='border:1px solid black;' width='15%'>")
+                        [void]$reportSB.AppendLine("$($drift.ValueInDestination)</td>")
+                        [void]$reportSB.AppendLine("</tr>")
 
-                    if ($null -ne $drift._Metadata_Level)
-                    {
-                        [void]$reportSB.AppendLine("<tr><td colspan='3' style='border:1px solid black;'>$emoticon $($drift._Metadata_Info)</td></tr>")
+                        if ($null -ne $drift._Metadata_Level)
+                        {
+                            [void]$reportSB.AppendLine("<tr><td colspan='3' style='border:1px solid black;'>$emoticon $($drift._Metadata_Info)</td></tr>")
+                        }
                     }
                 }
+                [void]$reportSB.AppendLine("</table><hr/>")
             }
-            [void]$reportSB.AppendLine("</table><hr/>")
+        }
+        [void]$reportSB.AppendLine("</body></html>")
+        if (-not [System.String]::IsNullOrEmpty($OutputPath))
+        {
+            $reportSB.ToString() | Out-File $OutputPath
+        }
+        else
+        {
+            return $reportSB.ToString()
         }
     }
-    [void]$reportSB.AppendLine("</body></html>")
-    if (-not [System.String]::IsNullOrEmpty($OutputPath))
+    elseif ($Type -eq 'JSON')
     {
-        $reportSB.ToString() | Out-File $OutputPath
-        Invoke-Item $OutputPath
-    }
-    else
-    {
-        return $reportSB.ToString()
+        if (-not [System.String]::IsNullOrEmpty($OutputPath))
+        {
+            ConvertTo-JSON $Delta -Depth 25 | Out-File $OutputPath
+        }
+        else
+        {
+            return (ConvertTo-JSON $Delta -Depth 25)
+        }
     }
 }
 
@@ -1055,7 +1110,7 @@ function Initialize-M365DSCReporting
         return
     }
 
-    Write-Output "Loading file '$ConfigurationPath'"
+    Write-Verbose -Message "Loading file '$ConfigurationPath'"
 
     $fileContent = Get-Content $ConfigurationPath -Raw
     try

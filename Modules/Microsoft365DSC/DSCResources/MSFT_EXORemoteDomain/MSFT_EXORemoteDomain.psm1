@@ -71,6 +71,10 @@ function Get-TargetResource
         $Name,
 
         [Parameter()]
+        [System.Boolean]
+        $NDREnabled,
+
+        [Parameter()]
         [System.String]
         $NonMimeCharacterSet,
 
@@ -125,7 +129,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Getting configuration of Remote Domain for $Identity"
 
@@ -145,8 +153,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -154,7 +162,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
     try
     {
         $RemoteDomain = Get-RemoteDomain -Identity $Identity -ErrorAction SilentlyContinue
@@ -182,6 +190,7 @@ function Get-TargetResource
                 LineWrapSize                         = $RemoteDomain.LineWrapSize
                 MeetingForwardNotificationEnabled    = $RemoteDomain.MeetingForwardNotificationEnabled
                 Name                                 = $RemoteDomain.Name
+                NDREnabled                           = $RemoteDomain.NDREnabled
                 NonMimeCharacterSet                  = $RemoteDomain.NonMimeCharacterSet
                 PreferredInternetCodePageForShiftJis = $RemoteDomain.PreferredInternetCodePageForShiftJis
                 RequiredCharsetCoverage              = $RemoteDomain.RequiredCharsetCoverage
@@ -190,11 +199,12 @@ function Get-TargetResource
                 TrustedMailInboundEnabled            = $RemoteDomain.TrustedMailInboundEnabled
                 TrustedMailOutboundEnabled           = $RemoteDomain.TrustedMailOutboundEnabled
                 UseSimpleDisplayName                 = $RemoteDomain.UseSimpleDisplayName
-                Credential                   = $Credential
+                Credential                           = $Credential
                 ApplicationId                        = $ApplicationId
                 CertificateThumbprint                = $CertificateThumbprint
                 CertificatePath                      = $CertificatePath
                 CertificatePassword                  = $CertificatePassword
+                Managedidentity                      = $ManagedIdentity.IsPresent
                 TenantId                             = $TenantId
             }
 
@@ -207,7 +217,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -300,6 +310,10 @@ function Set-TargetResource
         $Name,
 
         [Parameter()]
+        [System.Boolean]
+        $NDREnabled,
+
+        [Parameter()]
         [System.String]
         $NonMimeCharacterSet,
 
@@ -354,15 +368,19 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -376,16 +394,17 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     $RemoteDomainParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $RemoteDomainParams.Remove("Credential") | Out-Null
-    $RemoteDomainParams.Remove("Ensure") | Out-Null
-    $RemoteDomainParams.Remove("ApplicationId") | Out-Null
-    $RemoteDomainParams.Remove("TenantId") | Out-Null
-    $RemoteDomainParams.Remove("CertificateThumbprint") | Out-Null
+    $RemoteDomainParams.Remove('Credential') | Out-Null
+    $RemoteDomainParams.Remove('Ensure') | Out-Null
+    $RemoteDomainParams.Remove('ApplicationId') | Out-Null
+    $RemoteDomainParams.Remove('TenantId') | Out-Null
+    $RemoteDomainParams.Remove('CertificateThumbprint') | Out-Null
     $RemoteDomainParams.Remove('CertificatePath') | Out-Null
     $RemoteDomainParams.Remove('CertificatePassword') | Out-Null
+    $RemoteDomainParams.Remove('Managedidentity') | Out-Null
 
     # CASE: Remote Domain doesn't exist but should;
-    if ($Ensure -eq "Present" -and $currentRemoteDomainConfig.Ensure -eq "Absent")
+    if ($Ensure -eq 'Present' -and $currentRemoteDomainConfig.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Remote Domain '$($Name)' does not exist but it should. Create and configure it."
         # Create remote domain
@@ -396,21 +415,21 @@ function Set-TargetResource
         New-RemoteDomain -Name $Name -DomainName $DomainName
 
         # Configure new remote domain
-        $RemoteDomainParams.Remove("DomainName") | Out-Null
+        $RemoteDomainParams.Remove('DomainName') | Out-Null
         Set-RemoteDomain @RemoteDomainParams
     }
     # CASE: Remote Domain exists but it shouldn't;
-    elseif ($Ensure -eq "Absent" -and $currentRemoteDomainConfig.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Absent' -and $currentRemoteDomainConfig.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Remote Domain '$($Name)' exists but it shouldn't. Remove it."
         Remove-RemoteDomain -Identity $Name -Confirm:$false
     }
     # CASE: Remote Domain exists and it should, but has different values than the desired ones
-    elseif ($Ensure -eq "Present" -and $currentRemoteDomainConfig.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Present' -and $currentRemoteDomainConfig.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Remote Domain '$($Name)' already exists, but needs updating."
         Write-Verbose -Message "Setting RemoteDomain for $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $RemoteDomainParams)"
-        $RemoteDomainParams.Remove("DomainName") | Out-Null
+        $RemoteDomainParams.Remove('DomainName') | Out-Null
         Set-RemoteDomain @RemoteDomainParams
     }
 }
@@ -488,6 +507,10 @@ function Test-TargetResource
         $Name,
 
         [Parameter()]
+        [System.Boolean]
+        $NDREnabled,
+
+        [Parameter()]
         [System.String]
         $NonMimeCharacterSet,
 
@@ -542,14 +565,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -570,6 +597,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('Managedidentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -609,7 +637,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -619,8 +651,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -631,7 +663,7 @@ function Export-TargetResource
     {
         [array]$AllRemoteDomains = Get-RemoteDomain -ErrorAction Stop
 
-        $dscContent = ""
+        $dscContent = ''
 
         if ($AllRemoteDomains.Length -eq 0)
         {
@@ -648,11 +680,12 @@ function Export-TargetResource
 
             $Params = @{
                 Identity              = $domain.Identity
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
             $Results = Get-TargetResource @Params
@@ -676,7 +709,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -693,7 +726,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 

@@ -37,12 +37,8 @@ Configuration Master
         {
             DisplayName               = "App1"
             AvailableToOtherTenants   = $false
-            GroupMembershipClaims     = $null
             Homepage                  = "https://app.contoso.com"
-            IdentifierUris            = "https://app.contoso.com"
-            KnownClientApplications   = ""
             LogoutURL                 = "https://app.contoso.com/logout"
-            Oauth2RequirePostResponse = $false
             PublicClient              = $false
             ReplyURLs                 = "https://app.contoso.com"
             Permissions               = @(
@@ -435,7 +431,7 @@ Configuration Master
         #>
         #endregion
         #region O365
-        O365User JohnSmith
+        AADUSer JohnSmith
         {
             UserPrincipalName = "John.Smith@$Domain"
             DisplayName       = "John Smith"
@@ -460,7 +456,7 @@ Configuration Master
                 Members      = @("John.Smith@$Domain")
                 Credential   = $GlobalAdmin
                 Ensure       = "Present"
-                DependsOn    = "[O365User]JohnSmith"
+                DependsOn    = "[AADUSer]JohnSmith"
             }
         }
         #endregion
@@ -484,13 +480,6 @@ Configuration Master
         #region SC
         if ($Environment -ne 'GCCH')
         {
-            SCAuditConfigurationPolicy SharePointAuditPolicy
-            {
-                Workload   = "SharePoint"
-                Ensure     = "Present"
-                Credential = $GlobalAdmin
-            }
-
             SCAuditConfigurationPolicy OneDriveAuditPolicy
             {
                 Workload   = "OneDriveForBusiness"
@@ -685,25 +674,6 @@ Configuration Master
                 Ensure     = "Present"
                 Credential = $GlobalAdmin
 
-            }
-
-            SCSupervisoryReviewPolicy SRPolicy
-            {
-                Name       = "MySRPolicy"
-                Comment    = "Test Policy"
-                Reviewers  = @($GlobalAdmin.UserName)
-                Ensure     = "Present"
-                Credential = $GlobalAdmin
-            }
-
-            SCSupervisoryReviewRule SRRule
-            {
-                Name         = "DemoRule"
-                Condition    = "(Reviewee:$($GlobalAdmin.UserName))"
-                SamplingRate = 100
-                Policy       = 'MySRPolicy'
-                Ensure       = "Present"
-                Credential   = $GlobalAdmin
             }
             #endregion
 
@@ -987,7 +957,7 @@ Configuration Master
         {
             TeamName   = "Alpha Team"
             User       = "John.Smith@$Domain"
-            DependsOn  = @("[O365User]JohnSmith", "[TeamsTeam]TeamAlpha")
+            DependsOn  = @("[AADUSer]JohnSmith", "[TeamsTeam]TeamAlpha")
             Ensure     = "Present"
             Credential = $GlobalAdmin
         }

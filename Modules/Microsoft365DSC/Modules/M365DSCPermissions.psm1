@@ -16,10 +16,10 @@ Specifies what type of Graph permissions need to get returned.
 Specifies the workload of the permissions that need to get returned.
 
 .Example
-Get-M365DSCCompiledPermissionList -ResourceNameList @('O365User', 'AADApplication') -Source 'Graph' -PermissionsType 'Delegated'
+Get-M365DSCCompiledPermissionList -ResourceNameList @('AADUSer', 'AADApplication') -Source 'Graph' -PermissionsType 'Delegated'
 
 .Example
-Get-M365DSCCompiledPermissionList -ResourceNameList @('O365User', 'AADApplication') -Source 'Graph' -PermissionsType 'Application'
+Get-M365DSCCompiledPermissionList -ResourceNameList @('AADUSer', 'AADApplication') -Source 'Graph' -PermissionsType 'Application'
 
 .Example
 Get-M365DSCCompiledPermissionList -ResourceNameList @('EXOAcceptedDomain') -Source 'Exchange'
@@ -43,16 +43,16 @@ function Get-M365DSCCompiledPermissionList
         $PermissionsType = 'Delegated',
 
         [Parameter()]
-        [ValidateSet('Exchange', 'Graph')]
+        [ValidateSet('Exchange', 'Graph', 'SharePoint')]
         [System.String]
         $Source = 'Graph'
     )
 
     switch ($Source)
     {
-        'Graph'
+        { $_ -in @('Graph', 'SharePoint') }
         {
-            Write-Verbose -Message "Retrieving Graph $PermissionsType Permissions"
+            Write-Verbose -Message "Retrieving $Source $PermissionsType Permissions"
             $results = @{
                 ReadPermissions   = @()
                 UpdatePermissions = @()
@@ -173,6 +173,44 @@ function Get-M365DSCCompiledPermissionList
                         continue
                     }
                 }
+                'SharePoint'
+                {
+                    if ($null -ne $resourceSettings.permissions.sharepoint)
+                    {
+                        # Update permissions
+                        foreach ($updatePermission in $resourceSettings.permissions.sharepoint.$PermissionsType.update)
+                        {
+                            if (-not $results.UpdatePermissions.Contains($updatePermission.name))
+                            {
+                                Write-Verbose -Message "Found new Update permission {$($updatePermission.name)}"
+                                $results.UpdatePermissions += $updatePermission.name
+                            }
+                            else
+                            {
+                                Write-Verbose -Message "Update permission {$($updatePermission.name)} was already added"
+                            }
+                        }
+
+                        # Read permissions
+                        foreach ($readPermission in $resourceSettings.permissions.sharepoint.$PermissionsType.read)
+                        {
+                            if (-not $results.ReadPermissions.Contains($readPermission.name))
+                            {
+                                Write-Verbose -Message "Found new Read permission {$($readPermission.name)}"
+                                $results.ReadPermissions += $readPermission.name
+                            }
+                            else
+                            {
+                                Write-Verbose -Message "Read permission {$($readPermission.name)} was already added"
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Write-Warning "Error in reading SharePoint permissions. Missing sharepoint node in settings.json for $resourceName."
+                        continue
+                    }
+                }
             }
         }
     }
@@ -194,7 +232,7 @@ Specifies that the permissions should be determined for all resources.
 For which action should the permissions be updated: Read or Update.
 
 .Example
-Update-M365DSCAllowedGraphScopes -ResourceNameList @('O365User', 'AADApplication') -Type 'Read'
+Update-M365DSCAllowedGraphScopes -ResourceNameList @('AADUSer', 'AADApplication') -Type 'Read'
 
 .Example
 Update-M365DSCAllowedGraphScopes -All -Type 'Update' -Environment 'Global'
@@ -808,24 +846,269 @@ function Update-M365DSCExchangeResourcesSettingsJSON
 
 <#
 .Description
+This function updates the settings.json files for all SharePoint resources. It is
+setting the Sites.FullControl.All permissions for all available actions, since
+all used PnP cmdlets require this permissions.
+Then it updates the settings.json file
+
+.Example
+Update-M365DSCSharePointResourcesSettingsJSON
+
+.Functionality
+Internal
+#>
+function Update-M365DSCSharePointResourcesSettingsJSON
+{
+    [CmdletBinding()]
+    param ()
+
+    Write-Verbose "Determining DSCResources path"
+    $dscResourcesRoot = Join-Path -Path $PSScriptRoot -ChildPath '..\DSCResources'
+    Write-Verbose "  DSCResouces path: $dscResourcesRoot"
+
+    Write-Verbose "Getting all psm1 files"
+    $files = Get-ChildItem -Path "$dscResourcesRoot\MSFT_SPO*\*.psm1" -Recurse
+    Write-Verbose "  Found $($files.Count) psm1 files"
+
+    foreach ($file in $files)
+    {
+        Write-Verbose "Processing file: $($file.BaseName)"
+
+        $settingsFile = Join-Path -Path $file.DirectoryName -ChildPath 'settings.json'
+        if (Test-Path -Path $settingsFile)
+        {
+            Write-Verbose "  Updating existing settings.json file"
+            $settingsJson = Get-Content -Path $settingsFile -Raw
+            $settings = ConvertFrom-Json $settingsJson
+
+            if ($null -eq $settings.permissions)
+            {
+                $settings | Add-Member -MemberType NoteProperty -Name 'permissions' -Value $value
+
+                $value = [PSCustomObject]@{
+                    delegated   = [PSCustomObject]@{
+                        read   = @(
+                            [PSCustomObject]@{
+                                name = 'Sites.FullControl.All'
+                            }
+                        )
+                        update = @(
+                            [PSCustomObject]@{
+                                name = 'Sites.FullControl.All'
+                            }
+                        )
+                    }
+                    application = [PSCustomObject]@{
+                        read   = @(
+                            [PSCustomObject]@{
+                                name = 'Sites.FullControl.All'
+                            }
+                        )
+                        update = @(
+                            [PSCustomObject]@{
+                                name = 'Sites.FullControl.All'
+                            }
+                        )
+                    }
+                }
+                $settings.permissions | Add-Member -MemberType NoteProperty -Name 'sharepoint' -Value $value
+            }
+            else
+            {
+                if ($null -eq $settings.permissions.sharepoint)
+                {
+                    $value = [PSCustomObject]@{
+                        delegated   = [PSCustomObject]@{
+                            read   = @(
+                                [PSCustomObject]@{
+                                    name = 'Sites.FullControl.All'
+                                }
+                            )
+                            update = @(
+                                [PSCustomObject]@{
+                                    name = 'Sites.FullControl.All'
+                                }
+                            )
+                        }
+                        application = [PSCustomObject]@{
+                            read   = @(
+                                [PSCustomObject]@{
+                                    name = 'Sites.FullControl.All'
+                                }
+                            )
+                            update = @(
+                                [PSCustomObject]@{
+                                    name = 'Sites.FullControl.All'
+                                }
+                            )
+                        }
+                    }
+
+                    $settings.permissions | Add-Member -MemberType NoteProperty -Name 'sharepoint' -Value $value
+                }
+                else
+                {
+                    $value = [PSCustomObject]@{
+                        read   = @(
+                            [PSCustomObject]@{
+                                name = 'Sites.FullControl.All'
+                            }
+                        )
+                        update = @(
+                            [PSCustomObject]@{
+                                name = 'Sites.FullControl.All'
+                            }
+                        )
+                    }
+
+                    if ($null -eq $settings.permissions.sharepoint.delegated)
+                    {
+                        $settings.permissions.sharepoint | Add-Member -MemberType NoteProperty -Name 'delegated' -Value $value
+                    }
+                    else
+                    {
+                        $value = @(
+                            [PSCustomObject]@{
+                                name = 'Sites.FullControl.All'
+                            }
+                        )
+
+                        if ($null -eq $settings.permissions.sharepoint.delegated.read)
+                        {
+                            $settings.permissions.sharepoint.delegated | Add-Member -MemberType NoteProperty -Name 'read' -Value $value
+                        }
+                        else
+                        {
+                            $settings.permissions.sharepoint.delegated.read = $value
+                        }
+
+                        if ($null -eq $settings.permissions.sharepoint.delegated.update)
+                        {
+                            $settings.permissions.sharepoint.delegated | Add-Member -MemberType NoteProperty -Name 'update' -Value $value
+                        }
+                        else
+                        {
+                            $settings.permissions.sharepoint.delegated.update = $value
+                        }
+                    }
+
+                    if ($null -eq $settings.permissions.sharepoint.application)
+                    {
+                        $settings.permissions.sharepoint | Add-Member -MemberType NoteProperty -Name 'application' -Value $value
+                    }
+                    else
+                    {
+                        $value = @(
+                            [PSCustomObject]@{
+                                name = 'Sites.FullControl.All'
+                            }
+                        )
+
+                        if ($null -eq $settings.permissions.sharepoint.application.read)
+                        {
+                            $settings.permissions.sharepoint.application | Add-Member -MemberType NoteProperty -Name 'read' -Value $value
+                        }
+                        else
+                        {
+                            $settings.permissions.sharepoint.application.read = $value
+                        }
+
+                        if ($null -eq $settings.permissions.sharepoint.application.update)
+                        {
+                            $settings.permissions.sharepoint.application | Add-Member -MemberType NoteProperty -Name 'update' -Value $value
+                        }
+                        else
+                        {
+                            $settings.permissions.sharepoint.application.update = $value
+                        }
+
+                    }
+                }
+            }
+        }
+        else
+        {
+            Write-Verbose "    Creating new settings.json file"
+            $settings = [PSCustomObject]@{
+                resourceName = $file.BaseName -replace 'MSFT_'
+                description  = ""
+                permissions  = [PSCustomObject]@{
+                    graph      = [PSCustomObject]@{
+                        delegated   = [PSCustomObject]@{
+                            read   = @()
+                            update = @()
+                        }
+                        application = [PSCustomObject]@{
+                            read   = @()
+                            update = @()
+                        }
+                    }
+                    sharepoint = [PSCustomObject]@{
+                        delegated   = [PSCustomObject]@{
+                            read   = @(
+                                [PSCustomObject]@{
+                                    name = 'Sites.FullControl.All'
+                                }
+                            )
+                            update = @(
+                                [PSCustomObject]@{
+                                    name = 'Sites.FullControl.All'
+                                }
+                            )
+                        }
+                        application = [PSCustomObject]@{
+                            read   = @(
+                                [PSCustomObject]@{
+                                    name = 'Sites.FullControl.All'
+                                }
+                            )
+                            update = @(
+                                [PSCustomObject]@{
+                                    name = 'Sites.FullControl.All'
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        $json = ConvertTo-Json -InputObject $settings -Depth 10
+        Set-Content -Path $settingsFile -Value $json -Encoding UTF8
+    }
+}
+
+<#
+.Description
 This function creates or updates an application in Azure AD. It assigns permissions,
 grants consent and creates a secret or uploads a certificate to the application.
 
 This application can then be used for Application Authentication.
+
+The provided permissions have to be as an array of hashtables, with Api=Graph, SharePoint
+or Exchange and PermissionsName set to a list of permissions. See examples for more information.
 
 NOTE:
 If consent cannot be given for whatever reason, make sure all these permissions are
 given Admin Consent by browsing to the App Registration in Azure AD > API Permissions
 and clicking the "Grant admin consent for <orgname>" button.
 
-.Example
-Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions Sites.FullControl.All -AdminConsent -Type Secret
+More information:
+Graph API permissions: https://docs.microsoft.com/en-us/graph/permissions-reference
+Exchange permissions: https://docs.microsoft.com/en-us/exchange/permissions-exo/permissions-exo
+
+Note:
+If you want to configure App-Only permission for Exchange, as described here:
+https://docs.microsoft.com/en-us/powershell/exchange/app-only-auth-powershell-v2?view=exchange-ps#step-2-assign-api-permissions-to-the-application
+Using the following permission will achieve exactly that: @{Api='Exchange';PermissionsName='Exchange.ManageAsApp'}
 
 .Example
-Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions Sites.FullControl.All -AdminConsent -Type Certificate -CreateSelfSignedCertificate -CertificatePath c:\Temp\M365DSC.cer
+Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions @(@{Api='SharePoint';PermissionName='Sites.FullControl.All'}) -AdminConsent -Type Secret
 
 .Example
-Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions Sites.FullControl.All -AdminConsent -Type Certificate -CertificatePath c:\Temp\M365DSC.cer
+Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions @(@{Api='Graph';PermissionName='Domain.Read.All'}) -AdminConsent -Type Certificate -CreateSelfSignedCertificate -CertificatePath c:\Temp\M365DSC.cer
+
+.Example
+Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions @(@{Api='SharePoint';PermissionName='Sites.FullControl.All'},@{Api='Graph';PermissionName='Group.ReadWrite.All'},@{Api='Exchange';PermissionsName='Exchange.ManageAsApp'}) -AdminConsent -Type Certificate -CertificatePath c:\Temp\M365DSC.cer
 
 .Functionality
 Public
@@ -842,7 +1125,7 @@ function Update-M365DSCAzureAdApplication
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Secret')]
         [Parameter(Mandatory = $true, ParameterSetName = 'Certificate')]
-        [System.String[]]
+        [System.Collections.Hashtable[]]
         $Permissions,
 
         [Parameter(ParameterSetName = 'Secret')]
@@ -983,12 +1266,16 @@ function Update-M365DSCAzureAdApplication
         return
     }
 
-    if ($null -eq (Get-AzContext))
+    $context = Get-AzContext
+    if ($null -eq $context)
     {
         Connect-AzAccount
+        $context = Get-AzContext
     }
 
-    $svcprincipal = Get-AzADServicePrincipal | Where-Object -FilterScript { $_.DisplayName -eq "Microsoft Graph" }
+    $graphSvcprincipal = Get-AzADServicePrincipal | Where-Object -FilterScript { $_.DisplayName -eq "Microsoft Graph" }
+    $spSvcprincipal = Get-AzADServicePrincipal | Where-Object -FilterScript { $_.DisplayName -eq "Office 365 SharePoint Online" }
+    $exSvcprincipal = Get-AzADServicePrincipal | Where-Object -FilterScript { $_.DisplayName -eq "Office 365 Exchange Online" }
 
     Write-LogEntry " "
     Write-LogEntry "Checking existance of AD Application"
@@ -1009,12 +1296,34 @@ function Update-M365DSCAzureAdApplication
         $permissionsSet = $false
         foreach ($permission in $Permissions)
         {
-            Write-LogEntry "  Checking permission '$permission'"
-            $appRole = $svcprincipal.AppRole | Where-Object -FilterScript { $_.Value -eq $permission }
+            if ($permission.Api -eq $null -or $permission.Api -notin @("Graph", "SharePoint", "Exchange"))
+            {
+                Write-LogEntry "Specified permission is invalid $(Convert-M365DscHashtableToString -Hashtable $permission)" -Type Warning
+                continue
+            }
+            Write-LogEntry "  Checking permission '$($permission.Api)\$($permission.PermissionName)'"
+
+            switch ($permission.Api)
+            {
+                "Graph"
+                {
+                    $svcprincipal = $graphSvcprincipal
+                }
+                "SharePoint"
+                {
+                    $svcprincipal = $spSvcprincipal
+                }
+                "Exchange"
+                {
+                    $svcprincipal = $exSvcprincipal
+                }
+            }
+
+            $appRole = $svcprincipal.AppRole | Where-Object -FilterScript { $_.Value -eq $permission.PermissionName }
 
             if ($null -eq $appRole)
             {
-                Write-LogEntry "  [ERROR] Permission '$permission' not found!"
+                Write-LogEntry "  [ERROR] Permission '$($permission.PermissionName)' not found!"
                 continue
             }
 
@@ -1026,7 +1335,7 @@ function Update-M365DSCAzureAdApplication
             }
             else
             {
-                Write-LogEntry "    Permission '$permission' already added to the application!"
+                Write-LogEntry "    Permission '$($permission.Api)\$($permission.PermissionName)' already added to the application!"
             }
         }
 
@@ -1110,6 +1419,11 @@ function Update-M365DSCAzureAdApplication
                     $_ -is [Microsoft.Azure.PowerShell.Cmdlets.Resources.MSGraph.Models.ApiV10.MicrosoftGraphKeyCredential]
                 }
 
+                if ($PSBoundParameters.ContainsKey("CertificatePath"))
+                {
+                    $cerCert = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Certificate2 -ArgumentList $CertificatePath
+                }
+
                 if ($null -eq $certCreds)
                 {
                     Write-LogEntry "  Uploading App Certificate"
@@ -1120,9 +1434,8 @@ function Update-M365DSCAzureAdApplication
                     if ($PSBoundParameters.ContainsKey("CreateSelfSignedCertificate") -eq $false)
                     {
                         Write-LogEntry "  CertificatePath specified '$CertificatePath', using that certificate"
-                        $cerCert = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Certificate2 -ArgumentList $CertificatePath
                         $certCred = $certCreds | Where-Object { $_.DisplayName -eq $cerCert.Subject -and $_.EndDateTime -eq $cerCert.NotAfter.ToUniversalTime() }
-                        if ($null -eq $certCreds)
+                        if ($null -eq $certCred)
                         {
                             Write-LogEntry "    Specified certificate does not exist in the app, uploading now"
                             $createCertificate = $true
@@ -1174,6 +1487,10 @@ function Update-M365DSCAzureAdApplication
             Write-LogEntry " "
             Write-LogEntry "IMPORTANT: A new secret has been created. This is only displayed once: Make sure you store this information!"
         }
+
+        Write-LogEntry " "
+        Write-LogEntry "NOTE: Make sure you add the application to the required Microsoft 365 (e.g. Global Admin) or Exchange (e.g. Organization Management) role groups as well!"
+        Write-LogEntry "      See the documentation for any required permissions."
     }
 }
 
@@ -1182,5 +1499,6 @@ Export-ModuleMember -Function @(
     'Update-M365DSCAllowedGraphScopes',
     'Update-M365DSCAzureAdApplication',
     'Update-M365DSCExchangeResourcesSettingsJSON',
+    'Update-M365DSCSharePointResourcesSettingsJSON',
     'Update-M365DSCResourcesSettingsJSON'
 )

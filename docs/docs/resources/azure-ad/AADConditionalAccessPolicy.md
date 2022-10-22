@@ -34,6 +34,7 @@
 | **CloudAppSecurityType** | Write | String | Specifies, what Cloud App Security control is enforced by the Policy. ||
 | **SignInFrequencyValue** | Write | UInt32 | Sign in frequency time in the given unit to be enforced by the policy. ||
 | **TermsOfUse** | Write | String | Display name of the terms of use to assign. ||
+| **CustomAuthenticationFactors** | Write | StringArray[] | Custom Controls assigned to the grant property of this policy. ||
 | **SignInFrequencyType** | Write | String | Sign in frequency unit (days/hours) to be interpreted by the policy. |Days, Hours, |
 | **SignInFrequencyIsEnabled** | Write | Boolean | Specifies, whether sign-in frequency is enforced by the Policy. ||
 | **PersistentBrowserIsEnabled** | Write | Boolean | Specifies, whether Browser Persistence is controlled by the Policy. ||
@@ -42,8 +43,9 @@
 | **Credential** | Write | PSCredential | Credentials for the Microsoft Graph delegated permissions. ||
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
-| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory application to authenticate with. ||
+| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory application to authenticate with. ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
+| **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. ||
 
 # AADConditionalAccessPolicy
 

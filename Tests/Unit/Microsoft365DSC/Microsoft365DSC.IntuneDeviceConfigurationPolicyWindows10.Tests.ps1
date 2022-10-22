@@ -47,6 +47,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Remove-MgDeviceManagementDeviceConfiguration -MockWith {
             }
+            Mock -CommandName Get-MGDeviceManagementDeviceConfigurationAssignment -MockWith {
+
+                return @()
+            }
         }
 
         # Test contexts
@@ -437,12 +441,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         id            = "12345-12345-12345-12345-12345"
-                        AdditionalProperties = @{
-                            '@odata.type'                                  = "#microsoft.graph.windows10GeneralConfiguration"
-                        }
                         displayName = "CONTOSO | W10 | Device Restriction"
                         description = "Default device restriction settings"
-                        defenderBlockEndUserAccess = $true
+                        AdditionalProperties = @{
+                            '@odata.type'                                  = "#microsoft.graph.windows10GeneralConfiguration"
+                            defenderBlockEndUserAccess = $true
                         defenderRequireRealTimeMonitoring = $true
                         defenderRequireBehaviorMonitoring = $true
                         defenderRequireNetworkInspectionSystem = $true
@@ -464,12 +467,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         defenderScanType = 'quick'   #quick,full,userDefined
                         defenderSystemScanSchedule  = 'monday'  #days of week
                         defenderScheduledScanTime =  '11:00:00.0000000'
-                        defenderDetectedMalwareActions = (New-CimInstance -ClassName MSFT_IntuneDefenderDetectedMalwareActions -Property @{
+                        defenderDetectedMalwareActions = @{
                             lowSeverity      = 'clean'
                             moderateSeverity = 'quarantine'
                             highSeverity     = 'remove'
                             severeSeverity   = 'block'
-                        } -ClientOnly)
+                        }
                         defenderFileExtensionsToExclude = "[`"csv,jpg,docx`"]"
                         defenderFilesAndFoldersToExclude = "[`"c:\\2,C:\\1`"]"
                         defenderProcessesToExclude = "[`"notepad.exe,c:\\Windows\\myprocess.exe`"]"
@@ -615,6 +618,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         enterpriseCloudPrintOAuthAuthority = "https:/tenant.contoso.com/adfs"
                         enterpriseCloudPrintResourceIdentifier = "http://cloudenterpriseprint/cloudPrint"
                         networkProxyServer = @("address=proxy.contoso.com:8080","exceptions=*.contoso.com`r`n*.internal.local","useForLocalAddresses=false")
+                        }
+
                     }
                 }
             }

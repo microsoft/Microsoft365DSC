@@ -13,7 +13,7 @@
 | **TargetedUserProtectionAction** | Write | String | The TargetedUserProtectionActionâ¯parameter specifies the action to take on detected user impersonation messages for the users specified by the TargetedUsersToProtect parameter. |BccMessage, Delete, MoveToJmf, NoAction, Quarantine, Redirect|
 | **Enabled** | Write | Boolean | Specify if this policy should be enabled. Default is $true. ||
 | **EnableFirstContactSafetyTips** | Write | Boolean | The EnableFirstContactSafetyTips parameter specifies whether to enable or disable the safety tip that's shown when recipients first receive an email from a sender or do not often receive email from a sender. ||
-| **EnableAntispoofEnforcement** | Write | Boolean | The EnableAntispoofEnforcement parameter specifies whether to enable or disable antispoofing protection for the policy. ||
+| **EnableAntispoofEnforcement** | Write | Boolean | DEPRECATED. ||
 | **EnableMailboxIntelligence** | Write | Boolean | The EnableMailboxIntelligence parameter specifies whether to enable or disable mailbox intelligence (the first contact graph) in domain and user impersonation protection. ||
 | **EnableMailboxIntelligenceProtection** | Write | Boolean | The EnableMailboxIntelligenceProtection specifies whether to enable or disable enhanced impersonation results based on each user's individual sender map. This intelligence allows Microsoft 365 to customize user impersonation detection and better handle false positives. ||
 | **EnableOrganizationDomainsProtection** | Write | Boolean | Theâ¯EnableOrganizationDomainsProtection parameter specifies whether to enable domain impersonation protection for all registered domains in the Office 365 organization. ||
@@ -31,16 +31,21 @@
 | **ImpersonationProtectionState** | Write | String | The ImpersonationProtectionState parameter specifies the configuration of impersonation protection. ||
 | **MailboxIntelligenceProtectionAction** | Write | String | The MailboxIntelligenceProtectionAction parameter specifies what to do with messages that fail mailbox intelligence protection. ||
 | **MailboxIntelligenceProtectionActionRecipients** | Write | StringArray[] | Theâ¯MailboxIntelligenceProtectionActionRecipients parameter specifies the recipients to add to detected messages when the MailboxIntelligenceProtectionAction parameter is set to the valueâ¯Redirect or BccMessage. ||
+| **MailboxIntelligenceQuarantineTag** | Write | String | The MailboxIntelligenceQuarantineTag specifies the quarantine policy that's used on messages that are quarantined by mailbox intelligence. ||
+| **SpoofQuarantineTag** | Write | String | The SpoofQuarantineTag specifies the quarantine policy that's used on messages that are quarantined by spoof intelligence. ||
 | **TargetedDomainActionRecipients** | Write | StringArray[] | Theâ¯TargetedDomainActionRecipients parameter specifies the recipients to add to detected domain impersonation messages when the TargetedDomainProtectionAction parameter is set to the valueâ¯Redirect or BccMessage. A valid value for this parameter is an email address. You can specify multiple email addresses separated by commas. ||
 | **TargetedDomainsToProtect** | Write | StringArray[] | The TargetedDomainsToProtect parameter specifies the domains that are included in domain impersonation protection when the EnableTargetedDomainsProtection parameter is set to $true. ||
+| **TargetedDomainQuarantineTag** | Write | String | The TargetedDomainQuarantineTag specifies the quarantine policy that's used on messages that are quarantined by domain impersonation protection. ||
 | **TargetedUserActionRecipients** | Write | StringArray[] | Theâ¯TargetedUserActionRecipients parameter specifies the replacement or additional recipients for detected user impersonation messages when the TargetedUserProtectionAction parameter is set to the valueâ¯Redirect or BccMessage. A valid value for this parameter is an email address. You can specify multiple email addresses separated by commas. ||
 | **TargetedUsersToProtect** | Write | StringArray[] | The TargetedUsersToProtect parameter specifies the users that are included in user impersonation protection when the EnableTargetedUserProtection parameter is set to $true. ||
+| **TargetedUserQuarantineTag** | Write | String | The TargetedUserQuarantineTag specifies the quarantine policy that's used on messages that are quarantined by user impersonation protection. ||
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin ||
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword ||
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. ||
+| **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. ||
 
 # EXOAntiPhishPolicy
 
