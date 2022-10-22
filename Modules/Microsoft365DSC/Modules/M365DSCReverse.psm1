@@ -90,11 +90,11 @@ function Start-M365DSCConfigurationExtract
     # PowerShell Gallery
     try
     {
-        Test-M365DSCNewVersionAvailable
+        Test-M365DSCModuleValidity
     }
     catch
     {
-        Add-M365DSCEvent -Message $_ -Source 'M365DSCReverse::Test-M365DSCNewVersionAvailable'
+        Add-M365DSCEvent -Message $_ -Source 'M365DSCReverse::Test-M365DSCModuleValidity'
     }
     try
     {
@@ -717,7 +717,7 @@ function Start-M365DSCConfigurationExtract
             else
             {
                 $filesToDownload = Get-AllSPOPackages -ApplicationId $ApplicationId -CertificateThumbprint $CertificateThumbprint `
-                    -CertificatePassword $CertificatePassword -TenantId $TenantId -CertificatePath $CertificatePath
+                    -CertificatePassword $CertificatePassword -TenantId $TenantId -CertificatePath $CertificatePath -ManagedIdentity:$ManagedIdentity.IsPresent
             }
             if ($filesToDownload.Count -gt 0)
             {

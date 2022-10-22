@@ -102,6 +102,14 @@ function Get-TargetResource
         $MailboxIntelligenceProtectionActionRecipients = @(),
 
         [Parameter()]
+        [System.String]
+        $MailboxIntelligenceQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        $SpoofQuarantineTag,
+
+        [Parameter()]
         [System.Boolean]
         $MakeDefault = $false,
 
@@ -125,6 +133,10 @@ function Get-TargetResource
         $TargetedDomainsToProtect = @(),
 
         [Parameter()]
+        [System.String]
+        $TargetedDomainQuarantineTag,
+
+        [Parameter()]
         [System.String[]]
         $TargetedUserActionRecipients = @(),
 
@@ -136,6 +148,10 @@ function Get-TargetResource
         [Parameter()]
         [System.String[]]
         $TargetedUsersToProtect = @(),
+
+        [Parameter()]
+        [System.String]
+        $TargetedUserQuarantineTag,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -240,13 +256,17 @@ function Get-TargetResource
                 ImpersonationProtectionState                  = $AntiPhishPolicy.ImpersonationProtectionState
                 MailboxIntelligenceProtectionAction           = $AntiPhishPolicy.MailboxIntelligenceProtectionAction
                 MailboxIntelligenceProtectionActionRecipients = $AntiPhishPolicy.MailboxIntelligenceProtectionActionRecipients
+                MailboxIntelligenceQuarantineTag              = $AntiPhishPolicy.MailboxIntelligenceQuarantineTag
+                SpoofQuarantineTag                            = $AntiPhishPolicy.SpoofQuarantineTag
                 MakeDefault                                   = $AntiPhishPolicy.IsDefault
                 PhishThresholdLevel                           = $PhishThresholdLevelValue
                 TargetedDomainActionRecipients                = $AntiPhishPolicy.TargetedDomainActionRecipients
                 TargetedDomainsToProtect                      = $AntiPhishPolicy.TargetedDomainsToProtect
+                TargetedDomainQuarantineTag                   = $AntiPhishPolicy.TargetedDomainQuarantineTag
                 TargetedUserActionRecipients                  = $AntiPhishPolicy.TargetedUserActionRecipients
                 TargetedUserProtectionAction                  = $TargetedUserProtectionActionValue
                 TargetedUsersToProtect                        = $AntiPhishPolicy.TargetedUsersToProtect
+                TargetedUserQuarantineTag                     = $AntiPhishPolicy.TargetedUserQuarantineTag
                 Credential                                    = $Credential
                 Ensure                                        = 'Present'
                 ApplicationId                                 = $ApplicationId
@@ -391,6 +411,14 @@ function Set-TargetResource
         $MailboxIntelligenceProtectionActionRecipients = @(),
 
         [Parameter()]
+        [System.String]
+        $MailboxIntelligenceQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        $SpoofQuarantineTag,
+
+        [Parameter()]
         [System.Boolean]
         $MakeDefault = $false,
 
@@ -414,6 +442,10 @@ function Set-TargetResource
         $TargetedDomainsToProtect = @(),
 
         [Parameter()]
+        [System.String]
+        $TargetedDomainQuarantineTag,
+
+        [Parameter()]
         [System.String[]]
         $TargetedUserActionRecipients = @(),
 
@@ -425,6 +457,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $TargetedUsersToProtect = @(),
+
+        [Parameter()]
+        [System.String]
+        $TargetedUserQuarantineTag,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -621,6 +657,14 @@ function Test-TargetResource
         $MailboxIntelligenceProtectionActionRecipients = @(),
 
         [Parameter()]
+        [System.String]
+        $MailboxIntelligenceQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        $SpoofQuarantineTag,
+
+        [Parameter()]
         [System.Boolean]
         $MakeDefault = $false,
 
@@ -644,6 +688,10 @@ function Test-TargetResource
         $TargetedDomainsToProtect = @(),
 
         [Parameter()]
+        [System.String]
+        $TargetedDomainQuarantineTag,
+
+        [Parameter()]
         [System.String[]]
         $TargetedUserActionRecipients = @(),
 
@@ -655,6 +703,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $TargetedUsersToProtect = @(),
+
+        [Parameter()]
+        [System.String]
+        $TargetedUserQuarantineTag,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
