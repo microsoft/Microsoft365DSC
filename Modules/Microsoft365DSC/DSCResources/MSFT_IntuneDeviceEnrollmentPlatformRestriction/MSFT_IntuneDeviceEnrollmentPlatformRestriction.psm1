@@ -138,7 +138,7 @@ function Get-TargetResource
             Identity                                     = $config.Id
             DisplayName                                  = $config.DisplayName
             Description                                  = $config.Description
-            DeviceEnrollmentConfigurationType            = $config.DeviceEnrollmentConfigurationType
+            DeviceEnrollmentConfigurationType            = $config.DeviceEnrollmentConfigurationType.toString()
             Ensure                                       = 'Present'
             Credential                                   = $Credential
             ApplicationId                                = $ApplicationId
@@ -338,11 +338,14 @@ function Set-TargetResource
         #Assignments from DefaultPolicy are not editable and will raise an alert
         if($policy.Id -notlike "*_DefaultPlatformRestrictions")
         {
-            $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+            if($null -ne $Assignments -and $Assignments -ne @())
+            {
+                $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
 
-            Update-DeviceConfigurationPolicyAssignments `
-                -DeviceConfigurationPolicyId $policy.Id `
-                -Targets $assignmentsHash
+                Update-DeviceConfigurationPolicyAssignments `
+                    -DeviceConfigurationPolicyId $policy.Id `
+                    -Targets $assignmentsHash
+            }
         }
     }
     elseif ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Present')
@@ -382,11 +385,14 @@ function Set-TargetResource
         #Assignments from DefaultPolicy are not editable and will raise an alert
         if($Identity -notlike "*_DefaultPlatformRestrictions")
         {
-            $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+            if($null -ne $Assignments -and $Assignments -ne @())
+            {
+                $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
 
-            Update-DeviceConfigurationPolicyAssignments `
-                -DeviceConfigurationPolicyId $Identity `
-                -Targets $assignmentsHash
+                Update-DeviceConfigurationPolicyAssignments `
+                    -DeviceConfigurationPolicyId $Identity `
+                    -Targets $assignmentsHash
+            }
         }
 
     }
@@ -649,7 +655,7 @@ function Export-TargetResource
             }
             $Results = Get-TargetResource @Params
 
-            if ($Results.Assignments)
+            if ($null -ne $Results.Assignments)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Assignments) -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
                 if ($complexTypeStringResult)
@@ -662,7 +668,7 @@ function Export-TargetResource
                 }
             }
 
-            if ($Results.IosRestriction)
+            if ($null -ne $Results.IosRestriction)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ($Results.IosRestriction) -CIMInstanceName DeviceEnrollmentPlatformRestriction
                 if ($complexTypeStringResult)
@@ -675,7 +681,7 @@ function Export-TargetResource
                 }
             }
 
-            if ($Results.WindowsRestriction)
+            if ($null -ne $Results.WindowsRestriction)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ($Results.WindowsRestriction) -CIMInstanceName DeviceEnrollmentPlatformRestriction
                 if ($complexTypeStringResult)
@@ -688,7 +694,7 @@ function Export-TargetResource
                 }
             }
 
-            if ($Results.WindowsHomeSkuRestriction)
+            if ($null -ne $Results.WindowsHomeSkuRestriction)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ($Results.WindowsHomeSkuRestriction) -CIMInstanceName DeviceEnrollmentPlatformRestriction
                 if ($complexTypeStringResult)
@@ -700,7 +706,7 @@ function Export-TargetResource
                     $Results.Remove('WindowsHomeSkuRestriction') | Out-Null
                 }
             }
-            if ($Results.WindowsMobileRestriction)
+            if ($null -ne $Results.WindowsMobileRestriction)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ($Results.WindowsMobileRestriction) -CIMInstanceName DeviceEnrollmentPlatformRestriction
                 if ($complexTypeStringResult)
@@ -713,7 +719,7 @@ function Export-TargetResource
                 }
             }
 
-            if ($Results.AndroidRestriction)
+            if ($null -ne $Results.AndroidRestriction)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ($Results.AndroidRestriction) -CIMInstanceName DeviceEnrollmentPlatformRestriction
                 if ($complexTypeStringResult)
@@ -726,7 +732,7 @@ function Export-TargetResource
                 }
             }
 
-            if ($Results.AndroidForWorkRestriction)
+            if ($null -ne $Results.AndroidForWorkRestriction)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ($Results.AndroidForWorkRestriction) -CIMInstanceName DeviceEnrollmentPlatformRestriction
                 if ($complexTypeStringResult)
@@ -739,7 +745,7 @@ function Export-TargetResource
                 }
             }
 
-            if ($Results.MacRestriction)
+            if ($null -ne $Results.MacRestriction)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ($Results.MacRestriction) -CIMInstanceName DeviceEnrollmentPlatformRestriction
                 if ($complexTypeStringResult)
@@ -752,7 +758,7 @@ function Export-TargetResource
                 }
             }
 
-            if ($Results.MacOSRestriction)
+            if ($null -ne $Results.MacOSRestriction)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ($Results.MacOSRestriction) -CIMInstanceName DeviceEnrollmentPlatformRestriction
                 if ($complexTypeStringResult)
@@ -775,7 +781,7 @@ function Export-TargetResource
                 -Credential $Credential
 
 
-            if ($Results.Assignments)
+            if ($null -ne $Results.Assignments)
             {
                 $isCIMArray = $false
                 if ($Results.Assignments.getType().Fullname -like '*[[\]]')
@@ -785,41 +791,41 @@ function Export-TargetResource
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$isCIMArray
             }
 
-            if ($Results.IosRestriction)
+            if ($null -ne $Results.IosRestriction)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'IosRestriction'
             }
 
-            if ($Results.WindowsRestriction)
+            if ($null -ne $Results.WindowsRestriction)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'WindowsRestriction'
             }
 
-            if ($Results.WindowsHomeSkuRestriction)
+            if ($null -ne $Results.WindowsHomeSkuRestriction)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'WindowsHomeSkuRestriction'
             }
-            if ($Results.WindowsMobileRestriction)
+            if ($null -ne $Results.WindowsMobileRestriction)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'WindowsMobileRestriction'
             }
 
-            if ($Results.AndroidRestriction)
+            if ($null -ne $Results.AndroidRestriction)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AndroidRestriction'
             }
 
-            if ($Results.AndroidForWorkRestriction)
+            if ($null -ne $Results.AndroidForWorkRestriction)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AndroidForWorkRestriction'
             }
 
-            if ($Results.MacRestriction)
+            if ($null -ne $Results.MacRestriction)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'MacRestriction'
             }
 
-            if ($Results.MacOSRestriction)
+            if ($null -ne $Results.MacOSRestriction)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'MacOSRestriction'
             }
@@ -834,8 +840,6 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $_
-
         Write-Host $Global:M365DSCEmojiRedX
         if ($_.Exception -like '*401*')
         {
@@ -951,51 +955,7 @@ function Get-DevicePlatformRestrictionSetting
     return $results
 
 }
-function Get-M365DSCIntuneDeviceEnrollmentPlatformRestrictionAdditionalProperties
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param(
-        [Parameter(Mandatory = 'true')]
-        [System.Collections.Hashtable]
-        $Properties
-    )
 
-    $results = @{
-        '@odata.type'            = '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration'
-        androidRestriction       = @{
-            platformBlocked                 = $Properties.AndroidPlatformBlocked
-            personalDeviceEnrollmentBlocked = $Properties.AndroidPersonalDeviceEnrollmentBlocked
-            osMinimumVersion                = $Properties.AndroidOSMinimumVersion
-            osMaximumVersion                = $Properties.AndroidOSMaximumVersion
-        }
-        iosRestriction           = @{
-            platformBlocked                 = $Properties.iOSPlatformBlocked
-            personalDeviceEnrollmentBlocked = $Properties.iOSPersonalDeviceEnrollmentBlocked
-            osMinimumVersion                = $Properties.iOSOSMinimumVersion
-            osMaximumVersion                = $Properties.iOSOSMaximumVersion
-        }
-        macOSRestriction         = @{
-            platformBlocked                 = $Properties.MacPlatformBlocked
-            personalDeviceEnrollmentBlocked = $Properties.MacPersonalDeviceEnrollmentBlocked
-            osminimumVersion                = $Properties.MacOSMinimumVersion
-            osMaximumVersion                = $Properties.MacOSMaximumVersion
-        }
-        windowsRestriction       = @{
-            platformBlocked                 = $Properties.WindowsPlatformBlocked
-            personalDeviceEnrollmentBlocked = $Properties.WindowsPersonalDeviceEnrollmentBlocked
-            osMinimumVersion                = $Properties.WindowsOSMinimumVersion
-            osMaximumVersion                = $Properties.WindowsOSMaximumVersion
-        }
-        windowsMobileRestriction = @{
-            platformBlocked                 = $Properties.WindowsMobilePlatformBlocked
-            personalDeviceEnrollmentBlocked = $Properties.WindowsMobilePersonalDeviceEnrollmentBlocked
-            osMinimumVersion                = $Properties.WindowsMobileOSMinimumVersion
-            osMaximumVersion                = $Properties.WindowsMobileOSMaximumVersion
-        }
-    }
-    return $results
-}
 function Update-DeviceConfigurationPolicyAssignments
 {
     [CmdletBinding()]
@@ -1553,4 +1513,4 @@ function Convert-M365DSCDRGComplexTypeToHashtable
     }
     return [hashtable]$results
 }
-Export-ModuleMember -Function *-TargetResource,*
+Export-ModuleMember -Function *-TargetResource
