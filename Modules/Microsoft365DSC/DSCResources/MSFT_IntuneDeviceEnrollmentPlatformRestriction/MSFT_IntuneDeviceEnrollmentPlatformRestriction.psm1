@@ -151,29 +151,10 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Found Device Enrollment Platform Restriction with Name {$DisplayName}"
-        return @{
+
+        $results= @{
             DisplayName                                  = $config.DisplayName
             Description                                  = $config.Description
-            AndroidPlatformBlocked                       = $config.AdditionalProperties.androidRestriction.platformBlocked
-            AndroidPersonalDeviceEnrollmentBlocked       = $config.AdditionalProperties.androidRestriction.personalDeviceEnrollmentBlocked
-            AndroidOSMinimumVersion                      = $config.AdditionalProperties.androidRestriction.osMinimumVersion
-            AndroidOSMaximumVersion                      = $config.AdditionalProperties.androidRestriction.osMaximumVersion
-            iOSPlatformBlocked                           = $config.AdditionalProperties.iosRestriction.platformBlocked
-            iOSPersonalDeviceEnrollmentBlocked           = $config.AdditionalProperties.iosRestriction.personalDeviceEnrollmentBlocked
-            iOSOSMinimumVersion                          = $config.AdditionalProperties.iosRestriction.osMinimumVersion
-            iOSOSMaximumVersion                          = $config.AdditionalProperties.iosRestriction.osMaximumVersion
-            MacPlatformBlocked                           = $config.AdditionalProperties.macOSRestriction.platformBlocked
-            MacPersonalDeviceEnrollmentBlocked           = $config.AdditionalProperties.macOSRestriction.personalDeviceEnrollmentBlocked
-            MacOSMinimumVersion                          = $config.AdditionalProperties.macOSRestriction.minimumVersion
-            MacOSMaximumVersion                          = $config.AdditionalProperties.macOSRestriction.osMaximumVersion
-            WindowsPlatformBlocked                       = $config.AdditionalProperties.windowsRestriction.platformBlocked
-            WindowsPersonalDeviceEnrollmentBlocked       = $config.AdditionalProperties.windowsRestriction.personalDeviceEnrollmentBlocked
-            WindowsOSMinimumVersion                      = $config.AdditionalProperties.windowsRestriction.osMinimumVersion
-            WindowsOSMaximumVersion                      = $config.AdditionalProperties.windowsRestriction.osMaximumVersion
-            WindowsMobilePlatformBlocked                 = $config.AdditionalProperties.windowsMobileRestriction.platformBlocked
-            WindowsMobilePersonalDeviceEnrollmentBlocked = $config.AdditionalProperties.windowsMobileRestriction.personalDeviceEnrollmentBlocked
-            WindowsMobileOSMinimumVersion                = $config.AdditionalProperties.windowsMobileRestriction.osMinimumVersion
-            WindowsMobileOSMaximumVersion                = $config.AdditionalProperties.windowsMobileRestriction.osMaximumVersion
             Ensure                                       = 'Present'
             Credential                                   = $Credential
             ApplicationId                                = $ApplicationId
@@ -182,6 +163,10 @@ function Get-TargetResource
             CertificateThumbprint                        = $CertificateThumbprint
             Managedidentity                              = $ManagedIdentity.IsPresent
         }
+
+        $results+=get-DevicePlatformRestrictionSetting -Properties $config.AdditionalProperties
+
+        return $results
     }
     catch
     {
@@ -363,9 +348,14 @@ function Set-TargetResource
         $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
         | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration' }
         $AdditionalProperties = Get-M365DSCIntuneDeviceEnrollmentPlatformRestrictionAdditionalProperties -Properties $PSBoundParameters
-        Update-MgDeviceManagementDeviceEnrollmentConfiguration -DisplayName $DisplayName `
-            -Description $Description `
-            -AdditionalProperties $AdditionalProperties `
+        $bodyParameters=@{
+            displayName=$DisplayName
+            description=$Description
+        }
+        $bodyParameters+=$AdditionalProperties
+
+        Update-MgDeviceManagementDeviceEnrollmentConfiguration `
+            -BodyParameter $bodyParameters `
             -DeviceEnrollmentConfigurationId $config.id
     }
     elseif ($Ensure -eq 'Absent' -and $currentCategory.Ensure -eq 'Present')
@@ -666,8 +656,8 @@ function Get-M365DSCIntuneDeviceEnrollmentPlatformRestrictionAdditionalPropertie
         androidRestriction       = @{
             platformBlocked                 = $Properties.AndroidPlatformBlocked
             personalDeviceEnrollmentBlocked = $Properties.AndroidPersonalDeviceEnrollmentBlocked
-            osMinimumVersion                = $Properties.AndroidOSMinimumVersion
-            osMaximumVersion                = $Properties.AndroidOSMaximumVersion
+            osMinimumVersion                = $Properties.AndroidOsMinimumVersion
+            osMaximumVersion                = $Properties.AndroidOsMaximumVersion
         }
         iosRestriction           = @{
             platformBlocked                 = $Properties.iOSPlatformBlocked
@@ -696,5 +686,39 @@ function Get-M365DSCIntuneDeviceEnrollmentPlatformRestrictionAdditionalPropertie
     }
     return $results
 }
+function Get-DevicePlatformRestrictionSetting
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = 'true')]
+        [System.Collections.Hashtable]
+        $Properties
+    )
 
+    $results=@{}
+
+    $keys=$Properties.Keys|Where-Object{$_ -like "*Restriction"}
+    foreach($key in $keys)
+    {
+        $platform=$key.replace("Restriction","")
+        $platform=$platform.Substring(0,1).toUpper()+$platform.substring(1,$platform.length-1)
+        if($platform -eq 'MacOS')
+        {
+            $platform='Mac'
+        }
+        if($null -ne $Properties.$key)
+        {
+            $hashKey=[hashtable]::new($Properties.$key)
+            foreach($childKey in $hashKey.keys)
+            {
+                $keyName=$platform+ ($childKey.Substring(0,1).toUpper()+$childKey.substring(1,$childKey.length-1))
+                $keyValue=$Properties.$key.$childKey
+                $results.add($keyName,$keyValue)
+            }
+        }
+    }
+    return $results
+
+}
 Export-ModuleMember -Function *-TargetResource
