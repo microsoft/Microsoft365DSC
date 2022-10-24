@@ -2,8 +2,13 @@
 
 # UNRELEASED
 
+* TeamsDialInConferencingTenantSettings
+  * Initial release;
+    Fixes [#2426](https://github.com/microsoft/Microsoft365DSC/issues/2426)
 * DEPENDENCIES
-  * Updated MSCloudLoginAssistant to version 1.0.95;
+  * Updated MSCloudLoginAssistant to version 1.0.96;
+* MISC
+  * Add support for ManagedIdentity to the SPo and OD resources.
 
 # 1.22.1019.1
 
