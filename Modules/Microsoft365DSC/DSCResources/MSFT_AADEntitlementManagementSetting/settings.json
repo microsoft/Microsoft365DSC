@@ -1,0 +1,39 @@
+{
+    "resourceName": "AADEntitlementManagementSetting",
+    "description": "This resource configures an AzureAD Entitlement Management Setting.",
+    "permissions":    {
+    "graph":  {
+                  "delegated":  {
+                                    "read":  [
+                                                 {
+                                                     "name":  "EntitlementManagement.Read.All"
+                                                 },
+                                                 {
+                                                     "name":  "EntitlementManagement.ReadWrite.All"
+                                                 }
+                                             ],
+                                    "update":  [
+                                                   {
+                                                       "name":  "EntitlementManagement.ReadWrite.All"
+                                                   }
+                                               ]
+                                },
+                  "application":  {
+                                      "read":  [
+                                                   {
+                                                       "name":  "EntitlementManagement.Read.All"
+                                                   },
+                                                   {
+                                                       "name":  "EntitlementManagement.ReadWrite.All"
+                                                   }
+                                               ],
+                                      "update":  [
+                                                     {
+                                                         "name":  "EntitlementManagement.ReadWrite.All"
+                                                     }
+                                                 ]
+                                  }
+              }
+}
+
+}
