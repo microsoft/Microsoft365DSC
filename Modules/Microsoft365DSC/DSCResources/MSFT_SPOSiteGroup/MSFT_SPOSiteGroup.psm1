@@ -20,9 +20,9 @@ function Get-TargetResource
         $PermissionLevels,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -50,7 +50,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting SPOSiteGroups for {$Url}"
@@ -61,8 +65,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -70,7 +74,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -96,7 +100,7 @@ function Get-TargetResource
         }
         catch
         {
-            if ($Error[0].Exception.Message -eq "Group cannot be found.")
+            if ($Error[0].Exception.Message -eq 'Group cannot be found.')
             {
                 Write-Verbose -Message "Site group $($Identity) could not be found on site $($Url)"
 
@@ -116,7 +120,7 @@ function Get-TargetResource
         {
             if ($_.Exception -like '*Access denied*')
             {
-                Write-Warning -Message "The specified account does not have access to the permissions list"
+                Write-Warning -Message 'The specified account does not have access to the permissions list'
                 return $nullReturn
             }
         }
@@ -131,13 +135,14 @@ function Get-TargetResource
             Owner                 = $siteGroup.Owner.LoginName
             PermissionLevels      = [array]$permissions
             Credential            = $Credential
-            Ensure                = "Present"
+            Ensure                = 'Present'
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
     }
     catch
@@ -145,7 +150,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -187,9 +192,9 @@ function Set-TargetResource
         $PermissionLevels,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -217,7 +222,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting SPOSiteGroups for {$Url}"
@@ -226,8 +235,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -238,7 +247,7 @@ function Set-TargetResource
 
     $currentValues = Get-TargetResource @PSBoundParameters
     $IsNew = $false
-    if ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Absent")
+    if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
     {
         $SiteGroupSettings = @{
             Title = $Identity
@@ -248,7 +257,7 @@ function Set-TargetResource
         New-PnPGroup @SiteGroupSettings
         $IsNew = $true
     }
-    if (($Ensure -eq "Present" -and $currentValues.Ensure -eq "Present") -or $IsNew)
+    if (($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Present') -or $IsNew)
     {
         $RefferenceObjectRoles = $PermissionLevels
         $DifferenceObjectRoles = $currentValues.PermissionLevels
@@ -262,7 +271,7 @@ function Set-TargetResource
         $PermissionLevelsToRemove = @()
         foreach ($entry in $compareOutput)
         {
-            if ($entry.SideIndicator -eq "<=")
+            if ($entry.SideIndicator -eq '<=')
             {
                 Write-Verbose -Message "Permissionlevels to add: $($entry.InputObject)"
                 $PermissionLevelsToAdd += $entry.InputObject
@@ -288,7 +297,7 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Need to remove Permissions $PermissionLevelsToRemove"
             $NeedsToUpdateGroupPermissions = $true
-            $GroupPermissionsParameters.Add("RemoveRole", $PermissionLevelsToRemove)
+            $GroupPermissionsParameters.Add('RemoveRole', $PermissionLevelsToRemove)
         }
         elseif ($PermissionLevelsToRemove.Count -eq 0 -and $PermissionLevelsToAdd.Count -ne 0)
         {
@@ -296,34 +305,36 @@ function Set-TargetResource
             Write-Verbose -Message "Setting PnP Group with Identity {$Identity} and Owner {$Owner}"
             Write-Verbose -Message "Setting PnP Group Permissions Identity {$Identity} AddRole {$PermissionLevelsToAdd}"
             $NeedsToUpdateGroupPermissions = $true
-            $GroupPermissionsParameters.Add("AddRole", $PermissionLevelsToAdd)
+            $GroupPermissionsParameters.Add('AddRole', $PermissionLevelsToAdd)
         }
         elseif ($PermissionLevelsToAdd.Count -eq 0 -and $PermissionLevelsToRemove.Count -eq 0)
         {
             if (($Identity -eq $currentValues.Identity) -and ($Owner -eq $currentValues.Owner))
             {
-                Write-Verbose -Message "All values are configured as desired"
+                Write-Verbose -Message 'All values are configured as desired'
                 $NeedsToUpdateGroup = $false
             }
             else
             {
-                Write-Verbose -Message "Updating Group"
+                Write-Verbose -Message 'Updating Group'
             }
         }
         else
         {
             Write-Verbose -Message "Updating Group Permissions Add {$PermissionLevelsToAdd} Remove {$PermissionLevelsToRemove}"
             $NeedsToUpdateGroupPermissions = $true
-            $GroupPermissionsParameters.Add("AddRole", $PermissionLevelsToAdd)
+            $GroupPermissionsParameters.Add('AddRole', $PermissionLevelsToAdd)
         }
-        if ($NeedsToUpdateGroup) {
+        if ($NeedsToUpdateGroup)
+        {
             Set-PnPGroup @SiteGroupSettings
         }
-        if ($NeedsToUpdateGroupPermissions) {
+        if ($NeedsToUpdateGroupPermissions)
+        {
             Set-PnPGroupPermissions @GroupPermissionsParameters
         }
     }
-    elseif ($Ensure -eq "Absent" -and $currentValues.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Absent' -and $currentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Group $Identity"
         Write-Verbose "Removing SPOSiteGroup $Identity"
@@ -356,9 +367,9 @@ function Test-TargetResource
         $PermissionLevels,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -386,14 +397,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -408,12 +423,13 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove("ApplicationId") | Out-Null
-    $ValuesToCheck.Remove("TenantId") | Out-Null
-    $ValuesToCheck.Remove("CertificatePath") | Out-Null
-    $ValuesToCheck.Remove("CertificatePassword") | Out-Null
-    $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
-    $ValuesToCheck.Remove("ApplicationSecret") | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -457,7 +473,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
@@ -465,17 +485,17 @@ function Export-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters `
             -ErrorAction SilentlyContinue
 
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
 
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
 
         #Loop through all sites
         #for each site loop through all site groups and retrieve parameters
@@ -483,23 +503,23 @@ function Export-TargetResource
 
         $i = 1
 
-        $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-        if ($null -ne $Credential -and $Credential.UserName.Contains("@"))
+        $principal = '' # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
+        if ($null -ne $Credential -and $Credential.UserName.Contains('@'))
         {
-            $organization = $Credential.UserName.Split("@")[1]
+            $organization = $Credential.UserName.Split('@')[1]
 
-            if ($organization.IndexOf(".") -gt 0)
+            if ($organization.IndexOf('.') -gt 0)
             {
-                $principal = $organization.Split(".")[0]
+                $principal = $organization.Split('.')[0]
             }
         }
         else
         {
             $organization = $TenantId
-            $principal = $organization.Split(".")[0]
+            $principal = $organization.Split('.')[0]
         }
 
-        $dscContent = ""
+        $dscContent = ''
         Write-Host "`r`n" -NoNewline
         foreach ($site in $sites)
         {
@@ -540,7 +560,8 @@ function Export-TargetResource
                     CertificatePassword   = $CertificatePassword
                     CertificatePath       = $CertificatePath
                     CertificateThumbprint = $CertificateThumbprint
-                    Credential    = $Credential
+                    Managedidentity       = $ManagedIdentity.IsPresent
+                    Credential            = $Credential
                 }
                 try
                 {
@@ -561,7 +582,7 @@ function Export-TargetResource
                         {
                             $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
                             $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape('https://' + $principal + '-my.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0])-my.sharepoint.com/"
-                            $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+                            $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape('@' + $organization), "@`$(`$OrganizationName)"
                         }
                         $dscContent += $currentDSCBlock
 
@@ -582,7 +603,7 @@ function Export-TargetResource
 
         if ($i -eq 1)
         {
-            Write-Host ""
+            Write-Host ''
         }
 
         return $dscContent
@@ -595,7 +616,7 @@ function Export-TargetResource
             Write-Warning -Message "Cannot access {$($siteGroup.Title)}"
 
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -612,7 +633,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 

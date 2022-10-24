@@ -42,6 +42,15 @@ function Get-TargetResource
         $AllowCallForwardingToPhone,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled', 'UserOverride')]
+        $AllowCallRedirect,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSIPDevicesCalling,
+
+        [Parameter()]
         [System.Boolean]
         $PreventTollBypass,
 
@@ -49,6 +58,10 @@ function Get-TargetResource
         [System.String]
         [ValidateSet('Enabled', 'Disabled', 'Unanswered', 'UserOverride')]
         $BusyOnBusyEnabledType = 'Enabled',
+
+        [Parameter()]
+        [System.Int32]
+        $CallRecordingExpirationDays,
 
         [Parameter()]
         [System.String]
@@ -132,9 +145,12 @@ function Get-TargetResource
             AllowDelegation                   = $policy.AllowDelegation
             AllowCallForwardingToUser         = $policy.AllowCallForwardingToUser
             AllowCallForwardingToPhone        = $policy.AllowCallForwardingToPhone
+            AllowCallRedirect                 = $policy.AllowCallRedirect
+            AllowSIPDevicesCalling            = $policy.AllowSIPDevicesCalling
             Description                       = $policy.Description
             PreventTollBypass                 = $policy.PreventTollBypass
             BusyOnBusyEnabledType             = $policy.BusyOnBusyEnabledType
+            CallRecordingExpirationDays       = $policy.CallRecordingExpirationDays
             MusicOnHoldEnabledType            = $policy.MusicOnHoldEnabledType
             SafeTransferEnabled               = $policy.SafeTransferEnabled
             AllowCloudRecordingForCalls       = $policy.AllowCloudRecordingForCalls
@@ -143,7 +159,7 @@ function Get-TargetResource
             AutoAnswerEnabledType             = $policy.AutoAnswerEnabledType
             SpamFilteringEnabledType          = $policy.SpamFilteringEnabledType
             Ensure                            = 'Present'
-            Credential                = $Credential
+            Credential                        = $Credential
         }
     }
     catch
@@ -215,6 +231,15 @@ function Set-TargetResource
         $AllowCallForwardingToPhone,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled', 'UserOverride')]
+        $AllowCallRedirect,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSIPDevicesCalling,
+
+        [Parameter()]
         [System.Boolean]
         $PreventTollBypass,
 
@@ -222,6 +247,10 @@ function Set-TargetResource
         [System.String]
         [ValidateSet('Enabled', 'Disabled', 'Unanswered','UserOverride')]
         $BusyOnBusyEnabledType = 'Enabled',
+
+        [Parameter()]
+        [System.Int32]
+        $CallRecordingExpirationDays,
 
         [Parameter()]
         [System.String]
@@ -352,6 +381,15 @@ function Test-TargetResource
         $AllowCallForwardingToPhone,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled', 'UserOverride')]
+        $AllowCallRedirect,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSIPDevicesCalling,
+
+        [Parameter()]
         [System.Boolean]
         $PreventTollBypass,
 
@@ -359,6 +397,10 @@ function Test-TargetResource
         [System.String]
         [ValidateSet('Enabled', 'Disabled', 'Unanswered','UserOverride')]
         $BusyOnBusyEnabledType = 'Enabled',
+
+        [Parameter()]
+        [System.Int32]
+        $CallRecordingExpirationDays,
 
         [Parameter()]
         [System.String]

@@ -888,7 +888,7 @@ function Test-M365DSCParameterState
         $EventMessage += "    </DesiredValues>`r`n"
         $EventMessage += '</M365DSCEvent>'
 
-        Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+        Add-M365DSCEvent -Message $EventMessage -EventType 'Drift' -EntryType 'Warning' `
             -EventID 1 -Source $Source
     }
 
@@ -1133,7 +1133,7 @@ function Export-M365DSCConfiguration
     $data.Add('MaxProcesses', $null -ne $MaxProcesses)
     #endregion
 
-    $outdatedOrMissingAssemblies = Test-M365DSCDependencies
+    $outdatedOrMissingAssemblies = Test-M365DSCDependenciesForNewVersions
     if ($outdatedOrMissingAssemblies)
     {
         if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
@@ -1158,6 +1158,7 @@ function Export-M365DSCConfiguration
 
     # Clear the Connection Cache from MSCloudLoginAssistant
     $Global:MsCloudLoginConnectionProfile = $null
+    $Global:MSCloudLoginTriedGetEnvironment = $false
 
     # Make sure we are not connected to Microsoft Graph on another tenant
     try
@@ -1259,7 +1260,7 @@ function Confirm-M365DSCDependencies
     if (-not $Script:M365DSCDependenciesValidated)
     {
         Write-Verbose -Message 'Dependencies were not already validated.'
-        $result = Test-M365DSCDependencies
+        $result = Test-M365DSCDependenciesForNewVersions
         if ($result.Length -gt 0)
         {
             $ErrorMessage = "The following dependencies need updating:`r`n"
@@ -2242,7 +2243,11 @@ function Get-AllSPOPackages
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
@@ -2315,41 +2320,6 @@ function Remove-NullEntriesFromHashtable
 
 <#
 .Description
-This function is to be deprecated in future release
-
-.Functionality
-Internal
-#>
-function Assert-M365DSCTemplate
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $TemplatePath,
-
-        [Parameter()]
-        [System.String]
-        $TemplateName
-    )
-    $InformationPreference = 'SilentlyContinue'
-    $WarningPreference = 'SilentlyContinue'
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add('Event', 'AssertTemplate')
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    Write-Host $Global:M365DSCEmojiYellowCircle -NoNewline
-    Write-Host ' Assert-M365DSCTemplate is deprecated. Please use the new improved Assert-M365DSCBlueprint cmdlet instead.' -ForegroundColor Yellow
-}
-
-<#
-.Description
 This function compares a created export with the specified M365DSC Blueprint
 
 .Parameter BluePrintUrl
@@ -2391,7 +2361,12 @@ function Assert-M365DSCBlueprint
 
         [Parameter()]
         [System.String]
-        $HeaderFilePath
+        $HeaderFilePath,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('HTML', 'JSON')]
+        $Type = 'HTML'
     )
     $InformationPreference = 'SilentlyContinue'
     $WarningPreference = 'SilentlyContinue'
@@ -2474,7 +2449,8 @@ function Assert-M365DSCBlueprint
             -OutputPath $OutputReportPath `
             -DriftOnly:$true `
             -IsBlueprintAssessment:$true `
-            -HeaderFilePath $HeaderFilePath
+            -HeaderFilePath $HeaderFilePath `
+            -Type $Type
     }
     else
     {
@@ -2526,39 +2502,6 @@ function Test-M365DSCDependenciesForNewVersions
         }
         $i++
     }
-}
-
-<#
-.Description
-This function checks if all M365DSC dependencies are installed
-
-.Functionality
-Internal, Hidden
-#>
-function Test-M365DSCDependencies
-{
-    [CmdletBinding()]
-    $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
-    $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
-    $dependencies = $manifest.Dependencies
-    $missingDependencies = @()
-    foreach ($dependency in $dependencies)
-    {
-        try
-        {
-            Write-Verbose -Message "{$($dependency.ModuleName)} version $($dependency.RequiredVersion)"
-            $module = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
-            if (-not $module)
-            {
-                $missingDependencies += $dependency
-            }
-        }
-        catch
-        {
-            Write-Verbose -Message "Error: $_"
-        }
-    }
-    return $missingDependencies
 }
 
 <#
@@ -2790,7 +2733,7 @@ Internal
 function Update-M365DSCExportAuthenticationResults
 {
     [CmdletBinding()]
-    [OutputType([System.String])]
+    [OutputType([System.Collections.Hashtable])]
     param(
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -3029,71 +2972,6 @@ function Get-M365DSCExportContentForResource
     return $content
 }
 
-<#
-.Description
-This function check if the currently installed version of M365DSC is the most recent one,
-available in the PowerShell Gallery
-
-.Example
-Test-M365DSCNewVersionAvailable
-
-.Functionality
-Public
-#>
-function Test-M365DSCNewVersionAvailable
-{
-    [CmdletBinding()]
-    param()
-
-    if ('AzureAutomation/' -eq $env:AZUREPS_HOST_ENVIRONMENT)
-    {
-        $message = 'Skipping check for newer version of Microsoft 365 DSC due to Azure Automation Environment restrictions.'
-        Write-Verbose -Message $message
-        return
-    }
-
-    try
-    {
-        if ($null -eq $Global:M365DSCNewVersionNotification)
-        {
-            # Get current module used
-            $currentVersion = Get-Module 'Microsoft365DSC' -ErrorAction Stop
-
-            # Get module in the Gallery
-            $JobID = Start-Job { Find-Module 'Microsoft365DSC' -ErrorAction Stop }
-            $Timeout = $true
-            for ($i = 0; $i -lt 10; $i++)
-            {
-                if ((Get-Job $JobID.id).State -notmatch 'Running')
-                {
-                    $Timeout = $false
-                    break;
-                }
-                Start-Sleep -Seconds 1
-            }
-            if ($Timeout)
-            {
-                return
-            }
-            $GalleryVersion = Get-Job $JobID.id | Receive-Job
-            if ([Version]($GalleryVersion.Version) -gt [Version]($currentVersion.Version))
-            {
-                $message = "A NEWER VERSION OF MICROSOFT365DSC {v$($GalleryVersion.Version)} IS AVAILABLE IN THE POWERSHELL GALLERY. TO UPDATE, RUN:`r`nInstall-Module Microsoft365DSC -Force -AllowClobber"
-                Write-Host $message `
-                    -ForegroundColor 'White' `
-                    -BackgroundColor 'DarkGray'
-                Write-Verbose -Message $message
-            }
-            $Global:M365DSCNewVersionNotification = 'AlreadyShown'
-        }
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
-    }
-}
 
 <#
 .Description
@@ -3849,11 +3727,10 @@ Export-ModuleMember -Function @(
     'Set-EXOSafeLinksRule',
     'Split-ArrayByParts',
     'Test-M365DSCDependenciesForNewVersions',
-    'Test-M365DSCNewVersionAvailable',
+    'Test-M365DSCModuleValidity',
     'Test-M365DSCParameterState',
     'Uninstall-M365DSCOutdatedDependencies',
     'Update-M365DSCDependencies',
     'Update-M365DSCExportAuthenticationResults',
-    'Update-M365DSCModule',
-    'Test-M365DSCModuleValidity'
+    'Update-M365DSCModule'
 )

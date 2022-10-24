@@ -47,6 +47,10 @@ function Get-TargetResource
         $RouteAllMessagesViaOnPremises,
 
         [Parameter()]
+        [System.Boolean]
+        $SenderRewritingEnabled,
+
+        [Parameter()]
         [System.String[]]
         $SmartHosts = @(),
 
@@ -162,6 +166,7 @@ function Get-TargetResource
                 IsTransportRuleScoped         = $OutBoundConnector.IsTransportRuleScoped
                 RecipientDomains              = $OutBoundConnector.RecipientDomains
                 RouteAllMessagesViaOnPremises = $OutBoundConnector.RouteAllMessagesViaOnPremises
+                SenderRewritingEnabled        = $OutBoundConnector.SenderRewritingEnabled
                 SmartHosts                    = $OutBoundConnector.SmartHosts
                 TestMode                      = $OutBoundConnector.TestMode
                 TlsDomain                     = $OutBoundConnector.TlsDomain
@@ -256,6 +261,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $RouteAllMessagesViaOnPremises,
+
+        [Parameter()]
+        [System.Boolean]
+        $SenderRewritingEnabled,
 
         [Parameter()]
         [System.String[]]
@@ -418,6 +427,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $RouteAllMessagesViaOnPremises,
+
+        [Parameter()]
+        [System.Boolean]
+        $SenderRewritingEnabled,
 
         [Parameter()]
         [System.String[]]
