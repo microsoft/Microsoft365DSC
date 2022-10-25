@@ -1110,12 +1110,12 @@ function New-M365DSCResource
             'DeviceConfiguration'
             {
                 $repository = 'deviceConfigurations'
-                $propertiesDefinitions = Get-PropertiesDefinition -APIVersion $ApiVersion
             }
         }
 
     }
 
+    $propertiesDefinitions = Get-PropertiesDefinition -APIVersion $ApiVersion
     $PropertiesDefinitions = $PropertiesDefinitions | Where-Object -FilterScript { $_.id -like "*$($selectedODataType.Name)*" }
     $typeProperties = $selectedODataType.Properties | Where-Object -FilterScript { $_.Name -notin $ParametersToSkip }
     #$typeProperties
