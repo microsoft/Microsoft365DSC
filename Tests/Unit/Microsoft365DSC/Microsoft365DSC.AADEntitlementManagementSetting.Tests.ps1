@@ -44,18 +44,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The AADEntitlementManagementSetting Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Id                                           = "singleton"
+                    IsSingleInstance                             = "Yes"
                     ExternalUserLifecycleAction                  = "none"
-                    DurationUntilExternalUserDeletedAfterBlocked = "30.00:00:00"
-                    Ensure                                       = "Present"
+                    DaysUntilExternalUserDeletedAfterBlocked     = 30
                     Credential                                   = $Credential;
                 }
 
                 Mock -CommandName Get-MgEntitlementManagementSetting -MockWith {
                     return @{
-                        Id                                           = "singleton"
+                        IsSingleInstance                             = "Yes"
                         ExternalUserLifecycleAction                  = "none"
-                        DurationUntilExternalUserDeletedAfterBlocked = "30.00:00:00"
+                        DaysUntilExternalUserDeletedAfterBlocked     = 30
                     }
                 }
             }
@@ -71,18 +70,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The AADEntitlementManagementSetting exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Id                                          = "singleton"
+                    IsSingleInstance                             = "Yes"
                     ExternalUserLifecycleAction                  = "none"
-                    DurationUntilExternalUserDeletedAfterBlocked = "30.00:00:00"
-                    Ensure                                       = "Present"
+                    DaysUntilExternalUserDeletedAfterBlocked     = 30
                     Credential                                   = $Credential;
                 }
 
                 Mock -CommandName Get-MgEntitlementManagementSetting -MockWith {
                     return @{
-                        Id                                           = "singleton"
+                        IsSingleInstance                             = "Yes"
                         ExternalUserLifecycleAction                  = "blockSignIn" #Drift
-                        DurationUntilExternalUserDeletedAfterBlocked = "30.00:00:00"
+                        DaysUntilExternalUserDeletedAfterBlocked     = 30
                     }
                 }
             }
@@ -108,13 +106,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgEntitlementManagementSetting -MockWith {
-                    return @{
-                        Id                                           = "singleton"
-                        ExternalUserLifecycleAction                  = "none"
-                        DurationUntilExternalUserDeletedAfterBlocked = "30.00:00:00"
-                    }
-                }
             }
             It "Should Reverse Engineer resource from the Export method" {
                 Export-TargetResource @testParams
