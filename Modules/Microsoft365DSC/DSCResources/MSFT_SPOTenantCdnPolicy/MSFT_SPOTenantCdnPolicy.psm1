@@ -68,11 +68,23 @@ function Get-TargetResource
     try
     {
         $Policies = Get-PnPTenantCdnPolicies -CdnType $CDNType -ErrorAction Stop
+        if ($null -ne $Policies['ExcludeRestrictedSiteClassifications']) {
+            $ExcludeRestrictedSiteClassifications = `
+                $Policies['ExcludeRestrictedSiteClassifications'].Split(',')
+        } else {
+            $ExcludeRestrictedSiteClassifications = $null
+        }
+        if ($null -ne $Policies['IncludeFileExtensions']) {
+            $IncludeFileExtensions = `
+                $Policies['IncludeFileExtensions'].Split(',')
+        } else {
+            $IncludeFileExtensions = $null
+        }
 
         return @{
             CDNType                              = $CDNType
-            ExcludeRestrictedSiteClassifications = $Policies['ExcludeRestrictedSiteClassifications'].Split(',')
-            IncludeFileExtensions                = $Policies['IncludeFileExtensions'].Split(',')
+            ExcludeRestrictedSiteClassifications = $ExcludeRestrictedSiteClassifications
+            IncludeFileExtensions                = $IncludeFileExtensions
             Credential                           = $Credential
             ApplicationId                        = $ApplicationId
             TenantId                             = $TenantId
