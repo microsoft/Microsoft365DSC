@@ -136,17 +136,17 @@ function Start-M365DSCConfigurationExtract
         Write-Host -Object ' '
         Write-Host -Object 'Authentication methods specified:'
         if ($null -ne $Credential -and `
-            [System.String]::IsNullOrEmpty($ApplicationId) )
+                [System.String]::IsNullOrEmpty($ApplicationId) )
         {
             Write-Host -Object '- Credentials'
             $AuthMethods += 'Credentials'
         }
         if ($null -ne $Credential -and `
-            -not [System.String]::IsNullOrEmpty($ApplicationId))
+                -not [System.String]::IsNullOrEmpty($ApplicationId))
         {
             Write-Host -Object '- CredentialsWithApplicationId'
             $AuthMethods += 'CredentialsWithApplicationId'
-        } 
+        }
         if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint))
         {
             Write-Host -Object '- Service Principal with Certificate Thumbprint'
@@ -392,7 +392,7 @@ function Start-M365DSCConfigurationExtract
                     -Value $ApplicationSecret.GetNetworkCredential().Password `
                     -Description 'Azure AD Application Secret for Authentication'
             }
-            {$_  -in 'Credentials', 'CredentialsWithApplicationId' }
+            { $_ -in 'Credentials', 'CredentialsWithApplicationId' }
             {
                 if ($newline)
                 {
@@ -536,7 +536,7 @@ function Start-M365DSCConfigurationExtract
                     $applicationSecretValue = New-Object System.Management.Automation.PSCredential ('ApplicationSecret', (ConvertTo-SecureString $ApplicationSecret -AsPlainText -Force));
                     $parameters.Add('ApplicationSecret', $applicationSecretValue)
                 }
-                { $_ -in 'Credentials',  'CredentialsWithApplicationId' }
+                { $_ -in 'Credentials', 'CredentialsWithApplicationId' }
                 {
                     if ($AuthMethods -contains 'CredentialsWithApplicationId')
                     {
@@ -621,7 +621,7 @@ function Start-M365DSCConfigurationExtract
                 $DSCContent = $DSCContent.Insert($startPosition, $credsContent)
                 $launchCommand += " -CertificatePassword `$CertificatePassword"
             }
-            { $_ -in 'Credentials',  'CredentialsWithApplicationId' }
+            { $_ -in 'Credentials', 'CredentialsWithApplicationId' }
             {
                 #region Add the Prompt for Required Credentials at the top of the Configuration
                 $credsContent = ''
@@ -754,12 +754,12 @@ function Start-M365DSCConfigurationExtract
         $DSCContent.ToString() | Out-File $outputDSCFile
 
         if (!$AzureAutomation -and `
-            !$ManagedIdentity.IsPresent)
+                !$ManagedIdentity.IsPresent)
         {
             if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
             {
                 $LCMConfig = Get-DscLocalConfigurationManager
-                if ($null -ne $LCMConfig.CertificateID)
+                if ($null -eq $LCMConfig.CertificateID)
                 {
                     try
                     {
@@ -793,7 +793,7 @@ function Start-M365DSCConfigurationExtract
                 Write-Host '}'
             }
         }
-        
+
         $outputConfigurationData = $OutputDSCPath + 'ConfigurationData.psd1'
         New-ConfigurationDataDocument -Path $outputConfigurationData
 
