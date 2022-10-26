@@ -5,6 +5,9 @@
 * TeamsDialInConferencingTenantSettings
   * Initial release;
     Fixes [#2426](https://github.com/microsoft/Microsoft365DSC/issues/2426)
+* EXOTransportRule
+  * Add new parmeters: ApplyRightsProtectionCustomizationTemplate, Quarantine, RecipientAddressType, RemoveRMSAttachmentEncryption
+  * Deprecated parameters: ExceptIfMessageContainsAllDataClassifications, IncidentReportOriginalMail,MessageContainsAllDataClassifications
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.0.96;
 * MISC
