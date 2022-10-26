@@ -23,15 +23,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin@mydomain.com", $secpasswd)
 
-            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
-                return @{}
-            }
+            #Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
+             #   return @{}
+            #}
 
-            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
+           #Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
 
-            }
+            #}
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
 
@@ -113,35 +113,33 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
+                        DisplayName              = "My DSC Restriction";
+                        Description              = "";
+                        id                       = "12345-12345-12345-12345-12345"
                         AdditionalProperties = @{
                             '@odata.type'            = '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration'
-                        }
-                        id                       = "12345-12345-12345-12345-12345"
-                        AndroidRestriction       = @{
-                            PersonalDeviceEnrollmentBlocked = $True; #Drift
-                            PlatformBlocked                 = $False;
-                        }
-                        Description              = "";
-                        DisplayName              = "My DSC Restriction";
-                        Ensure                   = "Present"
-                        Credential       = $Credential;
-                        iOSRestriction           = @{
-                            OSMaximumVersion                = "11.0";
-                            OSMinimumVersion                = "9.0";
-                            PersonalDeviceEnrollmentBlocked = $False;
-                            PlatformBlocked                 = $False;
-                        }
-                        macOSRestriction         = @{
-                            PersonalDeviceEnrollmentBlocked = $False;
-                            PlatformBlocked                 = $True;
-                        }
-                        windowsMobileRestriction = @{
-                            PersonalDeviceEnrollmentBlocked = $False;
-                            PlatformBlocked                 = $True;
-                        }
-                        WindowsRestriction       = @{
-                            PersonalDeviceEnrollmentBlocked = $True;
-                            PlatformBlocked                 = $False;
+                            AndroidRestriction       = @{
+                                PersonalDeviceEnrollmentBlocked = $True; #Drift
+                                PlatformBlocked                 = $False;
+                            }
+                            iOSRestriction           = @{
+                                OSMaximumVersion                = "11.0";
+                                OSMinimumVersion                = "9.0";
+                                PersonalDeviceEnrollmentBlocked = $False;
+                                PlatformBlocked                 = $False;
+                            }
+                            macOSRestriction         = @{
+                                PersonalDeviceEnrollmentBlocked = $False;
+                                PlatformBlocked                 = $True;
+                            }
+                            windowsMobileRestriction = @{
+                                PersonalDeviceEnrollmentBlocked = $False;
+                                PlatformBlocked                 = $True;
+                            }
+                            WindowsRestriction       = @{
+                                PersonalDeviceEnrollmentBlocked = $True;
+                                PlatformBlocked                 = $False;
+                            }
                         }
                     }
                 }
@@ -254,6 +252,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
                         id                       = "12345-12345-12345-12345-12345"
+                        DisplayName              = "My DSC Restriction";
                         Description              = "";
                         AdditionalProperties = @{
                             '@odata.type'            = '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration'
@@ -309,15 +308,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         id                       = "12345-12345-12345-12345-12345"
                         Description              = "";
+                        DisplayName              = "My DSC Restriction";
                         AdditionalProperties = @{
                             '@odata.type'            = '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration'
                             AndroidRestriction       = @{
                                 PersonalDeviceEnrollmentBlocked = $False;
                                 PlatformBlocked                 = $False;
                             }
-                            DisplayName              = "My DSC Restriction";
-                            Ensure                   = "Present"
-                            Credential       = $Credential;
                             iOSRestriction           = @{
                                 OSMaximumVersion                = "11.0";
                                 OSMinimumVersion                = "9.0";

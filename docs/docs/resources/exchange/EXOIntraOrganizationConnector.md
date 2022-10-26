@@ -8,6 +8,7 @@
 | **DiscoveryEndpoint** | Write | String | The DiscoveryEndpoint parameter specifies the externally-accessible URL that's used for the Autodiscover service for the domain that's configured in the Intra-Organization connector. ||
 | **Enabled** | Write | Boolean | Specifies whether connector is enabled. ||
 | **TargetAddressDomains** | Write | StringArray[] | The TargetAddressDomains parameter specifies the domain namespaces that will be used in the Intra-organization connector. These domains must have valid Autodiscover endpoints defined in their organizations. The domains and their associated Autodiscover endpoints are used by the Intra-Organization connector for feature and service connectivity. You can specify multiple domains separated by commas. ||
+| **TargetSharingEpr** | Write | String | The TargetSharingEpr parameter specifies the URL of the target Exchange Web Services that will be used in the Intra-Organization connector. ||
 | **Ensure** | Write | String | Specifies if this Intra-Organization connector should exist. |Present, Absent|
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin ||
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||

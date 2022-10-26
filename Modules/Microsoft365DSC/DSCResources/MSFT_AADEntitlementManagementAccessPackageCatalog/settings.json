@@ -1,0 +1,29 @@
+{
+    "resourceName": "AADEntitlementManagementAccessPackageCatalog",
+    "description": "This resource configures an A A D Entitlement Management Access Package Catalog.",
+    "permissions":    {
+    "graph":  {
+                  "delegated":  {
+                                    "read":  [
+
+                                             ],
+                                    "update":  [
+                                                   {
+                                                       "name":  "EntitlementManagement.ReadWrite.All"
+                                                   }
+                                               ]
+                                },
+                  "application":  {
+                                      "read":  [
+
+                                               ],
+                                      "update":  [
+                                                     {
+                                                         "name":  "EntitlementManagement.ReadWrite.All"
+                                                     }
+                                                 ]
+                                  }
+              }
+}
+
+}

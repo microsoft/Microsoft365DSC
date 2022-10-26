@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "<ResourceName>" -GenericStubModule $GenericStubPath
+    -DscResource "AADEntitlementManagementAccessPackageCatalog" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -37,13 +37,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName <SetCmdletName> -MockWith {
+            Mock -CommandName Update-MgEntitlementManagementAccessPackageCatalog -MockWith {
             }
 
-            Mock -CommandName <NewCmdletName> -MockWith {
+            Mock -CommandName New-MgEntitlementManagementAccessPackageCatalog -MockWith {
             }
 
-            Mock -CommandName <RemoveCmdletName> -MockWith {
+            Mock -CommandName Remove-MgEntitlementManagementAccessPackageCatalog -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -51,15 +51,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
         # Test contexts
-        Context -Name "The <ResourceName> should exist but it DOES NOT" -Fixture {
+        Context -Name "The AADEntitlementManagementAccessPackageCatalog should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-<FakeValues>
+                        CatalogStatus = "FakeStringValue"
+                        CatalogType = "UserManaged"
+                        Description = "FakeStringValue"
+                        DisplayName = "FakeStringValue"
+                        Id = "FakeStringValue"
+                        IsExternallyVisible = $True
+
                     Ensure                        = "Present"
                     Credential                    = $Credential;
                 }
 
-                Mock -CommandName <GetCmdletName> -MockWith {
+                Mock -CommandName Get-MgEntitlementManagementAccessPackageCatalog -MockWith {
                     return $null
                 }
             }
@@ -71,21 +77,33 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should Create the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName <NewCmdletName> -Exactly 1
+                Should -Invoke -CommandName New-MgEntitlementManagementAccessPackageCatalog -Exactly 1
             }
         }
 
-        Context -Name "The <ResourceName> exists but it SHOULD NOT" -Fixture {
+        Context -Name "The AADEntitlementManagementAccessPackageCatalog exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-<FakeValues>
+                        CatalogStatus = "FakeStringValue"
+                        CatalogType = "UserManaged"
+                        Description = "FakeStringValue"
+                        DisplayName = "FakeStringValue"
+                        Id = "FakeStringValue"
+                        IsExternallyVisible = $True
+
                     Ensure                        = "Absent"
                     Credential                    = $Credential;
                 }
 
-                Mock -CommandName <GetCmdletName> -MockWith {
+                Mock -CommandName Get-MgEntitlementManagementAccessPackageCatalog -MockWith {
                     return @{
-<FakeValues2>
+                        CatalogStatus = "FakeStringValue"
+                        CatalogType = "UserManaged"
+                        Description = "FakeStringValue"
+                        DisplayName = "FakeStringValue"
+                        Id = "FakeStringValue"
+                        IsExternallyVisible = $True
+
                     }
                 }
             }
@@ -100,20 +118,32 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName <RemoveCmdletName> -Exactly 1
+                Should -Invoke -CommandName Remove-MgEntitlementManagementAccessPackageCatalog -Exactly 1
             }
         }
-        Context -Name "The <ResourceName> Exists and Values are already in the desired state" -Fixture {
+        Context -Name "The AADEntitlementManagementAccessPackageCatalog Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<FakeValues>
+                        CatalogStatus = "FakeStringValue"
+                        CatalogType = "UserManaged"
+                        Description = "FakeStringValue"
+                        DisplayName = "FakeStringValue"
+                        Id = "FakeStringValue"
+                        IsExternallyVisible = $True
+
                     Ensure                        = "Present"
                     Credential                    = $Credential;
                 }
 
-                Mock -CommandName <GetCmdletName> -MockWith {
+                Mock -CommandName Get-MgEntitlementManagementAccessPackageCatalog -MockWith {
                     return @{
-<FakeValues2>
+                        CatalogStatus = "FakeStringValue"
+                        CatalogType = "UserManaged"
+                        Description = "FakeStringValue"
+                        DisplayName = "FakeStringValue"
+                        Id = "FakeStringValue"
+                        IsExternallyVisible = $True
+
                     }
                 }
             }
@@ -124,17 +154,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "The <ResourceName> exists and values are NOT in the desired state" -Fixture {
+        Context -Name "The AADEntitlementManagementAccessPackageCatalog exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<FakeValues>
+                        CatalogStatus = "FakeStringValue"
+                        CatalogType = "UserManaged"
+                        Description = "FakeStringValue"
+                        DisplayName = "FakeStringValue"
+                        Id = "FakeStringValue"
+                        IsExternallyVisible = $True
+
                     Ensure                = "Present"
                     Credential            = $Credential;
                 }
 
-                Mock -CommandName <GetCmdletName> -MockWith {
+                Mock -CommandName Get-MgEntitlementManagementAccessPackageCatalog -MockWith {
                     return @{
-<DriftValues>
+                        CatalogStatus = "FakeStringValue"
+                        CatalogType = "UserManaged"
+                        Description = "FakeStringValue"
+                        DisplayName = "FakeStringValue"
+                        Id = "FakeStringValue"
+                        IsExternallyVisible = $False #Drift
                     }
                 }
             }
@@ -149,7 +190,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName <SetCmdletName> -Exactly 1
+                Should -Invoke -CommandName Update-MgEntitlementManagementAccessPackageCatalog -Exactly 1
             }
         }
 
@@ -160,9 +201,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName <GetCmdletName> -MockWith {
+                Mock -CommandName Get-MgEntitlementManagementAccessPackageCatalog -MockWith {
                     return @{
-<FakeValues2>
+                        CatalogStatus = "FakeStringValue"
+                        CatalogType = "UserManaged"
+                        Description = "FakeStringValue"
+                        DisplayName = "FakeStringValue"
+                        Id = "FakeStringValue"
+                        IsExternallyVisible = $True
+
                     }
                 }
             }
