@@ -234,10 +234,12 @@ function Start-M365DSCConfigurationExtract
                 $AuthMethods -contains 'CertificatePath' -or `
                 $AuthMethods -contains 'ApplicationWithSecret')
         {
+            [SecureString]$secStringPassword = ConvertTo-SecureString $ApplicationSecret -AsPlainText -Force
+            [PSCredential]$AppSecretAsPSCredential = New-Object System.Management.Automation.PSCredential ('ApplicationSecret', $secStringPassword)
             $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
                 -TenantId $TenantId `
                 -CertificateThumbprint $CertificateThumbprint `
-                -ApplicationSecret $ApplicationSecret `
+                -ApplicationSecret $AppSecretAsPSCredential `
                 -CertificatePath $CertificatePath
         }
         elseif ($AuthMethods -Contains 'Credentials')
@@ -717,7 +719,7 @@ function Start-M365DSCConfigurationExtract
             else
             {
                 $filesToDownload = Get-AllSPOPackages -ApplicationId $ApplicationId -CertificateThumbprint $CertificateThumbprint `
-                    -CertificatePassword $CertificatePassword -TenantId $TenantId -CertificatePath $CertificatePath
+                    -CertificatePassword $CertificatePassword -TenantId $TenantId -CertificatePath $CertificatePath -ManagedIdentity:$ManagedIdentity.IsPresent
             }
             if ($filesToDownload.Count -gt 0)
             {

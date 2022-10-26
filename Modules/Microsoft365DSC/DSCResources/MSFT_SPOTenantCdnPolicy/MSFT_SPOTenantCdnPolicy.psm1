@@ -43,7 +43,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration for SPOTenantCdnPolicy {$CDNType}"
@@ -54,8 +58,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -64,11 +68,23 @@ function Get-TargetResource
     try
     {
         $Policies = Get-PnPTenantCdnPolicies -CdnType $CDNType -ErrorAction Stop
+        if ($null -ne $Policies['ExcludeRestrictedSiteClassifications']) {
+            $ExcludeRestrictedSiteClassifications = `
+                $Policies['ExcludeRestrictedSiteClassifications'].Split(',')
+        } else {
+            $ExcludeRestrictedSiteClassifications = $null
+        }
+        if ($null -ne $Policies['IncludeFileExtensions']) {
+            $IncludeFileExtensions = `
+                $Policies['IncludeFileExtensions'].Split(',')
+        } else {
+            $IncludeFileExtensions = $null
+        }
 
         return @{
             CDNType                              = $CDNType
-            ExcludeRestrictedSiteClassifications = $Policies['ExcludeRestrictedSiteClassifications'].Split(',')
-            IncludeFileExtensions                = $Policies['IncludeFileExtensions'].Split(',')
+            ExcludeRestrictedSiteClassifications = $ExcludeRestrictedSiteClassifications
+            IncludeFileExtensions                = $IncludeFileExtensions
             Credential                           = $Credential
             ApplicationId                        = $ApplicationId
             TenantId                             = $TenantId
@@ -76,6 +92,7 @@ function Get-TargetResource
             CertificatePassword                  = $CertificatePassword
             CertificatePath                      = $CertificatePath
             CertificateThumbprint                = $CertificateThumbprint
+            Managedidentity                      = $ManagedIdentity.IsPresent
         }
     }
     catch
@@ -83,7 +100,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -148,7 +165,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration for SPOTenantCDNPolicy {$CDNType}"
@@ -157,8 +178,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -170,12 +191,12 @@ function Set-TargetResource
     if ($null -ne `
         (Compare-Object -ReferenceObject $curPolicies.IncludeFileExtensions -DifferenceObject $IncludeFileExtensions))
     {
-        Write-Verbose "Found difference in IncludeFileExtensions"
+        Write-Verbose 'Found difference in IncludeFileExtensions'
 
-        $stringValue = ""
+        $stringValue = ''
         foreach ($entry in $IncludeFileExtensions.Split(','))
         {
-            $stringValue += $entry + ","
+            $stringValue += $entry + ','
         }
         $stringValue = $stringValue.Remove($stringValue.Length - 1, 1)
         Set-PnPTenantCdnPolicy -CdnType $CDNType `
@@ -186,7 +207,7 @@ function Set-TargetResource
     if ($null -ne (Compare-Object -ReferenceObject $curPolicies.ExcludeRestrictedSiteClassifications `
                 -DifferenceObject $ExcludeRestrictedSiteClassifications))
     {
-        Write-Verbose "Found difference in ExcludeRestrictedSiteClassifications"
+        Write-Verbose 'Found difference in ExcludeRestrictedSiteClassifications'
 
 
         Set-PnPTenantCdnPolicy -CdnType $CDNType `
@@ -240,14 +261,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -264,9 +289,9 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("CDNType", `
-            "ExcludeRestrictedSiteClassifications", `
-            "IncludeFileExtensions")
+        -ValuesToCheck @('CDNType', `
+            'ExcludeRestrictedSiteClassifications', `
+            'IncludeFileExtensions')
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -305,7 +330,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
@@ -317,8 +346,8 @@ function Export-TargetResource
         Confirm-M365DSCDependencies
 
         #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-        $CommandName  = $MyInvocation.MyCommand
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
         $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
             -CommandName $CommandName `
             -Parameters $PSBoundParameters
@@ -333,12 +362,13 @@ function Export-TargetResource
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
+            Managedidentity       = $ManagedIdentity.IsPresent
             Credential            = $Credential
         }
 
         $Results = Get-TargetResource @Params
         Write-Host "`r`n    |---[1/2] Public" -NoNewline
-        $dscContent = ""
+        $dscContent = ''
         if ($null -ne $Results)
         {
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -358,9 +388,10 @@ function Export-TargetResource
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
-            Credential    = $Credential
+            Managedidentity       = $ManagedIdentity.IsPresent
+            Credential            = $Credential
         }
-        Write-Host "    |---[2/2] Private" -NoNewline
+        Write-Host '    |---[2/2] Private' -NoNewline
         $Results = Get-TargetResource @params
         if ($null -ne $result)
         {
@@ -391,7 +422,7 @@ function Export-TargetResource
             try
             {
                 Write-Verbose -Message $_
-                $tenantIdValue = ""
+                $tenantIdValue = ''
                 if (-not [System.String]::IsNullOrEmpty($TenantId))
                 {
                     $tenantIdValue = $TenantId
@@ -409,7 +440,7 @@ function Export-TargetResource
                 Write-Verbose -Message $_
             }
         }
-        return ""
+        return ''
     }
 }
 

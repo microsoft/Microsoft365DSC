@@ -1376,7 +1376,7 @@ function Get-M365DSCTenantDomain
         $TenantId,
 
         [Parameter(ParameterSetName = 'AppId')]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter(ParameterSetName = 'AppId')]
@@ -2243,7 +2243,11 @@ function Get-AllSPOPackages
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try

@@ -1,5 +1,26 @@
 # Change log for Microsoft365DSC
 
+# 1.22.1026.1
+
+* AADEntitlementManagementAccessPackageCatalog
+  * Initial release;
+* EXOIntraOrganizationConnector
+  * Add TargetSharingEpr parameter
+* EXOOwaMailboxPolicy
+  * Add 10 new parameters
+* EXOTransportRule
+  * Add new parmeters: ApplyRightsProtectionCustomizationTemplate, Quarantine, RecipientAddressType, RemoveRMSAttachmentEncryption
+  * Deprecated parameters: ExceptIfMessageContainsAllDataClassifications, IncidentReportOriginalMail,MessageContainsAllDataClassifications
+* TeamsDialInConferencingTenantSettings
+  * Initial release;
+    Fixes [#2426](https://github.com/microsoft/Microsoft365DSC/issues/2426)
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.96;
+* MISC
+  * Add support for ManagedIdentity to the SPO and OD resources.
+  * Fixed and issue with Export and ApplicationSecret where it wasn't properly converting to a PSCredential.
+    * FIXES [#2447](https://github.com/microsoft/Microsoft365DSC/issues/2447)
+
 # 1.22.1019.1
 
 * AADConditionalAccessPolicy

@@ -3045,6 +3045,11 @@ function Test-TargetResource
     }
     $ValuesToCheck.Remove("DefenderDetectedMalwareActions") | Out-Null
 
+    if($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    {
+        Write-Verbose -Message "Test-TargetResource returned $false"
+        return $false
+    }
     #region Assignments
     $testResult=$true
 
