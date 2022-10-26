@@ -5,6 +5,10 @@
 * TeamsDialInConferencingTenantSettings
   * Initial release;
     Fixes [#2426](https://github.com/microsoft/Microsoft365DSC/issues/2426)
+* EXOOwaMailboxPolicy
+  * Add 10 new parameters
+* EXOIntraOrganizationConnector
+  * Add TargetSharingEpr parameter
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.0.96;
 * MISC
