@@ -9,6 +9,8 @@
   * Updated MSCloudLoginAssistant to version 1.0.96;
 * MISC
   * Add support for ManagedIdentity to the SPo and OD resources.
+  * Fixed and issue with Export and ApplicationSecret where it wasn't properly converting to a PSCredential.
+    * FIXES [#2447](https://github.com/microsoft/Microsoft365DSC/issues/2447)
 
 # 1.22.1019.1
 
