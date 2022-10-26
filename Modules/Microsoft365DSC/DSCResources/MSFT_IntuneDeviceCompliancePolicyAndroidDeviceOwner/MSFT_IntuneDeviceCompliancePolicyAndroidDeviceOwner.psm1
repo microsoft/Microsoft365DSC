@@ -583,6 +583,11 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
+    if($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    {
+        Write-Verbose -Message "Test-TargetResource returned $false"
+        return $false
+    }
     #region Assignments
     $testResult=$true
 
