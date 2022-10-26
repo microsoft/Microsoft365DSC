@@ -339,11 +339,8 @@ function Export-TargetResource
         foreach ($Property in $Properties)
         {
             Write-Host "    |---[$i/$($Properties.Length)] $($Property.Name)" -NoNewline
-            $Params = @{
-                Name               = $Property.DisplayName
-                Credential = $Credential
-            }
-            $Results = Get-TargetResource @Params
+
+            $Results = Get-TargetResource @PSBoundParameters -Name $Property.DisplayName
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `

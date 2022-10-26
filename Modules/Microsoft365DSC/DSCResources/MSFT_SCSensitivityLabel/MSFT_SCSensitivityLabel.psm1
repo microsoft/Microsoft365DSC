@@ -1050,11 +1050,7 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($labels.Count)] $($label.Name)" -NoNewline
 
-            $Params = @{
-                Name               = $label.Name
-                Credential = $Credential
-            }
-            $Results = Get-TargetResource @Params
+            $Results = Get-TargetResource @PSBoundParameters -Name $label.Name
 
             if ($null -ne $Results.AdvancedSettings)
             {

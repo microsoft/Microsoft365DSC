@@ -346,11 +346,7 @@ function Export-TargetResource
         {
             Write-Host "        |---[$i/$($EventTypes.Length)] $($eventType.Name)" -NoNewline
 
-            $Params = @{
-                Credential = $Credential
-                Name               = $eventType.Name
-            }
-            $Results = Get-TargetResource @Params
+            $Results = Get-TargetResource @PSBoundParameters -Name $eventType.Name
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `

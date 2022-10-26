@@ -532,11 +532,7 @@ function Export-TargetResource
         foreach ($tag in $tags)
         {
             Write-Host "    |---[$i/$($totalTags)] $($tag.Name)" -NoNewline
-            $Params = @{
-                Name               = $tag.Name
-                Credential = $Credential
-            }
-            $Results = Get-TargetResource @Params
+            $Results = Get-TargetResource @PSBoundParameters -Name $tag.Name
             $Results.FilePlanProperty = Get-SCFilePlanPropertyAsString $Results.FilePlanProperty
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results

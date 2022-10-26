@@ -510,11 +510,8 @@ function Export-TargetResource
         foreach ($search in $searches)
         {
             Write-Host "        |---[$i/$($searches.Name.Count)] $($search.Name)" -NoNewline
-            $params = @{
-                Name               = $search.Name
-                Credential = $Credential
-            }
-            $Results = Get-TargetResource @Params
+
+            $Results = Get-TargetResource @PSBoundParameters -Name $search.Name
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `

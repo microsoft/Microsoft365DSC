@@ -382,11 +382,8 @@ function Export-TargetResource
         foreach ($Case in $Cases)
         {
             Write-Host "    eDiscovery: [$i/$($Cases.Count)] $($Case.Name)" -NoNewline
-            $Params = @{
-                Name               = $Case.Name
-                Credential = $Credential
-            }
-            $Results = Get-TargetResource @Params
+
+            $Results = Get-TargetResource @PSBoundParameters -Name $Case.Name
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `

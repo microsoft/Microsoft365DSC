@@ -352,11 +352,7 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($policies.Length)] $($policy.Workload)" -NoNewline
 
-            $Params = @{
-                Workload           = $policy.Workload
-                Credential = $Credential
-            }
-            $Results = Get-TargetResource @Params
+            $Results = Get-TargetResource @PSBoundParameters -Workload $policy.Workload
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `

@@ -797,11 +797,7 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($policies.Count)] $($policy.Name)" -NoNewline
 
-            $Params = @{
-                Name       = $policy.Name
-                Credential = $Credential
-            }
-            $Results = Get-TargetResource @Params
+            $Results = Get-TargetResource @PSBoundParameters -Name $policy.Name
 
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results

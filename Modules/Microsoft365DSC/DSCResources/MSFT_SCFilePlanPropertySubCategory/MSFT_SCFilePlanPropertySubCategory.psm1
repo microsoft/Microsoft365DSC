@@ -366,12 +366,10 @@ function Export-TargetResource
         {
             $parent = Get-FilePlanPropertyCategory | Where-Object -FilterScript { $_.Guid -like "*$($property.ParentId)*" }
             Write-Host "    |---[$i/$($Properties.Length)] $($Property.Name)" -NoNewline
-            $Params = @{
-                Name               = $Property.DisplayName
-                Category           = $parent.DisplayName
-                Credential = $Credential
-            }
-            $Results = Get-TargetResource @Params
+
+            $Results = Get-TargetResource @PSBoundParameters `
+                -Name $Property.DisplayName `
+                -Category $parent.DisplayName
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `

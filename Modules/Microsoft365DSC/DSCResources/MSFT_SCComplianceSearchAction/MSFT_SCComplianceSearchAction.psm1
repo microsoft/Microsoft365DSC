@@ -535,11 +535,9 @@ function Export-TargetResource
         foreach ($action in $actions)
         {
             Write-Host "        |---[$i/$($actions.Length)] $($action.Name)" -NoNewline
-            $Params = @{
-                Action             = $action.Action
-                SearchName         = $action.SearchName
-                Credential = $Credential
-            }
+            $Params = $PSBoundParameters.Clone()
+            $Params.Action = $action.Action
+            $Params.SearchName = $action.SearchName
 
             $Scenario = Get-ResultProperty -ResultString $action.Results -PropertyName "Scenario"
 

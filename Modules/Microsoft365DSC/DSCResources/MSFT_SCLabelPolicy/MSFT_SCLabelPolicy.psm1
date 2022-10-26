@@ -734,11 +734,7 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($policies.Count)] $($policy.Name)" -NoNewline
 
-            $Params = @{
-                Name               = $policy.Name
-                Credential = $Credential
-            }
-            $Results = Get-TargetResource @Params
+            $Results = Get-TargetResource @PSBoundParameters -Name $policy.Name
 
             if ($null -ne $Results.AdvancedSettings)
             {

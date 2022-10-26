@@ -933,12 +933,10 @@ function Export-TargetResource
         foreach ($rule in $rules)
         {
             Write-Host "    |---[$i/$($rules.Length)] $($rule.Name)" -NoNewline
-            $Params = @{
-                Name               = $rule.name
-                Policy             = $rule.ParentPolicyName
-                Credential = $Credential
-            }
-            $Results = Get-TargetResource @Params
+
+            $Results = Get-TargetResource @PSBoundParameters `
+                -Name   $rule.name `
+                -Policy $rule.ParentPolicyName
 
             $IsCIMArray = $false
             $IsSitCIMArray = $false

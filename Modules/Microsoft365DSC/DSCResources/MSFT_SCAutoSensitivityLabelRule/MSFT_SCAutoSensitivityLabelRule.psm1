@@ -1085,13 +1085,11 @@ function Export-TargetResource
             [Array]$workloads = $rule.Workload.Replace(' ', '').Split(',')
             foreach ($workload in $workloads)
             {
-                $Params = @{
-                    Name               = $rule.name
-                    Policy             = $rule.Policy
-                    Workload           = $workload
-                    Credential         = $Credential
-                }
-                $Results = Get-TargetResource @Params
+
+                $Results = Get-TargetResource @PSBoundParameters `
+                    -Name $rule.name `
+                    -Policy $rule.Policy `
+                    -Workload $workload
 
                 $IsCIMArray = $false
                 $IsSitCIMArray = $false

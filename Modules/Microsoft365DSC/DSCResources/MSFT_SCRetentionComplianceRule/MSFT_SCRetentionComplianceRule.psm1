@@ -539,12 +539,9 @@ function Export-TargetResource
             {
                 Write-Host "        |---[$i/$($rules.Length)] $($rule.Name)" -NoNewline
 
-                $Params = @{
-                    Credential = $Credential
-                    Name               = $rule.Name
-                    Policy             = $rule.Policy
-                }
-                $Results = Get-TargetResource @Params
+                $Results = Get-TargetResource @PSBoundParameters `
+                    -Name $rule.Name `
+                    -Policy $rule.Policy
 
                 if ([System.String]::IsNullOrEmpty($Results.ExpirationDateOption))
                 {

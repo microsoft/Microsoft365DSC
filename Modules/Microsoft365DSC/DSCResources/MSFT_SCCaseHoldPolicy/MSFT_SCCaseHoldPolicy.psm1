@@ -482,12 +482,11 @@ function Export-TargetResource
             foreach ($policy in $policies)
             {
                 Write-Host "        |---[$j/$($policies.Count)] $($policy.Name)" -NoNewline
-                $Params = @{
-                    Name               = $policy.Name
-                    Case               = $case.Name
-                    Credential = $Credential
-                }
-                $Results = Get-TargetResource @Params
+
+                $Results = Get-TargetResource @PSBoundParameters `
+                    -Name $policy.Name `
+                    -Case $case.Name
+
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `

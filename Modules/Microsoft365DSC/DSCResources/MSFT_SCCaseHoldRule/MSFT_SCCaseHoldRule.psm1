@@ -389,12 +389,9 @@ function Export-TargetResource
             {
                 $policy = Get-CaseHoldPolicy -Identity $Rule.Policy -ErrorAction Stop
 
-                $params = @{
-                    Name               = $Rule.Name
-                    Policy             = $policy.Name
-                    Credential = $Credential
-                }
-                $Results = Get-TargetResource @Params
+                $Results = Get-TargetResource @PSBoundParameters `
+                    -Name $Rule.Name `
+                    -Policy $policy.Name
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
