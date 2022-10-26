@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.1026.1
 
 * AADEntitlementManagementAccessPackageCatalog
   * Initial release;
