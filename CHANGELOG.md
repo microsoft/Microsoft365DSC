@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADEntitlementManagementAccessPackageCatalog
+  * Initial release;
 * EXOIntraOrganizationConnector
   * Add TargetSharingEpr parameter
 * EXOOwaMailboxPolicy
