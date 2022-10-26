@@ -1026,7 +1026,7 @@ function Export-M365DSCConfiguration
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -1376,7 +1376,7 @@ function Get-M365DSCTenantDomain
         $TenantId,
 
         [Parameter(ParameterSetName = 'AppId')]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter(ParameterSetName = 'AppId')]

@@ -62,7 +62,7 @@ function Start-M365DSCConfigurationExtract
         $ApplicationId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -381,7 +381,7 @@ function Start-M365DSCConfigurationExtract
             {
                 Add-ConfigurationDataEntry -Node 'NonNodeData' `
                     -Key 'ApplicationSecret' `
-                    -Value $ApplicationSecret `
+                    -Value ($ApplicationSecret.GetNetworkCredential().Password) `
                     -Description 'Azure AD Application Secret for Authentication'
             }
             'Credentials'
@@ -525,8 +525,7 @@ function Start-M365DSCConfigurationExtract
                 }
                 'ApplicationSecret'
                 {
-                    $applicationSecretValue = New-Object System.Management.Automation.PSCredential ('ApplicationSecret', (ConvertTo-SecureString $ApplicationSecret -AsPlainText -Force));
-                    $parameters.Add('ApplicationSecret', $applicationSecretValue)
+                    $parameters.Add('ApplicationSecret', $ApplicationSecret)
                 }
                 'Credentials'
                 {
