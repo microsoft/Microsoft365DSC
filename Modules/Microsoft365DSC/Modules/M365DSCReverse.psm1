@@ -62,7 +62,7 @@ function Start-M365DSCConfigurationExtract
         $ApplicationId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -135,11 +135,18 @@ function Start-M365DSCConfigurationExtract
 
         Write-Host -Object ' '
         Write-Host -Object 'Authentication methods specified:'
-        if ($null -ne $Credential)
+        if ($null -ne $Credential -and `
+            [System.String]::IsNullOrEmpty($ApplicationId) )
         {
             Write-Host -Object '- Credentials'
             $AuthMethods += 'Credentials'
         }
+        if ($null -ne $Credential -and `
+            -not [System.String]::IsNullOrEmpty($ApplicationId))
+        {
+            Write-Host -Object '- CredentialsWithApplicationId'
+            $AuthMethods += 'CredentialsWithApplicationId'
+        } 
         if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint))
         {
             Write-Host -Object '- Service Principal with Certificate Thumbprint'
@@ -240,7 +247,8 @@ function Start-M365DSCConfigurationExtract
                 -ApplicationSecret $ApplicationSecret `
                 -CertificatePath $CertificatePath
         }
-        elseif ($AuthMethods -Contains 'Credentials')
+        elseif ($AuthMethods -Contains 'Credentials' -or `
+                $AuthMethods -Contains 'CredentialsWithApplicationId')
         {
             if ($null -ne $Credential -and $Credential.UserName.Contains('@'))
             {
@@ -381,10 +389,10 @@ function Start-M365DSCConfigurationExtract
             {
                 Add-ConfigurationDataEntry -Node 'NonNodeData' `
                     -Key 'ApplicationSecret' `
-                    -Value $ApplicationSecret `
+                    -Value $ApplicationSecret.GetNetworkCredential().Password `
                     -Description 'Azure AD Application Secret for Authentication'
             }
-            'Credentials'
+            {$_  -in 'Credentials', 'CredentialsWithApplicationId' }
             {
                 if ($newline)
                 {
@@ -528,8 +536,12 @@ function Start-M365DSCConfigurationExtract
                     $applicationSecretValue = New-Object System.Management.Automation.PSCredential ('ApplicationSecret', (ConvertTo-SecureString $ApplicationSecret -AsPlainText -Force));
                     $parameters.Add('ApplicationSecret', $applicationSecretValue)
                 }
-                'Credentials'
+                { $_ -in 'Credentials',  'CredentialsWithApplicationId' }
                 {
+                    if ($AuthMethods -contains 'CredentialsWithApplicationId')
+                    {
+                        $parameters.Add('ApplicationId', $ApplicationId)
+                    }
                     $parameters.Add('Credential', $Credential)
                 }
                 'ManagedIdentity'
@@ -609,7 +621,7 @@ function Start-M365DSCConfigurationExtract
                 $DSCContent = $DSCContent.Insert($startPosition, $credsContent)
                 $launchCommand += " -CertificatePassword `$CertificatePassword"
             }
-            'Credentials'
+            { $_ -in 'Credentials',  'CredentialsWithApplicationId' }
             {
                 #region Add the Prompt for Required Credentials at the top of the Configuration
                 $credsContent = ''
@@ -741,7 +753,8 @@ function Start-M365DSCConfigurationExtract
         }
         $DSCContent.ToString() | Out-File $outputDSCFile
 
-        if (!$AzureAutomation)
+        if (!$AzureAutomation -and `
+            !$ManagedIdentity.IsPresent)
         {
             if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
             {
@@ -760,8 +773,11 @@ function Start-M365DSCConfigurationExtract
                     catch
                     {
                         Write-Verbose -Message $_
-                        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+                        if ($_ -notmatch 'The file exists')
+                        {
+                            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+                        }
                     }
 
                     Add-ConfigurationDataEntry -Node 'localhost' `
@@ -776,9 +792,10 @@ function Start-M365DSCConfigurationExtract
                 Write-Host "Cannot export Local Configuration Manager settings. This process isn't executed with Administrative Privileges!" -NoNewline -ForegroundColor DarkCyan
                 Write-Host '}'
             }
-            $outputConfigurationData = $OutputDSCPath + 'ConfigurationData.psd1'
-            New-ConfigurationDataDocument -Path $outputConfigurationData
         }
+        
+        $outputConfigurationData = $OutputDSCPath + 'ConfigurationData.psd1'
+        New-ConfigurationDataDocument -Path $outputConfigurationData
 
         if ($shouldOpenOutputDirectory)
         {
