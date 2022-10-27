@@ -23,6 +23,7 @@
 | **ApplyHtmlDisclaimerLocation** | Write | String | The ApplyHtmlDisclaimerLocation parameter specifies where to insert the HTML disclaimer text in the body of messages. |Append, Prepend|
 | **ApplyHtmlDisclaimerText** | Write | String | The ApplyHtmlDisclaimerText parameter specifies an action that adds the disclaimer text to messages. ||
 | **ApplyOME** | Write | Boolean | The ApplyOME parameter specifies an action that encrypts messages and their attachments by using Office 365 Message Encryption. ||
+| **ApplyRightsProtectionCustomizationTemplate** | Write | String | The ApplyRightsProtectionCustomizationTemplate parameter specifies an action that applies a custom branding template for OME encrypted messages. ||
 | **ApplyRightsProtectionTemplate** | Write | String | The ApplyRightsProtectionTemplate parameter specifies an action that applies rights management service (RMS) templates to messages.  ||
 | **AttachmentContainsWords** | Write | StringArray[] | The AttachmentContainsWords parameter specifies a condition that looks for words in message attachments.  ||
 | **AttachmentExtensionMatchesWords** | Write | StringArray[] | The AttachmentExtensionMatchesWords parameter specifies a condition that looks for words in the file name extensions of message attachments. ||
@@ -81,7 +82,7 @@
 | **ExceptIfManagerAddresses** | Write | StringArray[] | The ExceptIfManagerAddresses parameter specifies the users (managers) for the ExceptIfManagerForEvaluatedUser parameter. ||
 | **ExceptIfManagerForEvaluatedUser** | Write | String | The ExceptIfManagerForEvaluatedUser parameter specifies an exception that looks for users in the Manager attribute of senders or recipients. ||
 | **ExceptIfMessageTypeMatches** | Write | String | The ExceptIfMessageTypeMatches parameter specifies an exception that looks for messages of the specified type. |OOF, AutoForward, Encrypted, Calendaring, PermissionControlled, Voicemail, Signed, ApprovalRequest, ReadReceipt|
-| **ExceptIfMessageContainsAllDataClassifications** | Write | StringArray[] | This parameter is reserved for internal Microsoft use. ||
+| **ExceptIfMessageContainsAllDataClassifications** | Write | StringArray[] | DEPRECATED ||
 | **ExceptIfMessageContainsDataClassifications** | Write | StringArray[] | The ExceptIfMessageContainsDataClassifications parameter specifies an exception that looks for sensitive information types in the body of messages, and in any attachments. ||
 | **ExceptIfMessageSizeOver** | Write | String | The ExceptIfMessageSizeOver parameter specifies an exception that looks for messages larger than the specified size.  ||
 | **ExceptIfRecipientADAttributeContainsWords** | Write | StringArray[] | The ExceptIfRecipientADAttributeContainsWords parameter specifies an exception that looks for words in the Active Directory attributes of recipients. ||
@@ -121,10 +122,10 @@
 | **HeaderMatchesMessageHeader** | Write | String | The HeaderMatchesMessageHeader parameter specifies the name of header field in the message header when searching for the text patterns specified by the HeaderMatchesPatterns parameter. ||
 | **HeaderMatchesPatterns** | Write | StringArray[] | The HeaderMatchesPatterns parameter specifies a condition that looks for text patterns in a header field by using regular expressions.  ||
 | **IncidentReportContent** | Write | StringArray[] | The IncidentReportContent parameter specifies the message properties that are included in the incident report that's generated when a message violates a DLP policy.  ||
-| **IncidentReportOriginalMail** | Write | String | The IncidentReportOriginalMail parameter specifies whether to include the original message with the incident report.  ||
+| **IncidentReportOriginalMail** | Write | String | DEPRECATED ||
 | **ManagerAddresses** | Write | StringArray[] | The ManagerAddresses parameter specifies the users (managers) for the ExceptIfManagerForEvaluatedUser parameter. ||
 | **ManagerForEvaluatedUser** | Write | String | The ManagerForEvaluatedUser parameter specifies a condition that looks for users in the Manager attribute of senders or recipients. |Recipient, Sender|
-| **MessageContainsAllDataClassifications** | Write | StringArray[] | This parameter is reserved for internal Microsoft use. ||
+| **MessageContainsAllDataClassifications** | Write | StringArray[] | DEPRECATED ||
 | **MessageContainsDataClassifications** | Write | StringArray[] | The MessageContainsDataClassifications parameter specifies a condition that looks for sensitive information types in the body of messages, and in any attachments. ||
 | **MessageSizeOver** | Write | String | The MessageSizeOver parameter specifies a condition that looks for messages larger than the specified size. The size includes the message and all attachments. ||
 | **MessageTypeMatches** | Write | String | The MessageTypeMatches parameter specifies a condition that looks for messages of the specified type. |OOF, AutoForward, Encrypted, Calendaring, PermissionControlled, Voicemail, Signed, ApprovalRequest, ReadReceipt|
@@ -134,10 +135,12 @@
 | **NotifySender** | Write | String | The NotifySender parameter specifies an action that notifies the sender when messages violate DLP policies. |NotifyOnly, RejectMessage, RejectUnlessFalsePositiveOverride, RejectUnlessSilentOverride, RejectUnlessExplicitOverride|
 | **PrependSubject** | Write | String | The PrependSubject parameter specifies an action that adds text to add to the beginning of the Subject field of messages. ||
 | **Priority** | Write | String | The Priority parameter specifies a priority value for the rule that determines the order of rule processing. ||
+| **Quarantine** | Write | Boolean | The Quarantine parameter specifies an action that quarantines messages. ||
 | **RecipientADAttributeContainsWords** | Write | StringArray[] | The RecipientADAttributeContainsWords parameter specifies a condition that looks for words in the Active Directory attributes of recipients.  ||
 | **RecipientADAttributeMatchesPatterns** | Write | StringArray[] | The RecipientADAttributeMatchesPatterns parameter specifies a condition that looks for text patterns in the Active Directory attributes of recipients by using regular expressions. ||
 | **RecipientAddressContainsWords** | Write | StringArray[] | The RecipientAddressContainsWords parameter specifies a condition that looks for words in recipient email addresses. ||
 | **RecipientAddressMatchesPatterns** | Write | StringArray[] | The RecipientAddressMatchesPatterns parameter specifies a condition that looks for text patterns in recipient email addresses by using regular expressions. ||
+| **RecipientAddressType** | Write | String | The RecipientAddressType parameter specifies how conditions and exceptions check recipient email addresses. |Original, Resolved|
 | **RecipientDomainIs** | Write | StringArray[] | The RecipientDomainIs parameter specifies a condition that looks for recipients with email address in the specified domains. ||
 | **RecipientInSenderList** | Write | StringArray[] | This parameter is reserved for internal Microsoft use. ||
 | **RedirectMessageTo** | Write | StringArray[] | The RedirectMessageTo parameter specifies a rule action that redirects messages to the specified recipients. ||
@@ -146,6 +149,7 @@
 | **RemoveHeader** | Write | String | The RemoveHeader parameter specifies an action that removes a header field from the message header. ||
 | **RemoveOME** | Write | Boolean | The RemoveOME parameter specifies an action that removes the previous version of Office 365 Message Encryption from messages and their attachments. ||
 | **RemoveOMEv2** | Write | Boolean | The RemoveOMEv2 parameter specifies an action that removes Office 365 Message Encryption from messages and their attachments. ||
+| **RemoveRMSAttachmentEncryption** | Write | Boolean | This parameter specifies an action or part of an action for the rule. ||
 | **RouteMessageOutboundConnector** | Write | String | The RouteMessageOutboundConnector parameter specifies an action that routes messages through the specified Outbound connector in Office 365. ||
 | **RouteMessageOutboundRequireTls** | Write | Boolean | The RouteMessageOutboundRequireTls parameter specifies an action that uses Transport Layer Security (TLS) encryption to deliver messages outside your organization. ||
 | **RuleErrorAction** | Write | String | The RuleErrorAction parameter specifies what to do if rule processing can't be completed on messages. |Ignore, Defer|

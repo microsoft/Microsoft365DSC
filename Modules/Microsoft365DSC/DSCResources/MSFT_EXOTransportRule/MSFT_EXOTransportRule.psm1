@@ -87,6 +87,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplyRightsProtectionCustomizationTemplate,
+
+        [Parameter()]
+        [System.String]
         $ApplyRightsProtectionTemplate,
 
         [Parameter()]
@@ -321,6 +325,7 @@ function Get-TargetResource
         [System.String]
         $ExceptIfMessageTypeMatches,
 
+        #DEPRECATED
         [Parameter()]
         [System.String[]]
         $ExceptIfMessageContainsAllDataClassifications = @(),
@@ -485,6 +490,7 @@ function Get-TargetResource
         [System.String[]]
         $IncidentReportContent = @(),
 
+        #DEPRECATED
         [Parameter()]
         [System.String[]]
         $IncidentReportOriginalMail,
@@ -498,6 +504,7 @@ function Get-TargetResource
         [System.String]
         $ManagerForEvaluatedUser,
 
+        #DEPRECATED
         [Parameter()]
         [System.String[]]
         $MessageContainsAllDataClassifications,
@@ -542,6 +549,10 @@ function Get-TargetResource
         $Priority,
 
         [Parameter()]
+        [System.Boolean]
+        $Quarantine,
+
+        [Parameter()]
         [System.String[]]
         $RecipientADAttributeContainsWords,
 
@@ -556,6 +567,11 @@ function Get-TargetResource
         [Parameter()]
         [System.String[]]
         $RecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [ValidateSet('Original', 'Resolved')]
+        [System.String]
+        $RecipientAddressType,
 
         [Parameter()]
         [System.String[]]
@@ -588,6 +604,10 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $RemoveOMEv2,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveRMSAttachmentEncryption,
 
         [Parameter()]
         [System.String]
@@ -795,6 +815,7 @@ function Get-TargetResource
             ApplyHtmlDisclaimerLocation                   = $TransportRule.ApplyHtmlDisclaimerLocation
             ApplyHtmlDisclaimerText                       = $TransportRule.ApplyHtmlDisclaimerText
             ApplyOME                                      = $TransportRule.ApplyOME
+            ApplyRightsProtectionCustomizationTemplate    = $TransportRule.ApplyRightsProtectionCustomizationTemplate
             ApplyRightsProtectionTemplate                 = $TransportRule.ApplyRightsProtectionTemplate
             AttachmentContainsWords                       = $TransportRule.AttachmentContainsWords
             AttachmentExtensionMatchesWords               = $TransportRule.AttachmentExtensionMatchesWords
@@ -853,7 +874,8 @@ function Get-TargetResource
             ExceptIfManagerAddresses                      = $TransportRule.ExceptIfManagerAddresses
             ExceptIfManagerForEvaluatedUser               = $TransportRule.ExceptIfManagerForEvaluatedUser
             ExceptIfMessageTypeMatches                    = $TransportRule.ExceptIfMessageTypeMatches
-            ExceptIfMessageContainsAllDataClassifications = $TransportRule.ExceptIfMessageContainsAllDataClassifications
+            #DEPRECATED
+            #ExceptIfMessageContainsAllDataClassifications = $TransportRule.ExceptIfMessageContainsAllDataClassifications
             ExceptIfMessageContainsDataClassifications    = $TransportRule.ExceptIfMessageContainsDataClassifications
             ExceptIfMessageSizeOver                       = $TransportRule.ExceptIfMessageSizeOver
             ExceptIfRecipientADAttributeContainsWords     = $TransportRule.ExceptIfRecipientADAttributeContainsWords
@@ -893,10 +915,12 @@ function Get-TargetResource
             HeaderMatchesMessageHeader                    = $TransportRule.HeaderMatchesMessageHeader
             HeaderMatchesPatterns                         = $TransportRule.HeaderMatchesPatterns
             IncidentReportContent                         = $TransportRule.IncidentReportContent
-            IncidentReportOriginalMail                    = $TransportRule.IncidentReportOriginalMail
+            #DEPRECATED
+            #IncidentReportOriginalMail                    = $TransportRule.IncidentReportOriginalMail
             ManagerAddresses                              = $TransportRule.ManagerAddresses
             ManagerForEvaluatedUser                       = $TransportRule.ManagerForEvaluatedUser
-            MessageContainsAllDataClassifications         = $TransportRule.MessageContainsAllDataClassifications
+            #DEPRECATED
+            #MessageContainsAllDataClassifications         = $TransportRule.MessageContainsAllDataClassifications
             MessageContainsDataClassifications            = $MessageContainsDataClassificationsValue
             MessageSizeOver                               = $TransportRule.MessageSizeOver
             MessageTypeMatches                            = $TransportRule.MessageTypeMatches
@@ -906,10 +930,12 @@ function Get-TargetResource
             NotifySender                                  = $TransportRule.NotifySender
             PrependSubject                                = $TransportRule.PrependSubject
             Priority                                      = $TransportRule.Priority
+            Quarantine                                    = $TransportRule.Quarantine
             RecipientADAttributeContainsWords             = $TransportRule.RecipientADAttributeContainsWords
             RecipientADAttributeMatchesPatterns           = $TransportRule.RecipientADAttributeMatchesPatterns
             RecipientAddressContainsWords                 = $TransportRule.RecipientAddressContainsWords
             RecipientAddressMatchesPatterns               = $TransportRule.RecipientAddressMatchesPatterns
+            RecipientAddressType                          = $TransportRule.RecipientAddressType
             RecipientDomainIs                             = $TransportRule.RecipientDomainIs
             RecipientInSenderList                         = $TransportRule.RecipientInSenderList
             RedirectMessageTo                             = $TransportRule.RedirectMessageTo
@@ -918,6 +944,7 @@ function Get-TargetResource
             RemoveHeader                                  = $TransportRule.RemoveHeader
             RemoveOME                                     = $TransportRule.RemoveOME
             RemoveOMEv2                                   = $TransportRule.RemoveOMEv2
+            RemoveRMSAttachmentEncryption                 = $TransportRule.RemoveRMSAttachmentEncryption
             RouteMessageOutboundConnector                 = $TransportRule.RouteMessageOutboundConnector
             RouteMessageOutboundRequireTls                = $TransportRule.RouteMessageOutboundRequireTls
             RuleErrorAction                               = $TransportRule.RuleErrorAction
@@ -1053,6 +1080,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $ApplyOME,
+
+        [Parameter()]
+        [System.String]
+        $ApplyRightsProtectionCustomizationTemplate,
 
         [Parameter()]
         [System.String]
@@ -1290,6 +1321,7 @@ function Set-TargetResource
         [System.String]
         $ExceptIfMessageTypeMatches,
 
+        #DEPRECATED
         [Parameter()]
         [System.String[]]
         $ExceptIfMessageContainsAllDataClassifications = @(),
@@ -1454,6 +1486,7 @@ function Set-TargetResource
         [System.String[]]
         $IncidentReportContent = @(),
 
+        #DEPRECATED
         [Parameter()]
         [System.String[]]
         $IncidentReportOriginalMail,
@@ -1467,6 +1500,7 @@ function Set-TargetResource
         [System.String]
         $ManagerForEvaluatedUser,
 
+        #DEPRECATED
         [Parameter()]
         [System.String[]]
         $MessageContainsAllDataClassifications,
@@ -1511,6 +1545,10 @@ function Set-TargetResource
         $Priority,
 
         [Parameter()]
+        [System.Boolean]
+        $Quarantine,
+
+        [Parameter()]
         [System.String[]]
         $RecipientADAttributeContainsWords,
 
@@ -1525,6 +1563,11 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $RecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [ValidateSet('Original', 'Resolved')]
+        [System.String]
+        $RecipientAddressType,
 
         [Parameter()]
         [System.String[]]
@@ -1557,6 +1600,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $RemoveOMEv2,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveRMSAttachmentEncryption,
 
         [Parameter()]
         [System.String]
@@ -1715,6 +1762,20 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    # Warning for deprecated parameters
+    if ($PSBoundParameters.ContainsKey('ExceptIfMessageContainsAllDataClassifications'))
+    {
+        Write-Warning 'ExceptIfMessageContainsAllDataClassifications is deprecated. Please remove this parameter from your configuration.'
+    }
+    if ($PSBoundParameters.ContainsKey('IncidentReportOriginalMail'))
+    {
+        Write-Warning 'IncidentReportOriginalMail is deprecated. Please remove this parameter from your configuration.'
+    }
+    if ($PSBoundParameters.ContainsKey('MessageContainsAllDataClassifications'))
+    {
+        Write-Warning 'MessageContainsAllDataClassifications is deprecated. Please remove this parameter from your configuration.'
+    }
+
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' -InboundParameters $PSBoundParameters
 
     $NewTransportRuleParams = [System.Collections.Hashtable]($PSBoundParameters)
@@ -1727,6 +1788,14 @@ function Set-TargetResource
     $NewTransportRuleParams.Remove('CertificatePath') | Out-Null
     $NewTransportRuleParams.Remove('CertificatePassword') | Out-Null
     $NewTransportRuleParams.Remove('Managedidentity') | Out-Null
+
+    # Remove deprecated parameters
+    #DEPRECATED
+    $NewTransportRuleParams.Remove('ExceptIfMessageContainsAllDataClassifications') | Out-Null
+    #DEPRECATED
+    $NewTransportRuleParams.Remove('IncidentReportOriginalMail') | Out-Null
+    #DEPRECATED
+    $NewTransportRuleParams.Remove('MessageContainsAllDataClassifications') | Out-Null
 
     $SetTransportRuleParams = $NewTransportRuleParams.Clone()
     $SetTransportRuleParams.Add('Identity', $Name)
@@ -1841,6 +1910,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $ApplyOME,
+
+        [Parameter()]
+        [System.String]
+        $ApplyRightsProtectionCustomizationTemplate,
 
         [Parameter()]
         [System.String]
@@ -2078,6 +2151,7 @@ function Test-TargetResource
         [System.String]
         $ExceptIfMessageTypeMatches,
 
+        #DEPRECATED
         [Parameter()]
         [System.String[]]
         $ExceptIfMessageContainsAllDataClassifications = @(),
@@ -2242,6 +2316,7 @@ function Test-TargetResource
         [System.String[]]
         $IncidentReportContent = @(),
 
+        #DEPRECATED
         [Parameter()]
         [System.String[]]
         $IncidentReportOriginalMail,
@@ -2255,6 +2330,7 @@ function Test-TargetResource
         [System.String]
         $ManagerForEvaluatedUser,
 
+        #DEPRECATED
         [Parameter()]
         [System.String[]]
         $MessageContainsAllDataClassifications,
@@ -2299,6 +2375,10 @@ function Test-TargetResource
         $Priority,
 
         [Parameter()]
+        [System.Boolean]
+        $Quarantine,
+
+        [Parameter()]
         [System.String[]]
         $RecipientADAttributeContainsWords,
 
@@ -2313,6 +2393,11 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $RecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [ValidateSet('Original', 'Resolved')]
+        [System.String]
+        $RecipientAddressType,
 
         [Parameter()]
         [System.String[]]
@@ -2345,6 +2430,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $RemoveOMEv2,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveRMSAttachmentEncryption,
 
         [Parameter()]
         [System.String]

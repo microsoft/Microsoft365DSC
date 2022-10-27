@@ -730,6 +730,11 @@ function Test-TargetResource
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
+    if($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    {
+        Write-Verbose -Message "Test-TargetResource returned $false"
+        return $false
+    }
     #region Assignments
     $testResult=$true
 

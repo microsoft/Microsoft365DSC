@@ -234,10 +234,12 @@ function Start-M365DSCConfigurationExtract
                 $AuthMethods -contains 'CertificatePath' -or `
                 $AuthMethods -contains 'ApplicationWithSecret')
         {
+            [SecureString]$secStringPassword = ConvertTo-SecureString $ApplicationSecret -AsPlainText -Force
+            [PSCredential]$AppSecretAsPSCredential = New-Object System.Management.Automation.PSCredential ('ApplicationSecret', $secStringPassword)
             $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
                 -TenantId $TenantId `
                 -CertificateThumbprint $CertificateThumbprint `
-                -ApplicationSecret $ApplicationSecret `
+                -ApplicationSecret $AppSecretAsPSCredential `
                 -CertificatePath $CertificatePath
         }
         elseif ($AuthMethods -Contains 'Credentials')

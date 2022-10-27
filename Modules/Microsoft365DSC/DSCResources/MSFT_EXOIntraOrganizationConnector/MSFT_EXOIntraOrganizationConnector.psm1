@@ -21,6 +21,10 @@ function Get-TargetResource
         $TargetAddressDomains = @(),
 
         [Parameter()]
+        [System.String]
+        $TargetSharingEpr,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -97,6 +101,7 @@ function Get-TargetResource
                 DiscoveryEndpoint     = $IntraOrganizationConnector.DiscoveryEndpoint.ToString()
                 Enabled               = $IntraOrganizationConnector.Enabled
                 TargetAddressDomains  = $IntraOrganizationConnector.TargetAddressDomains
+                TargetSharingEpr      = $IntraOrganizationConnector.TargetSharingEpr
                 Credential            = $Credential
                 Ensure                = 'Present'
                 ApplicationId         = $ApplicationId
@@ -158,6 +163,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $TargetAddressDomains = @(),
+
+        [Parameter()]
+        [System.String]
+        $TargetSharingEpr,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -261,6 +270,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $TargetAddressDomains = @(),
+
+        [Parameter()]
+        [System.String]
+        $TargetSharingEpr,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]

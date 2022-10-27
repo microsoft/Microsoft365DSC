@@ -385,7 +385,6 @@ function Set-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters -ProfileName beta
-
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -422,6 +421,8 @@ function Set-TargetResource
         Write-Verbose -Message "Creating new Intune Device Compliance MacOS Policy {$DisplayName}"
         $PSBoundParameters.Remove('DisplayName') | Out-Null
         $PSBoundParameters.Remove('Description') | Out-Null
+        $PSBoundParameters.Remove('Assignments') | Out-Null
+
         $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyMacOSAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
         $policy=New-MgDeviceManagementDeviceCompliancePolicy -DisplayName $DisplayName `
             -Description $Description `
@@ -640,16 +641,22 @@ function Test-TargetResource
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
+
+    if($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    {
+        Write-Verbose -Message "Test-TargetResource returned $false"
+        return $false
+    }
     #region Assignments
     $testResult=$true
 
-    if((-not $CurrentValues.Assignments) -xor (-not $ValuesToCheck.Assignments))
+    if(($null -ne $CurrentValues.Assignments) -xor ($null -ne $ValuesToCheck.Assignments))
     {
         Write-Verbose -Message "Configuration drift: one the assignment is null"
         return $false
     }
 
-    if($CurrentValues.Assignments)
+    if($null -ne $CurrentValues.Assignments)
     {
         if($CurrentValues.Assignments.count -ne $ValuesToCheck.Assignments.count)
         {
