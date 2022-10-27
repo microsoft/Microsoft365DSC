@@ -190,6 +190,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         FirewallEnabled                             = $False
                         FirewallBlockAllIncoming                    = $False
                         FirewallEnableStealthMode                   = $False
+                        Assignments                                 = @()
                         Ensure                                      = 'Present'
                         Credential                                  = $Credential
                     }
@@ -218,9 +219,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 FirewallEnabled                             = $False
                                 FirewallBlockAllIncoming                    = $False
                                 FirewallEnableStealthMode                   = $False
-                                RoleScopeTagIds                             = "0"
                             }
                         }
+                    }
+                    Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicyAssignment -MockWith {
+                        return @()
                     }
                 }
 

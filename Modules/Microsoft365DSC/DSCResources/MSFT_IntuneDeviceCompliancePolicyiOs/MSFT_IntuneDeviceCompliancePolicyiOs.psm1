@@ -625,7 +625,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     #region Assignments
-    if($CurrentValues.Ensure -eq "Absent")
+    if($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
