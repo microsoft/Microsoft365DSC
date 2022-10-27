@@ -20,7 +20,7 @@ function Get-TargetResource
         [Parameter()]
         [validateset('Public', 'HiddenMembership')]
         [System.String]
-        $Visibility = 'Public',
+        $Visibility,
 
         [Parameter()]
         [validateset('Static', 'Dynamic')]
@@ -308,7 +308,7 @@ function Set-TargetResource
         [Parameter()]
         [validateset('Public', 'HiddenMembership')]
         [System.String]
-        $Visibility = 'Public',
+        $Visibility,
 
         [Parameter()]
         [validateset('Static', 'Dynamic')]
@@ -822,7 +822,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing {$DisplayName}"
+        Write-Verbose -Message "Removing AU {$DisplayName}"
 
 
         #region resource generator code
@@ -860,11 +860,11 @@ function Test-TargetResource
         [Parameter()]
         [validateset('Public', 'HiddenMembership')]
         [System.String]
-        $Visibility = 'Public',
+        $Visibility,
 
         [Parameter()]
         [validateset('Static', 'Dynamic')]
-        [System.String]$MembershipType = 'Static',
+        [System.String]$MembershipType,
 
         [Parameter()]
         [validateset('Paused', 'On')]
