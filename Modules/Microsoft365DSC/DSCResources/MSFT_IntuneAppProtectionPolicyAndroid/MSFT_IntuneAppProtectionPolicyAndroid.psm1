@@ -1206,21 +1206,15 @@ Function set-ManagedBrowserValues
         [string]$CustomBrowserPackageId
     )
 
-   # via the gui there are only 3 possible configs, we need to ensure we always set to one of those:
+   # via the gui there are only 3 possible configs:
    # edge - edge, true, empty id strings
    # any app - not configured, false, empty strings
    # unmanaged browser not configured, true, strings must not be empty
-   # cmdlets will set whatever we tell them to and pull them back as we set them - but GUI interprets them in its own way
-   # the ManagedBrowserToOpenLinksRequired is the controlling value when you view things in gui - if it is false then the browser is set to any app regardless of other settings
-   # if edge is set but there are also non-empty strings for the ids it displays unmanaged browser.
 
-   #($PSBoundParameters.keys -contains $param )
    write-host 'Setting Managed Browser Properties'
 
    if (!$ManagedBrowserToOpenLinksRequired)
    {
-        # no matter what else is specified, if ManagedBrowserToOpenLinksRequired is false or not specified in the config the gui interprets this as any app so we will do the same
-        # might want to modify in future to try and assume desired config based on other values but for now I will stick with the gui interpretation
         write-host 'Setting Managed Browser to Any App'
         $ManagedBrowser = 'notConfigured'
         $ManagedBrowserToOpenLinksRequired = $false
@@ -1232,7 +1226,6 @@ Function set-ManagedBrowserValues
    {
         if(($CustomBrowserDisplayName -ne '') -and ($CustomBrowserPackageId -ne ''))
         {
-            # in gui the custom browser values override the edge settings so assuming they are both specified we will use these values
             write-host 'Setting Managed Browser to Custom Browser'
             $ManagedBrowser = 'notConfigured'
             $ManagedBrowserToOpenLinksRequired = $true
@@ -1241,7 +1234,6 @@ Function set-ManagedBrowserValues
         }
         else
         {
-            # otherwise we have specified a managed browser so it has to be edge
             write-host 'Setting Managed Browser to Microsoft Edge'
             $ManagedBrowser = 'microsoftEdge'
             $ManagedBrowserToOpenLinksRequired = $true
