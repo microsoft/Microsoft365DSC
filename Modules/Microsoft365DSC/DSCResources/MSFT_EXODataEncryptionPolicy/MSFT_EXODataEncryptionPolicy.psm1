@@ -248,7 +248,7 @@ function Set-TargetResource
     $DataEncryptionPolicyParams.Remove('CertificateThumbprint') | Out-Null
     $DataEncryptionPolicyParams.Remove('CertificatePath') | Out-Null
     $DataEncryptionPolicyParams.Remove('CertificatePassword') | Out-Null
-    $DataEncryptionPolicyParams.Remove('Managedidentity') | Out-Null
+    $DataEncryptionPolicyParams.Remove('ManagedIdentity') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($null -eq $DataEncryptionPolicy))
     {
@@ -365,7 +365,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

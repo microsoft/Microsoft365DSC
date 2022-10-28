@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* MISC
+  * Fixes and issue with ManagedIdentity Parameter not being not removed correctly in a parameterset.
+    * FIXES [#2464](https://github.com/microsoft/Microsoft365DSC/issues/2464)
+
 # 1.22.1026.2
 
 * MISC

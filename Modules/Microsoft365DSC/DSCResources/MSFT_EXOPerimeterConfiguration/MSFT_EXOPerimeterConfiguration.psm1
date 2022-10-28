@@ -197,7 +197,7 @@ function Set-TargetResource
     $PerimeterConfigurationParams.Remove('CertificateThumbprint') | Out-Null
     $PerimeterConfigurationParams.Remove('CertificatePath') | Out-Null
     $PerimeterConfigurationParams.Remove('CertificatePassword') | Out-Null
-    $PerimeterConfigurationParams.Remove('Managedidentity') | Out-Null
+    $PerimeterConfigurationParams.Remove('ManagedIdentity') | Out-Null
     $PerimeterConfigurationParams.Remove('Identity') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($Null -ne $PerimeterConfigurationParams))
@@ -280,7 +280,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
