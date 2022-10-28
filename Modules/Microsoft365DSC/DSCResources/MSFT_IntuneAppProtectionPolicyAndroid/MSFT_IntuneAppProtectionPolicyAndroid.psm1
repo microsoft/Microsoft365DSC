@@ -270,7 +270,9 @@ function Get-TargetResource
                 }
 
                 DEFAULT
-                { $policy.add($param, $policyInfo.$param) }
+                {
+                    $policy.add($param, $policyInfo.$param) 
+                }
             }
         }
         # loop credential parameters and add them from input params
@@ -283,7 +285,8 @@ function Get-TargetResource
         $policy.add('Apps', $appsArray)
         $policy.add('Assignments', $assignmentsArray)
         $policy.add('ExcludedGroups', $exclusionArray)
-        $policy.add('AppGroupType', $policyInfo.AppGroupType)
+        $policy.add('ManagedIdentity', $ManagedIdentity.IsPresent)
+        #$policy.add('AppGroupType', $policyInfo.AppGroupType)
         # add Id for use in set function
         $policy.add('Id', $policyInfo.Id)
 
@@ -558,14 +561,20 @@ function Set-TargetResource
     if ($PSBoundParameters.keys -contains 'Assignments' )
     {
         $PSBoundParameters.Assignments | ForEach-Object {
-            if ($_ -ne $null) { $assignmentsArray += set-JSONstring -id $_ -type 'Assignments' }
+            if ($_ -ne $null)
+            {
+                $assignmentsArray += set-JSONstring -id $_ -type 'Assignments' 
+            }
         }
         $configstring += ( 'Assignments' + ":`r`n" + ($PSBoundParameters.Assignments | Out-String) + "`r`n" )
     }
     if ($PSBoundParameters.keys -contains 'ExcludedGroups' )
     {
         $PSBoundParameters.ExcludedGroups | ForEach-Object {
-            if ($_ -ne $null) { $assignmentsArray += set-JSONstring -id $_ -type 'ExcludedGroups' }
+            if ($_ -ne $null)
+            {
+                $assignmentsArray += set-JSONstring -id $_ -type 'ExcludedGroups' 
+            }
         }
         $configstring += ( 'ExcludedGroups' + ":`r`n" + ($PSBoundParameters.ExcludedGroups | Out-String) + "`r`n" )
 
@@ -573,7 +582,10 @@ function Set-TargetResource
     # set the apps values
     $AppsHash = set-AppsHash -AppGroupType $AppGroupType -apps $apps
     $appshash.Apps | ForEach-Object {
-        if ($_ -ne $null) { $appsarray += set-JSONstring -id $_ -type 'Apps' }
+        if ($_ -ne $null)
+        {
+            $appsarray += set-JSONstring -id $_ -type 'Apps' 
+        }
     }
     $configstring += ('AppGroupType:' + $appshash.AppGroupType + "`r`n")
     $configstring += ('Apps' + ":`r`n" + ($appshash.Apps | Out-String) + "`r`n" )
@@ -882,7 +894,10 @@ function Test-TargetResource
     $targetvalues.add('Apps', $AppsHash.Apps)
     $targetvalues.add('AppGroupType', $AppsHash.AppGroupType)
     # wipe out the current apps value if AppGroupType is anything but selectedpublicapps to match the appshash values
-    if ($CurrentValues.AppGroupType -ne 'selectedPublicApps') { $CurrentValues.Apps = @() }
+    if ($CurrentValues.AppGroupType -ne 'selectedPublicApps')
+    {
+        $CurrentValues.Apps = @() 
+    }
 
 
     Write-Verbose -Message "Current Values: $((Convert-M365DscHashtableToString -Hashtable $CurrentValues) -replace ';', "`r`n")"
@@ -972,7 +987,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
             }
             $Results = Get-TargetResource @Params
             #remove the Id value
@@ -1106,8 +1121,14 @@ function set-AppsHash
 
     if ($AppGroupType -eq '')
     {
-        if ($apps.count -eq 0 ) { $AppGroupType = 'allApps' }
-        else { $AppGroupType = 'selectedPublicApps' }
+        if ($apps.count -eq 0 )
+        {
+            $AppGroupType = 'allApps' 
+        }
+        else
+        {
+            $AppGroupType = 'selectedPublicApps' 
+        }
         Write-Verbose -Message "setting AppGroupType to $AppGroupType"
     }
 
@@ -1134,11 +1155,11 @@ function get-InputParameters
         AllowedOutboundDataTransferDestinations = @{Type = 'Parameter'        ; ExportFileType = 'String'; };
         ApplicationId                           = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
         ApplicationSecret                       = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
-        AppGroupType                            = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
+        AppGroupType                            = @{Type = 'Parameter'        ; ExportFileType = 'String'; };
         Apps                                    = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
         Assignments                             = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
         CertificateThumbprint                   = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
-        Managedidentity                         = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
+        ManagedIdentity                         = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
         ContactSyncBlocked                      = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         Credential                              = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
         DataBackupBlocked                       = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
