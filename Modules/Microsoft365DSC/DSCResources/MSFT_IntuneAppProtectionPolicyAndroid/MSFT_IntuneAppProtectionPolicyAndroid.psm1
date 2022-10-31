@@ -271,7 +271,7 @@ function Get-TargetResource
 
                 DEFAULT
                 {
-                    $policy.add($param, $policyInfo.$param) 
+                    $policy.add($param, $policyInfo.$param)
                 }
             }
         }
@@ -563,7 +563,7 @@ function Set-TargetResource
         $PSBoundParameters.Assignments | ForEach-Object {
             if ($_ -ne $null)
             {
-                $assignmentsArray += set-JSONstring -id $_ -type 'Assignments' 
+                $assignmentsArray += set-JSONstring -id $_ -type 'Assignments'
             }
         }
         $configstring += ( 'Assignments' + ":`r`n" + ($PSBoundParameters.Assignments | Out-String) + "`r`n" )
@@ -573,7 +573,7 @@ function Set-TargetResource
         $PSBoundParameters.ExcludedGroups | ForEach-Object {
             if ($_ -ne $null)
             {
-                $assignmentsArray += set-JSONstring -id $_ -type 'ExcludedGroups' 
+                $assignmentsArray += set-JSONstring -id $_ -type 'ExcludedGroups'
             }
         }
         $configstring += ( 'ExcludedGroups' + ":`r`n" + ($PSBoundParameters.ExcludedGroups | Out-String) + "`r`n" )
@@ -584,7 +584,7 @@ function Set-TargetResource
     $appshash.Apps | ForEach-Object {
         if ($_ -ne $null)
         {
-            $appsarray += set-JSONstring -id $_ -type 'Apps' 
+            $appsarray += set-JSONstring -id $_ -type 'Apps'
         }
     }
     $configstring += ('AppGroupType:' + $appshash.AppGroupType + "`r`n")
@@ -892,11 +892,12 @@ function Test-TargetResource
     # set the apps values
     $AppsHash = set-AppsHash -AppGroupType $AppGroupType -apps $apps
     $targetvalues.add('Apps', $AppsHash.Apps)
-    $targetvalues.add('AppGroupType', $AppsHash.AppGroupType)
+    # AppGroupType added via get-InputParameters at line 841
+    #$targetvalues.add('AppGroupType', $AppsHash.AppGroupType)
     # wipe out the current apps value if AppGroupType is anything but selectedpublicapps to match the appshash values
     if ($CurrentValues.AppGroupType -ne 'selectedPublicApps')
     {
-        $CurrentValues.Apps = @() 
+        $CurrentValues.Apps = @()
     }
 
 
@@ -1123,11 +1124,11 @@ function set-AppsHash
     {
         if ($apps.count -eq 0 )
         {
-            $AppGroupType = 'allApps' 
+            $AppGroupType = 'allApps'
         }
         else
         {
-            $AppGroupType = 'selectedPublicApps' 
+            $AppGroupType = 'selectedPublicApps'
         }
         Write-Verbose -Message "setting AppGroupType to $AppGroupType"
     }
