@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASE
+* AADEntitlementManagementAccessPackageCatalogResource
+  * Initial release;
+
+# 1.22.1026.2
+* MISC
+  * Fixes an issue with the export where the ApplicationSecret was throwing an empty string error when trying to authenticate with Certificate thumbprint.
+    * FIXES [#2455](https://github.com/microsoft/Microsoft365DSC/issues/2455)
+
 # 1.22.1026.1
 
 * AADEntitlementManagementAccessPackageCatalog
