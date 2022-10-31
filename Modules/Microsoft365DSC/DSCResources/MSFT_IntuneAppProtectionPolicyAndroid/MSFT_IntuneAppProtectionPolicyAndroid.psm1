@@ -333,6 +333,7 @@ function Get-TargetResource
     catch
     {
         Write-Verbose -Message "ERROR on get-targetresource for $displayName"
+        $nullResult.Ensure = 'ERROR'
         try
         {
             Write-Verbose -Message $_
@@ -892,6 +893,9 @@ function Test-TargetResource
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -ProfileName beta `
+    -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
