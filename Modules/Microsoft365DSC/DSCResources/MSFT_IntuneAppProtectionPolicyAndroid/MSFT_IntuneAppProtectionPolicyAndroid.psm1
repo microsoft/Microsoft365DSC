@@ -197,7 +197,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String]
+        $Id
     )
     Write-Verbose -Message "Checking for the Intune Android App Protection Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -ProfileName beta `
@@ -220,9 +224,23 @@ function Get-TargetResource
 
     try
     {
-        $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'" -ExpandProperty Apps, assignments `
-            -ErrorAction Stop
-
+        if ($id -ne '')
+        {
+            Write-Verbose -Message "Searching for Policy using Id {$Id}"
+            $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "Id eq '$Id'" -ExpandProperty Apps, assignments `
+                -ErrorAction Stop
+            if ($null -eq $policyInfo)
+            {
+                Write-Verbose -Message "No Android App Protection Policy with Id {$Id} was found"
+                Write-Verbose -Message "Function will now search for a policy with the same displayName {$Displayname} - If found this policy will be amended"
+            }
+        }
+        if ($null -eq $policyInfo)
+        {
+            Write-Verbose -Message "Searching for Policy using DisplayName {$DisplayName}"
+            $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'" -ExpandProperty Apps, assignments `
+                -ErrorAction Stop
+        }
         if ($null -eq $policyInfo)
         {
             Write-Verbose -Message "No Android App Protection Policy {$DisplayName} was found"
@@ -232,7 +250,7 @@ function Get-TargetResource
         # handle multiple results - throw error - may be able to remediate to specify ID in configuration at later date
         if ($policyInfo.gettype().isarray)
         {
-            Write-Verbose -Message "Multiple Android Policies with name {$DisplayName} were found - Module will only function with unique names, please manually remediate"
+            Write-Verbose -Message "Multiple Android Policies with name {$DisplayName} were found - Where No valid ID is specified Module will only function with unique names, please manually remediate"
             $nullResult.Ensure = 'ERROR'
             throw 'Multiple Policies with same displayname identified - Module currently only functions with unique names'
         }
@@ -309,10 +327,6 @@ function Get-TargetResource
         $policy.add('ManagedBrowserToOpenLinksRequired', $policyInfo.ManagedBrowserToOpenLinksRequired)
         $policy.add('CustomBrowserDisplayName', $policyInfo.CustomBrowserDisplayName)
         $policy.add('CustomBrowserPackageId', $policyInfo.CustomBrowserPackageId)
-
-        # add Id for use in set function
-        $policy.add('Id', $policyInfo.Id)
-
 
         return $policy
     }
@@ -533,7 +547,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String]
+        $Id
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -639,6 +657,10 @@ function Set-TargetResource
     if (($Ensure -eq 'Present') -and ($currentPolicy.Ensure -eq 'Absent'))
     {
         Write-Verbose -Message "Creating new Android App Protection Policy {$DisplayName}"
+        if ($id -ne '')
+        {
+            Write-Verbose -Message "ID in Configuration Document will be ignored, Policy will be created with a new ID"
+        }
         $setParams.add('Assignments', $assignmentsArray)
         $newpolicy = New-MgDeviceAppMgtAndroidManagedAppProtection @setParams
         $setParams.add('AndroidManagedAppProtectionId', $newpolicy.Id)
@@ -647,6 +669,10 @@ function Set-TargetResource
     elseif (($Ensure -eq 'Present') -and ($currentPolicy.Ensure -eq 'Present'))
     {
         Write-Verbose -Message "Updating existing Android App Protection Policy {$DisplayName}"
+        if ( ($id -ne '') -and ( $id -ne $currentPolicy.id ) )
+        {
+            Write-Verbose -Message ("id in configuration document and returned policy do not match - updating policy with matching Displayname {$displayname} - ID {" + $currentPolicy.id + '}')
+        }
         $setParams.add('AndroidManagedAppProtectionId', $currentPolicy.id)
         Update-MgDeviceAppMgtAndroidManagedAppProtection @setParams
 
@@ -858,7 +884,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String]
+        $Id
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -963,8 +993,8 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $targetvalues `
-        -ValuesToCheck $targetvalues.Keys
-    #-verbose
+        -ValuesToCheck $targetvalues.Keys `
+    -verbose
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -1037,6 +1067,7 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($policies.Count)] $($policy.displayName)" -NoNewline
             $params = @{
+                Id                    = $policy.id
                 DisplayName           = $policy.displayName
                 Ensure                = 'Present'
                 Credential            = $Credential
@@ -1047,8 +1078,6 @@ function Export-TargetResource
                 Managedidentity       = $ManagedIdentity.IsPresent
             }
             $Results = Get-TargetResource @Params
-            #remove the Id value
-            $Results.remove('Id') | Out-Null
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -1287,6 +1316,7 @@ function get-InputParameters
         Ensure                                          = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
         ExcludedGroups                                  = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
         FingerprintBlocked                              = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        Id                                              = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         IsAssigned                                      = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
         ManagedBrowser                                  = @{Type = 'ComplexParameter' ; ExportFileType = 'String'; };
         ManagedBrowserToOpenLinksRequired               = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
