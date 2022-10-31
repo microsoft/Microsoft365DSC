@@ -348,7 +348,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgAdministrativeUnitScopedRoleMember -MockWith {
                     return [pscustomobject]@{
                         RoleId = '12345-67890'
-                        RoleMemberINfo = [pscustomobject]@{
+                        RoleMemberInfo = [pscustomobject]@{
                             DisplayName = "John Doe"
                             Id          = "1234567890"
                         }
@@ -509,8 +509,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgAdministrativeUnit -MockWith {
                     return [pscustomobject]@{
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
+                        Description = "ExportDSCAU"
+                        DisplayName = "ExportDSCAU"
                         <#
                         Extensions =@(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphextension -Property @{
@@ -521,7 +521,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             } -ClientOnly)
                         )
                         #>
-                        Id = "FakeStringValue"
+                        Id = "ExportDSCAU"
                         Members = @(
                             [pscustomobject]@{Id = "1234567890"}
                         )
@@ -536,6 +536,46 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         )
                         Visibility = "Public"
 
+                    }
+                }
+
+                Mock -CommandName Get-MgAdministrativeUnitMember -MockWith {
+                    return [pscustomobject]@{
+                        Id = "1234567890"
+                    }
+                }
+
+                Mock -CommandName Get-MgUser -MockWith {
+                    return [pscustomobject]@{
+                        Id                = "1234567890"
+                        DisplayName       = "John Doe"
+                        UserPrincipalName = "John.Doe@mytenant.com"
+                    }
+                }
+
+                Mock -CommandName Get-MgAdministrativeUnitScopedRoleMember -MockWith {
+                    return [pscustomobject]@{
+                        RoleId = '12345-67890'
+                        RoleMemberInfo = [pscustomobject]@{
+                            DisplayName = "John Doe"
+                            Id          = "1234567890"
+                        }
+                    }
+                }
+
+                Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                    return [pscustomobject]@{
+                        '@odata.type' = "#microsoft.graph.user"
+                        DisplayName = "John Doe"
+                        UserPrincipalName = "John.Doe@mytenant.com"
+                        Id          = "1234567890"
+                    }
+                }
+
+                Mock -CommandName Get-MgDirectoryRole -MockWith {
+                    return [pscustomobject]@{
+                        Id = '12345-67890'
+                        DisplayName = 'User Administrator'
                     }
                 }
             }

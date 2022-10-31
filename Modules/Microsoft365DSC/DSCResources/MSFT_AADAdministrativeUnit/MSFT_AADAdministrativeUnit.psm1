@@ -215,7 +215,8 @@ function Get-TargetResource
                     {
                         $memberType = 'Group';
                     }
-                    else {
+                    else
+                    {
                         $memberType = 'ServicePrincipal';
                     }
                     $memberIdentity = $roleMemberObject.DisplayName
@@ -1072,7 +1073,7 @@ function Export-TargetResource
     {
 
         #region resource generator code
-        [array]$getValue = Get-MgDirectoryAdministrativeUnit -All `
+        [array]$getValue = Get-MgAdministrativeUnit -All `
             -ErrorAction Stop
 
         #endregion
