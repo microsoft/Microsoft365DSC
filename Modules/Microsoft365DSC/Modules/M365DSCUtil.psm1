@@ -2744,6 +2744,10 @@ function Update-M365DSCExportAuthenticationResults
         [System.Collections.Hashtable]
         $Results
     )
+    if ($Results.ContainsKey("ManagedIdentity") -and -not $Results.ManagedIdentity)
+    {
+        $Results.Remove("ManagedIdentity")
+    }
     if ($ConnectionMode -eq 'Credentials')
     {
         $Results.Credential = Resolve-Credentials -UserName 'credential'
