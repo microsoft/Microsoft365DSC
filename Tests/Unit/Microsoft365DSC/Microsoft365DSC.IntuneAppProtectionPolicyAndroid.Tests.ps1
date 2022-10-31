@@ -215,7 +215,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = get-DefaultTestParams
                 $Global:Count = 0
                 Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
-                    if ($Global:Count -eq 0)
+                    if ($Global:Count -le 1)
                     {
                         $Global:Count++
                         return $null
