@@ -74,6 +74,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsAssigned                                      = $True;
                     CustomBrowserPackageId                          = "";
                     CustomBrowserDisplayName                        = "";
+                    id                                              = "12345-12345-12345-12345-12345"
                 }
 
             }
