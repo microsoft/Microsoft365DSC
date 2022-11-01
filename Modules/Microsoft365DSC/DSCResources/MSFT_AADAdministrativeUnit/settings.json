@@ -7,15 +7,25 @@
                 "read": [
                     {
                         "name": "AdmninistrativeUnit.Read.All"
+                    },
+                    {
                         "name": "Directory.Read.All"
+                    },
+                    {
                         "name": "RoleManagement.Read.Directory"
+                    },
+                    {
                         "name": "Member.Read.Hidden"
                     }
                 ],
                 "update": [
                     {
                         "name": "AdministrativeUnit.ReadWrite.All"
+                    },
+                    {
                         "name": "Directory.ReadWrite.All"
+                    },
+                    {
                         "name": "RoleManagement.ReadWrite.Directory"
                     }
                 ]
@@ -24,15 +34,25 @@
                 "read": [
                     {
                         "name": "AdmninistrativeUnit.Read.All"
+                    },
+                    {
                         "name": "Directory.Read.All"
+                    },
+                    {
                         "name": "RoleManagement.Read.Directory"
+                    },
+                    {
                         "name": "Member.Read.Hidden"
                     }
                 ],
                 "update": [
                     {
                         "name": "AdmninistrativeUnit.ReadWrite.All"
+                    },
+                    {
                         "name": "Directory.ReadWrite.All"
+                    },
+                    {
                         "name": "RoleManagement.ReadWrite.Directory"
                     }
                 ]
