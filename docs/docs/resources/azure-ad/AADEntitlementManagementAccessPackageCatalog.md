@@ -23,6 +23,6 @@
 
 ### Description
 
-This resource configures an A A D Entitlement Management Access Package Catalog.
+This resource configures an Azure AD Entitlement Management Access Package Catalog.
 
 
