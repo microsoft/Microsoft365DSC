@@ -1239,6 +1239,10 @@ function New-AntiPhishPolicy
         $PhishThresholdLevel,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
         [System.Boolean]
         $EnableTargetedDomainsProtection,
 
@@ -1251,8 +1255,8 @@ function New-AntiPhishPolicy
         $EnableViaTag,
 
         [Parameter()]
-        [System.Object]
-        $MailboxIntelligenceProtectionAction,
+        [System.String]
+        $Name,
 
         [Parameter()]
         [System.Object]
@@ -1271,8 +1275,8 @@ function New-AntiPhishPolicy
         $ExcludedDomains,
 
         [Parameter()]
-        [System.String]
-        $PolicyTag,
+        [System.Object]
+        $MailboxIntelligenceProtectionAction,
 
         [Parameter()]
         [System.Object]
@@ -1296,10 +1300,6 @@ function New-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
-        $MailboxIntelligenceProtectionActionRecipients,
-
-        [Parameter()]
-        [System.Object]
         $TargetedDomainProtectionAction,
 
         [Parameter()]
@@ -1319,8 +1319,8 @@ function New-AntiPhishPolicy
         $RecommendedPolicyType,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Object]
+        $MailboxIntelligenceProtectionActionRecipients,
 
         [Parameter()]
         [System.String]
@@ -1344,6 +1344,10 @@ function New-AntiPhishPolicy
 
         [Parameter()]
         [System.String]
+        $PolicyTag,
+
+        [Parameter()]
+        [System.String]
         $TargetedUserQuarantineTag,
 
         [Parameter()]
@@ -1357,10 +1361,6 @@ function New-AntiPhishPolicy
         [Parameter()]
         [System.Boolean]
         $EnableUnusualCharactersSafetyTips,
-
-        [Parameter()]
-        [System.String]
-        $Name,
 
         [Parameter()]
         [System.Boolean]
@@ -1392,12 +1392,12 @@ function New-AntiPhishRule
         $Name,
 
         [Parameter()]
-        [System.Object[]]
-        $SentToMemberOf,
-
-        [Parameter()]
         [System.Object]
         $AntiPhishPolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $SentToMemberOf,
 
         [Parameter()]
         [System.Object[]]
@@ -1618,10 +1618,6 @@ function New-ClientAccessRule
     param(
         [Parameter()]
         [System.Object]
-        $ExceptAnyOfClientIPAddressesOrRanges,
-
-        [Parameter()]
-        [System.Object]
         $Action,
 
         [Parameter()]
@@ -1633,8 +1629,8 @@ function New-ClientAccessRule
         $Enabled,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Object]
+        $ExceptAnyOfClientIPAddressesOrRanges,
 
         [Parameter()]
         [System.String]
@@ -1659,6 +1655,10 @@ function New-ClientAccessRule
         [Parameter()]
         [System.Object]
         $UsernameMatchesAnyOfPatterns,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Object]
@@ -1845,12 +1845,12 @@ function New-DkimSigningConfig
         $BodyCanonicalization,
 
         [Parameter()]
-        [System.Object]
-        $HeaderCanonicalization,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $HeaderCanonicalization,
 
         [Parameter()]
         [System.UInt16]
@@ -1936,12 +1936,16 @@ function New-HostedContentFilterPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
         [System.Boolean]
         $InlineSafetyTipsEnabled,
 
         [Parameter()]
         [System.Object]
-        $RegionBlockList,
+        $BulkSpamAction,
 
         [Parameter()]
         [System.String]
@@ -1950,10 +1954,6 @@ function New-HostedContentFilterPolicy
         [Parameter()]
         [System.Int32]
         $EndUserSpamNotificationFrequency,
-
-        [Parameter()]
-        [System.Int32]
-        $QuarantineRetentionPeriod,
 
         [Parameter()]
         [System.Int32]
@@ -2045,6 +2045,10 @@ function New-HostedContentFilterPolicy
 
         [Parameter()]
         [System.Object]
+        $RegionBlockList,
+
+        [Parameter()]
+        [System.Object]
         $MarkAsSpamFromAddressAuthFail,
 
         [Parameter()]
@@ -2069,10 +2073,6 @@ function New-HostedContentFilterPolicy
 
         [Parameter()]
         [System.Object]
-        $BulkSpamAction,
-
-        [Parameter()]
-        [System.Object]
         $EndUserSpamNotificationLanguage,
 
         [Parameter()]
@@ -2080,8 +2080,8 @@ function New-HostedContentFilterPolicy
         $IncreaseScoreWithRedirectToOtherPort,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Int32]
+        $QuarantineRetentionPeriod,
 
         [Parameter()]
         [System.Object]
@@ -2258,12 +2258,12 @@ function New-HostedOutboundSpamFilterRule
         $From,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
-        [System.Boolean]
-        $Enabled
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
     )
 }
 function New-InboundConnector
@@ -2434,6 +2434,10 @@ function New-Mailbox
         $ModerationEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $EnableRoomMailboxAccount,
+
+        [Parameter()]
         [System.String]
         $Office,
 
@@ -2552,10 +2556,6 @@ function New-Mailbox
         [Parameter()]
         [System.Boolean]
         $ResetPasswordOnNextLogon,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableRoomMailboxAccount,
 
         [Parameter()]
         [System.String]
@@ -2765,12 +2765,12 @@ function New-MalwareFilterRule
         $RecipientDomainIs,
 
         [Parameter()]
-        [System.Object[]]
-        $ExceptIfRecipientDomainIs,
-
-        [Parameter()]
         [System.Object]
         $MalwareFilterPolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfRecipientDomainIs,
 
         [Parameter()]
         [System.Object[]]
@@ -2827,6 +2827,10 @@ function New-ManagementRoleAssignment
         $CustomRecipientWriteScope,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
         [System.String]
         $Name,
 
@@ -2853,10 +2857,6 @@ function New-ManagementRoleAssignment
         [Parameter()]
         [System.Object]
         $RecipientRelativeWriteScope,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
 
         [Parameter()]
         [System.Object]
@@ -2913,6 +2913,10 @@ function New-MessageClassification
 
         [Parameter()]
         [System.Boolean]
+        $RetainClassificationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $PermissionMenuVisible,
 
         [Parameter()]
@@ -2921,11 +2925,7 @@ function New-MessageClassification
 
         [Parameter()]
         [System.Object]
-        $DisplayPrecedence,
-
-        [Parameter()]
-        [System.Boolean]
-        $RetainClassificationEnabled
+        $DisplayPrecedence
     )
 }
 function New-MobileDeviceMailboxPolicy
@@ -2943,6 +2943,10 @@ function New-MobileDeviceMailboxPolicy
         [Parameter()]
         [System.Boolean]
         $AllowUnsignedInstallationPackages,
+
+        [Parameter()]
+        [System.Object]
+        $MaxPasswordFailedAttempts,
 
         [Parameter()]
         [System.Boolean]
@@ -3045,10 +3049,6 @@ function New-MobileDeviceMailboxPolicy
         $AllowBluetooth,
 
         [Parameter()]
-        [System.Boolean]
-        $WSSAccessEnabled,
-
-        [Parameter()]
         [System.Object]
         $RequireEncryptionSMIMEAlgorithm,
 
@@ -3086,15 +3086,15 @@ function New-MobileDeviceMailboxPolicy
 
         [Parameter()]
         [System.Boolean]
-        $PasswordRecoveryEnabled,
-
-        [Parameter()]
-        [System.Boolean]
         $RequireStorageCardEncryption,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $AttachmentsEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -3106,7 +3106,7 @@ function New-MobileDeviceMailboxPolicy
 
         [Parameter()]
         [System.Boolean]
-        $AttachmentsEnabled,
+        $PasswordRecoveryEnabled,
 
         [Parameter()]
         [System.Object]
@@ -3141,8 +3141,8 @@ function New-MobileDeviceMailboxPolicy
         $AllowTextMessaging,
 
         [Parameter()]
-        [System.Object]
-        $MaxPasswordFailedAttempts,
+        [System.Boolean]
+        $WSSAccessEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -3467,12 +3467,12 @@ function New-PartnerApplication
         $AcceptSecurityIdentifierInformation,
 
         [Parameter()]
-        [System.Object]
-        $AccountType,
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
-        [System.Boolean]
-        $Enabled
+        [System.Object]
+        $AccountType
     )
 }
 function New-PolicyTipConfig
@@ -3652,12 +3652,12 @@ function New-SafeAttachmentPolicy
         $RedirectAddress,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.String]
         $QuarantineTag,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Boolean]
@@ -4057,10 +4057,6 @@ function New-TransportRule
         $RuleSubType,
 
         [Parameter()]
-        [System.Object[]]
-        $AnyOfRecipientAddressMatchesPatterns,
-
-        [Parameter()]
         [System.Object]
         $SentToScope,
 
@@ -4429,6 +4425,10 @@ function New-TransportRule
         $ExceptIfRecipientADAttributeMatchesPatterns,
 
         [Parameter()]
+        [System.Boolean]
+        $StopRuleProcessing,
+
+        [Parameter()]
         [System.Object[]]
         $RecipientADAttributeContainsWords,
 
@@ -4565,8 +4565,8 @@ function New-TransportRule
         $ExceptIfAttachmentPropertyContainsWords,
 
         [Parameter()]
-        [System.Boolean]
-        $StopRuleProcessing,
+        [System.Object[]]
+        $AnyOfRecipientAddressMatchesPatterns,
 
         [Parameter()]
         [System.Object]
@@ -4605,15 +4605,15 @@ function Remove-AntiPhishPolicy
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Identity
     )
 }
 function Remove-AntiPhishRule
@@ -4868,6 +4868,10 @@ function Remove-Mailbox
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $PublicFolder,
 
         [Parameter()]
@@ -4888,11 +4892,7 @@ function Remove-Mailbox
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Migration,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Migration
     )
 }
 function Remove-MailContact
@@ -4940,6 +4940,10 @@ function Remove-ManagementRole
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
@@ -4948,11 +4952,7 @@ function Remove-ManagementRole
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Recurse,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Recurse
     )
 }
 function Remove-ManagementRoleAssignment
@@ -4961,15 +4961,15 @@ function Remove-ManagementRoleAssignment
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Identity
     )
 }
 function Remove-MessageClassification
@@ -5004,15 +5004,15 @@ function Remove-MobileDeviceMailboxPolicy
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Identity
     )
 }
 function Remove-OMEConfiguration
@@ -5073,15 +5073,15 @@ function Remove-OwaMailboxPolicy
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Identity
     )
 }
 function Remove-PartnerApplication
@@ -5155,15 +5155,15 @@ function Remove-SafeAttachmentPolicy
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Identity
     )
 }
 function Remove-SafeAttachmentRule
@@ -5185,15 +5185,15 @@ function Remove-SafeLinksPolicy
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Identity
     )
 }
 function Remove-SafeLinksRule
@@ -5241,31 +5241,31 @@ function Set-AcceptedDomain
     param(
         [Parameter()]
         [System.Boolean]
+        $CanHaveCloudCache,
+
+        [Parameter()]
+        [System.Boolean]
         $EnableNego2Authentication,
 
         [Parameter()]
         [System.Boolean]
-        $CanHaveCloudCache,
-
-        [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Object]
-        $DomainType,
+        $OutboundOnly,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
         [System.Boolean]
         $MatchSubDomains,
 
         [Parameter()]
-        [System.Boolean]
-        $OutboundOnly
+        [System.Object]
+        $DomainType
     )
 }
 function Set-ActiveSyncDeviceAccessRule
@@ -5291,15 +5291,15 @@ function Set-AdminAuditLogConfig
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Boolean]
-        $UnifiedAuditLogIngestionEnabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $UnifiedAuditLogIngestionEnabled
     )
 }
 function Set-AntiPhishPolicy
@@ -5317,6 +5317,10 @@ function Set-AntiPhishPolicy
         [Parameter()]
         [System.Int32]
         $PhishThresholdLevel,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Boolean]
@@ -5380,10 +5384,6 @@ function Set-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
-        $MailboxIntelligenceProtectionActionRecipients,
-
-        [Parameter()]
-        [System.Object]
         $TargetedDomainProtectionAction,
 
         [Parameter()]
@@ -5392,19 +5392,19 @@ function Set-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
-        $TargetedUsersToProtect,
-
-        [Parameter()]
-        [System.Object]
         $TargetedUserProtectionAction,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Object]
+        $MailboxIntelligenceProtectionActionRecipients,
 
         [Parameter()]
         [System.String]
         $MailboxIntelligenceQuarantineTag,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedUsersToProtect,
 
         [Parameter()]
         [System.String]
@@ -5505,12 +5505,12 @@ function Set-App
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
-        $UserList,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PrivateCatalog,
+        [System.Object]
+        $UserList,
 
         [Parameter()]
         [System.Object]
@@ -5525,16 +5525,16 @@ function Set-App
         $OrganizationApp,
 
         [Parameter()]
-        [System.Object]
-        $ProvidedTo,
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        $PrivateCatalog,
 
         [Parameter()]
-        [System.Boolean]
-        $Enabled
+        [System.Object]
+        $ProvidedTo
     )
 }
 function Set-ApplicationAccessPolicy
@@ -5819,16 +5819,16 @@ function set-CASMailboxPlan
         $ImapEnabled,
 
         [Parameter()]
-        [System.Object]
-        $OwaMailboxPolicy,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Object]
         $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $OwaMailboxPolicy,
 
         [Parameter()]
         [System.Boolean]
@@ -5880,10 +5880,6 @@ function Set-ClientAccessRule
         $ExceptAnyOfProtocols,
 
         [Parameter()]
-        [System.Object]
-        $AnyOfProtocols,
-
-        [Parameter()]
         [System.Int32]
         $Priority,
 
@@ -5892,12 +5888,16 @@ function Set-ClientAccessRule
         $ExceptUsernameMatchesAnyOfPatterns,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
         [System.Object]
         $AnyOfAuthenticationTypes,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Object]
+        $AnyOfProtocols,
 
         [Parameter()]
         [System.Object]
@@ -5929,16 +5929,16 @@ function Set-DataClassification
         $Confirm,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsDefault,
+
+        [Parameter()]
         [System.Object]
         $Fingerprints,
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsDefault
+        $Identity
     )
 }
 function Set-DataEncryptionPolicy
@@ -5978,16 +5978,16 @@ function Set-DataEncryptionPolicy
         $PermanentDataPurgeReason,
 
         [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
         [System.String]
         $PermanentDataPurgeContact,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Refresh,
-
-        [Parameter()]
-        [System.Boolean]
-        $Enabled
+        $Refresh
     )
 }
 function Set-DistributionGroup
@@ -6244,6 +6244,10 @@ function Set-DkimSigningConfig
         $BodyCanonicalization,
 
         [Parameter()]
+        [System.Object]
+        $HeaderCanonicalization,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
@@ -6257,11 +6261,7 @@ function Set-DkimSigningConfig
 
         [Parameter()]
         [System.Boolean]
-        $Enabled,
-
-        [Parameter()]
-        [System.Object]
-        $HeaderCanonicalization
+        $Enabled
     )
 }
 function Set-EmailAddressPolicy
@@ -6339,12 +6339,16 @@ function Set-HostedContentFilterPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
         [System.Boolean]
         $InlineSafetyTipsEnabled,
 
         [Parameter()]
         [System.Object]
-        $RegionBlockList,
+        $BulkSpamAction,
 
         [Parameter()]
         [System.String]
@@ -6353,10 +6357,6 @@ function Set-HostedContentFilterPolicy
         [Parameter()]
         [System.Int32]
         $EndUserSpamNotificationFrequency,
-
-        [Parameter()]
-        [System.Int32]
-        $QuarantineRetentionPeriod,
 
         [Parameter()]
         [System.Int32]
@@ -6452,6 +6452,10 @@ function Set-HostedContentFilterPolicy
 
         [Parameter()]
         [System.Object]
+        $RegionBlockList,
+
+        [Parameter()]
+        [System.Object]
         $MarkAsSpamFromAddressAuthFail,
 
         [Parameter()]
@@ -6472,10 +6476,6 @@ function Set-HostedContentFilterPolicy
 
         [Parameter()]
         [System.Object]
-        $BulkSpamAction,
-
-        [Parameter()]
-        [System.Object]
         $EndUserSpamNotificationLanguage,
 
         [Parameter()]
@@ -6483,8 +6483,8 @@ function Set-HostedContentFilterPolicy
         $IncreaseScoreWithRedirectToOtherPort,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Int32]
+        $QuarantineRetentionPeriod,
 
         [Parameter()]
         [System.Object]
@@ -6938,6 +6938,10 @@ function Set-JournalRule
         $Name,
 
         [Parameter()]
+        [System.Object]
+        $Scope,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
@@ -6947,15 +6951,11 @@ function Set-JournalRule
 
         [Parameter()]
         [System.Object]
-        $Recipient,
-
-        [Parameter()]
-        [System.Object]
         $Identity,
 
         [Parameter()]
         [System.Object]
-        $Scope
+        $Recipient
     )
 }
 function Set-Mailbox
@@ -6972,7 +6972,7 @@ function Set-Mailbox
 
         [Parameter()]
         [System.Object]
-        $ResourceCapacity,
+        $AuditOwner,
 
         [Parameter()]
         [System.Object]
@@ -7040,10 +7040,6 @@ function Set-Mailbox
 
         [Parameter()]
         [System.String]
-        $MailboxRegion,
-
-        [Parameter()]
-        [System.String]
         $MailTip,
 
         [Parameter()]
@@ -7052,7 +7048,7 @@ function Set-Mailbox
 
         [Parameter()]
         [System.Object]
-        $ModeratedBy,
+        $ResourceCapacity,
 
         [Parameter()]
         [System.String]
@@ -7061,6 +7057,10 @@ function Set-Mailbox
         [Parameter()]
         [System.Object]
         $GrantSendOnBehalfTo,
+
+        [Parameter()]
+        [System.Int16]
+        $PitrCopyIntervalInSeconds,
 
         [Parameter()]
         [System.Object]
@@ -7075,8 +7075,8 @@ function Set-Mailbox
         $RemoveDisabledArchive,
 
         [Parameter()]
-        [System.Object]
-        $Languages,
+        [System.Management.Automation.SwitchParameter]
+        $RemoveMailboxProvisioningConstraint,
 
         [Parameter()]
         [System.Object]
@@ -7085,6 +7085,10 @@ function Set-Mailbox
         [Parameter()]
         [System.Object]
         $LitigationHoldDuration,
+
+        [Parameter()]
+        [System.Object]
+        $ModeratedBy,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -7183,8 +7187,8 @@ function Set-Mailbox
         $CustomAttribute1,
 
         [Parameter()]
-        [System.Int16]
-        $PitrCopyIntervalInSeconds,
+        [System.Object]
+        $EmailAddressDisplayNames,
 
         [Parameter()]
         [System.Boolean]
@@ -7192,11 +7196,11 @@ function Set-Mailbox
 
         [Parameter()]
         [System.Object]
-        $AddressBookPolicy,
+        $Identity,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $RemoveMailboxProvisioningConstraint,
+        [System.String]
+        $MailboxRegion,
 
         [Parameter()]
         [System.Object]
@@ -7205,10 +7209,6 @@ function Set-Mailbox
         [Parameter()]
         [System.Boolean]
         $ModerationEnabled,
-
-        [Parameter()]
-        [System.Object]
-        $AuditOwner,
 
         [Parameter()]
         [System.Object]
@@ -7248,7 +7248,7 @@ function Set-Mailbox
 
         [Parameter()]
         [System.Object]
-        $Identity,
+        $Languages,
 
         [Parameter()]
         [System.String]
@@ -7260,15 +7260,15 @@ function Set-Mailbox
 
         [Parameter()]
         [System.Object]
-        $ExternalOofOptions,
-
-        [Parameter()]
-        [System.Object]
         $ExtensionCustomAttribute4,
 
         [Parameter()]
         [System.Object]
         $LitigationHoldDate,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Boolean]
@@ -7319,8 +7319,8 @@ function Set-Mailbox
         $RemoveDelayHoldApplied,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Object]
+        $ExternalOofOptions,
 
         [Parameter()]
         [System.Object]
@@ -7365,6 +7365,10 @@ function Set-Mailbox
         [Parameter()]
         [System.Object]
         $RecipientLimits,
+
+        [Parameter()]
+        [System.Object]
+        $AddressBookPolicy,
 
         [Parameter()]
         [System.Boolean]
@@ -7481,11 +7485,11 @@ function Set-MailboxPlan
 
         [Parameter()]
         [System.Object]
-        $ProhibitSendReceiveQuota,
+        $MaxSendSize,
 
         [Parameter()]
         [System.Object]
-        $MaxSendSize,
+        $ProhibitSendReceiveQuota,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -7606,12 +7610,12 @@ function Set-MailContact
         $DisplayName,
 
         [Parameter()]
-        [System.Object]
-        $RejectMessagesFromDLMembers,
-
-        [Parameter()]
         [System.String]
         $CustomAttribute3,
+
+        [Parameter()]
+        [System.Object]
+        $RejectMessagesFrom,
 
         [Parameter()]
         [System.String]
@@ -7670,6 +7674,10 @@ function Set-MailContact
         $ModeratedBy,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
         [System.String]
         $CustomAttribute14,
 
@@ -7695,10 +7703,6 @@ function Set-MailContact
 
         [Parameter()]
         [System.Object]
-        $RejectMessagesFrom,
-
-        [Parameter()]
-        [System.Object]
         $ExtensionCustomAttribute1,
 
         [Parameter()]
@@ -7706,8 +7710,8 @@ function Set-MailContact
         $MessageFormat,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Object]
+        $RejectMessagesFromDLMembers,
 
         [Parameter()]
         [System.Object]
@@ -7979,6 +7983,10 @@ function Set-MessageClassification
 
         [Parameter()]
         [System.Boolean]
+        $RetainClassificationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $PermissionMenuVisible,
 
         [Parameter()]
@@ -7991,11 +7999,7 @@ function Set-MessageClassification
 
         [Parameter()]
         [System.Object]
-        $DisplayPrecedence,
-
-        [Parameter()]
-        [System.Boolean]
-        $RetainClassificationEnabled
+        $DisplayPrecedence
     )
 }
 function Set-MobileDeviceMailboxPolicy
@@ -8013,6 +8017,10 @@ function Set-MobileDeviceMailboxPolicy
         [Parameter()]
         [System.Boolean]
         $AllowUnsignedInstallationPackages,
+
+        [Parameter()]
+        [System.Object]
+        $MaxPasswordFailedAttempts,
 
         [Parameter()]
         [System.Boolean]
@@ -8115,10 +8123,6 @@ function Set-MobileDeviceMailboxPolicy
         $AllowBluetooth,
 
         [Parameter()]
-        [System.Boolean]
-        $WSSAccessEnabled,
-
-        [Parameter()]
         [System.Object]
         $RequireEncryptionSMIMEAlgorithm,
 
@@ -8211,8 +8215,8 @@ function Set-MobileDeviceMailboxPolicy
         $AllowTextMessaging,
 
         [Parameter()]
-        [System.Object]
-        $MaxPasswordFailedAttempts,
+        [System.Boolean]
+        $WSSAccessEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -8331,15 +8335,15 @@ function Set-Organization
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Boolean]
-        $UnifiedAuditLogIngestionEnabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $UnifiedAuditLogIngestionEnabled
     )
 }
 function Set-OrganizationConfig
@@ -8365,10 +8369,6 @@ function Set-OrganizationConfig
         [Parameter()]
         [System.Object]
         $PublicFoldersEnabled,
-
-        [Parameter()]
-        [System.Int32]
-        $DefaultMinutesToReduceShortEventsBy,
 
         [Parameter()]
         [System.Boolean]
@@ -8432,10 +8432,6 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Boolean]
-        $ActivityBasedAuthenticationTimeoutEnabled,
-
-        [Parameter()]
-        [System.Boolean]
         $SmtpActionableMessagesEnabled,
 
         [Parameter()]
@@ -8459,8 +8455,8 @@ function Set-OrganizationConfig
         $BlockMoveMessagesForGroupFolders,
 
         [Parameter()]
-        [System.Object]
-        $DefaultPublicFolderDeletedItemRetention,
+        [System.Int32]
+        $DefaultMinutesToReduceShortEventsBy,
 
         [Parameter()]
         [System.Object]
@@ -8473,6 +8469,10 @@ function Set-OrganizationConfig
         [Parameter()]
         [System.Object]
         $OnlineMeetingsByDefaultEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectorsEnabledForOutlook,
 
         [Parameter()]
         [System.Object]
@@ -8503,6 +8503,10 @@ function Set-OrganizationConfig
         $OutlookMobileGCCRestrictionsEnabled,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
         [System.Boolean]
         $BookingsCreationOfCustomQuestionsRestricted,
 
@@ -8516,7 +8520,7 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Boolean]
-        $ConnectorsEnabledForOutlook,
+        $ActivityBasedAuthenticationTimeoutEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -8527,8 +8531,8 @@ function Set-OrganizationConfig
         $BookingsNamingPolicyPrefix,
 
         [Parameter()]
-        [System.Boolean]
-        $IsGroupMemberAllowedToEditContent,
+        [System.Object]
+        $DefaultPublicFolderDeletedItemRetention,
 
         [Parameter()]
         [System.Int32]
@@ -8663,8 +8667,8 @@ function Set-OrganizationConfig
         $BookingsMembershipApprovalRequired,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Boolean]
+        $IsGroupMemberAllowedToEditContent,
 
         [Parameter()]
         [System.Object]
@@ -8949,8 +8953,8 @@ function Set-OutboundConnector
         $AllAcceptedDomains,
 
         [Parameter()]
-        [System.Boolean]
-        $TestMode,
+        [System.Object]
+        $TlsDomain,
 
         [Parameter()]
         [System.String]
@@ -8997,8 +9001,8 @@ function Set-OutboundConnector
         $SenderRewritingEnabled,
 
         [Parameter()]
-        [System.Object]
-        $TlsDomain,
+        [System.Boolean]
+        $TestMode,
 
         [Parameter()]
         [System.Object]
@@ -9009,6 +9013,10 @@ function Set-OwaMailboxPolicy
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
         [Parameter()]
         [System.Int32]
         $DefaultClientLanguage,
@@ -9068,10 +9076,6 @@ function Set-OwaMailboxPolicy
         [Parameter()]
         [System.String]
         $BookingsMailboxDomain,
-
-        [Parameter()]
-        [System.Boolean]
-        $WeatherEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -9258,8 +9262,8 @@ function Set-OwaMailboxPolicy
         $UseISO885915,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Boolean]
+        $RecoverDeletedItemsEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -9339,7 +9343,7 @@ function Set-OwaMailboxPolicy
 
         [Parameter()]
         [System.Boolean]
-        $RecoverDeletedItemsEnabled,
+        $WeatherEnabled,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -9459,12 +9463,12 @@ function Set-PartnerApplication
         $ActAsPermissions,
 
         [Parameter()]
-        [System.Object]
-        $AccountType,
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
-        [System.Boolean]
-        $Enabled
+        [System.Object]
+        $AccountType
     )
 }
 function Set-PerimeterConfig
@@ -9516,6 +9520,10 @@ function Set-QuarantinePolicy
         [Parameter()]
         [System.Object]
         $Identity,
+
+        [Parameter()]
+        [System.String]
+        $EndUserSpamNotificationCustomFromAddress,
 
         [Parameter()]
         [System.Int32]
@@ -9572,6 +9580,10 @@ function Set-QuarantinePolicy
         [Parameter()]
         [System.Int32]
         $QuarantineRetentionDays,
+
+        [Parameter()]
+        [System.Object]
+        $EsnCustomSubject,
 
         [Parameter()]
         [System.Boolean]
@@ -9668,11 +9680,11 @@ function Set-RemoteDomain
 
         [Parameter()]
         [System.Boolean]
-        $NDRDiagnosticInfoEnabled,
+        $NDREnabled,
 
         [Parameter()]
         [System.Boolean]
-        $NDREnabled,
+        $NDRDiagnosticInfoEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -9713,12 +9725,12 @@ function Set-RoleAssignmentPolicy
         $Confirm,
 
         [Parameter()]
-        [System.Object]
-        $Identity,
+        [System.Management.Automation.SwitchParameter]
+        $IsDefault,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsDefault
+        [System.Object]
+        $Identity
     )
 }
 function Set-SafeAttachmentPolicy
@@ -9991,6 +10003,10 @@ function Set-TransportConfig
         $SmtpClientAuthenticationDisabled,
 
         [Parameter()]
+        [System.Globalization.CultureInfo]
+        $InternalDsnDefaultLanguage,
+
+        [Parameter()]
         [System.Object]
         $MessageExpiration,
 
@@ -10001,6 +10017,10 @@ function Set-TransportConfig
         [Parameter()]
         [System.Boolean]
         $ReplyAllStormProtectionEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $InternalDsnLanguageDetectionEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -10019,16 +10039,16 @@ function Set-TransportConfig
         $Rfc2231EncodingEnabled,
 
         [Parameter()]
-        [System.Boolean]
-        $InternalDsnLanguageDetectionEnabled,
+        [System.Object]
+        $HeaderPromotionModeSetting,
 
         [Parameter()]
         [System.Boolean]
         $VoicemailJournalingEnabled,
 
         [Parameter()]
-        [System.Object]
-        $HeaderPromotionModeSetting,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Object]
@@ -10047,10 +10067,6 @@ function Set-TransportConfig
         $JournalMessageExpirationDays,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.Object]
         $MaxRecipientEnvelopeLimit,
 
@@ -10065,10 +10081,6 @@ function Set-TransportConfig
         [Parameter()]
         [System.Globalization.CultureInfo]
         $ExternalDsnDefaultLanguage,
-
-        [Parameter()]
-        [System.Globalization.CultureInfo]
-        $InternalDsnDefaultLanguage,
 
         [Parameter()]
         [System.Object]
@@ -10853,10 +10865,6 @@ function Set-User
         $LastName,
 
         [Parameter()]
-        [System.Object]
-        $StsRefreshTokensValidFrom,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $RemoveMailboxProvisioningConstraint,
 
@@ -10893,12 +10901,20 @@ function Set-User
         $AssistantName,
 
         [Parameter()]
+        [System.Object]
+        $OtherHomePhone,
+
+        [Parameter()]
         [System.String]
         $StateOrProvince,
 
         [Parameter()]
         [System.String]
         $Initials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.String]
@@ -10921,8 +10937,8 @@ function Set-User
         $Manager,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Object]
+        $StsRefreshTokensValidFrom,
 
         [Parameter()]
         [System.Object]
@@ -10943,10 +10959,6 @@ function Set-User
         [Parameter()]
         [System.String]
         $Department,
-
-        [Parameter()]
-        [System.Object]
-        $OtherHomePhone,
 
         [Parameter()]
         [System.String]
@@ -11012,7 +11024,7 @@ function Get-MgApplication
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -11068,7 +11080,7 @@ function Get-MgApplication
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -11089,7 +11101,7 @@ function Get-MgApplicationOwner
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -11145,7 +11157,7 @@ function Get-MgApplicationOwner
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -11170,7 +11182,7 @@ function Get-MgServicePrincipal
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -11226,7 +11238,7 @@ function Get-MgServicePrincipal
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -11255,7 +11267,7 @@ function Get-MgServicePrincipalAppRoleAssignment
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -11311,7 +11323,7 @@ function Get-MgServicePrincipalAppRoleAssignment
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -11319,6 +11331,10 @@ function New-MgApplication
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [PSObject]
+        $OptionalClaims,
+
         [Parameter()]
         [PSObject]
         $HomeRealmDiscoveryPolicies,
@@ -11350,10 +11366,6 @@ function New-MgApplication
         [Parameter()]
         [PSObject]
         $VerifiedPublisher,
-
-        [Parameter()]
-        [PSObject]
-        $OptionalClaims,
 
         [Parameter()]
         [System.String[]]
@@ -11404,7 +11416,7 @@ function New-MgApplication
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -11484,7 +11496,7 @@ function New-MgApplication
         $AppRoles,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -11569,7 +11581,7 @@ function New-MgApplicationOwnerByRef
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -11593,7 +11605,7 @@ function New-MgApplicationOwnerByRef
         $OdataId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -11726,7 +11738,7 @@ function New-MgServicePrincipal
         $Tags,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -11814,7 +11826,7 @@ function New-MgServicePrincipal
         $AppRoles,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -11903,7 +11915,7 @@ function Remove-MgApplication
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -11943,7 +11955,7 @@ function Remove-MgApplication
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -11956,7 +11968,7 @@ function Remove-MgApplicationOwnerByRef
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -11984,7 +11996,7 @@ function Remove-MgApplicationOwnerByRef
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -12013,7 +12025,7 @@ function Remove-MgServicePrincipal
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -12037,7 +12049,7 @@ function Remove-MgServicePrincipal
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -12057,6 +12069,10 @@ function Update-MgApplication
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [PSObject]
+        $OptionalClaims,
+
         [Parameter()]
         [PSObject]
         $InputObject,
@@ -12092,10 +12108,6 @@ function Update-MgApplication
         [Parameter()]
         [PSObject]
         $VerifiedPublisher,
-
-        [Parameter()]
-        [PSObject]
-        $OptionalClaims,
 
         [Parameter()]
         [System.String[]]
@@ -12146,7 +12158,7 @@ function Update-MgApplication
         $Tags,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -12238,7 +12250,7 @@ function Update-MgApplication
         $AppRoles,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -12427,7 +12439,7 @@ function Update-MgServicePrincipal
         $Tags,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -12515,7 +12527,7 @@ function Update-MgServicePrincipal
         $AppRoles,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -12625,7 +12637,7 @@ function Invoke-MgGraphRequest
         $StatusCodeVariable,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Authentication.Models.OutputType]
+        [PSObject]
         $OutputType,
 
         [Parameter()]
@@ -12641,7 +12653,7 @@ function Invoke-MgGraphRequest
         $UserAgent,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Authentication.Models.GraphRequestAuthenticationType]
+        [PSObject]
         $Authentication,
 
         [Parameter()]
@@ -12649,7 +12661,7 @@ function Invoke-MgGraphRequest
         $Uri,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Authentication.Helpers.GraphRequestSession]
+        [PSObject]
         $GraphRequestSession,
 
         [Parameter()]
@@ -12661,7 +12673,7 @@ function Invoke-MgGraphRequest
         $OutputFilePath,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Authentication.Models.GraphRequestMethod]
+        [PSObject]
         $Method,
 
         [Parameter()]
@@ -12721,7 +12733,7 @@ function Get-MgDeviceManagement
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -12745,7 +12757,7 @@ function Get-MgDeviceManagement
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -12778,7 +12790,7 @@ function Get-MgDeviceManagementDeviceCategory
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -12826,7 +12838,7 @@ function Get-MgDeviceManagementDeviceCategory
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -12851,7 +12863,7 @@ function Get-MgDeviceManagementDeviceCompliancePolicy
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -12899,7 +12911,7 @@ function Get-MgDeviceManagementDeviceCompliancePolicy
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -12928,7 +12940,7 @@ function Get-MgDeviceManagementDeviceCompliancePolicyAssignment
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -12980,7 +12992,7 @@ function Get-MgDeviceManagementDeviceCompliancePolicyAssignment
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -13009,7 +13021,7 @@ function Get-MgDeviceManagementDeviceConfiguration
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -13061,7 +13073,7 @@ function Get-MgDeviceManagementDeviceConfiguration
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -13086,7 +13098,7 @@ function Get-MgDeviceManagementDeviceConfigurationAssignment
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -13142,7 +13154,7 @@ function Get-MgDeviceManagementDeviceConfigurationAssignment
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -13155,7 +13167,7 @@ function New-MgDeviceManagementDeviceCategory
         $Description,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -13179,7 +13191,7 @@ function New-MgDeviceManagementDeviceCategory
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -13248,7 +13260,7 @@ function New-MgDeviceManagementDeviceCompliancePolicy
         $UserStatusOverview,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -13296,7 +13308,7 @@ function New-MgDeviceManagementDeviceCompliancePolicy
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -13353,7 +13365,7 @@ function New-MgDeviceManagementDeviceConfiguration
         $GroupAssignments,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -13405,7 +13417,7 @@ function New-MgDeviceManagementDeviceConfiguration
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -13418,7 +13430,7 @@ function Remove-MgDeviceManagementDeviceCategory
         $DeviceCategoryId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -13446,7 +13458,7 @@ function Remove-MgDeviceManagementDeviceCategory
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -13463,7 +13475,7 @@ function Remove-MgDeviceManagementDeviceCompliancePolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -13503,7 +13515,7 @@ function Remove-MgDeviceManagementDeviceCompliancePolicy
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -13512,7 +13524,7 @@ function Remove-MgDeviceManagementDeviceConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -13552,7 +13564,7 @@ function Remove-MgDeviceManagementDeviceConfiguration
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -13745,7 +13757,7 @@ function Update-MgDeviceManagement
         $DeviceManagementScripts,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.DeviceManagementSubscriptionState]
+        [PSObject]
         $SubscriptionState,
 
         [Parameter()]
@@ -14053,7 +14065,7 @@ function Update-MgDeviceManagement
         $UserExperienceAnalyticsDeviceScope,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -14113,7 +14125,7 @@ function Update-MgDeviceManagement
         $DeviceCompliancePolicySettingStateSummaries,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -14289,7 +14301,7 @@ function Update-MgDeviceManagement
         $DeviceComplianceScripts,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.DeviceManagementSubscriptions]
+        [PSObject]
         $Subscriptions,
 
         [Parameter()]
@@ -14326,7 +14338,7 @@ function Update-MgDeviceManagementDeviceCategory
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -14366,7 +14378,7 @@ function Update-MgDeviceManagementDeviceCategory
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -14423,7 +14435,7 @@ function Update-MgDeviceManagementDeviceCompliancePolicy
         $UserStatusOverview,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -14475,7 +14487,7 @@ function Update-MgDeviceManagementDeviceCompliancePolicy
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -14540,7 +14552,7 @@ function Update-MgDeviceManagementDeviceConfiguration
         $GroupAssignments,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -14596,7 +14608,7 @@ function Update-MgDeviceManagementDeviceConfiguration
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -14621,7 +14633,7 @@ function Get-MgDeviceManagementAssignmentFilter
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -14673,7 +14685,7 @@ function Get-MgDeviceManagementAssignmentFilter
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -14698,7 +14710,7 @@ function Get-MgDeviceManagementConfigurationPolicy
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -14750,7 +14762,7 @@ function Get-MgDeviceManagementConfigurationPolicy
         $DeviceManagementConfigurationPolicyId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -14779,7 +14791,7 @@ function Get-MgDeviceManagementConfigurationPolicyAssignment
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -14831,7 +14843,7 @@ function Get-MgDeviceManagementConfigurationPolicyAssignment
         $DeviceManagementConfigurationPolicyAssignmentId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -14860,7 +14872,7 @@ function Get-MgDeviceManagementConfigurationPolicySetting
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -14912,7 +14924,7 @@ function Get-MgDeviceManagementConfigurationPolicySetting
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -14937,7 +14949,7 @@ function Get-MgDeviceManagementConfigurationPolicyTemplate
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -14989,7 +15001,7 @@ function Get-MgDeviceManagementConfigurationPolicyTemplate
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15018,7 +15030,7 @@ function Get-MgDeviceManagementConfigurationPolicyTemplateSettingTemplate
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -15070,7 +15082,7 @@ function Get-MgDeviceManagementConfigurationPolicyTemplateSettingTemplate
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15095,7 +15107,7 @@ function Get-MgDeviceManagementConfigurationSetting
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -15147,7 +15159,7 @@ function Get-MgDeviceManagementConfigurationSetting
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15172,7 +15184,7 @@ function Get-MgDeviceManagementIntent
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -15224,7 +15236,7 @@ function Get-MgDeviceManagementIntent
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15249,7 +15261,7 @@ function Get-MgDeviceManagementIntentAssignment
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -15305,7 +15317,7 @@ function Get-MgDeviceManagementIntentAssignment
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15334,7 +15346,7 @@ function Get-MgDeviceManagementIntentSetting
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -15386,7 +15398,7 @@ function Get-MgDeviceManagementIntentSetting
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15431,11 +15443,11 @@ function New-MgDeviceManagementAssignmentFilter
         $Rule,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.DevicePlatformType]
+        [PSObject]
         $Platform,
 
         [Parameter()]
@@ -15463,7 +15475,7 @@ function New-MgDeviceManagementAssignmentFilter
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15508,7 +15520,7 @@ function New-MgDeviceManagementConfigurationPolicy
         $PriorityMetaData,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -15524,11 +15536,11 @@ function New-MgDeviceManagementConfigurationPolicy
         $RoleScopeTagIds,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.DeviceManagementConfigurationPlatforms]
+        [PSObject]
         $Platforms,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.DeviceManagementConfigurationTechnologies]
+        [PSObject]
         $Technologies,
 
         [Parameter()]
@@ -15560,7 +15572,7 @@ function New-MgDeviceManagementConfigurationPolicy
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15601,7 +15613,7 @@ function New-MgDeviceManagementIntent
         $IsAssigned,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -15661,7 +15673,7 @@ function New-MgDeviceManagementIntent
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15670,7 +15682,7 @@ function Remove-MgDeviceManagementAssignmentFilter
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -15710,7 +15722,7 @@ function Remove-MgDeviceManagementAssignmentFilter
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15719,7 +15731,7 @@ function Remove-MgDeviceManagementConfigurationPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -15759,7 +15771,7 @@ function Remove-MgDeviceManagementConfigurationPolicy
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15768,7 +15780,7 @@ function Remove-MgDeviceManagementIntent
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -15793,10 +15805,6 @@ function Remove-MgDeviceManagementIntent
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
@@ -15805,10 +15813,14 @@ function Remove-MgDeviceManagementIntent
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15857,11 +15869,11 @@ function Update-MgDeviceManagementAssignmentFilter
         $Rule,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.DevicePlatformType]
+        [PSObject]
         $Platform,
 
         [Parameter()]
@@ -15897,7 +15909,7 @@ function Update-MgDeviceManagementAssignmentFilter
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15938,7 +15950,7 @@ function Update-MgDeviceManagementConfigurationPolicy
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -15954,7 +15966,7 @@ function Update-MgDeviceManagementConfigurationPolicy
         $RoleScopeTagIds,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.DeviceManagementConfigurationTechnologies]
+        [PSObject]
         $Technologies,
 
         [Parameter()]
@@ -15966,7 +15978,7 @@ function Update-MgDeviceManagementConfigurationPolicy
         $BodyParameter,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.DeviceManagementConfigurationPlatforms]
+        [PSObject]
         $Platforms,
 
         [Parameter()]
@@ -16006,7 +16018,7 @@ function Update-MgDeviceManagementConfigurationPolicy
         $DeviceManagementConfigurationPolicyId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -16031,7 +16043,7 @@ function Update-MgDeviceManagementConfigurationPolicyAssignment
         $SourceId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -16039,7 +16051,7 @@ function Update-MgDeviceManagementConfigurationPolicyAssignment
         $InputObject,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.DeviceAndAppManagementAssignmentSource]
+        [PSObject]
         $Source,
 
         [Parameter()]
@@ -16079,7 +16091,7 @@ function Update-MgDeviceManagementConfigurationPolicyAssignment
         $DeviceManagementConfigurationPolicyAssignmentId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -16120,7 +16132,7 @@ function Update-MgDeviceManagementIntent
         $IsAssigned,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -16192,7 +16204,7 @@ function Update-MgDeviceManagementIntent
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -16213,7 +16225,7 @@ function Update-MgDeviceManagementIntentSetting
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -16261,7 +16273,7 @@ function Update-MgDeviceManagementIntentSetting
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -16290,7 +16302,7 @@ function Get-MgDeviceManagementDeviceEnrollmentConfiguration
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -16342,970 +16354,7 @@ function Get-MgDeviceManagementDeviceEnrollmentConfiguration
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelineAppend
-    )
-}
-function Get-MgAgreement
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String[]]
-        $Property,
-
-        [Parameter()]
         [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Int32]
-        $PageSize,
-
-        [Parameter()]
-        [System.String]
-        $AgreementId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.String]
-        $CountVariable,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $All,
-
-        [Parameter()]
-        [System.String]
-        $Search,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
-    )
-}
-function Get-MgEntitlementManagementAccessPackage
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String[]]
-        $Property,
-
-        [Parameter()]
-        [System.String]
-        $CatalogId,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Int32]
-        $PageSize,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Int32]
-        $Skip,
-
-        [Parameter()]
-        [System.Int32]
-        $Top,
-
-        [Parameter()]
-        [System.String]
-        $CountVariable,
-
-        [Parameter()]
-        [System.String]
-        $DisplayNameContains,
-
-        [Parameter()]
-        [System.String]
-        $AccessPackageId,
-
-        [Parameter()]
-        [System.String[]]
-        $Sort,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $All,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $Search,
-
-        [Parameter()]
-        [System.String]
-        $DisplayNameEq,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelineAppend
-    )
-}
-function Get-MgEntitlementManagementAccessPackageCatalog
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String[]]
-        $Property,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Int32]
-        $PageSize,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Int32]
-        $Skip,
-
-        [Parameter()]
-        [System.Int32]
-        $Top,
-
-        [Parameter()]
-        [System.String]
-        $CountVariable,
-
-        [Parameter()]
-        [System.String]
-        $DisplayNameContains,
-
-        [Parameter()]
-        [System.String]
-        $AccessPackageId,
-
-        [Parameter()]
-        [System.String]
-        $AccessPackageCatalogId,
-
-        [Parameter()]
-        [System.String[]]
-        $Sort,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $All,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $Search,
-
-        [Parameter()]
-        [System.String]
-        $DisplayNameEq,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelineAppend
-    )
-}
-
-function Get-MgEntitlementManagementAccessPackageCatalogAccessPackageResource
-{
-    [CmdletBinding()]
-    param(
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [PSObject]
-        $AccessPackageCatalogId,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.String[]]
-        $Property,
-
-        [Parameter()]
-        [System.String]
-        $Search,
-
-        [Parameter()]
-        [System.uint32]
-        $Skip,
-
-        [Parameter()]
-        [System.String[]]
-        $Sort,
-
-        [Parameter()]
-        [System.uint32]
-        $Top,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $ModifiedBy,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelineAppend
-    )
-}
-function New-MgEntitlementManagementAccessPackage
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [PSObject]
-        $Catalog,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [PSObject]
-        $AccessPackagesIncompatibleWith,
-
-        [Parameter()]
-        [System.DateTime]
-        $CreatedDateTime,
-
-        [Parameter()]
-        [PSObject]
-        $IncompatibleGroups,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [PSObject]
-        $AccessPackageCatalog,
-
-        [Parameter()]
-        [System.String]
-        $CatalogId,
-
-        [Parameter()]
-        [System.DateTime]
-        $ModifiedDateTime,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [PSObject]
-        $AccessPackageAssignmentPolicies,
-
-        [Parameter()]
-        [System.String]
-        $CreatedBy,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsRoleScopesVisible,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [PSObject]
-        $IncompatibleAccessPackages,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [PSObject]
-        $AccessPackageResourceRoleScopes,
-
-        [Parameter()]
-        [PSObject]
-        $AssignmentPolicies,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $ModifiedBy,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsHidden
-    )
-}
-
-function New-MgEntitlementManagementAccessPackageResourceRequest
-{
-    [CmdletBinding()]
-    param(
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [PSObject]
-        $AccessPackagesIncompatibleWith,
-
-        [Parameter()]
-        [PSObject]
-        $AccessPackageResource,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ExecuteImmmediately,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsValidationOnly,
-
-        [Parameter()]
-        [System.DateTime]
-        $ExpirationDateTime,
-
-        [Parameter()]
-        [System.String]
-        $Justification,
-
-        [Parameter()]
-        [System.String]
-        $RequestState,
-
-        [Parameter()]
-        [System.String]
-        $RequestStatus,
-
-        [Parameter()]
-        [System.String]
-        $RequestType,
-
-        [Parameter()]
-        [PSObject]
-        $Requestor,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
-        $CatalogId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $ModifiedBy,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelineAppend
-    )
-}
-function Remove-MgEntitlementManagementAccessPackage
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
-        [System.String]
-        $IfMatch,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.String]
-        $AccessPackageId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelineAppend
-    )
-}
-function Update-MgEntitlementManagementAccessPackage
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [PSObject]
-        $Catalog,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [PSObject]
-        $AccessPackagesIncompatibleWith,
-
-        [Parameter()]
-        [System.DateTime]
-        $CreatedDateTime,
-
-        [Parameter()]
-        [PSObject]
-        $IncompatibleGroups,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [PSObject]
-        $AccessPackageCatalog,
-
-        [Parameter()]
-        [System.String]
-        $CatalogId,
-
-        [Parameter()]
-        [System.DateTime]
-        $ModifiedDateTime,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [PSObject]
-        $AccessPackageAssignmentPolicies,
-
-        [Parameter()]
-        [System.String]
-        $CreatedBy,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsRoleScopesVisible,
-
-        [Parameter()]
-        [System.String]
-        $AccessPackageId,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [PSObject]
-        $IncompatibleAccessPackages,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [PSObject]
-        $AccessPackageResourceRoleScopes,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
-        [PSObject]
-        $AssignmentPolicies,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $ModifiedBy,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsHidden
-    )
-}
-function New-MgEntitlementManagementAccessPackageCatalog
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsExternallyVisible,
-
-        [Parameter()]
-        [System.String]
-        $CatalogStatus,
-
-        [Parameter()]
-        [System.DateTime]
-        $CreatedDateTime,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.DateTime]
-        $ModifiedDateTime,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [PSObject]
-        $AccessPackages,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.String]
-        $CreatedBy,
-
-        [Parameter()]
-        [PSObject]
-        $AccessPackageResourceScopes,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [PSObject]
-        $AccessPackageResources,
-
-        [Parameter()]
-        [System.String]
-        $ModifiedBy,
-
-        [Parameter()]
-        [PSObject]
-        $CustomAccessPackageWorkflowExtensions,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [PSObject]
-        $AccessPackageResourceRoles,
-
-        [Parameter()]
-        [System.String]
-        $CatalogType,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelineAppend
-    )
-}
-function Remove-MgEntitlementManagementAccessPackageCatalog
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $AccessPackageCatalogId,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
-        [System.String]
-        $IfMatch,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelineAppend
-    )
-}
-function Update-MgEntitlementManagementAccessPackageCatalog
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsExternallyVisible,
-
-        [Parameter()]
-        [System.String]
-        $CatalogStatus,
-
-        [Parameter()]
-        [System.DateTime]
-        $CreatedDateTime,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.DateTime]
-        $ModifiedDateTime,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [PSObject]
-        $AccessPackages,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.String]
-        $CreatedBy,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [PSObject]
-        $AccessPackageResourceScopes,
-
-        [Parameter()]
-        [System.String]
-        $AccessPackageCatalogId,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [PSObject]
-        $AccessPackageResources,
-
-        [Parameter()]
-        [System.String]
-        $ModifiedBy,
-
-        [Parameter()]
-        [PSObject]
-        $CustomAccessPackageWorkflowExtensions,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [PSObject]
-        $AccessPackageResourceRoles,
-
-        [Parameter()]
-        [System.String]
-        $CatalogType,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
         $HttpPipelineAppend
     )
 }
@@ -17314,7 +16363,7 @@ function Get-MgRoleManagement
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -17338,7 +16387,7 @@ function Get-MgRoleManagement
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -17351,7 +16400,7 @@ function Get-MgRoleManagementDirectory
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -17375,7 +16424,7 @@ function Get-MgRoleManagementDirectory
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -17408,7 +16457,7 @@ function Get-MgRoleManagementDirectoryRoleAssignment
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -17456,7 +16505,7 @@ function Get-MgRoleManagementDirectoryRoleAssignment
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -17485,7 +16534,7 @@ function Get-MgRoleManagementDirectoryRoleDefinition
         $UnifiedRoleDefinitionId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -17533,7 +16582,7 @@ function Get-MgRoleManagementDirectoryRoleDefinition
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -17574,7 +16623,7 @@ function New-MgDeviceManagementDeviceEnrollmentConfiguration
         $Priority,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -17606,7 +16655,7 @@ function New-MgDeviceManagementDeviceEnrollmentConfiguration
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.DeviceEnrollmentConfigurationType]
+        [PSObject]
         $DeviceEnrollmentConfigurationType,
 
         [Parameter()]
@@ -17614,7 +16663,7 @@ function New-MgDeviceManagementDeviceEnrollmentConfiguration
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -17643,7 +16692,7 @@ function New-MgRoleManagementDirectoryRoleAssignment
         $DirectoryScope,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -17703,7 +16752,7 @@ function New-MgRoleManagementDirectoryRoleAssignment
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -17736,7 +16785,7 @@ function New-MgRoleManagementDirectoryRoleDefinition
         $TemplateId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -17784,7 +16833,7 @@ function New-MgRoleManagementDirectoryRoleDefinition
         $IsEnabled,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -17793,7 +16842,7 @@ function Remove-MgDeviceManagementDeviceEnrollmentConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -17833,7 +16882,7 @@ function Remove-MgDeviceManagementDeviceEnrollmentConfiguration
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -17842,7 +16891,7 @@ function Remove-MgRoleManagementDirectory
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -17874,7 +16923,7 @@ function Remove-MgRoleManagementDirectory
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -17883,7 +16932,7 @@ function Remove-MgRoleManagementDirectoryRoleAssignment
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -17923,7 +16972,7 @@ function Remove-MgRoleManagementDirectoryRoleAssignment
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -17932,7 +16981,7 @@ function Remove-MgRoleManagementDirectoryRoleDefinition
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -17946,6 +16995,10 @@ function Remove-MgRoleManagementDirectoryRoleDefinition
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $UnifiedRoleDefinitionId,
 
         [Parameter()]
         [System.String]
@@ -17964,15 +17017,11 @@ function Remove-MgRoleManagementDirectoryRoleDefinition
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [System.String]
-        $UnifiedRoleDefinitionId,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -18017,7 +17066,7 @@ function Update-MgDeviceManagementDeviceEnrollmentConfiguration
         $Priority,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -18057,7 +17106,7 @@ function Update-MgDeviceManagementDeviceEnrollmentConfiguration
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.DeviceEnrollmentConfigurationType]
+        [PSObject]
         $DeviceEnrollmentConfigurationType,
 
         [Parameter()]
@@ -18065,7 +17114,7 @@ function Update-MgDeviceManagementDeviceEnrollmentConfiguration
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -18078,7 +17127,7 @@ function Update-MgRoleManagement
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -18098,7 +17147,7 @@ function Update-MgRoleManagement
         $DeviceManagement,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -18159,12 +17208,16 @@ function Update-MgRoleManagementDirectory
         $ResourceNamespaces,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
         [PSObject]
         $RoleDefinitions,
+
+        [Parameter()]
+        [PSObject]
+        $RoleEligibilityScheduleInstances,
 
         [Parameter()]
         [PSObject]
@@ -18204,10 +17257,6 @@ function Update-MgRoleManagementDirectory
 
         [Parameter()]
         [PSObject]
-        $RoleEligibilityScheduleInstances,
-
-        [Parameter()]
-        [PSObject]
         $RoleAssignmentScheduleInstances,
 
         [Parameter()]
@@ -18219,7 +17268,7 @@ function Update-MgRoleManagementDirectory
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -18252,7 +17301,7 @@ function Update-MgRoleManagementDirectoryRoleDefinition
         $UnifiedRoleDefinitionId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -18312,7 +17361,7 @@ function Update-MgRoleManagementDirectoryRoleDefinition
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -18327,7 +17376,7 @@ function Invoke-MgTargetDeviceAppMgtTargetedManagedAppConfigurationApp
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -18339,7 +17388,7 @@ function Invoke-MgTargetDeviceAppMgtTargetedManagedAppConfigurationApp
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.TargetedManagedAppGroupType]
+        [PSObject]
         $AppGroupType,
 
         [Parameter()]
@@ -18359,7 +17408,7 @@ function Invoke-MgTargetDeviceAppMgtTargetedManagedAppConfigurationApp
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -18385,14 +17434,18 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $FingerprintBlocked,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfDevicePasscodeComplexityLessThanHigh,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppDeviceThreatLevel]
+        [PSObject]
         $MaximumAllowedDeviceThreatLevel,
 
         [Parameter()]
@@ -18404,7 +17457,7 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $MinimumRequiredPatchVersion,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfAndroidDeviceModelNotAllowed,
 
         [Parameter()]
@@ -18416,7 +17469,7 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $DisableAppEncryptionIfDeviceEncryptionIsEnabled,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.MobileThreatDefensePartnerPriority]
+        [PSObject]
         $MobileThreatDefensePartnerPriority,
 
         [Parameter()]
@@ -18424,15 +17477,15 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $CreatedDateTime,
 
         [Parameter()]
-        [PSObject]
-        $DeploymentSummary,
+        [System.String[]]
+        $AllowedAndroidDeviceModels,
 
         [Parameter()]
         [System.String]
         $MinimumWarningAppVersion,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedBrowserType]
+        [PSObject]
         $ManagedBrowser,
 
         [Parameter()]
@@ -18453,10 +17506,6 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
 
         [Parameter()]
         [System.TimeSpan]
-        $PinRequiredInsteadOfBiometricTimeout,
-
-        [Parameter()]
-        [System.TimeSpan]
         $PeriodBeforePinReset,
 
         [Parameter()]
@@ -18472,7 +17521,7 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $MinimumWarningPatchVersion,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfDeviceComplianceRequired,
 
         [Parameter()]
@@ -18484,11 +17533,7 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $CustomDialerAppDisplayName,
 
         [Parameter()]
-        [System.String[]]
-        $AllowedAndroidDeviceModels,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppDataIngestionLocation[]]
+        [PSObject]
         $AllowedDataIngestionLocations,
 
         [Parameter()]
@@ -18500,7 +17545,7 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $DeployedAppCount,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppNotificationRestriction]
+        [PSObject]
         $NotificationRestriction,
 
         [Parameter()]
@@ -18512,12 +17557,16 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $BiometricAuthenticationBlocked,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfDevicePasscodeComplexityLessThanMedium,
 
         [Parameter()]
         [System.String]
         $Id,
+
+        [Parameter()]
+        [PSObject]
+        $RequiredAndroidSafetyNetAppsVerificationType,
 
         [Parameter()]
         [PSObject]
@@ -18528,7 +17577,7 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $DeviceComplianceRequired,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.TargetedManagedAppGroupType]
+        [PSObject]
         $AppGroupType,
 
         [Parameter()]
@@ -18536,7 +17585,7 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $PeriodOfflineBeforeAccessCheck,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfUnableToAuthenticateUser,
 
         [Parameter()]
@@ -18564,11 +17613,11 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $MaximumPinRetries,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.AndroidManagedAppSafetyNetAppsVerificationType]
-        $RequiredAndroidSafetyNetAppsVerificationType,
+        [PSObject]
+        $AppActionIfDevicePasscodeComplexityLessThanLow,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfMaximumPinRetriesExceeded,
 
         [Parameter()]
@@ -18576,11 +17625,11 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $MinimumWipeCompanyPortalVersion,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppDataTransferLevel]
+        [PSObject]
         $AllowedOutboundDataTransferDestinations,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfAndroidDeviceManufacturerNotAllowed,
 
         [Parameter()]
@@ -18600,7 +17649,7 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $CustomDialerAppPackageId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppDataStorageLocation[]]
+        [PSObject]
         $AllowedDataStorageLocations,
 
         [Parameter()]
@@ -18616,7 +17665,7 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $IsAssigned,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppPhoneNumberRedirectLevel]
+        [PSObject]
         $DialerRestrictionLevel,
 
         [Parameter()]
@@ -18624,7 +17673,7 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $AllowedOutboundClipboardSharingExceptionLength,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfAndroidSafetyNetDeviceAttestationFailed,
 
         [Parameter()]
@@ -18632,7 +17681,7 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $Version,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfAndroidSafetyNetAppsVerificationFailed,
 
         [Parameter()]
@@ -18648,19 +17697,19 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $PeriodOfflineBeforeWipeIsEnforced,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
-        $AppActionIfDevicePasscodeComplexityLessThanLow,
+        [System.TimeSpan]
+        $PinRequiredInsteadOfBiometricTimeout,
 
         [Parameter()]
         [System.String]
         $MinimumRequiredAppVersion,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $MobileThreatDefenseRemediationAction,
 
         [Parameter()]
@@ -18672,8 +17721,8 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $KeyboardsRestricted,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [PSObject]
+        $DeploymentSummary,
 
         [Parameter()]
         [PSObject]
@@ -18704,7 +17753,7 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -18724,7 +17773,7 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $WipeAfterCompanyPortalUpdateDeferralInDays,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.AndroidManagedAppSafetyNetEvaluationType]
+        [PSObject]
         $RequiredAndroidSafetyNetEvaluationType,
 
         [Parameter()]
@@ -18740,7 +17789,7 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $FingerprintAndBiometricEnabled,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfDeviceLockNotSet,
 
         [Parameter()]
@@ -18772,11 +17821,11 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $LastModifiedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppDataTransferLevel]
+        [PSObject]
         $AllowedInboundDataTransferSources,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.AndroidManagedAppSafetyNetDeviceAttestationType]
+        [PSObject]
         $RequiredAndroidSafetyNetDeviceAttestationType,
 
         [Parameter()]
@@ -18792,7 +17841,7 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $BodyParameter,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppClipboardSharingLevel]
+        [PSObject]
         $AllowedOutboundClipboardSharingLevel,
 
         [Parameter()]
@@ -18804,11 +17853,11 @@ function New-MgDeviceAppMgtAndroidManagedAppProtection
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppPinCharacterSet]
+        [PSObject]
         $PinCharacterSet,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.AppManagementLevel]
+        [PSObject]
         $TargetedAppManagementLevels
     )
 }
@@ -18821,7 +17870,7 @@ function Set-MgDeviceAppMgtTargetedManagedAppConfiguration
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -18849,7 +17898,7 @@ function Set-MgDeviceAppMgtTargetedManagedAppConfiguration
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -18926,7 +17975,7 @@ function Update-MgDeviceAppMgt
         $ManagedAppRegistrations,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -19014,7 +18063,7 @@ function Update-MgDeviceAppMgt
         $WindowsInformationProtectionPolicies,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.MicrosoftStoreForBusinessPortalSelectionOptions]
+        [PSObject]
         $MicrosoftStoreForBusinessPortalSelection,
 
         [Parameter()]
@@ -19034,7 +18083,7 @@ function Update-MgDeviceAppMgt
         $MobileAppConfigurations,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -19048,10 +18097,14 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $FingerprintBlocked,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfDevicePasscodeComplexityLessThanHigh,
 
         [Parameter()]
@@ -19059,7 +18112,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $AndroidManagedAppProtectionId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppDeviceThreatLevel]
+        [PSObject]
         $MaximumAllowedDeviceThreatLevel,
 
         [Parameter()]
@@ -19071,7 +18124,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $MinimumRequiredPatchVersion,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfAndroidDeviceModelNotAllowed,
 
         [Parameter()]
@@ -19083,7 +18136,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $DisableAppEncryptionIfDeviceEncryptionIsEnabled,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.MobileThreatDefensePartnerPriority]
+        [PSObject]
         $MobileThreatDefensePartnerPriority,
 
         [Parameter()]
@@ -19091,11 +18144,11 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $CreatedDateTime,
 
         [Parameter()]
-        [PSObject]
-        $DeploymentSummary,
+        [System.String[]]
+        $AllowedAndroidDeviceModels,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedBrowserType]
+        [PSObject]
         $ManagedBrowser,
 
         [Parameter()]
@@ -19127,7 +18180,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $MinimumWarningPatchVersion,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfDeviceComplianceRequired,
 
         [Parameter()]
@@ -19139,11 +18192,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $CustomDialerAppDisplayName,
 
         [Parameter()]
-        [System.String[]]
-        $AllowedAndroidDeviceModels,
-
-        [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppDataIngestionLocation[]]
+        [PSObject]
         $AllowedDataIngestionLocations,
 
         [Parameter()]
@@ -19155,7 +18204,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $DeployedAppCount,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppNotificationRestriction]
+        [PSObject]
         $NotificationRestriction,
 
         [Parameter()]
@@ -19167,7 +18216,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $BiometricAuthenticationBlocked,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfDevicePasscodeComplexityLessThanMedium,
 
         [Parameter()]
@@ -19183,7 +18232,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $DeviceComplianceRequired,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.TargetedManagedAppGroupType]
+        [PSObject]
         $AppGroupType,
 
         [Parameter()]
@@ -19191,7 +18240,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $PeriodOfflineBeforeAccessCheck,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfUnableToAuthenticateUser,
 
         [Parameter()]
@@ -19215,7 +18264,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $ContactSyncBlocked,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppClipboardSharingLevel]
+        [PSObject]
         $AllowedOutboundClipboardSharingLevel,
 
         [Parameter()]
@@ -19223,11 +18272,11 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $Description,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.AndroidManagedAppSafetyNetAppsVerificationType]
+        [PSObject]
         $RequiredAndroidSafetyNetAppsVerificationType,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfMaximumPinRetriesExceeded,
 
         [Parameter()]
@@ -19239,11 +18288,11 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $Version,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppDataTransferLevel]
+        [PSObject]
         $AllowedOutboundDataTransferDestinations,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfAndroidDeviceManufacturerNotAllowed,
 
         [Parameter()]
@@ -19267,7 +18316,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $CustomDialerAppPackageId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppDataStorageLocation[]]
+        [PSObject]
         $AllowedDataStorageLocations,
 
         [Parameter()]
@@ -19287,7 +18336,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $IsAssigned,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppPhoneNumberRedirectLevel]
+        [PSObject]
         $DialerRestrictionLevel,
 
         [Parameter()]
@@ -19295,7 +18344,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $MinimumWarningAppVersion,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfAndroidSafetyNetDeviceAttestationFailed,
 
         [Parameter()]
@@ -19303,7 +18352,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $MaximumPinRetries,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfAndroidSafetyNetAppsVerificationFailed,
 
         [Parameter()]
@@ -19327,11 +18376,11 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $MinimumRequiredAppVersion,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $MobileThreatDefenseRemediationAction,
 
         [Parameter()]
@@ -19343,8 +18392,8 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $KeyboardsRestricted,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [PSObject]
+        $DeploymentSummary,
 
         [Parameter()]
         [PSObject]
@@ -19375,7 +18424,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $MinimumWarningOSVersion,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -19395,7 +18444,7 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $WipeAfterCompanyPortalUpdateDeferralInDays,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.AndroidManagedAppSafetyNetEvaluationType]
+        [PSObject]
         $RequiredAndroidSafetyNetEvaluationType,
 
         [Parameter()]
@@ -19407,11 +18456,11 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $WarnAfterCompanyPortalUpdateDeferralInDays,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfDevicePasscodeComplexityLessThanLow,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfDeviceLockNotSet,
 
         [Parameter()]
@@ -19443,11 +18492,11 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $LastModifiedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppDataTransferLevel]
+        [PSObject]
         $AllowedInboundDataTransferSources,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.AndroidManagedAppSafetyNetDeviceAttestationType]
+        [PSObject]
         $RequiredAndroidSafetyNetDeviceAttestationType,
 
         [Parameter()]
@@ -19479,11 +18528,11 @@ function Update-MgDeviceAppMgtAndroidManagedAppProtection
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.ManagedAppPinCharacterSet]
+        [PSObject]
         $PinCharacterSet,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.AppManagementLevel]
+        [PSObject]
         $TargetedAppManagementLevels
     )
 }
@@ -19492,7 +18541,7 @@ function Get-MgDeviceAppManagement
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -19516,7 +18565,7 @@ function Get-MgDeviceAppManagement
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -19545,7 +18594,7 @@ function Get-MgDeviceAppManagementAndroidManagedAppProtection
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -19597,7 +18646,7 @@ function Get-MgDeviceAppManagementAndroidManagedAppProtection
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -19622,7 +18671,7 @@ function Get-MgDeviceAppManagementiOSManagedAppProtection
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -19674,7 +18723,7 @@ function Get-MgDeviceAppManagementiOSManagedAppProtection
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -19699,7 +18748,7 @@ function Get-MgDeviceAppManagementTargetedManagedAppConfiguration
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -19751,7 +18800,7 @@ function Get-MgDeviceAppManagementTargetedManagedAppConfiguration
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -19776,7 +18825,7 @@ function Get-MgDeviceAppManagementTargetedManagedAppConfigurationAssignment
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -19832,7 +18881,7 @@ function Get-MgDeviceAppManagementTargetedManagedAppConfigurationAssignment
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -19877,7 +18926,7 @@ function New-MgDeviceAppManagementTargetedManagedAppConfiguration
         $IsAssigned,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -19893,7 +18942,7 @@ function New-MgDeviceAppManagementTargetedManagedAppConfiguration
         $RoleScopeTagIds,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.TargetedManagedAppGroupType]
+        [PSObject]
         $AppGroupType,
 
         [Parameter()]
@@ -19929,7 +18978,7 @@ function New-MgDeviceAppManagementTargetedManagedAppConfiguration
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -19938,7 +18987,7 @@ function Remove-MgDeviceAppManagementAndroidManagedAppProtection
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -19958,6 +19007,10 @@ function Remove-MgDeviceAppManagementAndroidManagedAppProtection
         $IfMatch,
 
         [Parameter()]
+        [System.String]
+        $AndroidManagedAppProtectionId,
+
+        [Parameter()]
         [PSObject]
         $InputObject,
 
@@ -19970,15 +19023,11 @@ function Remove-MgDeviceAppManagementAndroidManagedAppProtection
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [System.String]
-        $AndroidManagedAppProtectionId,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -19987,7 +19036,7 @@ function Remove-MgDeviceAppManagementiOSManagedAppProtection
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -20027,7 +19076,7 @@ function Remove-MgDeviceAppManagementiOSManagedAppProtection
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -20036,7 +19085,11 @@ function Remove-MgDeviceAppManagementTargetedManagedAppConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [System.String]
+        $TargetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -20064,16 +19117,12 @@ function Remove-MgDeviceAppManagementTargetedManagedAppConfiguration
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.String]
-        $TargetedManagedAppConfigurationId,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -20117,6 +19166,10 @@ function Update-MgDeviceAppManagement
         $DeviceAppManagementTasks,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
         [PSObject]
         $ManagedAppStatuses,
 
@@ -20137,7 +19190,7 @@ function Update-MgDeviceAppManagement
         $ManagedAppRegistrations,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -20155,10 +19208,6 @@ function Update-MgDeviceAppManagement
         [Parameter()]
         [PSObject]
         $WindowsInformationProtectionWipeActions,
-
-        [Parameter()]
-        [PSObject]
-        $MobileAppCategories,
 
         [Parameter()]
         [System.String]
@@ -20197,8 +19246,8 @@ function Update-MgDeviceAppManagement
         $Id,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [PSObject]
+        $MobileAppCategories,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -20225,7 +19274,7 @@ function Update-MgDeviceAppManagement
         $WindowsInformationProtectionPolicies,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.MicrosoftStoreForBusinessPortalSelectionOptions]
+        [PSObject]
         $MicrosoftStoreForBusinessPortalSelection,
 
         [Parameter()]
@@ -20245,7 +19294,7 @@ function Update-MgDeviceAppManagement
         $MobileAppConfigurations,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -20282,6 +19331,10 @@ function Update-MgDeviceAppManagementTargetedManagedAppConfiguration
         $DisplayName,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
         [PSObject]
         $InputObject,
 
@@ -20298,7 +19351,7 @@ function Update-MgDeviceAppManagementTargetedManagedAppConfiguration
         $IsAssigned,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -20314,7 +19367,7 @@ function Update-MgDeviceAppManagementTargetedManagedAppConfiguration
         $RoleScopeTagIds,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.TargetedManagedAppGroupType]
+        [PSObject]
         $AppGroupType,
 
         [Parameter()]
@@ -20334,8 +19387,8 @@ function Update-MgDeviceAppManagementTargetedManagedAppConfiguration
         $Id,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [PSObject]
+        $Apps,
 
         [Parameter()]
         [System.String]
@@ -20346,10 +19399,6 @@ function Update-MgDeviceAppManagementTargetedManagedAppConfiguration
         $ProxyCredential,
 
         [Parameter()]
-        [PSObject]
-        $Apps,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Break,
 
@@ -20358,7 +19407,7 @@ function Update-MgDeviceAppManagementTargetedManagedAppConfiguration
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -20381,7 +19430,7 @@ function Get-MgGroup
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -20441,7 +19490,7 @@ function Get-MgGroup
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -20470,7 +19519,7 @@ function Get-MgGroupLifecyclePolicy
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -20518,7 +19567,7 @@ function Get-MgGroupLifecyclePolicy
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -20539,7 +19588,7 @@ function Get-MgGroupMember
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -20595,7 +19644,7 @@ function Get-MgGroupMember
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -20616,7 +19665,7 @@ function Get-MgGroupMemberOf
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -20680,7 +19729,7 @@ function Get-MgGroupMemberOf
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -20701,7 +19750,7 @@ function Get-MgGroupOwner
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -20757,7 +19806,7 @@ function Get-MgGroupOwner
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -20765,6 +19814,10 @@ function New-MgGroup
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
         [Parameter()]
         [System.String]
         $Mail,
@@ -21014,12 +20067,12 @@ function New-MgGroup
         $OnPremisesSyncEnabled,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        $IsArchived,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -21046,7 +20099,7 @@ function New-MgGroup
         $IsAssignableToRole,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -21092,10 +20145,6 @@ function New-MgGroup
         [Parameter()]
         [System.String]
         $PreferredDataLocation,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsArchived,
 
         [Parameter()]
         [System.DateTime]
@@ -21131,7 +20180,7 @@ function New-MgGroupLifecyclePolicy
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -21175,7 +20224,7 @@ function New-MgGroupLifecyclePolicy
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -21184,7 +20233,7 @@ function New-MgGroupMember
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -21212,7 +20261,7 @@ function New-MgGroupMember
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -21237,7 +20286,7 @@ function New-MgGroupMemberByRef
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -21261,7 +20310,7 @@ function New-MgGroupMemberByRef
         $OdataId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -21290,7 +20339,7 @@ function New-MgGroupOwner
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -21318,7 +20367,7 @@ function New-MgGroupOwner
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -21343,7 +20392,7 @@ function New-MgGroupOwnerByRef
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -21367,7 +20416,7 @@ function New-MgGroupOwnerByRef
         $OdataId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -21396,7 +20445,7 @@ function Remove-MgGroup
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -21424,7 +20473,7 @@ function Remove-MgGroup
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -21449,7 +20498,7 @@ function Remove-MgGroupLifecyclePolicy
         $GroupLifecyclePolicyId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -21485,7 +20534,7 @@ function Remove-MgGroupLifecyclePolicy
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -21498,7 +20547,7 @@ function Remove-MgGroupMemberByRef
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -21530,7 +20579,7 @@ function Remove-MgGroupMemberByRef
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -21555,7 +20604,7 @@ function Remove-MgGroupOwnerByRef
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -21587,7 +20636,7 @@ function Remove-MgGroupOwnerByRef
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -21608,7 +20657,7 @@ function Set-MgGroupLicense
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -21640,7 +20689,7 @@ function Set-MgGroupLicense
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -21664,6 +20713,10 @@ function Update-MgGroup
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
         [Parameter()]
         [System.String]
         $Mail,
@@ -21921,7 +20974,7 @@ function Update-MgGroup
         $OnPremisesSyncEnabled,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -21930,7 +20983,7 @@ function Update-MgGroup
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        $IsArchived,
 
         [Parameter()]
         [PSObject]
@@ -21953,7 +21006,7 @@ function Update-MgGroup
         $IsAssignableToRole,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -22005,10 +21058,6 @@ function Update-MgGroup
         $IsFavorite,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsArchived,
-
-        [Parameter()]
         [System.DateTime]
         $CreatedDateTime,
 
@@ -22038,6 +21087,10 @@ function Update-MgGroupLifecyclePolicy
     [CmdletBinding()]
     param(
         [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
         [System.Collections.Hashtable]
         $AdditionalProperties,
 
@@ -22058,7 +21111,7 @@ function Update-MgGroupLifecyclePolicy
         $GroupLifecyclePolicyId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -22090,15 +21143,11 @@ function Update-MgGroupLifecyclePolicy
         $ProxyCredential,
 
         [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -22129,7 +21178,7 @@ function Get-MgDevice
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -22181,7 +21230,7 @@ function Get-MgDevice
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -22190,7 +21239,7 @@ function Get-MgDirectory
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -22214,7 +21263,7 @@ function Get-MgDirectory
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -22243,7 +21292,7 @@ function Get-MgDirectoryRole
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -22291,7 +21340,7 @@ function Get-MgDirectoryRole
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -22316,7 +21365,7 @@ function Get-MgDirectoryRoleTemplate
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -22364,7 +21413,7 @@ function Get-MgDirectoryRoleTemplate
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -22393,7 +21442,7 @@ function Get-MgOrganization
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -22441,7 +21490,7 @@ function Get-MgOrganization
         $OrganizationId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -22458,7 +21507,7 @@ function Get-MgSubscribedSku
         $InputObject,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -22474,7 +21523,7 @@ function Get-MgSubscribedSku
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -22643,7 +21692,7 @@ function New-MgDevice
         $SystemLabels,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -22659,7 +21708,7 @@ function New-MgDevice
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -22752,7 +21801,7 @@ function New-MgDirectoryRole
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -22792,7 +21841,7 @@ function New-MgDirectoryRole
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -22805,7 +21854,7 @@ function New-MgDirectoryRoleMemberByRef
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -22833,7 +21882,7 @@ function New-MgDirectoryRoleMemberByRef
         $OdataId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -22858,7 +21907,7 @@ function Remove-MgDevice
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -22898,7 +21947,7 @@ function Remove-MgDevice
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -22911,7 +21960,7 @@ function Remove-MgDirectoryRole
         $InputObject,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -22939,7 +21988,7 @@ function Remove-MgDirectoryRole
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -22960,7 +22009,7 @@ function Remove-MgDirectoryRoleMemberByRef
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -22992,7 +22041,7 @@ function Remove-MgDirectoryRoleMemberByRef
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -23157,7 +22206,7 @@ function Update-MgDevice
         $SystemLabels,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -23173,7 +22222,7 @@ function Update-MgDevice
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -23270,7 +22319,7 @@ function Update-MgDirectory
         $FederationConfigurations,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -23330,7 +22379,7 @@ function Update-MgDirectory
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -23359,7 +22408,7 @@ function Update-MgOrganization
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -23379,7 +22428,7 @@ function Update-MgOrganization
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -23407,7 +22456,7 @@ function Update-MgOrganization
         $AssignedPlans,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Support.MdmAuthority]
+        [PSObject]
         $MobileDeviceManagementAuthority,
 
         [Parameter()]
@@ -23459,10 +22508,6 @@ function Update-MgOrganization
         $ProxyCredential,
 
         [Parameter()]
-        [System.DateTime]
-        $DeletedDateTime,
-
-        [Parameter()]
         [PSObject]
         $ProvisionedPlans,
 
@@ -23477,6 +22522,10 @@ function Update-MgOrganization
         [Parameter()]
         [PSObject]
         $Branding,
+
+        [Parameter()]
+        [System.DateTime]
+        $DeletedDateTime,
 
         [Parameter()]
         [System.String]
@@ -23511,6 +22560,87 @@ function Update-MgOrganization
         $OnPremisesLastSyncDateTime
     )
 }
+function Get-MgAdministrativeUnit
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $AdministrativeUnitId,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.String]
+        $ConsistencyLevel,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
 function Get-MgDirectorySetting
 {
     [CmdletBinding()]
@@ -23536,7 +22666,7 @@ function Get-MgDirectorySetting
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -23584,7 +22714,84 @@ function Get-MgDirectorySetting
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function New-MgAdministrativeUnit
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsMemberManagementRestricted,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Visibility,
+
+        [Parameter()]
+        [PSObject]
+        $ScopedRoleMembers,
+
+        [Parameter()]
+        [PSObject]
+        $Members,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $Extensions,
+
+        [Parameter()]
+        [System.DateTime]
+        $DeletedDateTime,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -23597,6 +22804,55 @@ function New-MgDirectorySetting
         $Values
     )
 }
+function Remove-MgAdministrativeUnit
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [System.String]
+        $AdministrativeUnitId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
 function Remove-MgDirectorySetting
 {
     [CmdletBinding()]
@@ -23606,7 +22862,7 @@ function Remove-MgDirectorySetting
         $DirectorySettingId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -23642,7 +22898,96 @@ function Remove-MgDirectorySetting
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgAdministrativeUnit
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $AdministrativeUnitId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsMemberManagementRestricted,
+
+        [Parameter()]
+        [PSObject]
+        $ScopedRoleMembers,
+
+        [Parameter()]
+        [PSObject]
+        $Members,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [PSObject]
+        $Extensions,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Visibility,
+
+        [Parameter()]
+        [System.DateTime]
+        $DeletedDateTime,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -23670,7 +23015,7 @@ function Get-MgAgreement
         $InputObject,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -23706,12 +23051,898 @@ function Get-MgAgreement
         $Search,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Break
+    )
+}
+function Get-MgEntitlementManagementAccessPackage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.String]
+        $CatalogId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.String]
+        $DisplayNameContains,
+
+        [Parameter()]
+        [System.String]
+        $AccessPackageId,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.String]
+        $DisplayNameEq,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgEntitlementManagementAccessPackageCatalog
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.String]
+        $DisplayNameContains,
+
+        [Parameter()]
+        [System.String]
+        $AccessPackageId,
+
+        [Parameter()]
+        [System.String]
+        $AccessPackageCatalogId,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.String]
+        $DisplayNameEq,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function New-MgEntitlementManagementAccessPackage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $Catalog,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [PSObject]
+        $AccessPackagesIncompatibleWith,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $IncompatibleGroups,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [PSObject]
+        $AccessPackageCatalog,
+
+        [Parameter()]
+        [System.String]
+        $CatalogId,
+
+        [Parameter()]
+        [System.DateTime]
+        $ModifiedDateTime,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $AccessPackageAssignmentPolicies,
+
+        [Parameter()]
+        [System.String]
+        $CreatedBy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsRoleScopesVisible,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [PSObject]
+        $IncompatibleAccessPackages,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $AccessPackageResourceRoleScopes,
+
+        [Parameter()]
+        [PSObject]
+        $AssignmentPolicies,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $ModifiedBy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsHidden
+    )
+}
+function Remove-MgEntitlementManagementAccessPackage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $AccessPackageId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgEntitlementManagementAccessPackage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $Catalog,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [PSObject]
+        $AccessPackagesIncompatibleWith,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $IncompatibleGroups,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [PSObject]
+        $AccessPackageCatalog,
+
+        [Parameter()]
+        [System.String]
+        $CatalogId,
+
+        [Parameter()]
+        [System.DateTime]
+        $ModifiedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $AccessPackageAssignmentPolicies,
+
+        [Parameter()]
+        [System.String]
+        $CreatedBy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsRoleScopesVisible,
+
+        [Parameter()]
+        [System.String]
+        $AccessPackageId,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $IncompatibleAccessPackages,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $AccessPackageResourceRoleScopes,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $ModifiedBy,
+
+        [Parameter()]
+        [PSObject]
+        $AssignmentPolicies,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsHidden
+    )
+}
+function Get-MgEntitlementManagementAccessPackageCatalogAccessPackageResource
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String]
+        $AccessPackageCatalogId,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function New-MgEntitlementManagementAccessPackageCatalog
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsExternallyVisible,
+
+        [Parameter()]
+        [System.String]
+        $CatalogStatus,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.DateTime]
+        $ModifiedDateTime,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [PSObject]
+        $AccessPackages,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $CreatedBy,
+
+        [Parameter()]
+        [PSObject]
+        $AccessPackageResourceScopes,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $ModifiedBy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $AccessPackageResources,
+
+        [Parameter()]
+        [PSObject]
+        $CustomAccessPackageWorkflowExtensions,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $AccessPackageResourceRoles,
+
+        [Parameter()]
+        [System.String]
+        $CatalogType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function New-MgEntitlementManagementAccessPackageResourceRequest
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Justification,
+
+        [Parameter()]
+        [PSObject]
+        $AccessPackageResource,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ExecuteImmediately,
+
+        [Parameter()]
+        [System.String]
+        $CatalogId,
+
+        [Parameter()]
+        [System.String]
+        $RequestType,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $Requestor,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsValidationOnly,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.DateTime]
+        $ExpirationDateTime,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $RequestState,
+
+        [Parameter()]
+        [System.String]
+        $RequestStatus,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgEntitlementManagementAccessPackageCatalog
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $AccessPackageCatalogId,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgEntitlementManagementAccessPackageCatalog
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsExternallyVisible,
+
+        [Parameter()]
+        [System.String]
+        $CatalogStatus,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.DateTime]
+        $ModifiedDateTime,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [PSObject]
+        $AccessPackages,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $CreatedBy,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [PSObject]
+        $AccessPackageResourceScopes,
+
+        [Parameter()]
+        [System.String]
+        $AccessPackageCatalogId,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $ModifiedBy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $AccessPackageResources,
+
+        [Parameter()]
+        [PSObject]
+        $CustomAccessPackageWorkflowExtensions,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $AccessPackageResourceRoles,
+
+        [Parameter()]
+        [System.String]
+        $CatalogType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
     )
 }
 #endregion
@@ -23741,7 +23972,7 @@ function Get-MgIdentityConditionalAccessNamedLocation
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -23789,7 +24020,7 @@ function Get-MgIdentityConditionalAccessNamedLocation
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -23814,7 +24045,7 @@ function Get-MgIdentityConditionalAccessPolicy
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -23866,7 +24097,7 @@ function Get-MgIdentityConditionalAccessPolicy
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -23895,7 +24126,7 @@ function Get-MgOauth2PermissionGrant
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -23943,7 +24174,7 @@ function Get-MgOauth2PermissionGrant
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -23972,7 +24203,7 @@ function Get-MgPolicyAuthorizationPolicy
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -24020,7 +24251,7 @@ function Get-MgPolicyAuthorizationPolicy
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -24029,7 +24260,7 @@ function Get-MgPolicyIdentitySecurityDefaultEnforcementPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -24053,7 +24284,7 @@ function Get-MgPolicyIdentitySecurityDefaultEnforcementPolicy
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -24082,7 +24313,7 @@ function Get-MgPolicyRoleManagementPolicy
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -24134,7 +24365,7 @@ function Get-MgPolicyRoleManagementPolicy
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -24159,7 +24390,7 @@ function Get-MgPolicyRoleManagementPolicyAssignment
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -24211,7 +24442,7 @@ function Get-MgPolicyRoleManagementPolicyAssignment
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -24240,7 +24471,7 @@ function Get-MgPolicyRoleManagementPolicyRule
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -24292,7 +24523,7 @@ function Get-MgPolicyRoleManagementPolicyRule
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -24317,7 +24548,7 @@ function Get-MgPolicyTokenLifetimePolicy
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -24369,7 +24600,7 @@ function Get-MgPolicyTokenLifetimePolicy
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -24406,7 +24637,7 @@ function New-MgIdentityConditionalAccessPolicy
         $SessionControls,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -24446,7 +24677,7 @@ function New-MgIdentityConditionalAccessPolicy
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -24475,7 +24706,7 @@ function New-MgPolicyTokenLifetimePolicy
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -24515,7 +24746,7 @@ function New-MgPolicyTokenLifetimePolicy
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -24524,7 +24755,7 @@ function Remove-MgIdentityConditionalAccessNamedLocation
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -24564,7 +24795,7 @@ function Remove-MgIdentityConditionalAccessNamedLocation
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -24573,7 +24804,7 @@ function Remove-MgIdentityConditionalAccessPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -24613,7 +24844,7 @@ function Remove-MgIdentityConditionalAccessPolicy
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -24622,7 +24853,7 @@ function Remove-MgPolicyTokenLifetimePolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -24662,7 +24893,7 @@ function Remove-MgPolicyTokenLifetimePolicy
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -24703,7 +24934,7 @@ function Update-MgIdentityConditionalAccessPolicy
         $SessionControls,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -24751,7 +24982,7 @@ function Update-MgIdentityConditionalAccessPolicy
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -24796,7 +25027,7 @@ function Update-MgPolicyAuthorizationPolicy
         $AllowUserConsentForRiskyApps,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -24860,7 +25091,7 @@ function Update-MgPolicyAuthorizationPolicy
         $DefaultUserRolePermissions,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -24889,7 +25120,7 @@ function Update-MgPolicyIdentitySecurityDefaultEnforcementPolicy
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -24929,7 +25160,7 @@ function Update-MgPolicyIdentitySecurityDefaultEnforcementPolicy
         $IsEnabled,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -24970,7 +25201,7 @@ function Update-MgPolicyRoleManagementPolicy
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -25022,7 +25253,7 @@ function Update-MgPolicyRoleManagementPolicy
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -25047,7 +25278,7 @@ function Update-MgPolicyRoleManagementPolicyRule
         $UnifiedRoleManagementPolicyRuleId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -25087,7 +25318,7 @@ function Update-MgPolicyRoleManagementPolicyRule
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -25120,7 +25351,7 @@ function Update-MgPolicyTokenLifetimePolicy
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -25168,7 +25399,7 @@ function Update-MgPolicyTokenLifetimePolicy
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -25179,7 +25410,7 @@ function Get-MgGroupPlanner
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -25195,7 +25426,7 @@ function Get-MgGroupPlanner
         $InputObject,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -25240,7 +25471,7 @@ function Get-MgGroupPlannerPlan
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -25296,7 +25527,7 @@ function Get-MgGroupPlannerPlan
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -25317,7 +25548,7 @@ function Get-MgGroupPlannerPlanTask
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -25373,7 +25604,7 @@ function Get-MgGroupPlannerPlanTask
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -25382,7 +25613,7 @@ function Get-MgPlanner
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -25406,7 +25637,7 @@ function Get-MgPlanner
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -25435,7 +25666,7 @@ function Get-MgPlannerPlan
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -25487,7 +25718,7 @@ function Get-MgPlannerPlan
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -25508,7 +25739,7 @@ function Get-MgPlannerPlanBucket
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -25560,7 +25791,7 @@ function Get-MgPlannerPlanBucket
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -25573,7 +25804,7 @@ function New-MgPlannerBucket
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -25621,7 +25852,7 @@ function New-MgPlannerBucket
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -25654,7 +25885,7 @@ function New-MgPlannerPlan
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -25702,7 +25933,7 @@ function New-MgPlannerPlan
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -25727,7 +25958,7 @@ function Update-MgPlanner
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -25767,7 +25998,7 @@ function Update-MgPlanner
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -25804,7 +26035,7 @@ function Update-MgPlannerPlan
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -25860,7 +26091,7 @@ function Update-MgPlannerPlan
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -25887,7 +26118,7 @@ function Get-MgTeam
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -25939,7 +26170,7 @@ function Get-MgTeam
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -25968,7 +26199,7 @@ function Get-MgTeamChannel
         $ChannelId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -26020,7 +26251,7 @@ function Get-MgTeamChannel
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -26049,7 +26280,7 @@ function Get-MgTeamChannelTab
         $ChannelId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -26105,7 +26336,7 @@ function Get-MgTeamChannelTab
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -26114,7 +26345,7 @@ function Remove-MgTeam
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -26154,7 +26385,7 @@ function Remove-MgTeam
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -26163,7 +26394,7 @@ function Remove-MgTeamChannel
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -26207,7 +26438,7 @@ function Remove-MgTeamChannel
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -26220,7 +26451,7 @@ function Remove-MgTeamChannelTab
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -26244,7 +26475,7 @@ function Remove-MgTeamChannelTab
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -26295,7 +26526,7 @@ function Get-MgUser
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -26347,7 +26578,7 @@ function Get-MgUser
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -26376,7 +26607,7 @@ function Get-MgUserLicenseDetail
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -26428,7 +26659,7 @@ function Get-MgUserLicenseDetail
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -26929,7 +27160,7 @@ function New-MgUser
         $OnPremisesSecurityIdentifier,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -26969,7 +27200,7 @@ function New-MgUser
         $Events,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -27066,7 +27297,7 @@ function Remove-MgUser
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -27106,7 +27337,7 @@ function Remove-MgUser
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -27571,7 +27802,7 @@ function Update-MgUser
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -27615,7 +27846,7 @@ function Update-MgUser
         $UserId,
 
         [Parameter()]
-        [Microsoft.Graph.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -30646,6 +30877,10 @@ function New-SupervisoryReviewRule
 
         [Parameter()]
         [System.Object]
+        $IncludeAdaptiveScopes,
+
+        [Parameter()]
+        [System.Object]
         $SamplingRate,
 
         [Parameter()]
@@ -33430,10 +33665,6 @@ function Set-SupervisoryReviewRule
 
         [Parameter()]
         [System.Object]
-        $ContentContainsSensitiveInformation,
-
-        [Parameter()]
-        [System.Object]
         $Condition,
 
         [Parameter()]
@@ -33446,6 +33677,10 @@ function Set-SupervisoryReviewRule
 
         [Parameter()]
         [System.Object]
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
         $ContentMatchesDataModel,
 
         [Parameter()]
@@ -33455,6 +33690,10 @@ function Set-SupervisoryReviewRule
         [Parameter()]
         [System.Object]
         $CcsiDataModelOperator,
+
+        [Parameter()]
+        [System.Object]
+        $IncludeAdaptiveScopes,
 
         [Parameter()]
         [System.Object]
@@ -35892,6 +36131,57 @@ function Add-TeamUser
         $Role
     )
 }
+function Get-CsOnlineVoicemailPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Nullable`1[System.Guid]]
+        $Tenant,
+
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+function Get-CsTeamsMeetingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Nullable`1[System.Guid]]
+        $Tenant,
+
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+function Get-CsTeamsMessagingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Nullable`1[System.Guid]]
+        $Tenant,
+
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
 function Get-Team
 {
     [CmdletBinding()]
@@ -35949,6 +36239,513 @@ function Get-TeamUser
         [Parameter()]
         [System.String]
         $Role
+    )
+}
+function New-CsOnlineVoicemailPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableEditingCallAnswerRulesSetting,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTranscriptionProfanityMasking,
+
+        [Parameter()]
+        [System.String]
+        $PreambleAudioFile,
+
+        [Parameter()]
+        [System.String]
+        $ShareData,
+
+        [Parameter()]
+        [System.Nullable`1[System.Guid]]
+        $Tenant,
+
+        [Parameter()]
+        [System.String]
+        $SecondarySystemPromptLanguage,
+
+        [Parameter()]
+        [System.String]
+        $PrimarySystemPromptLanguage,
+
+        [Parameter()]
+        [System.Nullable`1[System.TimeSpan]]
+        $MaximumRecordingLength,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $PostambleAudioFile,
+
+        [Parameter()]
+        [System.Boolean]
+        $PreamblePostambleMandatory,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTranscription,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTranscriptionTranslation
+    )
+}
+function New-CsTeamsMeetingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TeamsCameraFarEndPTZMode,
+
+        [Parameter()]
+        [System.String]
+        $AllowTrackingInReport,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeetingCoach,
+
+        [Parameter()]
+        [System.String]
+        $DesignatedPresenterRoleMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAnnotations,
+
+        [Parameter()]
+        [System.String]
+        $AudibleRecordingNotification,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowIPAudio,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWhiteboard,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAnonymousUsersToDialOut,
+
+        [Parameter()]
+        [System.String]
+        $StreamingAttendeeMode,
+
+        [Parameter()]
+        [System.String]
+        $ExplicitRecordingConsent,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNetworkConfigurationSettingsLookup,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTranscription,
+
+        [Parameter()]
+        [System.String]
+        $ForceStreamingAttendeeMode,
+
+        [Parameter()]
+        [System.String]
+        $RoomAttributeUserOverride,
+
+        [Parameter()]
+        [System.String]
+        $RoomPeopleNameUserOverride,
+
+        [Parameter()]
+        [System.String]
+        $AllowUserToJoinExternalMeeting,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowExternalParticipantGiveRequestControl,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAnonymousUsersToStartMeeting,
+
+        [Parameter()]
+        [System.String]
+        $AutoAdmittedUsers,
+
+        [Parameter()]
+        [System.String]
+        $AllowTasksFromTranscript,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeetingRegistration,
+
+        [Parameter()]
+        [System.String]
+        $ChannelRecordingDownload,
+
+        [Parameter()]
+        [System.String]
+        $RecordingStorageMode,
+
+        [Parameter()]
+        [System.String]
+        $ScreenSharingMode,
+
+        [Parameter()]
+        [System.String]
+        $AllowCartCaptionsScheduling,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPrivateMeetNow,
+
+        [Parameter()]
+        [System.String]
+        $AllowEngagementReport,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWatermarkForCameraVideo,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWatermarkForScreenSharing,
+
+        [Parameter()]
+        [System.String]
+        $PreferredMeetingProviderForIslandsMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOrganizersToOverrideLobbySettings,
+
+        [Parameter()]
+        [System.String]
+        $LiveCaptionsEnabledType,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNDIStreaming,
+
+        [Parameter()]
+        [System.Nullable`1[System.Guid]]
+        $Tenant,
+
+        [Parameter()]
+        [System.String]
+        $IPAudioMode,
+
+        [Parameter()]
+        [System.String]
+        $AllowScreenContentDigitization,
+
+        [Parameter()]
+        [System.String]
+        $BlockedAnonymousJoinClientTypes,
+
+        [Parameter()]
+        [System.String]
+        $LiveInterpretationEnabledType,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int64]]
+        $NewMeetingRecordingExpirationDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeetNow,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAnonymousUsersToJoinMeeting,
+
+        [Parameter()]
+        [System.String]
+        $MeetingInviteLanguages,
+
+        [Parameter()]
+        [System.String]
+        $WhoCanRegister,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAvatarsInGallery,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCloudRecording,
+
+        [Parameter()]
+        [System.String]
+        $AllowedStreamingMediaInput,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowIPVideo,
+
+        [Parameter()]
+        [System.String]
+        $SpeakerAttributionMode,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowImmersiveView,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOutlookAddIn,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSharedNotes,
+
+        [Parameter()]
+        [System.String]
+        $MeetingChatEnabledType,
+
+        [Parameter()]
+        [System.String]
+        $QnAEngagementMode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowParticipantGiveRequestControl,
+
+        [Parameter()]
+        [System.Nullable`1[System.UInt32]]
+        $MediaBitRateKb,
+
+        [Parameter()]
+        [System.String]
+        $EnrollUserOverride,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPowerPointSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPrivateMeetingScheduling,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowChannelMeetingScheduling,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeetingReactions,
+
+        [Parameter()]
+        [System.String]
+        $VideoFiltersMode,
+
+        [Parameter()]
+        [System.String]
+        $InfoShownInReportMode,
+
+        [Parameter()]
+        [System.String]
+        $LiveStreamingMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBreakoutRooms,
+
+        [Parameter()]
+        [System.String]
+        $AllowDocumentCollaboration,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRecordingStorageOutsideRegion,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPSTNUsersToBypassLobby,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCarbonSummary,
+
+        [Parameter()]
+        [System.String]
+        $IPVideoMode
+    )
+}
+function New-CsTeamsMessagingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Nullable`1[System.Guid]]
+        $Tenant,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOwnerDeleteMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSmartReply,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserChat,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGiphy,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserDeleteMessage,
+
+        [Parameter()]
+        [System.String]
+        $ChannelsInChatListEnabledType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowStickers,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSmartCompose,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowFullChatPermissionUserToDeleteAnyMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUrlPreviews,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGiphyDisplay,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowChatWithGroup,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCommunicationComplianceEndUserReporting,
+
+        [Parameter()]
+        [System.String]
+        $ChatPermissionRole,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowImmersiveReader,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserTranslation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserEditMessage,
+
+        [Parameter()]
+        [System.String]
+        $AudioMessageEnabledType,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRemoveUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPasteInternetImage,
+
+        [Parameter()]
+        [System.String]
+        $ReadReceiptsEnabledType,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMemes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowFluidCollaborate,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSecurityEndUserReporting,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPriorityMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVideoMessages,
+
+        [Parameter()]
+        [System.String]
+        $GiphyRatingType,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserDeleteChat
     )
 }
 function New-Team
@@ -36089,6 +36886,69 @@ function New-TeamChannel
         $GroupId
     )
 }
+function Remove-CsOnlineVoicemailPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Nullable`1[System.Guid]]
+        $Tenant
+    )
+}
+function Remove-CsTeamsMeetingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Nullable`1[System.Guid]]
+        $Tenant
+    )
+}
+function Remove-CsTeamsMessagingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Nullable`1[System.Guid]]
+        $Tenant
+    )
+}
 function Remove-Team
 {
     [CmdletBinding()]
@@ -36126,6 +36986,513 @@ function Remove-TeamUser
         [Parameter()]
         [System.String]
         $Role
+    )
+}
+function Set-CsOnlineVoicemailPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableEditingCallAnswerRulesSetting,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTranscriptionProfanityMasking,
+
+        [Parameter()]
+        [System.String]
+        $PreambleAudioFile,
+
+        [Parameter()]
+        [System.String]
+        $ShareData,
+
+        [Parameter()]
+        [System.Nullable`1[System.Guid]]
+        $Tenant,
+
+        [Parameter()]
+        [System.String]
+        $SecondarySystemPromptLanguage,
+
+        [Parameter()]
+        [System.String]
+        $PrimarySystemPromptLanguage,
+
+        [Parameter()]
+        [System.Nullable`1[System.TimeSpan]]
+        $MaximumRecordingLength,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $PostambleAudioFile,
+
+        [Parameter()]
+        [System.Boolean]
+        $PreamblePostambleMandatory,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTranscription,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTranscriptionTranslation
+    )
+}
+function Set-CsTeamsMeetingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TeamsCameraFarEndPTZMode,
+
+        [Parameter()]
+        [System.String]
+        $AllowTrackingInReport,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeetingCoach,
+
+        [Parameter()]
+        [System.String]
+        $DesignatedPresenterRoleMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAnnotations,
+
+        [Parameter()]
+        [System.String]
+        $AudibleRecordingNotification,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowIPAudio,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWhiteboard,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAnonymousUsersToDialOut,
+
+        [Parameter()]
+        [System.String]
+        $StreamingAttendeeMode,
+
+        [Parameter()]
+        [System.String]
+        $ExplicitRecordingConsent,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNetworkConfigurationSettingsLookup,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTranscription,
+
+        [Parameter()]
+        [System.String]
+        $ForceStreamingAttendeeMode,
+
+        [Parameter()]
+        [System.String]
+        $RoomAttributeUserOverride,
+
+        [Parameter()]
+        [System.String]
+        $RoomPeopleNameUserOverride,
+
+        [Parameter()]
+        [System.String]
+        $AllowUserToJoinExternalMeeting,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowExternalParticipantGiveRequestControl,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAnonymousUsersToStartMeeting,
+
+        [Parameter()]
+        [System.String]
+        $AutoAdmittedUsers,
+
+        [Parameter()]
+        [System.String]
+        $AllowTasksFromTranscript,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeetingRegistration,
+
+        [Parameter()]
+        [System.String]
+        $ChannelRecordingDownload,
+
+        [Parameter()]
+        [System.String]
+        $RecordingStorageMode,
+
+        [Parameter()]
+        [System.String]
+        $ScreenSharingMode,
+
+        [Parameter()]
+        [System.String]
+        $AllowCartCaptionsScheduling,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPrivateMeetNow,
+
+        [Parameter()]
+        [System.String]
+        $AllowEngagementReport,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWatermarkForCameraVideo,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWatermarkForScreenSharing,
+
+        [Parameter()]
+        [System.String]
+        $PreferredMeetingProviderForIslandsMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOrganizersToOverrideLobbySettings,
+
+        [Parameter()]
+        [System.String]
+        $LiveCaptionsEnabledType,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNDIStreaming,
+
+        [Parameter()]
+        [System.Nullable`1[System.Guid]]
+        $Tenant,
+
+        [Parameter()]
+        [System.String]
+        $IPAudioMode,
+
+        [Parameter()]
+        [System.String]
+        $AllowScreenContentDigitization,
+
+        [Parameter()]
+        [System.String]
+        $BlockedAnonymousJoinClientTypes,
+
+        [Parameter()]
+        [System.String]
+        $LiveInterpretationEnabledType,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int64]]
+        $NewMeetingRecordingExpirationDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeetNow,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAnonymousUsersToJoinMeeting,
+
+        [Parameter()]
+        [System.String]
+        $MeetingInviteLanguages,
+
+        [Parameter()]
+        [System.String]
+        $WhoCanRegister,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAvatarsInGallery,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCloudRecording,
+
+        [Parameter()]
+        [System.String]
+        $AllowedStreamingMediaInput,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowIPVideo,
+
+        [Parameter()]
+        [System.String]
+        $SpeakerAttributionMode,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowImmersiveView,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOutlookAddIn,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSharedNotes,
+
+        [Parameter()]
+        [System.String]
+        $MeetingChatEnabledType,
+
+        [Parameter()]
+        [System.String]
+        $QnAEngagementMode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowParticipantGiveRequestControl,
+
+        [Parameter()]
+        [System.Nullable`1[System.UInt32]]
+        $MediaBitRateKb,
+
+        [Parameter()]
+        [System.String]
+        $EnrollUserOverride,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPowerPointSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPrivateMeetingScheduling,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowChannelMeetingScheduling,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeetingReactions,
+
+        [Parameter()]
+        [System.String]
+        $VideoFiltersMode,
+
+        [Parameter()]
+        [System.String]
+        $InfoShownInReportMode,
+
+        [Parameter()]
+        [System.String]
+        $LiveStreamingMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBreakoutRooms,
+
+        [Parameter()]
+        [System.String]
+        $AllowDocumentCollaboration,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRecordingStorageOutsideRegion,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPSTNUsersToBypassLobby,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCarbonSummary,
+
+        [Parameter()]
+        [System.String]
+        $IPVideoMode
+    )
+}
+function Set-CsTeamsMessagingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Nullable`1[System.Guid]]
+        $Tenant,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOwnerDeleteMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSmartReply,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserChat,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGiphy,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserDeleteMessage,
+
+        [Parameter()]
+        [System.String]
+        $ChannelsInChatListEnabledType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowStickers,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSmartCompose,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowFullChatPermissionUserToDeleteAnyMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUrlPreviews,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGiphyDisplay,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowChatWithGroup,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCommunicationComplianceEndUserReporting,
+
+        [Parameter()]
+        [System.String]
+        $ChatPermissionRole,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowImmersiveReader,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserTranslation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserEditMessage,
+
+        [Parameter()]
+        [System.String]
+        $AudioMessageEnabledType,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRemoveUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPasteInternetImage,
+
+        [Parameter()]
+        [System.String]
+        $ReadReceiptsEnabledType,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMemes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowFluidCollaborate,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSecurityEndUserReporting,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPriorityMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVideoMessages,
+
+        [Parameter()]
+        [System.String]
+        $GiphyRatingType,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserDeleteChat
     )
 }
 function Set-Team
@@ -36248,6 +37615,23 @@ function Set-TeamChannel
         [Parameter()]
         [System.String]
         $NewDisplayName
+    )
+}
+function Get-CsOnlineDialInConferencingTenantSettings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
     )
 }
 function Get-CsOnlineLisLocation
@@ -36400,23 +37784,6 @@ function Get-CsOnlineUser
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $UsePreferredDC
-    )
-}
-function Get-CsOnlineVoicemailPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
     )
 }
 function Get-CsOnlineVoicemailUserSettings
@@ -36743,40 +38110,6 @@ function Get-CsTeamsMeetingConfiguration
         $MsftInternalProcessingMode
     )
 }
-function Get-CsTeamsMeetingPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
-    )
-}
-function Get-CsTeamsMessagingPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
-    )
-}
 function Get-CsTeamsUpdateManagementPolicy
 {
     [CmdletBinding()]
@@ -36955,55 +38288,6 @@ function Grant-CsTeamsUpgradePolicy
         [Parameter()]
         [System.String]
         $Group,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
-    )
-}
-function New-CsOnlineVoicemailPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $PrimarySystemPromptLanguage,
-
-        [Parameter()]
-        [System.String]
-        $ShareData,
-
-        [Parameter()]
-        [System.TimeSpan]
-        $MaximumRecordingLength,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableTranscription,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableEditingCallAnswerRulesSetting,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableTranscriptionProfanityMasking,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableTranscriptionTranslation,
-
-        [Parameter()]
-        [System.String]
-        $SecondarySystemPromptLanguage,
 
         [Parameter()]
         [System.String]
@@ -37391,416 +38675,6 @@ function New-CsTeamsMeetingBroadcastPolicy
         $Confirm
     )
 }
-function New-CsTeamsMeetingPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $TeamsCameraFarEndPTZMode,
-
-        [Parameter()]
-        [System.String]
-        $AllowTrackingInReport,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowMeetingCoach,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowMeetNow,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowIPAudio,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowWhiteboard,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowAnonymousUsersToDialOut,
-
-        [Parameter()]
-        [System.String]
-        $StreamingAttendeeMode,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowAnnotations,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowNetworkConfigurationSettingsLookup,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowTranscription,
-
-        [Parameter()]
-        [System.String]
-        $RoomAttributeUserOverride,
-
-        [Parameter()]
-        [System.String]
-        $RoomPeopleNameUserOverride,
-
-        [Parameter()]
-        [System.String]
-        $AllowUserToJoinExternalMeeting,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowExternalParticipantGiveRequestControl,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowAnonymousUsersToStartMeeting,
-
-        [Parameter()]
-        [System.String]
-        $AutoAdmittedUsers,
-
-        [Parameter()]
-        [System.String]
-        $AllowTasksFromTranscript,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowMeetingRegistration,
-
-        [Parameter()]
-        [System.String]
-        $ChannelRecordingDownload,
-
-        [Parameter()]
-        [System.String]
-        $RecordingStorageMode,
-
-        [Parameter()]
-        [System.String]
-        $ScreenSharingMode,
-
-        [Parameter()]
-        [System.String]
-        $AllowCartCaptionsScheduling,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowPrivateMeetNow,
-
-        [Parameter()]
-        [System.String]
-        $AllowEngagementReport,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowWatermarkForCameraVideo,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowWatermarkForScreenSharing,
-
-        [Parameter()]
-        [System.String]
-        $PreferredMeetingProviderForIslandsMode,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowOrganizersToOverrideLobbySettings,
-
-        [Parameter()]
-        [System.String]
-        $LiveCaptionsEnabledType,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowNDIStreaming,
-
-        [Parameter()]
-        [System.String]
-        $IPAudioMode,
-
-        [Parameter()]
-        [System.String]
-        $AllowScreenContentDigitization,
-
-        [Parameter()]
-        [System.String]
-        $BlockedAnonymousJoinClientTypes,
-
-        [Parameter()]
-        [System.String]
-        $LiveInterpretationEnabledType,
-
-        [Parameter()]
-        [System.Int64]
-        $NewMeetingRecordingExpirationDays,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowAnonymousUsersToJoinMeeting,
-
-        [Parameter()]
-        [System.String]
-        $MeetingInviteLanguages,
-
-        [Parameter()]
-        [System.String]
-        $WhoCanRegister,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowAvatarsInGallery,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCloudRecording,
-
-        [Parameter()]
-        [System.String]
-        $AllowedStreamingMediaInput,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowIPVideo,
-
-        [Parameter()]
-        [System.String]
-        $SpeakerAttributionMode,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowImmersiveView,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowOutlookAddIn,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.String]
-        $DesignatedPresenterRoleMode,
-
-        [Parameter()]
-        [System.String]
-        $MeetingChatEnabledType,
-
-        [Parameter()]
-        [System.String]
-        $QnAEngagementMode,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowSharedNotes,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowParticipantGiveRequestControl,
-
-        [Parameter()]
-        [System.UInt32]
-        $MediaBitRateKb,
-
-        [Parameter()]
-        [System.String]
-        $EnrollUserOverride,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowPowerPointSharing,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowPrivateMeetingScheduling,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowChannelMeetingScheduling,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowMeetingReactions,
-
-        [Parameter()]
-        [System.String]
-        $VideoFiltersMode,
-
-        [Parameter()]
-        [System.String]
-        $InfoShownInReportMode,
-
-        [Parameter()]
-        [System.String]
-        $LiveStreamingMode,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBreakoutRooms,
-
-        [Parameter()]
-        [System.String]
-        $AllowDocumentCollaboration,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowRecordingStorageOutsideRegion,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowPSTNUsersToBypassLobby,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCarbonSummary,
-
-        [Parameter()]
-        [System.String]
-        $IPVideoMode
-    )
-}
-function New-CsTeamsMessagingPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Boolean]
-        $AllowOwnerDeleteMessage,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowSmartReply,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserChat,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowGiphy,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserDeleteMessage,
-
-        [Parameter()]
-        [System.String]
-        $ChannelsInChatListEnabledType,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowStickers,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowFullChatPermissionUserToDeleteAnyMessage,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUrlPreviews,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowGiphyDisplay,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCommunicationComplianceEndUserReporting,
-
-        [Parameter()]
-        [System.String]
-        $ChatPermissionRole,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowImmersiveReader,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserTranslation,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserEditMessage,
-
-        [Parameter()]
-        [System.String]
-        $AudioMessageEnabledType,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowRemoveUser,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowPasteInternetImage,
-
-        [Parameter()]
-        [System.String]
-        $ReadReceiptsEnabledType,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowMemes,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowFluidCollaborate,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowPriorityMessages,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowVideoMessages,
-
-        [Parameter()]
-        [System.String]
-        $GiphyRatingType,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowSmartCompose,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserDeleteChat
-    )
-}
 function New-CsTeamsUpdateManagementPolicy
 {
     [CmdletBinding()]
@@ -37930,23 +38804,6 @@ function New-CsVoiceNormalizationRule
         [Parameter()]
         [System.Boolean]
         $IsInternalExtension
-    )
-}
-function Remove-CsOnlineVoicemailPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
     )
 }
 function Remove-CsOnlineVoiceRoute
@@ -38110,40 +38967,6 @@ function Remove-CsTeamsMeetingBroadcastPolicy
         $MsftInternalProcessingMode
     )
 }
-function Remove-CsTeamsMeetingPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
-    )
-}
-function Remove-CsTeamsMessagingPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
-    )
-}
 function Remove-CsTeamsUpdateManagementPolicy
 {
     [CmdletBinding()]
@@ -38178,6 +39001,99 @@ function Remove-CsTenantDialPlan
         $MsftInternalProcessingMode
     )
 }
+function Set-CsOnlineDialInConferencingTenantSettings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeTollFreeNumberInMeetingInvites,
+
+        [Parameter()]
+        [System.String]
+        $EntryExitAnnouncementsType,
+
+        [Parameter()]
+        [System.Boolean]
+        $MigrateServiceNumbersOnCrossForestMove,
+
+        [Parameter()]
+        [System.Object]
+        $AllowedDialOutExternalDomains,
+
+        [Parameter()]
+        [System.Boolean]
+        $AutomaticallyReplaceAcpProvider,
+
+        [Parameter()]
+        [System.String]
+        $AllowFederatedUsersToDialOutToSelf,
+
+        [Parameter()]
+        [System.String]
+        $SendEmailFromAddress,
+
+        [Parameter()]
+        [System.Boolean]
+        $SendEmailFromOverride,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableNameRecording,
+
+        [Parameter()]
+        [System.Boolean]
+        $AutomaticallyMigrateUserMeetings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.UInt32]
+        $PinLength,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseUniqueConferenceIds,
+
+        [Parameter()]
+        [System.Boolean]
+        $AutomaticallySendEmailsToUsers,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPSTNOnlyMeetingsByDefault,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableEntryExitNotifications,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableDialOutJoinConfirmation,
+
+        [Parameter()]
+        [System.String]
+        $AllowFederatedUsersToDialOutToThirdParty,
+
+        [Parameter()]
+        [System.String]
+        $SendEmailFromDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $MaskPstnNumbersType
+    )
+}
 function Set-CsOnlinePstnUsage
 {
     [CmdletBinding()]
@@ -38193,55 +39109,6 @@ function Set-CsOnlinePstnUsage
         [Parameter()]
         [System.String]
         $Identity,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
-    )
-}
-function Set-CsOnlineVoicemailPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $PrimarySystemPromptLanguage,
-
-        [Parameter()]
-        [System.String]
-        $ShareData,
-
-        [Parameter()]
-        [System.TimeSpan]
-        $MaximumRecordingLength,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableTranscription,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableEditingCallAnswerRulesSetting,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableTranscriptionProfanityMasking,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableTranscriptionTranslation,
-
-        [Parameter()]
-        [System.String]
-        $SecondarySystemPromptLanguage,
 
         [Parameter()]
         [System.String]
@@ -38810,6 +39677,10 @@ function Set-CsTeamsGuestMessagingConfiguration
 
         [Parameter()]
         [System.Boolean]
+        $AllowUserDeleteMessage,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowGiphy,
 
         [Parameter()]
@@ -38819,10 +39690,6 @@ function Set-CsTeamsGuestMessagingConfiguration
         [Parameter()]
         [System.Boolean]
         $AllowUserEditMessage,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserDeleteMessage,
 
         [Parameter()]
         [System.String]
@@ -38871,6 +39738,10 @@ function Set-CsTeamsMeetingBroadcastConfiguration
 
         [Parameter()]
         [System.String]
+        $SdnLicenseId,
+
+        [Parameter()]
+        [System.String]
         $SupportURL,
 
         [Parameter()]
@@ -38883,11 +39754,7 @@ function Set-CsTeamsMeetingBroadcastConfiguration
 
         [Parameter()]
         [System.String]
-        $SdnApiTemplateUrl,
-
-        [Parameter()]
-        [System.String]
-        $SdnLicenseId
+        $SdnApiTemplateUrl
     )
 }
 function Set-CsTeamsMeetingBroadcastPolicy
@@ -39000,416 +39867,6 @@ function Set-CsTeamsMeetingConfiguration
         $LegalURL
     )
 }
-function Set-CsTeamsMeetingPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $TeamsCameraFarEndPTZMode,
-
-        [Parameter()]
-        [System.String]
-        $AllowTrackingInReport,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowMeetingCoach,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowMeetNow,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowIPAudio,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowWhiteboard,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowAnonymousUsersToDialOut,
-
-        [Parameter()]
-        [System.String]
-        $StreamingAttendeeMode,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowAnnotations,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowNetworkConfigurationSettingsLookup,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowTranscription,
-
-        [Parameter()]
-        [System.String]
-        $RoomAttributeUserOverride,
-
-        [Parameter()]
-        [System.String]
-        $RoomPeopleNameUserOverride,
-
-        [Parameter()]
-        [System.String]
-        $AllowUserToJoinExternalMeeting,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowExternalParticipantGiveRequestControl,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowAnonymousUsersToStartMeeting,
-
-        [Parameter()]
-        [System.String]
-        $AutoAdmittedUsers,
-
-        [Parameter()]
-        [System.String]
-        $AllowTasksFromTranscript,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowMeetingRegistration,
-
-        [Parameter()]
-        [System.String]
-        $ChannelRecordingDownload,
-
-        [Parameter()]
-        [System.String]
-        $RecordingStorageMode,
-
-        [Parameter()]
-        [System.String]
-        $ScreenSharingMode,
-
-        [Parameter()]
-        [System.String]
-        $AllowCartCaptionsScheduling,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowPrivateMeetNow,
-
-        [Parameter()]
-        [System.String]
-        $AllowEngagementReport,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowWatermarkForCameraVideo,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowWatermarkForScreenSharing,
-
-        [Parameter()]
-        [System.String]
-        $PreferredMeetingProviderForIslandsMode,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowOrganizersToOverrideLobbySettings,
-
-        [Parameter()]
-        [System.String]
-        $LiveCaptionsEnabledType,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowNDIStreaming,
-
-        [Parameter()]
-        [System.String]
-        $IPAudioMode,
-
-        [Parameter()]
-        [System.String]
-        $AllowScreenContentDigitization,
-
-        [Parameter()]
-        [System.String]
-        $BlockedAnonymousJoinClientTypes,
-
-        [Parameter()]
-        [System.String]
-        $LiveInterpretationEnabledType,
-
-        [Parameter()]
-        [System.Int64]
-        $NewMeetingRecordingExpirationDays,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowAnonymousUsersToJoinMeeting,
-
-        [Parameter()]
-        [System.String]
-        $MeetingInviteLanguages,
-
-        [Parameter()]
-        [System.String]
-        $WhoCanRegister,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowAvatarsInGallery,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCloudRecording,
-
-        [Parameter()]
-        [System.String]
-        $AllowedStreamingMediaInput,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowIPVideo,
-
-        [Parameter()]
-        [System.String]
-        $SpeakerAttributionMode,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowImmersiveView,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowOutlookAddIn,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.String]
-        $DesignatedPresenterRoleMode,
-
-        [Parameter()]
-        [System.String]
-        $MeetingChatEnabledType,
-
-        [Parameter()]
-        [System.String]
-        $QnAEngagementMode,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowSharedNotes,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowParticipantGiveRequestControl,
-
-        [Parameter()]
-        [System.UInt32]
-        $MediaBitRateKb,
-
-        [Parameter()]
-        [System.String]
-        $EnrollUserOverride,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowPowerPointSharing,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowPrivateMeetingScheduling,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowChannelMeetingScheduling,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowMeetingReactions,
-
-        [Parameter()]
-        [System.String]
-        $VideoFiltersMode,
-
-        [Parameter()]
-        [System.String]
-        $InfoShownInReportMode,
-
-        [Parameter()]
-        [System.String]
-        $LiveStreamingMode,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBreakoutRooms,
-
-        [Parameter()]
-        [System.String]
-        $AllowDocumentCollaboration,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowRecordingStorageOutsideRegion,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowPSTNUsersToBypassLobby,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCarbonSummary,
-
-        [Parameter()]
-        [System.String]
-        $IPVideoMode
-    )
-}
-function Set-CsTeamsMessagingPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Boolean]
-        $AllowOwnerDeleteMessage,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowSmartReply,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserChat,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowGiphy,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserDeleteMessage,
-
-        [Parameter()]
-        [System.String]
-        $ChannelsInChatListEnabledType,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowStickers,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowFullChatPermissionUserToDeleteAnyMessage,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUrlPreviews,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowGiphyDisplay,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCommunicationComplianceEndUserReporting,
-
-        [Parameter()]
-        [System.String]
-        $ChatPermissionRole,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowImmersiveReader,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserTranslation,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserEditMessage,
-
-        [Parameter()]
-        [System.String]
-        $AudioMessageEnabledType,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowRemoveUser,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowPasteInternetImage,
-
-        [Parameter()]
-        [System.String]
-        $ReadReceiptsEnabledType,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowMemes,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowFluidCollaborate,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowPriorityMessages,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowVideoMessages,
-
-        [Parameter()]
-        [System.String]
-        $GiphyRatingType,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowSmartCompose,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserDeleteChat
-    )
-}
 function Set-CsTeamsUpdateManagementPolicy
 {
     [CmdletBinding()]
@@ -39460,10 +39917,6 @@ function Set-CsTeamsUpgradeConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $SfBMeetingJoinUx,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
@@ -39474,6 +39927,10 @@ function Set-CsTeamsUpgradeConfiguration
         [Parameter()]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [System.String]
+        $SfBMeetingJoinUx,
 
         [Parameter()]
         [System.String]
@@ -39522,16 +39979,12 @@ function Set-CsTenantFederationConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Boolean]
+        $AllowTeamsConsumerInbound,
 
         [Parameter()]
         [System.Boolean]
         $SharedSipAddressSpace,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowTeamsConsumerInbound,
 
         [Parameter()]
         [System.Object]
@@ -39540,6 +39993,10 @@ function Set-CsTenantFederationConfiguration
         [Parameter()]
         [System.Boolean]
         $TreatDiscoveredPartnersAsUnverified,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Boolean]

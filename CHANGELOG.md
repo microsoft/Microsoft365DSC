@@ -1,10 +1,16 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASE
+# 1.22.1102.1
+
+* AADAdministrativeUnit
+  * Initial Release.
 * AADEntitlementManagementAccessPackageCatalogResource
   * Initial release;
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 4.9.0;
 
 # 1.22.1026.2
+
 * MISC
   * Fixes an issue with the export where the ApplicationSecret was throwing an empty string error when trying to authenticate with Certificate thumbprint.
     * FIXES [#2455](https://github.com/microsoft/Microsoft365DSC/issues/2455)

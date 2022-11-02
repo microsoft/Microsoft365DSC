@@ -1,0 +1,26 @@
+[ClassVersion("1.0.0")]
+class MSFT_AADAdministrativeUnitMember
+{
+    [Write, Description("User or Group Principal name.")] String Name;
+    [Write, Description("Member type. Valid values are: Group or User."), ValueMap{"Group", "User"}, Values{"Group", "User"}] String Type;
+};
+
+[ClassVersion("1.0.0.0"), FriendlyName("AADAdministrativeUnit")]
+class MSFT_AADAdministrativeUnit : OMI_BaseResource
+{
+    [Key, Description("Display name for the administrative unit.")] String DisplayName;
+    [Write, Description("An optional description for the administrative unit.")] string Description;
+    [Write, Description("Unique identifier for the administrative unit.")] string Id;
+    [Write, Description("Dynamic membership rule for the administrative unit.")] string MembershipRule;
+    [Write, Description("Membership type for the administrative unit. Can be dynamic or assigned."), ValueMap{"Assigned","Dynamic"}, Values{"Assigned","Dynamic"}] string MembershipType;
+    [Write, Description("Membership type for the administrative unit. Can be dynamic or assigned."), ValueMap{"On","Paused"}, Values{"On","Paused"}] string MembershipRuleProcessingState;
+    [Write, Description("Users and groups that are members of this administrative unit."), EmbeddedInstance("MSFT_AADAdministrativeUnitMember")] String Members[];
+    [Write, Description("Controls whether the administrative unit and its members are hidden or public. Can be set to HiddenMembership. If not set (value is null), the default behavior is public. When set to HiddenMembership, only members of the administrative unit can list other members of the administrative unit.")] string Visibility;
+    [Write, Description("Specify if the Azure AD Administrative Unit should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Credentials of the Azure AD Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Secret of the Azure Active Directory application to authenticate with."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+};
