@@ -316,6 +316,8 @@ function Get-TargetResource
         {
             $policy.add($param, (Get-Variable -Name $param).value)
         }
+        # fix for managed identity credential value
+        $policy.add('ManagedIdentity', $ManagedIdentity.IsPresent)
         # add complex parameters manually as they all have different requirements - potential to change in future
         $policy.add('Ensure', 'Present')
         $policy.add('Apps', $appsArray)
@@ -1079,7 +1081,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -1305,7 +1307,7 @@ function get-InputParameters
         Apps                                            = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
         Assignments                                     = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
         CertificateThumbprint                           = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
-        Managedidentity                                 = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
+        Managedidentity                                 = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
         ContactSyncBlocked                              = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
         Credential                                      = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
         CustomBrowserDisplayName                        = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
