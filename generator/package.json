@@ -58,7 +58,7 @@
   },
   "devDependencies": {
     "@types/react-router-dom": "^5.1.7",
-    "node-sass": "^5.0.0",
+    "node-sass": "6.0.1",
     "prettier": "^2.2.1",
     "postcss": "7.0.36"
   }
