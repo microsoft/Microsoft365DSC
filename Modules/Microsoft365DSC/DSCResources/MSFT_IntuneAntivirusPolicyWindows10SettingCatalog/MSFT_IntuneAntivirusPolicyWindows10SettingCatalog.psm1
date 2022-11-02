@@ -95,8 +95,61 @@ function Get-TargetResource
         $cloudextendedtimeout,
 
         [Parameter()]
+        [System.String]
+        $companyname,
+
+        [Parameter()]
         [System.Int32]
         $daystoretaincleanedmalware,
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disableaccountprotectionui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disableappbrowserui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablecleartpmbutton,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disabledevicesecurityui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disableenhancednotifications,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablefamilyui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablehealthui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablenetworkui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disabletpmfirmwareupdatewarning,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablevirusui,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -107,6 +160,20 @@ function Get-TargetResource
         [ValidateSet('0', '1')]
         [System.String]
         $disablecatchupquickscan,
+
+        [Parameter()]
+        [System.String]
+        $email,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $enablecustomizedtoasts,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $enableinappcustomization,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -129,6 +196,20 @@ function Get-TargetResource
         [Parameter()]
         [System.String[]]
         $excludedprocesses,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $hideransomwaredatarecovery,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $hidewindowssecuritynotificationareacontrol,
+
+        [Parameter()]
+        [System.String]
+        $phone,
 
         [Parameter()]
         [ValidateSet('0', '1', '2')]
@@ -178,6 +259,15 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
+        $tamperprotection,
+
+        [Parameter()]
+        [System.String]
+        $url,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
         $disablelocaladminmerge,
 
         [Parameter()]
@@ -204,6 +294,11 @@ function Get-TargetResource
         [ValidateSet('clean', 'quarantine', 'remove', 'allow', 'userdefined', 'block')]
         [System.String]
         $highseveritythreats,
+
+        [Parameter()]
+        [ValidateSet('d948ff9b-99cb-4ee0-8012-1fbc09685377_1', '45fea5e9-280d-4da1-9792-fb5736da0ca9_1','804339ad-1553-4478-a742-138fb5807418_1')]
+        [System.String]
+        $templateId,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -266,7 +361,7 @@ function Get-TargetResource
         #Retrieve policy general settings
         $policy = Get-MgDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction SilentlyContinue
 
-        if ($null -eq $policy)
+        <#if ($null -eq $policy)
         {
             Write-Verbose -Message "No Endpoint Protection Policy {$Identity} was found"
 
@@ -274,11 +369,11 @@ function Get-TargetResource
             $policy = Get-MgDeviceManagementConfigurationPolicy -All:$true |Where-Object -FilterScript { `
                             $_.name -eq $DisplayName `
                             -and $_.TemplateReference.TemplateId -eq $policyTemplateId }
-        }
+        }#>
 
         if ($null -eq $policy)
         {
-            Write-Verbose -Message "No Endpoint Protection Policy {$DisplayName} was found"
+            Write-Verbose -Message "No Endpoint Protection Policy with Id {$Identity} was found"
             return $nullResult
         }
 
@@ -291,11 +386,16 @@ function Get-TargetResource
         $returnHashtable.Add('Identity', $policy.id)
         $returnHashtable.Add('DisplayName', $policy.name)
         $returnHashtable.Add('Description', $policy.description)
+        $returnHashtable.Add('templateId', $policy.templateReference.templateId)
 
         foreach ($setting in $settings.settingInstance)
         {
             $addToParameters = $true
             $settingName = $setting.settingDefinitionId.Split('_') | Select-Object -Last 1
+            if ($settingName -eq 'options')
+            {
+                $settingName='tamperprotection'
+            }
 
             switch ($setting.AdditionalProperties.'@odata.type')
             {
@@ -473,8 +573,61 @@ function Set-TargetResource
         $cloudextendedtimeout,
 
         [Parameter()]
+        [System.String]
+        $companyname,
+
+        [Parameter()]
         [System.Int32]
         $daystoretaincleanedmalware,
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disableaccountprotectionui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disableappbrowserui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablecleartpmbutton,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disabledevicesecurityui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disableenhancednotifications,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablefamilyui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablehealthui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablenetworkui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disabletpmfirmwareupdatewarning,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablevirusui,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -485,6 +638,20 @@ function Set-TargetResource
         [ValidateSet('0', '1')]
         [System.String]
         $disablecatchupquickscan,
+
+        [Parameter()]
+        [System.String]
+        $email,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $enablecustomizedtoasts,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $enableinappcustomization,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -507,6 +674,20 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $excludedprocesses,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $hideransomwaredatarecovery,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $hidewindowssecuritynotificationareacontrol,
+
+        [Parameter()]
+        [System.String]
+        $phone,
 
         [Parameter()]
         [ValidateSet('0', '1', '2')]
@@ -556,6 +737,15 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
+        $tamperprotection,
+
+        [Parameter()]
+        [System.String]
+        $url,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
         $disablelocaladminmerge,
 
         [Parameter()]
@@ -582,6 +772,11 @@ function Set-TargetResource
         [ValidateSet('clean', 'quarantine', 'remove', 'allow', 'userdefined', 'block')]
         [System.String]
         $highseveritythreats,
+
+        [Parameter()]
+        [ValidateSet('d948ff9b-99cb-4ee0-8012-1fbc09685377_1', '45fea5e9-280d-4da1-9792-fb5736da0ca9_1','804339ad-1553-4478-a742-138fb5807418_1')]
+        [System.String]
+        $templateId,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -642,8 +837,11 @@ function Set-TargetResource
     $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
+    $PSBoundParameters.Remove('templateId') | Out-Null
 
-    $templateReferenceId = '804339ad-1553-4478-a742-138fb5807418_1'
+
+    #$policyReference = Get-MgDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction Stop
+    $templateReferenceId =$templateId
     $platforms = 'windows10'
     $technologies = 'mdm,microsoftSense'
 
@@ -802,8 +1000,61 @@ function Test-TargetResource
         $cloudextendedtimeout,
 
         [Parameter()]
+        [System.String]
+        $companyname,
+
+        [Parameter()]
         [System.Int32]
         $daystoretaincleanedmalware,
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disableaccountprotectionui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disableappbrowserui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablecleartpmbutton,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disabledevicesecurityui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disableenhancednotifications,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablefamilyui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablehealthui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablenetworkui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disabletpmfirmwareupdatewarning,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablevirusui,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -814,6 +1065,20 @@ function Test-TargetResource
         [ValidateSet('0', '1')]
         [System.String]
         $disablecatchupquickscan,
+
+        [Parameter()]
+        [System.String]
+        $email,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $enablecustomizedtoasts,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $enableinappcustomization,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -836,6 +1101,20 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $excludedprocesses,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $hideransomwaredatarecovery,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $hidewindowssecuritynotificationareacontrol,
+
+        [Parameter()]
+        [System.String]
+        $phone,
 
         [Parameter()]
         [ValidateSet('0', '1', '2')]
@@ -885,6 +1164,15 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
+        $tamperprotection,
+
+        [Parameter()]
+        [System.String]
+        $url,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
         $disablelocaladminmerge,
 
         [Parameter()]
@@ -911,6 +1199,11 @@ function Test-TargetResource
         [ValidateSet('clean', 'quarantine', 'remove', 'allow', 'userdefined', 'block')]
         [System.String]
         $highseveritythreats,
+
+        [Parameter()]
+        [ValidateSet('d948ff9b-99cb-4ee0-8012-1fbc09685377_1', '45fea5e9-280d-4da1-9792-fb5736da0ca9_1','804339ad-1553-4478-a742-138fb5807418_1')]
+        [System.String]
+        $templateId,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -1102,12 +1395,12 @@ function Export-TargetResource
 
     try
     {
-        $policyTemplateID = '804339ad-1553-4478-a742-138fb5807418_1'
+        $templateFamily = 'endpointSecurityAntivirus'
         [array]$policies = Get-MgDeviceManagementConfigurationPolicy `
             -ErrorAction Stop `
             -All:$true `
             -Filter $Filter
-        $policies = $policies | Where-Object -FilterScript { $_.TemplateReference.TemplateId -eq $policyTemplateId }
+        $policies = $policies | Where-Object -FilterScript { $_.TemplateReference.TemplateFamily -eq $templateFamily }
 
         if ($policies.Length -eq 0)
         {
@@ -1123,6 +1416,7 @@ function Export-TargetResource
 
             $params = @{
                 Identity              = $policy.id
+                TemplateId            = $policy.templateReference.templateId
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -1568,15 +1862,35 @@ function Format-M365DSCIntuneSettingCatalogPolicySettings
     $simpleSettings=@()
     $simpleSettings+=$templateSettings.SettingInstanceTemplate|Where-Object -FilterScript `
             {$_.AdditionalProperties."@odata.type" -ne "#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstanceTemplate"}
+
+    $keys=$DSCParams.keys
+    $keys=$keys -replace 'tamperprotection', 'options'
     foreach ($templateSetting in $simpleSettings)
     {
         $setting=@{}
-        $settingKey=$DSCParams.keys|Where-Object -FilterScript {$templateSetting.settingDefinitionId -like "*$($_)"}
-        if((-not [String]::IsNullOrEmpty($settingKey)) -and $DSCParams."$settingKey")
+        $settingKey=$keys|Where-Object -FilterScript {$templateSetting.settingDefinitionId -like "*$($_)"}
+        $originalKey=$settingKey
+        if($settingKey -eq 'options')
+        {
+            $originalKey='tamperprotection'
+        }
+        if((-not [String]::IsNullOrEmpty($settingKey)) -and $null -ne $DSCParams."$originalKey")
         {
             $setting.add("@odata.type","#microsoft.graph.deviceManagementConfigurationSetting")
-            $myFormattedSetting= Format-M365DSCParamsToSettingInstance -DSCParams @{$settingKey=$DSCParams."$settingKey"} `
-                -TemplateSetting $templateSetting
+
+            $includeValueReference=$true
+            $noValueReferenceKeys=@(
+                'excludedpaths'
+                'excludedprocesses'
+                'excludedextensions'
+            )
+            if($originalKey -in $noValueReferenceKeys)
+            {
+                $includeValueReference=$false
+            }
+            $myFormattedSetting= Format-M365DSCParamsToSettingInstance -DSCParams @{$settingKey=$DSCParams."$originalKey"} `
+                -TemplateSetting $templateSetting `
+                -IncludeSettingValueTemplateId $includeValueReference
 
             $setting.add('settingInstance',$myFormattedSetting)
             $settings+=$setting
@@ -1642,7 +1956,7 @@ function Format-M365DSCIntuneSettingCatalogPolicySettings
 
 
 
-function Get-MgDeviceManagementConfigurationSettingDefinition
+<#function Get-MgDeviceManagementConfigurationSettingDefinition
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -1700,7 +2014,7 @@ function Get-M365DSCAdditionalProperties
         }
     }
     return $results
-}
+}#>
 function Get-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
