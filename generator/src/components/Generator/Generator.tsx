@@ -27,7 +27,7 @@ export const Generator: React.FunctionComponent<IGeneratorProps> = (props) => {
       <Stack horizontal tokens={stackTokens} className={mergeStyles({ paddingTop: '30px' })}>
         <GenerationOptions></GenerationOptions>
       </Stack>
-      <Stack tokens={stackTokens} className={mergeStyles({ paddingTop: '30px' })}>
+      <Stack tokens={stackTokens} className={mergeStyles({ paddingTop: '30px', wordBreak: 'break-word' })}>
         <WorkloadOptions onSelectedResourcesChange={_onSelectedResourcesChange}></WorkloadOptions>
       </Stack>
     </>
