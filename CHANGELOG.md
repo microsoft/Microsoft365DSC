@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+# 1.22.1102.1
+
+* AADAdministrativeUnit
+  * Initial Release.
+* AADEntitlementManagementAccessPackageCatalogResource
+  * Initial release;
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 4.9.0;
+
 # 1.22.1026.2
 
 * MISC
