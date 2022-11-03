@@ -23,7 +23,7 @@ function Get-TargetResource
         $Visibility,
 
         [Parameter()]
-        [validateset('Static', 'Dynamic')]
+        [validateset('Assigned', 'Dynamic')]
         [System.String]$MembershipType,
 
         [Parameter()]
@@ -312,7 +312,7 @@ function Set-TargetResource
         $Visibility,
 
         [Parameter()]
-        [validateset('Static', 'Dynamic')]
+        [validateset('Assigned', 'Dynamic')]
         [System.String]$MembershipType,
 
         [Parameter()]
@@ -864,7 +864,7 @@ function Test-TargetResource
         $Visibility,
 
         [Parameter()]
-        [validateset('Static', 'Dynamic')]
+        [validateset('Assigned', 'Dynamic')]
         [System.String]$MembershipType,
 
         [Parameter()]
