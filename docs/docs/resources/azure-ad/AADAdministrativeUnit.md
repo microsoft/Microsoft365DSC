@@ -13,6 +13,7 @@
 | **MembershipType** | Write | String | Membership type for the administrative unit. Can be dynamic or assigned. |Assigned, Dynamic|
 | **MembershipRuleProcessingState** | Write | String | Membership type for the administrative unit. Can be dynamic or assigned. |On, Paused|
 | **Members** | Write | InstanceArray[] | Users and groups that are members of this administrative unit. ||
+| **ScopedRoleMembers** | Write | InstanceArray[] | Users, Groups and/or SPNs that have admin roles scoped to this administrative unit. ||
 | **Visibility** | Write | String | Controls whether the administrative unit and its members are hidden or public. Can be set to HiddenMembership. If not set (value is null), the default behavior is public. When set to HiddenMembership, only members of the administrative unit can list other members of the administrative unit. ||
 | **Ensure** | Write | String | Specify if the Azure AD Administrative Unit should exist or not. |Present, Absent|
 | **Credential** | Write | PSCredential | Credentials of the Azure AD Admin ||
