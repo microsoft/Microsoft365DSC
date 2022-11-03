@@ -330,6 +330,7 @@ function Start-M365DSCConfigurationExtract
             { $_ -in 'CertificateThumbprint', 'CertificatePath', 'ApplicationWithSecret' }
             {
                 $postParamContent.Append("    `$OrganizationName = `$ConfigurationData.NonNodeData.OrganizationName`r`n") | Out-Null
+                $postParamContent.Append("    `$TenantId = `$ConfigurationData.NonNodeData.TenantId`r`n") | Out-Null
 
                 Add-ConfigurationDataEntry -Node 'NonNodeData' `
                     -Key 'OrganizationName' `
