@@ -10,6 +10,7 @@ function Start-M365DSCConfigurationExtract
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingConvertToSecureStringWithPlainText', '', Justification = 'Conversion for credential creation')]
     param(
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -135,10 +136,17 @@ function Start-M365DSCConfigurationExtract
 
         Write-Host -Object ' '
         Write-Host -Object 'Authentication methods specified:'
-        if ($null -ne $Credential)
+        if ($null -ne $Credential -and `
+                [System.String]::IsNullOrEmpty($ApplicationId) )
         {
             Write-Host -Object '- Credentials'
             $AuthMethods += 'Credentials'
+        }
+        if ($null -ne $Credential -and `
+                -not [System.String]::IsNullOrEmpty($ApplicationId))
+        {
+            Write-Host -Object '- CredentialsWithApplicationId'
+            $AuthMethods += 'CredentialsWithApplicationId'
         }
         if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint))
         {
@@ -247,7 +255,8 @@ function Start-M365DSCConfigurationExtract
                 -ApplicationSecret $AppSecretAsPSCredential `
                 -CertificatePath $CertificatePath
         }
-        elseif ($AuthMethods -Contains 'Credentials')
+        elseif ($AuthMethods -Contains 'Credentials' -or `
+                $AuthMethods -Contains 'CredentialsWithApplicationId')
         {
             if ($null -ne $Credential -and $Credential.UserName.Contains('@'))
             {
@@ -289,7 +298,7 @@ function Start-M365DSCConfigurationExtract
                 $DSCContent.Append("    `$CertificatePassword`r`n") | Out-Null
                 $newline = $true
             }
-            'Credentials'
+            { $_ -in 'Credentials', 'CredentialsWithApplicationId' }
             {
                 if ($newline)
                 {
@@ -391,7 +400,7 @@ function Start-M365DSCConfigurationExtract
                     -Value $ApplicationSecret `
                     -Description 'Azure AD Application Secret for Authentication'
             }
-            'Credentials'
+            { $_ -in 'Credentials', 'CredentialsWithApplicationId' }
             {
                 if ($newline)
                 {
@@ -535,8 +544,12 @@ function Start-M365DSCConfigurationExtract
                     $applicationSecretValue = New-Object System.Management.Automation.PSCredential ('ApplicationSecret', (ConvertTo-SecureString $ApplicationSecret -AsPlainText -Force));
                     $parameters.Add('ApplicationSecret', $applicationSecretValue)
                 }
-                'Credentials'
+                { $_ -in 'Credentials', 'CredentialsWithApplicationId' }
                 {
+                    if ($AuthMethods -contains 'CredentialsWithApplicationId')
+                    {
+                        $parameters.Add('ApplicationId', $ApplicationId)
+                    }
                     $parameters.Add('Credential', $Credential)
                 }
                 'ManagedIdentity'
@@ -616,7 +629,7 @@ function Start-M365DSCConfigurationExtract
                 $DSCContent = $DSCContent.Insert($startPosition, $credsContent)
                 $launchCommand += " -CertificatePassword `$CertificatePassword"
             }
-            'Credentials'
+            { $_ -in 'Credentials', 'CredentialsWithApplicationId' }
             {
                 #region Add the Prompt for Required Credentials at the top of the Configuration
                 $credsContent = ''
@@ -748,7 +761,7 @@ function Start-M365DSCConfigurationExtract
         }
         $DSCContent.ToString() | Out-File $outputDSCFile
 
-        if (!$AzureAutomation)
+        if (!$AzureAutomation -and !$ManagedIdentity.IsPresent)
         {
             if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
             {
