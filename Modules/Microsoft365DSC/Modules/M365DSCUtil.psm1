@@ -2968,8 +2968,8 @@ function Get-M365DSCExportContentForResource
     if ($partialContent.ToLower().IndexOf($OrganizationName.ToLower()) -gt 0)
     {
         $partialContent = $partialContent -ireplace [regex]::Escape($OrganizationName + ':'), "`$($OrganizationName):"
-        $partialContent = $partialContent -ireplace [regex]::Escape('@' + $OrganizationName), "@`$TenantId"
         $partialContent = $partialContent -ireplace [regex]::Escape($OrganizationName), "`$OrganizationName"
+        $partialContent = $partialContent -ireplace [regex]::Escape('@' + $OrganizationName), "@`$OrganizationName"
     }
     $content += $partialContent
     $content += "        }`r`n"
