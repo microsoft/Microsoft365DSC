@@ -5,6 +5,9 @@
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * FIXES [#2463](https://github.com/microsoft/Microsoft365DSC/issues/2463)
   * Returns all type of policies from the template family: endpointSecurityAntivirus
+* EXOHostedOutboundSpamFilterPolicy
+  * Add support to create and remove Hosted Outbound Spam Filter Policies
+  * FIXES [#2492](https://github.com/microsoft/Microsoft365DSC/issues/2492)
 
 # 1.22.1102.1
 
