@@ -1,10 +1,22 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
+# UNRELEASED
 
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * FIXES [#2463](https://github.com/microsoft/Microsoft365DSC/issues/2463)
+  * Returns all type of policies from the template family: endpointSecurityAntivirus
 * MISC
   * Fixes and issue with ManagedIdentity Parameter not being not removed correctly in a parameterset.
     * FIXES [#2464](https://github.com/microsoft/Microsoft365DSC/issues/2464)
+
+# 1.22.1102.1
+
+* AADAdministrativeUnit
+  * Initial Release.
+* AADEntitlementManagementAccessPackageCatalogResource
+  * Initial release;
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 4.9.0;
 
 # 1.22.1026.2
 

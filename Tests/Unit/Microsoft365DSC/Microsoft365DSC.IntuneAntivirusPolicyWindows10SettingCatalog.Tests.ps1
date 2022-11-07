@@ -85,6 +85,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName          = "My Test";
                     Ensure               = "Present";
                     Identity             = "619bd4a4-3b3b-4441-bd6f-3f4c0c444870";
+                    templateId           = 'd948ff9b-99cb-4ee0-8012-1fbc09685377_1'
                 }
 
                 Mock -CommandName Get-MgDeviceManagementConfigurationPolicy -MockWith {
@@ -122,6 +123,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description          = "My Test Description";
                     DisplayName          = "My Test";
                     Ensure               = "Present";
+                    templateId           = 'd948ff9b-99cb-4ee0-8012-1fbc09685377_1'
                     Identity             = "619bd4a4-3b3b-4441-bd6f-3f4c0c444870";
                 }
 
@@ -191,6 +193,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description          = "My Test Description";
                     DisplayName          = "My Test";
                     Ensure               = "Present";
+                    templateId           = 'd948ff9b-99cb-4ee0-8012-1fbc09685377_1';
                     Identity             = "619bd4a4-3b3b-4441-bd6f-3f4c0c444870";
                 }
 
@@ -199,6 +202,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Id   = "619bd4a4-3b3b-4441-bd6f-3f4c0c444870"
                         Description = "My Test Description";
                         Name        = "My Test";
+                        TemplateReference = @{templateId = 'd948ff9b-99cb-4ee0-8012-1fbc09685377_1'}
                     }
                 }
 
@@ -251,6 +255,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description          = "My Test Description";
                     DisplayName          = "My Test";
                     Ensure               = "Absent";
+                    templateId           = 'd948ff9b-99cb-4ee0-8012-1fbc09685377_1'
                     Identity             = "619bd4a4-3b3b-4441-bd6f-3f4c0c444870";
                 }
 
@@ -259,6 +264,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Id   = "619bd4a4-3b3b-4441-bd6f-3f4c0c444870"
                         Description = "My Test Description";
                         Name        = "My Test";
+                        TemplateReference = @{templateId = 'd948ff9b-99cb-4ee0-8012-1fbc09685377_1'}
                     }
                 }
 
@@ -315,8 +321,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Id    = "619bd4a4-3b3b-4441-bd6f-3f4c0c444870"
                         Description = "My Test Description";
-                        Name        = "My Test";
-                        TemplateReference=@{TemplateId='804339ad-1553-4478-a742-138fb5807418_1'}
+                        Name        = "My Test policy";
+                        TemplateReference=@{
+                                templateId           = 'd948ff9b-99cb-4ee0-8012-1fbc09685377_1'
+                                templateFamily       ='endpointSecurityAntivirus'
+                        }
                     }
                 }
 
