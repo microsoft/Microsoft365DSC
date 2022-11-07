@@ -932,6 +932,12 @@ function Test-TargetResource
         }
     }
 
+    if (($CurrentValues.Ensure -eq 'Absent') -and ($Ensure -eq 'Present'))
+    {
+        Write-Verbose -Message "Policy {$DisplayName} Not Present on tenant - New Policy will be created"
+        return $false
+    }
+
     $targetvalues = @{}
 
     $Allparams = get-InputParameters
@@ -991,6 +997,9 @@ function Test-TargetResource
     $targetvalues.add('AppGroupType', $AppsHash.AppGroupType)
     # wipe out the current apps value if AppGroupType is anything but selectedpublicapps to match the appshash values
     if ($CurrentValues.AppGroupType -ne 'selectedPublicApps') { $CurrentValues.Apps = @() }
+
+    # remove thre ID from the values to check as it may not match
+    $targetvalues.remove('ID')
 
 
     Write-Verbose -Message "Current Values: $((Convert-M365DscHashtableToString -Hashtable $CurrentValues) -replace ';', "`r`n")"
