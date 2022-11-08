@@ -49,7 +49,7 @@ function Get-TargetResource
         $AutoForwardingMode,
 
         [Parameter()]
-        [ValidateSet('Present')]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
 
@@ -140,7 +140,7 @@ function Get-TargetResource
                 CertificateThumbprint                     = $CertificateThumbprint
                 CertificatePath                           = $CertificatePath
                 CertificatePassword                       = $CertificatePassword
-                Managedidentity                           = $ManagedIdentity.IsPresent
+                ManagedIdentity                           = $ManagedIdentity.IsPresent
                 TenantId                                  = $TenantId
             }
 
@@ -225,7 +225,7 @@ function Set-TargetResource
         $AutoForwardingMode,
 
         [Parameter()]
-        [ValidateSet('Present')]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
 
@@ -260,6 +260,8 @@ function Set-TargetResource
 
     Write-Verbose -Message "Testing configuration of HostedOutboundSpamFilterPolicy for $Identity"
 
+    $currentHostedOutboundSpamFilterPolicyConfig = Get-TargetResource @PSBoundParameters
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -285,8 +287,24 @@ function Set-TargetResource
     $HostedOutboundSpamFilterPolicyParams.Remove('CertificatePassword') | Out-Null
     $HostedOutboundSpamFilterPolicyParams.Remove('ManagedIdentity') | Out-Null
 
-    Write-Verbose -Message "Setting HostedOutboundSpamFilterPolicy $Identity with values: $(Convert-M365DscHashtableToString -Hashtable $HostedOutboundSpamFilterPolicyParams)"
-    Set-HostedOutboundSpamFilterPolicy @HostedOutboundSpamFilterPolicyParams
+    # CASE: Hosted Outbound Spam Filter Policy doesn't exist but should;
+    if ($Ensure -eq 'Present' -and $currentHostedOutboundSpamFilterPolicyConfig.Ensure -eq 'Absent') {
+        Write-Verbose -Message "Hosted Outbound Spam Filter Policy '$($Identity)' does not exist but it should. Create and configure it."
+        $HostedOutboundSpamFilterPolicyParams.Add('Name', $Identity)
+        $HostedOutboundSpamFilterPolicyParams.Remove('Identity') | Out-Null
+        New-HostedOutboundSpamFilterPolicy @HostedOutboundSpamFilterPolicyParams
+    }
+    # CASE: Hosted Outbound Spam Filter Policy exists but it shouldn't;
+    elseif ($Ensure -eq 'Absent' -and $currentHostedOutboundSpamFilterPolicyConfig.Ensure -eq 'Present') {
+        Write-Verbose -Message "Hosted Outbound Spam Filter Policy '$($Identity)' exists but it shouldn't. Remove it."
+        Remove-HostedOutboundSpamFilterPolicy -Identity $Identity -Force
+    }
+    # CASE: Hosted Outbound Spam Filter Policy exists and it should, but has different values than the desired ones
+    elseif ($Ensure -eq 'Present' -and $currentHostedOutboundSpamFilterPolicyConfig.Ensure -eq 'Present') {
+        Write-Verbose -Message "Hosted Outbound Spam Filter Policy '$($Identity)' already exists, but needs updating."
+        Write-Verbose -Message "Setting Hosted Outbound Spam Filter Policy $Identity with values: $(Convert-M365DscHashtableToString -Hashtable $HostedOutboundSpamFilterPolicyParams)"
+        Set-HostedOutboundSpamFilterPolicy @HostedOutboundSpamFilterPolicyParams -Confirm:$false
+    }
 }
 
 function Test-TargetResource
@@ -340,7 +358,7 @@ function Test-TargetResource
         $AutoForwardingMode,
 
         [Parameter()]
-        [ValidateSet('Present')]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
 
@@ -484,7 +502,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
             Write-Host "    |---[$i/$($HostedOutboundSpamFilterPolicies.Length)] $($HostedOutboundSpamFilterPolicy.Identity)" -NoNewline
