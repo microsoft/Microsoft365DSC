@@ -12,7 +12,7 @@ class MSFT_EXOHostedOutboundSpamFilterPolicy : OMI_BaseResource
     [Write, Description("The RecipientLimitExternalPerHour parameter specifies the maximum number of external recipients that a user can send to within an hour. A valid value is 0 to 10000. The default value is 0, which means the service defaults are used.")] String RecipientLimitExternalPerHour;
     [Write, Description("The ActionWhenThresholdReached parameter specifies the action to take when any of the limits specified in the policy are reached. Valid values are: Alert, BlockUser, BlockUserForToday. BlockUserForToday is the default value.")] String ActionWhenThresholdReached;
     [Write, Description("The AutoForwardingMode specifies how the policy controls automatic email forwarding to outbound recipients. Valid values are: Automatic, On, Off.")] String AutoForwardingMode;
-    [Write, Description("Specify if this rule should exist or not.  This value must be 'Present' as the Default policy cannot be deleted."), ValueMap{"Present"}, Values{"Present"}] String Ensure;
+    [Write, Description("Specify if this policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
