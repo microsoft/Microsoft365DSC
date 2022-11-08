@@ -389,7 +389,7 @@ function Set-TargetResource
     $currentParameters.Remove('CertificateThumbprint') | Out-Null
     $currentParameters.Remove('CertificatePath') | Out-Null
     $currentParameters.Remove('CertificatePassword') | Out-Null
-    $currentParameters.Remove('Managedidentity') | Out-Null
+    $currentParameters.Remove('ManagedIdentity') | Out-Null
 
     # Distribution group doesn't exist but it should
     if ($Ensure -eq 'Present' -and $currentDistributionGroup.Ensure -eq 'Absent')

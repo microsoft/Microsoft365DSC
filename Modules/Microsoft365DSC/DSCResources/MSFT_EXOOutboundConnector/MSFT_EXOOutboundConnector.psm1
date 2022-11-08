@@ -351,7 +351,7 @@ function Set-TargetResource
     $OutBoundConnectorParams.Remove('CertificateThumbprint') | Out-Null
     $OutBoundConnectorParams.Remove('CertificatePath') | Out-Null
     $OutBoundConnectorParams.Remove('CertificatePassword') | Out-Null
-    $OutBoundConnectorParams.Remove('Managedidentity') | Out-Null
+    $OutBoundConnectorParams.Remove('ManagedIdentity') | Out-Null
 
 
     if (('Present' -eq $Ensure ) -and ($null -eq $OutBoundConnector))
@@ -516,7 +516,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

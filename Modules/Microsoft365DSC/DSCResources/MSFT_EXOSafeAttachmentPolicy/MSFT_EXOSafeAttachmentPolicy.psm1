@@ -258,7 +258,7 @@ function Set-TargetResource
     $SafeAttachmentPolicyParams.Remove('CertificateThumbprint') | Out-Null
     $SafeAttachmentPolicyParams.Remove('CertificatePath') | Out-Null
     $SafeAttachmentPolicyParams.Remove('CertificatePassword') | Out-Null
-    $SafeAttachmentPolicyParams.Remove('Managedidentity') | Out-Null
+    $SafeAttachmentPolicyParams.Remove('ManagedIdentity') | Out-Null
 
     $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
 
@@ -458,7 +458,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
