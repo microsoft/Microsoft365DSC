@@ -5,6 +5,8 @@
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * FIXES [#2463](https://github.com/microsoft/Microsoft365DSC/issues/2463)
   * Returns all type of policies from the template family: endpointSecurityAntivirus
+* EXODataClassification
+  * FIXES [#2487](https://github.com/microsoft/Microsoft365DSC/issues/2487)
 * MISC
   * Fixes and issue with ManagedIdentity Parameter not being not removed correctly in a parameterset.
     * FIXES [#2464](https://github.com/microsoft/Microsoft365DSC/issues/2464)
