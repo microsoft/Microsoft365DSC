@@ -761,7 +761,7 @@ function Start-M365DSCConfigurationExtract
         }
         $DSCContent.ToString() | Out-File $outputDSCFile
 
-        if (!$AzureAutomation)
+        if (!$AzureAutomation -and !$ManagedIdentity.IsPresent)
         {
             if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
             {
@@ -796,10 +796,9 @@ function Start-M365DSCConfigurationExtract
                 Write-Host "Cannot export Local Configuration Manager settings. This process isn't executed with Administrative Privileges!" -NoNewline -ForegroundColor DarkCyan
                 Write-Host '}'
             }
-            $outputConfigurationData = $OutputDSCPath + 'ConfigurationData.psd1'
-            New-ConfigurationDataDocument -Path $outputConfigurationData
         }
-
+        $outputConfigurationData = $OutputDSCPath + 'ConfigurationData.psd1'
+        New-ConfigurationDataDocument -Path $outputConfigurationData
         if ($shouldOpenOutputDirectory)
         {
             try
