@@ -761,7 +761,7 @@ function Start-M365DSCConfigurationExtract
         }
         $DSCContent.ToString() | Out-File $outputDSCFile
 
-        if (!$AzureAutomation -and !$ManagedIdentity.IsPresent)
+        if (!$AzureAutomation)
         {
             if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
             {
