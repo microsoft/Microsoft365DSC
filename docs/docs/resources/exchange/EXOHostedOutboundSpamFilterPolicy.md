@@ -15,7 +15,7 @@
 | **RecipientLimitExternalPerHour** | Write | String | The RecipientLimitExternalPerHour parameter specifies the maximum number of external recipients that a user can send to within an hour. A valid value is 0 to 10000. The default value is 0, which means the service defaults are used. ||
 | **ActionWhenThresholdReached** | Write | String | The ActionWhenThresholdReached parameter specifies the action to take when any of the limits specified in the policy are reached. Valid values are: Alert, BlockUser, BlockUserForToday. BlockUserForToday is the default value. ||
 | **AutoForwardingMode** | Write | String | The AutoForwardingMode specifies how the policy controls automatic email forwarding to outbound recipients. Valid values are: Automatic, On, Off. ||
-| **Ensure** | Write | String | Specify if this rule should exist or not.  This value must be 'Present' as the Default policy cannot be deleted. |Present|
+| **Ensure** | Write | String | Specify if this policy should exist or not. |Present, Absent|
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin ||
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
