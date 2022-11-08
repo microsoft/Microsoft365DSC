@@ -293,7 +293,7 @@ function Set-TargetResource
     $SafeLinksRuleParams.Remove('CertificateThumbprint') | Out-Null
     $SafeLinksRuleParams.Remove('CertificatePath') | Out-Null
     $SafeLinksRuleParams.Remove('CertificatePassword') | Out-Null
-    $SafeLinksRuleParams.Remove('Managedidentity') | Out-Null
+    $SafeLinksRuleParams.Remove('ManagedIdentity') | Out-Null
 
 
     if (('Present' -eq $Ensure ) -and (-not $SafeLinksRule))
@@ -441,7 +441,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

@@ -227,7 +227,7 @@ function Set-TargetResource
     $opsParams.Remove('CertificateThumbprint') | Out-Null
     $opsParams.Remove('CertificatePath') | Out-Null
     $opsParams.Remove('CertificatePassword') | Out-Null
-    $opsParams.Remove('Managedidentity') | Out-Null
+    $opsParams.Remove('ManagedIdentity') | Out-Null
     $opsParams.Remove('ApplicationId') | Out-Null
     $opsParams.Remove('TenantId') | Out-Null
     $opsParams.Add('Scope', $RuleScope) | Out-Null
@@ -355,7 +355,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
 

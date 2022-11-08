@@ -320,7 +320,7 @@ function Set-TargetResource
     $IRMConfigurationParams.Remove('CertificateThumbprint') | Out-Null
     $IRMConfigurationParams.Remove('CertificatePath') | Out-Null
     $IRMConfigurationParams.Remove('CertificatePassword') | Out-Null
-    $IRMConfigurationParams.Remove('Managedidentity') | Out-Null
+    $IRMConfigurationParams.Remove('ManagedIdentity') | Out-Null
     $IRMConfigurationParams.Remove('Identity') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($Null -ne $IRMConfigurationParams))
@@ -462,7 +462,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

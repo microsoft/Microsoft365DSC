@@ -977,7 +977,7 @@ function Set-TargetResource
     $SetOwaMailboxPolicyParams.Remove('CertificateThumbprint') | Out-Null
     $SetOwaMailboxPolicyParams.Remove('CertificatePath') | Out-Null
     $SetOwaMailboxPolicyParams.Remove('CertificatePassword') | Out-Null
-    $SetOwaMailboxPolicyParams.Remove('Managedidentity') | Out-Null
+    $SetOwaMailboxPolicyParams.Remove('ManagedIdentity') | Out-Null
     $SetOwaMailboxPolicyParams.Remove('Ensure') | Out-Null
     $SetOwaMailboxPolicyParams.Add('Identity', $Name)
     $SetOwaMailboxPolicyParams.Remove('Name') | Out-Null
@@ -1423,7 +1423,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

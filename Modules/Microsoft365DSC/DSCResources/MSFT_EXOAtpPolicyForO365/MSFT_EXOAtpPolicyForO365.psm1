@@ -236,7 +236,7 @@ function Set-TargetResource
     $AtpPolicyParams.Remove('CertificateThumbprint') | Out-Null
     $AtpPolicyParams.Remove('CertificatePath') | Out-Null
     $AtpPolicyParams.Remove('CertificatePassword') | Out-Null
-    $AtpPolicyParams.Remove('Managedidentity') | Out-Null
+    $AtpPolicyParams.Remove('ManagedIdentity') | Out-Null
     Write-Verbose -Message "Setting AtpPolicyForO365 $Identity with values: $(Convert-M365DscHashtableToString -Hashtable $AtpPolicyParams)"
 
     Set-AtpPolicyForO365 @AtpPolicyParams
@@ -330,7 +330,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

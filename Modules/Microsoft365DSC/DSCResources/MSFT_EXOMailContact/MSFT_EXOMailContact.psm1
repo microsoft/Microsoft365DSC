@@ -342,7 +342,7 @@ function Set-TargetResource
     $setParameters.Remove('CertificateThumbprint') | Out-Null
     $setParameters.Remove('CertificatePath') | Out-Null
     $setParameters.Remove('CertificatePassword') | Out-Null
-    $setParameters.Remove('Managedidentity') | Out-Null
+    $setParameters.Remove('ManagedIdentity') | Out-Null
     $setParameters.Remove('Ensure') | Out-Null
 
     # Mail Contact doesn't exist but it should
@@ -498,7 +498,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $ValuesToCheck.Remove('OrganizationalUnit') | Out-Null
 

@@ -290,7 +290,7 @@ function Set-TargetResource
     $OMEConfigurationParams.Remove('CertificateThumbprint') | Out-Null
     $OMEConfigurationParams.Remove('CertificatePath') | Out-Null
     $OMEConfigurationParams.Remove('CertificatePassword') | Out-Null
-    $OMEConfigurationParams.Remove('Managedidentity') | Out-Null
+    $OMEConfigurationParams.Remove('ManagedIdentity') | Out-Null
 
     #ExternalMailExpiryInDays cannot be updated in the default OME configuration
     if ('OME Configuration' -eq $Identity)
@@ -423,7 +423,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
