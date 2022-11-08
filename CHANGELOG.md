@@ -18,6 +18,7 @@
 * AADEntitlementManagementAccessPackageCatalogResource
   * Initial release;
 * DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.15.0;
   * Updated MicrosoftTeams to version 4.9.0;
 
 # 1.22.1026.2
