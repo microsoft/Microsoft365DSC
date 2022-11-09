@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.1109.1
 
 * EXODataClassification
   * FIXES [#2487](https://github.com/microsoft/Microsoft365DSC/issues/2487)
@@ -13,6 +13,8 @@
 * MISC
   * Fixes and issue with ManagedIdentity Parameter not being not removed correctly in a parameterset.
     * FIXES [#2464](https://github.com/microsoft/Microsoft365DSC/issues/2464)
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.15.0;
 
 # 1.22.1102.1
 
@@ -21,7 +23,6 @@
 * AADEntitlementManagementAccessPackageCatalogResource
   * Initial release;
 * DEPENDENCIES
-  * Updated Microsoft.Graph.* to version 1.15.0;
   * Updated MicrosoftTeams to version 4.9.0;
   * Updated MSCloudLoginAssistant to version 1.0.97;
 
