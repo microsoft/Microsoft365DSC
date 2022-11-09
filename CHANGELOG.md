@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASE
+# UNRELEASED
 
 * EXODataClassification
   * FIXES [#2487](https://github.com/microsoft/Microsoft365DSC/issues/2487)
@@ -10,6 +10,9 @@
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * FIXES [#2463](https://github.com/microsoft/Microsoft365DSC/issues/2463)
   * Returns all type of policies from the template family: endpointSecurityAntivirus
+* MISC
+  * Fixes and issue with ManagedIdentity Parameter not being not removed correctly in a parameterset.
+    * FIXES [#2464](https://github.com/microsoft/Microsoft365DSC/issues/2464)
 
 # 1.22.1102.1
 

@@ -233,7 +233,7 @@ function Set-TargetResource
         $DkimSigningConfigParams.Remove('CertificateThumbprint') | Out-Null
         $DkimSigningConfigParams.Remove('CertificatePath') | Out-Null
         $DkimSigningConfigParams.Remove('CertificatePassword') | Out-Null
-        $DkimSigningConfigParams.Remove('Managedidentity') | Out-Null
+        $DkimSigningConfigParams.Remove('ManagedIdentity') | Out-Null
         $DkimSigningConfigParams += @{
             DomainName = $PSBoundParameters.Identity
         }
@@ -350,7 +350,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `

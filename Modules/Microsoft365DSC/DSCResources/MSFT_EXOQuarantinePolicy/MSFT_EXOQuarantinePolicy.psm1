@@ -327,7 +327,7 @@ function Set-TargetResource
     $QuarantinePolicyParams.Remove('CertificateThumbprint') | Out-Null
     $QuarantinePolicyParams.Remove('CertificatePath') | Out-Null
     $QuarantinePolicyParams.Remove('CertificatePassword') | Out-Null
-    $QuarantinePolicyParams.Remove('Managedidentity') | Out-Null
+    $QuarantinePolicyParams.Remove('ManagedIdentity') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($null -eq $QuarantinePolicy))
     {
@@ -441,7 +441,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
