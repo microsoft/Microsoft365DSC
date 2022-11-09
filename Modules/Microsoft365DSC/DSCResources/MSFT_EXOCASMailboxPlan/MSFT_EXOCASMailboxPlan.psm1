@@ -229,7 +229,7 @@ function Set-TargetResource
     $CASMailboxPlanParams.Remove('CertificateThumbprint') | Out-Null
     $CASMailboxPlanParams.Remove('CertificatePath') | Out-Null
     $CASMailboxPlanParams.Remove('CertificatePassword') | Out-Null
-    $CASMailboxPlanParams.Remove('Managedidentity') | Out-Null
+    $CASMailboxPlanParams.Remove('ManagedIdentity') | Out-Null
 
     $CASMailboxPlans = Get-CASMailboxPlan
     $CASMailboxPlan = $CASMailboxPlans | Where-Object -FilterScript { $_.Identity -eq $Identity }
@@ -330,7 +330,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

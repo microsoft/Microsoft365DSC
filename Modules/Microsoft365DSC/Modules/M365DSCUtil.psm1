@@ -1080,6 +1080,7 @@ function Export-M365DSCConfiguration
     }
 
     if ($PSBoundParameters.ContainsKey('ApplicationId') -eq $true -and `
+            $PSBoundParameters.ContainsKey('Credential') -eq $false -and `
             $PSBoundParameters.ContainsKey('TenantId') -eq $false)
     {
         Write-Host -Object '[ERROR] You have to specify TenantId when you specify ApplicationId' -ForegroundColor Red
@@ -1106,7 +1107,8 @@ function Export-M365DSCConfiguration
 
     if (($PSBoundParameters.ContainsKey('ApplicationId') -eq $false -or `
                 $PSBoundParameters.ContainsKey('TenantId') -eq $false) -and `
-        ($PSBoundParameters.ContainsKey('CertificateThumbprint') -eq $true -or `
+        ($PSBoundParameters.ContainsKey('Credential') -eq $false -and `
+                $PSBoundParameters.ContainsKey('CertificateThumbprint') -eq $true -or `
                 $PSBoundParameters.ContainsKey('ApplicationSecret') -eq $true -or `
                 $PSBoundParameters.ContainsKey('CertificatePath') -eq $true))
     {
@@ -1155,10 +1157,6 @@ function Export-M365DSCConfiguration
     {
         $MaxProcesses = 16
     }
-
-    # Clear the Connection Cache from MSCloudLoginAssistant
-    $Global:MsCloudLoginConnectionProfile = $null
-    $Global:MSCloudLoginTriedGetEnvironment = $false
 
     # Make sure we are not connected to Microsoft Graph on another tenant
     try
@@ -1604,15 +1602,20 @@ function New-M365DSCConnection
             Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
             return 'Credentials'
         }
-        if ($InboundParameters.ContainsKey('ApplicationId') -and
-            -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
+    }
+    # Case only Credential with ApplicationId is specified
+    elseif ($null -ne $InboundParameters.Credential -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+            [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+            [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
+    {
+        if ([System.String]::IsNullOrEmpty($Url))
         {
             Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -Credential $InboundParameters.Credential `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
-
             $data.Add('ConnectionType', 'CredentialsWithApplicationId')
 
             try
@@ -1628,61 +1631,29 @@ function New-M365DSCConnection
             Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
             return 'CredentialsWithApplicationId'
         }
-        if ($InboundParameters.ContainsKey('ApplicationSecret') -and
-            -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationSecret))
+        else
         {
             Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
-                -ApplicationSecret $InboundParameters.ApplicationSecret `
-                -TenantId $InboundParameters.TenantId `
+                -Credential $InboundParameters.Credential `
                 -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
+            $data.Add('ConnectionType', 'CredentialsWithApplicationId')
 
-            $data.Add('ConnectionType', 'ServicePrincipalWithSecret')
-            $data.Add('Tenant', $InboundParameters.TenantId)
-
-            Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
-            return 'ServicePrincipalWithSecret'
-        }
-        if ($InboundParameters.ContainsKey('CertificatePath') -and
-            -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePath))
-        {
-            $data.Add('CertificatePath', 'Yes')
-        }
-        if ($InboundParameters.ContainsKey('CertificateThumbprint') -and
-            -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
-        {
-            Write-Verbose -Message 'ApplicationId, TenantId and CertificateThumprint were specified. Connecting via Service Principal'
-            Connect-M365Tenant -Workload $Workload `
-                -ApplicationId $InboundParameters.ApplicationId `
-                -TenantId $InboundParameters.TenantId `
-                -CertificateThumbprint $InboundParameters.CertificateThumbprint `
-                -SkipModuleReload $Global:CurrentModeIsExport `
-                -ProfileName $ProfileName
-
-            $data.Add('ConnectionType', 'ServicePrincipalWithThumbprint')
-            $data.Add('Tenant', $InboundParameters.TenantId)
+            try
+            {
+                $tenantId = $InboundParameters.Credential.Username.Split('@')[1]
+                $data.Add('Tenant', $tenantId)
+            }
+            catch
+            {
+                Write-Verbose $_
+            }
 
             Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
-            return 'ServicePrincipalWithThumbprint'
+            return 'CredentialsWithApplicationId'
         }
-        if ($InboundParameters.ContainsKey('CertificatePassword') -and
-            -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePassword))
-        {
-            Connect-M365Tenant -Workload $Workload `
-                -ApplicationId $InboundParameters.ApplicationId `
-                -TenantId $InboundParameters.TenantId `
-                -CertificatePassword $InboundParameters.CertificatePassword.Password `
-                -Url $Url `
-                -SkipModuleReload $Global:CurrentModeIsExport `
-                -ProfileName $ProfileName
-            return 'ServicePrincipalWithPath'
-        }
-        $data.Add('ConnectionType', 'ServicePrincipalWithPassword')
-        $data.Add('Tenant', $InboundParameters.TenantId)
-        Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
-        return 'ServicePrincipalWithPassword'
     }
     # Case only the ServicePrincipal with Thumbprint parameters are specified
     elseif ($null -eq $InboundParameters.Credential -and `
@@ -1847,7 +1818,9 @@ function New-M365DSCConnection
         Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
         return 'ServicePrincipalWithThumbprint'
     }
-    elseif ($InboundParameters.ManagedIdentity)
+    # Case only Managed Identity and TenantId are specified
+    elseif ($InboundParameters.ManagedIdentity -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId))
     {
         Write-Verbose -Message 'Connecting via managed identity'
         Connect-M365Tenant -Workload $Workload `
@@ -2744,9 +2717,9 @@ function Update-M365DSCExportAuthenticationResults
         [System.Collections.Hashtable]
         $Results
     )
-    if ($Results.ContainsKey("ManagedIdentity") -and -not $Results.ManagedIdentity)
+    if ($Results.ContainsKey('ManagedIdentity') -and -not $Results.ManagedIdentity)
     {
-        $Results.Remove("ManagedIdentity")
+        $Results.Remove('ManagedIdentity')
     }
     if ($ConnectionMode -eq 'Credentials')
     {
@@ -2778,9 +2751,13 @@ function Update-M365DSCExportAuthenticationResults
     }
     else
     {
-        if ($Results.ContainsKey('Credential') -and ($ConnectionMode -ne 'CredentialsWithApplicationId' -or $ConnectionMode -ne 'Credentials'))
+        if ($Results.ContainsKey('Credential') -and ($ConnectionMode -ne 'CredentialsWithApplicationId' -and $ConnectionMode -ne 'Credentials'))
         {
             $Results.Remove('Credential') | Out-Null
+        }
+        else
+        {
+            $Results.Credential = Resolve-Credentials -UserName 'credential'
         }
         if (-not [System.String]::IsNullOrEmpty($Results.ApplicationId))
         {
@@ -2926,10 +2903,16 @@ function Get-M365DSCExportContentForResource
     $content = "        $ResourceName " + (New-Guid).ToString() + "`r`n"
     $content += "        {`r`n"
     $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath
-    if ($ConnectionMode -eq 'Credentials')
+    # Test for both Credentials and CredentialsWithApplicationId
+    if ($ConnectionMode -match 'Credentials')
     {
         $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
             -ParameterName 'Credential'
+        if (![System.String]::IsNullOrEmpty($Results.ApplicationId))
+        {
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+                -ParameterName 'ApplicationId'
+        }
     }
     else
     {
@@ -3071,7 +3054,7 @@ function Get-M365DSCComponentsWithMostSecureAuthenticationType
     param(
         [Parameter()]
         [System.String[]]
-        [ValidateSet('ApplicationWithSecret', 'CertificateThumbprint', 'CertificatePath', 'Credentials', 'ManagedIdentity')]
+        [ValidateSet('ApplicationWithSecret', 'CertificateThumbprint', 'CertificatePath', 'Credentials', 'CredentialsWithApplicationId', 'ManagedIdentity')]
         $AuthenticationMethod
     )
 
@@ -3117,7 +3100,15 @@ function Get-M365DSCComponentsWithMostSecureAuthenticationType
                 AuthMethod = 'ApplicationSecret'
             }
         }
-
+        # Case - Resource supports Credential using CredentialsWithApplicationId
+        elseif ($AuthenticationMethod.Contains('CredentialsWithApplicationId') -and `
+                $parameters.Contains('Credential'))
+        {
+            $Components += @{
+                Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
+                AuthMethod = 'CredentialsWithApplicationId'
+            }
+        }
         # Case - Resource supports Credential
         elseif ($AuthenticationMethod.Contains('Credentials') -and `
                 $parameters.Contains('Credential'))

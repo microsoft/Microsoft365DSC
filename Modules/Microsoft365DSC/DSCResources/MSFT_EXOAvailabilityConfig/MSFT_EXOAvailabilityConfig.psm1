@@ -279,7 +279,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $DesiredValues = $PSBoundParameters
     if ($OrgWideAccount.Contains('@'))

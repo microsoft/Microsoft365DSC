@@ -734,7 +734,7 @@ function Set-TargetResource
     $HostedContentFilterPolicyParams.Remove('CertificateThumbprint') | Out-Null
     $HostedContentFilterPolicyParams.Remove('CertificatePath') | Out-Null
     $HostedContentFilterPolicyParams.Remove('CertificatePassword') | Out-Null
-    $HostedContentFilterPolicyParams.Remove('Managedidentity') | Out-Null
+    $HostedContentFilterPolicyParams.Remove('ManagedIdentity') | Out-Null
 
     if ($HostedContentFilterPolicyParams.Contains('EndUserSpamNotificationCustomFromAddress'))
     {
@@ -1091,7 +1091,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     if ($null -ne $ValuesToCheck.AllowedSenders -and $ValuesToCheck.AllowedSenders.Length -eq 0)
     {

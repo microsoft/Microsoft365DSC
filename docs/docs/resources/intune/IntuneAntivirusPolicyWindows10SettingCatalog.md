@@ -12,6 +12,25 @@
 | **Identity** | Key | String | Identity of the endpoint protection policy for Windows 10. ||
 | **DisplayName** | Write | String | Display name of the endpoint protection policy for Windows 10. ||
 | **Description** | Write | String | Description of the endpoint protection policy for Windows 10. ||
+| **tamperprotection** | Write | String | Allows or disallows scanning of archives. (0: enable feature. 1: disable feature) |0, 1|
+| **disableaccountprotectionui** | Write | String | Use this policy setting to specify if to display the Account protection area in Windows Defender Security Center. (0: disable feature. 1: enable feature) |0, 1|
+| **disableappbrowserui** | Write | String | Use this policy setting if you want to disable the display of the app and browser protection area in Windows Defender Security Center. (0: disable feature. 1: enable feature) |0, 1|
+| **disablecleartpmbutton** | Write | String | Disable the Clear TPM button in Windows Security. (0: disable feature. 1: enable feature) |0, 1|
+| **disabledevicesecurityui** | Write | String | Use this policy setting if you want to disable the display of the Device security area in the Windows Defender Security Center. (0: disable feature. 1: enable feature) |0, 1|
+| **disablefamilyui** | Write | String | Use this policy setting if you want to disable the display of the family options area in Windows Defender Security Center. (0: disable feature. 1: enable feature) |0, 1|
+| **disablehealthui** | Write | String | Use this policy setting if you want to disable the display of the device performance and health area in Windows Defender Security Center. (0: disable feature. 1: enable feature) |0, 1|
+| **disablenetworkui** | Write | String | Use this policy setting if you want to disable the display of the firewall and network protection area in Windows Defender Security Center. (0: disable feature. 1: enable feature) |0, 1|
+| **disableenhancednotifications** | Write | String | Use this policy setting if you want to disable the display of Windows Defender Security Center notifications. (0: disable feature. 1: enable feature) |0, 1|
+| **disabletpmfirmwareupdatewarning** | Write | String | Hide the recommendation to update TPM Firmware when a vulnerable firmware is detected. (0: disable feature. 1: enable feature) |0, 1|
+| **disablevirusui** | Write | String | Use this policy setting if you want to disable the display of the virus and threat protection area in Windows Defender Security Center.  (0: disable feature. 1: enable feature) |0, 1|
+| **hideransomwaredatarecovery** | Write | String | Use this policy setting to hide the Ransomware data recovery area in Windows Defender Security Center. (0: disable feature. 1: enable feature) |0, 1|
+| **hidewindowssecuritynotificationareacontrol** | Write | String | This policy setting hides the Windows Security notification area control. (0: disable feature. 1: enable feature) |0, 1|
+| **enablecustomizedtoasts** | Write | String | Enable this policy to display your company name and contact options in the notifications. (0: disable feature. 1: enable feature) |0, 1|
+| **enableinappcustomization** | Write | String | Enable this policy to have your company name and contact options displayed in a contact card fly out in Windows Defender Security Center. (0: disable feature. 1: enable feature) |0, 1|
+| **companyname** | Write | String | The company name that is displayed to the users. CompanyName is required for both EnableCustomizedToasts and EnableInAppCustomization. ||
+| **email** | Write | String | The email address that is displayed to users. The default mail application is used to initiate email actions. ||
+| **phone** | Write | String | The phone number or Skype ID that is displayed to users. Skype is used to initiate the call. ||
+| **url** | Write | String | The help portal URL that is displayed to users. The default browser is used to initiate this action. ||
 | **allowarchivescanning** | Write | String | Allows or disallows scanning of archives. (0: disable feature. 1: enable feature) |0, 1|
 | **allowbehaviormonitoring** | Write | String | Allows or disallows Windows Defender Behavior Monitoring functionality. (0: disable feature. 1: enable feature) |0, 1|
 | **allowcloudprotection** | Write | String | To best protect your PC, Windows Defender will send information to Microsoft about any problems it finds. Microsoft will analyze that information, learn more about problems affecting you and other customers, and offer improved solutions. (0: disable feature. 1: enable feature) |0, 1|
@@ -52,6 +71,7 @@
 | **moderateseveritythreats** | Write | String | Allows an administrator to specify moderate severity threats corresponding action ID to take. |clean, quarantine, remove, allow, userdefined, block|
 | **severethreats** | Write | String | Allows an administrator to specify high severity threats corresponding action ID to take. |clean, quarantine, remove, allow, userdefined, block|
 | **highseveritythreats** | Write | String | Allows an administrator to specify severe threats corresponding action ID to take. |clean, quarantine, remove, allow, userdefined, block|
+| **templateId** | Write | String | Template Id of the policy. |d948ff9b-99cb-4ee0-8012-1fbc09685377_1, 45fea5e9-280d-4da1-9792-fb5736da0ca9_1, 804339ad-1553-4478-a742-138fb5807418_1|
 | **Assignments** | Write | InstanceArray[] | Represents the assignment to the Intune policy. ||
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed |Present, Absent|
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin ||

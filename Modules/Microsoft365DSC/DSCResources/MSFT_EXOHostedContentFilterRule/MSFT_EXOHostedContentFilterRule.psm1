@@ -313,7 +313,7 @@ function Set-TargetResource
         $CreationParams.Remove('CertificateThumbprint') | Out-Null
         $CreationParams.Remove('CertificatePath') | Out-Null
         $CreationParams.Remove('CertificatePassword') | Out-Null
-        $CreationParams.Remove('Managedidentity') | Out-Null
+        $CreationParams.Remove('ManagedIdentity') | Out-Null
         if ($Enabled -and ('Disabled' -eq $CurrentValues.State))
         {
             # New-HostedContentFilterRule has the Enabled parameter, Set-HostedContentFilterRule does not.
@@ -336,7 +336,7 @@ function Set-TargetResource
         $UpdateParams.Remove('CertificateThumbprint') | Out-Null
         $UpdateParams.Remove('CertificatePath') | Out-Null
         $UpdateParams.Remove('CertificatePassword') | Out-Null
-        $UpdateParams.Remove('Managedidentity') | Out-Null
+        $UpdateParams.Remove('ManagedIdentity') | Out-Null
         Write-Verbose -Message "Updating HostedContentFilterRule {$Identity}"
         Set-HostedContentFilterRule @UpdateParams
     }
@@ -456,7 +456,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

@@ -1,5 +1,21 @@
 # Change log for Microsoft365DSC
 
+# 1.22.1109.1
+
+* EXODataClassification
+  * FIXES [#2487](https://github.com/microsoft/Microsoft365DSC/issues/2487)
+* EXOHostedOutboundSpamFilterPolicy
+  * Add support to create and remove Hosted Outbound Spam Filter Policies
+  * FIXES [#2492](https://github.com/microsoft/Microsoft365DSC/issues/2492)
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * FIXES [#2463](https://github.com/microsoft/Microsoft365DSC/issues/2463)
+  * Returns all type of policies from the template family: endpointSecurityAntivirus
+* MISC
+  * Fixes and issue with ManagedIdentity Parameter not being not removed correctly in a parameterset.
+    * FIXES [#2464](https://github.com/microsoft/Microsoft365DSC/issues/2464)
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.15.0;
+
 # 1.22.1102.1
 
 * AADAdministrativeUnit
@@ -8,6 +24,7 @@
   * Initial release;
 * DEPENDENCIES
   * Updated MicrosoftTeams to version 4.9.0;
+  * Updated MSCloudLoginAssistant to version 1.0.97;
 
 # 1.22.1026.2
 
