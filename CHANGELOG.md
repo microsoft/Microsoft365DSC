@@ -1,5 +1,13 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* MISC
+  * Added Application based authentication to Microsoft Teams resources;
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.16.0;
+  * Updated PnP.PowerShell to version 1.12.0;
+
 # 1.22.1109.1
 
 * EXODataClassification

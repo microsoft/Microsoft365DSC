@@ -78,7 +78,7 @@
         },
         @{
             ModuleName      = 'PnP.PowerShell'
-            RequiredVersion = '1.11.0'
+            RequiredVersion = '1.12.0'
         },
         @{
             ModuleName      = 'ReverseDSC'
