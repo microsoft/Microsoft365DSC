@@ -15,6 +15,9 @@ class MSFT_TeamsMeetingConfiguration : OMI_BaseResource
     [Write, Description("Determines the starting port number for client screen sharing or application sharing. Minimum allowed value: 1024 Maximum allowed value: 65535 Default value: 50040.")] UInt32 ClientAppSharingPort;
     [Write, Description("Determines whether custom media port and range selections need to be enforced. When set to True, clients will use the specified port range for media traffic. When set to False (the default value) for any available port (from port 1024 through port 65535) will be used to accommodate media traffic.")] Boolean ClientMediaPortRangeEnabled;
     [Write, Description("Determines the total number of ports available for client sharing or application sharing. Default value is 20.")] UInt32 ClientAppSharingPortRange;
-    [Required, Description("Credentials of the Teams Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Credentials of the Teams Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
 };
 

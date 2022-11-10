@@ -43,9 +43,21 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -79,16 +91,19 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found Teams Update Management Policy with Identity {$Identity}"
         return @{
-            Identity            = $policy.Identity
-            Description         = $policy.Description
-            AllowManagedUpdates = $policy.AllowManagedUpdates
-            AllowPreview        = $policy.AllowPreview
-            AllowPublicPreview  = $policy.AllowPublicPreview
-            UpdateDayOfWeek     = $policy.UpdateDayOfWeek
-            UpdateTime          = $policy.UpdateTime
-            UpdateTimeOfDay     = $policy.UpdateTimeOfDay.Split('T')[1].Replace('Z', '')
-            Ensure              = 'Present'
-            Credential          = $Credential
+            Identity              = $policy.Identity
+            Description           = $policy.Description
+            AllowManagedUpdates   = $policy.AllowManagedUpdates
+            AllowPreview          = $policy.AllowPreview
+            AllowPublicPreview    = $policy.AllowPublicPreview
+            UpdateDayOfWeek       = $policy.UpdateDayOfWeek
+            UpdateTime            = $policy.UpdateTime
+            UpdateTimeOfDay       = $policy.UpdateTimeOfDay.Split('T')[1].Replace('Z', '')
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
     catch
@@ -161,9 +176,21 @@ function Set-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -190,6 +217,9 @@ function Set-TargetResource
         $newParams = $PSBoundParameters
         $newParams.Remove("Ensure") | Out-Null
         $newParams.Remove("Credential") | Out-Null
+        $newParams.Remove("ApplicationId") | Out-Null
+        $newParams.Remove("TenantId") | Out-Null
+        $newParams.Remove("CertificateThumbprint") | Out-Null
 
         New-CsTeamsUpdateManagementPolicy @newParams | Out-Null
     }
@@ -199,6 +229,9 @@ function Set-TargetResource
         $setParams = $PSBoundParameters
         $setParams.Remove("Ensure") | Out-Null
         $setParams.Remove("Credential") | Out-Null
+        $setParams.Remove("ApplicationId") | Out-Null
+        $setParams.Remove("TenantId") | Out-Null
+        $setParams.Remove("CertificateThumbprint") | Out-Null
 
         Set-CsTeamsUpdateManagementPolicy @setParams | Out-Null
     }
@@ -255,9 +288,21 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -278,7 +323,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -296,9 +340,21 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -331,8 +387,11 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity.Replace('Tag:', ''))" -NoNewline
             $params = @{
-                Identity   = $policy.Identity.Replace("Tag:", "")
-                Credential = $Credential
+                Identity              = $policy.Identity.Replace("Tag:", "")
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
             }
             $result = Get-TargetResource @params
             $result = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
