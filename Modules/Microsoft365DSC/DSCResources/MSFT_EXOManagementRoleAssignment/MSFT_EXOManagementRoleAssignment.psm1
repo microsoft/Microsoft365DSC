@@ -334,6 +334,7 @@ function Set-TargetResource
         $NewManagementRoleParams.Remove('Computer') | Out-Null
         $NewManagementRoleParams.Remove('App') | Out-Null
         $NewManagementRoleParams.Remove('Policy') | Out-Null
+        $NewManagementRoleParams.Remove('SecurityGroup') | Out-Null
         Set-ManagementRoleAssignment @NewManagementRoleParams
     }
 }
@@ -446,6 +447,12 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('User') | Out-Null
+    $ValuesToCheck.Remove('Role') | Out-Null
+    $ValuesToCheck.Remove('Computer') | Out-Null
+    $ValuesToCheck.Remove('App') | Out-Null
+    $ValuesToCheck.Remove('Policy') | Out-Null
+    $ValuesToCheck.Remove('SecurityGroup') | Out-Null
     $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
