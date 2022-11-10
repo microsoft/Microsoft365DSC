@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADEntitlementManagementAccessPackage
+  * Initial Release.
+
 # 1.22.1109.1
 
 * EXODataClassification
