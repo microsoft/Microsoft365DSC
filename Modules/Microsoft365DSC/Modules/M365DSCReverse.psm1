@@ -439,7 +439,7 @@ function Start-M365DSCConfigurationExtract
 
                 Add-ConfigurationDataEntry -Node 'NonNodeData' `
                     -Key 'OrganizationName' `
-                    -Value $OrganizationName `
+                    -Value $organization `
                     -Description "Tenant's default verified domain name"
 
                 Add-ConfigurationDataEntry -Node 'NonNodeData' `
