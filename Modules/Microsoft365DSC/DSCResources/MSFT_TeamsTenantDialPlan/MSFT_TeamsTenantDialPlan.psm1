@@ -491,14 +491,16 @@ function Export-TargetResource
             {
                 $results.NormalizationRules = Get-M365DSCNormalizationRulesAsString $results.NormalizationRules
             }
-            $currentDSCBlock = "        TeamsTenantDialPlan " + (New-Guid).ToString() + "`r`n"
-            $currentDSCBlock += "        {`r`n"
-            $content = Get-DSCBlock -Params $results -ModulePath $PSScriptRoot
 
-            $content = Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "NormalizationRules"
-            $currentDSCBlock += Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "Credential"
-            $currentDSCBlock += "        }`r`n"
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
+
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "NormalizationRules"
             $dscContent += $currentDSCBlock
+
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++

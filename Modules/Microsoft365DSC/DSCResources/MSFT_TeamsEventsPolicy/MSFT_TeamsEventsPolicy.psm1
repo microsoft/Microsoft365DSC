@@ -319,7 +319,7 @@ function Export-TargetResource
     try
     {
         $organization = ""
-        if ($Credential.UserName.Contains("@"))
+        if ($null -ne $Credential -and $Credential.UserName.Contains("@"))
         {
             $organization = $Credential.UserName.Split("@")[1]
         }

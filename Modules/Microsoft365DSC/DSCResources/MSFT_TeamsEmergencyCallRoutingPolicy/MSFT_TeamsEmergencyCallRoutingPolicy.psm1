@@ -373,8 +373,6 @@ function Export-TargetResource
             $result = Get-TargetResource @params
             $result = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Result
-            $currentDSCBlock = "        TeamsEmergencyCallRoutingPolicy " + (New-Guid).ToString() + "`r`n"
-            $currentDSCBlock += "        {`r`n"
 
             if ($null -ne $result.EmergencyNumbers)
             {
@@ -388,8 +386,12 @@ function Export-TargetResource
                 $content = Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "EmergencyNumbers"
             }
 
-            $currentDSCBlock += Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "Credential"
-            $currentDSCBlock += "        }`r`n"
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Result `
+                -Credential $Credential
+
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

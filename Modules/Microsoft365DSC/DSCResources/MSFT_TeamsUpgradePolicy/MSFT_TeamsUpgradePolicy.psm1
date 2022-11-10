@@ -276,7 +276,7 @@ function Export-TargetResource
     #endregion
 
     $organization = ""
-    if ($Credential.UserName.Contains("@"))
+    if ($null -ne $Credential -and $Credential.UserName.Contains("@"))
     {
         $organization = $Credential.UserName.Split("@")[1]
     }
@@ -298,19 +298,13 @@ function Export-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
             }
             $result = Get-TargetResource @params
-            $result = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Result
-            $currentDSCBlock = "        TeamsUpgradePolicy " + (New-Guid).ToString() + "`r`n"
-            $currentDSCBlock += "        {`r`n"
-            $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
-                -ParameterName "Credential"
-            if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
-            }
-            $currentDSCBlock += $partialContent
-            $currentDSCBlock += "        }`r`n"
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $result
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

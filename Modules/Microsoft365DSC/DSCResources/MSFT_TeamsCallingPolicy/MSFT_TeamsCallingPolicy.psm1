@@ -174,7 +174,7 @@ function Get-TargetResource
             Credential                        = $Credential
             ApplicationId                     = $ApplicationId
             TenantId                          = $TenantId
-            $CertificateThumbprint            = $CertificateThumbprint
+            CertificateThumbprint            = $CertificateThumbprint
         }
     }
     catch
