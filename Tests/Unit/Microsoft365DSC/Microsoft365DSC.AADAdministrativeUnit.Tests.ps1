@@ -1,25 +1,27 @@
 [CmdletBinding()]
 param(
 )
-$M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
-$CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
-$GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
-Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\UnitTestHelper.psm1" `
+# adding BeforeAll to comply with Pester v5.x
+BeforeAll {
+    $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
+                            -ChildPath "..\..\Unit" `
+                            -Resolve
+    $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
+                -ChildPath "\Stubs\Microsoft365.psm1" `
+                -Resolve)
+    $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
+        -ChildPath "\Stubs\Generic.psm1" `
         -Resolve)
+    Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
+            -ChildPath "\UnitTestHelper.psm1" `
+            -Resolve)
 
-# *-MgAdministrativeUnit* cmdlets are only available in the beta profile
-Select-MgProfile -Name beta
+    # *-MgAdministrativeUnit* cmdlets are only available in the beta profile
+    Select-MgProfile -Name beta
 
-$Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "AADAdministrativeUnit" -GenericStubModule $GenericStubPath
-
+    $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
+        -DscResource "AADAdministrativeUnit" -GenericStubModule $GenericStubPath
+}
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -46,8 +48,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
-            # Note: The Graph beta profile provides cmdlets xxx-MgAdministrativeUnit(xxx) that accommodate the preview AU membership feature
-            # but the 1.0 profile cmdlets only contains xxx-MgDirectoryAdministrativeUnit(xxx)
+            # Note: Only the Graph beta profile provides cmdlets xxx-MgAdministrativeUnit(xxx) that accommodate the preview AU membership feature
 
             Mock -CommandName Update-MgAdministrativeUnit -MockWith {
 
