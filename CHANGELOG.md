@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOManagementRoleAssignment
+  * FIXES [#2524](https://github.com/microsoft/Microsoft365DSC/issues/2524)
+
 # 1.22.1109.1
 
 * EXODataClassification
