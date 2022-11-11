@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* SCRetentionCompliancePolicy
+  * Fixes the Location parameters to be a string array instead of an object array.
+    FIXES [#2503](https://github.com/microsoft/Microsoft365DSC/issues/2503)
 * MISC
   * Added Application based authentication to Microsoft Teams resources;
 * DEPENDENCIES

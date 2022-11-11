@@ -107,14 +107,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-RetentionCompliancePolicy -MockWith {
                     return @{
                         Name                        = "TestPolicy"
-                        ExchangeLocation            = "https://contoso.sharepoint.com/sites/demo"
+                        ExchangeLocation            = @{
+                            DisplayName = "https://contoso.sharepoint.com/sites/demo"
+                        }
                         ExchangeLocationException   = "https://contoso.sharepoint.com"
-                        OneDriveLocation            = "https://contoso.sharepoint.com/sites/demo"
+                        OneDriveLocation            = @{
+                            DisplayName = "https://contoso.sharepoint.com/sites/demo"
+                        }
                         OneDriveLocationException   = "https://contoso.com"
-                        PublicFolderLocation        = "\\contoso\PF"
-                        SkypeLocation               = "https://contoso.sharepoint.com/sites/demo"
+                        PublicFolderLocation        = @{
+                            DisplayName = "\\contoso\PF"
+                        }
+                        SkypeLocation               = @{
+                            DisplayName = "https://contoso.sharepoint.com/sites/demo"
+                        }
                         SkypeLocationException      = "https://contoso.sharepoint.com/"
-                        SharePointLocation          = "https://contoso.sharepoint.com/sites/demo"
+                        SharePointLocation          = @{
+                            DisplayName = "https://contoso.sharepoint.com/sites/demo"
+                        }
                         SharePointLocationException = "https://contoso.com"
                     }
                 }
