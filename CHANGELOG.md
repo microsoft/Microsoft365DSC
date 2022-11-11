@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* SCRetentionCompliancePolicy
+  * Fixes the Location parameters to be a string array instead of an object array.
+    FIXES [#2503](https://github.com/microsoft/Microsoft365DSC/issues/2503)
+
 # 1.22.1109.1
 
 * EXODataClassification
