@@ -86,7 +86,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Getting configuration of Planner Task {$Title}"
 
@@ -191,6 +195,7 @@ function Get-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
 		        ApplicationSecret     = $ApplicationSecret
+                ManagedIdentity       = $ManagedIdentity.IsPresent
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $results)"
             return $results
@@ -309,7 +314,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Setting configuration of Planner Task {$Title}"
 
@@ -528,7 +537,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -600,7 +613,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -653,6 +670,7 @@ function Export-TargetResource
                             TenantId              = $TenantId
                             CertificateThumbprint = $CertificateThumbprint
                             ApplicationSecret     = $ApplicationSecret
+                            ManagedIdentity       = $ManagedIdentity.IsPresent
                         }
 
                         $result = Get-TargetResource @params

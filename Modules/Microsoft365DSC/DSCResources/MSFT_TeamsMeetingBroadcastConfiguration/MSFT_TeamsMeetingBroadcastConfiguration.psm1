@@ -318,8 +318,8 @@ function Export-TargetResource
     {
         $dscContent = ''
         $params = @{
-            Identity   = "Global"
-            Credential = $Credential
+            Identity              = "Global"
+            Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint

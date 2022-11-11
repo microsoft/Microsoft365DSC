@@ -210,7 +210,6 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
 
-
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
