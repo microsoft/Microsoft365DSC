@@ -194,9 +194,21 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting the Teams Meeting Policy $($Identity)"
@@ -274,6 +286,9 @@ function Get-TargetResource
             WhoCanRegister                             = $policy.WhoCanRegister
             Ensure                                     = 'Present'
             Credential                                 = $Credential
+            ApplicationId                              = $ApplicationId
+            TenantId                                   = $TenantId
+            CertificateThumbprint                      = $CertificateThumbprint
         }
     }
     catch
@@ -497,9 +512,21 @@ function Set-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message 'Setting Teams Meeting Policy'
@@ -524,6 +551,9 @@ function Set-TargetResource
     $SetParameters = $PSBoundParameters
     $SetParameters.Remove('Ensure') | Out-Null
     $SetParameters.Remove('Credential') | Out-Null
+    $SetParameters.Remove('ApplicationId') | Out-Null
+    $SetParameters.Remove('TenantId') | Out-Null
+    $SetParameters.Remove('CertificateThumbprint') | Out-Null
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
@@ -766,9 +796,21 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -790,7 +832,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
+
     # The AllowAnonymousUsersToDialOut is temporarly disabled. Therefore
     # we can't create or update a policy with it and it needs to be removed;
     $ValuesToCheck.Remove('AllowAnonymousUsersToDialOut') | Out-Null
@@ -815,9 +857,21 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -844,8 +898,11 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewline
             $params = @{
-                Identity           = $policy.Identity
-                Credential = $Credential
+                Identity              = $policy.Identity
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

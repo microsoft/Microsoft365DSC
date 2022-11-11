@@ -2,12 +2,20 @@
 
 # UNRELEASED
 
+* AADEntitlementManagementAccessPackage
+  * Initial Release.
 * EXOManagementRoleAssignment
   * Added support for RoleGroup Role Assignees
     Fixes [#2524](https://github.com/microsoft/Microsoft365DSC/issues/2524)
 * SCRetentionCompliancePolicy
   * Fixes the Location parameters to be a string array instead of an object array.
     FIXES [#2503](https://github.com/microsoft/Microsoft365DSC/issues/2503)
+* MISC
+  * Added Application based authentication to Microsoft Teams resources;
+  * Added support for Service Principal Auth for the Planner resources;
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.16.0;
+  * Updated PnP.PowerShell to version 1.12.0;
 
 # 1.22.1109.1
 

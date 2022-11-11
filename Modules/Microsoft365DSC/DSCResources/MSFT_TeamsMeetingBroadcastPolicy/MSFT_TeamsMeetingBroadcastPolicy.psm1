@@ -31,9 +31,21 @@ function Get-TargetResource
         [ValidateSet("Present", "Absent")]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration of Teams Meeting Broadcast Policy {$Identity}"
@@ -69,6 +81,9 @@ function Get-TargetResource
                 BroadcastRecordingMode          = $config.BroadcastRecordingMode
                 Ensure                          = 'Present'
                 Credential                      = $Credential
+                ApplicationId                   = $ApplicationId
+                TenantId                        = $TenantId
+                CertificateThumbprint           = $CertificateThumbprint
             }
         }
         return $nullReturn
@@ -131,9 +146,21 @@ function Set-TargetResource
         [ValidateSet("Present", "Absent")]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Write-Verbose -Message "Setting configuration of Teams Meeting Broadcast Policy {$Identity}"
 
@@ -172,6 +199,9 @@ function Set-TargetResource
     $SetParams = $PSBoundParameters
     $currentValues = Get-TargetResource @PSBoundParameters
     $SetParams.Remove("Credential") | Out-Null
+    $SetParams.Remove("ApplicationId") | Out-Null
+    $SetParams.Remove("TenantId") | Out-Null
+    $SetParams.Remove("CertificateThumbprint") | Out-Null
     $SetParams.Remove("Ensure") | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
@@ -221,9 +251,21 @@ function Test-TargetResource
         [ValidateSet("Present", "Absent")]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -245,7 +287,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
+
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
@@ -262,9 +304,21 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -291,8 +345,11 @@ function Export-TargetResource
         foreach ($policy in $policies)
         {
             $params = @{
-                Identity           = $policy.Identity
-                Credential = $Credential
+                Identity              = $policy.Identity
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
             }
             Write-Host "    |---[$i/$($policies.Length)] $($policy.Identity)" -NoNewline
             $Results = Get-TargetResource @Params
