@@ -1,5 +1,6 @@
+
 # AADAdministrativeUnit
 
 ## Description
 
-This resource configures an Azure Active Directory Administrative Unit.
+This resource configures an Azure AD Administrative Unit.
