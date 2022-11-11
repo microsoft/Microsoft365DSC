@@ -145,7 +145,7 @@ function Get-TargetResource
                 TenantId                         = $TenantId
             }
 
-            if ($roleAssignment.RoleAssigneeType -eq 'SecurityGroup' -or 'RoleGroup')
+            if ($roleAssignment.RoleAssigneeType -eq 'SecurityGroup' -or $roleAssignment.RoleAssigneeType -eq 'RoleGroup')
             {
                 $result.Add('SecurityGroup', $roleAssignment.RoleAssignee)
             }
