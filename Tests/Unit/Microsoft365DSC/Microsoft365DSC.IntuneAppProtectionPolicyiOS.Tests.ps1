@@ -23,33 +23,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
-
-            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
-                return @{}
-            }
-
-            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
-            }
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin@mydomain.com", $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
-
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
             }
 
-            Mock -CommandName Set-M365DSCIntuneAppProtectionPolicyiOS -MockWith {
+            Mock -CommandName New-MgDeviceAppManagementiosManagedAppProtection -MockWith {
+                return @{
+                    id='12345-12345-12345-12345-12345'
+                }
             }
-            Mock -CommandName Set-M365DSCIntuneAppProtectionPolicyiOSAssignment -MockWith {
-            }
-            Mock -CommandName Set-M365DSCIntuneAppProtectionPolicyiOSApps -MockWith {
-            }
-            Mock -CommandName New-M365DSCIntuneAppProtectionPolicyiOS -MockWith {
+            Mock -CommandName Update-MgDeviceAppManagementiosManagedAppProtection -MockWith {
             }
             Mock -CommandName Remove-MgDeviceAppManagementiosManagedAppProtection -MockWith {
+            }
+            Mock -CommandName Update-IntuneAppProtectionPolicyiOSAssignment -MockWith {
+            }
+            Mock -CommandName Update-IntuneAppProtectionPolicyiOSApp -MockWith {
             }
         }
 
@@ -84,10 +78,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MaximumPinRetries                       = 5;
                     MinimumPinLength                        = 4;
                     OrganizationalCredentialsRequired       = $False;
-                    PeriodBeforePinReset                    = "P60D";
-                    PeriodOfflineBeforeAccessCheck          = "PT12H";
-                    PeriodOfflineBeforeWipeIsEnforced       = "P90D";
-                    PeriodOnlineBeforeAccessCheck           = "PT30M";
+                    PeriodBeforePinReset                    = "90.00:00:00";
+                    PeriodOfflineBeforeAccessCheck          = "12:00:00";
+                    PeriodOfflineBeforeWipeIsEnforced       = "90.00:00:00";
+                    PeriodOnlineBeforeAccessCheck           = "00:30:00";
                     PinCharacterSet                         = "alphanumericAndSymbol";
                     PinRequired                             = $True;
                     DisableAppPinIfDevicePinIsSet           = $False;
@@ -95,21 +89,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SaveAsBlocked                           = $True;
                     SimplePinBlocked                        = $False;
                 }
-                $Global:Count = 0
                 Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtection -MockWith {
-                    if ($Global:Count -eq 0)
-                    {
-                        $Global:Count++
-                        return $null
-                    }
-                    else
-                    {
-                        return @{
-                            displayName   = "DSC Policy"
-                            id            = "12345-12345-12345-12345-12345"
-                            '@odata.type' = "#microsoft.graph.iosManagedAppProtection"
-                        }
-                    }
+                    return $null
                 }
             }
 
@@ -122,9 +103,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should create the Policy from the Set method" {
-                $Global:Count = 0
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-M365DSCIntuneAppProtectionPolicyiOS" -Exactly 1
+                Should -Invoke -CommandName "New-MgDeviceAppManagementiosManagedAppProtection" -Exactly 1
             }
         }
 
@@ -158,27 +138,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MaximumPinRetries                       = 5;
                     MinimumPinLength                        = 4;
                     OrganizationalCredentialsRequired       = $False;
-                    PeriodBeforePinReset                    = "P60D";
-                    PeriodOfflineBeforeAccessCheck          = "PT12H";
-                    PeriodOfflineBeforeWipeIsEnforced       = "P90D";
-                    PeriodOnlineBeforeAccessCheck           = "PT30M";
+                    PeriodBeforePinReset                    = "90.00:00:00";
+                    PeriodOfflineBeforeAccessCheck          = "12:00:00";
+                    PeriodOfflineBeforeWipeIsEnforced       = "90.00:00:00";
+                    PeriodOnlineBeforeAccessCheck           = "00:30:00";
                     PinCharacterSet                         = "alphanumericAndSymbol";
                     PinRequired                             = $True;
                     DisableAppPinIfDevicePinIsSet           = $False;
                     PrintBlocked                            = $False;
                     SaveAsBlocked                           = $True;
                     SimplePinBlocked                        = $False;
+                    Identity                                = "12345-12345-12345-12345-12345"
                 }
 
                 Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtection -MockWith {
-                    return @{
-                        displayName   = "DSC Policy"
-                        id            = "12345-12345-12345-12345-12345"
-                        '@odata.type' = "#microsoft.graph.iosManagedAppProtection"
-                    }
-                }
-
-                Mock -CommandName Get-M365DSCIntuneAppProtectionPolicyiOS -MockWith {
                     return @{
                         '@odata.type'                           = "#microsoft.graph.iosManagedAppProtection"
                         AllowedDataStorageLocations             = @("sharePoint");
@@ -186,43 +159,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                         AllowedOutboundDataTransferDestinations = "managedApps";
                         AppDataEncryptionType                   = "whenDeviceLocked";
-                        Apps                                    = @(
-                            @{
-                                id                  = "com.cisco.jabberimintune.ios.ios"
-                                mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.cisco.jabberimintune.ios"
-                                }
-                            },
-                            @{
-                                id                  = "com.pervasent.boardpapers.ios.ios"
-                                mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.pervasent.boardpapers.ios"
-                                }
-                            },
-                            @{
-                                id                  = "com.sharefile.mobile.intune.ios.ios"
-                                mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.sharefile.mobile.intune.ios"
-                                }
-                            }
-                        )
-                        Assignments                             = @(
-                            @{
-                                target = @{
-                                    '@odata.type' = "#microsoft.graph.groupAssignmentTarget"
-                                    groupId       = "6ee86c9f-2b3c-471d-ad38-ff4673ed723e"
-                                }
-                            },
-                            @{
-                                target = @{
-                                    '@odata.type' = "#microsoft.graph.exclusionGroupAssignmentTarget"
-                                    groupId       = "3eacc231-d77b-4efb-bb5f-310f68bd6198"
-                                }
-                            }
-                        )
                         ContactSyncBlocked                      = $False;
                         DataBackupBlocked                       = $False;
                         Description                             = "";
@@ -240,10 +176,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         MaximumPinRetries                       = 5;
                         MinimumPinLength                        = 4;
                         OrganizationalCredentialsRequired       = $False;
-                        PeriodBeforePinReset                    = "P60D";
-                        PeriodOfflineBeforeAccessCheck          = "PT12H";
-                        PeriodOfflineBeforeWipeIsEnforced       = "P90D";
-                        PeriodOnlineBeforeAccessCheck           = "PT30M";
+                        PeriodBeforePinReset                    = "90.00:00:00";
+                        PeriodOfflineBeforeAccessCheck          = "12:00:00";
+                        PeriodOfflineBeforeWipeIsEnforced       = "90.00:00:00";
+                        PeriodOnlineBeforeAccessCheck           = "00:30:00";
                         PinCharacterSet                         = "alphanumericAndSymbol";
                         PinRequired                             = $True;
                         DisableAppPinIfDevicePinIsSet           = $False;
@@ -253,6 +189,54 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         id                                      = "12345-12345-12345-12345-12345"
                     }
                 }
+                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtectionApp -MockWith {
+                    return @(
+                        @{
+                            id                  = "com.cisco.jabberimintune.ios.ios"
+                            mobileAppIdentifier = @{
+                                additionalProperties=@{
+                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
+                                    bundleId      = "com.cisco.jabberimintune.ios"
+                                }
+                            }
+                        },
+                        @{
+                            id                  = "com.pervasent.boardpapers.ios.ios"
+                            mobileAppIdentifier = @{
+                                additionalProperties=@{
+                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
+                                    bundleId      = "com.pervasent.boardpapers.ios"
+                                }
+                            }
+                        },
+                        @{
+                            id                  = "com.sharefile.mobile.intune.ios.ios"
+                            mobileAppIdentifier = @{
+                                additionalProperties=@{
+                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
+                                    bundleId      = "com.sharefile.mobile.intune.ios"
+                                }
+                            }
+                        }
+                    )
+                }
+                Mock -CommandName Get-IntuneAppProtectionPolicyiOSAssignment -MockWith {
+                    return @(
+                        @{
+                            target = @{
+                                '@odata.type' = "#microsoft.graph.groupAssignmentTarget"
+                                groupId       = "6ee86c9f-2b3c-471d-ad38-ff4673ed723e"
+                            }
+                        },
+                        @{
+                            target = @{
+                                '@odata.type' = "#microsoft.graph.exclusionGroupAssignmentTarget"
+                                groupId       = "3eacc231-d77b-4efb-bb5f-310f68bd6198"
+                            }
+                        }
+                    )
+                }
+
             }
 
             It "Should return Present from the Get method" {
@@ -265,7 +249,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should update the App Configuration Policy from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-M365DSCIntuneAppProtectionPolicyiOS -Exactly 1
+                Should -Invoke -CommandName Update-MgDeviceAppManagementiosManagedAppProtection -Exactly 1
             }
         }
 
@@ -288,82 +272,38 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExcludedGroups                          = @("3eacc231-d77b-4efb-bb5f-310f68bd6198");
                     FaceIdBlocked                           = $False;
                     FingerprintBlocked                      = $False;
+                    Credential                      = $Credential;
                     ManagedBrowser                          = "microsoftEdge";
                     MinimumRequiredAppVersion               = "0.2";
-                    MinimumRequiredOSVersion                = "0.2";
+                    MinimumRequiredOsVersion                = "0.2";
                     MinimumRequiredSdkVersion               = "0.1";
                     MinimumWarningAppVersion                = "0.1";
-                    MinimumWarningOSVersion                 = "0.1";
-                    Credential                      = $Credential;
+                    MinimumWarningOsVersion                 = "0.1";
                     ManagedBrowserToOpenLinksRequired       = $True;
                     MaximumPinRetries                       = 5;
                     MinimumPinLength                        = 4;
                     OrganizationalCredentialsRequired       = $False;
-                    PeriodBeforePinReset                    = "P60D";
-                    PeriodOfflineBeforeAccessCheck          = "PT12H";
-                    PeriodOfflineBeforeWipeIsEnforced       = "P90D";
-                    PeriodOnlineBeforeAccessCheck           = "PT30M";
+                    PeriodBeforePinReset                    = "90.00:00:00";
+                    PeriodOfflineBeforeAccessCheck          = "12:00:00";
+                    PeriodOfflineBeforeWipeIsEnforced       = "90.00:00:00";
+                    PeriodOnlineBeforeAccessCheck           = "00:30:00";
                     PinCharacterSet                         = "alphanumericAndSymbol";
                     PinRequired                             = $True;
                     DisableAppPinIfDevicePinIsSet           = $False;
                     PrintBlocked                            = $False;
                     SaveAsBlocked                           = $True;
                     SimplePinBlocked                        = $False;
+                    Identity                                = "12345-12345-12345-12345-12345"
                 }
 
                 Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtection -MockWith {
                     return @{
-                        displayName   = "DSC Policy"
-                        id            = "12345-12345-12345-12345-12345"
-                        '@odata.type' = "#microsoft.graph.iosManagedAppProtection"
-                    }
-                }
-
-                Mock -CommandName Get-M365DSCIntuneAppProtectionPolicyiOS -MockWith {
-                    @{
                         '@odata.type'                           = "#microsoft.graph.iosManagedAppProtection"
                         AllowedDataStorageLocations             = @("sharePoint");
                         AllowedInboundDataTransferSources       = "managedApps";
                         AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                         AllowedOutboundDataTransferDestinations = "managedApps";
                         AppDataEncryptionType                   = "whenDeviceLocked";
-                        Apps                                    = @(
-                            @{
-                                id                  = "com.cisco.jabberimintune.ios.ios"
-                                mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.cisco.jabberimintune.ios"
-                                }
-                            },
-                            @{
-                                id                  = "com.pervasent.boardpapers.ios.ios"
-                                mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.pervasent.boardpapers.ios"
-                                }
-                            },
-                            @{
-                                id                  = "com.sharefile.mobile.intune.ios.ios"
-                                mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.sharefile.mobile.intune.ios"
-                                }
-                            }
-                        )
-                        Assignments                             = @(
-                            @{
-                                target = @{
-                                    '@odata.type' = "#microsoft.graph.groupAssignmentTarget"
-                                    groupId       = "6ee86c9f-2b3c-471d-ad38-ff4673ed723e"
-                                }
-                            },
-                            @{
-                                target = @{
-                                    '@odata.type' = "#microsoft.graph.exclusionGroupAssignmentTarget"
-                                    groupId       = "3eacc231-d77b-4efb-bb5f-310f68bd6198"
-                                }
-                            }
-                        )
                         ContactSyncBlocked                      = $False;
                         DataBackupBlocked                       = $False;
                         Description                             = "";
@@ -373,18 +313,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         FingerprintBlocked                      = $False;
                         ManagedBrowser                          = "microsoftEdge";
                         MinimumRequiredAppVersion               = "0.2";
-                        MinimumRequiredOSVersion                = "0.2";
+                        MinimumRequiredOsVersion                = "0.2";
                         MinimumRequiredSdkVersion               = "0.1";
                         MinimumWarningAppVersion                = "0.1";
-                        MinimumWarningOSVersion                 = "0.1";
+                        MinimumWarningOsVersion                 = "0.1";
                         ManagedBrowserToOpenLinksRequired       = $True;
                         MaximumPinRetries                       = 5;
                         MinimumPinLength                        = 4;
                         OrganizationalCredentialsRequired       = $False;
-                        PeriodBeforePinReset                    = "P60D";
-                        PeriodOfflineBeforeAccessCheck          = "PT12H";
-                        PeriodOfflineBeforeWipeIsEnforced       = "P90D";
-                        PeriodOnlineBeforeAccessCheck           = "PT30M";
+                        PeriodBeforePinReset                    = "90.00:00:00";
+                        PeriodOfflineBeforeAccessCheck          = "12:00:00";
+                        PeriodOfflineBeforeWipeIsEnforced       = "90.00:00:00";
+                        PeriodOnlineBeforeAccessCheck           = "00:30:00";
                         PinCharacterSet                         = "alphanumericAndSymbol";
                         PinRequired                             = $True;
                         DisableAppPinIfDevicePinIsSet           = $False;
@@ -394,6 +334,54 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         id                                      = "12345-12345-12345-12345-12345"
                     }
                 }
+                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtectionApp -MockWith {
+                    return @(
+                        @{
+                            id                  = "com.cisco.jabberimintune.ios.ios"
+                            mobileAppIdentifier = @{
+                                additionalProperties=@{
+                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
+                                    bundleId      = "com.cisco.jabberimintune.ios"
+                                }
+                            }
+                        },
+                        @{
+                            id                  = "com.pervasent.boardpapers.ios.ios"
+                            mobileAppIdentifier = @{
+                                additionalProperties=@{
+                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
+                                    bundleId      = "com.pervasent.boardpapers.ios"
+                                }
+                            }
+                        },
+                        @{
+                            id                  = "com.sharefile.mobile.intune.ios.ios"
+                            mobileAppIdentifier = @{
+                                additionalProperties=@{
+                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
+                                    bundleId      = "com.sharefile.mobile.intune.ios"
+                                }
+                            }
+                        }
+                    )
+                }
+                Mock -CommandName Get-IntuneAppProtectionPolicyiOSAssignment -MockWith {
+                    return @(
+                        @{
+                            target = @{
+                                '@odata.type' = "#microsoft.graph.groupAssignmentTarget"
+                                groupId       = "6ee86c9f-2b3c-471d-ad38-ff4673ed723e"
+                            }
+                        },
+                        @{
+                            target = @{
+                                '@odata.type' = "#microsoft.graph.exclusionGroupAssignmentTarget"
+                                groupId       = "3eacc231-d77b-4efb-bb5f-310f68bd6198"
+                            }
+                        }
+                    )
+                }
+
             }
 
             It "Should return true from the Test method" {
@@ -431,71 +419,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MaximumPinRetries                       = 5;
                     MinimumPinLength                        = 4;
                     OrganizationalCredentialsRequired       = $False;
-                    PeriodBeforePinReset                    = "P60D";
-                    PeriodOfflineBeforeAccessCheck          = "PT12H";
-                    PeriodOfflineBeforeWipeIsEnforced       = "P90D";
-                    PeriodOnlineBeforeAccessCheck           = "PT30M";
+                    PeriodBeforePinReset                    = "90.00:00:00";
+                    PeriodOfflineBeforeAccessCheck          = "12:00:00";
+                    PeriodOfflineBeforeWipeIsEnforced       = "90.00:00:00";
+                    PeriodOnlineBeforeAccessCheck           = "00:30:00";
                     PinCharacterSet                         = "alphanumericAndSymbol";
                     PinRequired                             = $True;
                     DisableAppPinIfDevicePinIsSet           = $False;
                     PrintBlocked                            = $False;
                     SaveAsBlocked                           = $True;
                     SimplePinBlocked                        = $False;
+                    Identity                                = "12345-12345-12345-12345-12345"
                 }
 
                 Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtection -MockWith {
                     return @{
-                        displayName   = "DSC Policy"
-                        id            = "12345-12345-12345-12345-12345"
-                        '@odata.type' = "#microsoft.graph.iosManagedAppProtection"
-                    }
-                }
-
-                Mock -CommandName Get-M365DSCIntuneAppProtectionPolicyiOS -MockWith {
-                    @{
                         '@odata.type'                           = "#microsoft.graph.iosManagedAppProtection"
                         AllowedDataStorageLocations             = @("sharePoint");
                         AllowedInboundDataTransferSources       = "managedApps";
                         AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                         AllowedOutboundDataTransferDestinations = "managedApps";
                         AppDataEncryptionType                   = "whenDeviceLocked";
-                        Apps                                    = @(
-                            @{
-                                id                  = "com.cisco.jabberimintune.ios.ios"
-                                mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.cisco.jabberimintune.ios"
-                                }
-                            },
-                            @{
-                                id                  = "com.pervasent.boardpapers.ios.ios"
-                                mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.pervasent.boardpapers.ios"
-                                }
-                            },
-                            @{
-                                id                  = "com.sharefile.mobile.intune.ios.ios"
-                                mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.sharefile.mobile.intune.ios"
-                                }
-                            }
-                        )
-                        Assignments                             = @(
-                            @{
-                                target = @{
-                                    '@odata.type' = "#microsoft.graph.groupAssignmentTarget"
-                                    groupId       = "6ee86c9f-2b3c-471d-ad38-ff4673ed723e"
-                                }
-                            },
-                            @{
-                                target = @{
-                                    '@odata.type' = "#microsoft.graph.exclusionGroupAssignmentTarget"
-                                    groupId       = "3eacc231-d77b-4efb-bb5f-310f68bd6198"
-                                }
-                            }
-                        )
                         ContactSyncBlocked                      = $False;
                         DataBackupBlocked                       = $False;
                         Description                             = "";
@@ -513,10 +457,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         MaximumPinRetries                       = 5;
                         MinimumPinLength                        = 4;
                         OrganizationalCredentialsRequired       = $False;
-                        PeriodBeforePinReset                    = "P60D";
-                        PeriodOfflineBeforeAccessCheck          = "PT12H";
-                        PeriodOfflineBeforeWipeIsEnforced       = "P90D";
-                        PeriodOnlineBeforeAccessCheck           = "PT30M";
+                        PeriodBeforePinReset                    = "90.00:00:00";
+                        PeriodOfflineBeforeAccessCheck          = "12:00:00";
+                        PeriodOfflineBeforeWipeIsEnforced       = "90.00:00:00";
+                        PeriodOnlineBeforeAccessCheck           = "00:30:00";
                         PinCharacterSet                         = "alphanumericAndSymbol";
                         PinRequired                             = $True;
                         DisableAppPinIfDevicePinIsSet           = $False;
@@ -526,6 +470,54 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         id                                      = "12345-12345-12345-12345-12345"
                     }
                 }
+                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtectionApp -MockWith {
+                    return @(
+                        @{
+                            id                  = "com.cisco.jabberimintune.ios.ios"
+                            mobileAppIdentifier = @{
+                                additionalProperties=@{
+                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
+                                    bundleId      = "com.cisco.jabberimintune.ios"
+                                }
+                            }
+                        },
+                        @{
+                            id                  = "com.pervasent.boardpapers.ios.ios"
+                            mobileAppIdentifier = @{
+                                additionalProperties=@{
+                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
+                                    bundleId      = "com.pervasent.boardpapers.ios"
+                                }
+                            }
+                        },
+                        @{
+                            id                  = "com.sharefile.mobile.intune.ios.ios"
+                            mobileAppIdentifier = @{
+                                additionalProperties=@{
+                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
+                                    bundleId      = "com.sharefile.mobile.intune.ios"
+                                }
+                            }
+                        }
+                    )
+                }
+                Mock -CommandName Get-IntuneAppProtectionPolicyiOSAssignment -MockWith {
+                    return @(
+                        @{
+                            target = @{
+                                '@odata.type' = "#microsoft.graph.groupAssignmentTarget"
+                                groupId       = "6ee86c9f-2b3c-471d-ad38-ff4673ed723e"
+                            }
+                        },
+                        @{
+                            target = @{
+                                '@odata.type' = "#microsoft.graph.exclusionGroupAssignmentTarget"
+                                groupId       = "3eacc231-d77b-4efb-bb5f-310f68bd6198"
+                            }
+                        }
+                    )
+                }
+
             }
 
             It "Should return Present from the Get method" {
@@ -551,57 +543,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtection -MockWith {
                     return @{
-                        displayName   = "DSC Policy"
-                        id            = "12345-12345-12345-12345-12345"
-                        '@odata.type' = "#microsoft.graph.iosManagedAppProtection"
-                    }
-                }
-
-                Mock -CommandName Get-M365DSCIntuneAppProtectionPolicyiOS -MockWith {
-                    @{
                         '@odata.type'                           = "#microsoft.graph.iosManagedAppProtection"
                         AllowedDataStorageLocations             = @("sharePoint");
                         AllowedInboundDataTransferSources       = "managedApps";
                         AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                         AllowedOutboundDataTransferDestinations = "managedApps";
                         AppDataEncryptionType                   = "whenDeviceLocked";
-                        Apps                                    = @(
-                            @{
-                                id                  = "com.cisco.jabberimintune.ios.ios"
-                                mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.cisco.jabberimintune.ios"
-                                }
-                            },
-                            @{
-                                id                  = "com.pervasent.boardpapers.ios.ios"
-                                mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.pervasent.boardpapers.ios"
-                                }
-                            },
-                            @{
-                                id                  = "com.sharefile.mobile.intune.ios.ios"
-                                mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.sharefile.mobile.intune.ios"
-                                }
-                            }
-                        )
-                        Assignments                             = @(
-                            @{
-                                target = @{
-                                    '@odata.type' = "#microsoft.graph.groupAssignmentTarget"
-                                    groupId       = "6ee86c9f-2b3c-471d-ad38-ff4673ed723e"
-                                }
-                            },
-                            @{
-                                target = @{
-                                    '@odata.type' = "#microsoft.graph.exclusionGroupAssignmentTarget"
-                                    groupId       = "3eacc231-d77b-4efb-bb5f-310f68bd6198"
-                                }
-                            }
-                        )
                         ContactSyncBlocked                      = $False;
                         DataBackupBlocked                       = $False;
                         Description                             = "";
@@ -619,10 +566,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         MaximumPinRetries                       = 5;
                         MinimumPinLength                        = 4;
                         OrganizationalCredentialsRequired       = $False;
-                        PeriodBeforePinReset                    = "P60D";
-                        PeriodOfflineBeforeAccessCheck          = "PT12H";
-                        PeriodOfflineBeforeWipeIsEnforced       = "P90D";
-                        PeriodOnlineBeforeAccessCheck           = "PT30M";
+                        PeriodBeforePinReset                    = "90.00:00:00";
+                        PeriodOfflineBeforeAccessCheck          = "12:00:00";
+                        PeriodOfflineBeforeWipeIsEnforced       = "90.00:00:00";
+                        PeriodOnlineBeforeAccessCheck           = "00:30:00";
                         PinCharacterSet                         = "alphanumericAndSymbol";
                         PinRequired                             = $True;
                         DisableAppPinIfDevicePinIsSet           = $False;
@@ -631,6 +578,53 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SimplePinBlocked                        = $False;
                         id                                      = "12345-12345-12345-12345-12345"
                     }
+                }
+                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtectionApp -MockWith {
+                    return @(
+                        @{
+                            id                  = "com.cisco.jabberimintune.ios.ios"
+                            mobileAppIdentifier = @{
+                                additionalProperties=@{
+                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
+                                    bundleId      = "com.cisco.jabberimintune.ios"
+                                }
+                            }
+                        },
+                        @{
+                            id                  = "com.pervasent.boardpapers.ios.ios"
+                            mobileAppIdentifier = @{
+                                additionalProperties=@{
+                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
+                                    bundleId      = "com.pervasent.boardpapers.ios"
+                                }
+                            }
+                        },
+                        @{
+                            id                  = "com.sharefile.mobile.intune.ios.ios"
+                            mobileAppIdentifier = @{
+                                additionalProperties=@{
+                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
+                                    bundleId      = "com.sharefile.mobile.intune.ios"
+                                }
+                            }
+                        }
+                    )
+                }
+                Mock -CommandName Get-IntuneAppProtectionPolicyiOSAssignment -MockWith {
+                    return @(
+                        @{
+                            target = @{
+                                '@odata.type' = "#microsoft.graph.groupAssignmentTarget"
+                                groupId       = "6ee86c9f-2b3c-471d-ad38-ff4673ed723e"
+                            }
+                        },
+                        @{
+                            target = @{
+                                '@odata.type' = "#microsoft.graph.exclusionGroupAssignmentTarget"
+                                groupId       = "3eacc231-d77b-4efb-bb5f-310f68bd6198"
+                            }
+                        }
+                    )
                 }
             }
 
