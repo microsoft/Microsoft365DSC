@@ -14,7 +14,10 @@
 | **EntryExitAnnouncementsType** | Write | String | Supported entry and exit announcement type. ||
 | **MaskPstnNumbersType** | Write | String | This parameter allows tenant administrators to configure masking of PSTN participant phone numbers in the roster view for Microsoft Teams meetings enabled for Audio Conferencing, scheduled within the organization. Possible values are MaskedForExternalUsers, MaskedForAllUsers or NoMasking |MaskedForExternalUsers, MaskedForAllUsers, NoMasking|
 | **PinLength** | Write | UInt32 | Specifies the number of digits in the automatically generated PINs. Organizers can enter their PIN to start a meeting they scheduled if they join via phone and are the first person to join. The minimum value is 4, the maximum is 12, and the default is 5. ||
-| **Credential** | Required | PSCredential | Credentials of the Teams Global Admin. ||
+| **Credential** | Write | PSCredential | Credentials of the Teams Global Admin. ||
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
+| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
 
 # TeamsUserCallingSettings

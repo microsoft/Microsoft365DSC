@@ -8,7 +8,10 @@
 | **OnlinePstnUsages** | Write | StringArray[] | A list of online PSTN usages (such as Local or Long Distance) that can be applied to this online voice routing policy. The online PSTN usage must be an existing usage (PSTN usages can be retrieved by calling the Get-CsOnlinePstnUsage cmdlet). ||
 | **Description** | Write | String | Enables administrators to provide explanatory text to accompany an online voice routing policy. For example, the Description might include information about the users the policy should be assigned to. ||
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. |Present, Absent|
-| **Credential** | Required | PSCredential | Credentials of the Teams Global Admin ||
+| **Credential** | Write | PSCredential | Credentials of the Teams Admin ||
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
+| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
 
 # TeamsVoiceRoutingPolicy

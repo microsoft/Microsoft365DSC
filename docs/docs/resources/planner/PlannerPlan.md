@@ -7,7 +7,12 @@
 | **Title** | Key | String | The Title of the Planner Plan. ||
 | **OwnerGroup** | Key | String | Name of Id of the Azure Active Directory Group who owns the plan ||
 | **Ensure** | Write | String | Present ensures the Plan exists, absent ensures it is removed |Present, Absent|
-| **Credential** | Required | PSCredential | Credentials of the account to authenticate with. ||
+| **Credential** | Write | PSCredential | Credentials of the account to authenticate with. ||
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
+| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. ||
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
+| **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. ||
 
 # PlannerPlan
 
