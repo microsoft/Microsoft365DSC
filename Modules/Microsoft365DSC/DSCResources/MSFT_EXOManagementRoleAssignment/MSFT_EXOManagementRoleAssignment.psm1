@@ -334,6 +334,7 @@ function Set-TargetResource
         $NewManagementRoleParams.Remove('Computer') | Out-Null
         $NewManagementRoleParams.Remove('App') | Out-Null
         $NewManagementRoleParams.Remove('Policy') | Out-Null
+        $NewManagementRoleParams.Remove('SecurityGroup') | Out-Null
         Set-ManagementRoleAssignment @NewManagementRoleParams
     }
 }
