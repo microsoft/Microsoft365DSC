@@ -194,7 +194,7 @@ function Get-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
-		        ApplicationSecret     = $ApplicationSecret
+                ApplicationSecret     = $ApplicationSecret
                 ManagedIdentity       = $ManagedIdentity.IsPresent
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $results)"

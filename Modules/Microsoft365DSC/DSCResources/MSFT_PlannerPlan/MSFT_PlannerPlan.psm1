@@ -147,7 +147,7 @@ function Get-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
-		        ApplicationSecret     = $ApplicationSecret
+                ApplicationSecret     = $ApplicationSecret
                 ManagedIdentity       = $ManagedIdentity.IsPresent
             }
         }
