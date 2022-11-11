@@ -911,24 +911,6 @@ Configuration Master
             Credential                     = $GlobalAdmin
         }
 
-        TeamsMeetingPolicy DemoMeetingPolicy
-        {
-            AllowAnonymousUsersToStartMeeting          = $False
-            AllowChannelMeetingScheduling              = $True
-            AllowCloudRecording                        = $True
-            AllowExternalParticipantGiveRequestControl = $False
-            AllowIPVideo                               = $False
-            AllowMeetNow                               = $True
-            AllowOutlookAddIn                          = $False
-            AllowParticipantGiveRequestControl         = $True
-            AllowPowerPointSharing                     = $True
-            AllowPrivateMeetingScheduling              = $False
-            Description                                = "Integration Meeting Policy"
-            Identity                                   = "Integration Meeting Policy"
-            Ensure                                     = "Present"
-            Credential                                 = $GlobalAdmin
-        }
-
         TeamsTeam TeamAlpha
         {
             DisplayName          = "Alpha Team"
