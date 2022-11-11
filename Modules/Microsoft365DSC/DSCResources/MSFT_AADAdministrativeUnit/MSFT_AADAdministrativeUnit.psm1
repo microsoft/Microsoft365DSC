@@ -160,7 +160,7 @@ function Get-TargetResource
         $memberSpec = $null
         if ($getValue.AdditionalProperties.MembershipType -ne 'Dynamic')
         {
-            $auMembers = Get-MgAdministrativeUnitMember -AdministrativeUnitId $getValue.Id -All
+            $auMembers = Get-MgDirectoryAdministrativeUnitMember -AdministrativeUnitId $getValue.Id -All
             if ($auMembers)
             {
                 $memberSpec = @()
@@ -195,7 +195,7 @@ function Get-TargetResource
         }
 
         $scopedRoleMemberSpec = $null
-        $auScopedRoleMembers = Get-MgAdministrativeUnitScopedRoleMember -AdministrativeUnitId $getValue.Id -All
+        $auScopedRoleMembers = Get-MgDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId $getValue.Id -All
         if ($auScopedRoleMembers)
         {
             $scopedRoleMemberSpec = @()
@@ -235,7 +235,7 @@ function Get-TargetResource
 
         <#
         # Extensions are still too unwieldy
-        $auExtensions = Get-MgAdministrativeUnitExtension -AdministrativeUnitId $getValue.Id -All
+        $auExtensions = Get-MgDirectoryAdministrativeUnitExtension -AdministrativeUnitId $getValue.Id -All
         $extensionsSpec = $null
         if ($auExtensions)
         {
@@ -367,7 +367,7 @@ function Set-TargetResource
     )
 
     # Note: Graph names basic cmdlets xxx-MgDirectoryAdministrativeUnit(xxx)
-    # but the beta profile names latest cmdlets xxx-MgAdministrativeUnit(xxx)
+    # but the beta profile names latest cmdlets xxx-MgDirectoryAdministrativeUnit(xxx)
     # ONLY the beta cmdlets support the preview enabling MembershipType and MembershipRuleProcessingState
     # NB: Usage of these params require that the corresponding AAD preview feature is enabled
 
@@ -568,7 +568,7 @@ function Set-TargetResource
 
         foreach ($scopedRoleMember in $scopedRoleMemberSpecification)
         {
-            New-MgAdministrativeUnitScopedRoleMember -AdministrativeUnitId $policy.Id -BodyParameter $scopedRoleMember
+            New-MgDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId $policy.Id -BodyParameter $scopedRoleMember
         }
 
     }
@@ -665,14 +665,15 @@ function Set-TargetResource
                     Write-Verbose -Message "Adding new member {$($diff.Identity)}, type {$($diff.Type)} to Administrative Unit {$($currentInstance.DisplayName)}"
 
                     $memberBodyParam = @{
-                        '@odata.id' = "https://graph.microsoft.com/v1.0/$memberType/{$($memberObject.Id)}"
+                        '@odata.id' = "https://graph.microsoft.com/v1.0b038744  Objectivism2o2!
+                        b/$memberType/{$($memberObject.Id)}"
                     }
-                    New-MgAdministrativeUnitMemberByRef -AdministrativeUnitId ($currentInstance.Id) -BodyParameter $memberBodyParam | Out-Null
+                    New-MgDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId ($currentInstance.Id) -BodyParameter $memberBodyParam | Out-Null
                 }
                 elseif ($diff.SideIndicator -eq '<=')
                 {
                     Write-Verbose -Message "Removing member {$($diff.Identity)}, type {$($diff.Type)} from Administrative UNit {$($currentInstance.DisplayName)}"
-                    Remove-MgAdministrativeUnitMemberByRef -AdministrativeUnitId ($currentInstance.Id) -DirectoryObjectId ($memberObject.Id) | Out-Null
+                    Remove-MgDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId ($currentInstance.Id) -DirectoryObjectId ($memberObject.Id) | Out-Null
                 }
             }
         }
@@ -709,12 +710,12 @@ function Set-TargetResource
                             $additionalPropertiesArg.AdditionalProperties.Add($diff.InputObject.Properties[$p], $diff.InputObject.Properties[$p+1])
                         }
                     }
-                    New-MgAdministrativeUnitExtension -AdministrativeUnitId ($currentInstance.Id) @additionalPropertiesArg -BodyParameter @{ExtensionId = $diff.InputObject.Id} | Out-Null
+                    New-MgDirectoryAdministrativeUnitExtension -AdministrativeUnitId ($currentInstance.Id) @additionalPropertiesArg -BodyParameter @{ExtensionId = $diff.InputObject.Id} | Out-Null
                 }
                 elseif ($diff.SideIndicator -eq '<=')
                 {
                     Write-Verbose -Message "Removing extension {$($diff.InputObject.Id)} from Administrative Unit {$($currentInstance.DisplayName)}"
-                    Remove-MgAdministrativeUnitExtension -AdministrativeUnitId ($currentInstance.Id) -ExtensionId ($diff.InputObject.Id) | Out-Null
+                    Remove-MgDirectoryAdministrativeUnitExtension -AdministrativeUnitId ($currentInstance.Id) -ExtensionId ($diff.InputObject.Id) | Out-Null
                 }
                 else
                 {
@@ -728,7 +729,7 @@ function Set-TargetResource
                             $additionalPropertiesArg.AdditionalProperties.Add($diff.InputObject.Properties[$p], $diff.InputObject.Properties[$p+1])
                         }
                     }
-                    Update-MgAdministrativeUnitExtension -AdministrativeUnitId ($currentInstance.Id) -ExtensionId $diff.InputObject.Id @additionalPropertiesArg
+                    Update-MgDirectoryAdministrativeUnitExtension -AdministrativeUnitId ($currentInstance.Id) -ExtensionId $diff.InputObject.Id @additionalPropertiesArg
                 }
             }
         }
@@ -809,13 +810,13 @@ function Set-TargetResource
                                           }
                     }
                     # addition of scoped rolemember may throw if role is not supported as a scoped role
-                    New-MgAdministrativeUnitScopedRoleMember -AdministrativeUnitId ($currentInstance.Id) -BodyParameter $scopedRoleMemberParam -ErrorAction Stop | Out-Null
+                    New-MgDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId ($currentInstance.Id) -BodyParameter $scopedRoleMemberParam -ErrorAction Stop | Out-Null
                 }
                 elseif ($diff.SideIndicator -eq '<=')
                 {
                     Write-Verbose -Message "Removing scoped role {$($diff.RoleName)} member {$($diff.Identity)}, type {$($diff.Type)} from Administrative Unit {$($currentInstance.DisplayName)}"
-                    $scopedRoleMemberObject = Get-MgAdministrativeUnitScopedRoleMember -AdministrativeUnitId ($currentInstance.Id) -All | Where-Object -FilterScript {$_.RoleId -eq $roleObject.Id -and $_.RoleMemberInfo.Id -eq $memberObject.Id}
-                    Remove-MgAdministrativeUnitScopedRoleMember -AdministrativeUnitId ($currentInstance.Id) -ScopedRoleMembershipId $scopedRoleMemberObject.Id | Out-Null
+                    $scopedRoleMemberObject = Get-MgDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId ($currentInstance.Id) -All | Where-Object -FilterScript {$_.RoleId -eq $roleObject.Id -and $_.RoleMemberInfo.Id -eq $memberObject.Id}
+                    Remove-MgDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId ($currentInstance.Id) -ScopedRoleMembershipId $scopedRoleMemberObject.Id | Out-Null
                 }
             }
         }
@@ -832,7 +833,7 @@ function Set-TargetResource
 
 
         #region resource generator code
-        Remove-MgAdministrativeUnit -AdministrativeUnitId $currentInstance.Id
+        Remove-MgDirectoryAdministrativeUnit -AdministrativeUnitId $currentInstance.Id
         #endregion
 
     }
@@ -1073,7 +1074,7 @@ function Export-TargetResource
     {
 
         #region resource generator code
-        [array]$getValue = Get-MgAdministrativeUnit -All `
+        [array]$getValue = Get-MgDirectoryAdministrativeUnit -All `
             -ErrorAction Stop
 
         #endregion
