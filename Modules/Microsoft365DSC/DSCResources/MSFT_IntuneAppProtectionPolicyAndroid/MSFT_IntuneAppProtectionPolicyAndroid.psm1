@@ -653,8 +653,6 @@ function Set-TargetResource
         $configstring += ($param + ':' + $setParams.$param + "`r`n")
     }
 
-
-
     Write-Verbose -Message $configstring
 
     if (($Ensure -eq 'Present') -and ($currentPolicy.Ensure -eq 'Absent'))
@@ -1296,7 +1294,6 @@ Function set-ManagedBrowserValues
 
     return $ManagedBrowserHash
 }
-
 
 function get-InputParameters
 {
