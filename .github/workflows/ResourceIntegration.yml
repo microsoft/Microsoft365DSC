@@ -34,12 +34,16 @@ jobs:
         env:
           PUBLIC_USERNAME: ${{ secrets.PUBLIC_USERNAME }}
           PUBLIC_PASSWORD: ${{ secrets.PUBLIC_PASSWORD }}
+          APPLICATIONID: ${{ secrets.APPLICATIdONID }}
+          TENANTID: ${{ secrets.TENANTID }}
+          CERTIFICATETHUMBPRINT: ${{ secrets.CERTIFICATETHUMBPRINT }}
+          APPLICATIONSECRET: ${{ secrets.APPLICATIONSECRET }}
         run: |
           Set-ExecutionPolicy Unrestricted -Force
           Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
           $files = "${{ steps.changed-files.outputs.all_changed_files }}".Split(' ')
           $modifiedResources = @()
-          Write-Host "TENANT -&&- $env:PUBLIC_USERNAME"
+          Write-Host "TENANT -&&- $env:TENANTID"
           foreach ($file in $files)
           {
               Write-Host "Current File -> $file"
