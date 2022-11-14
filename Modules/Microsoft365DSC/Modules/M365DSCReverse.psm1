@@ -265,15 +265,19 @@ function Start-M365DSCConfigurationExtract
         }
         elseif ($AuthMethods -contains 'ManagedIdentity')
         {
-            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters @{'ManagedIdentity' = $true; 'TenantId' = $TenantId }
-            $organization = Get-M365DSCTenantDomain -TenantId $TenantId -ManagedIdentity
+            # If tenantId comes in as a GUID then query to replace with string representation, else use what was provided
+            if ($TenantId -match ('^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$'))
+            {
+                $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters @{'ManagedIdentity' = $true; 'TenantId' = $TenantId }
+                $organization = Get-M365DSCTenantDomain -TenantId $TenantId -ManagedIdentity
+            }
+            else
+            {
+                $organization = $TenantId
+            }
         }
 
         $AzureAutomation = $false
-        if ($organization.IndexOf('.') -gt 0)
-        {
-            $organization = $organization.Split('.')[0]
-        }
 
         [array] $version = Get-Module 'Microsoft365DSC'
         $version = $version[0].Version
@@ -431,6 +435,13 @@ function Start-M365DSCConfigurationExtract
             }
             'ManagedIdentity'
             {
+                $postParamContent.Append("    `$OrganizationName = `$ConfigurationData.NonNodeData.OrganizationName`r`n") | Out-Null
+
+                Add-ConfigurationDataEntry -Node 'NonNodeData' `
+                    -Key 'OrganizationName' `
+                    -Value $organization `
+                    -Description "Tenant's default verified domain name"
+
                 Add-ConfigurationDataEntry -Node 'NonNodeData' `
                     -Key 'TenantId' `
                     -Value $TenantId `
@@ -796,10 +807,9 @@ function Start-M365DSCConfigurationExtract
                 Write-Host "Cannot export Local Configuration Manager settings. This process isn't executed with Administrative Privileges!" -NoNewline -ForegroundColor DarkCyan
                 Write-Host '}'
             }
-            $outputConfigurationData = $OutputDSCPath + 'ConfigurationData.psd1'
-            New-ConfigurationDataDocument -Path $outputConfigurationData
         }
-
+        $outputConfigurationData = $OutputDSCPath + 'ConfigurationData.psd1'
+        New-ConfigurationDataDocument -Path $outputConfigurationData
         if ($shouldOpenOutputDirectory)
         {
             try

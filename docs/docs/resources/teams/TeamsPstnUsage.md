@@ -6,7 +6,10 @@
 | --- | --- | --- | --- | --- |
 | **Usage** | Key | String | An online PSTN usage (such as Local or Long Distance) that can be used in conjunction with voice routes and voice routing policies. ||
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. |Present, Absent|
-| **Credential** | Required | PSCredential | Credentials of the Teams Global Admin ||
+| **Credential** | Write | PSCredential | Credentials of the Teams Admin ||
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
+| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
 
 # TeamsPstnUsage

@@ -6,7 +6,10 @@
 | --- | --- | --- | --- | --- |
 | **Identity** | Key | String | The only valid input is Global - the tenant wide configuration |Global|
 | **AllowPrivateCalling** | Required | Boolean | Designates whether guests who have been enabled for Teams can use calling functionality. If $false, guests cannot call. ||
-| **Credential** | Required | PSCredential | Credentials of the Teams Admin ||
+| **Credential** | Write | PSCredential | Credentials of the Teams Admin ||
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
+| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
 # TeamsGuestCallingConfiguration
 

@@ -11,7 +11,10 @@
 | **SdnLicenseId** | Write | String | Specifies the Software Defined Network (SDN) license identifier. This is required and provided by some SDN providers. This parameter is only required if AllowSdnProviderForBroadcastMeeting is set to $true. ||
 | **SdnApiTemplateUrl** | Write | String | Specifies the Software Defined Network (SDN) provider's HTTP API endpoint. This information is provided to you by the SDN provider. This parameter is only required if AllowSdnProviderForBroadcastMeeting is set to $true. ||
 | **SdnApiToken** | Write | String | Specifies the Software Defined Network (SDN) provider's authentication token which is required to use their SDN license. This is required by some SDN providers who will give you the required token. This parameter is only required if AllowSdnProviderForBroadcastMeeting is set to $true. ||
-| **Credential** | Required | PSCredential | Credentials of the Teams Admin ||
+| **Credential** | Write | PSCredential | Credentials of the Teams Admin ||
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
+| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
 # TeamsMeetingBroadcastConfiguration
 

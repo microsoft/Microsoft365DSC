@@ -21,9 +21,29 @@ function Get-TargetResource
         [ValidateSet("Present", "Absent")]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Getting configuration of Planner Bucket {$Name}"
 
@@ -67,11 +87,16 @@ function Get-TargetResource
         }
 
         $results = @{
-            Name       = $Name
-            PlanId     = $PlanId
-            BucketId   = $bucket[0].Id
-            Ensure     = "Present"
-            Credential = $Credential
+            Name                  = $Name
+            PlanId                = $PlanId
+            BucketId              = $bucket[0].Id
+            Ensure                = "Present"
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            ApplicationSecret     = $ApplicationSecret
+            ManagedIdentity       = $ManagedIdentity.IsPresent
         }
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $results)"
         return $results
@@ -124,9 +149,29 @@ function Set-TargetResource
         [ValidateSet("Present", "Absent")]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Setting configuration of Planner Bucket {$Name}"
 
@@ -148,6 +193,11 @@ function Set-TargetResource
     $SetParams = $PSBoundParameters
     $currentValues = Get-TargetResource @PSBoundParameters
     $SetParams.Remove("Credential") | Out-Null
+    $SetParams.Remove("ApplicationId") | Out-Null
+    $SetParams.Remove("TenantId") | Out-Null
+    $SetParams.Remove("CertificateThumbprint") | Out-Null
+    $SetParams.Remove("ApplicationSecret") | Out-Null
+    $SetParams.Remove("ManagedIdentity") | Out-Null
     $SetParams.Remove("Ensure") | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
@@ -191,9 +241,29 @@ function Test-TargetResource
         [ValidateSet("Present", "Absent")]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -229,9 +299,29 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -272,10 +362,15 @@ function Export-TargetResource
                     {
                         Write-Host "            |---[$k/$($buckets.Length)] $($bucket.Name)" -NoNewline
                         $params = @{
-                            Name       = $bucket.Name
-                            PlanId     = $plan.Id
-                            BucketId   = $Bucket.Id
-                            Credential = $Credential
+                            Name                  = $bucket.Name
+                            PlanId                = $plan.Id
+                            BucketId              = $Bucket.Id
+                            Credential            = $Credential
+                            ApplicationId         = $ApplicationId
+                            TenantId              = $TenantId
+                            CertificateThumbprint = $CertificateThumbprint
+                            ApplicationSecret     = $ApplicationSecret
+                            ManagedIdentity       = $ManagedIdentity.IsPresent
                         }
                         $results = Get-TargetResource @params
                         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
