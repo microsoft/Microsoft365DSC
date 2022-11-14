@@ -1,11 +1,11 @@
-name: Full Circle
+name: Resource Integration
 on:
   push:
     branches:
-      - dev
+      - Dev
   pull_request:
     branches:
-      - dev
+      - Dev
 
 jobs:
   UnitTests:
