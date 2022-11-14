@@ -11,6 +11,9 @@ jobs:
   UnitTests:
     runs-on: windows-latest
 
+    # Only when run from the main repo
+    if: github.repository == 'microsoft/Microsoft365DSC'
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v3
@@ -30,6 +33,7 @@ jobs:
           $destination = "C:\Program Files\WindowsPowerShell\Modules"
           Copy-Item -Path $source -Recurse -Destination $destination -Container -Force
           Update-M365DSCDependencies
+
       - uses: actions/checkout@v3
       - name: Detect Changed Files
         shell: powershell
