@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADApplication
+  * Deprecated the Oauth2RequirePostResponse parameter as it was causing issues for the New function.
 * AADEntitlementManagementAccessPackage
   * Initial Release.
 * SCRetentionCompliancePolicy
