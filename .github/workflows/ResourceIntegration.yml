@@ -8,7 +8,7 @@ on:
       - Dev
 
 jobs:
-  UnitTests:
+  ResourceIntegration:
     runs-on: windows-latest
 
     # Only when run from the main repo
@@ -66,11 +66,11 @@ jobs:
                   {
                       Write-Host "Will execute {$integrationTestPath}"
                       $params = @{
-                          Credential = New-Object System.Management.Automation.PSCredential($env:PUBLIC_USERNAME, (ConvertTo-SecureString "($env:PUBLIC_PASSWORD)" -AsPlainText -Force))
-                          ApplicationId = $env:APPLICATIONID
-                          TenantId = $env:TENANTID
-                          CertificateThumbprint = $env:CERTIFICATETHUMBPRINT
-                          ApplicationSecret = New-Object System.Management.Automation.PSCredential("ApplicationSecret", (ConvertTo-SecureString ($env:APPLICATIONSECRET) -AsPlainText -Force))
+                          Credential = New-Object System.Management.Automation.PSCredential(${PUBLIC_USERNAME}, (ConvertTo-SecureString ${PUBLIC_PASSWORD} -AsPlainText -Force))
+                          ApplicationId = ${APPLICATIONID}
+                          TenantId = ${TENANTID}
+                          CertificateThumbprint = ${CERTIFICATETHUMBPRINT}
+                          ApplicationSecret = New-Object System.Management.Automation.PSCredential("ApplicationSecret", (ConvertTo-SecureString ${APPLICATIONSECRET} -AsPlainText -Force))
                       }
                       & $integrationTestPath @params
                   }
