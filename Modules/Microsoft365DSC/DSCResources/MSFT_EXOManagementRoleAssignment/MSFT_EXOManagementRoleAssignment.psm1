@@ -145,7 +145,7 @@ function Get-TargetResource
                 TenantId                         = $TenantId
             }
 
-            if ($roleAssignment.RoleAssigneeType -eq 'SecurityGroup')
+            if ($roleAssignment.RoleAssigneeType -eq 'SecurityGroup' -or $roleAssignment.RoleAssigneeType -eq 'RoleGroup')
             {
                 $result.Add('SecurityGroup', $roleAssignment.RoleAssignee)
             }
@@ -524,7 +524,8 @@ function Export-TargetResource
     try
     {
         [array]$roleAssignments = Get-ManagementRoleAssignment | Where-Object -FilterScript { $_.RoleAssigneeType -eq 'ServicePrincipal' -or `
-                $_.RoleAssigneeType -eq 'User' -or $_.RoleAssigneeType -eq 'RoleAssignmentPolicy' -or $_.RoleAssigneeType -eq 'SecurityGroup' }
+                $_.RoleAssigneeType -eq 'User' -or $_.RoleAssigneeType -eq 'RoleAssignmentPolicy' -or $_.RoleAssigneeType -eq 'SecurityGroup' `
+                -or $_.RoleAssigneeType -eq 'RoleGroup'}
 
         $dscContent = ''
 

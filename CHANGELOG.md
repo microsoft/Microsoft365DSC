@@ -8,7 +8,8 @@
 * AADEntitlementManagementAccessPackage
   * Initial Release.
 * EXOManagementRoleAssignment
-  * FIXES [#2524](https://github.com/microsoft/Microsoft365DSC/issues/2524)
+  * Added support for RoleGroup Role Assignees
+    Fixes [#2524](https://github.com/microsoft/Microsoft365DSC/issues/2524)
 * SCRetentionCompliancePolicy
   * Fixes the Location parameters to be a string array instead of an object array.
     FIXES [#2503](https://github.com/microsoft/Microsoft365DSC/issues/2503)
