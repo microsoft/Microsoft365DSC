@@ -999,7 +999,7 @@ function Test-TargetResource
     if ($CurrentValues.AppGroupType -ne 'selectedPublicApps') { $CurrentValues.Apps = @() }
 
     # remove thre ID from the values to check as it may not match
-    $targetvalues.remove('ID')
+    $targetvalues.remove('ID') | Out-Null
 
 
     Write-Verbose -Message "Current Values: $((Convert-M365DscHashtableToString -Hashtable $CurrentValues) -replace ';', "`r`n")"
@@ -1287,7 +1287,6 @@ Function set-ManagedBrowserValues
 
    }
 
-
     $ManagedBrowserHash = @{
         'ManagedBrowser' = $ManagedBrowser;
         'ManagedBrowserToOpenLinksRequired' = $ManagedBrowserToOpenLinksRequired;
@@ -1296,10 +1295,6 @@ Function set-ManagedBrowserValues
     }
 
     return $ManagedBrowserHash
-
-
-
-
 }
 
 
