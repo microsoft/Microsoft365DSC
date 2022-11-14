@@ -179,7 +179,8 @@ function Get-TargetResource
                 IdentifierUris            = $AADApp.IdentifierUris
                 KnownClientApplications   = $AADApp.Api.KnownClientApplications
                 LogoutURL                 = $AADApp.web.LogoutURL
-                Oauth2RequirePostResponse = $currentOauth2RequirePostResponseValue
+                #DEPRECATED
+                #Oauth2RequirePostResponse = $currentOauth2RequirePostResponseValue
                 PublicClient              = $isPublicClient
                 ReplyURLs                 = $AADApp.web.RedirectUris
                 Owners                    = $OwnersValues
@@ -350,6 +351,15 @@ function Set-TargetResource
     $backCurrentOwners = $currentAADApp.Owners
     $currentParameters.Remove('Owners') | Out-Null
 
+    if ($PSBoundParameters.ContainsKey("Oauth2RequirePostResponse"))
+    {
+        Write-Warning -Message "The Oauth2PermissionScopes parameter has been deprecated. Please remove it from your configuration."
+
+        # Passing in the Oauth2RequirePostResponse parameter returns an error when calling update-mgapplication.
+        # Removing it temporarly for the update scenario.
+        $currentParameters.Remove('Oauth2RequirePostResponse') | Out-Null
+    }
+
     if ($KnownClientApplications)
     {
         Write-Verbose -Message 'Checking if the known client applications already exist.'
@@ -447,9 +457,6 @@ function Set-TargetResource
     {
         $currentParameters.Remove('ObjectId') | Out-Null
 
-        # Passing in the Oauth2RequirePostResponse parameter returns an error when calling update-mgapplication.
-        # Removing it temporarly for the update scenario.
-        $currentParameters.Remove('Oauth2RequirePostResponse') | Out-Null
         $currentParameters.Add('ApplicationId', $currentAADApp.ObjectId)
         Write-Verbose -Message "Updating existing AzureAD Application {$DisplayName} with values:`r`n$($currentParameters | Out-String)"
         Update-MgApplication @currentParameters
@@ -750,6 +757,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('Oauth2RequirePostResponse') | Out-Null # DEPRECATED
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

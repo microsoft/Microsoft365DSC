@@ -18,7 +18,10 @@
 | **ClientAppSharingPort** | Write | UInt32 | Determines the starting port number for client screen sharing or application sharing. Minimum allowed value: 1024 Maximum allowed value: 65535 Default value: 50040. ||
 | **ClientMediaPortRangeEnabled** | Write | Boolean | Determines whether custom media port and range selections need to be enforced. When set to True, clients will use the specified port range for media traffic. When set to False (the default value) for any available port (from port 1024 through port 65535) will be used to accommodate media traffic. ||
 | **ClientAppSharingPortRange** | Write | UInt32 | Determines the total number of ports available for client sharing or application sharing. Default value is 20. ||
-| **Credential** | Required | PSCredential | Credentials of the Teams Admin ||
+| **Credential** | Write | PSCredential | Credentials of the Teams Admin ||
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
+| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
 # TeamsMeetingConfiguration
 

@@ -24,7 +24,10 @@
 | **AudioMessageEnabledType** | Write | String | Determines whether a user is allowed to send audio messages. Possible values are: ChatsAndChannels,ChatsOnly,Disabled. |ChatsAndChannels, ChatsOnly, Disabled|
 | **Tenant** | Write | String | Globally unique identifier (GUID) of the tenant account whose external user communication policy are being created. ||
 | **Ensure** | Write | String | Present ensures the Team Message Policy exists, absent ensures it is removed |Present, Absent|
-| **Credential** | Required | PSCredential | Credentials of the Teams Service Admin ||
+| **Credential** | Write | PSCredential | Credentials of the Teams Service Admin ||
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
+| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
 # TeamsMessagingPolicy
 

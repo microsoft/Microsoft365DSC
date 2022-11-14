@@ -26,7 +26,10 @@
 | **AutoAnswerEnabledType** | Write | String | This setting allows the tenant admin to enable or disable the Auto-Answer setting. Valid options are: Enabled, Disabled. |Enabled, Disabled|
 | **SpamFilteringEnabledType** | Write | String | Setting this parameter determines whether calls identified as Spam will be rejected or not (probably). Valid options are: Enabled, Disabled. |Enabled, Disabled|
 | **Ensure** | Write | String | Present ensures the policyexists, absent ensures it is removed. |Present, Absent|
-| **Credential** | Required | PSCredential | Credentials of the Teams Global Admin. ||
+| **Credential** | Write | PSCredential | Credentials of the Teams Admin. ||
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
+| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
 
 # TeamsCallingPolicy
