@@ -16,7 +16,7 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # OR "2" -> To retrieve the preceding commit.
 
@@ -24,7 +24,6 @@ jobs:
         id: changed-files
         uses: tj-actions/changed-files@v34
 
-      - uses: actions/checkout@v2
       - name: Install Microsoft365DSC
         shell: powershell
         run: |
@@ -33,6 +32,7 @@ jobs:
           $destination = "C:\Program Files\WindowsPowerShell\Modules"
           Copy-Item -Path $source -Recurse -Destination $destination -Container -Force
           Update-M365DSCDependencies
+
       - name: Detect Changed Files
         shell: powershell
         env:
@@ -47,6 +47,7 @@ jobs:
           Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
           $files = "${{ steps.changed-files.outputs.all_changed_files }}".Split(' ')
           $modifiedResources = @()
+          Write-Host "TENANT!!!!! $env:TENANTID"
           foreach ($file in $files)
           {
               Write-Host "Current File -> $file"
