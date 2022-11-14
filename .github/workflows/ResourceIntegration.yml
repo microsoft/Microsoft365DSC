@@ -11,6 +11,9 @@ jobs:
   UnitTests:
     runs-on: windows-latest
 
+    # Only when run from the main repo
+    if: github.repository == 'microsoft/Microsoft365DSC'
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v3
@@ -30,6 +33,7 @@ jobs:
           $destination = "C:\Program Files\WindowsPowerShell\Modules"
           Copy-Item -Path $source -Recurse -Destination $destination -Container -Force
           Update-M365DSCDependencies
+
       - uses: actions/checkout@v3
       - name: Detect Changed Files
         shell: powershell
@@ -61,20 +65,12 @@ jobs:
                   if (Test-Path $integrationTestPath)
                   {
                       Write-Host "Will execute {$integrationTestPath}"
-                      
-                      $CredPassword = ConvertTo-SecureString $env:PUBLIC_PASSWORD -AsPlainText -Force
-                      $Credential = New-Object System.Management.Automation.PSCredential ($env:PUBLIC_USERNAME, $CredPassword)
-                      $Credential.Password.MakeReadOnly()
-                      
-                      $AppSecretPass = ConvertTo-SecureString $env:APPLICATIONSECRET -AsPlainText -Force
-                      $ApplicationSecret = New-Object System.Management.Automation.PSCredential("ApplicationSecret", $AppSecretPass)
-                      
                       $params = @{
-                          Credential = $Credential
+                          Credential = New-Object System.Management.Automation.PSCredential($env:PUBLIC_USERNAME, (ConvertTo-SecureString "($env:PUBLIC_PASSWORD)" -AsPlainText -Force))
                           ApplicationId = $env:APPLICATIONID
                           TenantId = $env:TENANTID
                           CertificateThumbprint = $env:CERTIFICATETHUMBPRINT
-                          ApplicationSecret = $ApplicationSecret
+                          ApplicationSecret = New-Object System.Management.Automation.PSCredential("ApplicationSecret", (ConvertTo-SecureString ($env:APPLICATIONSECRET) -AsPlainText -Force))
                       }
                       & $integrationTestPath @params
                   }
