@@ -61,12 +61,20 @@ jobs:
                   if (Test-Path $integrationTestPath)
                   {
                       Write-Host "Will execute {$integrationTestPath}"
+                      
+                      $CredPassword = ConvertTo-SecureString $env:PUBLIC_PASSWORD -AsPlainText -Force
+                      $Credential = New-Object System.Management.Automation.PSCredential ($env:PUBLIC_USERNAME, $CredPassword)
+                      $Credential.Password.MakeReadOnly()
+                      
+                      $AppSecretPass = ConvertTo-SecureString $env:APPLICATIONSECRET -AsPlainText -Force
+                      $ApplicationSecret = New-Object System.Management.Automation.PSCredential("ApplicationSecret", $AppSecretPass)
+                      
                       $params = @{
-                          Credential = New-Object System.Management.Automation.PSCredential($env:PUBLIC_USERNAME, (ConvertTo-SecureString "($env:PUBLIC_PASSWORD)" -AsPlainText -Force))
+                          Credential = $Credential
                           ApplicationId = $env:APPLICATIONID
                           TenantId = $env:TENANTID
                           CertificateThumbprint = $env:CERTIFICATETHUMBPRINT
-                          ApplicationSecret = New-Object System.Management.Automation.PSCredential("ApplicationSecret", (ConvertTo-SecureString ($env:APPLICATIONSECRET) -AsPlainText -Force))
+                          ApplicationSecret = $ApplicationSecret
                       }
                       & $integrationTestPath @params
                   }
