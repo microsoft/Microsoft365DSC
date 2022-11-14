@@ -35,19 +35,12 @@ jobs:
 
       - name: Detect Changed Files
         shell: powershell
-        env:
-          PUBLIC_USERNAME: ${{ secrets.PUBLIC_USERNAME }}
-          PUBLIC_PASSWORD: ${{ secrets.PUBLIC_PASSWORD }}
-          APPLICATIONID: ${{ secrets.APPLICATIONID }}
-          TENANTID: ${{ secrets.TENANTID }}
-          CERTIFICATETHUMBPRINT: ${{ secrets.CERTIFICATETHUMBPRINT }}
-          APPLICATIONSECRET: ${{ secrets.APPLICATIONSECRET }}
         run: |
           Set-ExecutionPolicy Unrestricted -Force
           Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
           $files = "${{ steps.changed-files.outputs.all_changed_files }}".Split(' ')
           $modifiedResources = @()
-          Write-Host "TENANT --- " + ${{ secrets.TENANTID }}
+          Write-Host "TENANT --**- ${{secrets.TENANTID}}"
           foreach ($file in $files)
           {
               Write-Host "Current File -> $file"
