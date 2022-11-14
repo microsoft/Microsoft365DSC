@@ -4,6 +4,7 @@
 
 * AADApplication
   * Deprecated the Oauth2RequirePostResponse parameter as it was causing issues for the New function.
+    FIXES [#2276](https://github.com/microsoft/Microsoft365DSC/issues/2276)
 * AADEntitlementManagementAccessPackage
   * Initial Release.
 * SCRetentionCompliancePolicy
