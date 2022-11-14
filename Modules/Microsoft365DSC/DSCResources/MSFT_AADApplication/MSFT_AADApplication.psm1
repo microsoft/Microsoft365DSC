@@ -731,7 +731,7 @@ function Test-TargetResource
     else
     {
         if ($Permissions.Length -gt 0)
-        {#test
+        {#test2
             Write-Verbose -Message 'No Permissions exist for the current Azure AD App, but permissions were specified for desired state'
             Write-Verbose -Message "Test-TargetResource returned $false"
             $EventMessage = "Permissions for Azure AD Application {$DisplayName} were not in the desired state.`r`n" + `
