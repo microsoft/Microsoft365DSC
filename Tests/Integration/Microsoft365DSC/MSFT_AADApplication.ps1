@@ -465,6 +465,7 @@ $ConfigurationData = @{
         @{
             NodeName                    = "Localhost"
             PSDSCAllowPlaintextPassword = $true
+            PSDscAllowDomainUser        = $true
         }
     )
 }
