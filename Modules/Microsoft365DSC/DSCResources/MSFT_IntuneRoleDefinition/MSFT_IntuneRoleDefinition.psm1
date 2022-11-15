@@ -12,7 +12,7 @@ function Get-TargetResource
         [System.String]
         $Description,
 
-        [Parameter(Mandatory= $true)]
+        [Parameter()]
         [System.String]
         $DisplayName,
 
@@ -27,6 +27,10 @@ function Get-TargetResource
         [Parameter()]
         [System.String[]]
         $notAllowedResourceActions,
+
+        [Parameter()]
+        [System.String[]]
+        $roleScopeTagIds,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -51,7 +55,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
 
     )
 
@@ -59,9 +67,9 @@ function Get-TargetResource
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
-            -ProfileName 'v1.0'
+            -ProfileName 'beta'
 
-        Select-MgProfile 'v1.0'
+        Select-MgProfile 'beta'
     }
     catch
     {
@@ -113,6 +121,7 @@ function Get-TargetResource
             DisplayName           = $getValue.DisplayName
             IsBuiltIn             = $getValue.IsBuiltIn
             Ensure                = 'Present'
+            roleScopeTagIds       = $getValue.RoleScopeTagIds
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -166,7 +175,7 @@ function Set-TargetResource
         [System.String]
         $Description,
 
-        [Parameter(Mandatory= $true)]
+        [Parameter()]
         [System.String]
         $DisplayName,
 
@@ -181,6 +190,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $notAllowedResourceActions,
+
+        [Parameter()]
+        [System.String[]]
+        $roleScopeTagIds,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -205,16 +218,20 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
-            -ProfileName 'v1.0'
+            -ProfileName 'beta'
 
-        Select-MgProfile 'v1.0' -ErrorAction Stop
+        Select-MgProfile 'beta' -ErrorAction Stop
     }
     catch
     {
@@ -241,11 +258,20 @@ function Set-TargetResource
     $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
     $PSBoundParameters.Remove('TenantId') | Out-Null
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
+    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating {$DisplayName}"
-
+        if($null -ne $roleScopeTagIds){
+            $ScopeRoleTags = @()
+            foreach($roleScopeTagId in $roleScopeTagIds){
+                $Tag = Get-MgDeviceManagementRoleScopeTag -RoleScopeTagId $roleScopeTagId -ErrorAction SilentlyContinue
+                if($null -ne $Tag){
+                    $ScopeRoleTags += $Tag.Id
+                }
+            }
+        }
         $resourceActions = @{
 			'@odata.type' = "microsoft.graph.resourceAction"
 			notAllowedResourceActions = $notAllowedResourceActions
@@ -255,13 +281,13 @@ function Set-TargetResource
 			'@odata.type' = "microsoft.graph.rolePermission"
 			resourceActions = @($resourceActions)
         }
-
+        $ScopeTagIds = $ScopeRoleTags
         $CreateParameters = @{
             '@odata.type' 		  = "#microsoft.graph.roleDefinition"
             displayName 		  = $DisplayName
             description 		  = $Description
-            IsBuiltIn             = $IsBuiltIn
             rolePermissions       = @($rolepermission)
+            roleScopeTagIds		  = $ScopeTagIds
         }
 
         $policy=New-MgDeviceManagementRoleDefinition -BodyParameter $CreateParameters
@@ -270,7 +296,15 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating {$DisplayName}"
-
+        if($null -ne $roleScopeTagIds){
+            $ScopeRoleTags = @()
+            foreach($roleScopeTagId in $roleScopeTagIds){
+                $Tag = Get-MgDeviceManagementRoleScopeTag -RoleScopeTagId $roleScopeTagId -ErrorAction SilentlyContinue
+                if($null -ne $Tag){
+                    $ScopeRoleTags += $Tag.Id
+                }
+            }
+        }
         $resourceActions = @{
 			'@odata.type' = "microsoft.graph.resourceAction"
 			notAllowedResourceActions = $notAllowedResourceActions
@@ -280,12 +314,13 @@ function Set-TargetResource
 			'@odata.type' = "microsoft.graph.rolePermission"
 			resourceActions = @($resourceActions)
         }
-
+        $ScopeTagIds = $ScopeRoleTags
         $UpdateParameters = @{
             '@odata.type' 		  = "#microsoft.graph.roleDefinition"
             displayName 		  = $DisplayName
             description 		  = $Description
             rolePermissions       = @($rolepermission)
+            roleScopeTagIds		  = $ScopeTagIds
         }
 
         Update-MgDeviceManagementRoleDefinition -BodyParameter $UpdateParameters `
@@ -313,7 +348,7 @@ function Test-TargetResource
         [System.String]
         $Description,
 
-        [Parameter(Mandatory= $true)]
+        [Parameter()]
         [System.String]
         $DisplayName,
 
@@ -328,6 +363,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $notAllowedResourceActions,
+
+        [Parameter()]
+        [System.String[]]
+        $roleScopeTagIds,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -352,7 +391,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -384,6 +427,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
     $ValuesToCheck.Remove('Id') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     foreach ($key in $ValuesToCheck.Keys)
     {
@@ -440,8 +484,8 @@ function Export-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName 'v1.0'
-    Select-MgProfile 'v1.0' -ErrorAction Stop
+        -ProfileName 'beta'
+    Select-MgProfile 'beta' -ErrorAction Stop
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -489,72 +533,24 @@ function Export-TargetResource
             $params = @{
                 id                    = $config.id
                 Ensure                = 'Present'
-                Displayname           = $config.displayName
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity
             }
 
             $Results = Get-TargetResource @Params
+
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-
-                    if ($Results.RolePermissions)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.RolePermissions -CIMInstanceName MicrosoftGraphrolepermission
-            if ($complexTypeStringResult)
-            {
-                $Results.RolePermissions = $complexTypeStringResult
-            }
-            else
-            {
-                $Results.Remove('RolePermissions') | Out-Null
-            }
-        }
-        if ($Results.RoleAssignments)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.RoleAssignments -CIMInstanceName MicrosoftGraphroleassignment
-            if ($complexTypeStringResult)
-            {
-                $Results.RoleAssignments = $complexTypeStringResult
-            }
-            else
-            {
-                $Results.Remove('RoleAssignments') | Out-Null
-            }
-        }
-
-
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-
-                    if ($Results.RolePermissions)
-        {
-            $isCIMArray=$false
-            if($Results.RolePermissions.getType().Fullname -like "*[[\]]")
-            {
-                $isCIMArray=$true
-            }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "RolePermissions" -isCIMArray:$isCIMArray
-        }
-        if ($Results.RoleAssignments)
-        {
-            $isCIMArray=$false
-            if($Results.RoleAssignments.getType().Fullname -like "*[[\]]")
-            {
-                $isCIMArray=$true
-            }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "RoleAssignments" -isCIMArray:$isCIMArray
-        }
-
-
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
