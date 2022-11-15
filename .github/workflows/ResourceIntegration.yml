@@ -57,9 +57,10 @@ jobs:
                   if (Test-Path $integrationTestPath)
                   {
                       Write-Host "Will execute {$integrationTestPath}"
+                      Write-Host "Connecting using {$($env:PUBLIC_USERNAME)}"
                       $CredPassword = ConvertTo-SecureString $env:PUBLIC_PASSWORD -AsPlainText -Force
                       $CredSecret = ConvertTo-SecureString $env:APPLICATIONSECRET -AsPlainText -Force
-                      $Credential = New-Object System.Management.Automation.PSCredential ($env:PUBLIC_USERNAME, $CredPassword)
+                      $Credential = New-Object System.Management.Automation.PSCredential($env:PUBLIC_USERNAME, $CredPassword)
                       $params = @{
                           Credential = $Credential
                           ApplicationId = $env:APPLICATIONID
