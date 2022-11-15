@@ -1,5 +1,6 @@
 name: Resource Integration
 on: [push]
+
 jobs:
   ResourceIntegration:
     runs-on: windows-latest
@@ -9,12 +10,15 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0  # OR "2" -> To retrieve the preceding commit.
+
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v34
+
+      - uses: actions/checkout@v2
       - name: Install Microsoft365DSC
         shell: powershell
         run: |
@@ -28,7 +32,7 @@ jobs:
         env:
           PUBLIC_USERNAME: ${{ secrets.PUBLIC_USERNAME }}
           PUBLIC_PASSWORD: ${{ secrets.PUBLIC_PASSWORD }}
-          APPLICATIONID: ${{ secrets.APPLICATIdONID }}
+          APPLICATIONID: ${{ secrets.APPLICATIONID }}
           TENANTID: ${{ secrets.TENANTID }}
           CERTIFICATETHUMBPRINT: ${{ secrets.CERTIFICATETHUMBPRINT }}
           APPLICATIONSECRET: ${{ secrets.APPLICATIONSECRET }}
@@ -37,7 +41,6 @@ jobs:
           Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
           $files = "${{ steps.changed-files.outputs.all_changed_files }}".Split(' ')
           $modifiedResources = @()
-          Write-Host "TENANT -&&- $env:TENANTID"
           foreach ($file in $files)
           {
               Write-Host "Current File -> $file"
@@ -59,9 +62,9 @@ jobs:
                       $Credential = New-Object System.Management.Automation.PSCredential ($env:PUBLIC_USERNAME, $CredPassword)
                       $params = @{
                           Credential = $Credential
-                          ApplicationId = "$env:APPLICATIONID"
-                          TenantId = "$env:TENANTID"
-                          CertificateThumbprint = "$env:CERTIFICATETHUMBPRINT"
+                          ApplicationId = $env:APPLICATIONID
+                          TenantId = $env:TENANTID
+                          CertificateThumbprint = $env:CERTIFICATETHUMBPRINT
                           ApplicationSecret = New-Object System.Management.Automation.PSCredential("ApplicationSecret", $CredSecret)
                       }
                       & $integrationTestPath @params
@@ -72,3 +75,4 @@ jobs:
                   }
               }
           }
+
