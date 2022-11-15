@@ -963,7 +963,6 @@ function Get-M365DSCAzureADAppPermissions
         }
         $i++
     }
-
     return $permissions
 }
 
