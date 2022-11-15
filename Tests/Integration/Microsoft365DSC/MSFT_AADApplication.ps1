@@ -460,7 +460,14 @@ Configuration AADApplication-Remove
         }
     }
 }
-$ConfigurationData = ".\ConfigurationData.psd1"
+$ConfigurationData = @{
+    AllNodes = @(
+        @{
+            NodeName                    = "Localhost"
+            PSDSCAllowPlaintextPassword = $true
+        }
+    )
+}
 
 AADApplication-New -Credential $Credential `
     -ApplicationId $ApplicationId `
