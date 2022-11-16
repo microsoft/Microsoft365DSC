@@ -116,6 +116,7 @@ function Get-TargetResource
         $ScopeTagsId = @()
         $ScopeTagsId = (Get-MgDeviceManagementRoleAssignmentRoleScopeTag -DeviceAndAppManagementRoleAssignmentId $getValue.Id).Id
 
+        $RoleDefinitionid = Get-MgDeviceManagementRoleAssignment -DeviceAndAppManagementRoleAssignmentId $getvalue.Id -ExpandProperty *
         Write-Verbose -Message "Found something with id {$id}"
         $results = @{
             Id = $getValue.Id
@@ -123,7 +124,7 @@ function Get-TargetResource
             DisplayName = $getValue.DisplayName
             ResourceScopes = $getValue.ResourceScopes
             Members = $getValue.Members
-            RoleDefinition = $getValue.RoleDefinition
+            RoleDefinition = $RoleDefinitionid.RoleDefinition.Id
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -286,15 +287,12 @@ function Set-TargetResource
             roleScopeTagIds = $ScopeTags
         }
 
-        Write-Host "CreateParameters: $CreateParameters"
-
         $policy=New-MgDeviceManagementRoleAssignment -BodyParameter $CreateParameters
 
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating {$DisplayName}"
-
 
         $UpdateParameters = @{
             description = $Description
@@ -306,8 +304,6 @@ function Set-TargetResource
             'roleDefinition@odata.bind' = "https://graph.microsoft.com/beta/deviceManagement/roleDefinitions('$roleDefinition')"
             roleScopeTagIds = $ScopeTags
         }
-
-        Write-Host "UpdateParameters: $UpdateParameters"
 
         Update-MgDeviceManagementRoleAssignment -BodyParameter $UpdateParameters `
             -DeviceAndAppManagementRoleAssignmentId $currentInstance.Id
@@ -436,6 +432,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('RoleScopeTagIds') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
+
     foreach ($key in $ValuesToCheck.Keys)
     {
         if (($null -ne $CurrentValues[$key]) `
