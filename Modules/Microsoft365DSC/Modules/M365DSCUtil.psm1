@@ -2751,11 +2751,11 @@ function Update-M365DSCExportAuthenticationResults
     }
     else
     {
-        if ($Results.ContainsKey('Credential') -and ($ConnectionMode -ne 'CredentialsWithApplicationId' -and $ConnectionMode -ne 'Credentials'))
+        if ($Results.ContainsKey('Credential') -and $ConnectionMode -ne 'CredentialsWithApplicationId')
         {
             $Results.Remove('Credential') | Out-Null
         }
-        else
+        elseif ($Results.ContainsKey('Credential') -and $ConnectionMode -eq 'CredentialsWithApplicationId')
         {
             $Results.Credential = Resolve-Credentials -UserName 'credential'
         }

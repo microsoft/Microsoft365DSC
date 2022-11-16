@@ -13,7 +13,10 @@
 | **AllowStickers** | Write | Boolean | Determines if stickers are available for use. ||
 | **AllowGiphy** | Write | Boolean | Determines if Giphy are available for use. ||
 | **AllowImmersiveReader** | Write | Boolean | Determines if Immersive Reader is enabled. ||
-| **Credential** | Required | PSCredential | Credentials of the Teams Admin ||
+| **Credential** | Write | PSCredential | Credentials of the Teams Admin ||
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
+| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
 # TeamsGuestMessagingConfiguration
 

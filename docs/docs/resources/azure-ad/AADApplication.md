@@ -64,7 +64,6 @@ Configuration Example
             IdentifierUris            = "https://app.contoso.com"
             KnownClientApplications   = ""
             LogoutURL                 = "https://app.contoso.com/logout"
-            Oauth2RequirePostResponse = $false
             PublicClient              = $false
             ReplyURLs                 = "https://app.contoso.com"
             Permissions               = @(
