@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.1116.1
 
 * AADApplication
   * Deprecated the Oauth2RequirePostResponse parameter as it was causing issues for the New function.
