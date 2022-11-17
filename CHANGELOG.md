@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.1116.1
 
 * AADApplication
   * Deprecated the Oauth2RequirePostResponse parameter as it was causing issues for the New function.
@@ -18,6 +18,7 @@
   * Added support for Service Principal Auth for the Planner resources;
 * DEPENDENCIES
   * Updated Microsoft.Graph.* to version 1.16.0;
+  * Updated Microsoft.Teams to version 4.9.1;
   * Updated PnP.PowerShell to version 1.12.0;
 
 # 1.22.1109.1

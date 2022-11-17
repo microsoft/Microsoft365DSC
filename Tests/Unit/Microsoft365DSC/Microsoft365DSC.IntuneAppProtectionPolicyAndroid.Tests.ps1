@@ -31,44 +31,50 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     [string]$description
                 )
                 return @{
-                    AllowedDataStorageLocations             = @("sharePoint");
-                    AllowedInboundDataTransferSources       = "managedApps";
-                    AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
-                    AllowedOutboundDataTransferDestinations = "managedApps";
-                    AppGroupType                            = "selectedPublicApps";
-                    Apps                                    = @("com.cisco.im.intune", "com.penlink.penpoint", "com.slack.intune");
-                    Assignments                             = @("6ee86c9f-2b3c-471d-ad38-ff4673ed723e");
-                    ContactSyncBlocked                      = $False;
-                    DataBackupBlocked                       = $False;
-                    Description                             = 'DSC Policy';
-                    DeviceComplianceRequired                = $True;
-                    DisplayName                             = "DSC Policy";
-                    Ensure                                  = "Present"
-                    ExcludedGroups                          = @("3eacc231-d77b-4efb-bb5f-310f68bd6198");
-                    FingerprintBlocked                      = $False;
-                    Credential                              = $Credential;
-                    ManagedBrowserToOpenLinksRequired       = $True;
-                    MaximumPinRetries                       = 5;
-                    MinimumPinLength                        = 4;
-                    OrganizationalCredentialsRequired       = $False;
-                    PeriodBeforePinReset                    = "P60D";
-                    PeriodOfflineBeforeAccessCheck          = "PT12H";
-                    PeriodOfflineBeforeWipeIsEnforced       = "P90D";
-                    PeriodOnlineBeforeAccessCheck           = "PT30M";
-                    PinCharacterSet                         = "alphanumericAndSymbol";
-                    PinRequired                             = $True;
-                    DisableAppPinIfDevicePinIsSet           = $False;
-                    PrintBlocked                            = $False;
-                    SaveAsBlocked                           = $True;
-                    SimplePinBlocked                        = $False;
-                    ManagedBrowser                          = "notConfigured";
-                    MinimumRequiredAppVersion               = "1.2";
-                    MinimumRequiredOSVersion                = "1.1";
-                    MinimumRequiredPatchVersion             = "2020-07-13";
-                    MinimumWarningAppVersion                = "1.5";
-                    MinimumWarningOSVersion                 = "1.5";
-                    MinimumWarningPatchVersion              = "2021-07-13";
-                    IsAssigned                              = $true;
+                    AllowedDataStorageLocations                     = @("sharePoint");
+                    AllowedInboundDataTransferSources               = "managedApps";
+                    AllowedOutboundClipboardSharingLevel            = "managedAppsWithPasteIn";
+                    AllowedOutboundDataTransferDestinations         = "managedApps";
+                    AppGroupType                                    = "selectedPublicApps";
+                    Apps                                            = @("com.cisco.im.intune", "com.penlink.penpoint", "com.slack.intune");
+                    Assignments                                     = @("6ee86c9f-2b3c-471d-ad38-ff4673ed723e");
+                    ContactSyncBlocked                              = $False;
+                    DataBackupBlocked                               = $False;
+                    Description                                     = 'DSC Policy';
+                    DeviceComplianceRequired                        = $True;
+                    DisableAppEncryptionIfDeviceEncryptionIsEnabled = $True;
+                    EncryptAppData                                  = $True;
+                    DisplayName                                     = "DSC Policy";
+                    Ensure                                          = "Present"
+                    ExcludedGroups                                  = @("3eacc231-d77b-4efb-bb5f-310f68bd6198");
+                    FingerprintBlocked                              = $False;
+                    Credential                                      = $Credential;
+                    ManagedBrowserToOpenLinksRequired               = $True;
+                    MaximumPinRetries                               = 5;
+                    MinimumPinLength                                = 4;
+                    OrganizationalCredentialsRequired               = $False;
+                    PeriodBeforePinReset                            = "P60D";
+                    PeriodOfflineBeforeAccessCheck                  = "PT12H";
+                    PeriodOfflineBeforeWipeIsEnforced               = "P90D";
+                    PeriodOnlineBeforeAccessCheck                   = "PT30M";
+                    PinCharacterSet                                 = "alphanumericAndSymbol";
+                    PinRequired                                     = $True;
+                    DisableAppPinIfDevicePinIsSet                   = $False;
+                    PrintBlocked                                    = $False;
+                    SaveAsBlocked                                   = $True;
+                    SimplePinBlocked                                = $False;
+                    ScreenCaptureBlocked                            = $False;
+                    ManagedBrowser                                  = "microsoftEdge";
+                    MinimumRequiredAppVersion                       = "1.2";
+                    MinimumRequiredOSVersion                        = "1.1";
+                    MinimumRequiredPatchVersion                     = "2020-07-13";
+                    MinimumWarningAppVersion                        = "1.5";
+                    MinimumWarningOSVersion                         = "1.5";
+                    MinimumWarningPatchVersion                      = "2021-07-13";
+                    IsAssigned                                      = $True;
+                    CustomBrowserPackageId                          = "";
+                    CustomBrowserDisplayName                        = "";
+                    id                                              = "12345-12345-12345-12345-12345"
                 }
 
             }
@@ -136,33 +142,38 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             }
                         }
                     )
-                    ContactSyncBlocked                      = $False;
-                    DataBackupBlocked                       = $False;
-                    Description                             = 'DSC Policy'
-                    DeviceComplianceRequired                = $True;
-                    FingerprintBlocked                      = $False;
-                    ManagedBrowserToOpenLinksRequired       = $True;
-                    MaximumPinRetries                       = 5;
-                    MinimumPinLength                        = 4;
-                    OrganizationalCredentialsRequired       = $False;
-                    PeriodBeforePinReset                    = New-TimeSpan -Days 60;
-                    PeriodOfflineBeforeAccessCheck          = New-TimeSpan -Hours 12;
-                    PeriodOfflineBeforeWipeIsEnforced       = New-TimeSpan -Days 90;
-                    PeriodOnlineBeforeAccessCheck           = New-TimeSpan -Minutes 30;
-                    PinCharacterSet                         = "alphanumericAndSymbol";
-                    PinRequired                             = $True;
-                    DisableAppPinIfDevicePinIsSet           = $False;
-                    PrintBlocked                            = $False;
-                    SaveAsBlocked                           = $True;
-                    SimplePinBlocked                        = $False;
-                    ManagedBrowser                          = "notConfigured";
-                    MinimumRequiredAppVersion               = "1.2";
-                    MinimumRequiredOSVersion                = "1.1";
-                    MinimumRequiredPatchVersion             = "2020-07-13";
-                    MinimumWarningAppVersion                = "1.5";
-                    MinimumWarningOSVersion                 = "1.5";
-                    MinimumWarningPatchVersion              = "2021-07-13";
-                    IsAssigned                              = $true;
+                    ContactSyncBlocked                              = $False;
+                    DataBackupBlocked                               = $False;
+                    Description                                     = 'DSC Policy'
+                    DeviceComplianceRequired                        = $True;
+                    DisableAppEncryptionIfDeviceEncryptionIsEnabled = $true;
+                    EncryptAppData                                  = $True;
+                    FingerprintBlocked                              = $False;
+                    ManagedBrowserToOpenLinksRequired               = $True;
+                    MaximumPinRetries                               = 5;
+                    MinimumPinLength                                = 4;
+                    OrganizationalCredentialsRequired               = $False;
+                    PeriodBeforePinReset                            = New-TimeSpan -Days 60;
+                    PeriodOfflineBeforeAccessCheck                  = New-TimeSpan -Hours 12;
+                    PeriodOfflineBeforeWipeIsEnforced               = New-TimeSpan -Days 90;
+                    PeriodOnlineBeforeAccessCheck                   = New-TimeSpan -Minutes 30;
+                    PinCharacterSet                                 = "alphanumericAndSymbol";
+                    PinRequired                                     = $True;
+                    DisableAppPinIfDevicePinIsSet                   = $False;
+                    PrintBlocked                                    = $False;
+                    SaveAsBlocked                                   = $True;
+                    SimplePinBlocked                                = $False;
+                    ScreenCaptureBlocked                            = $False;
+                    ManagedBrowser                                  = "microsoftEdge";
+                    MinimumRequiredAppVersion                       = "1.2";
+                    MinimumRequiredOSVersion                        = "1.1";
+                    MinimumRequiredPatchVersion                     = "2020-07-13";
+                    MinimumWarningAppVersion                        = "1.5";
+                    MinimumWarningOSVersion                         = "1.5";
+                    MinimumWarningPatchVersion                      = "2021-07-13";
+                    IsAssigned                                      = $True;
+                    CustomBrowserPackageId                          = "";
+                    CustomBrowserDisplayName                        = "";
                 }
             }
 
@@ -204,7 +215,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = get-DefaultTestParams
                 $Global:Count = 0
                 Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
-                    if ($Global:Count -eq 0)
+                    if ($Global:Count -le 1)
                     {
                         $Global:Count++
                         return $null
@@ -238,7 +249,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When the policy already exists and is NOT in the Desired State" -Fixture {
             BeforeAll {
                 $testParams = get-DefaultTestParams
-                $testParams.ManagedBrowserToOpenLinksRequired       = $False #Drift
+                $testParams.FingerprintBlocked       = $true #Drift
 
 
                 Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
