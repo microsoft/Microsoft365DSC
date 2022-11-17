@@ -22,11 +22,23 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
+        $ResourceScopesDisplayNames,
+
+        [Parameter()]
+        [System.String[]]
         $Members,
 
         [Parameter()]
         [System.String[]]
+        $MembersDisplayNames,
+
+        [Parameter()]
+        [System.String]
         $RoleDefinition,
+
+        [Parameter()]
+        [System.String]
+        $RoleDefinitionDisplayName,
 
         [Parameter()]
         [System.String[]]
@@ -116,23 +128,53 @@ function Get-TargetResource
         $ScopeTagsId = @()
         $ScopeTagsId = (Get-MgDeviceManagementRoleAssignmentRoleScopeTag -DeviceAndAppManagementRoleAssignmentId $getValue.Id).Id
 
-        $RoleDefinitionid = Get-MgDeviceManagementRoleAssignment -DeviceAndAppManagementRoleAssignmentId $getvalue.Id -ExpandProperty *
+        #Get Roledefinition first, loop through all roledefinitions and find the assignment match the id
+        $tempRoleDefinitions = Get-MgDeviceManagementRoleDefinition
+        foreach($tempRoleDefinition in $tempRoleDefinitions)
+        {
+            $item = Get-MgDeviceManagementRoleDefinitionRoleAssignment -RoleDefinitionId $tempRoleDefinition.Id | Where-Object {$_.Id -eq $getValue.Id}
+            if($null -ne $item)
+            {
+                $RoleDefinition = $tempRoleDefinition.Id
+                $RoleDefinitionDisplayName = $tempRoleDefinition.DisplayName
+                break
+            }
+        }
+
+        #$RoleDefinitionid = Get-MgDeviceManagementRoleAssignment -DeviceAndAppManagementRoleAssignmentId $getvalue.Id -ExpandProperty *
+
+        $ResourceScopesDisplayNames = @()
+        foreach($ResourceScope in $getValue.ResourceScopes)
+        {
+            $ResourceScopesDisplayNames += (Get-MgGroup -GroupId $ResourceScope).DisplayName
+        }
+
+        $MembersDisplayNames = @()
+        foreach($tempMember in $getValue.Members)
+        {
+            $MembersDisplayNames += (Get-MgGroup -GroupId $tempMember).DisplayName
+        }
+
         Write-Verbose -Message "Found something with id {$id}"
+
         $results = @{
             Id = $getValue.Id
-            Description = $getValue.Description
-            DisplayName = $getValue.DisplayName
-            ResourceScopes = $getValue.ResourceScopes
-            Members = $getValue.Members
-            RoleDefinition = $RoleDefinitionid.RoleDefinition.Id
-            Ensure                = 'Present'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            ApplicationSecret     = $ApplicationSecret
-            CertificateThumbprint = $CertificateThumbprint
-            Managedidentity       = $ManagedIdentity.IsPresent
-            RoleScopeTagIds       = $ScopeTags
+            Description                 = $getValue.Description
+            DisplayName                 = $getValue.DisplayName
+            ResourceScopes              = $getValue.ResourceScopes
+            ResourceScopesDisplayNames  = $ResourceScopesDisplayNames
+            Members                     = $getValue.Members
+            MembersDisplayNames         = $MembersDisplayNames
+            RoleDefinition              = $RoleDefinition
+            RoleDefinitionDisplayName   = $RoleDefinitionDisplayName
+            Ensure                      = 'Present'
+            Credential                  = $Credential
+            ApplicationId               = $ApplicationId
+            TenantId                    = $TenantId
+            ApplicationSecret           = $ApplicationSecret
+            CertificateThumbprint       = $CertificateThumbprint
+            Managedidentity             = $ManagedIdentity.IsPresent
+            RoleScopeTagIds             = $ScopeTags
         }
 
 
@@ -187,11 +229,23 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
+        $ResourceScopesDisplayNames,
+
+        [Parameter()]
+        [System.String[]]
         $Members,
 
         [Parameter()]
         [System.String[]]
+        $MembersDisplayNames,
+
+        [Parameter()]
+        [System.String]
         $RoleDefinition,
+
+        [Parameter()]
+        [System.String]
+        $RoleDefinitionDisplayName,
 
         [Parameter()]
         [System.String[]]
@@ -272,6 +326,44 @@ function Set-TargetResource
         }
     }
 
+    if(!($RoleDefinition -match "^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$")){
+        [string]$roleDefinition = $null
+        $Filter = "displayName eq '$RoleDefinitionDisplayName'"
+        $RoleDefinitionId = Get-MgDeviceManagementRoleDefinition -Filter $Filter -ErrorAction SilentlyContinue
+        if($null -ne $RoleDefinitionId){
+            $roleDefinition = $RoleDefinitionId.Id
+        }
+        else{
+            Write-Verbose -Message "Nothing with displayname {$RoleDefinitionDisplayName} was found"
+        }
+    }
+
+    foreach($MembersDisplayName in $membersDisplayNames){
+        $Filter = "displayName eq '$MembersDisplayName'"
+        $MemberId = Get-MgGroup -Filter $Filter -ErrorAction SilentlyContinue
+        if($null -ne $MemberId){
+            if($Members -notcontains $MemberId.Id){
+                $Members += $MemberId.Id
+            }
+        }
+        else{
+            Write-Verbose -Message "Nothing with displayname {$MembersDisplayName} was found"
+        }
+    }
+
+    foreach($ResourceScopesDisplayName in $ResourceScopesDisplayNames){
+        $Filter = "displayName eq '$ResourceScopesDisplayName'"
+        $ResourceScopeId = Get-MgGroup -Filter $Filter -ErrorAction SilentlyContinue
+        if($null -ne $ResourceScopeId){
+            if($ResourceScopes -notcontains $ResourceScopeId.Id){
+                $ResourceScopes += $ResourceScopeId.Id
+            }
+        }
+        else{
+            Write-Verbose -Message "Nothing with displayname {$ResourceScopesDisplayName} was found"
+        }
+    }
+
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating {$DisplayName}"
@@ -340,11 +432,23 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String[]]
+        $ResourceScopesDisplayNames,
+
+        [Parameter()]
+        [System.String[]]
         $Members,
 
         [Parameter()]
         [System.String[]]
+        $MembersDisplayNames,
+
+        [Parameter()]
+        [System.String]
         $RoleDefinition,
+
+        [Parameter()]
+        [System.String]
+        $RoleDefinitionDisplayName,
 
         [Parameter()]
         [System.String[]]
@@ -397,6 +501,47 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
+    if(!($RoleDefinition -match '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$')){
+        [string]$roleDefinition = $null
+        $Filter = "displayName eq '$RoleDefinitionDisplayName'"
+        $RoleDefinitionId = Get-MgDeviceManagementRoleDefinition -Filter $Filter -ErrorAction SilentlyContinue
+        if($null -ne $RoleDefinitionId){
+            $roleDefinition = $RoleDefinitionId.Id
+            $PSBoundParameters.Set_Item('RoleDefinition',$roleDefinition)
+        }
+        else{
+            Write-Verbose -Message "Nothing with displayname {$RoleDefinitionDisplayName} was found"
+        }
+    }
+
+    foreach($MembersDisplayName in $membersDisplayNames){
+        $Filter = "displayName eq '$MembersDisplayName'"
+        $newMemeber = Get-MgGroup -Filter $Filter -ErrorAction SilentlyContinue
+        if($null -ne $newMemeber){
+            if($Members -notcontains $newMemeber.Id){
+                $Members += $newMemeber.Id
+            }
+        }
+        else{
+            Write-Verbose -Message "Nothing with displayname {$RoleDefinitionDisplayName} was found"
+        }
+    }
+    $PSBoundParameters.Set_Item('Members',$Members)
+
+    foreach($ResourceScopesDisplayName in $resourceScopesDisplayNames){
+        $Filter = "displayName eq '$ResourceScopesDisplayName'"
+        $newResourceScope = Get-MgGroup -Filter $Filter -ErrorAction SilentlyContinue
+        if($null -ne $newResourceScope){
+            if($ResourceScopes -notcontains $newResourceScope.Id){
+                $ResourceScopes += $newResourceScope.Id
+            }
+        }
+        else{
+            Write-Verbose -Message "Nothing with displayname {$RoleDefinitionDisplayName} was found"
+        }
+    }
+    $PSBoundParameters.Set_Item('ResourceScopes',$ResourceScopes)
+
     if($CurrentValues.Ensure -eq "Absent")
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
@@ -434,6 +579,8 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
     $ValuesToCheck.Remove('RoleScopeTagIds') | Out-Null
     $ValuesToCheck.Remove('Id') | Out-Null
+    $ValuesToCheck.Remove('ResourceScopesDisplayNames') | Out-Null
+    $ValuesToCheck.Remove('membersDisplayNames') | Out-Null
 
     foreach ($key in $ValuesToCheck.Keys)
     {
