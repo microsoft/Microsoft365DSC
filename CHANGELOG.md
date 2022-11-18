@@ -7,7 +7,7 @@
   * Manage Intune Role definition
 * IntuneRoleAssignment
   * Initial Release
-  * Manage Intune Role assignent
+  * Manage Intune Role assignment
 * DEPENDENCIES
   * Updated Microsoft.Graph.* to version 1.17.0;
   * Updated MSCloudLoginAssistant to version 1.0.98;

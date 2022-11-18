@@ -22,6 +22,8 @@ Configuration Example
             Id                        = "";
             IsBuiltIn                 = $False;
             notallowedResourceActions = @();
-            roleScopeTagIds           = @("0","1");        }
+            roleScopeTagIds           = @("0","1");
+            Credential                = $credsGlobalAdmin
+        }
     }
 }
