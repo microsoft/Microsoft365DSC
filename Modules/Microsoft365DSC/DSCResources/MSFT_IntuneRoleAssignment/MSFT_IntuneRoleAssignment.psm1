@@ -40,10 +40,6 @@ function Get-TargetResource
         [System.String]
         $RoleDefinitionDisplayName,
 
-        [Parameter()]
-        [System.String[]]
-        $RoleScopeTagIds,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -125,9 +121,6 @@ function Get-TargetResource
             }
         }
 
-        $ScopeTagsId = @()
-        $ScopeTagsId = (Get-MgDeviceManagementRoleAssignmentRoleScopeTag -DeviceAndAppManagementRoleAssignmentId $getValue.Id).Id
-
         #Get Roledefinition first, loop through all roledefinitions and find the assignment match the id
         $tempRoleDefinitions = Get-MgDeviceManagementRoleDefinition
         foreach($tempRoleDefinition in $tempRoleDefinitions)
@@ -174,7 +167,6 @@ function Get-TargetResource
             ApplicationSecret           = $ApplicationSecret
             CertificateThumbprint       = $CertificateThumbprint
             Managedidentity             = $ManagedIdentity.IsPresent
-            RoleScopeTagIds             = $ScopeTags
         }
 
 
@@ -247,10 +239,6 @@ function Set-TargetResource
         [System.String]
         $RoleDefinitionDisplayName,
 
-        [Parameter()]
-        [System.String[]]
-        $RoleScopeTagIds,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -316,16 +304,6 @@ function Set-TargetResource
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
 
-    if($null -ne $RoleScopeTagIds){
-        $ScopeTags = @()
-        foreach($roleScopeTagId in $RoleScopeTagIds){
-            $Tag = Get-MgDeviceManagementRoleScopeTag -RoleScopeTagId $roleScopeTagId -ErrorAction SilentlyContinue
-            if($null -ne $Tag){
-                $ScopeTags += $Tag.Id
-            }
-        }
-    }
-
     if(!($RoleDefinition -match "^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$")){
         [string]$roleDefinition = $null
         $Filter = "displayName eq '$RoleDefinitionDisplayName'"
@@ -338,6 +316,7 @@ function Set-TargetResource
         }
     }
 
+    [array]$members = @()
     foreach($MembersDisplayName in $membersDisplayNames){
         $Filter = "displayName eq '$MembersDisplayName'"
         $MemberId = Get-MgGroup -Filter $Filter -ErrorAction SilentlyContinue
@@ -351,6 +330,7 @@ function Set-TargetResource
         }
     }
 
+    [array]$resourceScopes = @()
     foreach($ResourceScopesDisplayName in $ResourceScopesDisplayNames){
         $Filter = "displayName eq '$ResourceScopesDisplayName'"
         $ResourceScopeId = Get-MgGroup -Filter $Filter -ErrorAction SilentlyContinue
@@ -376,7 +356,6 @@ function Set-TargetResource
             members = $Members
             '@odata.type' = '#microsoft.graph.deviceAndAppManagementRoleAssignment'
             'roleDefinition@odata.bind' = "https://graph.microsoft.com/beta/deviceManagement/roleDefinitions('$roleDefinition')"
-            roleScopeTagIds = $ScopeTags
         }
 
         $policy=New-MgDeviceManagementRoleAssignment -BodyParameter $CreateParameters
@@ -394,7 +373,6 @@ function Set-TargetResource
             members = $Members
             '@odata.type' = '#microsoft.graph.deviceAndAppManagementRoleAssignment'
             'roleDefinition@odata.bind' = "https://graph.microsoft.com/beta/deviceManagement/roleDefinitions('$roleDefinition')"
-            roleScopeTagIds = $ScopeTags
         }
 
         Update-MgDeviceManagementRoleAssignment -BodyParameter $UpdateParameters `
@@ -450,10 +428,6 @@ function Test-TargetResource
         [System.String]
         $RoleDefinitionDisplayName,
 
-        [Parameter()]
-        [System.String[]]
-        $RoleScopeTagIds,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -496,7 +470,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of {$id}"
+    Write-Verbose -Message "Testing configuration of {$id - $displayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
@@ -577,7 +551,6 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-    $ValuesToCheck.Remove('RoleScopeTagIds') | Out-Null
     $ValuesToCheck.Remove('Id') | Out-Null
     $ValuesToCheck.Remove('ResourceScopesDisplayNames') | Out-Null
     $ValuesToCheck.Remove('membersDisplayNames') | Out-Null

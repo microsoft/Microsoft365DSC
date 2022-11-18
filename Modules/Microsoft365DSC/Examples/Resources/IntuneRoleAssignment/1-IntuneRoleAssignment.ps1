@@ -13,15 +13,18 @@ Configuration Example
 
     Node localhost
     {
-        IntuneRoleAssignment "d0dc6002-2131-480b-a70d-a795ebf474f2"
+        IntuneRoleAssignment "IntuneRoleAssignment"
         {
-            Description           = "Descrition of the role assignment";
-            DisplayName           = "Display name of the role assignment";
-            Ensure                = "Present";
-            Id                    = "d0dc6002-2131-480b-a70d-a795ebf474f2";
-			Roledefinition	      = "c1d9fcbb-cba5-40b0-bf6b-527006585f4b";
-            Members               = @("4ecd31fa-5da1-4003-a3c8-da7d86edc674");
-            ResourceScopes        = @("7d1bffac-0174-4475-8aac-45dec9fb184f");
+            Description                = "test2";
+            DisplayName                = "test2";
+            Ensure                     = "Present";
+            Id                         = "20556aad-3d16-465a-890c-cf915ae1cd60";
+            Members                    = @("");
+            MembersDisplayNames        = @("SecGroup2");
+            ResourceScopes             = @("6eb76881-f56f-470f-be0d-672145d3dcb1");
+            ResourceScopesDisplayNames = @("");
+            RoleDefinition             = "2d00d0fd-45e9-4166-904f-b76ac5eed2c7";
+            RoleDefinitionDisplayName  = "This is my role";
         }
     }
 }

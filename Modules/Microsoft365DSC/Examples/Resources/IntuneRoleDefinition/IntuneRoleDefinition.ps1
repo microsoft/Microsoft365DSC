@@ -13,15 +13,15 @@ Configuration Example
 
     Node localhost
     {
-        IntuneRoleDefinition "bb52f6f6-d0a7-4a39-afdb-a64709773e4c"
+        IntuneRoleDefinition "IntuneRoleDefinition"
         {
             allowedResourceActions    = @("Microsoft.Intune_Organization_Read","Microsoft.Intune_Roles_Create","Microsoft.Intune_Roles_Read","Microsoft.Intune_Roles_Update");
-            Description               = "My 2nd role defined by me.";
-            DisplayName               = "This is my 2nd role";
-            Ensure                    = "Absent";
-            Id                        = "bb52f6f6-d0a7-4a39-afdb-a64709773e4c";
+            Description               = "My role defined by me.";
+            DisplayName               = "This is my role";
+            Ensure                    = "Present";
+            Id                        = "";
             IsBuiltIn                 = $False;
             notallowedResourceActions = @();
-        }
+            roleScopeTagIds           = @("0","1");        }
     }
 }
