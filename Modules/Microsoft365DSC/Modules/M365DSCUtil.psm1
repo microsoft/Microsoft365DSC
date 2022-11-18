@@ -1241,8 +1241,6 @@ function Confirm-M365DSCDependencies
     {
         Write-Verbose -Message 'Dependencies were not already validated.'
 
-        Update-M365DSCDependencies
-
         $result = Update-M365DSCDependencies -ValidateOnly
 
         if ($result.Length -gt 0)
