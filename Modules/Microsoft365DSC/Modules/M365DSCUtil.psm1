@@ -1135,24 +1135,6 @@ function Export-M365DSCConfiguration
     $data.Add('MaxProcesses', $null -ne $MaxProcesses)
     #endregion
 
-    $outdatedOrMissingAssemblies = Test-M365DSCDependenciesForNewVersions
-    if ($outdatedOrMissingAssemblies)
-    {
-        if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
-        {
-            foreach ($dependency in $outdatedOrMissingAssemblies)
-            {
-                Write-Host "Updating dependency {$($dependency.ModuleName)} to version {$($dependency.RequiredVersion)}..." -NoNewline
-                Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -Scope 'AllUsers' | Out-Null
-                Write-Host $Global:M365DSCEmojiGreenCheckmark
-            }
-        }
-        else
-        {
-            Write-Error 'Cannot update the dependencies for Microsoft365DSC. You need to run this command as a local administrator.'
-        }
-    }
-
     if ($null -eq $MaxProcesses)
     {
         $MaxProcesses = 16
@@ -1258,7 +1240,11 @@ function Confirm-M365DSCDependencies
     if (-not $Script:M365DSCDependenciesValidated)
     {
         Write-Verbose -Message 'Dependencies were not already validated.'
-        $result = Test-M365DSCDependenciesForNewVersions
+
+        Update-M365DSCDependencies
+
+        $result = Update-M365DSCDependencies -ValidateOnly
+
         if ($result.Length -gt 0)
         {
             $ErrorMessage = "The following dependencies need updating:`r`n"
@@ -1266,7 +1252,8 @@ function Confirm-M365DSCDependencies
             {
                 $ErrorMessage += '    * ' + $invalidDependency.ModuleName + "`r`n"
             }
-            $ErrorMessage += 'Please run Update-M365DSCDependencies.'
+            $ErrorMessage += 'Please run Update-M365DSCDependencies as Administrator.'
+            $ErrorMessage += 'Please run Uninstall-M365DSCOutdatedDependencies.'
             $Script:M365DSCDependenciesValidated = $false
             Add-M365DSCEvent -Message $ErrorMessage -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -2497,44 +2484,61 @@ function Update-M365DSCDependencies
 {
     [CmdletBinding()]
     param(
-        [parameter()]
+        [Parameter()]
         [Switch]
-        $Force
+        $Force,
+
+        [Parameter()]
+        [Switch]
+        $ValidateOnly
     )
+
     $InformationPreference = 'Continue'
     $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
     $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
     $dependencies = $manifest.Dependencies
     $i = 1
 
-    if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
-    {
-        foreach ($dependency in $dependencies)
-        {
-            Write-Progress -Activity 'Scanning Dependencies' -PercentComplete ($i / $dependencies.Count * 100)
-            try
-            {
-                if (-not $Force)
-                {
-                    $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
-                }
+    $returnValue = @()
 
-                if (-not $found -or $Force)
+    foreach ($dependency in $dependencies)
+    {
+        Write-Progress -Activity 'Scanning Dependencies' -PercentComplete ($i / $dependencies.Count * 100)
+        try
+        {
+            if (-not $Force)
+            {
+                $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
+            }
+
+            if ((-not $found -or $Force) -and -not $ValidateOnly)
+            {
+                if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
                 {
-                    Write-Information -Message "Installing $($dependency.ModuleName) version {$($dependency.RequiredVersion)}"
+                    Write-Information -MessageData "Installing $($dependency.ModuleName) version {$($dependency.RequiredVersion)}"
                     Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force -Scope 'AllUsers'
                 }
+                else
+                {
+                    Write-Error 'Cannot update the dependencies for Microsoft365DSC. You need to run this command as a local administrator.'
+                }
             }
-            catch
+
+            if (-not $found -and $validateOnly)
             {
-                Write-Host "Could not update {$($dependency.ModuleName)}"
+                $returnValue += $dependency
             }
-            $i++
         }
+        catch
+        {
+            Write-Host "Could not update {$($dependency.ModuleName)}"
+        }
+        $i++
     }
-    else
+
+    if ($ValidateOnly)
     {
-        Write-Error 'Cannot update the dependencies for Microsoft365DSC. You need to run this command as a local administrator.'
+        return $returnValue
     }
 }
 
@@ -2561,7 +2565,7 @@ function Uninstall-M365DSCOutdatedDependencies
     {
         try
         {
-            Write-Information -Message "Uninstalling $($module.Name) Version {$($module.Version)}"
+            Write-Information -MessageData "Uninstalling $($module.Name) Version {$($module.Version)}"
             if (Test-Path -Path $($module.Path))
             {
                 Remove-Item $($module.Path) -Force -Recurse
@@ -2589,7 +2593,7 @@ function Uninstall-M365DSCOutdatedDependencies
             {
                 try
                 {
-                    Write-Information -Message "Uninstalling $($foundModule.Name) Version {$($foundModule.Version)}"
+                    Write-Information -MessageData "Uninstalling $($foundModule.Name) Version {$($foundModule.Version)}"
                     if (Test-Path -Path $($foundModule.Path))
                     {
                         Remove-Item $($foundModule.ModuleBase) -Force -Recurse
@@ -2611,13 +2615,13 @@ function Uninstall-M365DSCOutdatedDependencies
     $authModule = $manifest.Dependencies | Where-Object { $_.ModuleName -eq 'Microsoft.Graph.Authentication' }
     try
     {
-        Write-Information -Message 'Checking Microsoft.Graph.Authentication'
+        Write-Information -MessageData 'Checking Microsoft.Graph.Authentication'
         $found = Get-Module $authModule.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -ne $authModule.RequiredVersion }
         foreach ($foundModule in $found)
         {
             try
             {
-                Write-Information -Message "Uninstalling $($foundModule.Name) version {$($foundModule.Version)}"
+                Write-Information -MessageData "Uninstalling $($foundModule.Name) version {$($foundModule.Version)}"
                 if (Test-Path -Path $($foundModule.Path))
                 {
                     Remove-Item $($foundModule.ModuleBase) -Force -Recurse
