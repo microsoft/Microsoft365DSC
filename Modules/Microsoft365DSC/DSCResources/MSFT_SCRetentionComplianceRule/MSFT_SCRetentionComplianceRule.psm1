@@ -106,14 +106,14 @@ function Get-TargetResource
                 Policy                       = $AssociatedPolicy.Name
                 RetentionDuration            = $RuleObject.RetentionDuration
                 RetentionComplianceAction    = $RetentionComplianceActionValue
+                RetentionDurationDisplayHint = $RuleObject.RetentionDurationDisplayHint
+                ExpirationDateOption         = $RuleObject.ExpirationDateOption
                 Credential                   = $Credential
                 Ensure                       = 'Present'
             }
             if (-not $associatedPolicy.TeamsPolicy)
             {
-                $result.Add('ExpirationDateOption', $RuleObject.ExpirationDateOption)
                 $result.Add('ExcludedItemClasses', $RuleObject.ExcludedItemClasses)
-                $result.Add('RetentionDurationDisplayHint', $RuleObject.RetentionDurationDisplayHint)
                 $result.Add('ContentMatchQuery', $RuleObject.ContentMatchQuery)
             }
 

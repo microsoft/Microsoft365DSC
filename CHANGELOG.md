@@ -2,6 +2,12 @@
 
 # UNRELEASED
 
+* SCRetentionCompliancePolicy
+  * Fixes issue with the TeamsChannelLocation and TeamsChatsLocation parameters that were improperly returned by the Get- function.
+    FIXES [#2472](https://github.com/microsoft/Microsoft365DSC/issues/2472)
+* SCRetentionComplianceRule
+  * Fixes issue with Teams Policy where the RetentionDurationDisplayHint and ExpirationDateOption parameters weren't returned by the Get- function.
+    FIXES [#2472](https://github.com/microsoft/Microsoft365DSC/issues/2472)
 * DEPENDENCIES
   * Updated Microsoft.Graph.* to version 1.17.0;
   * Updated MSCloudLoginAssistant to version 1.0.98;
