@@ -11,6 +11,11 @@
 * DEPENDENCIES
   * Updated Microsoft.Graph.* to version 1.17.0;
   * Updated MSCloudLoginAssistant to version 1.0.98;
+* MISC
+  * Removed Test-M365DSCDependenciesForNewVersions from export functions. This will improve export speed.
+  * New Parameter `ValidateOnly` for Update-M365DSCDependencies to check if all dependencies are installed.
+    FIXES [2519](https://github.com/microsoft/Microsoft365DSC/issues/2519)
+  * Fixed incorrect usage of Write-Information cmdLet
 
 # 1.22.1116.1
 
