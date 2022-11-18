@@ -12925,7 +12925,7 @@ function Get-MgDeviceManagementTemplateCategory
     )
 }
 
-function Get-MgDeviceManagementTemplateCategory
+function Get-MgDeviceManagementTemplateCategoryRecommendedSetting
 {
     [CmdletBinding()]
     param(
