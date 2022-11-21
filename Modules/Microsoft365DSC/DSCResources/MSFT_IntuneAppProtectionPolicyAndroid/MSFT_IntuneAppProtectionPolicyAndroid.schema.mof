@@ -35,7 +35,7 @@ class MSFT_IntuneAppProtectionPolicyAndroid : OMI_BaseResource
     [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
 	[Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
-    [Write, Description("Indicates in which managed browser(s) that internet links should be opened. When this property is configured, ManagedBrowserToOpenLinksRequired should be true. Possible values are: notConfigured, microsoftEdge."), ValueMap{"notConfigured","microsoftEdge"}, Values{"notConfigured","microsoftEdge"}] String ManagedBrowser;
+    [Write, Description("Indicates in which managed browser(s) that internet links should be opened. Used in conjunction with CustomBrowserPackageId, CustomBrowserDisplayName and ManagedBrowserToOpenLinksRequired. Possible values are: notConfigured, microsoftEdge."), ValueMap{"notConfigured","microsoftEdge"}, Values{"notConfigured","microsoftEdge"}] String ManagedBrowser;
     [Write, Description("Versions less than the specified version will block the managed app from accessing company data.")] String MinimumRequiredAppVersion;
     [Write, Description("Versions less than the specified version will block the managed app from accessing company data.")] String MinimumRequiredOSVersion;
     [Write, Description("Versions less than the specified version will block the managed app from accessing company data.")] String MinimumRequiredPatchVersion;
@@ -44,4 +44,10 @@ class MSFT_IntuneAppProtectionPolicyAndroid : OMI_BaseResource
     [Write, Description("Versions less than the specified version will result in warning message on the managed app")] String MinimumWarningPatchVersion;
     [Write, Description("The apps controlled by this protection policy, overrides any values in Apps unless this value is 'selectedPublicApps'."),ValueMap{"allApps", "allMicrosoftApps", "allCoreMicrosoftApps", "selectedPublicApps"}, Values{"allApps", "allMicrosoftApps", "allCoreMicrosoftApps", "selectedPublicApps"}] String AppGroupType;
     [Write, Description("Indicates if the policy is deployed to any inclusion groups or not. Inherited from targetedManagedAppProtection.")] Boolean IsAssigned;
+    [Write, Description("Indicates whether or not to Block the user from taking Screenshots.")] Boolean ScreenCaptureBlocked;
+    [Write, Description("Indicates whether or not the 'Encrypt org data' value is enabled.  True = require")] Boolean EncryptAppData;
+    [Write, Description("Indicates whether or not the 'Encrypt org data on enrolled devices' value is enabled.  False = require.  Only functions if EncryptAppData is set to True")] Boolean DisableAppEncryptionIfDeviceEncryptionIsEnabled;
+    [Write, Description("The application name for browser associated with the 'Unmanaged Browser ID'. This name will be displayed to users if the specified browser is not installed.")] String CustomBrowserDisplayName;
+    [Write, Description("The application ID for a single browser. Web content (http/s) from policy managed applications will open in the specified browser.")] String CustomBrowserPackageId;
+    [Write, Description("Id of the Intune policy. To avoid creation of duplicate policies DisplayName will be searched for if the ID is not found")] String Id;
 };

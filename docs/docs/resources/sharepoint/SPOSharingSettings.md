@@ -5,7 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **IsSingleInstance** | Key | String | Specifies the resource is a single instance, the value must be 'Yes' |Yes|
-| **SharingCapability** | Write | String | Configures anonymous link types for folders |ExistingExternalUserSharingOnly, ExternalUserAndGuestSharing, Disabled, ExternalUserSharingOnly|
+| **SharingCapability** | Write | String | Configures sharing capability for SharePoint |ExistingExternalUserSharingOnly, ExternalUserAndGuestSharing, Disabled, ExternalUserSharingOnly|
 | **MySiteSharingCapability** | Write | String | Configures sharing capability for mysite (onedrive) |ExistingExternalUserSharingOnly, ExternalUserAndGuestSharing, Disabled, ExternalUserSharingOnly|
 | **ShowEveryoneClaim** | Write | Boolean | Enables the administrator to hide the Everyone claim in the People Picker. ||
 | **ShowAllUsersClaim** | Write | Boolean | Enables the administrator to hide the All Users claim groups in People Picker. ||

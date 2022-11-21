@@ -17,7 +17,10 @@
 | **OptimizeDeviceDialing** | Write | Boolean | Specifies if the dial plan should optimize device dialing or not. ||
 | **SimpleName** | Write | String | The SimpleName parameter is a display name for the tenant dial plan. This name must be unique among all tenant dial plans within the Skype for Business Server deployment.This string can be up to 49 characters long. Valid characters are alphabetic or numeric characters, hyphen (-), dot (.) and parentheses (()). ||
 | **Ensure** | Write | String | Specify if this dial plan should exist or not. |Present, Absent|
-| **Credential** | Required | PSCredential | Credentials of the Teams Global Admin ||
+| **Credential** | Write | PSCredential | Credentials of the Teams Admin ||
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
+| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
 # TeamsTenantDialPlan
 

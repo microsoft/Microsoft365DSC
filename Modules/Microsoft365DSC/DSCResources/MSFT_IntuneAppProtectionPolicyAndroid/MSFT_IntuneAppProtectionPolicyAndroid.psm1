@@ -101,6 +101,18 @@ function Get-TargetResource
         $FingerprintBlocked,
 
         [Parameter()]
+        [System.Boolean]
+        $DisableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $CustomBrowserDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $CustomBrowserPackageId,
+
+        [Parameter()]
         [System.String[]]
         $Apps,
 
@@ -150,6 +162,14 @@ function Get-TargetResource
         [System.Boolean]
         $IsAssigned,
 
+        [Parameter()]
+        [System.Boolean]
+        $ScreenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptAppData,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -177,7 +197,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String]
+        $Id
     )
     Write-Verbose -Message "Checking for the Intune Android App Protection Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -ProfileName beta `
@@ -200,9 +224,23 @@ function Get-TargetResource
 
     try
     {
-        $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'" -ExpandProperty Apps, assignments `
-            -ErrorAction Stop
-
+        if ($id -ne '')
+        {
+            Write-Verbose -Message "Searching for Policy using Id {$Id}"
+            $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "Id eq '$Id'" -ExpandProperty Apps, assignments `
+                -ErrorAction Stop
+            if ($null -eq $policyInfo)
+            {
+                Write-Verbose -Message "No Android App Protection Policy with Id {$Id} was found"
+                Write-Verbose -Message "Function will now search for a policy with the same displayName {$Displayname} - If found this policy will be amended"
+            }
+        }
+        if ($null -eq $policyInfo)
+        {
+            Write-Verbose -Message "Searching for Policy using DisplayName {$DisplayName}"
+            $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'" -ExpandProperty Apps, assignments `
+                -ErrorAction Stop
+        }
         if ($null -eq $policyInfo)
         {
             Write-Verbose -Message "No Android App Protection Policy {$DisplayName} was found"
@@ -212,7 +250,7 @@ function Get-TargetResource
         # handle multiple results - throw error - may be able to remediate to specify ID in configuration at later date
         if ($policyInfo.gettype().isarray)
         {
-            Write-Verbose -Message "Multiple Android Policies with name {$DisplayName} were found - Module will only function with unique names, please manually remediate"
+            Write-Verbose -Message "Multiple Android Policies with name {$DisplayName} were found - Where No valid ID is specified Module will only function with unique names, please manually remediate"
             $nullResult.Ensure = 'ERROR'
             throw 'Multiple Policies with same displayname identified - Module currently only functions with unique names'
         }
@@ -278,21 +316,26 @@ function Get-TargetResource
         {
             $policy.add($param, (Get-Variable -Name $param).value)
         }
+        # fix for managed identity credential value
+        $policy.add('ManagedIdentity', $ManagedIdentity.IsPresent)
         # add complex parameters manually as they all have different requirements - potential to change in future
         $policy.add('Ensure', 'Present')
         $policy.add('Apps', $appsArray)
         $policy.add('Assignments', $assignmentsArray)
         $policy.add('ExcludedGroups', $exclusionArray)
-        $policy.add('AppGroupType', $policyInfo.AppGroupType)
-        # add Id for use in set function
-        $policy.add('Id', $policyInfo.Id)
-
+        $policy.add('AppGroupType', $policyInfo.AppGroupType.toString())
+        #managed browser settings - export as is, when re-applying function will correct
+        $policy.add('ManagedBrowser', $policyInfo.ManagedBrowser.toString())
+        $policy.add('ManagedBrowserToOpenLinksRequired', $policyInfo.ManagedBrowserToOpenLinksRequired)
+        $policy.add('CustomBrowserDisplayName', $policyInfo.CustomBrowserDisplayName)
+        $policy.add('CustomBrowserPackageId', $policyInfo.CustomBrowserPackageId)
 
         return $policy
     }
     catch
     {
         Write-Verbose -Message "ERROR on get-targetresource for $displayName"
+        $nullResult.Ensure = 'ERROR'
         try
         {
             Write-Verbose -Message $_
@@ -411,6 +454,18 @@ function Set-TargetResource
         $FingerprintBlocked,
 
         [Parameter()]
+        [System.Boolean]
+        $DisableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $CustomBrowserDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $CustomBrowserPackageId,
+
+        [Parameter()]
         [System.String[]]
         $Apps,
 
@@ -460,6 +515,14 @@ function Set-TargetResource
         [System.Boolean]
         $IsAssigned,
 
+        [Parameter()]
+        [System.Boolean]
+        $ScreenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptAppData,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -487,7 +550,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String]
+        $Id
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -578,15 +645,23 @@ function Set-TargetResource
     $configstring += ('AppGroupType:' + $appshash.AppGroupType + "`r`n")
     $configstring += ('Apps' + ":`r`n" + ($appshash.Apps | Out-String) + "`r`n" )
 
-
-
-
+    # Set the managedbrowser values
+    $ManagedBrowserValuesHash = set-ManagedBrowserValues @PSBoundParameters
+    foreach ($param in $ManagedBrowserValuesHash.keys)
+    {
+        $setParams.add($param, $ManagedBrowserValuesHash.$param)
+        $configstring += ($param + ':' + $setParams.$param + "`r`n")
+    }
 
     Write-Verbose -Message $configstring
 
     if (($Ensure -eq 'Present') -and ($currentPolicy.Ensure -eq 'Absent'))
     {
         Write-Verbose -Message "Creating new Android App Protection Policy {$DisplayName}"
+        if ($id -ne '')
+        {
+            Write-Verbose -Message "ID in Configuration Document will be ignored, Policy will be created with a new ID"
+        }
         $setParams.add('Assignments', $assignmentsArray)
         $newpolicy = New-MgDeviceAppMgtAndroidManagedAppProtection @setParams
         $setParams.add('AndroidManagedAppProtectionId', $newpolicy.Id)
@@ -595,6 +670,10 @@ function Set-TargetResource
     elseif (($Ensure -eq 'Present') -and ($currentPolicy.Ensure -eq 'Present'))
     {
         Write-Verbose -Message "Updating existing Android App Protection Policy {$DisplayName}"
+        if ( ($id -ne '') -and ( $id -ne $currentPolicy.id ) )
+        {
+            Write-Verbose -Message ("id in configuration document and returned policy do not match - updating policy with matching Displayname {$displayname} - ID {" + $currentPolicy.id + '}')
+        }
         $setParams.add('AndroidManagedAppProtectionId', $currentPolicy.id)
         Update-MgDeviceAppMgtAndroidManagedAppProtection @setParams
 
@@ -710,6 +789,18 @@ function Test-TargetResource
         $FingerprintBlocked,
 
         [Parameter()]
+        [System.Boolean]
+        $DisableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $CustomBrowserDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $CustomBrowserPackageId,
+
+        [Parameter()]
         [System.String[]]
         $Apps,
 
@@ -759,6 +850,14 @@ function Test-TargetResource
         [System.Boolean]
         $IsAssigned,
 
+        [Parameter()]
+        [System.Boolean]
+        $ScreenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptAppData,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -786,10 +885,17 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String]
+        $Id
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -ProfileName beta `
+    -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
@@ -822,6 +928,12 @@ function Test-TargetResource
             Write-Verbose -Message "Policy {$DisplayName} already removed"
             return $True
         }
+    }
+
+    if (($CurrentValues.Ensure -eq 'Absent') -and ($Ensure -eq 'Present'))
+    {
+        Write-Verbose -Message "Policy {$DisplayName} Not Present on tenant - New Policy will be created"
+        return $false
     }
 
     $targetvalues = @{}
@@ -883,6 +995,9 @@ function Test-TargetResource
     $targetvalues.add('AppGroupType', $AppsHash.AppGroupType)
     # wipe out the current apps value if AppGroupType is anything but selectedpublicapps to match the appshash values
     if ($CurrentValues.AppGroupType -ne 'selectedPublicApps') { $CurrentValues.Apps = @() }
+
+    # remove thre ID from the values to check as it may not match
+    $targetvalues.remove('ID') | Out-Null
 
 
     Write-Verbose -Message "Current Values: $((Convert-M365DscHashtableToString -Hashtable $CurrentValues) -replace ';', "`r`n")"
@@ -965,6 +1080,7 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($policies.Count)] $($policy.displayName)" -NoNewline
             $params = @{
+                Id                    = $policy.id
                 DisplayName           = $policy.displayName
                 Ensure                = 'Present'
                 Credential            = $Credential
@@ -972,11 +1088,9 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
             }
             $Results = Get-TargetResource @Params
-            #remove the Id value
-            $Results.remove('Id') | Out-Null
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -1125,52 +1239,114 @@ function set-AppsHash
     return $AppsHash
 }
 
+Function set-ManagedBrowserValues
+{
+    param (
+        [string]$ManagedBrowser,
+        [switch]$ManagedBrowserToOpenLinksRequired,
+        [string]$CustomBrowserDisplayName,
+        [string]$CustomBrowserPackageId
+    )
+
+   # via the gui there are only 3 possible configs:
+   # edge - edge, true, empty id strings
+   # any app - not configured, false, empty strings
+   # unmanaged browser not configured, true, strings must not be empty
+
+   write-host 'Setting Managed Browser Properties'
+
+   if (!$ManagedBrowserToOpenLinksRequired)
+   {
+        write-host 'Setting Managed Browser to Any App'
+        $ManagedBrowser = 'notConfigured'
+        $ManagedBrowserToOpenLinksRequired = $false
+        $CustomBrowserDisplayName = ''
+        $CustomBrowserPackageId = ''
+
+   }
+   else
+   {
+        if(($CustomBrowserDisplayName -ne '') -and ($CustomBrowserPackageId -ne ''))
+        {
+            write-host 'Setting Managed Browser to Custom Browser'
+            $ManagedBrowser = 'notConfigured'
+            $ManagedBrowserToOpenLinksRequired = $true
+            $CustomBrowserDisplayName = $CustomBrowserDisplayName
+            $CustomBrowserPackageId = $CustomBrowserPackageId
+        }
+        else
+        {
+            write-host 'Setting Managed Browser to Microsoft Edge'
+            $ManagedBrowser = 'microsoftEdge'
+            $ManagedBrowserToOpenLinksRequired = $true
+            $CustomBrowserDisplayName = ''
+            $CustomBrowserPackageId = ''
+        }
+
+   }
+
+    $ManagedBrowserHash = @{
+        'ManagedBrowser' = $ManagedBrowser;
+        'ManagedBrowserToOpenLinksRequired' = $ManagedBrowserToOpenLinksRequired;
+        'CustomBrowserDisplayName' = $CustomBrowserDisplayName;
+        'CustomBrowserPackageId' = $CustomBrowserPackageId
+    }
+
+    return $ManagedBrowserHash
+}
+
 function get-InputParameters
 {
     return @{
-        AllowedDataStorageLocations             = @{Type = 'Parameter'        ; ExportFileType = 'Array'; };
-        AllowedInboundDataTransferSources       = @{Type = 'Parameter'        ; ExportFileType = 'String'; };
-        AllowedOutboundClipboardSharingLevel    = @{Type = 'Parameter'        ; ExportFileType = 'String'; };
-        AllowedOutboundDataTransferDestinations = @{Type = 'Parameter'        ; ExportFileType = 'String'; };
-        ApplicationId                           = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
-        ApplicationSecret                       = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
-        AppGroupType                            = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
-        Apps                                    = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
-        Assignments                             = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
-        CertificateThumbprint                   = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
-        Managedidentity                         = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
-        ContactSyncBlocked                      = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        Credential                              = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
-        DataBackupBlocked                       = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        Description                             = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        DeviceComplianceRequired                = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        DisableAppPinIfDevicePinIsSet           = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        DisplayName                             = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        Ensure                                  = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
-        ExcludedGroups                          = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
-        FingerprintBlocked                      = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        IsAssigned                              = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
-        ManagedBrowser                          = @{Type = 'Parameter'        ; ExportFileType = 'String'; };
-        ManagedBrowserToOpenLinksRequired       = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        MaximumPinRetries                       = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        MinimumPinLength                        = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        MinimumRequiredAppVersion               = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        MinimumRequiredOSVersion                = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        MinimumRequiredPatchVersion             = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        MinimumWarningAppVersion                = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        MinimumWarningOSVersion                 = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        MinimumWarningPatchVersion              = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        OrganizationalCredentialsRequired       = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        PeriodBeforePinReset                    = @{Type = 'Parameter'        ; ExportFileType = 'Duration'; };
-        PeriodOfflineBeforeAccessCheck          = @{Type = 'Parameter'        ; ExportFileType = 'Duration'; };
-        PeriodOfflineBeforeWipeIsEnforced       = @{Type = 'Parameter'        ; ExportFileType = 'Duration'; };
-        PeriodOnlineBeforeAccessCheck           = @{Type = 'Parameter'        ; ExportFileType = 'Duration'; };
-        PinCharacterSet                         = @{Type = 'Parameter'        ; ExportFileType = 'String'; };
-        PinRequired                             = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        PrintBlocked                            = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        SaveAsBlocked                           = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        SimplePinBlocked                        = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        TenantId                                = @{Type = 'Credential'       ; ExportFileType = 'NA'; }
+        AllowedDataStorageLocations                     = @{Type = 'Parameter'        ; ExportFileType = 'Array'; };
+        AllowedInboundDataTransferSources               = @{Type = 'Parameter'        ; ExportFileType = 'String'; };
+        AllowedOutboundClipboardSharingLevel            = @{Type = 'Parameter'        ; ExportFileType = 'String'; };
+        AllowedOutboundDataTransferDestinations         = @{Type = 'Parameter'        ; ExportFileType = 'String'; };
+        ApplicationId                                   = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
+        ApplicationSecret                               = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
+        AppGroupType                                    = @{Type = 'ComplexParameter' ; ExportFileType = 'String'; };
+        Apps                                            = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
+        Assignments                                     = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
+        CertificateThumbprint                           = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
+        Managedidentity                                 = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
+        ContactSyncBlocked                              = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        Credential                                      = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
+        CustomBrowserDisplayName                        = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
+        CustomBrowserPackageId                          = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
+        DataBackupBlocked                               = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        Description                                     = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        DeviceComplianceRequired                        = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        DisableAppEncryptionIfDeviceEncryptionIsEnabled = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        DisableAppPinIfDevicePinIsSet                   = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        DisplayName                                     = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        EncryptAppData                                  = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        Ensure                                          = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
+        ExcludedGroups                                  = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
+        FingerprintBlocked                              = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        Id                                              = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        IsAssigned                                      = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
+        ManagedBrowser                                  = @{Type = 'ComplexParameter' ; ExportFileType = 'String'; };
+        ManagedBrowserToOpenLinksRequired               = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
+        MaximumPinRetries                               = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        MinimumPinLength                                = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        MinimumRequiredAppVersion                       = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        MinimumRequiredOSVersion                        = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        MinimumRequiredPatchVersion                     = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        MinimumWarningAppVersion                        = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        MinimumWarningOSVersion                         = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        MinimumWarningPatchVersion                      = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        OrganizationalCredentialsRequired               = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        PeriodBeforePinReset                            = @{Type = 'Parameter'        ; ExportFileType = 'Duration'; };
+        PeriodOfflineBeforeAccessCheck                  = @{Type = 'Parameter'        ; ExportFileType = 'Duration'; };
+        PeriodOfflineBeforeWipeIsEnforced               = @{Type = 'Parameter'        ; ExportFileType = 'Duration'; };
+        PeriodOnlineBeforeAccessCheck                   = @{Type = 'Parameter'        ; ExportFileType = 'Duration'; };
+        PinCharacterSet                                 = @{Type = 'Parameter'        ; ExportFileType = 'String'; };
+        PinRequired                                     = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        PrintBlocked                                    = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        SaveAsBlocked                                   = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        ScreenCaptureBlocked                            = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        SimplePinBlocked                                = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        TenantId                                        = @{Type = 'Credential'       ; ExportFileType = 'NA'; }
     }
 }
 

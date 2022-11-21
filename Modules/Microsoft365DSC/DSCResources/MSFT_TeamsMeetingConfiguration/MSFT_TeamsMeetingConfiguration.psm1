@@ -64,9 +64,21 @@ function Get-TargetResource
         [System.Boolean]
         $ClientMediaPortRangeEnabled,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration of Teams Meeting"
@@ -105,7 +117,10 @@ function Get-TargetResource
             ClientAppSharingPort        = $config.ClientAppSharingPort
             ClientAppSharingPortRange   = $config.ClientAppSharingPortRange
             ClientMediaPortRangeEnabled = $config.ClientMediaPortRangeEnabled
-            Credential          = $Credential
+            Credential                  = $Credential
+            ApplicationId               = $ApplicationId
+            TenantId                    = $TenantId
+            CertificateThumbprint       = $CertificateThumbprint
         }
     }
     catch
@@ -199,9 +214,21 @@ function Set-TargetResource
         [System.Boolean]
         $ClientMediaPortRangeEnabled,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration of Teams Meetings"
@@ -222,7 +249,10 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     $SetParams = $PSBoundParameters
-    $SetParams.Remove("Credential")
+    $SetParams.Remove("Credential") | Out-Null
+    $SetParams.Remove("ApplicationId") | Out-Null
+    $SetParams.Remove("TenantId") | Out-Null
+    $SetParams.Remove("CertificateThumbprint") | Out-Null
 
     Set-CsTeamsMeetingConfiguration @SetParams
 }
@@ -293,9 +323,21 @@ function Test-TargetResource
         [System.Boolean]
         $ClientMediaPortRangeEnabled,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -317,7 +359,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
+
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
@@ -334,9 +376,21 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
@@ -358,8 +412,11 @@ function Export-TargetResource
     {
         $dscContent = ''
         $params = @{
-            Identity           = "Global"
-            Credential = $Credential
+            Identity              = "Global"
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
         $Results = Get-TargetResource @Params
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

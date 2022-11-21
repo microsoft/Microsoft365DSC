@@ -17,9 +17,29 @@ function Get-TargetResource
         [ValidateSet("Present", "Absent")]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Getting configuration of Planner Plan {$Title}"
 
@@ -120,10 +140,15 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Plan found, returning Ensure = Present"
             $results = @{
-                Title      = $Title
-                OwnerGroup = $OwnerGroupValue
-                Ensure     = 'Present'
-                Credential = $Credential
+                Title                 = $Title
+                OwnerGroup            = $OwnerGroupValue
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                ApplicationSecret     = $ApplicationSecret
+                ManagedIdentity       = $ManagedIdentity.IsPresent
             }
         }
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $results)"
@@ -173,9 +198,29 @@ function Set-TargetResource
         [ValidateSet("Present", "Absent")]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Setting configuration of Planner Plan {$Title}"
 
@@ -197,6 +242,11 @@ function Set-TargetResource
     $SetParams = $PSBoundParameters
     $currentValues = Get-TargetResource @PSBoundParameters
     $SetParams.Remove("Credential") | Out-Null
+    $SetParams.Remove("ApplicationId") | Out-Null
+    $SetParams.Remove("TenantId") | Out-Null
+    $SetParams.Remove("CertificateThumbprint") | Out-Null
+    $SetParams.Remove("ApplicationSecret") | Out-Null
+    $SetParams.Remove("ManagedIdentity") | Out-Null
     $SetParams.Remove("Ensure") | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
@@ -245,9 +295,29 @@ function Test-TargetResource
         [ValidateSet("Present", "Absent")]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -283,9 +353,29 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -324,9 +414,14 @@ function Export-TargetResource
                 foreach ($plan in $plans)
                 {
                     $params = @{
-                        Title      = $plan.Title
-                        OwnerGroup = $group.Id
-                        Credential = $Credential
+                        Title                 = $plan.Title
+                        OwnerGroup            = $group.Id
+                        Credential            = $Credential
+                        ApplicationId         = $ApplicationId
+                        TenantId              = $TenantId
+                        CertificateThumbprint = $CertificateThumbprint
+                        ApplicationSecret     = $ApplicationSecret
+                        ManagedIdentity       = $ManagedIdentity.IsPresent
                     }
 
                     Write-Host "        [$j/$($plans.Length)] $($plan.Title)"

@@ -337,7 +337,7 @@ function Set-TargetResource
     $ClientAccessRuleParams.Remove('CertificateThumbprint') | Out-Null
     $ClientAccessRuleParams.Remove('CertificatePath') | Out-Null
     $ClientAccessRuleParams.Remove('CertificatePassword') | Out-Null
-    $ClientAccessRuleParams.Remove('Managedidentity') | Out-Null
+    $ClientAccessRuleParams.Remove('ManagedIdentity') | Out-Null
     if ($ClientAccessRuleParams.RuleScope)
     {
         $ClientAccessRuleParams += @{
@@ -492,7 +492,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

@@ -46,9 +46,21 @@ function Get-TargetResource
         [System.UInt32]
         $PinLength,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting the Teams Dial In Conferencing Tenant Settings"
@@ -86,6 +98,9 @@ function Get-TargetResource
             MaskPstnNumbersType                      = $instance.MaskPstnNumbersType
             PinLength                                = $instance.PinLength
             Credential                               = $Credential
+            ApplicationId                            = $ApplicationId
+            TenantId                                 = $TenantId
+            CertificateThumbprint                    = $CertificateThumbprint
         }
     }
     catch
@@ -161,9 +176,21 @@ function Set-TargetResource
         [System.UInt32]
         $PinLength,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting Teams Dial In Conferencing Tenant Settings"
@@ -187,6 +214,9 @@ function Set-TargetResource
 
     $SetParameters = $PSBoundParameters
     $SetParameters.Remove("Credential") | Out-Null
+    $SetParameters.Remove("ApplicationId") | Out-Null
+    $SetParameters.Remove("TenantId") | Out-Null
+    $SetParameters.Remove("CertificateThumbprint") | Out-Null
     $SetParameters.Remove("IsSingleInstance") | Out-Null
 
     try
@@ -266,9 +296,21 @@ function Test-TargetResource
         [System.UInt32]
         $PinLength,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -290,7 +332,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -308,9 +349,21 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -331,8 +384,11 @@ function Export-TargetResource
     {
         $dscContent = [System.Text.StringBuilder]::new()
         $params = @{
-            IsSingleInstance = 'Yes'
-            Credential       = $Credential
+            IsSingleInstance      = 'Yes'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
         $Results = Get-TargetResource @Params
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

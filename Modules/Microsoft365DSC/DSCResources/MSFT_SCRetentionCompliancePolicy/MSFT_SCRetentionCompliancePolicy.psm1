@@ -162,9 +162,9 @@ function Get-TargetResource
                     Comment                       = $PolicyObject.Comment
                     Enabled                       = $PolicyObject.Enabled
                     RestrictiveRetention          = $PolicyObject.RestrictiveRetention
-                    TeamsChannelLocation          = [array]$PolicyObject.TeamsChannelLocation
+                    TeamsChannelLocation          = [array]$PolicyObject.TeamsChannelLocation.DisplayName
                     TeamsChannelLocationException = $PolicyObject.TeamsChannelLocationException
-                    TeamsChatLocation             = [array]$PolicyObject.TeamsChatLocation
+                    TeamsChatLocation             = [array]$PolicyObject.TeamsChatLocation.DisplayName
                     TeamsChatLocationException    = $PolicyObject.TeamsChatLocationException
                     Credential                    = $Credential
                 }
@@ -175,19 +175,19 @@ function Get-TargetResource
                     Ensure                       = 'Present'
                     Name                         = $PolicyObject.Name
                     Comment                      = $PolicyObject.Comment
-                    DynamicScopeLocation         = [array]$PolicyObject.DynamicScopeLocation
+                    DynamicScopeLocation         = [array]$PolicyObject.DynamicScopeLocation.DisplayName
                     Enabled                      = $PolicyObject.Enabled
-                    ExchangeLocation             = [array]$PolicyObject.ExchangeLocation
+                    ExchangeLocation             = [array]$PolicyObject.ExchangeLocation.DisplayName
                     ExchangeLocationException    = [array]$PolicyObject.ExchangeLocationException
-                    ModernGroupLocation          = [array]$PolicyObject.ModernGroupLocation
+                    ModernGroupLocation          = [array]$PolicyObject.ModernGroupLocation.DisplayName
                     ModernGroupLocationException = [array]$PolicyObject.ModernGroupLocationException
-                    OneDriveLocation             = [array]$PolicyObject.OneDriveLocation
+                    OneDriveLocation             = [array]$PolicyObject.OneDriveLocation.DisplayName
                     OneDriveLocationException    = [array]$PolicyObject.OneDriveLocationException
-                    PublicFolderLocation         = [array]$PolicyObject.PublicFolderLocation
+                    PublicFolderLocation         = [array]$PolicyObject.PublicFolderLocation.DisplayName
                     RestrictiveRetention         = $PolicyObject.RestrictiveRetention
-                    SharePointLocation           = [array]$PolicyObject.SharePointLocation
+                    SharePointLocation           = [array]$PolicyObject.SharePointLocation.DisplayName
                     SharePointLocationException  = $PolicyObject.SharePointLocationException
-                    SkypeLocation                = [array]$PolicyObject.SkypeLocation
+                    SkypeLocation                = [array]$PolicyObject.SkypeLocation.DisplayName
                     SkypeLocationException       = $PolicyObject.SkypeLocationException
                     Credential           = $Credential
                 }

@@ -259,7 +259,7 @@ function Set-TargetResource
     $AvailabilityAddressSpaceParams.Remove('CertificateThumbprint') | Out-Null
     $AvailabilityAddressSpaceParams.Remove('CertificatePath') | Out-Null
     $AvailabilityAddressSpaceParams.Remove('CertificatePassword') | Out-Null
-    $AvailabilityAddressSpaceParams.Remove('Managedidentity') | Out-Null
+    $AvailabilityAddressSpaceParams.Remove('ManagedIdentity') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($null -eq $AvailabilityAddressSpace))
     {
@@ -400,7 +400,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

@@ -38,7 +38,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. ||
-| **ManagedBrowser** | Write | String | Indicates in which managed browser(s) that internet links should be opened. When this property is configured, ManagedBrowserToOpenLinksRequired should be true. Possible values are: notConfigured, microsoftEdge. |notConfigured, microsoftEdge|
+| **ManagedBrowser** | Write | String | Indicates in which managed browser(s) that internet links should be opened. Used in conjunction with CustomBrowserPackageId, CustomBrowserDisplayName and ManagedBrowserToOpenLinksRequired. Possible values are: notConfigured, microsoftEdge. |notConfigured, microsoftEdge|
 | **MinimumRequiredAppVersion** | Write | String | Versions less than the specified version will block the managed app from accessing company data. ||
 | **MinimumRequiredOSVersion** | Write | String | Versions less than the specified version will block the managed app from accessing company data. ||
 | **MinimumRequiredPatchVersion** | Write | String | Versions less than the specified version will block the managed app from accessing company data. ||
@@ -47,6 +47,12 @@
 | **MinimumWarningPatchVersion** | Write | String | Versions less than the specified version will result in warning message on the managed app ||
 | **AppGroupType** | Write | String | The apps controlled by this protection policy, overrides any values in Apps unless this value is 'selectedPublicApps'. |allApps, allMicrosoftApps, allCoreMicrosoftApps, selectedPublicApps|
 | **IsAssigned** | Write | Boolean | Indicates if the policy is deployed to any inclusion groups or not. Inherited from targetedManagedAppProtection. ||
+| **ScreenCaptureBlocked** | Write | Boolean | Indicates whether or not to Block the user from taking Screenshots. ||
+| **EncryptAppData** | Write | Boolean | Indicates whether or not the 'Encrypt org data' value is enabled.  True = require ||
+| **DisableAppEncryptionIfDeviceEncryptionIsEnabled** | Write | Boolean | Indicates whether or not the 'Encrypt org data on enrolled devices' value is enabled.  False = require.  Only functions if EncryptAppData is set to True ||
+| **CustomBrowserDisplayName** | Write | String | The application name for browser associated with the 'Unmanaged Browser ID'. This name will be displayed to users if the specified browser is not installed. ||
+| **CustomBrowserPackageId** | Write | String | The application ID for a single browser. Web content (http/s) from policy managed applications will open in the specified browser. ||
+| **Id** | Write | String | Id of the Intune policy. To avoid creation of duplicate policies DisplayName will be searched for if the ID is not found ||
 
 
 # IntuneAppProtectionPolicyAndroid

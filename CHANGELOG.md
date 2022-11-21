@@ -1,10 +1,58 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASE
+# UNRELEASED
 
+* SCRetentionCompliancePolicy
+  * Fixes issue with the TeamsChannelLocation and TeamsChatsLocation parameters that were improperly returned by the Get- function.
+    FIXES [#2472](https://github.com/microsoft/Microsoft365DSC/issues/2472)
+* SCRetentionComplianceRule
+  * Fixes issue with Teams Policy where the RetentionDurationDisplayHint and ExpirationDateOption parameters weren't returned by the Get- function.
+    FIXES [#2472](https://github.com/microsoft/Microsoft365DSC/issues/2472)
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.17.0;
+  * Updated MSCloudLoginAssistant to version 1.0.98;
+* MISC
+  * Removed Test-M365DSCDependenciesForNewVersions from export functions. This will improve export speed.
+  * New Parameter `ValidateOnly` for Update-M365DSCDependencies to check if all dependencies are installed.
+    FIXES [2519](https://github.com/microsoft/Microsoft365DSC/issues/2519)
+  * Fixed incorrect usage of Write-Information cmdLet
+
+# 1.22.1116.1
+
+* AADApplication
+  * Deprecated the Oauth2RequirePostResponse parameter as it was causing issues for the New function.
+    FIXES [#2276](https://github.com/microsoft/Microsoft365DSC/issues/2276)
+* AADEntitlementManagementAccessPackage
+  * Initial Release.
+* EXOManagementRoleAssignment
+  * Added support for RoleGroup Role Assignees
+    Fixes [#2524](https://github.com/microsoft/Microsoft365DSC/issues/2524)
+* SCRetentionCompliancePolicy
+  * Fixes the Location parameters to be a string array instead of an object array.
+    FIXES [#2503](https://github.com/microsoft/Microsoft365DSC/issues/2503)
+* MISC
+  * Added Application based authentication to Microsoft Teams resources;
+  * Added support for Service Principal Auth for the Planner resources;
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.16.0;
+  * Updated Microsoft.Teams to version 4.9.1;
+  * Updated PnP.PowerShell to version 1.12.0;
+
+# 1.22.1109.1
+
+* EXODataClassification
+  * FIXES [#2487](https://github.com/microsoft/Microsoft365DSC/issues/2487)
+* EXOHostedOutboundSpamFilterPolicy
+  * Add support to create and remove Hosted Outbound Spam Filter Policies
+  * FIXES [#2492](https://github.com/microsoft/Microsoft365DSC/issues/2492)
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * FIXES [#2463](https://github.com/microsoft/Microsoft365DSC/issues/2463)
   * Returns all type of policies from the template family: endpointSecurityAntivirus
+* MISC
+  * Fixes and issue with ManagedIdentity Parameter not being not removed correctly in a parameterset.
+    * FIXES [#2464](https://github.com/microsoft/Microsoft365DSC/issues/2464)
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.15.0;
 
 # 1.22.1102.1
 
@@ -14,6 +62,7 @@
   * Initial release;
 * DEPENDENCIES
   * Updated MicrosoftTeams to version 4.9.0;
+  * Updated MSCloudLoginAssistant to version 1.0.97;
 
 # 1.22.1026.2
 

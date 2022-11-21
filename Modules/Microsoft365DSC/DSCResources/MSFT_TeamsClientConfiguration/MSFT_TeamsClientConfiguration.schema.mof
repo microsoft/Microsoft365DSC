@@ -16,6 +16,9 @@ class MSFT_TeamsClientConfiguration : OMI_BaseResource
     [Write, Description("This setting applies only to Skype for Business Online (not Microsoft Teams) and defines whether the user must provide a secondary form of authentication to access the meeting content from a resource device account. Meeting content is defined as files that are shared to the Content Bin - files that have been attached to the meeting."), ValueMap{"NotRequired", "RequiredOutsideScheduleMeeting", "AlwaysRequired"}, Values{"NotRequired", "RequiredOutsideScheduleMeeting", "AlwaysRequired"}] string ContentPin;
     [Write, Description("Require a secondary form of authentication to access meeting content."), ValueMap{"NoAccess", "PartialAccess", "FullAccess"}, Values{"NoAccess", "PartialAccess", "FullAccess"}] string ResourceAccountContentAccess;
     [Write, Description("Senders domains can be further restricted to ensure that only allowed SMTP domains can send emails to the Teams channels. This is a comma-separated string of the domains you'd like to allow to send emails to Teams channels.")] string RestrictedSenderList[];
-    [Required, Description("Credentials of the Teams Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Credentials of the Teams Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
 };
 

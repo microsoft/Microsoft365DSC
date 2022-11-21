@@ -526,7 +526,7 @@ function Set-TargetResource
     $PSBoundParameters.Remove('TenantId') | Out-Null
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('CertificatePassword') | Out-Null
-    $PSBoundParameters.Remove('Managedidentity') | Out-Null
+    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
     $PSBoundParameters.Remove('CertificatePath') | Out-Null
     $PSBoundParameters.Remove('Credential') | Out-Null
 

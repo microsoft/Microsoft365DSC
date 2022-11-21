@@ -166,36 +166,36 @@ function Get-TargetResource
     try
     {
         #Retrieve policy general settings
-        try
-        {
-            $policy = Get-MgDeviceManagementIntent -DeviceManagementIntentId $Identity -ErrorAction Stop
-        }
-        catch
-        {
-            Write-Verbose -Message "No Endpoint Protection Attack Surface Protection rules Policy {$DisplayName} was found"
-            return $nullResult
-        }
+
+        $policy = Get-MgDeviceManagementIntent -DeviceManagementIntentId $Identity -ErrorAction SilentlyContinue
 
         if ($null -eq $policy)
         {
-            Write-Verbose -Message "No Endpoint Protection Attack Surface Protection rules Policy {$DisplayName} was found"
+            Write-Verbose -Message "No Endpoint Protection Attack Surface Protection rules Policy with identity {$Identity} was found"
+            if(-not [String]::IsNullOrEmpty($DisplayName))
+            {
+                $policy = Get-MgDeviceManagementIntent -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+            }
+        }
+        if ($null -eq $policy)
+        {
+            Write-Verbose -Message "No Endpoint Protection Attack Surface Protection rules Policy with displayName {$DisplayName} was found"
             return $nullResult
         }
 
         #Retrieve policy specific settings
         [array]$settings = Get-MgDeviceManagementIntentSetting `
-            -DeviceManagementIntentId $Identity `
+            -DeviceManagementIntentId $policy.Id `
             -ErrorAction Stop
 
-        $definitionIdPrefix = 'windows10EndpointProtectionConfiguration_defender'
         $returnHashtable = @{}
-        $returnHashtable.Add('Identity', $Identity)
+        $returnHashtable.Add('Identity', $policy.Id)
         $returnHashtable.Add('DisplayName', $policy.DisplayName)
         $returnHashtable.Add('Description', $policy.Description)
 
         foreach ($setting in $settings)
         {
-            $settingName = $setting.definitionId.replace("deviceConfiguration--$definitionIdPrefix", '')
+            $settingName = $setting.definitionId.replace("deviceConfiguration--windows10EndpointProtectionConfiguration_defender", '')
             $settingValue = $setting.ValueJson | ConvertFrom-Json
 
             $returnHashtable.Add($settingName, $settingValue)
@@ -417,24 +417,25 @@ function Set-TargetResource
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
 
     $policyTemplateID = '0e237410-1367-4844-bd7f-15fb0f08943b'
-    $definitionIdPrefix = 'windows10EndpointProtectionConfiguration_defender'
 
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Endpoint Protection Attack Surface Protection rules Policy {$DisplayName}"
         $PSBoundParameters.Remove('Identity') | Out-Null
+        $PSBoundParameters.Remove('Assignments') | Out-Null
         $PSBoundParameters.Remove('DisplayName') | Out-Null
         $PSBoundParameters.Remove('Description') | Out-Null
-        $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $settings = Get-M365DSCIntuneDeviceConfigurationSettings `
             -Properties ([System.Collections.Hashtable]$PSBoundParameters) `
-            -DefinitionIdPrefix $definitionIdPrefix
+            -TemplateId $policyTemplateID
 
-        $policy=New-MgDeviceManagementIntent -DisplayName $DisplayName `
-            -Description $Description `
-            -TemplateId $policyTemplateID `
-            -Settings $settings
+        $createParameters=@{}
+        $createParameters.add('DisplayName',$DisplayName)
+        $createParameters.add('Description',$Description)
+        $createParameters.add('Settings',$settings)
+        $createParameters.add('TemplateId',$policyTemplateID)
+        $policy=New-MgDeviceManagementIntent -BodyParameter $createParameters
 
         #region Assignments
         $assignmentsHash=@()
@@ -461,26 +462,19 @@ function Set-TargetResource
 
         $settings = Get-M365DSCIntuneDeviceConfigurationSettings `
             -Properties ([System.Collections.Hashtable]$PSBoundParameters) `
-            -DefinitionIdPrefix $definitionIdPrefix
+            -TemplateId $policyTemplateID
 
-        Update-MgDeviceManagementIntent -ErrorAction Stop `
-            -DisplayName $DisplayName `
-            -Description $Description `
-            -DeviceManagementIntentId $Identity
+        $updateParameters=@{}
+        $updateParameters.add('DisplayName',$DisplayName)
+        $updateParameters.add('Description',$Description)
+        Update-MgDeviceManagementIntent -DeviceManagementIntentId $currentPolicy.Identity -BodyParameter $updateParameters
 
-        $currentSettings = Get-MgDeviceManagementIntentSetting `
-            -DeviceManagementIntentId $Identity `
-            -ErrorAction Stop
-
-        foreach ($setting in $settings)
-        {
-            $mySetting = $currentSettings | Where-Object{ $_.DefinitionId -eq $setting.DefinitionId }
-            $setting.add('id', $mySetting.Id)
-        }
-        $Uri="https://graph.microsoft.com/beta/deviceManagement/intents/$Identity/updateSettings"
+        #Update-MgDeviceManagementIntent does not support updating the property settings
+        #Update-MgDeviceManagementIntentSetting only support updating a single setting at a time
+        #Using Rest to reduce the number of calls
+        $Uri="https://graph.microsoft.com/beta/deviceManagement/intents/$($currentPolicy.Identity)/updateSettings"
         $body=@{"settings"=$settings}
-        #write-verbose -message ($body|ConvertTo-Json -Depth 20)
-        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body ($body|ConvertTo-Json -Depth 20) -ContentType "application/json" -ErrorAction Stop
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body ($body|ConvertTo-Json -Depth 20) -ContentType "application/json"
 
         #region Assignments
         $assignmentsHash=@()
@@ -488,14 +482,15 @@ function Set-TargetResource
         {
             $assignmentsHash+=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
-        Update-DeviceManagementIntentAssignments -DeviceManagementIntentId $Identity `
+        Update-DeviceManagementIntentAssignments `
+            -DeviceManagementIntentId $currentPolicy.Identity `
             -Targets $assignmentsHash
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Endpoint Protection Attack Surface Protection rules Policy {$DisplayName}"
-        Remove-MgDeviceManagementIntent -DeviceManagementIntentId $Identity -Confirm:$false -ErrorAction Stop
+        Remove-MgDeviceManagementIntent -DeviceManagementIntentId $currentPolicy.Identity -Confirm:$false
     }
 }
 
@@ -660,12 +655,17 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
     $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('Identity') | Out-Null
 
+    if($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    {
+        return $false
+    }
     #region Assignments
     $testResult=$true
 
@@ -795,10 +795,9 @@ function Export-TargetResource
     {
         $policyTemplateID = '0e237410-1367-4844-bd7f-15fb0f08943b'
         [array]$policies = Get-MgDeviceManagementIntent `
+            -Filter "TemplateId -eq '$policyTemplateID'" `
             -ErrorAction Stop `
-            -All:$true `
-            -Filter $Filter `
-        | Where-Object -FilterScript { $_.TemplateId -eq $policyTemplateID }
+            -All:$true
 
         if ($policies.Length -eq 0)
         {
@@ -903,38 +902,64 @@ function Get-M365DSCIntuneDeviceConfigurationSettings
         $Properties,
         [Parameter()]
         [System.String]
-        $DefinitionIdPrefix
+        $TemplateId
     )
 
-    $results = @()
-    foreach ($property in $properties.Keys)
-    {
-        if ($property -ne 'Verbose')
-        {
-            $setting = @{}
-            switch (($properties.$property.gettype()).name)
-            {
-                'String' { $settingType = '#microsoft.graph.deviceManagementStringSettingInstance' }
-                'Boolean' { $settingType = '#microsoft.graph.deviceManagementBooleanSettingInstance' }
-                'Int32' { $settingType = '#microsoft.graph.deviceManagementIntegerSettingInstance' }
-                'String[]' { $settingType = '#microsoft.graph.deviceManagementCollectionSettingInstance' }
-                Default { $settingType = '#microsoft.graph.deviceManagementComplexSettingInstance' }
-            }
-            $settingDefinitionIdPrefix = "deviceConfiguration--$DefinitionIdPrefix"
-            $settingDefinitionId = $settingDefinitionIdPrefix + $property
-            $setting.Add('@odata.type', $settingType)
-            $setting.Add('definitionId', $settingDefinitionId)
-            if ('String[]' -eq ($properties.$property.gettype()).name -and $properties.$property.count -eq 0 )
-            {
-                $setting.Add('valueJson', '[]')
-            }
-            else
-            {
-                $setting.Add('valueJson', ($properties.$property | ConvertTo-Json))
-            }
+    $templateCategoryId=(Get-MgDeviceManagementTemplateCategory -DeviceManagementTemplateId $TemplateId).Id
+    $templateSettings= Get-MgDeviceManagementTemplateCategoryRecommendedSetting `
+        -DeviceManagementTemplateId $TemplateId `
+        -DeviceManagementTemplateSettingCategoryId $templateCategoryId
 
-            $results += $setting
+    $results = @()
+    foreach ($setting in $templateSettings)
+    {
+        $result = @{}
+        $settingType=$setting.AdditionalProperties."@odata.type"
+        $settingValue=$null
+        $currentValueKey=$Properties.keys | Where-Object -FilterScript {$setting.DefinitionId -like "*$_" }
+        if($null -ne $currentValueKey)
+        {
+            $settingValue = $Properties.$currentValueKey
         }
+
+        switch ($settingType)
+        {
+            '#microsoft.graph.deviceManagementStringSettingInstance'
+            {
+                if([String]::IsNullOrEmpty($settingValue))
+                {
+                    $settingValue = $setting.ValueJson
+                }
+                else
+                {
+                    $settingValue = ConvertTo-Json -InputObject $settingValue
+                }
+            }
+            '#microsoft.graph.deviceManagementCollectionSettingInstance'
+            {
+                if($null -eq $settingValue)
+                {
+                    $settingValue = ConvertTo-Json -InputObject @()
+                }
+                else
+                {
+                    $settingValue = ConvertTo-Json -InputObject ([Array]$settingValue)
+                }
+            }
+            Default
+            {
+                $settingValue = $setting.ValueJson
+            }
+        }
+
+
+
+        $result.Add('@odata.type', $settingType)
+        $result.Add('Id', $setting.Id)
+        $result.Add('definitionId', $setting.DefinitionId)
+        $result.Add('valueJson', ($settingValue ))
+
+        $results += $result
     }
     return $results
 }

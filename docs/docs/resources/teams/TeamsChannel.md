@@ -10,7 +10,7 @@
 | **NewDisplayName** | Write | String | Used to update current channel name ||
 | **Description** | Write | String | Channel description ||
 | **Ensure** | Write | String | Present ensures the Team channel exists, absent ensures it is removed |Present, Absent|
-| **Credential** | Write | PSCredential | Credentials of the Teams Global Admin ||
+| **Credential** | Write | PSCredential | Credentials of the Teams Admin ||
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
