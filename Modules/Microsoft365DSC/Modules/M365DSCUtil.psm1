@@ -3243,9 +3243,13 @@ function Get-M365DSCWorkloadsListFromResourceNames
             }
             'O3'
             {
-                if (-not $workloads.Contains('MicrosoftGraph'))
+                if (-not $workloads.Contains('MicrosoftGraph') -and $resource -eq 'O365Group')
                 {
                     $workloads += 'MicrosoftGraph'
+                }
+                elseif(-not $workloads.Contains('ExchangeOnline'))
+                {
+                    $workloads += 'ExchangeOnline'
                 }
             }
             'OD'
