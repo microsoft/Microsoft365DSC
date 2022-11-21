@@ -16,7 +16,7 @@
   * New Parameter `ValidateOnly` for Update-M365DSCDependencies to check if all dependencies are installed.
     FIXES [2519](https://github.com/microsoft/Microsoft365DSC/issues/2519)
   * Fixed incorrect usage of Write-Information cmdLet
-  * Fixed an issue with missing dependency on Az.Resources and an issue with certificate creation.
+  * Fixed an issue with missing dependency on Az.Resources and an issue with certificate creation within Update-M365DSCAzureAdApplication.
     FIXED [2567](https://github.com/microsoft/Microsoft365DSC/issues/2567)
 
 # 1.22.1116.1
