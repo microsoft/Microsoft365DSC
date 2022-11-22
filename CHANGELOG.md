@@ -17,6 +17,9 @@
 * O365OrgCustomizationSetting
   * Updated settings.json to include permissions.
     FIXES [#2517](https://github.com/microsoft/Microsoft365DSC/issues/2517)
+* SCDLPCompliancePolicy
+  * Fixes an issue where the Exchange Location and Exception where not sent back in a correct format during Export.
+    FIXES [#2545](https://github.com/microsoft/Microsoft365DSC/issues/2545)
 * SCRetentionCompliancePolicy
   * Fixes issue with the TeamsChannelLocation and TeamsChatsLocation parameters that were improperly returned by the Get- function.
     FIXES [#2472](https://github.com/microsoft/Microsoft365DSC/issues/2472)
