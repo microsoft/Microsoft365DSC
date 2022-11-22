@@ -71,10 +71,32 @@ function Get-TargetResource
     {
         $config = Get-CsTenantFederationConfiguration -ErrorAction Stop
 
+        $AllowedDomainsArray = $config.AllowedDomains.AllowedDomain.Domain
+        $AllowedDomainsValues = @()
+
+        if ($AllowedDomainsArray.Length -gt 0)
+        {
+            foreach ($domain in $AllowedDomainsArray)
+            {
+                $AllowedDomainsValues += $domain
+            }
+        }
+
+        $BlockedDomainsArray = $config.BlockedDomains.Domain
+        $BlockedDomainsValues = @()
+
+        if ($BlockedDomainsArray.Length -gt 0)
+        {
+            foreach ($domain in $BlockedDomainsArray)
+            {
+                $BlockedDomainsValues += $domain
+            }
+        }
+
         return @{
             Identity                  = $Identity
-            AllowedDomains            = [System.String[]]$config.AllowedDomains
-            BlockedDomains            = [System.String[]]$config.BlockedDomains
+            AllowedDomains            = $AllowedDomainsValues
+            BlockedDomains            = $BlockedDomainsValues
             AllowFederatedUsers       = $config.AllowFederatedUsers
             AllowPublicUsers          = $config.AllowPublicUsers
             AllowTeamsConsumer        = $config.AllowTeamsConsumer

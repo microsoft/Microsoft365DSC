@@ -5,6 +5,9 @@
 * AADUser
   * Fixed issue with license assignment
     FIXES [#2556](https://github.com/microsoft/Microsoft365DSC/issues/2556)
+* EXOOrganizationRelationship
+  * Add 'None' as supported value for MailboxMoveCapability
+    FIXES [#2570](https://github.com/microsoft/Microsoft365DSC/issues/2570)
 * IntuneRoledefinition
   * Initial Release
   * Manage Intune Role definition
@@ -26,9 +29,9 @@
 * SCRetentionComplianceRule
   * Fixes issue with Teams Policy where the RetentionDurationDisplayHint and ExpirationDateOption parameters weren't returned by the Get- function.
     FIXES [#2472](https://github.com/microsoft/Microsoft365DSC/issues/2472)
-* EXOOrganizationRelationship
-  * Add 'None' as supported value for MailboxMoveCapability
-    FIXES [#2570](https://github.com/microsoft/Microsoft365DSC/issues/2570)
+* TeamsFederationConfiguration
+  * Fixes an issue where the extraction of allowed domain and blocked domain wasn't in the proper format.
+    FIXES [#2576](https://github.com/microsoft/Microsoft365DSC/issues/2576)
 * DEPENDENCIES
   * Updated Microsoft.Graph.* to version 1.17.0;
   * Updated MSCloudLoginAssistant to version 1.0.98;
