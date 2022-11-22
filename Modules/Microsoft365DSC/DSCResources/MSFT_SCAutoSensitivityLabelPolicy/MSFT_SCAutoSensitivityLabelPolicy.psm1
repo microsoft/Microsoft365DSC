@@ -75,7 +75,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateRange(0,2)]
+        [ValidateRange(0, 2)]
         $Priority,
 
         [Parameter()]
@@ -126,7 +126,7 @@ function Get-TargetResource
     }
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -142,7 +142,7 @@ function Get-TargetResource
         {
             # There is a bug with the Get-AutoSensitivityLabelPolicy where if you get by Identity, the priority is an invalid number.
             # Threfore we get it by name.
-            $policy = Get-AutoSensitivityLabelPolicy | Where-Object -FilterScript {$_.Name -eq $Name}
+            $policy = Get-AutoSensitivityLabelPolicy | Where-Object -FilterScript { $_.Name -eq $Name }
         }
         catch
         {
@@ -193,26 +193,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -293,7 +279,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateRange(0,2)]
+        [ValidateRange(0, 2)]
         $Priority,
 
         [Parameter()]
@@ -333,7 +319,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of Sensitivity label policy for $Name"
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -351,18 +337,18 @@ function Set-TargetResource
         $CreationParams = $PSBoundParameters
 
         #Remove parameters not used in New-LabelPolicy
-        $CreationParams.Remove("Credential") | Out-Null
-        $CreationParams.Remove("Ensure") | Out-Null
-        $CreationParams.Remove("AddExchangeLocation") | Out-Null
-        $CreationParams.Remove("AddOneDriveLocation") | Out-Null
-        $CreationParams.Remove("AddOneDriveLocationException") | Out-Null
-        $CreationParams.Remove("AddSharePointLocation") | Out-Null
-        $CreationParams.Remove("AddSharePointLocationException") | Out-Null
-        $CreationParams.Remove("RemoveExchangeLocation") | Out-Null
-        $CreationParams.Remove("RemoveOneDriveLocation") | Out-Null
-        $CreationParams.Remove("RemoveOneDriveLocationException") | Out-Null
-        $CreationParams.Remove("RemoveSharePointLocation") | Out-Null
-        $CreationParams.Remove("RemoveSharePointLocationException") | Out-Null
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('Ensure') | Out-Null
+        $CreationParams.Remove('AddExchangeLocation') | Out-Null
+        $CreationParams.Remove('AddOneDriveLocation') | Out-Null
+        $CreationParams.Remove('AddOneDriveLocationException') | Out-Null
+        $CreationParams.Remove('AddSharePointLocation') | Out-Null
+        $CreationParams.Remove('AddSharePointLocationException') | Out-Null
+        $CreationParams.Remove('RemoveExchangeLocation') | Out-Null
+        $CreationParams.Remove('RemoveOneDriveLocation') | Out-Null
+        $CreationParams.Remove('RemoveOneDriveLocationException') | Out-Null
+        $CreationParams.Remove('RemoveSharePointLocation') | Out-Null
+        $CreationParams.Remove('RemoveSharePointLocationException') | Out-Null
 
         Write-Verbose "Creating new Auto Sensitivity label policy $Name."
 
@@ -379,15 +365,15 @@ function Set-TargetResource
             Start-Sleep 5
             $SetParams = $PSBoundParameters
             #Remove unused parameters for Set-Label cmdlet
-            $SetParams.Remove("Credential") | Out-Null
-            $SetParams.Remove("Ensure") | Out-Null
-            $SetParams.Remove("Name") | Out-Null
-            $SetParams.Remove("ExchangeLocationException") | Out-Null
-            $SetParams.Remove("ExchangeLocation") | Out-Null
-            $SetParams.Remove("OneDriveLocation") | Out-Null
-            $SetParams.Remove("OneDriveLocationException") | Out-Null
-            $SetParams.Remove("SharePointLocation") | Out-Null
-            $SetParams.Remove("SharePointLocationException") | Out-Null
+            $SetParams.Remove('Credential') | Out-Null
+            $SetParams.Remove('Ensure') | Out-Null
+            $SetParams.Remove('Name') | Out-Null
+            $SetParams.Remove('ExchangeLocationException') | Out-Null
+            $SetParams.Remove('ExchangeLocation') | Out-Null
+            $SetParams.Remove('OneDriveLocation') | Out-Null
+            $SetParams.Remove('OneDriveLocationException') | Out-Null
+            $SetParams.Remove('SharePointLocation') | Out-Null
+            $SetParams.Remove('SharePointLocationException') | Out-Null
             Set-AutoSensitivityLabelPolicy @SetParams -Identity $Name
         }
         catch
@@ -399,15 +385,15 @@ function Set-TargetResource
     {
         $SetParams = $PSBoundParameters
         #Remove unused parameters for Set-Label cmdlet
-        $SetParams.Remove("Credential") | Out-Null
-        $SetParams.Remove("Ensure") | Out-Null
-        $SetParams.Remove("Name") | Out-Null
-        $SetParams.Remove("ExchangeLocationException") | Out-Null
-        $SetParams.Remove("ExchangeLocation") | Out-Null
-        $SetParams.Remove("OneDriveLocation") | Out-Null
-        $SetParams.Remove("OneDriveLocationException") | Out-Null
-        $SetParams.Remove("SharePointLocation") | Out-Null
-        $SetParams.Remove("SharePointLocationException") | Out-Null
+        $SetParams.Remove('Credential') | Out-Null
+        $SetParams.Remove('Ensure') | Out-Null
+        $SetParams.Remove('Name') | Out-Null
+        $SetParams.Remove('ExchangeLocationException') | Out-Null
+        $SetParams.Remove('ExchangeLocation') | Out-Null
+        $SetParams.Remove('OneDriveLocation') | Out-Null
+        $SetParams.Remove('OneDriveLocationException') | Out-Null
+        $SetParams.Remove('SharePointLocation') | Out-Null
+        $SetParams.Remove('SharePointLocationException') | Out-Null
         try
         {
             Set-AutoSensitivityLabelPolicy @SetParams -Identity $Name
@@ -509,7 +495,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateRange(0,2)]
+        [ValidateRange(0, 2)]
         $Priority,
 
         [Parameter()]
@@ -547,7 +533,7 @@ function Test-TargetResource
     )
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -566,7 +552,7 @@ function Test-TargetResource
             -removedData $RemoveExchangeLocation -additionalData $AddExchangeLocation
         if ($null -ne $configData)
         {
-            $ValuesToCheck["ExchangeLocation"] = $configData
+            $ValuesToCheck['ExchangeLocation'] = $configData
         }
         if ($null -eq $configData -and $null -ne $CurrentValues.ExchangeLocation `
                 -and $null -ne $RemoveExchangeLocation)
@@ -583,7 +569,7 @@ function Test-TargetResource
 
         if ($null -ne $configData)
         {
-            $ValuesToCheck["ExchangeLocationException"] = $configData
+            $ValuesToCheck['ExchangeLocationException'] = $configData
         }
 
         if ($null -eq $configData -and $null -ne $CurrentValues.ExchangeLocationException `
@@ -601,7 +587,7 @@ function Test-TargetResource
             -removedData $RemoveSharePointLocation -additionalData $AddSharePointLocation
         if ($null -ne $configData)
         {
-            $ValuesToCheck["SharePointLocation"] = $configData
+            $ValuesToCheck['SharePointLocation'] = $configData
         }
         if ($null -eq $configData -and $null -ne $CurrentValues.SharePointLocation `
                 -and $null -ne $SharePointLocation)
@@ -618,7 +604,7 @@ function Test-TargetResource
 
         if ($null -ne $configData)
         {
-            $ValuesToCheck["SharePointLocationException"] = $configData
+            $ValuesToCheck['SharePointLocationException'] = $configData
         }
 
         if ($null -eq $configData -and $null -ne $CurrentValues.SharePointLocationException `
@@ -635,7 +621,7 @@ function Test-TargetResource
             -removedData $RemoveOneDriveLocation -additionalData $AddOneDriveLocation
         if ($null -ne $configData)
         {
-            $ValuesToCheck["OneDriveLocation"] = $configData
+            $ValuesToCheck['OneDriveLocation'] = $configData
         }
         if ($null -eq $configData -and $null -ne $CurrentValues.OneDriveLocation `
                 -and $null -ne $OneDriveLocation)
@@ -652,7 +638,7 @@ function Test-TargetResource
 
         if ($null -ne $configData)
         {
-            $ValuesToCheck["OneDriveLocationException"] = $configData
+            $ValuesToCheck['OneDriveLocationException'] = $configData
         }
 
         if ($null -eq $configData -and $null -ne $CurrentValues.OneDriveLocationException `
@@ -691,7 +677,7 @@ function Export-TargetResource
         -SkipModuleReload $true
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -703,7 +689,7 @@ function Export-TargetResource
     {
         [array]$policies = Get-AutoSensitivityLabelPolicy -ErrorAction Stop
 
-        $dscContent = ""
+        $dscContent = ''
         $i = 1
         if ($policies.Length -eq 0)
         {
@@ -740,27 +726,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
     return $dscContent
 }
@@ -769,7 +742,8 @@ function New-PolicyData
 {
     [CmdletBinding()]
     [OutputType([System.Collections.ArrayList])]
-    param(
+    param
+    (
         [Parameter ()]
         $configData,
 
@@ -782,6 +756,7 @@ function New-PolicyData
         [Parameter ()]
         $additionalData
     )
+
     [System.Collections.ArrayList]$desiredData = @()
     foreach ($currItem in $currentData)
     {
@@ -814,6 +789,5 @@ function New-PolicyData
 
     return $desiredData
 }
-
 
 Export-ModuleMember -Function *-TargetResource

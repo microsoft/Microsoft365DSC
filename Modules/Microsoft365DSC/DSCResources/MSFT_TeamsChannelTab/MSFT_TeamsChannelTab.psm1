@@ -48,9 +48,9 @@ function Get-TargetResource
         $RemoveUrl,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -73,8 +73,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -82,7 +82,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
 
     try
@@ -107,19 +107,23 @@ function Get-TargetResource
         }
         catch
         {
-            Write-Verbose -Message $_
+            New-M365DSCLogEntry -Message 'Error retrieving data:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
             Write-Verbose "The specified Service Principal doesn't have access to read Group information. Permission Required: Group.Read.All & Team.ReadBasic.All"
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $TenantId
         }
 
         if ($null -eq $teamInstance)
         {
             $Message = "Team {$TeamName} was not found."
-            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $TenantID
+            New-M365DSCLogEntry -Message $Message `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
             throw $Message
         }
 
@@ -133,10 +137,13 @@ function Get-TargetResource
 
         if ($null -eq $channelInstance)
         {
-            Add-M365DSCEvent -Message "Could not find Channels for Team {$($teamInstance.GroupId)}" -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $TenantID
-            throw "Channel {$ChannelName} was not found."
+            $message = "Could not find Channel {$ChannelName} for Team {$($teamInstance.GroupId)}"
+            New-M365DSCLogEntry -Message $Message `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
+            throw $message
         }
 
         # Get the Channel Tab
@@ -153,7 +160,7 @@ function Get-TargetResource
         if ($null -eq $tabInstance)
         {
             $nullResult = $PSBoundParameters
-            $nullResult.Ensure = "Absent"
+            $nullResult.Ensure = 'Absent'
             return $nullResult
         }
 
@@ -171,32 +178,18 @@ function Get-TargetResource
             ApplicationId         = $ApplicationId
             TenantId              = $TenantID
             CertificateThumbprint = $CertificateThumbprint
-            Ensure                = "Present"
+            Ensure                = 'Present'
         }
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        throw $_
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return @{}
     }
 }
 
@@ -249,9 +242,9 @@ function Set-TargetResource
         $RemoveUrl,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -272,8 +265,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -286,16 +279,16 @@ function Set-TargetResource
     $tab = Get-TargetResource @PSBoundParameters
 
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("Ensure") | Out-Null
-    $CurrentParameters.Remove("ApplicationId") | Out-Null
-    $CurrentParameters.Remove("TenantId") | Out-Null
-    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
+    $CurrentParameters.Remove('Ensure') | Out-Null
+    $CurrentParameters.Remove('ApplicationId') | Out-Null
+    $CurrentParameters.Remove('TenantId') | Out-Null
+    $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
 
     Write-Verbose -Message "Retrieving Team Channel {$ChannelName} from Team {$($tab.TeamId)}"
     $ChannelInstance = Get-MgTeamChannel -TeamId $tab.TeamId `
         -Filter "DisplayName eq '$ChannelName'"
 
-    if ($Ensure -eq "Present" -and ($tab.Ensure -eq "Present"))
+    if ($Ensure -eq 'Present' -and ($tab.Ensure -eq 'Present'))
     {
         Write-Verbose -Message "Retrieving Tab {$DisplayName} from Channel {$($ChannelInstance.Id))} from Team {$($tab.TeamId)}"
         $tabInstance = Get-M365DSCTeamChannelTab -TeamId $tab.TeamId `
@@ -305,17 +298,17 @@ function Set-TargetResource
         Set-M365DSCTeamsChannelTab -Parameters $CurrentParameters `
             -TabId $tabInstance.Id | Out-Null
     }
-    elseif ($Ensure -eq "Present" -and ($tab.Ensure -eq "Absent"))
+    elseif ($Ensure -eq 'Present' -and ($tab.Ensure -eq 'Absent'))
     {
         Write-Verbose -Message "Creating new tab {$DisplayName}"
         Write-Verbose -Message "Params: $($CurrentParameters | Out-String)"
-        $CurrentParameters.Add("TeamId", $tab.TeamId)
-        $CurrentParameters.Add("ChannelId", $ChannelInstance.Id)
-        $CurrentParameters.Remove("TeamName") | Out-Null
-        $CurrentParameters.Remove("ChannelName") | Out-Null
+        $CurrentParameters.Add('TeamId', $tab.TeamId)
+        $CurrentParameters.Add('ChannelId', $ChannelInstance.Id)
+        $CurrentParameters.Remove('TeamName') | Out-Null
+        $CurrentParameters.Remove('ChannelName') | Out-Null
         New-M365DSCTeamsChannelTab -Parameters $CurrentParameters
     }
-    elseif ($Ensure -eq "Absent" -and ($tab.Ensure -eq "Present"))
+    elseif ($Ensure -eq 'Absent' -and ($tab.Ensure -eq 'Present'))
     {
         Write-Verbose -Message "Retrieving Tab {$DisplayName} from Channel {$($ChannelInstance.Id))} from Team {$($tab.TeamId)}"
         $tabInstance = Get-M365DSCTeamChannelTab -TeamId $tab.TeamId `
@@ -381,9 +374,9 @@ function Test-TargetResource
         $RemoveUrl,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -401,8 +394,8 @@ function Test-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -456,17 +449,17 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
-            -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -477,7 +470,7 @@ function Export-TargetResource
     {
         [array]$teams = Get-Team
         $i = 1
-        $dscContent = ""
+        $dscContent = ''
         Write-Host "`r`n" -NoNewline
         foreach ($team in $teams)
         {
@@ -490,10 +483,11 @@ function Export-TargetResource
             }
             catch
             {
-                Write-Host "        $($Global:M365DSCEmojiRedX) The specified Service Principal doesn't have access to read Channel information. Permission Required: Channel.ReadBasic.All"
-                Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                    -TenantId $TenantId
+                $message = "        $($Global:M365DSCEmojiRedX) The specified Service Principal doesn't have access to read Channel information. Permission Required: Channel.ReadBasic.All"
+                New-M365DSCLogEntry -Message $Message `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
             }
 
             $j = 1
@@ -509,10 +503,11 @@ function Export-TargetResource
                 }
                 catch
                 {
-                    Write-Host "            $($Global:M365DSCEmojiRedX) The specified Service Principal doesn't have access to read Tab information. Permission Required: TeamsTab.Read.All"
-                    Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                        -TenantId $TenantId
+                    $message = "            $($Global:M365DSCEmojiRedX) The specified Service Principal doesn't have access to read Tab information. Permission Required: TeamsTab.Read.All"
+                    New-M365DSCLogEntry -Message $Message `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
                 }
 
                 $k = 1
@@ -555,25 +550,22 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $TenantId
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 
 function New-M365DSCTeamsChannelTab
 {
     [CmdletBinding()]
-    param (
+    param
+    (
         [Parameter(Mandatory = $true)]
         [System.Collections.HashTable]
         $Parameters
@@ -598,13 +590,14 @@ function New-M365DSCTeamsChannelTab
     Invoke-MgGraphRequest -Method POST `
         -Uri $Url `
         -Body $JSONContent `
-        -Headers @{"Content-Type" = "application/json" } | Out-Null
+        -Headers @{'Content-Type' = 'application/json' } | Out-Null
 }
 
 function Set-M365DSCTeamsChannelTab
 {
     [CmdletBinding()]
-    param (
+    param
+    (
         [Parameter(Mandatory = $true)]
         [System.Collections.HashTable]
         $Parameters,
@@ -632,14 +625,15 @@ function Set-M365DSCTeamsChannelTab
     Invoke-MgGraphRequest -Method PATCH `
         -Uri $Url `
         -Body $JSONContent `
-        -Headers @{"Content-Type" = "application/json" } | Out-Null
+        -Headers @{'Content-Type' = 'application/json' } | Out-Null
 }
 
 function Get-M365DSCTeamChannelTab
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [System.String]
         $TeamID,
@@ -658,7 +652,7 @@ function Get-M365DSCTeamChannelTab
     Write-Verbose -Message "GET request to {$Url}"
     $response = Invoke-MgGraphRequest -Method GET `
         -Uri $Url `
-        -Headers @{"Content-Type" = "application/json" }
+        -Headers @{'Content-Type' = 'application/json' }
     return $response.value
 }
 

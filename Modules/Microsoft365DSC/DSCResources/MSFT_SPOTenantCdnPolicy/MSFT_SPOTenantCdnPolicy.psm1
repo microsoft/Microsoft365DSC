@@ -68,16 +68,22 @@ function Get-TargetResource
     try
     {
         $Policies = Get-PnPTenantCdnPolicies -CdnType $CDNType -ErrorAction Stop
-        if ($null -ne $Policies['ExcludeRestrictedSiteClassifications']) {
+        if ($null -ne $Policies['ExcludeRestrictedSiteClassifications'])
+        {
             $ExcludeRestrictedSiteClassifications = `
                 $Policies['ExcludeRestrictedSiteClassifications'].Split(',')
-        } else {
+        }
+        else
+        {
             $ExcludeRestrictedSiteClassifications = $null
         }
-        if ($null -ne $Policies['IncludeFileExtensions']) {
+        if ($null -ne $Policies['IncludeFileExtensions'])
+        {
             $IncludeFileExtensions = `
                 $Policies['IncludeFileExtensions'].Split(',')
-        } else {
+        }
+        else
+        {
             $IncludeFileExtensions = $null
         }
 
@@ -97,27 +103,13 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        throw $_
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return @{}
     }
 }
 
@@ -419,26 +411,12 @@ function Export-TargetResource
         else
         {
             Write-Host $Global:M365DSCEmojiRedX
-            try
-            {
-                Write-Verbose -Message $_
-                $tenantIdValue = ''
-                if (-not [System.String]::IsNullOrEmpty($TenantId))
-                {
-                    $tenantIdValue = $TenantId
-                }
-                elseif ($null -ne $Credential)
-                {
-                    $tenantIdValue = $Credential.UserName.Split('@')[1]
-                }
-                Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                    -TenantId $tenantIdValue
-            }
-            catch
-            {
-                Write-Verbose -Message $_
-            }
+
+            New-M365DSCLogEntry -Message 'Error during Export:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
         }
         return ''
     }
