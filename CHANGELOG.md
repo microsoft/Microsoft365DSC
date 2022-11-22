@@ -2,6 +2,12 @@
 
 # UNRELEASED
 
+* IntuneRoledefinition
+  * Initial Release
+  * Manage Intune Role definition
+* IntuneRoleAssignment
+  * Initial Release
+  * Manage Intune Role assignment
 * O365AdminAuditLogConfig
   * Updated settings.json to include permissions.
     FIXES [#2517](https://github.com/microsoft/Microsoft365DSC/issues/2517)
