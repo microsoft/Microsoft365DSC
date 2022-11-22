@@ -22,7 +22,9 @@
   * New Parameter `ValidateOnly` for Update-M365DSCDependencies to check if all dependencies are installed.
     FIXES [2519](https://github.com/microsoft/Microsoft365DSC/issues/2519)
   * Fixed incorrect usage of Write-Information cmdLet
-
+  * Fixed typos for permissions in settings.json
+    FIXES [2553](https://github.com/microsoft/Microsoft365DSC/issues/2553)
+    
 # 1.22.1116.1
 
 * AADApplication
