@@ -106,13 +106,32 @@ function Get-TargetResource
         else
         {
             Write-Verbose "Found existing DLPCompliancePolicy $($Name)"
+
+            $ExchangeSenderMemberOfValue = @()
+            if ($null -ne $PolicyObject.ExchangeSenderMemberOf)
+            {
+                foreach ($member in $PolicyObject.ExchangeSenderMemberOf)
+                {
+                    $ExchangeSenderMemberOfValue += (ConvertFrom-JSON $member).PrimarySmtpAddress
+                }
+            }
+
+            $ExchangeSenderMemberOfExceptionValue = @()
+            if ($null -ne $PolicyObject.ExchangeSenderMemberOfException)
+            {
+                foreach ($member in $PolicyObject.ExchangeSenderMemberOfException)
+                {
+                    $ExchangeSenderMemberOfExceptionValue += (ConvertFrom-JSON $member).PrimarySmtpAddress
+                }
+            }
+
             $result = @{
                 Ensure                          = 'Present'
                 Name                            = $PolicyObject.Name
                 Comment                         = $PolicyObject.Comment
                 ExchangeLocation                = $PolicyObject.ExchangeLocation.Name
-                ExchangeSenderMemberOf          = $PolicyObject.ExchangeSenderMemberOf
-                ExchangeSenderMemberOfException = $PolicyObject.ExchangeSenderMemberOfException
+                ExchangeSenderMemberOf          = $ExchangeSenderMemberOfValue
+                ExchangeSenderMemberOfException = $ExchangeSenderMemberOfExceptionValue
                 Mode                            = $PolicyObject.Mode
                 OneDriveLocation                = $PolicyObject.OneDriveLocation.Name
                 OneDriveLocationException       = $PolicyObject.OneDriveLocationException
