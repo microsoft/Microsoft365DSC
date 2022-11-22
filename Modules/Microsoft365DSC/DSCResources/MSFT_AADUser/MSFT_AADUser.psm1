@@ -449,8 +449,8 @@ function Set-TargetResource
             {
                 $currentLicenses = @()
             }
-            $licenseDifferences  = Compare-Object -ReferenceObject $LicenseAssignment -DifferenceObject $currentLicenses
-            if ($licensesDifferences.Length -gt 0)
+            [Array]$licenseDifferences  = Compare-Object -ReferenceObject $LicenseAssignment -DifferenceObject $currentLicenses
+            if ($licenseDifferences.Length -gt 0)
             {
                 $licenses = @{AddLicenses = @(); RemoveLicenses = @();}
 
@@ -503,10 +503,10 @@ function Set-TargetResource
         #region Assign Licenses
         try
         {
-            if ($licensesDifferences.Length -gt 0)
+            if ($licenseDifferences.Length -gt 0)
             {
                 Write-Verbose -Message "Updating License assignments with values: $(Convert-M365DscHashtableToString -Hashtable $licenses)"
-                Set-MgUserLicense -UserId $user.Id -AddLicenses $licenses.AddLicenses -RemoveLicenses $licenses.RemoveLicenses
+                Set-MgUserLicense -UserId $user.UserPrincipalName -AddLicenses $licenses.AddLicenses -RemoveLicenses $licenses.RemoveLicenses
             }
         }
         catch
@@ -544,9 +544,13 @@ function Set-TargetResource
                 $currentRoles = @()
             }
 
-            $diffRoles = Compare-Object -ReferenceObject $Roles -DifferenceObject $currentRoles
-            Write-Verbose -Message "Current Roles: $($currentRoles -join ',')"
-            Write-Verbose -Message "Desired Roles: $($Roles -join ',')"
+            [Array]$diffRoles = Compare-Object -ReferenceObject $Roles -DifferenceObject $currentRoles
+
+            if ($diffRoles.Length -gt 0)
+            {
+                Write-Verbose -Message "Current Roles: $($currentRoles -join ',')"
+                Write-Verbose -Message "Desired Roles: $($Roles -join ',')"
+            }
 
             foreach ($roleDifference in $diffRoles)
             {

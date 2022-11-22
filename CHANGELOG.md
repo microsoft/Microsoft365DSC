@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADUser
+  * Fixed issue with license assignment
+    FIXES [#2556](https://github.com/microsoft/Microsoft365DSC/issues/2556)
 * IntuneRoledefinition
   * Initial Release
   * Manage Intune Role definition
@@ -33,7 +36,7 @@
   * Fixed incorrect usage of Write-Information cmdLet
   * Fixed typos for permissions in settings.json
     FIXES [2553](https://github.com/microsoft/Microsoft365DSC/issues/2553)
-    
+
 # 1.22.1116.1
 
 * AADApplication
