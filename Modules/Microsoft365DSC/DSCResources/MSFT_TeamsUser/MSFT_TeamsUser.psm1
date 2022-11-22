@@ -14,13 +14,13 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Guest", "Member", "Owner")]
-        $Role = "Member",
+        [ValidateSet('Guest', 'Member', 'Owner')]
+        $Role = 'Member',
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -47,8 +47,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -56,7 +56,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -71,13 +71,13 @@ function Get-TargetResource
 
         try
         {
-            Write-Verbose "Retrieving user without a specific Role specified"
+            Write-Verbose 'Retrieving user without a specific Role specified'
             $allMembers = Get-TeamUser -GroupId $team.GroupId -ErrorAction SilentlyContinue
         }
         catch
         {
             Write-Warning "The current user doesn't have the rights to access the list of members for Team {$($TeamName)}."
-            Write-Verbose $_
+            Write-Verbose -Message $_
             return $nullReturn
         }
 
@@ -93,8 +93,8 @@ function Get-TargetResource
             User                  = $myUser.User
             Role                  = $myUser.Role
             TeamName              = $TeamName
-            Ensure                = "Present"
-            Credential    = $Credential
+            Ensure                = 'Present'
+            Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
@@ -102,26 +102,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -141,13 +127,13 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Guest", "Member", "Owner")]
-        $Role = "Member",
+        [ValidateSet('Guest', 'Member', 'Owner')]
+        $Role = 'Member',
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -172,8 +158,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -187,25 +173,25 @@ function Set-TargetResource
     Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
 
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("TeamName") | Out-Null
-    $CurrentParameters.Add("GroupId", $team.GroupId)
-    $CurrentParameters.Remove("Credential") | Out-Null
-    $CurrentParameters.Remove("ApplicationId") | Out-Null
-    $CurrentParameters.Remove("TenantId") | Out-Null
-    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
-    $CurrentParameters.Remove("Ensure") | Out-Null
+    $CurrentParameters.Remove('TeamName') | Out-Null
+    $CurrentParameters.Add('GroupId', $team.GroupId)
+    $CurrentParameters.Remove('Credential') | Out-Null
+    $CurrentParameters.Remove('ApplicationId') | Out-Null
+    $CurrentParameters.Remove('TenantId') | Out-Null
+    $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
+    $CurrentParameters.Remove('Ensure') | Out-Null
 
-    if ($Ensure -eq "Present")
+    if ($Ensure -eq 'Present')
     {
         Write-Verbose -Message "Adding team user $User with role:$Role"
         Add-TeamUser @CurrentParameters
     }
     else
     {
-        if ($Role -eq "Member" -and $CurrentParameters.ContainsKey("Role"))
+        if ($Role -eq 'Member' -and $CurrentParameters.ContainsKey('Role'))
         {
-            $CurrentParameters.Remove("Role") | Out-Null
-            Write-Verbose -Message "Removed role parameter"
+            $CurrentParameters.Remove('Role') | Out-Null
+            Write-Verbose -Message 'Removed role parameter'
         }
         Remove-TeamUser @CurrentParameters
         Write-Verbose -Message "Removing team user $User"
@@ -228,13 +214,13 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Guest", "Member", "Owner")]
-        $Role = "Member",
+        [ValidateSet('Guest', 'Member', 'Owner')]
+        $Role = 'Member',
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -256,8 +242,8 @@ function Test-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -270,7 +256,7 @@ function Test-TargetResource
 
     if ($null -eq $Role)
     {
-        $CurrentValues.Remove("Role") | Out-Null
+        $CurrentValues.Remove('Role') | Out-Null
     }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
@@ -279,9 +265,9 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure", `
-            "User", `
-            "Role")
+        -ValuesToCheck @('Ensure', `
+            'User', `
+            'Role')
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -317,8 +303,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -334,7 +320,7 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
         $dscContent = [System.Text.StringBuilder]::new()
         $j = 1
@@ -357,12 +343,12 @@ function Export-TargetResource
                         Write-Host "        - [$k/$($users.Length)] $($user.User)" -NoNewline
 
                         $getParams = @{
-                                TeamName              = $team.DisplayName
-                                User                  = $user.User
-                                Credential            = $Credential
-                                ApplicationId         = $ApplicationId
-                                TenantId              = $TenantId
-                                CertificateThumbprint = $CertificateThumbprint
+                            TeamName              = $team.DisplayName
+                            User                  = $user.User
+                            Credential            = $Credential
+                            ApplicationId         = $ApplicationId
+                            TenantId              = $TenantId
+                            CertificateThumbprint = $CertificateThumbprint
                         }
                         $results = Get-TargetResource @getParams
                         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -392,27 +378,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message "Error during Export:" `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

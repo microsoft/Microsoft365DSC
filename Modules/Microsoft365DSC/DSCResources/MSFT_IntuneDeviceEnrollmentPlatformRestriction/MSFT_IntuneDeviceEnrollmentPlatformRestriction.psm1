@@ -152,36 +152,30 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found Device Enrollment Platform Restriction with Name {$DisplayName}"
 
-        $results= @{
-            DisplayName                                  = $config.DisplayName
-            Description                                  = $config.Description
-            Ensure                                       = 'Present'
-            Credential                                   = $Credential
-            ApplicationId                                = $ApplicationId
-            TenantId                                     = $TenantId
-            ApplicationSecret                            = $ApplicationSecret
-            CertificateThumbprint                        = $CertificateThumbprint
-            Managedidentity                              = $ManagedIdentity.IsPresent
+        $results = @{
+            DisplayName           = $config.DisplayName
+            Description           = $config.Description
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
 
-        $results+=get-DevicePlatformRestrictionSetting -Properties $config.AdditionalProperties
+        $results += get-DevicePlatformRestrictionSetting -Properties $config.AdditionalProperties
 
         return $results
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullResult
     }
 }
@@ -348,11 +342,11 @@ function Set-TargetResource
         $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
         | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration' }
         $AdditionalProperties = Get-M365DSCIntuneDeviceEnrollmentPlatformRestrictionAdditionalProperties -Properties $PSBoundParameters
-        $bodyParameters=@{
-            displayName=$DisplayName
-            description=$Description
+        $bodyParameters = @{
+            displayName = $DisplayName
+            description = $Description
         }
-        $bodyParameters+=$AdditionalProperties
+        $bodyParameters += $AdditionalProperties
 
         Update-MgDeviceManagementDeviceEnrollmentConfiguration `
             -BodyParameter $bodyParameters `
@@ -624,28 +618,23 @@ function Export-TargetResource
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }
-
 
 function Get-M365DSCIntuneDeviceEnrollmentPlatformRestrictionAdditionalProperties
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param(
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.Collections.Hashtable]
         $Properties
@@ -686,39 +675,42 @@ function Get-M365DSCIntuneDeviceEnrollmentPlatformRestrictionAdditionalPropertie
     }
     return $results
 }
+
 function Get-DevicePlatformRestrictionSetting
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param(
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.Collections.Hashtable]
         $Properties
     )
 
-    $results=@{}
+    $results = @{}
 
-    $keys=$Properties.Keys|Where-Object{$_ -like "*Restriction"}
-    foreach($key in $keys)
+    $keys = $Properties.Keys | Where-Object { $_ -like '*Restriction' }
+    foreach ($key in $keys)
     {
-        $platform=$key.replace("Restriction","")
-        $platform=$platform.Substring(0,1).toUpper()+$platform.substring(1,$platform.length-1)
-        if($platform -eq 'MacOS')
+        $platform = $key.replace('Restriction', '')
+        $platform = $platform.Substring(0, 1).toUpper() + $platform.substring(1, $platform.length - 1)
+        if ($platform -eq 'MacOS')
         {
-            $platform='Mac'
+            $platform = 'Mac'
         }
-        if($null -ne $Properties.$key)
+        if ($null -ne $Properties.$key)
         {
-            $hashKey=[hashtable]::new($Properties.$key)
-            foreach($childKey in $hashKey.keys)
+            $hashKey = [hashtable]::new($Properties.$key)
+            foreach ($childKey in $hashKey.keys)
             {
-                $keyName=$platform+ ($childKey.Substring(0,1).toUpper()+$childKey.substring(1,$childKey.length-1))
-                $keyValue=$Properties.$key.$childKey
-                $results.add($keyName,$keyValue)
+                $keyName = $platform + ($childKey.Substring(0, 1).toUpper() + $childKey.substring(1, $childKey.length - 1))
+                $keyValue = $Properties.$key.$childKey
+                $results.add($keyName, $keyValue)
             }
         }
     }
-    return $results
 
+    return $results
 }
+
 Export-ModuleMember -Function *-TargetResource

@@ -157,7 +157,7 @@ function Get-TargetResource
             }
 
             [Array]$Owners = Get-MgApplicationOwner -ApplicationId $AADApp.Id -All:$true | `
-                    Where-Object { !$_.DeletedDateTime }
+                Where-Object { !$_.DeletedDateTime }
             $OwnersValues = @()
             foreach ($Owner in $Owners)
             {
@@ -201,22 +201,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -505,17 +495,11 @@ function Set-TargetResource
                 }
                 catch
                 {
-                    try
-                    {
-                        Write-Verbose -Message $_
-                        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                            -TenantId $tenantIdValue
-                    }
-                    catch
-                    {
-                        Write-Verbose -Message $_
-                    }
+                    New-M365DSCLogEntry -Message 'Error updating data:' `
+                        -Exception $_ `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
                 }
             }
             elseif ($diff.SideIndicator -eq '<=')
@@ -535,17 +519,11 @@ function Set-TargetResource
                 }
                 catch
                 {
-                    try
-                    {
-                        Write-Verbose -Message $_
-                        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                            -TenantId $tenantIdValue
-                    }
-                    catch
-                    {
-                        Write-Verbose -Message $_
-                    }
+                    New-M365DSCLogEntry -Message 'Error updating data:' `
+                        -Exception $_ `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
                 }
             }
         }
@@ -873,22 +851,13 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }

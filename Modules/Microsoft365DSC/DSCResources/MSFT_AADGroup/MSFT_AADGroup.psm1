@@ -187,7 +187,7 @@ function Get-TargetResource
             [Array]$memberOf = Get-MgGroupMemberOf -GroupId $Group.Id -All # result also used for/by AssignedToRole
             $MemberOfValues = @()
             # Note: only process security-groups that this group is a member of and not directory roles (if any)
-            foreach ($member in ($memberOf  | Where-Object -FilterScript {$_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.group"}))
+            foreach ($member in ($memberOf  | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.group' }))
             {
                 if ($null -ne $member.AdditionalProperties.displayName)
                 {
@@ -201,7 +201,7 @@ function Get-TargetResource
             {
                 $AssignedToRoleValues = @()
                 # Note: only process directory roles and not group membership (if any)
-                foreach ($role in $($memberOf | Where-Object -FilterScript {$_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.directoryRole"}))
+                foreach ($role in $($memberOf | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.directoryRole' }))
                 {
                     if ($null -ne $role.AdditionalProperties.displayName)
                     {
@@ -253,22 +253,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -542,8 +532,9 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Error -Message $_
-            New-M365DSCLogEntry -Error $_ -Message "Couldn't set group $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+            New-M365DSCLogEntry -Message "Couldn't set group $DisplayName" `
+                -Exception $_ `
+                -Source $MyInvocation.MyCommand.ModuleName
         }
     }
     elseif ($Ensure -eq 'Present' -and $currentGroup.Ensure -eq 'Absent')
@@ -565,7 +556,9 @@ function Set-TargetResource
         catch
         {
             Write-Verbose -Message $_
-            New-M365DSCLogEntry -Error $_ -Message "Couldn't create group $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+            New-M365DSCLogEntry -Message "Couldn't create group $DisplayName" `
+                -Exception $_ `
+                -Source $MyInvocation.MyCommand.ModuleName
         }
     }
     elseif ($Ensure -eq 'Absent' -and $currentGroup.Ensure -eq 'Present')
@@ -576,7 +569,9 @@ function Set-TargetResource
         }
         catch
         {
-            New-M365DSCLogEntry -Error $_ -Message "Couldn't delete group $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+            New-M365DSCLogEntry -Message "Couldn't delete group $DisplayName" `
+                -Exception $_ `
+                -Source $MyInvocation.MyCommand.ModuleName
         }
     }
 
@@ -713,7 +708,7 @@ function Set-TargetResource
                     if ($memberOfgroup.psobject.Typenames -match 'Group')
                     {
                         Write-Verbose -Message "Removing AAD Group {$($currentGroup.DisplayName)} from AAD group {$($memberOfGroup.DisplayName)}"
-                        Remove-MgGroupMemberByRef -GroupId ($memberOfGroup.Id) -DirectoryObjectId ($currentGroup.Id) |Out-Null
+                        Remove-MgGroupMemberByRef -GroupId ($memberOfGroup.Id) -DirectoryObjectId ($currentGroup.Id) | Out-Null
                     }
                     else
                     {
@@ -761,15 +756,15 @@ function Set-TargetResource
                     {
                         Write-Verbose -Message "Assigning AAD group {$($currentGroup.DisplayName)} to Directory Role {$($diff.InputObject)}"
                         $DirObject = @{
-                            "@odata.id" = "https://graph.microsoft.com/v1.0/directoryObjects/$($currentGroup.Id)"
-                            }
-                        New-MgDirectoryRoleMemberByRef -DirectoryRoleId ($role.Id) -BodyParameter $DirObject | Out-null
+                            '@odata.id' = "https://graph.microsoft.com/v1.0/directoryObjects/$($currentGroup.Id)"
+                        }
+                        New-MgDirectoryRoleMemberByRef -DirectoryRoleId ($role.Id) -BodyParameter $DirObject | Out-Null
 
                     }
                     elseif ($diff.SideIndicator -eq '<=')
                     {
                         Write-Verbose -Message "Removing AAD group {$($currentGroup.DisplayName)} from Directory Role {$($role.DisplayName)}"
-                        Remove-MgDirectoryRoleMemberByRef -DirectoryRoleId ($role.Id) -DirectoryObjectId ($currentGroup.Id) | Out-null
+                        Remove-MgDirectoryRoleMemberByRef -DirectoryRoleId ($role.Id) -DirectoryObjectId ($currentGroup.Id) | Out-Null
                     }
                 }
             }
@@ -1064,22 +1059,13 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }

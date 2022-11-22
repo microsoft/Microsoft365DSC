@@ -27,7 +27,7 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('Enable', 'TestWithNotifications', 'TestWithoutNotifications', 'Disable', 'PendingDeletion')]
         [System.String]
-        $Mode = "Enable",
+        $Mode = 'Enable',
 
         [Parameter()]
         [System.String[]]
@@ -84,8 +84,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -148,26 +148,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -201,7 +187,7 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('Enable', 'TestWithNotifications', 'TestWithoutNotifications', 'Disable', 'PendingDeletion')]
         [System.String]
-        $Mode = "Enable",
+        $Mode = 'Enable',
 
         [Parameter()]
         [System.String[]]
@@ -247,8 +233,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -263,17 +249,17 @@ function Set-TargetResource
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentPolicy.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove("Credential")
-        $CreationParams.Remove("Ensure")
+        $CreationParams.Remove('Credential')
+        $CreationParams.Remove('Ensure')
         New-DLPCompliancePolicy @CreationParams
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove("Credential")
-        $CreationParams.Remove("Ensure")
-        $CreationParams.Remove("Name")
-        $CreationParams.Add("Identity", $Name)
+        $CreationParams.Remove('Credential')
+        $CreationParams.Remove('Ensure')
+        $CreationParams.Remove('Name')
+        $CreationParams.Add('Identity', $Name)
 
         # SharePoint Location is specified or already existing, we need to determine
         # the delta.
@@ -284,17 +270,17 @@ function Set-TargetResource
                 Where-Object { $SharePointLocation -NotContains $_ }
             if ($null -ne $ToBeRemoved)
             {
-                $CreationParams.Add("RemoveSharePointLocation", $ToBeRemoved)
+                $CreationParams.Add('RemoveSharePointLocation', $ToBeRemoved)
             }
 
             $ToBeAdded = $SharePointLocation | `
                 Where-Object { $CurrentPolicy.SharePointLocation -NotContains $_ }
             if ($null -ne $ToBeAdded)
             {
-                $CreationParams.Add("AddSharePointLocation", $ToBeAdded)
+                $CreationParams.Add('AddSharePointLocation', $ToBeAdded)
             }
 
-            $CreationParams.Remove("SharePointLocation")
+            $CreationParams.Remove('SharePointLocation')
         }
 
         # Exchange Location is specified or already existing, we need to determine
@@ -306,17 +292,17 @@ function Set-TargetResource
                 Where-Object { $ExchangeLocation -NotContains $_ }
             if ($null -ne $ToBeRemoved)
             {
-                $CreationParams.Add("RemoveExchangeLocation", $ToBeRemoved)
+                $CreationParams.Add('RemoveExchangeLocation', $ToBeRemoved)
             }
 
             $ToBeAdded = $ExchangeLocation | `
                 Where-Object { $CurrentPolicy.ExchangeLocation -NotContains $_ }
             if ($null -ne $ToBeAdded)
             {
-                $CreationParams.Add("AddExchangeLocation", $ToBeAdded)
+                $CreationParams.Add('AddExchangeLocation', $ToBeAdded)
             }
 
-            $CreationParams.Remove("ExchangeLocation")
+            $CreationParams.Remove('ExchangeLocation')
         }
 
         # OneDrive Location is specified or already existing, we need to determine
@@ -328,16 +314,16 @@ function Set-TargetResource
                 Where-Object { $OneDriveLocation -NotContains $_ }
             if ($null -ne $ToBeRemoved)
             {
-                $CreationParams.Add("RemoveOneDriveLocation", $ToBeRemoved)
+                $CreationParams.Add('RemoveOneDriveLocation', $ToBeRemoved)
             }
 
             $ToBeAdded = $OneDriveLocation | `
                 Where-Object { $CurrentPolicy.OneDriveLocation -NotContains $_ }
             if ($null -ne $ToBeAdded)
             {
-                $CreationParams.Add("AddOneDriveLocation", $ToBeAdded)
+                $CreationParams.Add('AddOneDriveLocation', $ToBeAdded)
             }
-            $CreationParams.Remove("OneDriveLocation")
+            $CreationParams.Remove('OneDriveLocation')
         }
 
         # OneDrive Location Exception is specified or already existing, we need to determine
@@ -349,16 +335,16 @@ function Set-TargetResource
                 Where-Object { $OneDriveLocationException -NotContains $_ }
             if ($null -ne $ToBeRemoved)
             {
-                $CreationParams.Add("RemoveOneDriveLocationException", $ToBeRemoved)
+                $CreationParams.Add('RemoveOneDriveLocationException', $ToBeRemoved)
             }
 
             $ToBeAdded = $OneDriveLocationException | `
                 Where-Object { $CurrentPolicy.OneDriveLocationException -NotContains $_ }
             if ($null -ne $ToBeAdded)
             {
-                $CreationParams.Add("AddOneDriveLocationException", $ToBeAdded)
+                $CreationParams.Add('AddOneDriveLocationException', $ToBeAdded)
             }
-            $CreationParams.Remove("OneDriveLocationException")
+            $CreationParams.Remove('OneDriveLocationException')
         }
 
         # SharePoint Location Exception is specified or already existing, we need to determine
@@ -370,16 +356,16 @@ function Set-TargetResource
                 Where-Object { $SharePointLocationException -NotContains $_ }
             if ($null -ne $ToBeRemoved)
             {
-                $CreationParams.Add("RemoveSharePointLocationException", $ToBeRemoved)
+                $CreationParams.Add('RemoveSharePointLocationException', $ToBeRemoved)
             }
 
             $ToBeAdded = $SharePointLocationException | `
                 Where-Object { $CurrentPolicy.SharePointLocationException -NotContains $_ }
             if ($null -ne $ToBeAdded)
             {
-                $CreationParams.Add("AddSharePointLocationException", $ToBeAdded)
+                $CreationParams.Add('AddSharePointLocationException', $ToBeAdded)
             }
-            $CreationParams.Remove("SharePointLocationException")
+            $CreationParams.Remove('SharePointLocationException')
         }
 
         # Teams Location is specified or already existing, we need to determine
@@ -391,16 +377,16 @@ function Set-TargetResource
                 Where-Object { $TeamsLocation -NotContains $_ }
             if ($null -ne $ToBeRemoved)
             {
-                $CreationParams.Add("RemoveTeamsLocation", $ToBeRemoved)
+                $CreationParams.Add('RemoveTeamsLocation', $ToBeRemoved)
             }
 
             $ToBeAdded = $TeamsLocation | `
                 Where-Object { $CurrentPolicy.TeamsLocation -NotContains $_ }
             if ($null -ne $ToBeAdded)
             {
-                $CreationParams.Add("AddTeamsLocation", $ToBeAdded)
+                $CreationParams.Add('AddTeamsLocation', $ToBeAdded)
             }
-            $CreationParams.Remove("TeamsLocation")
+            $CreationParams.Remove('TeamsLocation')
         }
 
         # Teams Location Exception is specified or already existing, we need to determine
@@ -412,16 +398,16 @@ function Set-TargetResource
                 Where-Object { $TeamsLocationException -NotContains $_ }
             if ($null -ne $ToBeRemoved)
             {
-                $CreationParams.Add("RemoveTeamsLocationException", $ToBeRemoved)
+                $CreationParams.Add('RemoveTeamsLocationException', $ToBeRemoved)
             }
 
             $ToBeAdded = $TeamsLocationException | `
                 Where-Object { $CurrentPolicy.TeamsLocationException -NotContains $_ }
             if ($null -ne $ToBeAdded)
             {
-                $CreationParams.Add("AddTeamsLocationException", $ToBeAdded)
+                $CreationParams.Add('AddTeamsLocationException', $ToBeAdded)
             }
-            $CreationParams.Remove("TeamsLocationException")
+            $CreationParams.Remove('TeamsLocationException')
         }
         Write-Verbose "Updating Policy with values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
         Set-DLPCompliancePolicy @CreationParams
@@ -443,7 +429,9 @@ function Set-TargetResource
         }
         catch
         {
-            New-M365DSCLogEntry  -Error $_ -Message $_ -Source $MyInvocation.MyCommand.ModuleName
+            New-M365DSCLogEntry  -Message $_ `
+                -Exception $_ `
+                -Source $MyInvocation.MyCommand.ModuleName
         }
     }
 }
@@ -477,7 +465,7 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('Enable', 'TestWithNotifications', 'TestWithoutNotifications', 'Disable', 'PendingDeletion')]
         [System.String]
-        $Mode = "Enable",
+        $Mode = 'Enable',
 
         [Parameter()]
         [System.String[]]
@@ -520,8 +508,8 @@ function Test-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -566,8 +554,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -593,7 +581,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($policies.Count)] $($policy.Name)" -NoNewline
             $Params = @{
                 Credential = $Credential
-                Name               = $policy.Name
+                Name       = $policy.Name
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -614,27 +602,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 
