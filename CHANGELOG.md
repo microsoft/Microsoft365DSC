@@ -2,16 +2,6 @@
 
 # UNRELEASED
 
-* IntuneRoledefinition
-  * Initial Release
-  * Manage Intune Role definition
-* IntuneRoleAssignment
-  * Initial Release
-  * Manage Intune Role assignment
-* SCRetentionCompliancePolicy
-  * Fixes issue with the TeamsChannelLocation and TeamsChatsLocation parameters that were improperly returned by the Get- function. FIXES #2472
-* SCRetentionComplianceRule
-  * Fixes issue with Teams Policy where the RetentionDurationDisplayHint and ExpirationDateOption parameters weren't returned by the Get- function. FIXES #2472
 * SCRetentionCompliancePolicy
   * Fixes issue with the TeamsChannelLocation and TeamsChatsLocation parameters that were improperly returned by the Get- function.
     FIXES [#2472](https://github.com/microsoft/Microsoft365DSC/issues/2472)
