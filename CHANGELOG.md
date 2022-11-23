@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.1123.1
 
 * IntuneDeviceConfigurationPolicyWindows10
   * Fixed issue when creating this resource if property DefenderDetectedMalwareActions was not present, it'd still be created but with errors.
@@ -11,7 +11,7 @@
 * EXOOrganizationRelationship
   * Add 'None' as supported value for MailboxMoveCapability
     FIXES [#2570](https://github.com/microsoft/Microsoft365DSC/issues/2570)
-* IntuneRoledefinition
+* IntuneRoleDefinition
   * Initial Release
   * Manage Intune Role definition
 * IntuneRoleAssignment

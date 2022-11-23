@@ -795,7 +795,7 @@ function Export-TargetResource
     {
         $policyTemplateID = '0e237410-1367-4844-bd7f-15fb0f08943b'
         [array]$policies = Get-MgDeviceManagementIntent `
-            -Filter "TemplateId -eq '$policyTemplateID'" `
+            -Filter "TemplateId eq '$policyTemplateID'" `
             -ErrorAction Stop `
             -All:$true
 
