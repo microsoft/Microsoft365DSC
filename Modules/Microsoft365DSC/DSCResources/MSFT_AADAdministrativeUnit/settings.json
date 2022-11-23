@@ -6,7 +6,7 @@
             "delegated": {
                 "read": [
                     {
-                        "name": "AdmninistrativeUnit.Read.All"
+                        "name": "AdministrativeUnit.Read.All"
                     },
                     {
                         "name": "Directory.Read.All"
@@ -33,7 +33,7 @@
             "application": {
                 "read": [
                     {
-                        "name": "AdmninistrativeUnit.Read.All"
+                        "name": "AdministrativeUnit.Read.All"
                     },
                     {
                         "name": "Directory.Read.All"
@@ -47,7 +47,7 @@
                 ],
                 "update": [
                     {
-                        "name": "AdmninistrativeUnit.ReadWrite.All"
+                        "name": "AdministrativeUnit.ReadWrite.All"
                     },
                     {
                         "name": "Directory.ReadWrite.All"

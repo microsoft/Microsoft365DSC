@@ -178,8 +178,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Checking for the Intune Device Compliance Windows 10 Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
-    Select-MgProfile -Name beta
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -464,9 +464,10 @@ function Set-TargetResource
 
     Write-Verbose -Message "Intune Device Compliance Windows 10 Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'beta'
 
-    Select-MgProfile -Name beta
+    Select-MgProfile -Name 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -893,9 +894,8 @@ function Export-TargetResource
         $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
-
-    Select-MgProfile -Name beta
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -924,7 +924,6 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
-
 
         foreach ($configDeviceWindowsPolicy in $configDeviceWindowsPolicies)
         {
@@ -1006,7 +1005,6 @@ function Export-TargetResource
         return ''
     }
 }
-
 
 function Get-M365DSCIntuneDeviceCompliancePolicyWindows10AdditionalProperties
 {

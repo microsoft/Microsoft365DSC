@@ -1,6 +1,7 @@
 This feature of Microsoft365DSC is not a true standalone feature. It is a combination of existing features to unlock a new scenario for users.
 
 ## Clone = Export/Deploy
+
 Since Microsoft365DSC is able to take a snapshot of any Microsoft 365 tenant and can deploy a Microsoft365DSC configuration onto any tenant, we can easily clone the configuration of any tenant over another one (or another set of tenants).
 
 When you take a snapshot of an existing tenant, the extracted configuration file doesn’t contain any information that is specific to the source tenant. It abstracts it all into variables, which make the configuration generic instead of unique for a particular tenant. It is then at compilation time that you provide information about the environment onto which this configuration will be applied to.
@@ -16,7 +17,7 @@ Let's assume you are trying to clone the configuration of Tenant A onto Tenant B
 
 ### Full example script for cloning one resource
 
-**IMPORTANT:** The specified credential should __NOT__ have Multi-Factor Authentication enabled!!
+**IMPORTANT:** The specified credential should **NOT** have Multi-Factor Authentication enabled!!
 
 ```PowerShell
 Install-Module Microsoft365Dsc
@@ -33,7 +34,7 @@ $TargetCredential = Get-Credential
 
 Update-M365DSCAllowedGraphScopes -ResourceNameList @("AADGroupsNamingPolicy") -Type Update
 
-C:\Dsc\M365TenantConfig.ps1 -Credential $TargetCredential -OutputPath C:\Dsc
+C:\Dsc\M365TenantConfig.ps1 -Credential $TargetCredential
 
 Start-DscConfiguration -Path C:\Dsc -Wait -Verbose
 ```

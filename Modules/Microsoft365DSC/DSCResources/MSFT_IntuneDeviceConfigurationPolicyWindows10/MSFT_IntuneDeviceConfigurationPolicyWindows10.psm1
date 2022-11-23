@@ -876,7 +876,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Checking for the Intune Device Configuration Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -1133,8 +1134,7 @@ function Get-TargetResource
         }
 
         $returnAssignments=@()
-        Select-MgProfile -name beta
-        $returnAssignments+=Get-MGDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $policy.Id
+        $returnAssignments += Get-MGDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $policy.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $returnAssignments)
         {
@@ -1147,7 +1147,6 @@ function Get-TargetResource
             $assignmentResult += $assignmentValue
         }
         $results.Add('Assignments',$assignmentResult)
-        Select-MgProfile -name v1.0
         return $results
     }
     catch
@@ -2073,7 +2072,9 @@ function Set-TargetResource
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationPolicyWindowsAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        $AdditionalProperties.DefenderDetectedMalwareActions.Add("@odata.type", "#microsoft.graph.defenderDetectedMalwareActions")
+        if ($AdditionalProperties.DefenderDetectedMalwareActions) {
+            $AdditionalProperties.DefenderDetectedMalwareActions.Add("@odata.type", "#microsoft.graph.defenderDetectedMalwareActions")
+        }
         $policy=New-MGDeviceManagementDeviceConfiguration -DisplayName $DisplayName `
             -Description $Description `
             -AdditionalProperties $AdditionalProperties
@@ -3156,7 +3157,8 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
