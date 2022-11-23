@@ -43,7 +43,7 @@ function Get-TargetResource
         $MailboxMoveEnabled,
 
         [Parameter()]
-        [ValidateSet('Inbound', 'Outbound', 'RemoteInbound', 'RemoteOutbound')]
+        [ValidateSet('Inbound', 'Outbound', 'RemoteInbound', 'RemoteOutbound', 'None')]
         [System.String]
         $MailboxMoveCapability,
 
@@ -305,7 +305,7 @@ function Set-TargetResource
         $MailboxMoveEnabled,
 
         [Parameter()]
-        [ValidateSet('Inbound', 'Outbound', 'RemoteInbound', 'RemoteOutbound')]
+        [ValidateSet('Inbound', 'Outbound', 'RemoteInbound', 'RemoteOutbound', 'None')]
         [System.String]
         $MailboxMoveCapability,
 
@@ -528,7 +528,7 @@ function Test-TargetResource
         $MailboxMoveEnabled,
 
         [Parameter()]
-        [ValidateSet('Inbound', 'Outbound', 'RemoteInbound', 'RemoteOutbound')]
+        [ValidateSet('Inbound', 'Outbound', 'RemoteInbound', 'RemoteOutbound', 'None')]
         [System.String]
         $MailboxMoveCapability,
 

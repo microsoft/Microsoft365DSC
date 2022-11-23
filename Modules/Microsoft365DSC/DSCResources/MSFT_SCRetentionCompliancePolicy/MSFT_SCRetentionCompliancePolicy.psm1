@@ -142,9 +142,9 @@ function Get-TargetResource
                     Comment                       = $PolicyObject.Comment
                     Enabled                       = $PolicyObject.Enabled
                     RestrictiveRetention          = $PolicyObject.RestrictiveRetention
-                    TeamsChannelLocation          = [array]$PolicyObject.TeamsChannelLocation
+                    TeamsChannelLocation          = [array]$PolicyObject.TeamsChannelLocation.DisplayName
                     TeamsChannelLocationException = $PolicyObject.TeamsChannelLocationException
-                    TeamsChatLocation             = [array]$PolicyObject.TeamsChatLocation
+                    TeamsChatLocation             = [array]$PolicyObject.TeamsChatLocation.DisplayName
                     TeamsChatLocationException    = $PolicyObject.TeamsChatLocationException
                     Credential                    = $Credential
                 }

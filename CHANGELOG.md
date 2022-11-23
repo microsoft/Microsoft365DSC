@@ -2,9 +2,43 @@
 
 # UNRELEASED
 
+* AADUser
+  * Fixed issue with license assignment
+    FIXES [#2556](https://github.com/microsoft/Microsoft365DSC/issues/2556)
+* IntuneRoledefinition
+  * Initial Release
+  * Manage Intune Role definition
+* IntuneRoleAssignment
+  * Initial Release
+  * Manage Intune Role assignment
+* O365AdminAuditLogConfig
+  * Updated settings.json to include permissions.
+    FIXES [#2517](https://github.com/microsoft/Microsoft365DSC/issues/2517)
+* O365OrgCustomizationSetting
+  * Updated settings.json to include permissions.
+    FIXES [#2517](https://github.com/microsoft/Microsoft365DSC/issues/2517)
+* SCDLPCompliancePolicy
+  * Fixes an issue where the Exchange Location and Exception where not sent back in a correct format during Export.
+    FIXES [#2545](https://github.com/microsoft/Microsoft365DSC/issues/2545)
+* SCRetentionCompliancePolicy
+  * Fixes issue with the TeamsChannelLocation and TeamsChatsLocation parameters that were improperly returned by the Get- function.
+    FIXES [#2472](https://github.com/microsoft/Microsoft365DSC/issues/2472)
+* SCRetentionComplianceRule
+  * Fixes issue with Teams Policy where the RetentionDurationDisplayHint and ExpirationDateOption parameters weren't returned by the Get- function.
+    FIXES [#2472](https://github.com/microsoft/Microsoft365DSC/issues/2472)
+* EXOOrganizationRelationship
+  * Add 'None' as supported value for MailboxMoveCapability
+    FIXES [#2570](https://github.com/microsoft/Microsoft365DSC/issues/2570)
 * DEPENDENCIES
   * Updated Microsoft.Graph.* to version 1.17.0;
   * Updated MSCloudLoginAssistant to version 1.0.98;
+* MISC
+  * Removed Test-M365DSCDependenciesForNewVersions from export functions. This will improve export speed.
+  * New Parameter `ValidateOnly` for Update-M365DSCDependencies to check if all dependencies are installed.
+    FIXES [2519](https://github.com/microsoft/Microsoft365DSC/issues/2519)
+  * Fixed incorrect usage of Write-Information cmdLet
+  * Fixed typos for permissions in settings.json
+    FIXES [2553](https://github.com/microsoft/Microsoft365DSC/issues/2553)
 
 # 1.22.1116.1
 
