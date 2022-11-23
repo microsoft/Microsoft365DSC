@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.17.0;
+  * Updated MSCloudLoginAssistant to version 1.0.98;
+
 # 1.22.1116.1
 
 * AADApplication
