@@ -1072,13 +1072,11 @@ function Export-TargetResource
 
     try
     {
-
         #region resource generator code
         [array]$getValue = Get-MgDirectoryAdministrativeUnit -All `
             -ErrorAction Stop
 
         #endregion
-
 
         $i = 1
         $dscContent = ''
@@ -1110,7 +1108,7 @@ function Export-TargetResource
 
             if ($Results.Members)
             {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Members -CIMInstanceName   MicrosoftGraphdirectoryobject
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Members -CIMInstanceName MicrosoftGraphIdentity
                 if ($complexTypeStringResult)
                 {
                     $Results.Members = $complexTypeStringResult            }
@@ -1121,7 +1119,7 @@ function Export-TargetResource
             }
             if ($Results.ScopedRoleMembers)
             {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.ScopedRoleMembers -CIMInstanceName     MicrosoftGraphscopedrolemembership
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.ScopedRoleMembers -CIMInstanceName MicrosoftGraphscopedrolemembership
                 if ($complexTypeStringResult)
                 {
                     $Results.ScopedRoleMembers = $complexTypeStringResult            }
@@ -1157,6 +1155,7 @@ function Export-TargetResource
                     $isCIMArray=$true
                 }
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Members" -isCIMArray:$isCIMArray
+                $currentDSCBlock = $currentDSCBlock.Replace('}");', '});')
             }
             if ($Results.ScopedRoleMembers)
             {
