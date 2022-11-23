@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* IntuneDeviceConfigurationPolicyWindows10
+  * Fixed issue when creating this resource if property DefenderDetectedMalwareActions was not present, it'd still be created but with errors.
+    FIXES [#2581](https://github.com/microsoft/Microsoft365DSC/issues/2581)
 * AADUser
   * Fixed issue with license assignment
     FIXES [#2556](https://github.com/microsoft/Microsoft365DSC/issues/2556)
