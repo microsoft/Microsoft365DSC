@@ -90,11 +90,11 @@ function Get-TargetResource
         ResourceGenerator#>
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message 'Nothing with <FilterScript> {$<FilterScript>} was found'
+            Write-Verbose -Message "Nothing with <FilterScript> {$<FilterScript>} was found"
             return $nullResult
         }
 
-        Write-Verbose -Message 'Found something with <PrimaryKey> {$<PrimaryKey>}'
+        Write-Verbose -Message "Found something with <PrimaryKey> {$<PrimaryKey>}"
         $results = @{
             <#ResourceGenerator
             #region resource generator code
@@ -381,7 +381,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message 'Testing configuration of {$<PrimaryKey>}'
+    Write-Verbose -Message "Testing configuration of {$<PrimaryKey>}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()

@@ -520,11 +520,24 @@ function Compare-M365DSCConfigurations
             }
             else
             {
+                $filteredProperties = @(
+                    'ResourceName',
+                    'ResourceId',
+                    'Credential',
+                    'CertificatePath',
+                    'CertificatePassword',
+                    'TenantId',
+                    'ApplicationId',
+                    'CertificateThumbprint',
+                    'ApplicationSecret',
+                    'ManagedIdentity'
+                )
+
                 [System.Collections.Hashtable]$destinationResource = $destinationResource[0]
                 # The resource instance exists in both the source and the destination. Compare each property;
                 foreach ($propertyName in $sourceResource.Keys)
                 {
-                    if ($propertyName -notin @('ResourceName', 'ResourceId', 'Credential', 'CertificatePath', 'CertificatePassword', 'TenantId', 'ApplicationId', 'CertificateThumbprint', 'ApplicationSecret'))
+                    if ($propertyName -notin $filteredProperties)
                     {
                         # Needs to be a separate nested if statement otherwise the ReferenceObject an be null and it will error out;
                         if ($destinationResource.ContainsKey($propertyName) -eq $false -or (-not [System.String]::IsNullOrEmpty($propertyName) -and
@@ -578,7 +591,7 @@ function Compare-M365DSCConfigurations
                 # object. By scanning against the destination we will catch properties that are not null on the source but not null in destination;
                 foreach ($propertyName in $destinationResource.Keys)
                 {
-                    if ($propertyName -notin @('ResourceName', 'ResourceId', 'Credential', 'CertificatePath', 'CertificatePassword', 'TenantId', 'ApplicationId', 'CertificateThumbprint', 'ApplicationSecret'))
+                    if ($propertyName -notin $filteredProperties)
                     {
                         if (-not [System.String]::IsNullOrEmpty($propertyName) -and
                             -not $sourceResource.Contains($propertyName))

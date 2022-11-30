@@ -99,7 +99,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return @{}
+        return $null
     }
 }
 

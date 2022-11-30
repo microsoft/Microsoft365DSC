@@ -108,8 +108,6 @@ function Get-TargetResource
             }
             catch
             {
-                Write-Host $Global:M365DSCEmojiRedX
-
                 New-M365DSCLogEntry -Message 'Error retrieving data:' `
                     -Exception $_ `
                     -Source $($MyInvocation.MyCommand.Source) `
@@ -411,6 +409,7 @@ function Export-TargetResource
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
                     $j++
+                    Write-Host $Global:M365DSCEmojiGreenCheckmark
                 }
                 $i++
             }
