@@ -143,9 +143,9 @@ function Get-TargetResource
                     Enabled                       = $PolicyObject.Enabled
                     RestrictiveRetention          = $PolicyObject.RestrictiveRetention
                     TeamsChannelLocation          = @()
-                    TeamsChannelLocationException = $PolicyObject.TeamsChannelLocationException
+                    TeamsChannelLocationException = @()
                     TeamsChatLocation             = @()
-                    TeamsChatLocationException    = $PolicyObject.TeamsChatLocationException
+                    TeamsChatLocationException    = @()
                     Credential                    = $Credential
                 }
 
@@ -153,10 +153,17 @@ function Get-TargetResource
                 {
                     $result.TeamsChannelLocation = [array]$PolicyObject.TeamsChannelLocation.Name
                 }
-
                 if ($PolicyObject.TeamsChatLocation.Count -gt 0)
                 {
                     $result.TeamsChatLocation = [array]$PolicyObject.TeamsChatLocation.Name
+                }
+                if ($PolicyObject.TeamsChannelLocationException.Count -gt 0)
+                {
+                    $result.TeamsChannelLocationException = [array]$PolicyObject.TeamsChannelLocationException.Name
+                }
+                if ($PolicyObject.TeamsChatLocationException.Count -gt 0)
+                {
+                    $result.TeamsChatLocationException = $PolicyObject.TeamsChatLocationException.Name
                 }
             }
             else
@@ -168,17 +175,17 @@ function Get-TargetResource
                     DynamicScopeLocation         = @()
                     Enabled                      = $PolicyObject.Enabled
                     ExchangeLocation             = @()
-                    ExchangeLocationException    = [array]$PolicyObject.ExchangeLocationException
+                    ExchangeLocationException    = @()
                     ModernGroupLocation          = @()
-                    ModernGroupLocationException = [array]$PolicyObject.ModernGroupLocationException
+                    ModernGroupLocationException = @()
                     OneDriveLocation             = @()
-                    OneDriveLocationException    = [array]$PolicyObject.OneDriveLocationException
+                    OneDriveLocationException    = @()
                     PublicFolderLocation         = @()
                     RestrictiveRetention         = $PolicyObject.RestrictiveRetention
                     SharePointLocation           = @()
-                    SharePointLocationException  = $PolicyObject.SharePointLocationException
+                    SharePointLocationException  = @()
                     SkypeLocation                = @()
-                    SkypeLocationException       = $PolicyObject.SkypeLocationException
+                    SkypeLocationException       = @()
                     Credential                   = $Credential
                 }
 
@@ -209,6 +216,26 @@ function Get-TargetResource
                 if ($PolicyObject.SkypeLocation.Count -gt 0)
                 {
                     $result.SkypeLocation = [array]$PolicyObject.SkypeLocation.Name
+                }
+                if ($PolicyObject.ExchangeLocationException.Count -gt 0)
+                {
+                    $result.ExchangeLocationException = [array]$PolicyObject.ExchangeLocationException.Name
+                }
+                if ($PolicyObject.ModernGroupLocationException.Count -gt 0)
+                {
+                    $result.ModernGroupLocationException = [array]$PolicyObject.ModernGroupLocationException.Name
+                }
+                if ($PolicyObject.OneDriveLocationException.Count -gt 0)
+                {
+                    $result.OneDriveLocationException = [array]$PolicyObject.OneDriveLocationException.Name
+                }
+                if ($PolicyObject.SharePointLocationException.Count -gt 0)
+                {
+                    $result.SharePointLocationException = [array]$PolicyObject.SharePointLocationException.Name
+                }
+                if ($PolicyObject.SkypeLocationException.Count -gt 0)
+                {
+                    $result.SkypeLocationException = [array]$PolicyObject.SkypeLocationException.Name
                 }
             }
 
@@ -372,7 +399,6 @@ function Set-TargetResource
     $isTeamsBased = $false
     if ($null -eq $TeamsChannelLocation -and $null -eq $TeamsChatLocation)
     {
-        Write-Verbose -Message "Policy $Name is not a Teams Policy"
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove("Credential")
         $CreationParams.Remove("Ensure")
