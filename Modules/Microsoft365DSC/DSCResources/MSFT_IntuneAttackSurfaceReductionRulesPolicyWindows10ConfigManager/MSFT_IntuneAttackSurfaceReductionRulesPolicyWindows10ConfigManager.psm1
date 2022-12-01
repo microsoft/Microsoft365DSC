@@ -260,19 +260,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullResult
     }
 }
@@ -807,7 +800,8 @@ function Export-TargetResource
         $policyTemplateID = '5dd36540-eb22-4e7e-b19c-2a07772ba627_1'
         [array]$policies = Get-MgDeviceManagementConfigurationPolicy `
             -All:$true `
-            -Filter $Filter | Where-Object -FilterScript { $_.TemplateReference.TemplateId -eq $policyTemplateID }
+            -Filter $Filter | Where-Object -FilterScript { $_.TemplateReference.TemplateId -eq $policyTemplateID } `
+            -ErrorAction Stop
 
         if ($policies.Length -eq 0)
         {
@@ -885,19 +879,13 @@ function Export-TargetResource
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
 
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }
@@ -1029,7 +1017,9 @@ function Convert-M365DSCParamsToSettingInstance
                 $settingInstance.add('groupSettingCollectionValue', $groupSettingCollectionValues)
                 $results += $settingInstance
             }
-            Default {}
+            Default
+            {
+            }
         }
     }
     return $results
@@ -1390,32 +1380,28 @@ function Get-MgDeviceManagementConfigurationPolicySetting
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $null
     }
 
 
 }
+
 function Get-MgDeviceManagementConfigurationPolicyAssignments
 {
     [CmdletBinding()]
-    param (
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.String]
         $DeviceManagementConfigurationPolicyId
     )
+
     try
     {
         $configurationPolicyAssignments = @()
@@ -1452,29 +1438,22 @@ function Get-MgDeviceManagementConfigurationPolicyAssignments
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $null
     }
-
-
 }
+
 function Update-MgDeviceManagementConfigurationPolicyAssignments
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param (
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.String]
         $DeviceManagementConfigurationPolicyId,
@@ -1483,6 +1462,7 @@ function Update-MgDeviceManagementConfigurationPolicyAssignments
         [Array]
         $Targets
     )
+
     try
     {
         $configurationPolicyAssignments = @()
@@ -1517,32 +1497,28 @@ function Update-MgDeviceManagementConfigurationPolicyAssignments
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $null
     }
 }
+
 function Get-MgDeviceManagementConfigurationSettingDefinition
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param (
+    param
+    (
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity
     )
+
     try
     {
         $Uri = "https://graph.microsoft.com/beta/deviceManagement/ConfigurationSettings/$($Identity.tolower())"
@@ -1551,28 +1527,21 @@ function Get-MgDeviceManagementConfigurationSettingDefinition
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $null
     }
-
-
 }
+
 function Get-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
-    param(
+    param
+    (
         [Parameter()]
         $ComplexObject
     )
@@ -1622,7 +1591,8 @@ function Get-M365DSCDRGComplexTypeToString
 {
     [CmdletBinding()]
     #[OutputType([System.String])]
-    param(
+    param
+    (
         [Parameter()]
         $ComplexObject,
 
@@ -1636,6 +1606,7 @@ function Get-M365DSCDRGComplexTypeToString
         [switch]
         $isArray = $false
     )
+
     if ($null -eq $ComplexObject)
     {
         return $null
@@ -1713,11 +1684,13 @@ function Test-M365DSCComplexObjectHasValues
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-    param(
+    param
+    (
         [System.Collections.Hashtable]
         [Parameter()]
         $ComplexObject
     )
+
     if (-Not $ComplexObject)
     {
         return $false
@@ -1747,11 +1720,13 @@ function Test-M365DSCComplexObjectHasValues
     }
     return $hasValue
 }
-Function Get-M365DSCDRGSimpleObjectTypeToString
+
+function Get-M365DSCDRGSimpleObjectTypeToString
 {
     [CmdletBinding()]
     [OutputType([System.String])]
-    param(
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.String]
         $Key,
@@ -1862,11 +1837,13 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
     }
     return $returnValue
 }
+
 function Get-M365DSCAdditionalProperties
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param(
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.Collections.Hashtable]
         $Properties
@@ -1884,11 +1861,13 @@ function Get-M365DSCAdditionalProperties
     }
     return $results
 }
+
 function Compare-M365DSCComplexObject
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-    param(
+    param
+    (
         [Parameter()]
         $Source,
 
@@ -2000,7 +1979,6 @@ function Compare-M365DSCComplexObject
                     Write-Verbose -Message "Simple Object drift key: $key - Target $($differenceObject|Out-String)"
                     return $false
                 }
-
             }
         }
     }
@@ -2011,7 +1989,8 @@ function Compare-M365DSCComplexObject
 function Convert-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
-    param(
+    param
+    (
         [Parameter(Mandatory = 'true')]
         $ComplexObject
     )

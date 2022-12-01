@@ -5,7 +5,8 @@
 * SCRetentionCompliancePolicy
   * Fixed an issue with the Update logic in the Set-TargetResource
     FIXES [#2600](https://github.com/microsoft/Microsoft365DSC/issues/2600)
-
+* MISC
+  * Standardize and improved logging across all resources
 # 1.22.1123.1
 
 * IntuneDeviceConfigurationPolicyWindows10

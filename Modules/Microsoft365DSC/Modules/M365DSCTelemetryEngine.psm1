@@ -20,7 +20,7 @@ function Get-ApplicationInsightsTelemetryClient
 
         if ($null -eq $InstrumentationKey)
         {
-            $InstrumentationKey = "bc5aa204-0b1e-4499-a955-d6a639bdb4fa"
+            $InstrumentationKey = 'bc5aa204-0b1e-4499-a955-d6a639bdb4fa'
         }
         $TelClient = [Microsoft.ApplicationInsights.TelemetryClient]::new()
         $TelClient.InstrumentationKey = $InstrumentationKey
@@ -68,126 +68,126 @@ function Add-M365DSCTelemetryEvent
 
             if ($null -ne $ProjectName)
             {
-                $Data.Add("ProjectName", $ProjectName)
+                $Data.Add('ProjectName', $ProjectName)
             }
 
             if (-not [System.String]::IsNullOrEmpty($Data.Principal))
             {
                 if ($Data.Principal -like '*@*.*')
                 {
-                    $principalValue = $Data.Principal.Split("@")[1]
-                    $Data.Add("Tenant", $principalValue)
+                    $principalValue = $Data.Principal.Split('@')[1]
+                    $Data.Add('Tenant', $principalValue)
                 }
             }
             elseif (-not [System.String]::IsNullOrEmpty($Data.TenantId))
             {
                 $principalValue = $Data.TenantId
-                $Data.Add("Tenant", $principalValue)
+                $Data.Add('Tenant', $principalValue)
             }
 
-            $Data.Remove("TenandId") | Out-Null
-            $Data.Remove("Principal") | Out-Null
+            $Data.Remove('TenandId') | Out-Null
+            $Data.Remove('Principal') | Out-Null
 
             # Capture PowerShell Version Info
-            $Data.Add("PSMainVersion", $PSVersionTable.PSVersion.Major.ToString() + "." + $PSVersionTable.PSVersion.Minor.ToString())
-            $Data.Add("PSVersion", $PSVersionTable.PSVersion.ToString())
-            $Data.Add("PSEdition", $PSVersionTable.PSEdition.ToString())
+            $Data.Add('PSMainVersion', $PSVersionTable.PSVersion.Major.ToString() + '.' + $PSVersionTable.PSVersion.Minor.ToString())
+            $Data.Add('PSVersion', $PSVersionTable.PSVersion.ToString())
+            $Data.Add('PSEdition', $PSVersionTable.PSEdition.ToString())
 
             if ($null -ne $PSVersionTable.BuildVersion)
             {
-                $Data.Add("PSBuildVersion", $PSVersionTable.BuildVersion.ToString())
+                $Data.Add('PSBuildVersion', $PSVersionTable.BuildVersion.ToString())
             }
 
             if ($null -ne $PSVersionTable.CLRVersion)
             {
-                $Data.Add("PSCLRVersion", $PSVersionTable.CLRVersion.ToString())
+                $Data.Add('PSCLRVersion', $PSVersionTable.CLRVersion.ToString())
             }
 
             # Capture Console/Host Information
-            if ($host.Name -eq "ConsoleHost" -and $null -eq $env:WT_SESSION)
+            if ($host.Name -eq 'ConsoleHost' -and $null -eq $env:WT_SESSION)
             {
-                $Data.Add("PowerShellAgent", "Console")
+                $Data.Add('PowerShellAgent', 'Console')
             }
-            elseif ($host.Name -eq "Windows PowerShell ISE Host")
+            elseif ($host.Name -eq 'Windows PowerShell ISE Host')
             {
-                $Data.Add("PowerShellAgent", "ISE")
+                $Data.Add('PowerShellAgent', 'ISE')
             }
-            elseif ($host.Name -eq "ConsoleHost" -and $null -ne $env:WT_SESSION)
+            elseif ($host.Name -eq 'ConsoleHost' -and $null -ne $env:WT_SESSION)
             {
-                $Data.Add("PowerShellAgent", "Windows Terminal")
+                $Data.Add('PowerShellAgent', 'Windows Terminal')
             }
-            elseif ($host.Name -eq "ConsoleHost" -and $null -eq $env:WT_SESSION -and `
-                    $null -ne $env:BUILD_BUILDID -and $env:SYSTEM -eq "build")
+            elseif ($host.Name -eq 'ConsoleHost' -and $null -eq $env:WT_SESSION -and `
+                    $null -ne $env:BUILD_BUILDID -and $env:SYSTEM -eq 'build')
             {
-                $Data.Add("PowerShellAgent", "Azure DevOPS")
-                $Data.Add("AzureDevOPSPipelineType", "Build")
-                $Data.Add("AzureDevOPSAgent", $env:POWERSHELL_DISTRIBUTION_CHANNEL)
+                $Data.Add('PowerShellAgent', 'Azure DevOPS')
+                $Data.Add('AzureDevOPSPipelineType', 'Build')
+                $Data.Add('AzureDevOPSAgent', $env:POWERSHELL_DISTRIBUTION_CHANNEL)
             }
-            elseif ($host.Name -eq "ConsoleHost" -and $null -eq $env:WT_SESSION -and `
-                    $null -ne $env:BUILD_BUILDID -and $env:SYSTEM -eq "release")
+            elseif ($host.Name -eq 'ConsoleHost' -and $null -eq $env:WT_SESSION -and `
+                    $null -ne $env:BUILD_BUILDID -and $env:SYSTEM -eq 'release')
             {
-                $Data.Add("PowerShellAgent", "Azure DevOPS")
-                $Data.Add("AzureDevOPSPipelineType", "Release")
-                $Data.Add("AzureDevOPSAgent", $env:POWERSHELL_DISTRIBUTION_CHANNEL)
+                $Data.Add('PowerShellAgent', 'Azure DevOPS')
+                $Data.Add('AzureDevOPSPipelineType', 'Release')
+                $Data.Add('AzureDevOPSAgent', $env:POWERSHELL_DISTRIBUTION_CHANNEL)
             }
-            elseif ($host.Name -eq "Default Host" -and `
+            elseif ($host.Name -eq 'Default Host' -and `
                     $null -ne $env:APPSETTING_FUNCTIONS_EXTENSION_VERSION)
             {
-                $Data.Add("PowerShellAgent", "Azure Function")
-                $Data.Add("AzureFunctionWorkerVersion", $env:FUNCTIONS_WORKER_RUNTIME_VERSION)
+                $Data.Add('PowerShellAgent', 'Azure Function')
+                $Data.Add('AzureFunctionWorkerVersion', $env:FUNCTIONS_WORKER_RUNTIME_VERSION)
             }
-            elseif ($host.Name -eq "CloudShell")
+            elseif ($host.Name -eq 'CloudShell')
             {
-                $Data.Add("PowerShellAgent", "Cloud Shell")
+                $Data.Add('PowerShellAgent', 'Cloud Shell')
             }
 
             if ($null -ne $Data.Resource)
             {
-                if ($Data.Resource.StartsWith("MSFT_AAD") -or $Data.Resource.StartsWith("AAD"))
+                if ($Data.Resource.StartsWith('MSFT_AAD') -or $Data.Resource.StartsWith('AAD'))
                 {
-                    $Data.Add("Workload", "Azure Active Directory")
+                    $Data.Add('Workload', 'Azure Active Directory')
                 }
-                elseif ($Data.Resource.StartsWith("MSFT_EXO") -or $Data.Resource.StartsWith("EXO"))
+                elseif ($Data.Resource.StartsWith('MSFT_EXO') -or $Data.Resource.StartsWith('EXO'))
                 {
-                    $Data.Add("Workload", "Exchange Online")
+                    $Data.Add('Workload', 'Exchange Online')
                 }
-                elseif ($Data.Resource.StartsWith("MSFT_Intune") -or $Data.Resource.StartsWith("Intune"))
+                elseif ($Data.Resource.StartsWith('MSFT_Intune') -or $Data.Resource.StartsWith('Intune'))
                 {
-                    $Data.Add("Workload", "Intune")
+                    $Data.Add('Workload', 'Intune')
                 }
-                elseif ($Data.Resource.StartsWith("MSFT_O365") -or $Data.Resource.StartsWith("O365"))
+                elseif ($Data.Resource.StartsWith('MSFT_O365') -or $Data.Resource.StartsWith('O365'))
                 {
-                    $Data.Add("Workload", "Office 365 Admin")
+                    $Data.Add('Workload', 'Office 365 Admin')
                 }
-                elseif ($Data.Resource.StartsWith("MSFT_OD") -or $Data.Resource.StartsWith("OD"))
+                elseif ($Data.Resource.StartsWith('MSFT_OD') -or $Data.Resource.StartsWith('OD'))
                 {
-                    $Data.Add("Workload", "OneDrive for Business")
+                    $Data.Add('Workload', 'OneDrive for Business')
                 }
-                elseif ($Data.Resource.StartsWith("MSFT_Planner") -or $Data.Resource.StartsWith("Planner"))
+                elseif ($Data.Resource.StartsWith('MSFT_Planner') -or $Data.Resource.StartsWith('Planner'))
                 {
-                    $Data.Add("Workload", "Planner")
+                    $Data.Add('Workload', 'Planner')
                 }
-                elseif ($Data.Resource.StartsWith("MSFT_PP") -or $Data.Resource.StartsWith("PP"))
+                elseif ($Data.Resource.StartsWith('MSFT_PP') -or $Data.Resource.StartsWith('PP'))
                 {
-                    $Data.Add("Workload", "Power Platform")
+                    $Data.Add('Workload', 'Power Platform')
                 }
-                elseif ($Data.Resource.StartsWith("MSFT_SC") -or $Data.Resource.StartsWith("SC"))
+                elseif ($Data.Resource.StartsWith('MSFT_SC') -or $Data.Resource.StartsWith('SC'))
                 {
-                    $Data.Add("Workload", "Security and Compliance Center")
+                    $Data.Add('Workload', 'Security and Compliance Center')
                 }
-                elseif ($Data.Resource.StartsWith("MSFT_SPO") -or $Data.Resource.StartsWith("SPO"))
+                elseif ($Data.Resource.StartsWith('MSFT_SPO') -or $Data.Resource.StartsWith('SPO'))
                 {
-                    $Data.Add("Workload", "SharePoint Online")
+                    $Data.Add('Workload', 'SharePoint Online')
                 }
-                elseif ($Data.Resource.StartsWith("MSFT_Teams") -or $Data.Resource.StartsWith("Teams"))
+                elseif ($Data.Resource.StartsWith('MSFT_Teams') -or $Data.Resource.StartsWith('Teams'))
                 {
-                    $Data.Add("Workload", "Teams")
+                    $Data.Add('Workload', 'Teams')
                 }
-                $Data.Resource = $Data.Resource.Replace("MSFT_", "")
+                $Data.Resource = $Data.Resource.Replace('MSFT_', '')
             }
 
             [array]$version = (Get-Module 'Microsoft365DSC').Version | Sort-Object -Descending
-            $Data.Add("M365DSCVersion", $version[0].ToString())
+            $Data.Add('M365DSCVersion', $version[0].ToString())
 
             # Get Dependencies loaded versions
             try
@@ -196,12 +196,12 @@ function Add-M365DSCTelemetryEvent
                 $manifest = Import-PowerShellDataFile "$currentPath/Microsoft365DSC.psd1"
                 $dependencies = $manifest.RequiredModules
 
-                $dependenciesContent = ""
+                $dependenciesContent = ''
                 foreach ($dependency in $dependencies)
                 {
                     $dependenciesContent += Get-Module $dependency.ModuleName | Out-String
                 }
-                $Data.Add("DependenciesVersion", $dependenciesContent)
+                $Data.Add('DependenciesVersion', $dependenciesContent)
             }
             catch
             {
@@ -333,19 +333,19 @@ function Format-M365DSCTelemetryParameters
 
     try
     {
-        $data.Add("Resource", $ResourceName)
-        $data.Add("Method", $CommandName)
+        $data.Add('Resource', $ResourceName)
+        $data.Add('Method', $CommandName)
         if (-not $Parameters.ApplicationId)
         {
-            $data.Add("Principal", $Parameters.Credential.UserName)
-            $data.Add("TenantId", $Parameters.Credential.UserName.Split('@')[1])
+            $data.Add('Principal', $Parameters.Credential.UserName)
+            $data.Add('TenantId', $Parameters.Credential.UserName.Split('@')[1])
         }
         else
         {
-            $data.Add("Principal", $Parameters.ApplicationId)
-            $data.Add("TenantId", $Parameters.TenantId)
+            $data.Add('Principal', $Parameters.ApplicationId)
+            $data.Add('TenantId', $Parameters.TenantId)
         }
-        $data.Add("ConnectionMode", (Get-M365DSCAuthenticationMode -Parameters $Parameters))
+        $data.Add('ConnectionMode', (Get-M365DSCAuthenticationMode -Parameters $Parameters))
     }
     catch
     {

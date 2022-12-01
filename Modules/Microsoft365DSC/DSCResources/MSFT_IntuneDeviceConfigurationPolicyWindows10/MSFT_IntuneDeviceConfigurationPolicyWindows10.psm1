@@ -920,250 +920,243 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Found Device Configuration Policy {$DisplayName}"
-        $results= @{
-            Description                                             = $policy.Description
-            DisplayName                                             = $policy.DisplayName
-            EnterpriseCloudPrintDiscoveryEndPoint                   = $policy.AdditionalProperties.enterpriseCloudPrintDiscoveryEndPoint
-            EnterpriseCloudPrintOAuthAuthority                      = $policy.AdditionalProperties.enterpriseCloudPrintOAuthAuthority
-            EnterpriseCloudPrintOAuthClientIdentifier               = $policy.AdditionalProperties.enterpriseCloudPrintOAuthClientIdentifier
-            EnterpriseCloudPrintResourceIdentifier                  = $policy.AdditionalProperties.enterpriseCloudPrintResourceIdentifier
-            EnterpriseCloudPrintDiscoveryMaxLimit                   = $policy.AdditionalProperties.enterpriseCloudPrintDiscoveryMaxLimit
-            EnterpriseCloudPrintMopriaDiscoveryResourceIdentifier   = $policy.AdditionalProperties.enterpriseCloudPrintMopriaDiscoveryResourceIdentifier
-            SearchBlockDiacritics                                   = $policy.AdditionalProperties.searchBlockDiacritics
-            SearchDisableAutoLanguageDetection                      = $policy.AdditionalProperties.searchDisableAutoLanguageDetection
-            SearchDisableIndexingEncryptedItems                     = $policy.AdditionalProperties.searchDisableIndexingEncryptedItems
-            SearchEnableRemoteQueries                               = $policy.AdditionalProperties.searchEnableRemoteQueries
-            SearchDisableIndexerBackoff                             = $policy.AdditionalProperties.searchDisableIndexerBackoff
-            SearchDisableIndexingRemovableDrive                     = $policy.AdditionalProperties.searchDisableIndexingRemovableDrive
-            SearchEnableAutomaticIndexSizeManangement               = $policy.AdditionalProperties.searchEnableAutomaticIndexSizeManangement
-            DiagnosticsDataSubmissionMode                           = $policy.AdditionalProperties.diagnosticsDataSubmissionMode
-            OneDriveDisableFileSync                                 = $policy.AdditionalProperties.oneDriveDisableFileSync
-            SmartScreenEnableAppInstallControl                      = $policy.AdditionalProperties.smartScreenEnableAppInstallControl
-            PersonalizationDesktopImageUrl                          = $policy.AdditionalProperties.personalizationDesktopImageUrl
-            PersonalizationLockScreenImageUrl                       = $policy.AdditionalProperties.personalizationLockScreenImageUrl
-            BluetoothAllowedServices                                = $policy.AdditionalProperties.bluetoothAllowedServices
-            BluetoothBlockAdvertising                               = $policy.AdditionalProperties.bluetoothBlockAdvertising
-            BluetoothBlockDiscoverableMode                          = $policy.AdditionalProperties.bluetoothBlockDiscoverableMode
-            BluetoothBlockPrePairing                                = $policy.AdditionalProperties.bluetoothBlockPrePairing
-            EdgeBlockAutofill                                       = $policy.AdditionalProperties.edgeBlockAutofill
-            EdgeBlocked                                             = $policy.AdditionalProperties.edgeBlocked
-            EdgeCookiePolicy                                        = $policy.AdditionalProperties.edgeCookiePolicy
-            EdgeBlockDeveloperTools                                 = $policy.AdditionalProperties.edgeBlockDeveloperTools
-            EdgeBlockSendingDoNotTrackHeader                        = $policy.AdditionalProperties.edgeBlockSendingDoNotTrackHeader
-            EdgeBlockExtensions                                     = $policy.AdditionalProperties.edgeBlockExtensions
-            EdgeBlockInPrivateBrowsing                              = $policy.AdditionalProperties.edgeBlockInPrivateBrowsing
-            EdgeBlockJavaScript                                     = $policy.AdditionalProperties.edgeBlockJavaScript
-            EdgeBlockPasswordManager                                = $policy.AdditionalProperties.edgeBlockPasswordManager
-            EdgeBlockAddressBarDropdown                             = $policy.AdditionalProperties.edgeBlockAddressBarDropdown
-            EdgeBlockCompatibilityList                              = $policy.AdditionalProperties.edgeBlockCompatibilityList
-            EdgeClearBrowsingDataOnExit                             = $policy.AdditionalProperties.edgeClearBrowsingDataOnExit
-            EdgeAllowStartPagesModification                         = $policy.AdditionalProperties.edgeAllowStartPagesModification
-            EdgeDisableFirstRunPage                                 = $policy.AdditionalProperties.edgeDisableFirstRunPage
-            EdgeBlockLiveTileDataCollection                         = $policy.AdditionalProperties.edgeBlockLiveTileDataCollection
-            EdgeSyncFavoritesWithInternetExplorer                   = $policy.AdditionalProperties.edgeSyncFavoritesWithInternetExplorer
-            CellularBlockDataWhenRoaming                            = $policy.AdditionalProperties.cellularBlockDataWhenRoaming
-            CellularBlockVpn                                        = $policy.AdditionalProperties.cellularBlockVpn
-            CellularBlockVpnWhenRoaming                             = $policy.AdditionalProperties.cellularBlockVpnWhenRoaming
-            DefenderRequireRealTimeMonitoring                       = $policy.AdditionalProperties.defenderRequireRealTimeMonitoring
-            DefenderRequireBehaviorMonitoring                       = $policy.AdditionalProperties.defenderRequireBehaviorMonitoring
-            DefenderRequireNetworkInspectionSystem                  = $policy.AdditionalProperties.defenderRequireNetworkInspectionSystem
-            DefenderScanDownloads                                   = $policy.AdditionalProperties.defenderScanDownloads
-            DefenderScanScriptsLoadedInInternetExplorer             = $policy.AdditionalProperties.defenderScanScriptsLoadedInInternetExplorer
-            DefenderBlockEndUserAccess                              = $policy.AdditionalProperties.defenderBlockEndUserAccess
-            DefenderSignatureUpdateIntervalInHours                  = $policy.AdditionalProperties.defenderSignatureUpdateIntervalInHours
-            DefenderMonitorFileActivity                             = $policy.AdditionalProperties.defenderMonitorFileActivity
-            DefenderDaysBeforeDeletingQuarantinedMalware            = $policy.AdditionalProperties.defenderDaysBeforeDeletingQuarantinedMalware
-            DefenderScanMaxCpu                                      = $policy.AdditionalProperties.defenderScanMaxCpu
-            DefenderScanArchiveFiles                                = $policy.AdditionalProperties.defenderScanArchiveFiles
-            DefenderScanIncomingMail                                = $policy.AdditionalProperties.defenderScanIncomingMail
-            DefenderScanRemovableDrivesDuringFullScan               = $policy.AdditionalProperties.defenderScanRemovableDrivesDuringFullScan
-            DefenderScanMappedNetworkDrivesDuringFullScan           = $policy.AdditionalProperties.defenderScanMappedNetworkDrivesDuringFullScan
-            DefenderScanNetworkFiles                                = $policy.AdditionalProperties.defenderScanNetworkFiles
-            DefenderRequireCloudProtection                          = $policy.AdditionalProperties.defenderRequireCloudProtection
-            DefenderCloudBlockLevel                                 = $policy.AdditionalProperties.defenderCloudBlockLevel
-            DefenderPromptForSampleSubmission                       = $policy.AdditionalProperties.defenderPromptForSampleSubmission
-            DefenderScheduledQuickScanTime                          = $policy.AdditionalProperties.defenderScheduledQuickScanTime
-            DefenderScanType                                        = $policy.AdditionalProperties.defenderScanType
-            DefenderSystemScanSchedule                              = $policy.AdditionalProperties.defenderSystemScanSchedule
-            DefenderScheduledScanTime                               = $policy.AdditionalProperties.defenderScheduledScanTime
-            DefenderDetectedMalwareActions                          = $DefenderDetectedMalwareActionsValues
-            DefenderFileExtensionsToExclude                         = $policy.AdditionalProperties.defenderFileExtensionsToExclude
-            DefenderFilesAndFoldersToExclude                        = $policy.AdditionalProperties.defenderFilesAndFoldersToExclude
-            DefenderProcessesToExclude                              = $policy.AdditionalProperties.defenderProcessesToExclude
-            LockScreenAllowTimeoutConfiguration                     = $policy.AdditionalProperties.lockScreenAllowTimeoutConfiguration
-            LockScreenBlockActionCenterNotifications                = $policy.AdditionalProperties.lockScreenBlockActionCenterNotifications
-            LockScreenBlockCortana                                  = $policy.AdditionalProperties.lockScreenBlockCortana
-            LockScreenBlockToastNotifications                       = $policy.AdditionalProperties.lockScreenBlockToastNotifications
-            LockScreenTimeoutInSeconds                              = $policy.AdditionalProperties.lockScreenTimeoutInSeconds
-            PasswordBlockSimple                                     = $policy.AdditionalProperties.passwordBlockSimple
-            PasswordExpirationDays                                  = $policy.AdditionalProperties.passwordExpirationDays
-            PasswordMinimumLength                                   = $policy.AdditionalProperties.passwordMinimumLength
-            PasswordMinutesOfInactivityBeforeScreenTimeout          = $policy.AdditionalProperties.passwordMinutesOfInactivityBeforeScreenTimeout
-            PasswordMinimumCharacterSetCount                        = $policy.AdditionalProperties.passwordMinimumCharacterSetCount
-            PasswordPreviousPasswordBlockCount                      = $policy.AdditionalProperties.passwordPreviousPasswordBlockCount
-            PasswordRequired                                        = $policy.AdditionalProperties.passwordRequired
-            PasswordRequireWhenResumeFromIdleState                  = $policy.AdditionalProperties.passwordRequireWhenResumeFromIdleState
-            PasswordRequiredType                                    = $policy.AdditionalProperties.passwordRequiredType
-            PasswordSignInFailureCountBeforeFactoryReset            = $policy.AdditionalProperties.passwordSignInFailureCountBeforeFactoryReset
-            PrivacyAdvertisingId                                    = $policy.AdditionalProperties.privacyAdvertisingId
-            PrivacyAutoAcceptPairingAndConsentPrompts               = $policy.AdditionalProperties.privacyAutoAcceptPairingAndConsentPrompts
-            PrivacyBlockInputPersonalization                        = $policy.AdditionalProperties.privacyBlockInputPersonalization
-            StartBlockUnpinningAppsFromTaskbar                      = $policy.AdditionalProperties.startBlockUnpinningAppsFromTaskbar
-            StartMenuAppListVisibility                              = $policy.AdditionalProperties.startMenuAppListVisibility
-            StartMenuHideChangeAccountSettings                      = $policy.AdditionalProperties.startMenuHideChangeAccountSettings
-            StartMenuHideFrequentlyUsedApps                         = $policy.AdditionalProperties.startMenuHideFrequentlyUsedApps
-            StartMenuHideHibernate                                  = $policy.AdditionalProperties.startMenuHideHibernate
-            StartMenuHideLock                                       = $policy.AdditionalProperties.startMenuHideLock
-            StartMenuHidePowerButton                                = $policy.AdditionalProperties.startMenuHidePowerButton
-            StartMenuHideRecentJumpLists                            = $policy.AdditionalProperties.startMenuHideRecentJumpLists
-            StartMenuHideRecentlyAddedApps                          = $policy.AdditionalProperties.startMenuHideRecentlyAddedApps
-            StartMenuHideRestartOptions                             = $policy.AdditionalProperties.startMenuHideRestartOptions
-            StartMenuHideShutDown                                   = $policy.AdditionalProperties.startMenuHideShutDown
-            StartMenuHideSignOut                                    = $policy.AdditionalProperties.startMenuHideSignOut
-            StartMenuHideSleep                                      = $policy.AdditionalProperties.startMenuHideSleep
-            StartMenuHideSwitchAccount                              = $policy.AdditionalProperties.startMenuHideSwitchAccount
-            StartMenuHideUserTile                                   = $policy.AdditionalProperties.startMenuHideUserTile
-            StartMenuLayoutEdgeAssetsXml                            = $policy.AdditionalProperties.startMenuLayoutEdgeAssetsXml
-            StartMenuLayoutXml                                      = $policy.AdditionalProperties.startMenuLayoutXml
-            StartMenuMode                                           = $policy.AdditionalProperties.startMenuMode
-            StartMenuPinnedFolderDocuments                          = $policy.AdditionalProperties.startMenuPinnedFolderDocuments
-            StartMenuPinnedFolderDownloads                          = $policy.AdditionalProperties.startMenuPinnedFolderDownloads
-            StartMenuPinnedFolderFileExplorer                       = $policy.AdditionalProperties.startMenuPinnedFolderFileExplorer
-            StartMenuPinnedFolderHomeGroup                          = $policy.AdditionalProperties.startMenuPinnedFolderHomeGroup
-            StartMenuPinnedFolderMusic                              = $policy.AdditionalProperties.startMenuPinnedFolderMusic
-            StartMenuPinnedFolderNetwork                            = $policy.AdditionalProperties.startMenuPinnedFolderNetwork
-            StartMenuPinnedFolderPersonalFolder                     = $policy.AdditionalProperties.startMenuPinnedFolderPersonalFolder
-            StartMenuPinnedFolderPictures                           = $policy.AdditionalProperties.startMenuPinnedFolderPictures
-            StartMenuPinnedFolderSettings                           = $policy.AdditionalProperties.startMenuPinnedFolderSettings
-            StartMenuPinnedFolderVideos                             = $policy.AdditionalProperties.startMenuPinnedFolderVideos
-            SettingsBlockSettingsApp                                = $policy.AdditionalProperties.settingsBlockSettingsApp
-            SettingsBlockSystemPage                                 = $policy.AdditionalProperties.settingsBlockSystemPage
-            SettingsBlockDevicesPage                                = $policy.AdditionalProperties.settingsBlockDevicesPage
-            SettingsBlockNetworkInternetPage                        = $policy.AdditionalProperties.settingsBlockNetworkInternetPage
-            SettingsBlockPersonalizationPage                        = $policy.AdditionalProperties.settingsBlockPersonalizationPage
-            SettingsBlockAccountsPage                               = $policy.AdditionalProperties.settingsBlockAccountsPage
-            SettingsBlockTimeLanguagePage                           = $policy.AdditionalProperties.settingsBlockTimeLanguagePage
-            SettingsBlockEaseOfAccessPage                           = $policy.AdditionalProperties.settingsBlockEaseOfAccessPage
-            SettingsBlockPrivacyPage                                = $policy.AdditionalProperties.settingsBlockPrivacyPage
-            SettingsBlockUpdateSecurityPage                         = $policy.AdditionalProperties.settingsBlockUpdateSecurityPage
-            SettingsBlockAppsPage                                   = $policy.AdditionalProperties.settingsBlockAppsPage
-            SettingsBlockGamingPage                                 = $policy.AdditionalProperties.settingsBlockGamingPage
-            WindowsSpotlightBlockConsumerSpecificFeatures           = $policy.AdditionalProperties.windowsSpotlightBlockConsumerSpecificFeatures
-            WindowsSpotlightBlocked                                 = $policy.AdditionalProperties.windowsSpotlightBlocked
-            WindowsSpotlightBlockOnActionCenter                     = $policy.AdditionalProperties.windowsSpotlightBlockOnActionCenter
-            WindowsSpotlightBlockTailoredExperiences                = $policy.AdditionalProperties.windowsSpotlightBlockTailoredExperiences
-            WindowsSpotlightBlockThirdPartyNotifications            = $policy.AdditionalProperties.windowsSpotlightBlockThirdPartyNotifications
-            WindowsSpotlightBlockWelcomeExperience                  = $policy.AdditionalProperties.windowsSpotlightBlockWelcomeExperience
-            WindowsSpotlightBlockWindowsTips                        = $policy.AdditionalProperties.windowsSpotlightBlockWindowsTips
-            WindowsSpotlightConfigureOnLockScreen                   = $policy.AdditionalProperties.windowsSpotlightConfigureOnLockScreen
-            NetworkProxyApplySettingsDeviceWide                     = $policy.AdditionalProperties.networkProxyApplySettingsDeviceWide
-            NetworkProxyDisableAutoDetect                           = $policy.AdditionalProperties.networkProxyDisableAutoDetect
-            NetworkProxyAutomaticConfigurationUrl                   = $policy.AdditionalProperties.networkProxyAutomaticConfigurationUrl
-            NetworkProxyServer                                      = $policy.AdditionalProperties.networkProxyServer
-            AccountsBlockAddingNonMicrosoftAccountEmail             = $policy.AdditionalProperties.accountsBlockAddingNonMicrosoftAccountEmail
-            AntiTheftModeBlocked                                    = $policy.AdditionalProperties.antiTheftModeBlocked
-            BluetoothBlocked                                        = $policy.AdditionalProperties.bluetoothBlocked
-            CameraBlocked                                           = $policy.AdditionalProperties.cameraBlocked
-            ConnectedDevicesServiceBlocked                          = $policy.AdditionalProperties.connectedDevicesServiceBlocked
-            CertificatesBlockManualRootCertificateInstallation      = $policy.AdditionalProperties.certificatesBlockManualRootCertificateInstallation
-            CopyPasteBlocked                                        = $policy.AdditionalProperties.copyPasteBlocked
-            CortanaBlocked                                          = $policy.AdditionalProperties.cortanaBlocked
-            DeviceManagementBlockFactoryResetOnMobile               = $policy.AdditionalProperties.deviceManagementBlockFactoryResetOnMobile
-            DeviceManagementBlockManualUnenroll                     = $policy.AdditionalProperties.deviceManagementBlockManualUnenroll
-            SafeSearchFilter                                        = $policy.AdditionalProperties.safeSearchFilter
-            EdgeBlockPopups                                         = $policy.AdditionalProperties.edgeBlockPopups
-            EdgeBlockSearchSuggestions                              = $policy.AdditionalProperties.edgeBlockSearchSuggestions
-            EdgeBlockSendingIntranetTrafficToInternetExplorer       = $policy.AdditionalProperties.edgeBlockSendingIntranetTrafficToInternetExplorer
-            EdgeSendIntranetTrafficToInternetExplorer               = $policy.AdditionalProperties.edgeSendIntranetTrafficToInternetExplorer
-            EdgeRequireSmartScreen                                  = $policy.AdditionalProperties.edgeRequireSmartScreen
-            EdgeEnterpriseModeSiteListLocation                      = $policy.AdditionalProperties.edgeEnterpriseModeSiteListLocation
-            EdgeFirstRunUrl                                         = $policy.AdditionalProperties.edgeFirstRunUrl
-            EdgeSearchEngine                                        = $policy.AdditionalProperties.edgeSearchEngine.edgeSearchEngineType
-            EdgeHomepageUrls                                        = $policy.AdditionalProperties.edgeHomepageUrls
-            EdgeBlockAccessToAboutFlags                             = $policy.AdditionalProperties.edgeBlockAccessToAboutFlags
-            SmartScreenBlockPromptOverride                          = $policy.AdditionalProperties.smartScreenBlockPromptOverride
-            SmartScreenBlockPromptOverrideForFiles                  = $policy.AdditionalProperties.smartScreenBlockPromptOverrideForFiles
-            WebRtcBlockLocalhostIpAddress                           = $policy.AdditionalProperties.webRtcBlockLocalhostIpAddress
-            InternetSharingBlocked                                  = $policy.AdditionalProperties.internetSharingBlocked
-            SettingsBlockAddProvisioningPackage                     = $policy.AdditionalProperties.settingsBlockAddProvisioningPackage
-            SettingsBlockRemoveProvisioningPackage                  = $policy.AdditionalProperties.settingsBlockRemoveProvisioningPackage
-            SettingsBlockChangeSystemTime                           = $policy.AdditionalProperties.settingsBlockChangeSystemTime
-            SettingsBlockEditDeviceName                             = $policy.AdditionalProperties.settingsBlockEditDeviceName
-            SettingsBlockChangeRegion                               = $policy.AdditionalProperties.settingsBlockChangeRegion
-            SettingsBlockChangeLanguage                             = $policy.AdditionalProperties.settingsBlockChangeLanguage
-            SettingsBlockChangePowerSleep                           = $policy.AdditionalProperties.settingsBlockChangePowerSleep
-            LocationServicesBlocked                                 = $policy.AdditionalProperties.locationServicesBlocked
-            MicrosoftAccountBlocked                                 = $policy.AdditionalProperties.microsoftAccountBlocked
-            MicrosoftAccountBlockSettingsSync                       = $policy.AdditionalProperties.microsoftAccountBlockSettingsSync
-            NfcBlocked                                              = $policy.AdditionalProperties.nfcBlocked
-            ResetProtectionModeBlocked                              = $policy.AdditionalProperties.resetProtectionModeBlocked
-            ScreenCaptureBlocked                                    = $policy.AdditionalProperties.screenCaptureBlocked
-            StorageBlockRemovableStorage                            = $policy.AdditionalProperties.storageBlockRemovableStorage
-            StorageRequireMobileDeviceEncryption                    = $policy.AdditionalProperties.storageRequireMobileDeviceEncryption
-            UsbBlocked                                              = $policy.AdditionalProperties.usbBlocked
-            VoiceRecordingBlocked                                   = $policy.AdditionalProperties.voiceRecordingBlocked
-            WiFiBlockAutomaticConnectHotspots                       = $policy.AdditionalProperties.wiFiBlockAutomaticConnectHotspots
-            WiFiBlocked                                             = $policy.AdditionalProperties.wiFiBlocked
-            WiFiBlockManualConfiguration                            = $policy.AdditionalProperties.wiFiBlockManualConfiguration
-            WiFiScanInterval                                        = $policy.AdditionalProperties.wiFiScanInterval
-            WirelessDisplayBlockProjectionToThisDevice              = $policy.AdditionalProperties.wirelessDisplayBlockProjectionToThisDevice
-            WirelessDisplayBlockUserInputFromReceiver               = $policy.AdditionalProperties.wirelessDisplayBlockUserInputFromReceiver
-            WirelessDisplayRequirePinForPairing                     = $policy.AdditionalProperties.wirelessDisplayRequirePinForPairing
-            WindowsStoreBlocked                                     = $policy.AdditionalProperties.windowsStoreBlocked
-            AppsAllowTrustedAppsSideloading                         = $policy.AdditionalProperties.appsAllowTrustedAppsSideloading
-            WindowsStoreBlockAutoUpdate                             = $policy.AdditionalProperties.windowsStoreBlockAutoUpdate
-            DeveloperUnlockSetting                                  = $policy.AdditionalProperties.developerUnlockSetting
-            SharedUserAppDataAllowed                                = $policy.AdditionalProperties.sharedUserAppDataAllowed
-            AppsBlockWindowsStoreOriginatedApps                     = $policy.AdditionalProperties.appsBlockWindowsStoreOriginatedApps
-            WindowsStoreEnablePrivateStoreOnly                      = $policy.AdditionalProperties.windowsStoreEnablePrivateStoreOnly
-            StorageRestrictAppDataToSystemVolume                    = $policy.AdditionalProperties.storageRestrictAppDataToSystemVolume
-            StorageRestrictAppInstallToSystemVolume                 = $policy.AdditionalProperties.storageRestrictAppInstallToSystemVolume
-            GameDvrBlocked                                          = $policy.AdditionalProperties.gameDvrBlocked
-            ExperienceBlockDeviceDiscovery                          = $policy.AdditionalProperties.experienceBlockDeviceDiscovery
-            ExperienceBlockErrorDialogWhenNoSIM                     = $policy.AdditionalProperties.experienceBlockErrorDialogWhenNoSIM
-            ExperienceBlockTaskSwitcher                             = $policy.AdditionalProperties.experienceBlockTaskSwitcher
-            LogonBlockFastUserSwitching                             = $policy.AdditionalProperties.logonBlockFastUserSwitching
-            TenantLockdownRequireNetworkDuringOutOfBoxExperience    = $policy.AdditionalProperties.tenantLockdownRequireNetworkDuringOutOfBoxExperience
-            Ensure                                                  = "Present"
-            Credential                                      = $Credential
-            ApplicationId                                           = $ApplicationId
-            TenantId                                                = $TenantId
-            ApplicationSecret                                       = $ApplicationSecret
-            CertificateThumbprint                                   = $CertificateThumbprint
+        $results = @{
+            Description                                           = $policy.Description
+            DisplayName                                           = $policy.DisplayName
+            EnterpriseCloudPrintDiscoveryEndPoint                 = $policy.AdditionalProperties.enterpriseCloudPrintDiscoveryEndPoint
+            EnterpriseCloudPrintOAuthAuthority                    = $policy.AdditionalProperties.enterpriseCloudPrintOAuthAuthority
+            EnterpriseCloudPrintOAuthClientIdentifier             = $policy.AdditionalProperties.enterpriseCloudPrintOAuthClientIdentifier
+            EnterpriseCloudPrintResourceIdentifier                = $policy.AdditionalProperties.enterpriseCloudPrintResourceIdentifier
+            EnterpriseCloudPrintDiscoveryMaxLimit                 = $policy.AdditionalProperties.enterpriseCloudPrintDiscoveryMaxLimit
+            EnterpriseCloudPrintMopriaDiscoveryResourceIdentifier = $policy.AdditionalProperties.enterpriseCloudPrintMopriaDiscoveryResourceIdentifier
+            SearchBlockDiacritics                                 = $policy.AdditionalProperties.searchBlockDiacritics
+            SearchDisableAutoLanguageDetection                    = $policy.AdditionalProperties.searchDisableAutoLanguageDetection
+            SearchDisableIndexingEncryptedItems                   = $policy.AdditionalProperties.searchDisableIndexingEncryptedItems
+            SearchEnableRemoteQueries                             = $policy.AdditionalProperties.searchEnableRemoteQueries
+            SearchDisableIndexerBackoff                           = $policy.AdditionalProperties.searchDisableIndexerBackoff
+            SearchDisableIndexingRemovableDrive                   = $policy.AdditionalProperties.searchDisableIndexingRemovableDrive
+            SearchEnableAutomaticIndexSizeManangement             = $policy.AdditionalProperties.searchEnableAutomaticIndexSizeManangement
+            DiagnosticsDataSubmissionMode                         = $policy.AdditionalProperties.diagnosticsDataSubmissionMode
+            OneDriveDisableFileSync                               = $policy.AdditionalProperties.oneDriveDisableFileSync
+            SmartScreenEnableAppInstallControl                    = $policy.AdditionalProperties.smartScreenEnableAppInstallControl
+            PersonalizationDesktopImageUrl                        = $policy.AdditionalProperties.personalizationDesktopImageUrl
+            PersonalizationLockScreenImageUrl                     = $policy.AdditionalProperties.personalizationLockScreenImageUrl
+            BluetoothAllowedServices                              = $policy.AdditionalProperties.bluetoothAllowedServices
+            BluetoothBlockAdvertising                             = $policy.AdditionalProperties.bluetoothBlockAdvertising
+            BluetoothBlockDiscoverableMode                        = $policy.AdditionalProperties.bluetoothBlockDiscoverableMode
+            BluetoothBlockPrePairing                              = $policy.AdditionalProperties.bluetoothBlockPrePairing
+            EdgeBlockAutofill                                     = $policy.AdditionalProperties.edgeBlockAutofill
+            EdgeBlocked                                           = $policy.AdditionalProperties.edgeBlocked
+            EdgeCookiePolicy                                      = $policy.AdditionalProperties.edgeCookiePolicy
+            EdgeBlockDeveloperTools                               = $policy.AdditionalProperties.edgeBlockDeveloperTools
+            EdgeBlockSendingDoNotTrackHeader                      = $policy.AdditionalProperties.edgeBlockSendingDoNotTrackHeader
+            EdgeBlockExtensions                                   = $policy.AdditionalProperties.edgeBlockExtensions
+            EdgeBlockInPrivateBrowsing                            = $policy.AdditionalProperties.edgeBlockInPrivateBrowsing
+            EdgeBlockJavaScript                                   = $policy.AdditionalProperties.edgeBlockJavaScript
+            EdgeBlockPasswordManager                              = $policy.AdditionalProperties.edgeBlockPasswordManager
+            EdgeBlockAddressBarDropdown                           = $policy.AdditionalProperties.edgeBlockAddressBarDropdown
+            EdgeBlockCompatibilityList                            = $policy.AdditionalProperties.edgeBlockCompatibilityList
+            EdgeClearBrowsingDataOnExit                           = $policy.AdditionalProperties.edgeClearBrowsingDataOnExit
+            EdgeAllowStartPagesModification                       = $policy.AdditionalProperties.edgeAllowStartPagesModification
+            EdgeDisableFirstRunPage                               = $policy.AdditionalProperties.edgeDisableFirstRunPage
+            EdgeBlockLiveTileDataCollection                       = $policy.AdditionalProperties.edgeBlockLiveTileDataCollection
+            EdgeSyncFavoritesWithInternetExplorer                 = $policy.AdditionalProperties.edgeSyncFavoritesWithInternetExplorer
+            CellularBlockDataWhenRoaming                          = $policy.AdditionalProperties.cellularBlockDataWhenRoaming
+            CellularBlockVpn                                      = $policy.AdditionalProperties.cellularBlockVpn
+            CellularBlockVpnWhenRoaming                           = $policy.AdditionalProperties.cellularBlockVpnWhenRoaming
+            DefenderRequireRealTimeMonitoring                     = $policy.AdditionalProperties.defenderRequireRealTimeMonitoring
+            DefenderRequireBehaviorMonitoring                     = $policy.AdditionalProperties.defenderRequireBehaviorMonitoring
+            DefenderRequireNetworkInspectionSystem                = $policy.AdditionalProperties.defenderRequireNetworkInspectionSystem
+            DefenderScanDownloads                                 = $policy.AdditionalProperties.defenderScanDownloads
+            DefenderScanScriptsLoadedInInternetExplorer           = $policy.AdditionalProperties.defenderScanScriptsLoadedInInternetExplorer
+            DefenderBlockEndUserAccess                            = $policy.AdditionalProperties.defenderBlockEndUserAccess
+            DefenderSignatureUpdateIntervalInHours                = $policy.AdditionalProperties.defenderSignatureUpdateIntervalInHours
+            DefenderMonitorFileActivity                           = $policy.AdditionalProperties.defenderMonitorFileActivity
+            DefenderDaysBeforeDeletingQuarantinedMalware          = $policy.AdditionalProperties.defenderDaysBeforeDeletingQuarantinedMalware
+            DefenderScanMaxCpu                                    = $policy.AdditionalProperties.defenderScanMaxCpu
+            DefenderScanArchiveFiles                              = $policy.AdditionalProperties.defenderScanArchiveFiles
+            DefenderScanIncomingMail                              = $policy.AdditionalProperties.defenderScanIncomingMail
+            DefenderScanRemovableDrivesDuringFullScan             = $policy.AdditionalProperties.defenderScanRemovableDrivesDuringFullScan
+            DefenderScanMappedNetworkDrivesDuringFullScan         = $policy.AdditionalProperties.defenderScanMappedNetworkDrivesDuringFullScan
+            DefenderScanNetworkFiles                              = $policy.AdditionalProperties.defenderScanNetworkFiles
+            DefenderRequireCloudProtection                        = $policy.AdditionalProperties.defenderRequireCloudProtection
+            DefenderCloudBlockLevel                               = $policy.AdditionalProperties.defenderCloudBlockLevel
+            DefenderPromptForSampleSubmission                     = $policy.AdditionalProperties.defenderPromptForSampleSubmission
+            DefenderScheduledQuickScanTime                        = $policy.AdditionalProperties.defenderScheduledQuickScanTime
+            DefenderScanType                                      = $policy.AdditionalProperties.defenderScanType
+            DefenderSystemScanSchedule                            = $policy.AdditionalProperties.defenderSystemScanSchedule
+            DefenderScheduledScanTime                             = $policy.AdditionalProperties.defenderScheduledScanTime
+            DefenderDetectedMalwareActions                        = $DefenderDetectedMalwareActionsValues
+            DefenderFileExtensionsToExclude                       = $policy.AdditionalProperties.defenderFileExtensionsToExclude
+            DefenderFilesAndFoldersToExclude                      = $policy.AdditionalProperties.defenderFilesAndFoldersToExclude
+            DefenderProcessesToExclude                            = $policy.AdditionalProperties.defenderProcessesToExclude
+            LockScreenAllowTimeoutConfiguration                   = $policy.AdditionalProperties.lockScreenAllowTimeoutConfiguration
+            LockScreenBlockActionCenterNotifications              = $policy.AdditionalProperties.lockScreenBlockActionCenterNotifications
+            LockScreenBlockCortana                                = $policy.AdditionalProperties.lockScreenBlockCortana
+            LockScreenBlockToastNotifications                     = $policy.AdditionalProperties.lockScreenBlockToastNotifications
+            LockScreenTimeoutInSeconds                            = $policy.AdditionalProperties.lockScreenTimeoutInSeconds
+            PasswordBlockSimple                                   = $policy.AdditionalProperties.passwordBlockSimple
+            PasswordExpirationDays                                = $policy.AdditionalProperties.passwordExpirationDays
+            PasswordMinimumLength                                 = $policy.AdditionalProperties.passwordMinimumLength
+            PasswordMinutesOfInactivityBeforeScreenTimeout        = $policy.AdditionalProperties.passwordMinutesOfInactivityBeforeScreenTimeout
+            PasswordMinimumCharacterSetCount                      = $policy.AdditionalProperties.passwordMinimumCharacterSetCount
+            PasswordPreviousPasswordBlockCount                    = $policy.AdditionalProperties.passwordPreviousPasswordBlockCount
+            PasswordRequired                                      = $policy.AdditionalProperties.passwordRequired
+            PasswordRequireWhenResumeFromIdleState                = $policy.AdditionalProperties.passwordRequireWhenResumeFromIdleState
+            PasswordRequiredType                                  = $policy.AdditionalProperties.passwordRequiredType
+            PasswordSignInFailureCountBeforeFactoryReset          = $policy.AdditionalProperties.passwordSignInFailureCountBeforeFactoryReset
+            PrivacyAdvertisingId                                  = $policy.AdditionalProperties.privacyAdvertisingId
+            PrivacyAutoAcceptPairingAndConsentPrompts             = $policy.AdditionalProperties.privacyAutoAcceptPairingAndConsentPrompts
+            PrivacyBlockInputPersonalization                      = $policy.AdditionalProperties.privacyBlockInputPersonalization
+            StartBlockUnpinningAppsFromTaskbar                    = $policy.AdditionalProperties.startBlockUnpinningAppsFromTaskbar
+            StartMenuAppListVisibility                            = $policy.AdditionalProperties.startMenuAppListVisibility
+            StartMenuHideChangeAccountSettings                    = $policy.AdditionalProperties.startMenuHideChangeAccountSettings
+            StartMenuHideFrequentlyUsedApps                       = $policy.AdditionalProperties.startMenuHideFrequentlyUsedApps
+            StartMenuHideHibernate                                = $policy.AdditionalProperties.startMenuHideHibernate
+            StartMenuHideLock                                     = $policy.AdditionalProperties.startMenuHideLock
+            StartMenuHidePowerButton                              = $policy.AdditionalProperties.startMenuHidePowerButton
+            StartMenuHideRecentJumpLists                          = $policy.AdditionalProperties.startMenuHideRecentJumpLists
+            StartMenuHideRecentlyAddedApps                        = $policy.AdditionalProperties.startMenuHideRecentlyAddedApps
+            StartMenuHideRestartOptions                           = $policy.AdditionalProperties.startMenuHideRestartOptions
+            StartMenuHideShutDown                                 = $policy.AdditionalProperties.startMenuHideShutDown
+            StartMenuHideSignOut                                  = $policy.AdditionalProperties.startMenuHideSignOut
+            StartMenuHideSleep                                    = $policy.AdditionalProperties.startMenuHideSleep
+            StartMenuHideSwitchAccount                            = $policy.AdditionalProperties.startMenuHideSwitchAccount
+            StartMenuHideUserTile                                 = $policy.AdditionalProperties.startMenuHideUserTile
+            StartMenuLayoutEdgeAssetsXml                          = $policy.AdditionalProperties.startMenuLayoutEdgeAssetsXml
+            StartMenuLayoutXml                                    = $policy.AdditionalProperties.startMenuLayoutXml
+            StartMenuMode                                         = $policy.AdditionalProperties.startMenuMode
+            StartMenuPinnedFolderDocuments                        = $policy.AdditionalProperties.startMenuPinnedFolderDocuments
+            StartMenuPinnedFolderDownloads                        = $policy.AdditionalProperties.startMenuPinnedFolderDownloads
+            StartMenuPinnedFolderFileExplorer                     = $policy.AdditionalProperties.startMenuPinnedFolderFileExplorer
+            StartMenuPinnedFolderHomeGroup                        = $policy.AdditionalProperties.startMenuPinnedFolderHomeGroup
+            StartMenuPinnedFolderMusic                            = $policy.AdditionalProperties.startMenuPinnedFolderMusic
+            StartMenuPinnedFolderNetwork                          = $policy.AdditionalProperties.startMenuPinnedFolderNetwork
+            StartMenuPinnedFolderPersonalFolder                   = $policy.AdditionalProperties.startMenuPinnedFolderPersonalFolder
+            StartMenuPinnedFolderPictures                         = $policy.AdditionalProperties.startMenuPinnedFolderPictures
+            StartMenuPinnedFolderSettings                         = $policy.AdditionalProperties.startMenuPinnedFolderSettings
+            StartMenuPinnedFolderVideos                           = $policy.AdditionalProperties.startMenuPinnedFolderVideos
+            SettingsBlockSettingsApp                              = $policy.AdditionalProperties.settingsBlockSettingsApp
+            SettingsBlockSystemPage                               = $policy.AdditionalProperties.settingsBlockSystemPage
+            SettingsBlockDevicesPage                              = $policy.AdditionalProperties.settingsBlockDevicesPage
+            SettingsBlockNetworkInternetPage                      = $policy.AdditionalProperties.settingsBlockNetworkInternetPage
+            SettingsBlockPersonalizationPage                      = $policy.AdditionalProperties.settingsBlockPersonalizationPage
+            SettingsBlockAccountsPage                             = $policy.AdditionalProperties.settingsBlockAccountsPage
+            SettingsBlockTimeLanguagePage                         = $policy.AdditionalProperties.settingsBlockTimeLanguagePage
+            SettingsBlockEaseOfAccessPage                         = $policy.AdditionalProperties.settingsBlockEaseOfAccessPage
+            SettingsBlockPrivacyPage                              = $policy.AdditionalProperties.settingsBlockPrivacyPage
+            SettingsBlockUpdateSecurityPage                       = $policy.AdditionalProperties.settingsBlockUpdateSecurityPage
+            SettingsBlockAppsPage                                 = $policy.AdditionalProperties.settingsBlockAppsPage
+            SettingsBlockGamingPage                               = $policy.AdditionalProperties.settingsBlockGamingPage
+            WindowsSpotlightBlockConsumerSpecificFeatures         = $policy.AdditionalProperties.windowsSpotlightBlockConsumerSpecificFeatures
+            WindowsSpotlightBlocked                               = $policy.AdditionalProperties.windowsSpotlightBlocked
+            WindowsSpotlightBlockOnActionCenter                   = $policy.AdditionalProperties.windowsSpotlightBlockOnActionCenter
+            WindowsSpotlightBlockTailoredExperiences              = $policy.AdditionalProperties.windowsSpotlightBlockTailoredExperiences
+            WindowsSpotlightBlockThirdPartyNotifications          = $policy.AdditionalProperties.windowsSpotlightBlockThirdPartyNotifications
+            WindowsSpotlightBlockWelcomeExperience                = $policy.AdditionalProperties.windowsSpotlightBlockWelcomeExperience
+            WindowsSpotlightBlockWindowsTips                      = $policy.AdditionalProperties.windowsSpotlightBlockWindowsTips
+            WindowsSpotlightConfigureOnLockScreen                 = $policy.AdditionalProperties.windowsSpotlightConfigureOnLockScreen
+            NetworkProxyApplySettingsDeviceWide                   = $policy.AdditionalProperties.networkProxyApplySettingsDeviceWide
+            NetworkProxyDisableAutoDetect                         = $policy.AdditionalProperties.networkProxyDisableAutoDetect
+            NetworkProxyAutomaticConfigurationUrl                 = $policy.AdditionalProperties.networkProxyAutomaticConfigurationUrl
+            NetworkProxyServer                                    = $policy.AdditionalProperties.networkProxyServer
+            AccountsBlockAddingNonMicrosoftAccountEmail           = $policy.AdditionalProperties.accountsBlockAddingNonMicrosoftAccountEmail
+            AntiTheftModeBlocked                                  = $policy.AdditionalProperties.antiTheftModeBlocked
+            BluetoothBlocked                                      = $policy.AdditionalProperties.bluetoothBlocked
+            CameraBlocked                                         = $policy.AdditionalProperties.cameraBlocked
+            ConnectedDevicesServiceBlocked                        = $policy.AdditionalProperties.connectedDevicesServiceBlocked
+            CertificatesBlockManualRootCertificateInstallation    = $policy.AdditionalProperties.certificatesBlockManualRootCertificateInstallation
+            CopyPasteBlocked                                      = $policy.AdditionalProperties.copyPasteBlocked
+            CortanaBlocked                                        = $policy.AdditionalProperties.cortanaBlocked
+            DeviceManagementBlockFactoryResetOnMobile             = $policy.AdditionalProperties.deviceManagementBlockFactoryResetOnMobile
+            DeviceManagementBlockManualUnenroll                   = $policy.AdditionalProperties.deviceManagementBlockManualUnenroll
+            SafeSearchFilter                                      = $policy.AdditionalProperties.safeSearchFilter
+            EdgeBlockPopups                                       = $policy.AdditionalProperties.edgeBlockPopups
+            EdgeBlockSearchSuggestions                            = $policy.AdditionalProperties.edgeBlockSearchSuggestions
+            EdgeBlockSendingIntranetTrafficToInternetExplorer     = $policy.AdditionalProperties.edgeBlockSendingIntranetTrafficToInternetExplorer
+            EdgeSendIntranetTrafficToInternetExplorer             = $policy.AdditionalProperties.edgeSendIntranetTrafficToInternetExplorer
+            EdgeRequireSmartScreen                                = $policy.AdditionalProperties.edgeRequireSmartScreen
+            EdgeEnterpriseModeSiteListLocation                    = $policy.AdditionalProperties.edgeEnterpriseModeSiteListLocation
+            EdgeFirstRunUrl                                       = $policy.AdditionalProperties.edgeFirstRunUrl
+            EdgeSearchEngine                                      = $policy.AdditionalProperties.edgeSearchEngine.edgeSearchEngineType
+            EdgeHomepageUrls                                      = $policy.AdditionalProperties.edgeHomepageUrls
+            EdgeBlockAccessToAboutFlags                           = $policy.AdditionalProperties.edgeBlockAccessToAboutFlags
+            SmartScreenBlockPromptOverride                        = $policy.AdditionalProperties.smartScreenBlockPromptOverride
+            SmartScreenBlockPromptOverrideForFiles                = $policy.AdditionalProperties.smartScreenBlockPromptOverrideForFiles
+            WebRtcBlockLocalhostIpAddress                         = $policy.AdditionalProperties.webRtcBlockLocalhostIpAddress
+            InternetSharingBlocked                                = $policy.AdditionalProperties.internetSharingBlocked
+            SettingsBlockAddProvisioningPackage                   = $policy.AdditionalProperties.settingsBlockAddProvisioningPackage
+            SettingsBlockRemoveProvisioningPackage                = $policy.AdditionalProperties.settingsBlockRemoveProvisioningPackage
+            SettingsBlockChangeSystemTime                         = $policy.AdditionalProperties.settingsBlockChangeSystemTime
+            SettingsBlockEditDeviceName                           = $policy.AdditionalProperties.settingsBlockEditDeviceName
+            SettingsBlockChangeRegion                             = $policy.AdditionalProperties.settingsBlockChangeRegion
+            SettingsBlockChangeLanguage                           = $policy.AdditionalProperties.settingsBlockChangeLanguage
+            SettingsBlockChangePowerSleep                         = $policy.AdditionalProperties.settingsBlockChangePowerSleep
+            LocationServicesBlocked                               = $policy.AdditionalProperties.locationServicesBlocked
+            MicrosoftAccountBlocked                               = $policy.AdditionalProperties.microsoftAccountBlocked
+            MicrosoftAccountBlockSettingsSync                     = $policy.AdditionalProperties.microsoftAccountBlockSettingsSync
+            NfcBlocked                                            = $policy.AdditionalProperties.nfcBlocked
+            ResetProtectionModeBlocked                            = $policy.AdditionalProperties.resetProtectionModeBlocked
+            ScreenCaptureBlocked                                  = $policy.AdditionalProperties.screenCaptureBlocked
+            StorageBlockRemovableStorage                          = $policy.AdditionalProperties.storageBlockRemovableStorage
+            StorageRequireMobileDeviceEncryption                  = $policy.AdditionalProperties.storageRequireMobileDeviceEncryption
+            UsbBlocked                                            = $policy.AdditionalProperties.usbBlocked
+            VoiceRecordingBlocked                                 = $policy.AdditionalProperties.voiceRecordingBlocked
+            WiFiBlockAutomaticConnectHotspots                     = $policy.AdditionalProperties.wiFiBlockAutomaticConnectHotspots
+            WiFiBlocked                                           = $policy.AdditionalProperties.wiFiBlocked
+            WiFiBlockManualConfiguration                          = $policy.AdditionalProperties.wiFiBlockManualConfiguration
+            WiFiScanInterval                                      = $policy.AdditionalProperties.wiFiScanInterval
+            WirelessDisplayBlockProjectionToThisDevice            = $policy.AdditionalProperties.wirelessDisplayBlockProjectionToThisDevice
+            WirelessDisplayBlockUserInputFromReceiver             = $policy.AdditionalProperties.wirelessDisplayBlockUserInputFromReceiver
+            WirelessDisplayRequirePinForPairing                   = $policy.AdditionalProperties.wirelessDisplayRequirePinForPairing
+            WindowsStoreBlocked                                   = $policy.AdditionalProperties.windowsStoreBlocked
+            AppsAllowTrustedAppsSideloading                       = $policy.AdditionalProperties.appsAllowTrustedAppsSideloading
+            WindowsStoreBlockAutoUpdate                           = $policy.AdditionalProperties.windowsStoreBlockAutoUpdate
+            DeveloperUnlockSetting                                = $policy.AdditionalProperties.developerUnlockSetting
+            SharedUserAppDataAllowed                              = $policy.AdditionalProperties.sharedUserAppDataAllowed
+            AppsBlockWindowsStoreOriginatedApps                   = $policy.AdditionalProperties.appsBlockWindowsStoreOriginatedApps
+            WindowsStoreEnablePrivateStoreOnly                    = $policy.AdditionalProperties.windowsStoreEnablePrivateStoreOnly
+            StorageRestrictAppDataToSystemVolume                  = $policy.AdditionalProperties.storageRestrictAppDataToSystemVolume
+            StorageRestrictAppInstallToSystemVolume               = $policy.AdditionalProperties.storageRestrictAppInstallToSystemVolume
+            GameDvrBlocked                                        = $policy.AdditionalProperties.gameDvrBlocked
+            ExperienceBlockDeviceDiscovery                        = $policy.AdditionalProperties.experienceBlockDeviceDiscovery
+            ExperienceBlockErrorDialogWhenNoSIM                   = $policy.AdditionalProperties.experienceBlockErrorDialogWhenNoSIM
+            ExperienceBlockTaskSwitcher                           = $policy.AdditionalProperties.experienceBlockTaskSwitcher
+            LogonBlockFastUserSwitching                           = $policy.AdditionalProperties.logonBlockFastUserSwitching
+            TenantLockdownRequireNetworkDuringOutOfBoxExperience  = $policy.AdditionalProperties.tenantLockdownRequireNetworkDuringOutOfBoxExperience
+            Ensure                                                = 'Present'
+            Credential                                            = $Credential
+            ApplicationId                                         = $ApplicationId
+            TenantId                                              = $TenantId
+            ApplicationSecret                                     = $ApplicationSecret
+            CertificateThumbprint                                 = $CertificateThumbprint
             Managedidentity                                       = $ManagedIdentity.IsPresent
         }
 
-        $returnAssignments=@()
-        $returnAssignments += Get-MGDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $policy.Id
+        $returnAssignments = @()
+        $returnAssignments += Get-MgDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $policy.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $returnAssignments)
         {
             $assignmentValue = @{
-                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
                 deviceAndAppManagementAssignmentFilterType = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.toString()
-                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
+                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
+                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
             }
             $assignmentResult += $assignmentValue
         }
-        $results.Add('Assignments',$assignmentResult)
+        $results.Add('Assignments', $assignmentResult)
         return $results
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullResult
     }
 }
@@ -2072,20 +2065,21 @@ function Set-TargetResource
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationPolicyWindowsAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        if ($AdditionalProperties.DefenderDetectedMalwareActions) {
-            $AdditionalProperties.DefenderDetectedMalwareActions.Add("@odata.type", "#microsoft.graph.defenderDetectedMalwareActions")
+        if ($AdditionalProperties.DefenderDetectedMalwareActions)
+        {
+            $AdditionalProperties.DefenderDetectedMalwareActions.Add('@odata.type', '#microsoft.graph.defenderDetectedMalwareActions')
         }
-        $policy=New-MGDeviceManagementDeviceConfiguration -DisplayName $DisplayName `
+        $policy = New-MgDeviceManagementDeviceConfiguration -DisplayName $DisplayName `
             -Description $Description `
             -AdditionalProperties $AdditionalProperties
 
         #region Assignments
-        $assignmentsHash=@()
-        foreach($assignment in $Assignments)
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
         {
-            $assignmentsHash+=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
-        if($policy.id)
+        if ($policy.id)
         {
             Update-DeviceConfigurationPolicyAssignments -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash
@@ -2105,19 +2099,19 @@ function Set-TargetResource
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationPolicyWindowsAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        if($AdditionalProperties.DefenderDetectedMalwareActions)
+        if ($AdditionalProperties.DefenderDetectedMalwareActions)
         {
-            $AdditionalProperties.DefenderDetectedMalwareActions.Add("@odata.type", "#microsoft.graph.defenderDetectedMalwareActions")
+            $AdditionalProperties.DefenderDetectedMalwareActions.Add('@odata.type', '#microsoft.graph.defenderDetectedMalwareActions')
         }
-        Update-MGDeviceManagementDeviceConfiguration -AdditionalProperties $AdditionalProperties `
+        Update-MgDeviceManagementDeviceConfiguration -AdditionalProperties $AdditionalProperties `
             -Description $Description `
             -DeviceConfigurationId $configDevicePolicy.Id
 
         #region Assignments
-        $assignmentsHash=@()
-        foreach($assignment in $Assignments)
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
         {
-            $assignmentsHash+=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
         Update-DeviceConfigurationPolicyAssignments -DeviceConfigurationPolicyId $configDevicePolicy.Id `
             -Targets $assignmentsHash
@@ -3044,67 +3038,66 @@ function Test-TargetResource
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
     }
-    $ValuesToCheck.Remove("DefenderDetectedMalwareActions") | Out-Null
+    $ValuesToCheck.Remove('DefenderDetectedMalwareActions') | Out-Null
 
-    if($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
     }
     #region Assignments
-    $testResult=$true
+    $testResult = $true
 
-    if((-not $CurrentValues.Assignments) -xor (-not $ValuesToCheck.Assignments))
+    if ((-not $CurrentValues.Assignments) -xor (-not $ValuesToCheck.Assignments))
     {
-        Write-Verbose -Message "Configuration drift: one the assignment is null"
+        Write-Verbose -Message 'Configuration drift: one the assignment is null'
         return $false
     }
 
-    if($CurrentValues.Assignments)
+    if ($CurrentValues.Assignments)
     {
-        if($CurrentValues.Assignments.count -ne $ValuesToCheck.Assignments.count)
+        if ($CurrentValues.Assignments.count -ne $ValuesToCheck.Assignments.count)
         {
             Write-Verbose -Message "Configuration drift: Number of assignment has changed - current {$($CurrentValues.Assignments.count)} target {$($ValuesToCheck.Assignments.count)}"
             return $false
         }
-        foreach($assignment in $CurrentValues.Assignments)
+        foreach ($assignment in $CurrentValues.Assignments)
         {
             #GroupId Assignment
-            if(-not [String]::IsNullOrEmpty($assignment.groupId))
+            if (-not [String]::IsNullOrEmpty($assignment.groupId))
             {
-                $source=[Array]$ValuesToCheck.Assignments|Where-Object -FilterScript {$_.groupId -eq $assignment.groupId}
-                if(-not $source)
+                $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.groupId -eq $assignment.groupId }
+                if (-not $source)
                 {
                     Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
-                    $testResult=$false
+                    $testResult = $false
                     break;
                 }
-                $sourceHash=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-                $testResult=Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
+                $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
+                $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
             }
             #AllDevices/AllUsers assignment
             else
             {
-                $source=[Array]$ValuesToCheck.Assignments|Where-Object -FilterScript {$_.dataType -eq $assignment.dataType}
-                if(-not $source)
+                $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.dataType -eq $assignment.dataType }
+                if (-not $source)
                 {
                     Write-Verbose -Message "Configuration drift: {$($assignment.dataType)} not found"
-                    $testResult=$false
+                    $testResult = $false
                     break;
                 }
-                $sourceHash=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-                $testResult=Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
+                $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
+                $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
             }
 
-            if(-not $testResult)
+            if (-not $testResult)
             {
-                $testResult=$false
+                $testResult = $false
                 break;
             }
-
         }
     }
-    if(-not $testResult)
+    if (-not $testResult)
     {
         return $false
     }
@@ -3242,12 +3235,12 @@ function Export-TargetResource
 
             if ($Results.Assignments)
             {
-                $isCIMArray=$false
-                if($Results.Assignments.getType().Fullname -like "*[[\]]")
+                $isCIMArray = $false
+                if ($Results.Assignments.getType().Fullname -like '*[[\]]')
                 {
-                    $isCIMArray=$true
+                    $isCIMArray = $true
                 }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$isCIMArray
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$isCIMArray
             }
 
             $dscContent += $currentDSCBlock
@@ -3261,23 +3254,18 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
+
         if ($_.Exception -like '*401*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
 
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }
@@ -3286,7 +3274,8 @@ function Get-M365DSCIntuneDeviceConfigurationPolicyWindowsAdditionalProperties
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param(
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.Collections.Hashtable]
         $Properties
@@ -3321,7 +3310,8 @@ function Update-DeviceConfigurationPolicyAssignments
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param (
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.String]
         $DeviceConfigurationPolicyId,
@@ -3330,114 +3320,107 @@ function Update-DeviceConfigurationPolicyAssignments
         [Array]
         $Targets
     )
+
     try
     {
-        $configurationPolicyAssignments=@()
+        $configurationPolicyAssignments = @()
 
-        $Uri="https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations/$DeviceConfigurationPolicyId/assign"
+        $Uri = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations/$DeviceConfigurationPolicyId/assign"
 
-        foreach($target in $targets)
+        foreach ($target in $targets)
         {
-            $formattedTarget=@{"@odata.type"=$target.dataType}
-            if($target.groupId)
+            $formattedTarget = @{'@odata.type' = $target.dataType }
+            if ($target.groupId)
             {
-                $formattedTarget.Add('groupId',$target.groupId)
+                $formattedTarget.Add('groupId', $target.groupId)
             }
-            if($target.collectionId)
+            if ($target.collectionId)
             {
-                $formattedTarget.Add('collectionId',$target.collectionId)
+                $formattedTarget.Add('collectionId', $target.collectionId)
             }
-            if($target.deviceAndAppManagementAssignmentFilterType)
+            if ($target.deviceAndAppManagementAssignmentFilterType)
             {
-                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',$target.deviceAndAppManagementAssignmentFilterType)
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType', $target.deviceAndAppManagementAssignmentFilterType)
             }
-            if($target.deviceAndAppManagementAssignmentFilterId)
+            if ($target.deviceAndAppManagementAssignmentFilterId)
             {
-                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',$target.deviceAndAppManagementAssignmentFilterId)
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId', $target.deviceAndAppManagementAssignmentFilterId)
             }
-            $configurationPolicyAssignments+=@{'target'= $formattedTarget}
+            $configurationPolicyAssignments += @{'target' = $formattedTarget }
         }
-        $body=@{'assignments'=$configurationPolicyAssignments}|ConvertTo-Json -Depth 20
+        $body = @{'assignments' = $configurationPolicyAssignments } | ConvertTo-Json -Depth 20
         #write-verbose -Message $body
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
 
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $null
     }
-
-
 }
 
 function Get-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
-    [OutputType([hashtable],[hashtable[]])]
-    param(
+    [OutputType([hashtable], [hashtable[]])]
+    param
+    (
         [Parameter()]
         $ComplexObject
     )
 
-    if($null -eq $ComplexObject)
+    if ($null -eq $ComplexObject)
     {
         return $null
     }
 
 
-    if($ComplexObject.getType().Fullname -like "*hashtable")
+    if ($ComplexObject.getType().Fullname -like '*hashtable')
     {
         return $ComplexObject
     }
-    if($ComplexObject.getType().Fullname -like "*hashtable[[\]]")
+    if ($ComplexObject.getType().Fullname -like '*hashtable[[\]]')
     {
         return [hashtable[]]$ComplexObject
     }
 
 
-    if($ComplexObject.gettype().fullname -like "*[[\]]")
+    if ($ComplexObject.gettype().fullname -like '*[[\]]')
     {
-        $results=@()
+        $results = @()
 
-        foreach($item in $ComplexObject)
+        foreach ($item in $ComplexObject)
         {
-            if($item)
+            if ($item)
             {
                 $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
-                $results+=$hash
+                $results += $hash
             }
         }
 
         # PowerShell returns all non-captured stream output, not just the argument of the return statement.
         #An empty array is mangled into $null in the process.
         #However, an array can be preserved on return by prepending it with the array construction operator (,)
-        return ,[hashtable[]]$results
+        return , [hashtable[]]$results
     }
 
     $results = @{}
-    $keys = $ComplexObject | Get-Member | Where-Object -FilterScript {$_.MemberType -eq 'Property' -and $_.Name -ne 'AdditionalProperties'}
+    $keys = $ComplexObject | Get-Member | Where-Object -FilterScript { $_.MemberType -eq 'Property' -and $_.Name -ne 'AdditionalProperties' }
 
     foreach ($key in $keys)
     {
 
-        if($ComplexObject.$($key.Name))
+        if ($ComplexObject.$($key.Name))
         {
             $keyName = $key.Name[0].ToString().ToLower() + $key.Name.Substring(1, $key.Name.Length - 1)
 
-            if($ComplexObject.$($key.Name).gettype().fullname -like "*CimInstance*")
+            if ($ComplexObject.$($key.Name).gettype().fullname -like '*CimInstance*')
             {
                 $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$($key.Name)
 
@@ -3457,7 +3440,8 @@ function Get-M365DSCDRGComplexTypeToString
 {
     [CmdletBinding()]
     #[OutputType([System.String])]
-    param(
+    param
+    (
         [Parameter()]
         $ComplexObject,
 
@@ -3471,11 +3455,11 @@ function Get-M365DSCDRGComplexTypeToString
 
         [Parameter()]
         [System.String]
-        $Whitespace="",
+        $Whitespace = '',
 
         [Parameter()]
         [switch]
-        $isArray=$false
+        $isArray = $false
     )
 
     if ($null -eq $ComplexObject)
@@ -3484,19 +3468,19 @@ function Get-M365DSCDRGComplexTypeToString
     }
 
     #If ComplexObject  is an Array
-    if ($ComplexObject.GetType().FullName -like "*[[\]]")
+    if ($ComplexObject.GetType().FullName -like '*[[\]]')
     {
-        $currentProperty=@()
+        $currentProperty = @()
         foreach ($item in $ComplexObject)
         {
-            $split=@{
-                'ComplexObject'=$item
-                'CIMInstanceName'=$CIMInstanceName
-                'Whitespace'="                $whitespace"
+            $split = @{
+                'ComplexObject'   = $item
+                'CIMInstanceName' = $CIMInstanceName
+                'Whitespace'      = "                $whitespace"
             }
             if ($ComplexTypeMapping)
             {
-                $split.add('ComplexTypeMapping',$ComplexTypeMapping)
+                $split.add('ComplexTypeMapping', $ComplexTypeMapping)
             }
 
             $currentProperty += Get-M365DSCDRGComplexTypeToString -isArray:$true @split
@@ -3506,11 +3490,11 @@ function Get-M365DSCDRGComplexTypeToString
         # PowerShell returns all non-captured stream output, not just the argument of the return statement.
         #An empty array is mangled into $null in the process.
         #However, an array can be preserved on return by prepending it with the array construction operator (,)
-        return ,$currentProperty
+        return , $currentProperty
     }
 
-    $currentProperty=""
-    if($isArray)
+    $currentProperty = ''
+    if ($isArray)
     {
         $currentProperty += "`r`n"
     }
@@ -3522,67 +3506,67 @@ function Get-M365DSCDRGComplexTypeToString
         if ($ComplexObject[$key])
         {
             $keyNotNull++
-            if ($ComplexObject[$key].GetType().FullName -like "Microsoft.Graph.PowerShell.Models.*" -or $key -in $ComplexTypeMapping.Name)
+            if ($ComplexObject[$key].GetType().FullName -like 'Microsoft.Graph.PowerShell.Models.*' -or $key -in $ComplexTypeMapping.Name)
             {
-                $hashPropertyType=$ComplexObject[$key].GetType().Name.tolower()
+                $hashPropertyType = $ComplexObject[$key].GetType().Name.tolower()
 
                 #overwrite type if object defined in mapping complextypemapping
-                if($key -in $ComplexTypeMapping.Name)
+                if ($key -in $ComplexTypeMapping.Name)
                 {
-                    $hashPropertyType=($ComplexTypeMapping|Where-Object -FilterScript {$_.Name -eq $key}).CimInstanceName
-                    $hashProperty=$ComplexObject[$key]
+                    $hashPropertyType = ($ComplexTypeMapping | Where-Object -FilterScript { $_.Name -eq $key }).CimInstanceName
+                    $hashProperty = $ComplexObject[$key]
                 }
                 else
                 {
-                    $hashProperty=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key]
+                    $hashProperty = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key]
                 }
 
-                if($key -notin $ComplexTypeMapping.Name)
+                if ($key -notin $ComplexTypeMapping.Name)
                 {
-                    $Whitespace+="            "
+                    $Whitespace += '            '
                 }
 
-                if(-not $isArray -or ($isArray -and $key -in $ComplexTypeMapping.Name ))
+                if (-not $isArray -or ($isArray -and $key -in $ComplexTypeMapping.Name ))
                 {
-                    $currentProperty += $whitespace + $key + " = "
-                    if($ComplexObject[$key].GetType().FullName -like "*[[\]]")
+                    $currentProperty += $whitespace + $key + ' = '
+                    if ($ComplexObject[$key].GetType().FullName -like '*[[\]]')
                     {
-                        $currentProperty += "@("
+                        $currentProperty += '@('
                     }
                 }
 
-                if($key -in $ComplexTypeMapping.Name)
+                if ($key -in $ComplexTypeMapping.Name)
                 {
-                    $Whitespace=""
+                    $Whitespace = ''
 
                 }
                 $currentProperty += Get-M365DSCDRGComplexTypeToString `
-                                -ComplexObject $hashProperty `
-                                -CIMInstanceName $hashPropertyType `
-                                -Whitespace $Whitespace `
-                                -ComplexTypeMapping $ComplexTypeMapping
+                    -ComplexObject $hashProperty `
+                    -CIMInstanceName $hashPropertyType `
+                    -Whitespace $Whitespace `
+                    -ComplexTypeMapping $ComplexTypeMapping
 
-                if($ComplexObject[$key].GetType().FullName -like "*[[\]]")
+                if ($ComplexObject[$key].GetType().FullName -like '*[[\]]')
                 {
-                    $currentProperty += ")"
+                    $currentProperty += ')'
                 }
-        }
+            }
             else
             {
-                if(-not $isArray)
+                if (-not $isArray)
                 {
-                    $Whitespace= "            "
+                    $Whitespace = '            '
                 }
-                $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $ComplexObject[$key] -Space ($Whitespace+"    ")
+                $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $ComplexObject[$key] -Space ($Whitespace + '    ')
             }
         }
         else
         {
-            $mappedKey=$ComplexTypeMapping|where-object -filterscript {$_.name -eq $key}
+            $mappedKey = $ComplexTypeMapping | Where-Object -FilterScript { $_.name -eq $key }
 
-            if($mappedKey -and $mappedKey.isRequired)
+            if ($mappedKey -and $mappedKey.isRequired)
             {
-                if($mappedKey.isArray)
+                if ($mappedKey.isArray)
                 {
                     $currentProperty += "$Whitespace    $key = @()`r`n"
                 }
@@ -3598,11 +3582,12 @@ function Get-M365DSCDRGComplexTypeToString
     return $currentProperty
 }
 
-Function Get-M365DSCDRGSimpleObjectTypeToString
+function Get-M365DSCDRGSimpleObjectTypeToString
 {
     [CmdletBinding()]
     [OutputType([System.String])]
-    param(
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.String]
         $Key,
@@ -3612,49 +3597,48 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
 
         [Parameter()]
         [System.String]
-        $Space="                "
-
+        $Space = '                '
     )
 
-    $returnValue=""
+    $returnValue = ''
     switch -Wildcard ($Value.GetType().Fullname )
     {
-        "*.Boolean"
+        '*.Boolean'
         {
-            $returnValue= $Space + $Key + " = `$" + $Value.ToString() + "`r`n"
+            $returnValue = $Space + $Key + " = `$" + $Value.ToString() + "`r`n"
         }
-        "*.String"
+        '*.String'
         {
-            if($key -eq '@odata.type')
+            if ($key -eq '@odata.type')
             {
-                $key='odataType'
+                $key = 'odataType'
             }
-            $returnValue= $Space + $Key + " = '" + $Value + "'`r`n"
+            $returnValue = $Space + $Key + " = '" + $Value + "'`r`n"
         }
-        "*.DateTime"
+        '*.DateTime'
         {
-            $returnValue= $Space + $Key + " = '" + $Value + "'`r`n"
+            $returnValue = $Space + $Key + " = '" + $Value + "'`r`n"
         }
-        "*[[\]]"
+        '*[[\]]'
         {
-            $returnValue= $Space + $key + " = @("
-            $whitespace=""
-            $newline=""
-            if($Value.count -gt 1)
+            $returnValue = $Space + $key + ' = @('
+            $whitespace = ''
+            $newline = ''
+            if ($Value.count -gt 1)
             {
                 $returnValue += "`r`n"
-                $whitespace=$Space+"    "
-                $newline="`r`n"
+                $whitespace = $Space + '    '
+                $newline = "`r`n"
             }
             foreach ($item in $Value)
             {
                 switch -Wildcard ($item.GetType().Fullname )
                 {
-                    "*.String"
+                    '*.String'
                     {
                         $returnValue += "$whitespace'$item'$newline"
                     }
-                    "*.DateTime"
+                    '*.DateTime'
                     {
                         $returnValue += "$whitespace'$item'$newline"
                     }
@@ -3664,7 +3648,7 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
                     }
                 }
             }
-            if($Value.count -gt 1)
+            if ($Value.count -gt 1)
             {
                 $returnValue += "$Space)`r`n"
             }
@@ -3676,7 +3660,7 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
         }
         Default
         {
-            $returnValue= $Space + $Key + " = " + $Value + "`r`n"
+            $returnValue = $Space + $Key + ' = ' + $Value + "`r`n"
         }
     }
     return $returnValue
@@ -3686,59 +3670,61 @@ function Compare-M365DSCComplexObject
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-    param(
+    param
+    (
         [Parameter()]
         $Source,
+
         [Parameter()]
         $Target
     )
 
     #Comparing full objects
-    if($null -eq  $Source  -and $null -eq $Target)
+    if ($null -eq $Source -and $null -eq $Target)
     {
         return $true
     }
 
-    $sourceValue=""
-    $targetValue=""
+    $sourceValue = ''
+    $targetValue = ''
     if (($null -eq $Source) -xor ($null -eq $Target))
     {
-        if($null -eq $Source)
+        if ($null -eq $Source)
         {
-            $sourceValue="Source is null"
+            $sourceValue = 'Source is null'
         }
 
-        if($null -eq $Target)
+        if ($null -eq $Target)
         {
-            $targetValue="Target is null"
+            $targetValue = 'Target is null'
         }
         Write-Verbose -Message "Configuration drift - Complex object: {$sourceValue$targetValue}"
         return $false
     }
 
-    if($Source.getType().FullName -like "*CimInstance[[\]]" -or $Source.getType().FullName -like "*Hashtable[[\]]")
+    if ($Source.getType().FullName -like '*CimInstance[[\]]' -or $Source.getType().FullName -like '*Hashtable[[\]]')
     {
-        if($source.count -ne $target.count)
+        if ($source.count -ne $target.count)
         {
             Write-Verbose -Message "Configuration drift - The complex array have different number of items: Source {$($source.count)} Target {$($target.count)}"
             return $false
         }
-        if($source.count -eq 0)
+        if ($source.count -eq 0)
         {
             return $true
         }
 
-        $i=0
-        foreach($item in $Source)
+        $i = 0
+        foreach ($item in $Source)
         {
 
-            $compareResult= Compare-M365DSCComplexObject `
-                    -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Source[$i]) `
-                    -Target $Target[$i]
+            $compareResult = Compare-M365DSCComplexObject `
+                -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Source[$i]) `
+                -Target $Target[$i]
 
-            if(-not $compareResult)
+            if (-not $compareResult)
             {
-                Write-Verbose -Message "Configuration drift - The complex array items are not identical"
+                Write-Verbose -Message 'Configuration drift - The complex array items are not identical'
                 return $false
             }
             $i++
@@ -3746,40 +3732,40 @@ function Compare-M365DSCComplexObject
         return $true
     }
 
-    $keys= $Source.Keys|Where-Object -FilterScript {$_ -ne "PSComputerName"}
+    $keys = $Source.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
     foreach ($key in $keys)
     {
         #write-verbose -message "Comparing key: {$key}"
         #Matching possible key names between Source and Target
-        $skey=$key
-        $tkey=$key
-        if($key -eq 'odataType')
+        $skey = $key
+        $tkey = $key
+        if ($key -eq 'odataType')
         {
-            $skey='@odata.type'
+            $skey = '@odata.type'
         }
         else
         {
-            $tmpkey=$Target.keys|Where-Object -FilterScript {$_ -eq "$key"}
-            if($tkey)
+            $tmpkey = $Target.keys | Where-Object -FilterScript { $_ -eq "$key" }
+            if ($tkey)
             {
-                $tkey=$tmpkey|Select-Object -First 1
+                $tkey = $tmpkey | Select-Object -First 1
             }
         }
 
-        $sourceValue=$Source.$key
-        $targetValue=$Target.$tkey
+        $sourceValue = $Source.$key
+        $targetValue = $Target.$tkey
         #One of the item is null and not the other
         if (($null -eq $Source.$skey) -xor ($null -eq $Target.$tkey))
         {
 
-            if($null -eq $Source.$skey)
+            if ($null -eq $Source.$skey)
             {
-                $sourceValue="null"
+                $sourceValue = 'null'
             }
 
-            if($null -eq $Target.$tkey)
+            if ($null -eq $Target.$tkey)
             {
-                $targetValue="null"
+                $targetValue = 'null'
             }
 
             Write-Verbose -Message "Configuration drift - key: $key Source {$sourceValue} Target {$targetValue}"
@@ -3787,16 +3773,16 @@ function Compare-M365DSCComplexObject
         }
 
         #Both keys aren't null or empty
-        if(($null -ne $Source.$skey) -and ($null -ne $Target.$tkey))
+        if (($null -ne $Source.$skey) -and ($null -ne $Target.$tkey))
         {
-            if($Source.$skey.getType().FullName -like "*CimInstance*" -or $Source.$skey.getType().FullName -like "*hashtable*"  )
+            if ($Source.$skey.getType().FullName -like '*CimInstance*' -or $Source.$skey.getType().FullName -like '*hashtable*'  )
             {
                 #Recursive call for complex object
-                $compareResult= Compare-M365DSCComplexObject `
+                $compareResult = Compare-M365DSCComplexObject `
                     -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Source.$skey) `
                     -Target $Target.$tkey
 
-                if(-not $compareResult)
+                if (-not $compareResult)
                 {
                     Write-Verbose -Message "Configuration drift - complex object key: $key Source {$sourceValue} Target {$targetValue}"
                     return $false
@@ -3805,8 +3791,8 @@ function Compare-M365DSCComplexObject
             else
             {
                 #Simple object comparison
-                $referenceObject=$Target.$tkey
-                $differenceObject=$Source.$skey
+                $referenceObject = $Target.$tkey
+                $differenceObject = $Source.$skey
 
                 $compareResult = Compare-Object `
                     -ReferenceObject ($referenceObject) `
@@ -3817,64 +3803,61 @@ function Compare-M365DSCComplexObject
                     Write-Verbose -Message "Configuration drift - simple object key: $key Source {$sourceValue} Target {$targetValue}"
                     return $false
                 }
-
             }
-
         }
     }
 
     return $true
 }
+
 function Convert-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
-    [OutputType([hashtable],[hashtable[]])]
-    param(
+    [OutputType([hashtable], [hashtable[]])]
+    param
+    (
         [Parameter(Mandatory = 'true')]
         $ComplexObject
     )
 
-
-    if($ComplexObject.getType().Fullname -like "*[[\]]")
+    if ($ComplexObject.getType().Fullname -like '*[[\]]')
     {
-        $results=@()
-        foreach($item in $ComplexObject)
+        $results = @()
+        foreach ($item in $ComplexObject)
         {
-            $hash=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
-            $results+=$hash
+            $hash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
+            $results += $hash
         }
 
         #Write-Verbose -Message ("Convert-M365DSCDRGComplexTypeToHashtable >>> results: "+(convertTo-JSON $results -Depth 20))
         # PowerShell returns all non-captured stream output, not just the argument of the return statement.
         #An empty array is mangled into $null in the process.
         #However, an array can be preserved on return by prepending it with the array construction operator (,)
-        return ,[hashtable[]]$results
+        return , [hashtable[]]$results
     }
     $hashComplexObject = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject
 
-    if($hashComplexObject)
+    if ($hashComplexObject)
     {
 
-        $results=$hashComplexObject.clone()
-        $keys=$hashComplexObject.Keys|Where-Object -FilterScript {$_ -ne 'PSComputerName'}
+        $results = $hashComplexObject.clone()
+        $keys = $hashComplexObject.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
         foreach ($key in $keys)
         {
-            if($hashComplexObject[$key] -and $hashComplexObject[$key].getType().Fullname -like "*CimInstance*")
+            if ($hashComplexObject[$key] -and $hashComplexObject[$key].getType().Fullname -like '*CimInstance*')
             {
-                $results[$key]=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $hashComplexObject[$key]
+                $results[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $hashComplexObject[$key]
             }
             else
             {
                 $propertyName = $key[0].ToString().ToLower() + $key.Substring(1, $key.Length - 1)
-                $propertyValue=$results[$key]
-                $results.remove($key)|out-null
-                $results.add($propertyName,$propertyValue)
+                $propertyValue = $results[$key]
+                $results.remove($key) | Out-Null
+                $results.add($propertyName, $propertyValue)
             }
         }
     }
     return [hashtable]$results
 }
+
 Export-ModuleMember -Function *-TargetResource
-
-
-

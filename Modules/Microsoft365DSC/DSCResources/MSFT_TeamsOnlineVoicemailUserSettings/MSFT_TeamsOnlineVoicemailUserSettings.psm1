@@ -10,7 +10,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("DeclineCall", "PromptOnly", "PromptOnlyWithTransfer", "RegularVoicemail", "VoicemailWithTransferOption")]
+        [ValidateSet('DeclineCall', 'PromptOnly', 'PromptOnlyWithTransfer', 'RegularVoicemail', 'VoicemailWithTransferOption')]
         $CallAnswerRule,
 
         [Parameter()]
@@ -50,9 +50,9 @@ function Get-TargetResource
         $VoicemailEnabled,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -80,8 +80,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -89,7 +89,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -122,26 +122,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -157,7 +143,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("DeclineCall", "PromptOnly", "PromptOnlyWithTransfer", "RegularVoicemail", "VoicemailWithTransferOption")]
+        [ValidateSet('DeclineCall', 'PromptOnly', 'PromptOnlyWithTransfer', 'RegularVoicemail', 'VoicemailWithTransferOption')]
         $CallAnswerRule,
 
         [Parameter()]
@@ -197,9 +183,9 @@ function Set-TargetResource
         $VoicemailEnabled,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -218,14 +204,14 @@ function Set-TargetResource
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Setting Teams Online Voicemail User Settings"
+    Write-Verbose -Message 'Setting Teams Online Voicemail User Settings'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -238,11 +224,11 @@ function Set-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     $SetParameters = $PSBoundParameters
-    $SetParameters.Remove("Ensure") | Out-Null
-    $SetParameters.Remove("Credential") | Out-Null
-    $SetParameters.Remove("ApplicationId") | Out-Null
-    $SetParameters.Remove("TenantId") | Out-Null
-    $SetParameters.Remove("CertificateThumbprint") | Out-Null
+    $SetParameters.Remove('Ensure') | Out-Null
+    $SetParameters.Remove('Credential') | Out-Null
+    $SetParameters.Remove('ApplicationId') | Out-Null
+    $SetParameters.Remove('TenantId') | Out-Null
+    $SetParameters.Remove('CertificateThumbprint') | Out-Null
 
     try
     {
@@ -250,26 +236,11 @@ function Set-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
     }
 }
 
@@ -285,7 +256,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("DeclineCall", "PromptOnly", "PromptOnlyWithTransfer", "RegularVoicemail", "VoicemailWithTransferOption")]
+        [ValidateSet('DeclineCall', 'PromptOnly', 'PromptOnlyWithTransfer', 'RegularVoicemail', 'VoicemailWithTransferOption')]
         $CallAnswerRule,
 
         [Parameter()]
@@ -325,9 +296,9 @@ function Test-TargetResource
         $VoicemailEnabled,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -349,8 +320,8 @@ function Test-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -408,8 +379,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -456,27 +427,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

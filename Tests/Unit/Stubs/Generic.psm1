@@ -402,9 +402,9 @@ function New-M365DSCConnection
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
-        [ValidateSet("ExchangeOnline", 'Intune', `
-                "SecurityComplianceCenter", "MSOnline", "PnP", "PowerPlatforms", `
-                "MicrosoftTeams", "MicrosoftGraph")]
+        [ValidateSet('ExchangeOnline', 'Intune', `
+                'SecurityComplianceCenter', 'MSOnline', 'PnP', 'PowerPlatforms', `
+                'MicrosoftTeams', 'MicrosoftGraph')]
         [System.String]
         $Workload,
 
@@ -422,8 +422,8 @@ function New-M365DSCConnection
 
         [Parameter()]
         [System.String]
-        [ValidateSet("v1.0", "beta")]
-        $ProfileName = "v1.0"
+        [ValidateSet('v1.0', 'beta')]
+        $ProfileName = 'v1.0'
     )
 }
 
@@ -545,17 +545,21 @@ function New-M365DSCLogEntry
     [CmdletBinding()]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Error,
+        $Source,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Message,
 
         [Parameter()]
-        [System.String]
-        $Source,
+        [System.Object]
+        $Exception,
+
+        [Parameter()]
+        [PSCredential]
+        $Credential,
 
         [Parameter()]
         [System.String]

@@ -2,62 +2,70 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath '..\..\Unit' `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath '\Stubs\Microsoft365.psm1' `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath '\Stubs\Generic.psm1' `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\UnitTestHelper.psm1" `
+        -ChildPath '\UnitTestHelper.psm1' `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SPOTenantSettings" -GenericStubModule $GenericStubPath
+    -DscResource 'SPOTenantSettings' -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         BeforeAll {
-            $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            if ($null -eq (Get-Module PnP.PowerShell))
+            {
+                Import-Module PnP.PowerShell
+
+            }
+
+            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
             }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
-
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credentials"
+                return 'Credentials'
+            }
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
             }
         }
 
         # Test contexts
-        Context -Name "SPO Tenant settings are not configured" -Fixture {
+        Context -Name 'SPO Tenant settings are not configured' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance                              = "Yes"
-                    Credential                            = $Credential
+                    IsSingleInstance                              = 'Yes'
+                    Credential                                    = $Credential
                     MinCompatibilityLevel                         = 16
                     MaxCompatibilityLevel                         = 16
                     SearchResolveExactEmailOrUPN                  = $false
                     OfficeClientADALDisabled                      = $false
                     LegacyAuthProtocolsEnabled                    = $true
-                    SignInAccelerationDomain                      = ""
+                    SignInAccelerationDomain                      = ''
                     UsePersistentCookiesForExplorerView           = $false
                     UserVoiceForFeedbackEnabled                   = $true
                     PublicCdnEnabled                              = $false
-                    PublicCdnAllowedFileTypes                     = "CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF"
+                    PublicCdnAllowedFileTypes                     = 'CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF'
                     UseFindPeopleInPeoplePicker                   = $false
                     NotificationsInSharePointEnabled              = $true
                     OwnerAnonymousNotification                    = $true
@@ -68,15 +76,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Set-PnPTenant -MockWith {
                     return @{
-                        CompatibilityRange                            = "16,16"
+                        CompatibilityRange                            = '16,16'
                         SearchResolveExactEmailOrUPN                  = $false
                         OfficeClientADALDisabled                      = $false
                         LegacyAuthProtocolsEnabled                    = $true
-                        SignInAccelerationDomain                      = ""
+                        SignInAccelerationDomain                      = ''
                         UsePersistentCookiesForExplorerView           = $false
                         UserVoiceForFeedbackEnabled                   = $true
                         PublicCdnEnabled                              = $false
-                        PublicCdnAllowedFileTypes                     = "CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF"
+                        PublicCdnAllowedFileTypes                     = 'CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF'
                         UseFindPeopleInPeoplePicker                   = $false
                         NotificationsInSharePointEnabled              = $true
                         OwnerAnonymousNotification                    = $true
@@ -88,15 +96,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-PnPTenant -MockWith {
                     return @{
-                        CompatibilityRange                            = "16,16"
+                        CompatibilityRange                            = '16,16'
                         SearchResolveExactEmailOrUPN                  = $false
                         OfficeClientADALDisabled                      = $false
                         LegacyAuthProtocolsEnabled                    = $true
-                        SignInAccelerationDomain                      = ""
+                        SignInAccelerationDomain                      = ''
                         UsePersistentCookiesForExplorerView           = $false
                         UserVoiceForFeedbackEnabled                   = $true
                         PublicCdnEnabled                              = $false
-                        PublicCdnAllowedFileTypes                     = "CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF"
+                        PublicCdnAllowedFileTypes                     = 'CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF'
                         UseFindPeopleInPeoplePicker                   = $false
                         NotificationsInSharePointEnabled              = $true
                         OwnerAnonymousNotification                    = $true
@@ -107,16 +115,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Sets the tenant AccessControl settings in Set method" {
+            It 'Sets the tenant AccessControl settings in Set method' {
                 Set-TargetResource @testParams
             }
         }
 
-        Context -Name "ReverseDSC Tests" -Fixture {
+        Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $testParams = @{
@@ -125,15 +133,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-PnPTenant -MockWith {
                     return @{
-                        CompatibilityRange                            = "16,16"
+                        CompatibilityRange                            = '16,16'
                         SearchResolveExactEmailOrUPN                  = $false
                         OfficeClientADALDisabled                      = $false
                         LegacyAuthProtocolsEnabled                    = $true
-                        SignInAccelerationDomain                      = ""
+                        SignInAccelerationDomain                      = ''
                         UsePersistentCookiesForExplorerView           = $false
                         UserVoiceForFeedbackEnabled                   = $true
                         PublicCdnEnabled                              = $false
-                        PublicCdnAllowedFileTypes                     = "CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF"
+                        PublicCdnAllowedFileTypes                     = 'CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF'
                         UseFindPeopleInPeoplePicker                   = $false
                         NotificationsInSharePointEnabled              = $true
                         OwnerAnonymousNotification                    = $true
@@ -141,9 +149,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         FilePickerExternalImageSearchEnabled          = $true
                         HideDefaultThemes                             = $false
                     }
-                }}
+                } }
 
-            It "Should Reverse Engineer resource from the Export method" {
+            It 'Should Reverse Engineer resource from the Export method' {
                 Export-TargetResource @testParams
             }
         }

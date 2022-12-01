@@ -122,26 +122,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -283,7 +269,9 @@ function Set-TargetResource
             if ($Error[0].Exception.Message -eq 'Site Script Not Found')
             {
                 $Message = "The Site Script, $($Title), does not exist."
-                New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+                New-M365DSCLogEntry -Message $Message `
+                    -Exception $_ `
+                    -Source $MyInvocation.MyCommand.ModuleName
                 throw $Message
             }
         }
@@ -514,26 +502,13 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }

@@ -35,25 +35,25 @@ function Get-M365DSCHashAsString
     {
         switch ($Values.$key.GetType().Name)
         {
-            "String"
+            'String'
             {
                 $sb.AppendLine("                        $key = `"$($Values.$key)`"") | Out-Null
             }
-            "Int32"
+            'Int32'
             {
                 $sb.AppendLine("                        $key = $($Values.$key)") | Out-Null
             }
-            "UInt32"
+            'UInt32'
             {
                 $sb.AppendLine("                        $key = $($Values.$key)") | Out-Null
             }
-            "Boolean"
+            'Boolean'
             {
                 $sb.AppendLine("                        $key = `$$($Values.$key)") | Out-Null
             }
-            "String[]"
+            'String[]'
             {
-                $stringValue = ""
+                $stringValue = ''
                 foreach ($item in $Values.$key)
                 {
                     $stringValue += "`"$item`","
@@ -84,29 +84,38 @@ function Get-M365DSCFakeValues
     {
         switch ($parameter.Type.Name)
         {
-            "String"
-            {
-                if ($IntroduceDrift) {
-                    if ($parameter.ValidValues.Length -eq 0) {
-                        $result.Add($parameter.Name, "FakeStringValue")
-                    } else {
-                        $result.Add($parameter.Name, $parameter.ValidValues[1])
-                    }
-                } else {
-                    if ($parameter.ValidValues.Length -eq 0) {
-                        $result.Add($parameter.Name, "FakeStringValue2")
-                    } else {
-                        $result.Add($parameter.Name, $parameter.ValidValues[0])
-                    }
-                }
-            }
-            "String[]"
+            'String'
             {
                 if ($IntroduceDrift)
                 {
                     if ($parameter.ValidValues.Length -eq 0)
                     {
-                        $result.Add($parameter.Name, @("FakeStringArrayValue1"))
+                        $result.Add($parameter.Name, 'FakeStringValue')
+                    }
+                    else
+                    {
+                        $result.Add($parameter.Name, $parameter.ValidValues[1])
+                    }
+                }
+                else
+                {
+                    if ($parameter.ValidValues.Length -eq 0)
+                    {
+                        $result.Add($parameter.Name, 'FakeStringValue2')
+                    }
+                    else
+                    {
+                        $result.Add($parameter.Name, $parameter.ValidValues[0])
+                    }
+                }
+            }
+            'String[]'
+            {
+                if ($IntroduceDrift)
+                {
+                    if ($parameter.ValidValues.Length -eq 0)
+                    {
+                        $result.Add($parameter.Name, @('FakeStringArrayValue1'))
                     }
                     else
                     {
@@ -117,7 +126,7 @@ function Get-M365DSCFakeValues
                 {
                     if ($parameter.ValidValues.Length -eq 0)
                     {
-                        $result.Add($parameter.Name, @("FakeStringArrayValue1", "FakeStringArrayValue2"))
+                        $result.Add($parameter.Name, @('FakeStringArrayValue1', 'FakeStringArrayValue2'))
                     }
                     else
                     {
@@ -125,7 +134,7 @@ function Get-M365DSCFakeValues
                     }
                 }
             }
-            "Int32"
+            'Int32'
             {
                 if ($IntroduceDrift)
                 {
@@ -136,7 +145,7 @@ function Get-M365DSCFakeValues
                     $result.Add($parameter.Name, 25)
                 }
             }
-            "UInt32"
+            'UInt32'
             {
                 if ($IntroduceDrift)
                 {
@@ -147,7 +156,7 @@ function Get-M365DSCFakeValues
                     $result.Add($parameter.Name, 25)
                 }
             }
-            "Boolean"
+            'Boolean'
             {
                 if ($IntroduceDrift)
                 {
@@ -163,7 +172,8 @@ function Get-M365DSCFakeValues
     return $result
 }
 
-function New-ExoUnitTest {
+function New-ExoUnitTest
+{
     param (
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -175,52 +185,60 @@ function New-ExoUnitTest {
 
         [Parameter(Mandatory = $false)]
         [System.String]
-        $CmdletNoun = ""
+        $CmdletNoun = ''
     )
 
-    if ($ResourceName.StartsWith("MSFT_")) {
+    if ($ResourceName.StartsWith('MSFT_'))
+    {
         $ResourceName = $ResourceName.Substring(5)
     }
 
-    if ($CmdletNoun -eq "") {
+    if ($CmdletNoun -eq '')
+    {
         $CmdletNoun = $ResourceName.Substring(3)
     }
 
     # Get properties of resource
-    $ignoredProperties = @("ErrorVariable", `
-                        "ErrorAction", `
-                        "InformationVariable", `
-                        "InformationAction", `
-                        "WarningVariable", `
-                        "WarningAction", `
-                        "OutVariable", `
-                        "OutBuffer", `
-                        "PipelineVariable", `
-                        "Verbose", `
-                        "WhatIf", `
-                        "Debug",
-                        "Credential",
-                        "ApplicationId",
-                        "Ensure",
-                        "TenantId",
-                        "CertificateThumbprint",
-                        "CertificatePath",
-                        "CertificatePassword",
-                        "IsSingleInstance")
+    $ignoredProperties = @('ErrorVariable', `
+            'ErrorAction', `
+            'InformationVariable', `
+            'InformationAction', `
+            'WarningVariable', `
+            'WarningAction', `
+            'OutVariable', `
+            'OutBuffer', `
+            'PipelineVariable', `
+            'Verbose', `
+            'WhatIf', `
+            'Debug',
+        'Credential',
+        'ApplicationId',
+        'Ensure',
+        'TenantId',
+        'CertificateThumbprint',
+        'CertificatePath',
+        'CertificatePassword',
+        'IsSingleInstance')
 
-    try {
-        Import-Module $("..\DSCResources\MSFT_" + $ResourceName + "\MSFT_" + $ResourceName + ".psm1") -Force -ErrorAction Stop
-    } catch {
+    try
+    {
+        Import-Module $('..\DSCResources\MSFT_' + $ResourceName + '\MSFT_' + $ResourceName + '.psm1') -Force -ErrorAction Stop
+    }
+    catch
+    {
         Write-Host "DSC resource $ResourceName not found!"
         break;
     }
 
     # Copy unit test template
-    try {
+    try
+    {
         $unitTestPath = "$OutputPath\Microsoft365DSC.$($ResourceName).Tests.ps1"
         Copy-Item -Path ..\..\..\ResourceGenerator\UnitTest.Template.ps1 -Destination $unitTestPath -ErrorAction Stop
-    } catch {
-        Write-Host "Cannot create unit test file!"
+    }
+    catch
+    {
+        Write-Host 'Cannot create unit test file!'
         break;
     }
 
@@ -240,18 +258,18 @@ function New-ExoUnitTest {
     # build unit test
     $fakeValues = Get-M365DSCFakeValues -ParametersInformation $parameterInformation -IntroduceDrift $false
     $fakeValuesString = Get-M365DSCHashAsString -Values $fakeValues
-    Write-TokenReplacement -Token "<FakeValues>" -value $fakeValuesString -FilePath $unitTestPath
+    Write-TokenReplacement -Token '<FakeValues>' -value $fakeValuesString -FilePath $unitTestPath
 
     $fakeDriftValues = Get-M365DSCFakeValues -ParametersInformation $parameterInformation -IntroduceDrift $true
     $fakeDriftValuesString = Get-M365DSCHashAsString -Values $fakeDriftValues
-    Write-TokenReplacement -Token "<DriftValues>" -value $fakeDriftValuesString -FilePath $unitTestPath
+    Write-TokenReplacement -Token '<DriftValues>' -value $fakeDriftValuesString -FilePath $unitTestPath
 
-    Write-TokenReplacement -Token "<ResourceName>" -value $ResourceName -FilePath $unitTestPath
+    Write-TokenReplacement -Token '<ResourceName>' -value $ResourceName -FilePath $unitTestPath
 
-    Write-TokenReplacement -Token "<GetCmdletName>" -value "Get-$($CmdletNoun)" -FilePath $unitTestPath
-    Write-TokenReplacement -Token "<SetCmdletName>" -value "Set-$($CmdletNoun)" -FilePath $unitTestPath
-    Write-TokenReplacement -Token "<RemoveCmdletName>" -value "Remove-$($CmdletNoun)" -FilePath $unitTestPath
-    Write-TokenReplacement -Token "<NewCmdletName>" -value "New-$($CmdletNoun)" -FilePath $unitTestPath
+    Write-TokenReplacement -Token '<GetCmdletName>' -value "Get-$($CmdletNoun)" -FilePath $unitTestPath
+    Write-TokenReplacement -Token '<SetCmdletName>' -value "Set-$($CmdletNoun)" -FilePath $unitTestPath
+    Write-TokenReplacement -Token '<RemoveCmdletName>' -value "Remove-$($CmdletNoun)" -FilePath $unitTestPath
+    Write-TokenReplacement -Token '<NewCmdletName>' -value "New-$($CmdletNoun)" -FilePath $unitTestPath
 }
 
 Export-ModuleMember -Function @(

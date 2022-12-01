@@ -50,7 +50,7 @@ function Get-TargetResource
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Getting configuration of Teams Meeting Broadcast"
+    Write-Verbose -Message 'Getting configuration of Teams Meeting Broadcast'
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -59,7 +59,7 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -88,27 +88,13 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        throw $_
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return @{}
     }
 }
 
@@ -163,13 +149,13 @@ function Set-TargetResource
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Setting configuration of Teams Meeting Broadcast"
+    Write-Verbose -Message 'Setting configuration of Teams Meeting Broadcast'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -181,10 +167,10 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     $SetParams = $PSBoundParameters
-    $SetParams.Remove("Credential") | Out-Null
-    $SetParams.Remove("ApplicationId") | Out-Null
-    $SetParams.Remove("TenantId") | Out-Null
-    $SetParams.Remove("CertificateThumbprint") | Out-Null
+    $SetParams.Remove('Credential') | Out-Null
+    $SetParams.Remove('ApplicationId') | Out-Null
+    $SetParams.Remove('TenantId') | Out-Null
+    $SetParams.Remove('CertificateThumbprint') | Out-Null
 
     Set-CsTeamsMeetingBroadcastConfiguration @SetParams
 }
@@ -244,7 +230,7 @@ function Test-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -252,13 +238,13 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Teams Meeting Broadcast"
+    Write-Verbose -Message 'Testing configuration of Teams Meeting Broadcast'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     if ($CurrentValues.SdnApiToken -eq '**********')
     {
-        $CurrentValues.Remove("SdnApiToken") | Out-Null
+        $CurrentValues.Remove('SdnApiToken') | Out-Null
     }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
@@ -306,7 +292,7 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -318,14 +304,14 @@ function Export-TargetResource
     {
         $dscContent = ''
         $params = @{
-            Identity              = "Global"
+            Identity              = 'Global'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
         }
-        Add-ConfigurationDataEntry -Node "NonNodeData" -Key "SdnApiToken" -Value "**********"`
-            -Description "API Token for the Teams SDN Provider for Meeting Broadcast"
+        Add-ConfigurationDataEntry -Node 'NonNodeData' -Key 'SdnApiToken' -Value '**********'`
+            -Description 'API Token for the Teams SDN Provider for Meeting Broadcast'
         $results = Get-TargetResource @params
         $results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
             -Results $Results
@@ -340,7 +326,7 @@ function Export-TargetResource
             -Credential $Credential
 
         $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-            -ParameterName "SdnApiToken"
+            -ParameterName 'SdnApiToken'
 
         $dscContent += $currentDSCBlock
         Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -351,27 +337,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

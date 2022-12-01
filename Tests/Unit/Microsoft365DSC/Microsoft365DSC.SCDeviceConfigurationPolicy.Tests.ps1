@@ -2,27 +2,27 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath '..\..\Unit' `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath '\Stubs\Microsoft365.psm1' `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath '\Stubs\Generic.psm1' `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\UnitTestHelper.psm1" `
+        -ChildPath '\UnitTestHelper.psm1' `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SCDeviceConfigurationPolicy" -GenericStubModule $GenericStubPath
+    -DscResource 'SCDeviceConfigurationPolicy' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         BeforeAll {
-            $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
 
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
@@ -30,23 +30,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
             }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
-
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credentials"
+                return 'Credentials'
             }
 
             Mock -CommandName Import-PSSession -MockWith {
-
             }
 
             Mock -CommandName New-PSSession -MockWith {
-
             }
 
             Mock -CommandName Remove-DeviceConfigurationPolicy -MockWith {
@@ -54,7 +50,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Set-DeviceConfigurationPolicy -MockWith {
-
             }
 
             Mock -CommandName New-DeviceConfigurationPolicy -MockWith {
@@ -62,15 +57,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     # This mock can simply return an empty object for the purpose of these tests.
                 }
             }
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
+            }
         }
 
         # Test contexts
         Context -Name "The Device Configuration Policy doesn't already exist" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Name               = 'TestPolicy'
-                    Comment            = 'This is a test comment'
-                    Ensure             = 'Present'
+                    Name       = 'TestPolicy'
+                    Comment    = 'This is a test comment'
+                    Ensure     = 'Present'
                     Credential = $Credential
                 }
 
@@ -84,24 +83,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Absent from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Absent"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
 
-            It "Should call the Set method" {
+            It 'Should call the Set method' {
                 Set-TargetResource @testParams
 
-                # Because the policy was not found, the set method should attempt to create it;
-                # Therefore we want to assess that the New-* method was called exactly once;
+                # Because the policy was not found, the set method should attempt to create it
+                # Therefore we want to assess that the New-* method was called exactly once
                 Should -Invoke -CommandName 'New-DeviceConfigurationPolicy' -Exactly 1
             }
         }
 
-        Context -Name "The Device Configuration Policy already exists and it is already in the Desired State" -Fixture {
+        Context -Name 'The Device Configuration Policy already exists and it is already in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Name               = 'TestPolicy'
-                    Comment            = 'This is a test comment'
-                    Ensure             = 'Present'
+                    Name       = 'TestPolicy'
+                    Comment    = 'This is a test comment'
+                    Ensure     = 'Present'
                     Credential = $Credential
                 }
 
@@ -118,16 +117,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
         }
 
-        Context -Name "The Device Configuration Policy already exists and it is NOT in the Desired State" -Fixture {
+        Context -Name 'The Device Configuration Policy already exists and it is NOT in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Name               = 'TestPolicy'
-                    Comment            = 'This is a test comment'
-                    Ensure             = 'Present'
+                    Name       = 'TestPolicy'
+                    Comment    = 'This is a test comment'
+                    Ensure     = 'Present'
                     Credential = $Credential
                 }
 
@@ -145,20 +144,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
             It 'Should update the policy in the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "Set-DeviceConfigurationPolicy" -Exactly 1
+                Should -Invoke -CommandName 'Set-DeviceConfigurationPolicy' -Exactly 1
             }
         }
 
-        Context -Name "The Device Configuration Policy Exists but it Should NOT" -Fixture {
+        Context -Name 'The Device Configuration Policy Exists but it Should NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Name               = 'TestPolicy'
-                    Comment            = 'This is a test comment'
-                    Ensure             = 'Absent'
+                    Name       = 'TestPolicy'
+                    Comment    = 'This is a test comment'
+                    Ensure     = 'Absent'
                     Credential = $Credential
                 }
 
@@ -175,19 +174,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
             It 'Should Delete from the Set method' {
                 Set-TargetResource @testParams
 
-                # Because the policy was not found, the set method should attempt to delete it;
-                # Therefore we want to assess that the Remove-* method was called exactly once;
+                # Because the policy was not found, the set method should attempt to delete it
+                # Therefore we want to assess that the Remove-* method was called exactly once
                 Should -Invoke -CommandName 'Remove-DeviceConfigurationPolicy' -Exactly 1
             }
         }
 
-        Context -Name "ReverseDSC Tests" -Fixture {
+        Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $testParams = @{
@@ -202,7 +201,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should Reverse Engineer resource from the Export method" {
+            It 'Should Reverse Engineer resource from the Export method' {
                 Export-TargetResource @testParams
             }
         }

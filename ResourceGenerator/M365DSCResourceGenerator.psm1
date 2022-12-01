@@ -1046,7 +1046,8 @@ function New-M365DSCResource
         New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -ProfileName 'v1.0' `
             -InboundParameters @{ `
-            Credential = $Credential `
+                Credential = $Credential `
+
         } | Out-Null
     }
 
@@ -1217,11 +1218,11 @@ function New-M365DSCResource
     Write-TokenReplacement -Token '<ResourceDescription>' -Value $resourceDescription -FilePath $readmeFilePath
 
     $getCmdlet = Get-Command -Name "Get-$($GraphModuleCmdLetNoun)" -Module $GraphModule
-    $getDefaultParameterSet = $getCmdlet.ParameterSets | Where-Object -FilterScript { $_.Name -eq 'Get'}
+    $getDefaultParameterSet = $getCmdlet.ParameterSets | Where-Object -FilterScript { $_.Name -eq 'Get' }
     $getKeyIdentifier = ($getDefaultParameterSet.Parameters | Where-Object -FilterScript { $_.IsMandatory }).Name
-    if([String]::isNullOrEmpty($getKeyIdentifier))
+    if ([String]::isNullOrEmpty($getKeyIdentifier))
     {
-        $getKeyIdentifier=$typeProperties[0].Name
+        $getKeyIdentifier = $typeProperties[0].Name
     }
 
     Write-TokenReplacement -Token '<ParameterBlock>' -Value $parameterString -FilePath $moduleFilePath
@@ -1364,19 +1365,12 @@ function Update-DeviceConfigurationPolicyAssignment
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message `$_
-            `$tenantIdValue = ""
-            `$tenantIdValue = `$Credential.UserName.Split('@')[1]
-            Add-M365DSCEvent -Message `$_ -EntryType 'Error' ``
-                -EventID 1 -Source `$(`$MyInvocation.MyCommand.Source) ``
-                -TenantId `$tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message `$_
-        }
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception `$_ `
+            -Source `$(`$MyInvocation.MyCommand.Source) `
+            -TenantId `$TenantId `
+            -Credential `$Credential
+
         return `$null
     }
 

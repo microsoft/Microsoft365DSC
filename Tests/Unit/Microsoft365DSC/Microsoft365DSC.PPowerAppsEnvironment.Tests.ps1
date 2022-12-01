@@ -2,42 +2,40 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath '..\..\Unit' `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath '\Stubs\Microsoft365.psm1' `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath '\Stubs\Generic.psm1' `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\UnitTestHelper.psm1" `
+        -ChildPath '\UnitTestHelper.psm1' `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "PPPowerAppsEnvironment" -GenericStubModule $GenericStubPath
+    -DscResource 'PPPowerAppsEnvironment' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         BeforeAll {
-            $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
             }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
-
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credentials"
+                return 'Credentials'
             }
 
             Mock -CommandName Remove-AdminPowerAppEnvironment -MockWith {
@@ -51,17 +49,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 }
             }
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
+            }
         }
 
         # Test contexts
         Context -Name "Environment doesn't already exist" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName        = "Test Environment"
-                    Location           = 'canada'
-                    EnvironmentSKU     = 'production'
-                    Credential = $Credential
-                    Ensure             = "Present"
+                    DisplayName    = 'Test Environment'
+                    Location       = 'canada'
+                    EnvironmentSKU = 'production'
+                    Credential     = $Credential
+                    Ensure         = 'Present'
                 }
 
                 Mock -CommandName Get-AdminPowerAppEnvironment -MockWith {
@@ -74,28 +76,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Absent from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Absent"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
 
-            It "Should create the environment in the Set method" {
+            It 'Should create the environment in the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName New-AdminPowerAppEnvironment -Exactly 1
             }
         }
 
-        Context -Name "Environment already exists but is NOT in the Desired State" -Fixture {
+        Context -Name 'Environment already exists but is NOT in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName        = "Test Environment"
-                    Location           = 'canada'
-                    EnvironmentSKU     = 'production'
-                    Credential = $Credential
-                    Ensure             = "Present"
+                    DisplayName    = 'Test Environment'
+                    Location       = 'canada'
+                    EnvironmentSKU = 'production'
+                    Credential     = $Credential
+                    Ensure         = 'Present'
                 }
 
                 Mock -CommandName Get-AdminPowerAppEnvironment -MockWith {
                     return @{
-                        DisplayName     = "Test Environment"
+                        DisplayName     = 'Test Environment'
                         Location        = 'unitedstates'
                         EnvironmentType = 'production'
                     }
@@ -107,29 +109,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It "Should not do anything in the Set method" {
+            It 'Should not do anything in the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Remove-AdminPowerAppEnvironment -Exactly 0
                 Should -Invoke -CommandName New-AdminPowerAppEnvironment -Exactly 0
             }
         }
 
-        Context -Name "Environment already exists but IS ALREADY in the Desired State" -Fixture {
+        Context -Name 'Environment already exists but IS ALREADY in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName        = "Test Environment"
-                    Location           = 'canada'
-                    EnvironmentSKU     = 'production'
-                    Credential = $Credential
-                    Ensure             = "Present"
+                    DisplayName    = 'Test Environment'
+                    Location       = 'canada'
+                    EnvironmentSKU = 'production'
+                    Credential     = $Credential
+                    Ensure         = 'Present'
                 }
 
                 Mock -CommandName Get-AdminPowerAppEnvironment -MockWith {
                     return @{
-                        DisplayName     = "Test Environment"
+                        DisplayName     = 'Test Environment'
                         Location        = 'canada'
                         EnvironmentType = 'production'
                     }
@@ -141,23 +143,23 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
         }
 
-        Context -Name "Environment already exists but SHOULD NOT" -Fixture {
+        Context -Name 'Environment already exists but SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName        = "Test Environment"
-                    Location           = 'canada'
-                    EnvironmentSKU     = 'production'
-                    Credential = $Credential
-                    Ensure             = "Absent"
+                    DisplayName    = 'Test Environment'
+                    Location       = 'canada'
+                    EnvironmentSKU = 'production'
+                    Credential     = $Credential
+                    Ensure         = 'Absent'
                 }
 
                 Mock -CommandName Get-AdminPowerAppEnvironment -MockWith {
                     return @{
-                        DisplayName     = "Test Environment"
+                        DisplayName     = 'Test Environment'
                         Location        = 'canada'
                         EnvironmentType = 'production'
                     }
@@ -169,17 +171,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It "Should delete the environment in the Set method" {
+            It 'Should delete the environment in the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Remove-AdminPowerAppEnvironment -Exactly 1
                 Should -Invoke -CommandName New-AdminPowerAppEnvironment -Exactly 0
             }
         }
 
-        Context -Name "ReverseDSC Tests" -Fixture {
+        Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $testParams = @{
@@ -188,14 +190,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-AdminPowerAppEnvironment -MockWith {
                     return @{
-                        DisplayName     = "Test Environment"
+                        DisplayName     = 'Test Environment'
                         Location        = 'canada'
                         EnvironmentType = 'production'
                     }
                 }
             }
 
-            It "Should Reverse Engineer resource from the Export method" {
+            It 'Should Reverse Engineer resource from the Export method' {
                 Export-TargetResource @testParams
             }
         }

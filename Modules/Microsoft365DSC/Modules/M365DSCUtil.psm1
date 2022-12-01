@@ -1558,7 +1558,7 @@ function New-M365DSCConnection
             }
             catch
             {
-                Write-Verbose $_
+                Write-Verbose -Message $_
             }
 
             Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
@@ -1581,7 +1581,7 @@ function New-M365DSCConnection
             }
             catch
             {
-                Write-Verbose $_
+                Write-Verbose -Message $_
             }
 
             Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
@@ -1610,7 +1610,7 @@ function New-M365DSCConnection
             }
             catch
             {
-                Write-Verbose $_
+                Write-Verbose -Message $_
             }
 
             Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
@@ -1633,7 +1633,7 @@ function New-M365DSCConnection
             }
             catch
             {
-                Write-Verbose $_
+                Write-Verbose -Message $_
             }
 
             Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
@@ -1725,7 +1725,7 @@ function New-M365DSCConnection
             }
             catch
             {
-                Write-Verbose $_
+                Write-Verbose -Message $_
             }
             Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
             return 'Credential'
@@ -2160,7 +2160,7 @@ function Install-M365DSCDevBranch
         }
         catch
         {
-            Write-Verbose $_
+            Write-Verbose -Message $_
         }
     }
     Write-Host 'Done' -ForegroundColor Green
