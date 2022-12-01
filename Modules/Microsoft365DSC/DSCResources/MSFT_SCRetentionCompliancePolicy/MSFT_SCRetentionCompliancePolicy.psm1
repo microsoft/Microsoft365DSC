@@ -142,11 +142,28 @@ function Get-TargetResource
                     Comment                       = $PolicyObject.Comment
                     Enabled                       = $PolicyObject.Enabled
                     RestrictiveRetention          = $PolicyObject.RestrictiveRetention
-                    TeamsChannelLocation          = [array]$PolicyObject.TeamsChannelLocation.DisplayName
-                    TeamsChannelLocationException = $PolicyObject.TeamsChannelLocationException
-                    TeamsChatLocation             = [array]$PolicyObject.TeamsChatLocation.DisplayName
-                    TeamsChatLocationException    = $PolicyObject.TeamsChatLocationException
+                    TeamsChannelLocation          = @()
+                    TeamsChannelLocationException = @()
+                    TeamsChatLocation             = @()
+                    TeamsChatLocationException    = @()
                     Credential                    = $Credential
+                }
+
+                if ($PolicyObject.TeamsChannelLocation.Count -gt 0)
+                {
+                    $result.TeamsChannelLocation = [array]$PolicyObject.TeamsChannelLocation.Name
+                }
+                if ($PolicyObject.TeamsChatLocation.Count -gt 0)
+                {
+                    $result.TeamsChatLocation = [array]$PolicyObject.TeamsChatLocation.Name
+                }
+                if ($PolicyObject.TeamsChannelLocationException.Count -gt 0)
+                {
+                    $result.TeamsChannelLocationException = [array]$PolicyObject.TeamsChannelLocationException.Name
+                }
+                if ($PolicyObject.TeamsChatLocationException.Count -gt 0)
+                {
+                    $result.TeamsChatLocationException = $PolicyObject.TeamsChatLocationException.Name
                 }
             }
             else
@@ -155,21 +172,70 @@ function Get-TargetResource
                     Ensure                       = 'Present'
                     Name                         = $PolicyObject.Name
                     Comment                      = $PolicyObject.Comment
-                    DynamicScopeLocation         = [array]$PolicyObject.DynamicScopeLocation.DisplayName
+                    DynamicScopeLocation         = @()
                     Enabled                      = $PolicyObject.Enabled
-                    ExchangeLocation             = [array]$PolicyObject.ExchangeLocation.DisplayName
-                    ExchangeLocationException    = [array]$PolicyObject.ExchangeLocationException
-                    ModernGroupLocation          = [array]$PolicyObject.ModernGroupLocation.DisplayName
-                    ModernGroupLocationException = [array]$PolicyObject.ModernGroupLocationException
-                    OneDriveLocation             = [array]$PolicyObject.OneDriveLocation.DisplayName
-                    OneDriveLocationException    = [array]$PolicyObject.OneDriveLocationException
-                    PublicFolderLocation         = [array]$PolicyObject.PublicFolderLocation.DisplayName
+                    ExchangeLocation             = @()
+                    ExchangeLocationException    = @()
+                    ModernGroupLocation          = @()
+                    ModernGroupLocationException = @()
+                    OneDriveLocation             = @()
+                    OneDriveLocationException    = @()
+                    PublicFolderLocation         = @()
                     RestrictiveRetention         = $PolicyObject.RestrictiveRetention
-                    SharePointLocation           = [array]$PolicyObject.SharePointLocation.DisplayName
-                    SharePointLocationException  = $PolicyObject.SharePointLocationException
-                    SkypeLocation                = [array]$PolicyObject.SkypeLocation.DisplayName
-                    SkypeLocationException       = $PolicyObject.SkypeLocationException
-                    Credential           = $Credential
+                    SharePointLocation           = @()
+                    SharePointLocationException  = @()
+                    SkypeLocation                = @()
+                    SkypeLocationException       = @()
+                    Credential                   = $Credential
+                }
+
+                if ($PolicyObject.DynamicScopeLocation.Count -gt 0)
+                {
+                    $result.DynamicScopeLocation = [array]$PolicyObject.DynamicScopeLocation.Name
+                }
+                if ($PolicyObject.ExchangeLocation.Count -gt 0)
+                {
+                    $result.ExchangeLocation = [array]$PolicyObject.ExchangeLocation.Name
+                }
+                if ($PolicyObject.ModernGroupLocation.Count -gt 0)
+                {
+                    $result.ModernGroupLocation = [array]$PolicyObject.ModernGroupLocation.Name
+                }
+                if ($PolicyObject.OneDriveLocation.Count -gt 0)
+                {
+                    $result.OneDriveLocation = [array]$PolicyObject.OneDriveLocation.Name
+                }
+                if ($PolicyObject.PublicFolderLocation.Count -gt 0)
+                {
+                    $result.PublicFolderLocation = [array]$PolicyObject.PublicFolderLocation.Name
+                }
+                if ($PolicyObject.SharePointLocation.Count -gt 0)
+                {
+                    $result.SharePointLocation = [array]$PolicyObject.SharePointLocation.Name
+                }
+                if ($PolicyObject.SkypeLocation.Count -gt 0)
+                {
+                    $result.SkypeLocation = [array]$PolicyObject.SkypeLocation.Name
+                }
+                if ($PolicyObject.ExchangeLocationException.Count -gt 0)
+                {
+                    $result.ExchangeLocationException = [array]$PolicyObject.ExchangeLocationException.Name
+                }
+                if ($PolicyObject.ModernGroupLocationException.Count -gt 0)
+                {
+                    $result.ModernGroupLocationException = [array]$PolicyObject.ModernGroupLocationException.Name
+                }
+                if ($PolicyObject.OneDriveLocationException.Count -gt 0)
+                {
+                    $result.OneDriveLocationException = [array]$PolicyObject.OneDriveLocationException.Name
+                }
+                if ($PolicyObject.SharePointLocationException.Count -gt 0)
+                {
+                    $result.SharePointLocationException = [array]$PolicyObject.SharePointLocationException.Name
+                }
+                if ($PolicyObject.SkypeLocationException.Count -gt 0)
+                {
+                    $result.SkypeLocationException = [array]$PolicyObject.SkypeLocationException.Name
                 }
             }
 
@@ -206,7 +272,6 @@ function Get-TargetResource
 
 function Set-TargetResource
 {
-
     [CmdletBinding()]
     param
     (
@@ -331,9 +396,9 @@ function Set-TargetResource
 
     $CurrentPolicy = Get-TargetResource @PSBoundParameters
 
+    $isTeamsBased = $false
     if ($null -eq $TeamsChannelLocation -and $null -eq $TeamsChatLocation)
     {
-        Write-Verbose -Message "Policy $Name is not a Teams Policy"
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove("Credential")
         $CreationParams.Remove("Ensure")
@@ -582,16 +647,30 @@ function Set-TargetResource
     }
     else
     {
+        $isTeamsBased = $true
         Write-Verbose -Message "Policy $Name is a Teams Policy"
         $CreationParams = @{
             Identity                      = $Name
             Comment                       = $Comment
             Enabled                       = $Enabled
             RestrictiveRetention          = $RestrictiveRetention
-            TeamsChannelLocation          = $TeamsChannelLocation
-            TeamsChannelLocationException = $TeamsChannelLocationException
-            TeamsChatLocation             = $TeamsChatLocation
-            TeamsChatLocationException    = $TeamsChatLocationException
+        }
+
+        if ($null -ne $TeamsChannelLocation)
+        {
+            $CreationParams.Add('TeamsChannelLocation', $TeamsChannelLocation)
+        }
+        if ($null -ne $TeamsChannelLocationException)
+        {
+            $CreationParams.Add('TeamsChannelLocationException', $TeamsChannelLocationException)
+        }
+        if ($null -ne $TeamsChatLocation)
+        {
+            $CreationParams.Add('TeamsChatLocation', $TeamsChatLocation)
+        }
+        if ($null -ne $TeamsChatLocationException)
+        {
+            $CreationParams.Add('TeamsChatLocationException', $TeamsChatLocationException)
         }
 
         # Teams Chat Location is specified or already existing, we need to determine
@@ -614,8 +693,6 @@ function Set-TargetResource
                 Write-Verbose -Message "Adding the AddTeamsChatLocation property."
                 $CreationParams.Add("AddTeamsChatLocation", $ToBeAdded)
             }
-            Write-Verbose -Message "Removing the TeamsChatLocation property."
-            $CreationParams.Remove("TeamsChatLocation")
         }
 
         # Teams Chat Location Exception is specified or already existing, we need to determine
@@ -638,8 +715,6 @@ function Set-TargetResource
                 Write-Verbose -Message "Adding the AddTeamsChatLocationException property."
                 $CreationParams.Add("AddTeamsChatLocationException", $ToBeAdded)
             }
-            Write-Verbose -Message "Removing the TeamsChatLocationException property."
-            $CreationParams.Remove("TeamsChatLocationException")
         }
 
         # Teams Channel Location is specified or already existing, we need to determine
@@ -662,8 +737,6 @@ function Set-TargetResource
                 Write-Verbose -Message "Adding the AddTeamsChannelLocation property."
                 $CreationParams.Add("AddTeamsChannelLocation", $ToBeAdded)
             }
-            Write-Verbose -Message "Removing the TeamsChannelLocation property."
-            $CreationParams.Remove("TeamsChannelLocation")
         }
 
         # Teams Channel Location Exception is specified or already existing, we need to determine
@@ -686,20 +759,28 @@ function Set-TargetResource
                 Write-Verbose -Message "Adding the AddTeamsChannelLocationException property."
                 $CreationParams.Add("AddTeamsChannelLocationException", $ToBeAdded)
             }
-            Write-Verbose -Message "Removing the TeamsChannelLocationException property."
-            $CreationParams.Remove("TeamsChannelLocationException")
         }
-        $CreationParams.Remove("RestrictiveRetention") | Out-Null
     }
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentPolicy.Ensure))
     {
-        Write-Verbose -Message "Creating new Retention Compliance Policy $Name"
         $CreationParams.Add("Name", $Name)
         $CreationParams.Remove("Identity") | Out-Null
+        Write-Verbose -Message "Creating new Retention Compliance Policy $Name with values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
         New-RetentionCompliancePolicy @CreationParams
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
+        # Remove Teams specific parameters
+        $CreationParams.Remove("TeamsChatLocationException") | Out-Null
+        $CreationParams.Remove("TeamsChannelLocationException") | Out-Null
+        $CreationParams.Remove("TeamsChannelLocation") | Out-Null
+        $CreationParams.Remove("TeamsChatLocation") | Out-Null
+
+        if ($isTeamsBased)
+        {
+            $CreationParams.Remove("RestrictiveRetention") | Out-Null
+        }
+
         Write-Verbose "Updating Policy with values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
         Set-RetentionCompliancePolicy @CreationParams
     }
