@@ -2,20 +2,20 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath '..\..\Unit' `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath '\Stubs\Microsoft365.psm1' `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath '\Stubs\Generic.psm1' `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\UnitTestHelper.psm1" `
+        -ChildPath '\UnitTestHelper.psm1' `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SPOSearchResultSource" -GenericStubModule $GenericStubPath
+    -DscResource 'SPOSearchResultSource' -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -28,23 +28,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
-            $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
             }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
-
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credentials"
+                return 'Credentials'
             }
             $existingValueXML = "<SearchConfigurationSettings xmlns=`"http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Portability`" xmlns:i=`"http://www.w3.org/2001/XMLSchema-instance`">
             <SearchQueryConfigurationSettings><SearchQueryConfigurationSettings>
@@ -104,22 +102,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             <SearchSubscriptionSettingsConfigurationSettings i:nil=`"true`" />
             <SearchTaxonomyConfigurationSettings i:nil=`"true`" />
             </SearchConfigurationSettings>"
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
+            }
         }
 
         # Test contexts
         Context -Name "When the Result Source doesn't already exist" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Name               = "TestRS"
-                    Description        = "New Result Source"
-                    Protocol           = "Local"
-                    SourceURL          = ""
-                    Type               = "SharePoint"
-                    Ensure             = "Present"
-                    Credential = $Credential
+                    Name        = 'TestRS'
+                    Description = 'New Result Source'
+                    Protocol    = 'Local'
+                    SourceURL   = ''
+                    Type        = 'SharePoint'
+                    Ensure      = 'Present'
+                    Credential  = $Credential
                 }
                 $xmlTemplatePath = Join-Path -Path $PSScriptRoot `
-                    -ChildPath "..\..\..\Modules\Microsoft365DSC\Dependencies\SearchConfigurationSettings.xml" `
+                    -ChildPath '..\..\..\Modules\Microsoft365DSC\Dependencies\SearchConfigurationSettings.xml' `
                     -Resolve
                 $emptyXMLTemplate = Get-Content $xmlTemplatePath
                 Mock -CommandName Get-PnPSearchConfiguration -MockWith {
@@ -132,29 +134,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should return Absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Absent"
+            It 'Should return Absent from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Creates the result source in the Set method" {
+            It 'Creates the result source in the Set method' {
                 Set-TargetResource @testParams
             }
         }
 
-        Context -Name "When the Result Source already exists" -Fixture {
+        Context -Name 'When the Result Source already exists' -Fixture {
             BeforeAll {
                 $Script:RecentExtract = $null
                 $testParams = @{
-                    Name               = "This is a Test"
-                    Description        = "New Result Source"
-                    Protocol           = "Local"
-                    Type               = "SharePoint"
-                    Ensure             = "Present"
-                    Credential = $Credential
+                    Name        = 'This is a Test'
+                    Description = 'New Result Source'
+                    Protocol    = 'Local'
+                    Type        = 'SharePoint'
+                    Ensure      = 'Present'
+                    Credential  = $Credential
                 }
                 Mock -CommandName Get-PnPSearchConfiguration -MockWith {
                     return $existingValueXML
@@ -165,24 +167,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should return Present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+            It 'Should return Present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It "Should return true from the Test method" {
+            It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
 
-            It "Update the managed property in the Set method" {
+            It 'Update the managed property in the Set method' {
                 Set-TargetResource @testParams
             }
         }
 
-        Context -Name "ReverseDSC Tests" -Fixture {
+        Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $testParams = @{
-                    Credential          = $Credential
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-PnPSearchConfiguration -MockWith {
@@ -190,7 +192,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should Reverse Engineer resource from the Export method" {
+            It 'Should Reverse Engineer resource from the Export method' {
                 Export-TargetResource @testParams
             }
         }

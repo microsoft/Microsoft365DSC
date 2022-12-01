@@ -36,11 +36,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
             }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
-
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -63,6 +61,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-Job -MockWith {
+            }
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
             }
         }
 

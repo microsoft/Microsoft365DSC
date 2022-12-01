@@ -2,20 +2,20 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath '..\..\Unit' `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath '\Stubs\Microsoft365.psm1' `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath '\Stubs\Generic.psm1' `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\UnitTestHelper.psm1" `
+        -ChildPath '\UnitTestHelper.psm1' `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SPOSiteAuditSettings" -GenericStubModule $GenericStubPath
+    -DscResource 'SPOSiteAuditSettings' -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -28,99 +28,102 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
-            $secpasswd = ConvertTo-SecureString "Pass@word1)" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $secpasswd = ConvertTo-SecureString 'Pass@word1)' -AsPlainText -Force
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
 
-            $Global:PartialExportFileName = "c:\TestPath"
+            $Global:PartialExportFileName = 'c:\TestPath'
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-                return "FakeDSCContent"
+                return 'FakeDSCContent'
             }
             Mock -CommandName Save-M365DSCPartialExport -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credentials"
+                return 'Credentials'
             }
 
             Mock -CommandName Set-PnPAuditing -MockWith {
+            }
 
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
             }
         }
 
         # Test contexts
-        Context -Name "Set SPOSiteAuditSettings to All" -Fixture {
+        Context -Name 'Set SPOSiteAuditSettings to All' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Url                = "https://contoso.com/sites/fakesite"
-                    AuditFlags         = "All"
+                    Url        = 'https://contoso.com/sites/fakesite'
+                    AuditFlags = 'All'
                     Credential = $Credential
                 }
 
                 Mock -CommandName Get-PnPAuditing -MockWith {
                     return @{
-                        AuditFlags = "None"
+                        AuditFlags = 'None'
                     }
                 }
 
                 Mock -CommandName Get-PnPTenantSite -MockWith {
                     return @{
-                        Url = "https://contoso.com/sites/fakesite"
+                        Url = 'https://contoso.com/sites/fakesite'
                     }
                 }
             }
 
-            It "Should return the current resource from the Get method" {
-                (Get-TargetResource @testParams).Url | Should -Be "https://contoso.com/sites/fakesite"
+            It 'Should return the current resource from the Get method' {
+                (Get-TargetResource @testParams).Url | Should -Be 'https://contoso.com/sites/fakesite'
             }
 
-            It "Should set settings from the Set method" {
+            It 'Should set settings from the Set method' {
                 Set-TargetResource @testParams
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
         }
 
-        Context -Name "Set SPOSiteAuditSettings to None" -Fixture {
+        Context -Name 'Set SPOSiteAuditSettings to None' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Url                = "https://contoso.com/sites/fakesite"
-                    AuditFlags         = "None"
+                    Url        = 'https://contoso.com/sites/fakesite'
+                    AuditFlags = 'None'
                     Credential = $Credential
                 }
 
                 Mock -CommandName Get-PnPAuditing -MockWith {
                     return @{
-                        AuditFlags = "All"
+                        AuditFlags = 'All'
                     }
                 }
 
                 Mock -CommandName Get-PnPTenantSite -MockWith {
                     return @{
-                        Url = "https://contoso.com/sites/fakesite"
+                        Url = 'https://contoso.com/sites/fakesite'
                     }
                 }
             }
 
-            It "Should return the current resource from the Get method" {
-                (Get-TargetResource @testParams).Url | Should -Be "https://contoso.com/sites/fakesite"
+            It 'Should return the current resource from the Get method' {
+                (Get-TargetResource @testParams).Url | Should -Be 'https://contoso.com/sites/fakesite'
             }
 
-            It "Should set settings from the Set method" {
+            It 'Should set settings from the Set method' {
                 Set-TargetResource @testParams
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
         }
 
-        Context -Name "ReverseDSC Tests" -Fixture {
+        Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $testParams = @{
@@ -129,18 +132,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-PnPAuditing -MockWith {
                     return @{
-                        AuditFlags = "None"
+                        AuditFlags = 'None'
                     }
                 }
 
                 Mock -CommandName Get-PnPTenantSite -MockWith {
                     return @{
-                        Url = "https://contoso.com/sites/fakesite"
+                        Url = 'https://contoso.com/sites/fakesite'
                     }
                 }
             }
 
-            It "Should Reverse Engineer resource from the Export method" {
+            It 'Should Reverse Engineer resource from the Export method' {
                 Export-TargetResource @testParams
             }
         }

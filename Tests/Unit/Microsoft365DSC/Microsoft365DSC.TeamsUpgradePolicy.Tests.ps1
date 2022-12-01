@@ -43,6 +43,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Grant-CsTeamsUpgradePolicy -MockWith {
             }
 
+            # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
         }
@@ -54,7 +55,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity               = 'Test Policy'
                     Users                  = @('john.smith@contoso.onmicrosoft.com')
                     MigrateMeetingsToTeams = $false
-                    Credential             = $Credential;
+                    Credential             = $Credential
                 }
 
                 Mock -CommandName Get-CsTeamsUpgradePolicy -MockWith {
@@ -73,7 +74,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity               = 'Test Policy'
                     Users                  = @('john.smith@contoso.onmicrosoft.com')
                     MigrateMeetingsToTeams = $false
-                    Credential             = $Credential;
+                    Credential             = $Credential
                 }
 
                 Mock -CommandName Get-CsTeamsUpgradePolicy -MockWith {
@@ -108,7 +109,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity               = 'Islands'
                     Users                  = @('john.smith@contoso.onmicrosoft.com')
                     MigrateMeetingsToTeams = $false
-                    Credential             = $Credential;
+                    Credential             = $Credential
                 }
 
                 Mock -CommandName Get-CsTeamsUpgradePolicy -MockWith {
@@ -136,7 +137,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $testParams = @{
-                    Credential = $Credential;
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-CsTeamsUpgradePolicy -MockWith {

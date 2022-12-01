@@ -2,20 +2,20 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath '..\..\Unit' `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath '\Stubs\Microsoft365.psm1' `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath '\Stubs\Generic.psm1' `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\UnitTestHelper.psm1" `
+        -ChildPath '\UnitTestHelper.psm1' `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "ODSettings" -GenericStubModule $GenericStubPath
+    -DscResource 'ODSettings' -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -27,38 +27,40 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Import-Module PnP.PowerShell
 
             }
-            
-            $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+
+            $secpasswd = ConvertTo-SecureString 'Pass@word1' -AsPlainText -Force
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
             }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
-
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credentials"
+                return 'Credentials'
             }
 
             Mock -CommandName Set-PnPTenantSyncClientRestriction -MockWith {
             }
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
+            }
         }
 
         # Test contexts
-        Context -Name "Check OneDrive Quota" -Fixture {
+        Context -Name 'Check OneDrive Quota' -Fixture {
             BeforeAll {
                 $testParams = @{
                     OneDriveStorageQuota = 1024
-                    IsSingleInstance     = "Yes"
-                    Ensure               = "Present"
-                    Credential   = $Credential
+                    IsSingleInstance     = 'Yes'
+                    Ensure               = 'Present'
+                    Credential           = $Credential
                 }
 
                 Mock -CommandName Set-PnPTenant -MockWith {
@@ -70,38 +72,38 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Updates the OneDriveSettings in the Set method" {
+            It 'Updates the OneDriveSettings in the Set method' {
                 Set-TargetResource @testParams
             }
         }
 
-        Context -Name "Set OneDrive Quota" -Fixture {
+        Context -Name 'Set OneDrive Quota' -Fixture {
             BeforeAll {
                 $testParams = @{
                     OneDriveStorageQuota                      = 1024
-                    IsSingleInstance                          = "Yes"
+                    IsSingleInstance                          = 'Yes'
                     OrphanedPersonalSitesRetentionPeriod      = 60
                     OneDriveForGuestsEnabled                  = $true
                     NotifyOwnersWhenInvitationsAccepted       = $true
                     NotificationsInOneDriveForBusinessEnabled = $true
-                    ODBMembersCanShare                        = "On"
-                    ODBAccessRequests                         = "On"
+                    ODBMembersCanShare                        = 'On'
+                    ODBAccessRequests                         = 'On'
                     BlockMacSync                              = $true
                     DisableReportProblemDialog                = $true
                     TenantRestrictionEnabled                  = $true
                     DomainGuids                               = @(New-Guid)
-                    ExcludedFileExtensions                    = @(".asmx")
-                    GrooveBlockOption                         = "HardOptIn"
-                    Credential                        = $Credential
+                    ExcludedFileExtensions                    = @('.asmx')
+                    GrooveBlockOption                         = 'HardOptIn'
+                    Credential                                = $Credential
                 }
 
                 Mock -CommandName Get-PnPTenant -MockWith {
                     return @{
-                        OneDriveStorageQuota = "1024"
+                        OneDriveStorageQuota = '1024'
                     }
                 }
 
@@ -111,9 +113,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         OptOutOfGrooveSoftBlock    = $false
                         DisableReportProblemDialog = $false
                         BlockMacSync               = $true
-                        AllowedDomainList          = @("")
+                        AllowedDomainList          = @('')
                         TenantRestrictionEnabled   = $true
-                        ExcludedFileExtensions     = @(".asmx")
+                        ExcludedFileExtensions     = @('.asmx')
                     }
                 }
                 Mock -CommandName Set-PnPTenant -MockWith {
@@ -121,20 +123,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should return Ensure equals to Present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+            It 'Should return Ensure equals to Present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It "Should configure OneDrive settings in the Set method" {
+            It 'Should configure OneDrive settings in the Set method' {
                 Set-TargetResource @testParams
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
         }
 
-        Context -Name "ReverseDSC Tests" -Fixture {
+        Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $testParams = @{
@@ -143,12 +145,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-PnPTenant -MockWith {
                     return @{
-                        OneDriveStorageQuota = "1024"
+                        OneDriveStorageQuota = '1024'
                     }
                 }
             }
 
-            It "Should Reverse Engineer resource from the Export method" {
+            It 'Should Reverse Engineer resource from the Export method' {
                 Export-TargetResource @testParams
             }
         }

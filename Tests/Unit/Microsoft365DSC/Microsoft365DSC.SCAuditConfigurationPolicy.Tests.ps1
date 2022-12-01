@@ -2,27 +2,27 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath '..\..\Unit' `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath '\Stubs\Microsoft365.psm1' `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath '\Stubs\Generic.psm1' `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\UnitTestHelper.psm1" `
+        -ChildPath '\UnitTestHelper.psm1' `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SCAuditConfigurationPolicy" -GenericStubModule $GenericStubPath
+    -DscResource 'SCAuditConfigurationPolicy' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         BeforeAll {
-            $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
 
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
@@ -30,23 +30,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
             }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
-
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credentials"
+                return 'Credentials'
             }
 
             Mock -CommandName Import-PSSession -MockWith {
-
             }
 
             Mock -CommandName New-PSSession -MockWith {
-
             }
 
             Mock -CommandName New-AuditConfigurationPolicy -MockWith {
@@ -57,15 +53,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Remove-AuditConfigurationPolicy -MockWith {
             }
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
+            }
         }
 
         # Test contexts
         Context -Name "Policy doesn't already exists and should" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Workload           = "SharePoint"
+                    Workload   = 'SharePoint'
                     Credential = $Credential
-                    Ensure             = "Present"
+                    Ensure     = 'Present'
                 }
 
                 Mock -CommandName Get-AuditConfigurationPolicy -MockWith {
@@ -78,27 +78,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Absent from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Absent"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
 
-            It "Should call the Set method" {
+            It 'Should call the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName New-AuditConfigurationPolicy -Exactly 1
             }
         }
 
-        Context -Name "Policy already exists and should - SharePoint" -Fixture {
+        Context -Name 'Policy already exists and should - SharePoint' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Workload           = "SharePoint"
+                    Workload   = 'SharePoint'
                     Credential = $Credential
-                    Ensure             = "Present"
+                    Ensure     = 'Present'
                 }
 
                 Mock -CommandName Get-AuditConfigurationPolicy -MockWith {
                     return @{
-                        Workload = "SharePoint"
-                        Name     = "91f20f6f-7ef9-4561-9a38-d771452d5e45"
+                        Workload = 'SharePoint'
+                        Name     = '91f20f6f-7ef9-4561-9a38-d771452d5e45'
                     }
                 }
             }
@@ -108,27 +108,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It "Should call the Set method" {
+            It 'Should call the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName New-AuditConfigurationPolicy -Exactly 0
             }
         }
 
-        Context -Name "Policy already exists and should - OneDrive" -Fixture {
+        Context -Name 'Policy already exists and should - OneDrive' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Workload           = "OneDriveForBusiness"
+                    Workload   = 'OneDriveForBusiness'
                     Credential = $Credential
-                    Ensure             = "Present"
+                    Ensure     = 'Present'
                 }
 
                 Mock -CommandName Get-AuditConfigurationPolicy -MockWith {
                     return @{
-                        Workload = "SharePoint"
-                        Name     = "a415dcce-19a0-4153-b137-eb6fd67995b5"
+                        Workload = 'SharePoint'
+                        Name     = 'a415dcce-19a0-4153-b137-eb6fd67995b5'
                     }
                 }
             }
@@ -138,10 +138,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It "Should call the Set method" {
+            It 'Should call the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName New-AuditConfigurationPolicy -Exactly 0
             }
@@ -150,16 +150,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Policy already exists but shouldn't - SharePoint" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Workload           = "SharePoint"
+                    Workload   = 'SharePoint'
                     Credential = $Credential
-                    Ensure             = "Absent"
+                    Ensure     = 'Absent'
                 }
 
                 Mock -CommandName Get-AuditConfigurationPolicy -MockWith {
                     return @{
-                        Workload = "SharePoint"
+                        Workload = 'SharePoint'
                         Identity = '11111111-1111-1111-1111-11111111111'
-                        Name     = "91f20f6f-7ef9-4561-9a38-d771452d5e45"
+                        Name     = '91f20f6f-7ef9-4561-9a38-d771452d5e45'
                     }
                 }
             }
@@ -169,10 +169,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It "Should call the Set method" {
+            It 'Should call the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Remove-AuditConfigurationPolicy -Exactly 1
             }
@@ -181,16 +181,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Policy already exists but shouldn't - OneDrive" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Workload           = "OneDriveForBusiness"
+                    Workload   = 'OneDriveForBusiness'
                     Credential = $Credential
-                    Ensure             = "Absent"
+                    Ensure     = 'Absent'
                 }
 
                 Mock -CommandName Get-AuditConfigurationPolicy -MockWith {
                     return @{
-                        Workload = "SharePoint"
+                        Workload = 'SharePoint'
                         Identity = '11111111-1111-1111-1111-11111111111'
-                        Name     = "a415dcce-19a0-4153-b137-eb6fd67995b5"
+                        Name     = 'a415dcce-19a0-4153-b137-eb6fd67995b5'
                     }
                 }
             }
@@ -200,16 +200,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It "Should call the Set method" {
+            It 'Should call the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Remove-AuditConfigurationPolicy -Exactly 1
             }
         }
 
-        Context -Name "ReverseDSC Tests" -Fixture {
+        Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $testParams = @{
@@ -218,13 +218,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-AuditConfigurationPolicy -MockWith {
                     return @{
-                        Workload = "SharePoint"
-                        Name     = "a415dcce-19a0-4153-b137-eb6fd67995b5"
+                        Workload = 'SharePoint'
+                        Name     = 'a415dcce-19a0-4153-b137-eb6fd67995b5'
                     }
                 }
             }
 
-            It "Should Reverse Engineer resource from the Export method" {
+            It 'Should Reverse Engineer resource from the Export method' {
                 Export-TargetResource @testParams
             }
         }
