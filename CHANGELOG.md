@@ -2,8 +2,10 @@
 
 # UNRELEASED
 
+* TeamsMeetingPolicy
+  * Added support for several new properties.
 * MISC
-  * Standardize and improved logging across all resources
+  * Standardized and improved logging across all resources.
 
 # 1.22.1130.1
 

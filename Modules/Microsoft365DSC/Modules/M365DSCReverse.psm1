@@ -785,6 +785,10 @@ function Start-M365DSCConfigurationExtract
                     {
                         # Export the certificate assigned to the LCM
                         $certPath = $OutputDSCPath + 'M365DSC.cer'
+                        if (Test-Path $certPath)
+                        {
+                            Remove-Item $certPath -Force
+                        }
                         Export-Certificate -FilePath $certPath `
                             -Cert "cert:\LocalMachine\my\$($LCMConfig.CertificateID)" `
                             -Type CERT `
