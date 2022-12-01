@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# 1.22.1130.1
+
+* SCRetentionCompliancePolicy
+  * Fixed an issue with the Update logic in the Set-TargetResource
+    FIXES [#2600](https://github.com/microsoft/Microsoft365DSC/issues/2600)
+
 # 1.22.1123.1
 
 * IntuneDeviceConfigurationPolicyWindows10

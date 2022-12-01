@@ -8,7 +8,7 @@ Microsoft365DSC is built as a module for the [PowerShell Desired State Configura
 
 ## Automate ![Infographic](../Images/Automate.png){ align=left width=100 }
 
-Using PowerShell Desired State Configuration (DSC) syntax, write a complete definition of how you want your Microsoft 365 tenant to be configured. The Microsoft365DSC module allows Microsoft 365 administrators to define the configuration(s) of the various workloads (SharePoint, Exchange, Security & Compliance, Teams, etc.), and apply the configuration in an automated way. For example, administrators that wish to deploy a new Search Managed Property to their SharePoint Online workload, can do so with similar lines of code (all code examples can be found on the [Resources List](https://github.com/microsoft/Microsoft365DSC/wiki/Resources-List) wiki page):
+Using PowerShell Desired State Configuration (DSC) syntax, write a complete definition of how you want your Microsoft 365 tenant to be configured. The Microsoft365DSC module allows Microsoft 365 administrators to define the configuration(s) of the various workloads (SharePoint, Exchange, Security & Compliance, Teams, etc.), and apply the configuration in an automated way. For example, administrators that wish to deploy a new Search Managed Property to their SharePoint Online workload, can do so with similar lines of code (all code examples can be found on the [Resources List](../resources/overview/) page):
 
 ```PowerShell
 SPOSearchManagedProperty SearchMP
@@ -39,7 +39,7 @@ SPOSearchManagedProperty SearchMP
 
 Just like any other normal PowerShell DSC configuration, your Microsoft365DSC file will need to be compiled into a .MOF file for the Local Configuration Manager to be able to apply it. Once your configuration file has been compiled, you can execute the configuration process by calling into the **Start-DSCConfiguration** PowerShell cmdlet. All configuration resources defined by Microsoft365DSC will make remote calls back to the Microsoft 365 tenant using various underlying frameworks and components (Microsoft Teams PowerShell Module, SharePoint PnP, Azure Active Directory, etc.). It is therefore important that the machine that executes the configuration has internet connectivity back to the Microsoft 365 tenant you are trying to configure. For additional information on how to get started with PowerShell Desired State Configuration, you can refer to the [Introduction to PowerShell Desired State Configuration](https://channel9.msdn.com/Series/SharePoint-Automation-with-DSC/Video-Introduction-to-PowerShell-DSC) training video.
 
-See the [Automating](../../user-guide/get-started/complete-story/#deploying-configurations) page for more information about possible options.
+See the [Automating](../../user-guide/get-started/deploying-configurations/) page for more information about possible options.
 
 ## Export ![Infographic](../Images/export.PNG){ align=left width=100 }
 
@@ -51,7 +51,7 @@ Upon providing credentials with correct permissions, the tool will begin the ext
 
 The tool will extract several artifacts, including all SharePoint Add-ins and Frameworks packages, the configuration itself, and a metadata file that contains all variables that are specific to your environment. That metadata file (.psd1) abstracts components of you configuration, such as the tenant name, in order to make it as easy as possible for you to replicate those configurations across tenants. As an example, you can extract the configuration from any given tenant using the ReverseDSC functionality, open the extracted .psd1 metadata file, change the tenant's name to a new destination, and apply that new configuration. This allows organizations to keep the configuration of multiple tenants in synchronization with one another.
 
-See the [Exporting](../../user-guide/get-started/complete-story/#taking-a-snapshot-of-existing-tenant) page for more information about possible options.
+See the [Exporting](../../user-guide/get-started/snapshot-of-existing-tenant/) page for more information about possible options.
 
 ## Synchronize ![Infographic](../Images/Synchronize.png){ align=left width=100 }
 
@@ -83,7 +83,7 @@ Automatic monitoring of configuration drifts in your tenant and notification abo
 
 ![MonitorFlow](../Images/MonitorFlow.png){ align=center width=500 }
 
-See the [Monitoring](../../user-guide/get-started/complete-story/#monitoring-for-configuration-drifts) page for more information about possible options.
+See the [Monitoring](../../user-guide/get-started/monitoring-drifts/) page for more information about possible options.
 
 ## Report ![Infographic](../Images/report.PNG){ align=left width=100 }
 
@@ -91,4 +91,4 @@ Take any Microsoft365DSC configuration and generate a user friendly report from 
 
 ![ReportFlow](../Images/ReportFlow.png){ align=center width=500 }
 
-See the [Reporting](../../user-guide/get-started/complete-story/#generating-reports-from-configurations) page for more information about possible options.
+See the [Reporting](../../user-guide/get-started/generating-reports/) page for more information about possible options.
