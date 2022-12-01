@@ -22,19 +22,19 @@ function Format-M365DSCString
     $InvalidCharacters = @(
         @{
             # Tilted Apostrophe
-            InvalidCharacter = "[\u2019]"
+            InvalidCharacter = '[\u2019]'
             MainReplaceBy    = "'"
             CimReplaceBy     = "''"
         },
         @{
             # Tilted Left Quotes
-            InvalidCharacter = "[\u201C]"
+            InvalidCharacter = '[\u201C]'
             MainReplaceBy    = "`""
             CimReplaceBy     = '"'
         },
         @{
             # Tilted Right Quotes
-            InvalidCharacter = "[\u201D]"
+            InvalidCharacter = '[\u201D]'
             MainReplaceBy    = "`""
             CimReplaceBy     = '"'
         }

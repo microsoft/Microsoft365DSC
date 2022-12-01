@@ -21,7 +21,7 @@ function New-M365DSCStubFiles
     if ($null -eq $Credential)
     {
         $Credential = Get-Credential
-        $PSBoundParameters.Add("Credential", $Credential)
+        $PSBoundParameters.Add('Credential', $Credential)
     }
 
     if (Test-Path $DestinationFilePath)
@@ -29,7 +29,7 @@ function New-M365DSCStubFiles
         $answer = $null
         do
         {
-            $answer = Read-Host "A file already exists at the specified location. Remove it? (y/n)"
+            $answer = Read-Host 'A file already exists at the specified location. Remove it? (y/n)'
         } while ($answer -ne 'y' -and $answer -ne 'n')
 
         if ($answer -eq 'y')
@@ -39,27 +39,27 @@ function New-M365DSCStubFiles
     }
 
     $Content = ''
-    $folderPath = Join-Path $PSScriptRoot -ChildPath "../DSCResources"
+    $folderPath = Join-Path $PSScriptRoot -ChildPath '../DSCResources'
     Write-Host $FolderPath
     $workloads = @(
-        @{Name = 'ExchangeOnline';           ModuleName = "ExchangeOnlineManagement";                      CommandName = "Get-Mailbox"},
-        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.Applications";},
-        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.Authentication";},
-        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.DeviceManagement";},
-        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.DeviceManagement.Administration";},
-        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.DeviceManagement.Enrolment";},
-        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.Devices.CorporateManagement";},
-        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.Groups";},
-        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.Identity.DirectoryManagement";},
-        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.Identity.Governance";},
-        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.Identity.Signins";},
-        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.Planner";},
-        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.Teams";},
-        @{Name = 'MicrosoftGraph';           ModuleName = "Microsoft.Graph.Users";},
-        @{Name = 'SecurityComplianceCenter'; ModuleName = "ExchangeOnlineManagement";                      CommandName = "Get-Label"},
-        @{Name = 'PnP';                      ModuleName = 'PnP.PowerShell';},
-        @{Name = 'PowerPlatforms';           ModuleName = 'Microsoft.PowerApps.Administration.PowerShell';},
-        @{Name = 'MicrosoftTeams';           ModuleName = "MicrosoftTeams";}
+        @{Name = 'ExchangeOnline'; ModuleName = 'ExchangeOnlineManagement'; CommandName = 'Get-Mailbox' },
+        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Applications'; },
+        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Authentication'; },
+        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement'; },
+        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement.Administration'; },
+        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement.Enrolment'; },
+        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Devices.CorporateManagement'; },
+        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Groups'; },
+        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.DirectoryManagement'; },
+        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.Governance'; },
+        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.Signins'; },
+        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Planner'; },
+        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Teams'; },
+        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Users'; },
+        @{Name = 'SecurityComplianceCenter'; ModuleName = 'ExchangeOnlineManagement'; CommandName = 'Get-Label' },
+        @{Name = 'PnP'; ModuleName = 'PnP.PowerShell'; },
+        @{Name = 'PowerPlatforms'; ModuleName = 'Microsoft.PowerApps.Administration.PowerShell'; },
+        @{Name = 'MicrosoftTeams'; ModuleName = 'MicrosoftTeams'; }
     )
     foreach ($Module in $workloads)
     {
@@ -92,7 +92,7 @@ function New-M365DSCStubFiles
 
         if ($Module.Name -eq 'MicrosoftGraph')
         {
-            Write-Host "Loading Beta Graph APIs"
+            Write-Host 'Loading Beta Graph APIs'
             $MaximumFunctionCount = 32000
             Select-MgProfile -Name beta | Out-Null
             $betaCmdlets = Get-Command -CommandType 'Cmdlet' -Module $CurrentModuleName
@@ -120,7 +120,7 @@ function New-M365DSCStubFiles
         $i = 1
         foreach ($cmdlet in $cmdlets)
         {
-            Write-Progress -Activity "Generating Stubs" -Status $cmdlet.Name -PercentComplete (($i / $cmdlets.Length) * 100)
+            Write-Progress -Activity 'Generating Stubs' -Status $cmdlet.Name -PercentComplete (($i / $cmdlets.Length) * 100)
             $foundInFiles = Get-ChildItem -Path $folderPath `
                 -Recurse | Select-String -Pattern $cmdlet.Name
 
@@ -142,18 +142,18 @@ function New-M365DSCStubFiles
                     Write-Verbose -Message $_
                 }
 
-                $invalidParameters = @("ErrorVariable", `
-                        "ErrorAction", `
-                        "InformationVariable", `
-                        "InformationAction", `
-                        "WarningVariable", `
-                        "WarningAction", `
-                        "OutVariable", `
-                        "OutBuffer", `
-                        "PipelineVariable", `
-                        "Verbose", `
-                        "WhatIf", `
-                        "Debug")
+                $invalidParameters = @('ErrorVariable', `
+                        'ErrorAction', `
+                        'InformationVariable', `
+                        'InformationAction', `
+                        'WarningVariable', `
+                        'WarningAction', `
+                        'OutVariable', `
+                        'OutBuffer', `
+                        'PipelineVariable', `
+                        'Verbose', `
+                        'WhatIf', `
+                        'Debug')
 
                 $additionalParameters = (Get-Command $cmdlet.Name).Parameters
 
@@ -167,7 +167,7 @@ function New-M365DSCStubFiles
                     }
                 }
                 $StubContent += "function $($cmdlet.Name)`n{`r`n    [CmdletBinding()]`r`n    param(`r`n"
-                $invalidTypes = @("ActionPreference")
+                $invalidTypes = @('ActionPreference')
 
                 $foundParamNames = @()
                 foreach ($param in $parameters.Values)
@@ -184,27 +184,27 @@ function New-M365DSCStubFiles
                             $ParamType = $param.ParameterType.ToString()
                             if ($ParamType -eq 'System.Collections.Generic.List`1[System.String]')
                             {
-                                $ParamType = "System.String[]"
+                                $ParamType = 'System.String[]'
                             }
                             elseif ($ParamType -eq 'System.Nullable`1[System.Boolean]')
                             {
-                                $ParamType = "System.Boolean"
+                                $ParamType = 'System.Boolean'
                             }
                             elseif ($ParamType.StartsWith("System.Collections.Generic.List``1[Microsoft.Open.MSGraph.Model."))
                             {
-                                $ParamType = "System.Object[]"
+                                $ParamType = 'System.Object[]'
                             }
-                            elseif ($ParamType.StartsWith("Microsoft.Graph.PowerShell."))
+                            elseif ($ParamType.StartsWith('Microsoft.Graph.PowerShell.'))
                             {
-                                $ParamType = "PSObject"
+                                $ParamType = 'PSObject'
                             }
-                            elseif ($ParamType.StartsWith("Microsoft.Teams."))
+                            elseif ($ParamType.StartsWith('Microsoft.Teams.'))
                             {
-                                $ParamType = "PSObject"
+                                $ParamType = 'PSObject'
                             }
-                            elseif ($ParamType.StartsWith("Microsoft.Rtc."))
+                            elseif ($ParamType.StartsWith('Microsoft.Rtc.'))
                             {
-                                $ParamType = "PSObject"
+                                $ParamType = 'PSObject'
                             }
                             $StubContent += "        [$ParamType]`r`n"
                             $StubContent += "        `$$($param.Name),`r`n`r`n"
@@ -223,7 +223,7 @@ function New-M365DSCStubFiles
             }
             $i ++
         }
-        Write-Progress -Activity "Generating Stubs" -Completed
+        Write-Progress -Activity 'Generating Stubs' -Completed
 
         $Content += "#region $($Module.Name)`r`n"
 
