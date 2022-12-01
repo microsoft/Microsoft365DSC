@@ -46,6 +46,28 @@
 | **TeamsCameraFarEndPTZMode** | Write | String | Determines whether or not meetings created by users with this policy are able to utilize the Camera Far-End PTZ Mode. |Disabled, Enabled|
 | **AllowMeetingReactions** | Write | Boolean | Determines whether or not meetings created by users with this policy are able to utilize the Meeting Reactions feature. ||
 | **WhoCanRegister** | Write | String | Specifies who can attend and register for webinars. |Everyone, EveryoneInCompany|
+| **AllowAnnotations** | Write | Boolean | N/A ||
+| **AllowAnonymousUsersToJoinMeeting** | Write | Boolean | Determines whether anonymous users can join the meetings that impacted users organize. Set this to TRUE to allow anonymous users to join a meeting. Set this to FALSE to prohibit them from joining a meeting. ||
+| **AllowMeetingCoach** | Write | Boolean | N/A ||
+| **AllowMeetingRegistration** | Write | Boolean | Controls if a user can create a webinar meeting. The default value is True. ||
+| **AllowNetworkConfigurationSettingsLookup** | Write | Boolean | Determines whether network configuration setting lookups can be made by users who are not Enterprise Voice enabled. It is used to enable Network Roaming policies. ||
+| **AllowWatermarkForCameraVideo** | Write | Boolean | N/A ||
+| **AllowWatermarkForScreenSharing** | Write | Boolean | N/A ||
+| **NewMeetingRecordingExpirationDays** | Write | UInt32 | Specifies the number of days before meeting recordings will expire and move to the recycle bin. Value can be from 1 to 99,999 days. NOTE: You may opt to set Meeting Recordings to never expire by entering the value -1. ||
+| **AllowCartCaptionsScheduling** | Write | String | Determines whether a user can add a URL for captions from a Communications Access Real-Time Translation (CART) captioner for providing real-time captions in meetings. |EnabledUserOverride, DisabledUserOverride, Disabled|
+| **AllowDocumentCollaboration** | Write | String | N/A ||
+| **AllowedStreamingMediaInput** | Write | String | N/A ||
+| **BlockedAnonymousJoinClientTypes** | Write | String | A user can join a Teams meeting anonymously using a Teams client or using a custom application built using Azure Communication Services. When anonymous meeting join is enabled, both types of clients may be used by default. This optional parameter can be used to block one of the client types that can be used. The allowed values are ACS (to block the use of Azure Communication Services clients) or Teams (to block the use of Teams clients). Both can also be specified, separated by a comma, but this is equivalent to disabling anonymous join completely. ||
+| **ChannelRecordingDownload** | Write | String | N/A ||
+| **ExplicitRecordingConsent** | Write | String | N/A ||
+| **ForceStreamingAttendeeMode** | Write | String | N/A ||
+| **InfoShownInReportMode** | Write | String | N/A ||
+| **LiveInterpretationEnabledType** | Write | String | N/A ||
+| **LiveStreamingMode** | Write | String | Determines whether you provide support for your users to stream their Teams meetings to large audiences through Real-Time Messaging Protocol (RTMP). |Disabled, Enabled|
+| **MeetingInviteLanguages** | Write | String | Controls how the join information in meeting invitations is displayed by enforcing a common language or enabling up to two languages to be displayed. Note: All Teams supported languages can be specified using language codes. ||
+| **QnAEngagementMode** | Write | String | N/A ||
+| **RoomPeopleNameUserOverride** | Write | String | N/A ||
+| **SpeakerAttributionMode** | Write | String | Possible values: EnabledUserOverride or Disabled. |Disabled, EnabledUserOverride|
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. |Present, Absent|
 | **Credential** | Write | PSCredential | Credentials of the Teams Global Admin. ||
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
