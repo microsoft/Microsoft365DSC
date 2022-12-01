@@ -270,23 +270,7 @@ function New-EXOSafeAttachmentRule
     }
     catch
     {
-        try {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId)) {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential) {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch {
-            Write-Verbose -Message $_
-        }
-        return $nullReturn
+       Write-M365DSCLogEvent -Message $_ -EventSource $($MyInvocation.MyCommand.Source) -TenantId $tenantid -Credential $Credential
     }
 }
 
@@ -401,23 +385,7 @@ function Set-EXOSafeAttachmentRule
     }
     catch
     {
-        try {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId)) {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential) {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch {
-            Write-Verbose -Message $_
-        }
-        return $nullReturn
+        Write-M365DSCLogEvent -Message $_ -EventSource $($MyInvocation.MyCommand.Source) -TenantId $tenantid -Credential $Credential
     }
 }
 
@@ -453,23 +421,7 @@ function Set-EXOSafeLinksRule
     }
     catch
     {
-        try {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId)) {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential) {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch {
-            Write-Verbose -Message $_
-        }
-        return $nullReturn
+        Write-M365DSCLogEvent -Message $_ -EventSource $($MyInvocation.MyCommand.Source) -TenantId $tenantid -Credential $Credential
     }
 }
 
@@ -3758,6 +3710,64 @@ function Update-M365DSCModule
     Uninstall-M365DSCOutdatedDependencies
 }
 
+<#
+.Description
+This function writes messages and adds M365DSCEvents to Eventlog
+
+.Example
+Write-M365DSCLogEvent -Message $_ -EventSource $($MyInvocation.MyCommand.Source) -TenantId $tenantid -Credential $Credential
+
+.Functionality
+Public
+#>
+function Write-M365DSCLogEvent
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Message,
+
+        [Parameter()]
+        [System.String]
+        $EventSource = "M365DSC",
+
+        [Parameter()]
+        [System.Uint32]
+        $EventID = 1,
+
+        [Parameter()]
+        [ValidateSet('Error', 'Information', 'FailureAudit', 'SuccessAudit', 'Warning')]
+        [System.String]
+        $EventEntryType = 'Error',
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [PSCredential]
+        $Credential
+    )
+    try {
+        Write-Verbose -Message $Message
+        $tenantIdValue = ''
+        if (-not [System.String]::IsNullOrEmpty($TenantId)) {
+            $tenantIdValue = $TenantId
+        }
+        elseif ($null -ne $Credential) {
+            $tenantIdValue = $Credential.UserName.Split('@')[1]
+        }
+        Add-M365DSCEvent -Message $Message -EntryType $EventEntryType -EventID $EventID -Source $EventSource -TenantId $tenantIdValue
+    }
+    catch {
+        Write-Verbose -Message $_
+    }
+    return $nullReturn
+}
+
+
 Export-ModuleMember -Function @(
     'Assert-M365DSCBlueprint',
     'Confirm-ImportedCmdletIsAvailable',
@@ -3797,5 +3807,6 @@ Export-ModuleMember -Function @(
     'Uninstall-M365DSCOutdatedDependencies',
     'Update-M365DSCDependencies',
     'Update-M365DSCExportAuthenticationResults',
-    'Update-M365DSCModule'
+    'Update-M365DSCModule',
+    'Write-M365DSCLogEvent'
 )
