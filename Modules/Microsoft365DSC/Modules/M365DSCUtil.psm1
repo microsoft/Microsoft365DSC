@@ -298,23 +298,7 @@ function New-EXOSafeLinksRule
     }
     catch
     {
-        try {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId)) {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential) {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch {
-            Write-Verbose -Message $_
-        }
-        return $nullReturn
+        Write-M365DSCLogEvent -Message $_ -EventSource $($MyInvocation.MyCommand.Source) -TenantId $tenantid -Credential $Credential
     }
 }
 
