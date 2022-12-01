@@ -3,7 +3,28 @@
 # UNRELEASED
 
 * TeamsMeetingPolicy
-  * Added support for several new properties.
+  * Added support for several new properties:
+    * AllowAnnotations
+    * AllowAnonymousUsersToJoinMeeting
+    * AllowMeetingCoach
+    * AllowMeetingRegistration
+    * AllowNetworkConfigurationSettingsLookup
+    * AllowWatermarkForCameraVideo
+    * AllowWatermarkForScreenSharing
+    * NewMeetingRecordingExpirationDays
+    * AllowCartCaptionsScheduling
+    * AllowDocumentCollaboration
+    * AllowedStreamingMediaInput
+    * BlockedAnonymousJoinClientTypes
+    * ChannelRecordingDownload
+    * ExplicitRecordingConsent
+    * ForceStreamingAttendeeMode
+    * InfoShownInReportMode
+    * LiveInterpretationEnabledType
+    * LiveStreamingMode
+    * MeetingInviteLanguages
+    * QnAEngagementMode
+    * RoomPeopleNameUserOverride
 * MISC
   * Standardized and improved logging across all resources.
 
