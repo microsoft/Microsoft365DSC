@@ -2,27 +2,27 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath '..\..\Unit' `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath '\Stubs\Microsoft365.psm1' `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath '\Stubs\Generic.psm1' `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\UnitTestHelper.psm1" `
+        -ChildPath '\UnitTestHelper.psm1' `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SCCaseHoldRule" -GenericStubModule $GenericStubPath
+    -DscResource 'SCCaseHoldRule' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         BeforeAll {
-            $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
 
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
@@ -30,23 +30,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
             }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
-
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credentials"
+                return 'Credentials'
             }
 
             Mock -CommandName Import-PSSession -MockWith {
-
             }
 
             Mock -CommandName New-PSSession -MockWith {
-
             }
 
             Mock -CommandName Remove-CaseHoldRule -MockWith {
@@ -66,19 +62,23 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 }
             }
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
+            }
         }
 
         # Test contexts
         Context -Name "Rule doesn't already exists and should" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Name               = "TestRule"
-                    Policy             = "TestPolicy"
-                    Comment            = "This is a test Rule"
-                    Disabled           = $false
-                    ContentMatchQuery  = "filename:2016 budget filetype:xlsx"
-                    Credential = $Credential
-                    Ensure             = "Present"
+                    Name              = 'TestRule'
+                    Policy            = 'TestPolicy'
+                    Comment           = 'This is a test Rule'
+                    Disabled          = $false
+                    ContentMatchQuery = 'filename:2016 budget filetype:xlsx'
+                    Credential        = $Credential
+                    Ensure            = 'Present'
                 }
 
                 Mock -CommandName Get-CaseHoldRule -MockWith {
@@ -91,40 +91,40 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Absent from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Absent"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
 
-            It "Should call the Set method" {
+            It 'Should call the Set method' {
                 Set-TargetResource @testParams
             }
         }
 
-        Context -Name "Rule already exists and should be updated" -Fixture {
+        Context -Name 'Rule already exists and should be updated' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Name               = "TestRule"
-                    Policy             = "TestPolicy"
-                    Comment            = "This is a test Rule"
-                    Disabled           = $false
-                    ContentMatchQuery  = "filename:2016 budget filetype:xlsx"
-                    Credential = $Credential
-                    Ensure             = "Present"
+                    Name              = 'TestRule'
+                    Policy            = 'TestPolicy'
+                    Comment           = 'This is a test Rule'
+                    Disabled          = $false
+                    ContentMatchQuery = 'filename:2016 budget filetype:xlsx'
+                    Credential        = $Credential
+                    Ensure            = 'Present'
                 }
 
                 Mock -CommandName Get-CaseHoldRule -MockWith {
                     return @{
-                        Name              = "TestRule"
-                        Policy            = "12345-12345-12345-12345-12345"
-                        Comment           = "Different comment"
+                        Name              = 'TestRule'
+                        Policy            = '12345-12345-12345-12345-12345'
+                        Comment           = 'Different comment'
                         Disabled          = $true
-                        ContentMatchQuery = "filename:2016 budget filetype:xlsx"
+                        ContentMatchQuery = 'filename:2016 budget filetype:xlsx'
                     }
                 }
 
                 Mock -CommandName Get-CaseHoldPolicy -MockWith {
                     return @{
-                        Name     = "TestPolicy"
-                        Identity = "12345-12345-12345-12345-12345"
+                        Name     = 'TestPolicy'
+                        Identity = '12345-12345-12345-12345-12345'
                     }
                 }
             }
@@ -138,36 +138,36 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
         }
 
-        Context -Name "Rule already exists, but should be absent" -Fixture {
+        Context -Name 'Rule already exists, but should be absent' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Name               = "TestRule"
-                    Policy             = "TestPolicy"
-                    Comment            = "This is a test Rule"
-                    Disabled           = $false
-                    ContentMatchQuery  = "filename:2016 budget filetype:xlsx"
-                    Credential = $Credential
-                    Ensure             = "Absent"
+                    Name              = 'TestRule'
+                    Policy            = 'TestPolicy'
+                    Comment           = 'This is a test Rule'
+                    Disabled          = $false
+                    ContentMatchQuery = 'filename:2016 budget filetype:xlsx'
+                    Credential        = $Credential
+                    Ensure            = 'Absent'
                 }
 
                 Mock -CommandName Get-CaseHoldRule -MockWith {
                     return @{
-                        Name              = "TestRule"
-                        Policy            = "12345-12345-12345-12345-12345"
-                        Comment           = "Different comment"
+                        Name              = 'TestRule'
+                        Policy            = '12345-12345-12345-12345-12345'
+                        Comment           = 'Different comment'
                         Disabled          = $true
-                        ContentMatchQuery = "filename:2016 budget filetype:xlsx"
+                        ContentMatchQuery = 'filename:2016 budget filetype:xlsx'
                     }
                 }
 
                 Mock -CommandName Get-CaseHoldPolicy -MockWith {
                     return @{
-                        Name     = "TestPolicy"
-                        Identity = "12345-12345-12345-12345-12345"
+                        Name     = 'TestPolicy'
+                        Identity = '12345-12345-12345-12345-12345'
                     }
                 }
             }
@@ -181,11 +181,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
         }
 
-        Context -Name "ReverseDSC Tests" -Fixture {
+        Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $testParams = @{
@@ -193,30 +193,30 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 $testRule1 = @{
-                    Name              = "TestRule1"
-                    Policy            = "12345-12345-12345-12345-12345"
-                    Comment           = "Different comment"
+                    Name              = 'TestRule1'
+                    Policy            = '12345-12345-12345-12345-12345'
+                    Comment           = 'Different comment'
                     Disabled          = $true
-                    ContentMatchQuery = "filename:2016 budget filetype:xlsx"
+                    ContentMatchQuery = 'filename:2016 budget filetype:xlsx'
                 }
 
                 $testRule2 = @{
-                    Name              = "TestRule2"
-                    Policy            = "12345-12345-12345-12345-12345"
-                    Comment           = "Different comment"
+                    Name              = 'TestRule2'
+                    Policy            = '12345-12345-12345-12345-12345'
+                    Comment           = 'Different comment'
                     Disabled          = $true
-                    ContentMatchQuery = "filename:2016 budget filetype:xlsx"
+                    ContentMatchQuery = 'filename:2016 budget filetype:xlsx'
                 }
 
                 Mock -CommandName Get-CaseHoldPolicy -MockWith {
                     return @{
-                        Name     = "TestPolicy"
-                        Identity = "12345-12345-12345-12345-12345"
+                        Name     = 'TestPolicy'
+                        Identity = '12345-12345-12345-12345-12345'
                     }
                 }
             }
 
-            It "Should Reverse Engineer resource from the Export method when single" {
+            It 'Should Reverse Engineer resource from the Export method when single' {
                 Mock -CommandName Get-CaseHoldRule -MockWith {
                     return $testRule1
                 }
@@ -224,7 +224,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Export-TargetResource @testParams
             }
 
-            It "Should Reverse Engineer resource from the Export method when multiple" {
+            It 'Should Reverse Engineer resource from the Export method when multiple' {
                 Mock -CommandName Get-CaseHoldRule -MockWith {
                     return @($testRule1, $testRule2)
                 }

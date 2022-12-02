@@ -106,7 +106,7 @@ function Get-TargetResource
         $AppsVisibilityList,
 
         [Parameter()]
-        [ValidateSet('none','appsInListCompliant','appsNotInListCompliant')]
+        [ValidateSet('none', 'appsInListCompliant', 'appsNotInListCompliant')]
         [System.String]
         $AppsVisibilityListType,
 
@@ -183,7 +183,7 @@ function Get-TargetResource
         $ClassroomForceUnpromptedAppAndDeviceLock,
 
         [Parameter()]
-        [ValidateSet('none','appsInListCompliant','appsNotInListCompliant')]
+        [ValidateSet('none', 'appsInListCompliant', 'appsNotInListCompliant')]
         [System.String]
         $CompliantAppListType,
 
@@ -444,7 +444,7 @@ function Get-TargetResource
         $KioskModeAppStoreUrl,
 
         [Parameter()]
-        [ValidateSet('notConfigured','appStoreApp','managedApp','builtInApp')]
+        [ValidateSet('notConfigured', 'appStoreApp', 'managedApp', 'builtInApp')]
         [System.String]
         $KioskModeAppType,
 
@@ -525,7 +525,7 @@ function Get-TargetResource
         $ManagedPasteboardRequired,
 
         [Parameter()]
-        [ValidateSet('allAllowed','allBlocked','agesAbove4','agesAbove9','agesAbove12','agesAbove17')]
+        [ValidateSet('allAllowed', 'allBlocked', 'agesAbove4', 'agesAbove9', 'agesAbove12', 'agesAbove17')]
         [System.String]
         $MediaContentRatingApps,
 
@@ -634,7 +634,7 @@ function Get-TargetResource
         $PasscodeRequired,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','alphanumeric','numeric')]
+        [ValidateSet('deviceDefault', 'alphanumeric', 'numeric')]
         [System.String]
         $PasscodeRequiredType,
 
@@ -687,7 +687,7 @@ function Get-TargetResource
         $SafariBlockJavaScript,
 
         [Parameter()]
-        [ValidateSet('browserDefault','blockAlways','allowCurrentWebSite','allowFromWebsitesVisited','allowAlways')]
+        [ValidateSet('browserDefault', 'blockAlways', 'allowCurrentWebSite', 'allowFromWebsitesVisited', 'allowAlways')]
         [System.String]
         $SafariCookieSettings,
 
@@ -817,14 +817,14 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message "Connection to the workload failed."
+        Write-Verbose -Message 'Connection to the workload failed.'
     }
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -836,23 +836,23 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $getValue=$null
+        $getValue = $null
 
         #region resource generator code
         $getValue = Get-MgDeviceManagementDeviceConfiguration `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
                 $_.id -eq $id `
-            }
+        }
 
-        if(-not $getValue)
+        if (-not $getValue)
         {
             $getValue = Get-MgDeviceManagementDeviceConfiguration `
                 -ErrorAction Stop | Where-Object `
                 -FilterScript { `
                     $_.DisplayName -eq "$DisplayName" `
                     -and $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration' `
-                }
+            }
         }
 
         #endregion
@@ -868,248 +868,234 @@ function Get-TargetResource
         $results = @{
 
             #region resource generator code
-            Id = $getValue.Id
-            Description = $getValue.Description
-            DisplayName = $getValue.DisplayName
-            AccountBlockModification = $getValue.AdditionalProperties.accountBlockModification
-            ActivationLockAllowWhenSupervised = $getValue.AdditionalProperties.activationLockAllowWhenSupervised
-            AirDropBlocked = $getValue.AdditionalProperties.airDropBlocked
-            AirDropForceUnmanagedDropTarget = $getValue.AdditionalProperties.airDropForceUnmanagedDropTarget
+            Id                                             = $getValue.Id
+            Description                                    = $getValue.Description
+            DisplayName                                    = $getValue.DisplayName
+            AccountBlockModification                       = $getValue.AdditionalProperties.accountBlockModification
+            ActivationLockAllowWhenSupervised              = $getValue.AdditionalProperties.activationLockAllowWhenSupervised
+            AirDropBlocked                                 = $getValue.AdditionalProperties.airDropBlocked
+            AirDropForceUnmanagedDropTarget                = $getValue.AdditionalProperties.airDropForceUnmanagedDropTarget
             AirPlayForcePairingPasswordForOutgoingRequests = $getValue.AdditionalProperties.airPlayForcePairingPasswordForOutgoingRequests
-            AirPrintBlockCredentialsStorage = $getValue.AdditionalProperties.airPrintBlockCredentialsStorage
-            AirPrintBlocked = $getValue.AdditionalProperties.airPrintBlocked
-            AirPrintBlockiBeaconDiscovery = $getValue.AdditionalProperties.airPrintBlockiBeaconDiscovery
-            AirPrintForceTrustedTLS = $getValue.AdditionalProperties.airPrintForceTrustedTLS
-            AppClipsBlocked = $getValue.AdditionalProperties.appClipsBlocked
-            AppleNewsBlocked = $getValue.AdditionalProperties.appleNewsBlocked
-            ApplePersonalizedAdsBlocked = $getValue.AdditionalProperties.applePersonalizedAdsBlocked
-            AppleWatchBlockPairing = $getValue.AdditionalProperties.appleWatchBlockPairing
-            AppleWatchForceWristDetection = $getValue.AdditionalProperties.appleWatchForceWristDetection
-            AppRemovalBlocked = $getValue.AdditionalProperties.appRemovalBlocked
-            AppStoreBlockAutomaticDownloads = $getValue.AdditionalProperties.appStoreBlockAutomaticDownloads
-            AppStoreBlocked = $getValue.AdditionalProperties.appStoreBlocked
-            AppStoreBlockInAppPurchases = $getValue.AdditionalProperties.appStoreBlockInAppPurchases
-            AppStoreBlockUIAppInstallation = $getValue.AdditionalProperties.appStoreBlockUIAppInstallation
-            AppStoreRequirePassword = $getValue.AdditionalProperties.appStoreRequirePassword
-            AppsVisibilityListType = $getValue.AdditionalProperties.appsVisibilityListType
-            AutoFillForceAuthentication = $getValue.AdditionalProperties.autoFillForceAuthentication
-            AutoUnlockBlocked = $getValue.AdditionalProperties.autoUnlockBlocked
-            BlockSystemAppRemoval = $getValue.AdditionalProperties.blockSystemAppRemoval
-            BluetoothBlockModification = $getValue.AdditionalProperties.bluetoothBlockModification
-            CameraBlocked = $getValue.AdditionalProperties.cameraBlocked
-            CellularBlockDataRoaming = $getValue.AdditionalProperties.cellularBlockDataRoaming
+            AirPrintBlockCredentialsStorage                = $getValue.AdditionalProperties.airPrintBlockCredentialsStorage
+            AirPrintBlocked                                = $getValue.AdditionalProperties.airPrintBlocked
+            AirPrintBlockiBeaconDiscovery                  = $getValue.AdditionalProperties.airPrintBlockiBeaconDiscovery
+            AirPrintForceTrustedTLS                        = $getValue.AdditionalProperties.airPrintForceTrustedTLS
+            AppClipsBlocked                                = $getValue.AdditionalProperties.appClipsBlocked
+            AppleNewsBlocked                               = $getValue.AdditionalProperties.appleNewsBlocked
+            ApplePersonalizedAdsBlocked                    = $getValue.AdditionalProperties.applePersonalizedAdsBlocked
+            AppleWatchBlockPairing                         = $getValue.AdditionalProperties.appleWatchBlockPairing
+            AppleWatchForceWristDetection                  = $getValue.AdditionalProperties.appleWatchForceWristDetection
+            AppRemovalBlocked                              = $getValue.AdditionalProperties.appRemovalBlocked
+            AppStoreBlockAutomaticDownloads                = $getValue.AdditionalProperties.appStoreBlockAutomaticDownloads
+            AppStoreBlocked                                = $getValue.AdditionalProperties.appStoreBlocked
+            AppStoreBlockInAppPurchases                    = $getValue.AdditionalProperties.appStoreBlockInAppPurchases
+            AppStoreBlockUIAppInstallation                 = $getValue.AdditionalProperties.appStoreBlockUIAppInstallation
+            AppStoreRequirePassword                        = $getValue.AdditionalProperties.appStoreRequirePassword
+            AppsVisibilityListType                         = $getValue.AdditionalProperties.appsVisibilityListType
+            AutoFillForceAuthentication                    = $getValue.AdditionalProperties.autoFillForceAuthentication
+            AutoUnlockBlocked                              = $getValue.AdditionalProperties.autoUnlockBlocked
+            BlockSystemAppRemoval                          = $getValue.AdditionalProperties.blockSystemAppRemoval
+            BluetoothBlockModification                     = $getValue.AdditionalProperties.bluetoothBlockModification
+            CameraBlocked                                  = $getValue.AdditionalProperties.cameraBlocked
+            CellularBlockDataRoaming                       = $getValue.AdditionalProperties.cellularBlockDataRoaming
             CellularBlockGlobalBackgroundFetchWhileRoaming = $getValue.AdditionalProperties.cellularBlockGlobalBackgroundFetchWhileRoaming
-            CellularBlockPerAppDataModification = $getValue.AdditionalProperties.cellularBlockPerAppDataModification
-            CellularBlockPersonalHotspot = $getValue.AdditionalProperties.cellularBlockPersonalHotspot
-            CellularBlockPersonalHotspotModification = $getValue.AdditionalProperties.cellularBlockPersonalHotspotModification
-            CellularBlockPlanModification = $getValue.AdditionalProperties.cellularBlockPlanModification
-            CellularBlockVoiceRoaming = $getValue.AdditionalProperties.cellularBlockVoiceRoaming
-            CertificatesBlockUntrustedTlsCertificates = $getValue.AdditionalProperties.certificatesBlockUntrustedTlsCertificates
-            ClassroomAppBlockRemoteScreenObservation = $getValue.AdditionalProperties.classroomAppBlockRemoteScreenObservation
-            ClassroomAppForceUnpromptedScreenObservation = $getValue.AdditionalProperties.classroomAppForceUnpromptedScreenObservation
-            ClassroomForceAutomaticallyJoinClasses = $getValue.AdditionalProperties.classroomForceAutomaticallyJoinClasses
-            ClassroomForceRequestPermissionToLeaveClasses = $getValue.AdditionalProperties.classroomForceRequestPermissionToLeaveClasses
-            ClassroomForceUnpromptedAppAndDeviceLock = $getValue.AdditionalProperties.classroomForceUnpromptedAppAndDeviceLock
-            CompliantAppListType = $getValue.AdditionalProperties.compliantAppListType
-            ConfigurationProfileBlockChanges = $getValue.AdditionalProperties.configurationProfileBlockChanges
-            ContactsAllowManagedToUnmanagedWrite = $getValue.AdditionalProperties.contactsAllowManagedToUnmanagedWrite
-            ContactsAllowUnmanagedToManagedRead = $getValue.AdditionalProperties.contactsAllowUnmanagedToManagedRead
-            ContinuousPathKeyboardBlocked = $getValue.AdditionalProperties.continuousPathKeyboardBlocked
-            DateAndTimeForceSetAutomatically = $getValue.AdditionalProperties.dateAndTimeForceSetAutomatically
-            DefinitionLookupBlocked = $getValue.AdditionalProperties.definitionLookupBlocked
-            DeviceBlockEnableRestrictions = $getValue.AdditionalProperties.deviceBlockEnableRestrictions
-            DeviceBlockEraseContentAndSettings = $getValue.AdditionalProperties.deviceBlockEraseContentAndSettings
-            DeviceBlockNameModification = $getValue.AdditionalProperties.deviceBlockNameModification
-            DiagnosticDataBlockSubmission = $getValue.AdditionalProperties.diagnosticDataBlockSubmission
-            DiagnosticDataBlockSubmissionModification = $getValue.AdditionalProperties.diagnosticDataBlockSubmissionModification
-            DocumentsBlockManagedDocumentsInUnmanagedApps = $getValue.AdditionalProperties.documentsBlockManagedDocumentsInUnmanagedApps
-            DocumentsBlockUnmanagedDocumentsInManagedApps = $getValue.AdditionalProperties.documentsBlockUnmanagedDocumentsInManagedApps
-            EmailInDomainSuffixes = $getValue.AdditionalProperties.emailInDomainSuffixes
-            EnterpriseAppBlockTrust = $getValue.AdditionalProperties.enterpriseAppBlockTrust
-            EnterpriseAppBlockTrustModification = $getValue.AdditionalProperties.enterpriseAppBlockTrustModification
-            EnterpriseBookBlockBackup = $getValue.AdditionalProperties.enterpriseBookBlockBackup
-            EnterpriseBookBlockMetadataSync = $getValue.AdditionalProperties.enterpriseBookBlockMetadataSync
-            EsimBlockModification = $getValue.AdditionalProperties.esimBlockModification
-            FaceTimeBlocked = $getValue.AdditionalProperties.faceTimeBlocked
-            FilesNetworkDriveAccessBlocked = $getValue.AdditionalProperties.filesNetworkDriveAccessBlocked
-            FilesUsbDriveAccessBlocked = $getValue.AdditionalProperties.filesUsbDriveAccessBlocked
-            FindMyDeviceInFindMyAppBlocked = $getValue.AdditionalProperties.findMyDeviceInFindMyAppBlocked
-            FindMyFriendsBlocked = $getValue.AdditionalProperties.findMyFriendsBlocked
-            FindMyFriendsInFindMyAppBlocked = $getValue.AdditionalProperties.findMyFriendsInFindMyAppBlocked
-            GameCenterBlocked = $getValue.AdditionalProperties.gameCenterBlocked
-            GamingBlockGameCenterFriends = $getValue.AdditionalProperties.gamingBlockGameCenterFriends
-            GamingBlockMultiplayer = $getValue.AdditionalProperties.gamingBlockMultiplayer
-            HostPairingBlocked = $getValue.AdditionalProperties.hostPairingBlocked
-            IBooksStoreBlocked = $getValue.AdditionalProperties.iBooksStoreBlocked
-            IBooksStoreBlockErotica = $getValue.AdditionalProperties.iBooksStoreBlockErotica
-            ICloudBlockActivityContinuation = $getValue.AdditionalProperties.iCloudBlockActivityContinuation
-            ICloudBlockBackup = $getValue.AdditionalProperties.iCloudBlockBackup
-            ICloudBlockDocumentSync = $getValue.AdditionalProperties.iCloudBlockDocumentSync
-            ICloudBlockManagedAppsSync = $getValue.AdditionalProperties.iCloudBlockManagedAppsSync
-            ICloudBlockPhotoLibrary = $getValue.AdditionalProperties.iCloudBlockPhotoLibrary
-            ICloudBlockPhotoStreamSync = $getValue.AdditionalProperties.iCloudBlockPhotoStreamSync
-            ICloudBlockSharedPhotoStream = $getValue.AdditionalProperties.iCloudBlockSharedPhotoStream
-            ICloudPrivateRelayBlocked = $getValue.AdditionalProperties.iCloudPrivateRelayBlocked
-            ICloudRequireEncryptedBackup = $getValue.AdditionalProperties.iCloudRequireEncryptedBackup
-            ITunesBlocked = $getValue.AdditionalProperties.iTunesBlocked
-            ITunesBlockExplicitContent = $getValue.AdditionalProperties.iTunesBlockExplicitContent
-            ITunesBlockMusicService = $getValue.AdditionalProperties.iTunesBlockMusicService
-            ITunesBlockRadio = $getValue.AdditionalProperties.iTunesBlockRadio
-            KeyboardBlockAutoCorrect = $getValue.AdditionalProperties.keyboardBlockAutoCorrect
-            KeyboardBlockDictation = $getValue.AdditionalProperties.keyboardBlockDictation
-            KeyboardBlockPredictive = $getValue.AdditionalProperties.keyboardBlockPredictive
-            KeyboardBlockShortcuts = $getValue.AdditionalProperties.keyboardBlockShortcuts
-            KeyboardBlockSpellCheck = $getValue.AdditionalProperties.keyboardBlockSpellCheck
-            KeychainBlockCloudSync = $getValue.AdditionalProperties.keychainBlockCloudSync
-            KioskModeAllowAssistiveSpeak = $getValue.AdditionalProperties.kioskModeAllowAssistiveSpeak
-            KioskModeAllowAssistiveTouchSettings = $getValue.AdditionalProperties.kioskModeAllowAssistiveTouchSettings
-            KioskModeAllowAutoLock = $getValue.AdditionalProperties.kioskModeAllowAutoLock
-            KioskModeAllowColorInversionSettings = $getValue.AdditionalProperties.kioskModeAllowColorInversionSettings
-            KioskModeAllowRingerSwitch = $getValue.AdditionalProperties.kioskModeAllowRingerSwitch
-            KioskModeAllowScreenRotation = $getValue.AdditionalProperties.kioskModeAllowScreenRotation
-            KioskModeAllowSleepButton = $getValue.AdditionalProperties.kioskModeAllowSleepButton
-            KioskModeAllowTouchscreen = $getValue.AdditionalProperties.kioskModeAllowTouchscreen
-            KioskModeAllowVoiceControlModification = $getValue.AdditionalProperties.kioskModeAllowVoiceControlModification
-            KioskModeAllowVoiceOverSettings = $getValue.AdditionalProperties.kioskModeAllowVoiceOverSettings
-            KioskModeAllowVolumeButtons = $getValue.AdditionalProperties.kioskModeAllowVolumeButtons
-            KioskModeAllowZoomSettings = $getValue.AdditionalProperties.kioskModeAllowZoomSettings
-            KioskModeAppStoreUrl = $getValue.AdditionalProperties.kioskModeAppStoreUrl
-            KioskModeAppType = $getValue.AdditionalProperties.kioskModeAppType
-            KioskModeBlockAutoLock = $getValue.AdditionalProperties.kioskModeBlockAutoLock
-            KioskModeBlockRingerSwitch = $getValue.AdditionalProperties.kioskModeBlockRingerSwitch
-            KioskModeBlockScreenRotation = $getValue.AdditionalProperties.kioskModeBlockScreenRotation
-            KioskModeBlockSleepButton = $getValue.AdditionalProperties.kioskModeBlockSleepButton
-            KioskModeBlockTouchscreen = $getValue.AdditionalProperties.kioskModeBlockTouchscreen
-            KioskModeBlockVolumeButtons = $getValue.AdditionalProperties.kioskModeBlockVolumeButtons
-            KioskModeBuiltInAppId = $getValue.AdditionalProperties.kioskModeBuiltInAppId
-            KioskModeEnableVoiceControl = $getValue.AdditionalProperties.kioskModeEnableVoiceControl
-            KioskModeManagedAppId = $getValue.AdditionalProperties.kioskModeManagedAppId
-            KioskModeRequireAssistiveTouch = $getValue.AdditionalProperties.kioskModeRequireAssistiveTouch
-            KioskModeRequireColorInversion = $getValue.AdditionalProperties.kioskModeRequireColorInversion
-            KioskModeRequireMonoAudio = $getValue.AdditionalProperties.kioskModeRequireMonoAudio
-            KioskModeRequireVoiceOver = $getValue.AdditionalProperties.kioskModeRequireVoiceOver
-            KioskModeRequireZoom = $getValue.AdditionalProperties.kioskModeRequireZoom
-            LockScreenBlockControlCenter = $getValue.AdditionalProperties.lockScreenBlockControlCenter
-            LockScreenBlockNotificationView = $getValue.AdditionalProperties.lockScreenBlockNotificationView
-            LockScreenBlockPassbook = $getValue.AdditionalProperties.lockScreenBlockPassbook
-            LockScreenBlockTodayView = $getValue.AdditionalProperties.lockScreenBlockTodayView
-            ManagedPasteboardRequired = $getValue.AdditionalProperties.managedPasteboardRequired
-            MediaContentRatingApps = $getValue.AdditionalProperties.mediaContentRatingApps
-            MessagesBlocked = $getValue.AdditionalProperties.messagesBlocked
-            NfcBlocked = $getValue.AdditionalProperties.nfcBlocked
-            NotificationsBlockSettingsModification = $getValue.AdditionalProperties.notificationsBlockSettingsModification
-            OnDeviceOnlyDictationForced = $getValue.AdditionalProperties.onDeviceOnlyDictationForced
-            OnDeviceOnlyTranslationForced = $getValue.AdditionalProperties.onDeviceOnlyTranslationForced
-            PasscodeBlockFingerprintModification = $getValue.AdditionalProperties.passcodeBlockFingerprintModification
-            PasscodeBlockFingerprintUnlock = $getValue.AdditionalProperties.passcodeBlockFingerprintUnlock
-            PasscodeBlockModification = $getValue.AdditionalProperties.passcodeBlockModification
-            PasscodeBlockSimple = $getValue.AdditionalProperties.passcodeBlockSimple
-            PasscodeExpirationDays = $getValue.AdditionalProperties.passcodeExpirationDays
-            PasscodeMinimumCharacterSetCount = $getValue.AdditionalProperties.passcodeMinimumCharacterSetCount
-            PasscodeMinimumLength = $getValue.AdditionalProperties.passcodeMinimumLength
-            PasscodeMinutesOfInactivityBeforeLock = $getValue.AdditionalProperties.passcodeMinutesOfInactivityBeforeLock
+            CellularBlockPerAppDataModification            = $getValue.AdditionalProperties.cellularBlockPerAppDataModification
+            CellularBlockPersonalHotspot                   = $getValue.AdditionalProperties.cellularBlockPersonalHotspot
+            CellularBlockPersonalHotspotModification       = $getValue.AdditionalProperties.cellularBlockPersonalHotspotModification
+            CellularBlockPlanModification                  = $getValue.AdditionalProperties.cellularBlockPlanModification
+            CellularBlockVoiceRoaming                      = $getValue.AdditionalProperties.cellularBlockVoiceRoaming
+            CertificatesBlockUntrustedTlsCertificates      = $getValue.AdditionalProperties.certificatesBlockUntrustedTlsCertificates
+            ClassroomAppBlockRemoteScreenObservation       = $getValue.AdditionalProperties.classroomAppBlockRemoteScreenObservation
+            ClassroomAppForceUnpromptedScreenObservation   = $getValue.AdditionalProperties.classroomAppForceUnpromptedScreenObservation
+            ClassroomForceAutomaticallyJoinClasses         = $getValue.AdditionalProperties.classroomForceAutomaticallyJoinClasses
+            ClassroomForceRequestPermissionToLeaveClasses  = $getValue.AdditionalProperties.classroomForceRequestPermissionToLeaveClasses
+            ClassroomForceUnpromptedAppAndDeviceLock       = $getValue.AdditionalProperties.classroomForceUnpromptedAppAndDeviceLock
+            CompliantAppListType                           = $getValue.AdditionalProperties.compliantAppListType
+            ConfigurationProfileBlockChanges               = $getValue.AdditionalProperties.configurationProfileBlockChanges
+            ContactsAllowManagedToUnmanagedWrite           = $getValue.AdditionalProperties.contactsAllowManagedToUnmanagedWrite
+            ContactsAllowUnmanagedToManagedRead            = $getValue.AdditionalProperties.contactsAllowUnmanagedToManagedRead
+            ContinuousPathKeyboardBlocked                  = $getValue.AdditionalProperties.continuousPathKeyboardBlocked
+            DateAndTimeForceSetAutomatically               = $getValue.AdditionalProperties.dateAndTimeForceSetAutomatically
+            DefinitionLookupBlocked                        = $getValue.AdditionalProperties.definitionLookupBlocked
+            DeviceBlockEnableRestrictions                  = $getValue.AdditionalProperties.deviceBlockEnableRestrictions
+            DeviceBlockEraseContentAndSettings             = $getValue.AdditionalProperties.deviceBlockEraseContentAndSettings
+            DeviceBlockNameModification                    = $getValue.AdditionalProperties.deviceBlockNameModification
+            DiagnosticDataBlockSubmission                  = $getValue.AdditionalProperties.diagnosticDataBlockSubmission
+            DiagnosticDataBlockSubmissionModification      = $getValue.AdditionalProperties.diagnosticDataBlockSubmissionModification
+            DocumentsBlockManagedDocumentsInUnmanagedApps  = $getValue.AdditionalProperties.documentsBlockManagedDocumentsInUnmanagedApps
+            DocumentsBlockUnmanagedDocumentsInManagedApps  = $getValue.AdditionalProperties.documentsBlockUnmanagedDocumentsInManagedApps
+            EmailInDomainSuffixes                          = $getValue.AdditionalProperties.emailInDomainSuffixes
+            EnterpriseAppBlockTrust                        = $getValue.AdditionalProperties.enterpriseAppBlockTrust
+            EnterpriseAppBlockTrustModification            = $getValue.AdditionalProperties.enterpriseAppBlockTrustModification
+            EnterpriseBookBlockBackup                      = $getValue.AdditionalProperties.enterpriseBookBlockBackup
+            EnterpriseBookBlockMetadataSync                = $getValue.AdditionalProperties.enterpriseBookBlockMetadataSync
+            EsimBlockModification                          = $getValue.AdditionalProperties.esimBlockModification
+            FaceTimeBlocked                                = $getValue.AdditionalProperties.faceTimeBlocked
+            FilesNetworkDriveAccessBlocked                 = $getValue.AdditionalProperties.filesNetworkDriveAccessBlocked
+            FilesUsbDriveAccessBlocked                     = $getValue.AdditionalProperties.filesUsbDriveAccessBlocked
+            FindMyDeviceInFindMyAppBlocked                 = $getValue.AdditionalProperties.findMyDeviceInFindMyAppBlocked
+            FindMyFriendsBlocked                           = $getValue.AdditionalProperties.findMyFriendsBlocked
+            FindMyFriendsInFindMyAppBlocked                = $getValue.AdditionalProperties.findMyFriendsInFindMyAppBlocked
+            GameCenterBlocked                              = $getValue.AdditionalProperties.gameCenterBlocked
+            GamingBlockGameCenterFriends                   = $getValue.AdditionalProperties.gamingBlockGameCenterFriends
+            GamingBlockMultiplayer                         = $getValue.AdditionalProperties.gamingBlockMultiplayer
+            HostPairingBlocked                             = $getValue.AdditionalProperties.hostPairingBlocked
+            IBooksStoreBlocked                             = $getValue.AdditionalProperties.iBooksStoreBlocked
+            IBooksStoreBlockErotica                        = $getValue.AdditionalProperties.iBooksStoreBlockErotica
+            ICloudBlockActivityContinuation                = $getValue.AdditionalProperties.iCloudBlockActivityContinuation
+            ICloudBlockBackup                              = $getValue.AdditionalProperties.iCloudBlockBackup
+            ICloudBlockDocumentSync                        = $getValue.AdditionalProperties.iCloudBlockDocumentSync
+            ICloudBlockManagedAppsSync                     = $getValue.AdditionalProperties.iCloudBlockManagedAppsSync
+            ICloudBlockPhotoLibrary                        = $getValue.AdditionalProperties.iCloudBlockPhotoLibrary
+            ICloudBlockPhotoStreamSync                     = $getValue.AdditionalProperties.iCloudBlockPhotoStreamSync
+            ICloudBlockSharedPhotoStream                   = $getValue.AdditionalProperties.iCloudBlockSharedPhotoStream
+            ICloudPrivateRelayBlocked                      = $getValue.AdditionalProperties.iCloudPrivateRelayBlocked
+            ICloudRequireEncryptedBackup                   = $getValue.AdditionalProperties.iCloudRequireEncryptedBackup
+            ITunesBlocked                                  = $getValue.AdditionalProperties.iTunesBlocked
+            ITunesBlockExplicitContent                     = $getValue.AdditionalProperties.iTunesBlockExplicitContent
+            ITunesBlockMusicService                        = $getValue.AdditionalProperties.iTunesBlockMusicService
+            ITunesBlockRadio                               = $getValue.AdditionalProperties.iTunesBlockRadio
+            KeyboardBlockAutoCorrect                       = $getValue.AdditionalProperties.keyboardBlockAutoCorrect
+            KeyboardBlockDictation                         = $getValue.AdditionalProperties.keyboardBlockDictation
+            KeyboardBlockPredictive                        = $getValue.AdditionalProperties.keyboardBlockPredictive
+            KeyboardBlockShortcuts                         = $getValue.AdditionalProperties.keyboardBlockShortcuts
+            KeyboardBlockSpellCheck                        = $getValue.AdditionalProperties.keyboardBlockSpellCheck
+            KeychainBlockCloudSync                         = $getValue.AdditionalProperties.keychainBlockCloudSync
+            KioskModeAllowAssistiveSpeak                   = $getValue.AdditionalProperties.kioskModeAllowAssistiveSpeak
+            KioskModeAllowAssistiveTouchSettings           = $getValue.AdditionalProperties.kioskModeAllowAssistiveTouchSettings
+            KioskModeAllowAutoLock                         = $getValue.AdditionalProperties.kioskModeAllowAutoLock
+            KioskModeAllowColorInversionSettings           = $getValue.AdditionalProperties.kioskModeAllowColorInversionSettings
+            KioskModeAllowRingerSwitch                     = $getValue.AdditionalProperties.kioskModeAllowRingerSwitch
+            KioskModeAllowScreenRotation                   = $getValue.AdditionalProperties.kioskModeAllowScreenRotation
+            KioskModeAllowSleepButton                      = $getValue.AdditionalProperties.kioskModeAllowSleepButton
+            KioskModeAllowTouchscreen                      = $getValue.AdditionalProperties.kioskModeAllowTouchscreen
+            KioskModeAllowVoiceControlModification         = $getValue.AdditionalProperties.kioskModeAllowVoiceControlModification
+            KioskModeAllowVoiceOverSettings                = $getValue.AdditionalProperties.kioskModeAllowVoiceOverSettings
+            KioskModeAllowVolumeButtons                    = $getValue.AdditionalProperties.kioskModeAllowVolumeButtons
+            KioskModeAllowZoomSettings                     = $getValue.AdditionalProperties.kioskModeAllowZoomSettings
+            KioskModeAppStoreUrl                           = $getValue.AdditionalProperties.kioskModeAppStoreUrl
+            KioskModeAppType                               = $getValue.AdditionalProperties.kioskModeAppType
+            KioskModeBlockAutoLock                         = $getValue.AdditionalProperties.kioskModeBlockAutoLock
+            KioskModeBlockRingerSwitch                     = $getValue.AdditionalProperties.kioskModeBlockRingerSwitch
+            KioskModeBlockScreenRotation                   = $getValue.AdditionalProperties.kioskModeBlockScreenRotation
+            KioskModeBlockSleepButton                      = $getValue.AdditionalProperties.kioskModeBlockSleepButton
+            KioskModeBlockTouchscreen                      = $getValue.AdditionalProperties.kioskModeBlockTouchscreen
+            KioskModeBlockVolumeButtons                    = $getValue.AdditionalProperties.kioskModeBlockVolumeButtons
+            KioskModeBuiltInAppId                          = $getValue.AdditionalProperties.kioskModeBuiltInAppId
+            KioskModeEnableVoiceControl                    = $getValue.AdditionalProperties.kioskModeEnableVoiceControl
+            KioskModeManagedAppId                          = $getValue.AdditionalProperties.kioskModeManagedAppId
+            KioskModeRequireAssistiveTouch                 = $getValue.AdditionalProperties.kioskModeRequireAssistiveTouch
+            KioskModeRequireColorInversion                 = $getValue.AdditionalProperties.kioskModeRequireColorInversion
+            KioskModeRequireMonoAudio                      = $getValue.AdditionalProperties.kioskModeRequireMonoAudio
+            KioskModeRequireVoiceOver                      = $getValue.AdditionalProperties.kioskModeRequireVoiceOver
+            KioskModeRequireZoom                           = $getValue.AdditionalProperties.kioskModeRequireZoom
+            LockScreenBlockControlCenter                   = $getValue.AdditionalProperties.lockScreenBlockControlCenter
+            LockScreenBlockNotificationView                = $getValue.AdditionalProperties.lockScreenBlockNotificationView
+            LockScreenBlockPassbook                        = $getValue.AdditionalProperties.lockScreenBlockPassbook
+            LockScreenBlockTodayView                       = $getValue.AdditionalProperties.lockScreenBlockTodayView
+            ManagedPasteboardRequired                      = $getValue.AdditionalProperties.managedPasteboardRequired
+            MediaContentRatingApps                         = $getValue.AdditionalProperties.mediaContentRatingApps
+            MessagesBlocked                                = $getValue.AdditionalProperties.messagesBlocked
+            NfcBlocked                                     = $getValue.AdditionalProperties.nfcBlocked
+            NotificationsBlockSettingsModification         = $getValue.AdditionalProperties.notificationsBlockSettingsModification
+            OnDeviceOnlyDictationForced                    = $getValue.AdditionalProperties.onDeviceOnlyDictationForced
+            OnDeviceOnlyTranslationForced                  = $getValue.AdditionalProperties.onDeviceOnlyTranslationForced
+            PasscodeBlockFingerprintModification           = $getValue.AdditionalProperties.passcodeBlockFingerprintModification
+            PasscodeBlockFingerprintUnlock                 = $getValue.AdditionalProperties.passcodeBlockFingerprintUnlock
+            PasscodeBlockModification                      = $getValue.AdditionalProperties.passcodeBlockModification
+            PasscodeBlockSimple                            = $getValue.AdditionalProperties.passcodeBlockSimple
+            PasscodeExpirationDays                         = $getValue.AdditionalProperties.passcodeExpirationDays
+            PasscodeMinimumCharacterSetCount               = $getValue.AdditionalProperties.passcodeMinimumCharacterSetCount
+            PasscodeMinimumLength                          = $getValue.AdditionalProperties.passcodeMinimumLength
+            PasscodeMinutesOfInactivityBeforeLock          = $getValue.AdditionalProperties.passcodeMinutesOfInactivityBeforeLock
             PasscodeMinutesOfInactivityBeforeScreenTimeout = $getValue.AdditionalProperties.passcodeMinutesOfInactivityBeforeScreenTimeout
-            PasscodePreviousPasscodeBlockCount = $getValue.AdditionalProperties.passcodePreviousPasscodeBlockCount
-            PasscodeRequired = $getValue.AdditionalProperties.passcodeRequired
-            PasscodeRequiredType = $getValue.AdditionalProperties.passcodeRequiredType
-            PasscodeSignInFailureCountBeforeWipe = $getValue.AdditionalProperties.passcodeSignInFailureCountBeforeWipe
-            PasswordBlockAirDropSharing = $getValue.AdditionalProperties.passwordBlockAirDropSharing
-            PasswordBlockAutoFill = $getValue.AdditionalProperties.passwordBlockAutoFill
-            PasswordBlockProximityRequests = $getValue.AdditionalProperties.passwordBlockProximityRequests
-            PkiBlockOTAUpdates = $getValue.AdditionalProperties.pkiBlockOTAUpdates
-            PodcastsBlocked = $getValue.AdditionalProperties.podcastsBlocked
-            PrivacyForceLimitAdTracking = $getValue.AdditionalProperties.privacyForceLimitAdTracking
-            ProximityBlockSetupToNewDevice = $getValue.AdditionalProperties.proximityBlockSetupToNewDevice
-            SafariBlockAutofill = $getValue.AdditionalProperties.safariBlockAutofill
-            SafariBlocked = $getValue.AdditionalProperties.safariBlocked
-            SafariBlockJavaScript = $getValue.AdditionalProperties.safariBlockJavaScript
-            SafariBlockPopups = $getValue.AdditionalProperties.safariBlockPopups
-            SafariCookieSettings = $getValue.AdditionalProperties.safariCookieSettings
-            SafariManagedDomains = $getValue.AdditionalProperties.safariManagedDomains
-            SafariPasswordAutoFillDomains = $getValue.AdditionalProperties.safariPasswordAutoFillDomains
-            SafariRequireFraudWarning = $getValue.AdditionalProperties.safariRequireFraudWarning
-            ScreenCaptureBlocked = $getValue.AdditionalProperties.screenCaptureBlocked
-            SharedDeviceBlockTemporarySessions = $getValue.AdditionalProperties.sharedDeviceBlockTemporarySessions
-            SiriBlocked = $getValue.AdditionalProperties.siriBlocked
-            SiriBlockedWhenLocked = $getValue.AdditionalProperties.siriBlockedWhenLocked
-            SiriBlockUserGeneratedContent = $getValue.AdditionalProperties.siriBlockUserGeneratedContent
-            SiriRequireProfanityFilter = $getValue.AdditionalProperties.siriRequireProfanityFilter
-            SoftwareUpdatesEnforcedDelayInDays = $getValue.AdditionalProperties.softwareUpdatesEnforcedDelayInDays
-            SoftwareUpdatesForceDelayed = $getValue.AdditionalProperties.softwareUpdatesForceDelayed
-            SpotlightBlockInternetResults = $getValue.AdditionalProperties.spotlightBlockInternetResults
-            UnpairedExternalBootToRecoveryAllowed = $getValue.AdditionalProperties.unpairedExternalBootToRecoveryAllowed
-            UsbRestrictedModeBlocked = $getValue.AdditionalProperties.usbRestrictedModeBlocked
-            VoiceDialingBlocked = $getValue.AdditionalProperties.voiceDialingBlocked
-            VpnBlockCreation = $getValue.AdditionalProperties.vpnBlockCreation
-            WallpaperBlockModification = $getValue.AdditionalProperties.wallpaperBlockModification
-            WiFiConnectOnlyToConfiguredNetworks = $getValue.AdditionalProperties.wiFiConnectOnlyToConfiguredNetworks
-            WiFiConnectToAllowedNetworksOnlyForced = $getValue.AdditionalProperties.wiFiConnectToAllowedNetworksOnlyForced
-            WifiPowerOnForced = $getValue.AdditionalProperties.wifiPowerOnForced
-            Managedidentity= $ManagedIdentity.IsPresent
+            PasscodePreviousPasscodeBlockCount             = $getValue.AdditionalProperties.passcodePreviousPasscodeBlockCount
+            PasscodeRequired                               = $getValue.AdditionalProperties.passcodeRequired
+            PasscodeRequiredType                           = $getValue.AdditionalProperties.passcodeRequiredType
+            PasscodeSignInFailureCountBeforeWipe           = $getValue.AdditionalProperties.passcodeSignInFailureCountBeforeWipe
+            PasswordBlockAirDropSharing                    = $getValue.AdditionalProperties.passwordBlockAirDropSharing
+            PasswordBlockAutoFill                          = $getValue.AdditionalProperties.passwordBlockAutoFill
+            PasswordBlockProximityRequests                 = $getValue.AdditionalProperties.passwordBlockProximityRequests
+            PkiBlockOTAUpdates                             = $getValue.AdditionalProperties.pkiBlockOTAUpdates
+            PodcastsBlocked                                = $getValue.AdditionalProperties.podcastsBlocked
+            PrivacyForceLimitAdTracking                    = $getValue.AdditionalProperties.privacyForceLimitAdTracking
+            ProximityBlockSetupToNewDevice                 = $getValue.AdditionalProperties.proximityBlockSetupToNewDevice
+            SafariBlockAutofill                            = $getValue.AdditionalProperties.safariBlockAutofill
+            SafariBlocked                                  = $getValue.AdditionalProperties.safariBlocked
+            SafariBlockJavaScript                          = $getValue.AdditionalProperties.safariBlockJavaScript
+            SafariBlockPopups                              = $getValue.AdditionalProperties.safariBlockPopups
+            SafariCookieSettings                           = $getValue.AdditionalProperties.safariCookieSettings
+            SafariManagedDomains                           = $getValue.AdditionalProperties.safariManagedDomains
+            SafariPasswordAutoFillDomains                  = $getValue.AdditionalProperties.safariPasswordAutoFillDomains
+            SafariRequireFraudWarning                      = $getValue.AdditionalProperties.safariRequireFraudWarning
+            ScreenCaptureBlocked                           = $getValue.AdditionalProperties.screenCaptureBlocked
+            SharedDeviceBlockTemporarySessions             = $getValue.AdditionalProperties.sharedDeviceBlockTemporarySessions
+            SiriBlocked                                    = $getValue.AdditionalProperties.siriBlocked
+            SiriBlockedWhenLocked                          = $getValue.AdditionalProperties.siriBlockedWhenLocked
+            SiriBlockUserGeneratedContent                  = $getValue.AdditionalProperties.siriBlockUserGeneratedContent
+            SiriRequireProfanityFilter                     = $getValue.AdditionalProperties.siriRequireProfanityFilter
+            SoftwareUpdatesEnforcedDelayInDays             = $getValue.AdditionalProperties.softwareUpdatesEnforcedDelayInDays
+            SoftwareUpdatesForceDelayed                    = $getValue.AdditionalProperties.softwareUpdatesForceDelayed
+            SpotlightBlockInternetResults                  = $getValue.AdditionalProperties.spotlightBlockInternetResults
+            UnpairedExternalBootToRecoveryAllowed          = $getValue.AdditionalProperties.unpairedExternalBootToRecoveryAllowed
+            UsbRestrictedModeBlocked                       = $getValue.AdditionalProperties.usbRestrictedModeBlocked
+            VoiceDialingBlocked                            = $getValue.AdditionalProperties.voiceDialingBlocked
+            VpnBlockCreation                               = $getValue.AdditionalProperties.vpnBlockCreation
+            WallpaperBlockModification                     = $getValue.AdditionalProperties.wallpaperBlockModification
+            WiFiConnectOnlyToConfiguredNetworks            = $getValue.AdditionalProperties.wiFiConnectOnlyToConfiguredNetworks
+            WiFiConnectToAllowedNetworksOnlyForced         = $getValue.AdditionalProperties.wiFiConnectToAllowedNetworksOnlyForced
+            WifiPowerOnForced                              = $getValue.AdditionalProperties.wifiPowerOnForced
+            Managedidentity                                = $ManagedIdentity.IsPresent
 
-            Ensure                = 'Present'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            ApplicationSecret     = $ApplicationSecret
-            CertificateThumbprint = $CertificateThumbprint
+            Ensure                                         = 'Present'
+            Credential                                     = $Credential
+            ApplicationId                                  = $ApplicationId
+            TenantId                                       = $TenantId
+            ApplicationSecret                              = $ApplicationSecret
+            CertificateThumbprint                          = $CertificateThumbprint
         }
 
-        $results.Add("AppsSingleAppModeList", $getValue.additionalProperties.appsSingleAppModeList)
-        $results.Add("AppsVisibilityList", $getValue.additionalProperties.appsVisibilityList)
-        $results.Add("CompliantAppsList", $getValue.additionalProperties.compliantAppsList)
-        $results.Add("MediaContentRatingAustralia", $getValue.additionalProperties.mediaContentRatingAustralia)
-        $results.Add("MediaContentRatingCanada", $getValue.additionalProperties.mediaContentRatingCanada)
-        $results.Add("MediaContentRatingFrance", $getValue.additionalProperties.mediaContentRatingFrance)
-        $results.Add("MediaContentRatingGermany", $getValue.additionalProperties.mediaContentRatingGermany)
-        $results.Add("MediaContentRatingIreland", $getValue.additionalProperties.mediaContentRatingIreland)
-        $results.Add("MediaContentRatingJapan", $getValue.additionalProperties.mediaContentRatingJapan)
-        $results.Add("MediaContentRatingNewZealand", $getValue.additionalProperties.mediaContentRatingNewZealand)
-        $results.Add("MediaContentRatingUnitedKingdom", $getValue.additionalProperties.mediaContentRatingUnitedKingdom)
-        $results.Add("MediaContentRatingUnitedStates", $getValue.additionalProperties.mediaContentRatingUnitedStates)
-        $results.Add("NetworkUsageRules", $getValue.additionalProperties.networkUsageRules)
+        $results.Add('AppsSingleAppModeList', $getValue.additionalProperties.appsSingleAppModeList)
+        $results.Add('AppsVisibilityList', $getValue.additionalProperties.appsVisibilityList)
+        $results.Add('CompliantAppsList', $getValue.additionalProperties.compliantAppsList)
+        $results.Add('MediaContentRatingAustralia', $getValue.additionalProperties.mediaContentRatingAustralia)
+        $results.Add('MediaContentRatingCanada', $getValue.additionalProperties.mediaContentRatingCanada)
+        $results.Add('MediaContentRatingFrance', $getValue.additionalProperties.mediaContentRatingFrance)
+        $results.Add('MediaContentRatingGermany', $getValue.additionalProperties.mediaContentRatingGermany)
+        $results.Add('MediaContentRatingIreland', $getValue.additionalProperties.mediaContentRatingIreland)
+        $results.Add('MediaContentRatingJapan', $getValue.additionalProperties.mediaContentRatingJapan)
+        $results.Add('MediaContentRatingNewZealand', $getValue.additionalProperties.mediaContentRatingNewZealand)
+        $results.Add('MediaContentRatingUnitedKingdom', $getValue.additionalProperties.mediaContentRatingUnitedKingdom)
+        $results.Add('MediaContentRatingUnitedStates', $getValue.additionalProperties.mediaContentRatingUnitedStates)
+        $results.Add('NetworkUsageRules', $getValue.additionalProperties.networkUsageRules)
 
 
-        $returnAssignments=@()
-        $returnAssignments+=Get-MgDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $getValue.Id
+        $returnAssignments = @()
+        $returnAssignments += Get-MgDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $getValue.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $returnAssignments)
         {
             $assignmentValue = @{
-                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
                 deviceAndAppManagementAssignmentFilterType = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.toString()
-                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
+                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
+                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
             }
             $assignmentResult += $assignmentValue
         }
 
-        $results.Add('Assignments',$assignmentResult)
+        $results.Add('Assignments', $assignmentResult)
 
         return [System.Collections.Hashtable] $results
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullResult
     }
 }
@@ -1221,7 +1207,7 @@ function Set-TargetResource
         $AppsVisibilityList,
 
         [Parameter()]
-        [ValidateSet('none','appsInListCompliant','appsNotInListCompliant')]
+        [ValidateSet('none', 'appsInListCompliant', 'appsNotInListCompliant')]
         [System.String]
         $AppsVisibilityListType,
 
@@ -1298,7 +1284,7 @@ function Set-TargetResource
         $ClassroomForceUnpromptedAppAndDeviceLock,
 
         [Parameter()]
-        [ValidateSet('none','appsInListCompliant','appsNotInListCompliant')]
+        [ValidateSet('none', 'appsInListCompliant', 'appsNotInListCompliant')]
         [System.String]
         $CompliantAppListType,
 
@@ -1559,7 +1545,7 @@ function Set-TargetResource
         $KioskModeAppStoreUrl,
 
         [Parameter()]
-        [ValidateSet('notConfigured','appStoreApp','managedApp','builtInApp')]
+        [ValidateSet('notConfigured', 'appStoreApp', 'managedApp', 'builtInApp')]
         [System.String]
         $KioskModeAppType,
 
@@ -1640,7 +1626,7 @@ function Set-TargetResource
         $ManagedPasteboardRequired,
 
         [Parameter()]
-        [ValidateSet('allAllowed','allBlocked','agesAbove4','agesAbove9','agesAbove12','agesAbove17')]
+        [ValidateSet('allAllowed', 'allBlocked', 'agesAbove4', 'agesAbove9', 'agesAbove12', 'agesAbove17')]
         [System.String]
         $MediaContentRatingApps,
 
@@ -1749,7 +1735,7 @@ function Set-TargetResource
         $PasscodeRequired,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','alphanumeric','numeric')]
+        [ValidateSet('deviceDefault', 'alphanumeric', 'numeric')]
         [System.String]
         $PasscodeRequiredType,
 
@@ -1802,7 +1788,7 @@ function Set-TargetResource
         $SafariBlockJavaScript,
 
         [Parameter()]
-        [ValidateSet('browserDefault','blockAlways','allowCurrentWebSite','allowFromWebsitesVisited','allowAlways')]
+        [ValidateSet('browserDefault', 'blockAlways', 'allowCurrentWebSite', 'allowFromWebsitesVisited', 'allowAlways')]
         [System.String]
         $SafariCookieSettings,
 
@@ -1928,8 +1914,8 @@ function Set-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
             -ProfileName 'v1.0'
-        $context=Get-MgContext
-        if($null -eq $context)
+        $context = Get-MgContext
+        if ($null -eq $context)
         {
             $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters -ProfileName 'beta'
@@ -1945,7 +1931,7 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -1966,42 +1952,42 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating {$DisplayName}"
-        $PSBoundParameters.Remove("Assignments") | Out-Null
+        $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
-        $CreateParameters=Rename-M365DSCCimInstanceODataParameter -Properties $CreateParameters
+        $CreateParameters = Rename-M365DSCCimInstanceODataParameter -Properties $CreateParameters
 
         #$AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($CreateParameters)
 
-        $CreateParameters.Remove("Id") | Out-Null
-        $CreateParameters.Remove("Verbose") | Out-Null
+        $CreateParameters.Remove('Id') | Out-Null
+        $CreateParameters.Remove('Verbose') | Out-Null
 
-        foreach($key in ($CreateParameters.clone()).Keys)
+        foreach ($key in ($CreateParameters.clone()).Keys)
         {
-            if($CreateParameters[$key].getType().Fullname -like "*CimInstance*")
+            if ($CreateParameters[$key].getType().Fullname -like '*CimInstance*')
             {
-                $CreateParameters[$key]=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
+                $CreateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
             }
 
-            if($key -ne '@odata.type')
+            if ($key -ne '@odata.type')
             {
-                $keyName=$key.substring(0,1).ToLower()+$key.substring(1,$key.length-1)
-                $keyValue=$CreateParameters.$key
-                $CreateParameters.remove($key)|out-null
-                $CreateParameters.add($keyName,$keyValue)|out-null
+                $keyName = $key.substring(0, 1).ToLower() + $key.substring(1, $key.length - 1)
+                $keyValue = $CreateParameters.$key
+                $CreateParameters.remove($key) | Out-Null
+                $CreateParameters.add($keyName, $keyValue) | Out-Null
             }
         }
-        $CreateParameters.add("@odata.type","#microsoft.graph.iosGeneralDeviceConfiguration")
+        $CreateParameters.add('@odata.type', '#microsoft.graph.iosGeneralDeviceConfiguration')
 
         #region resource generator code
-        $policy=New-MgDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
-        $assignmentsHash=@()
-        foreach($assignment in $Assignments)
+        $policy = New-MgDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
         {
-            $assignmentsHash+=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
 
-        if($policy.id)
+        if ($policy.id)
         {
             Update-DeviceConfigurationPolicyAssignments -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash
@@ -2013,38 +1999,38 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating {$DisplayName}"
-        $PSBoundParameters.Remove("Assignments") | Out-Null
+        $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
-        $UpdateParameters=Rename-M365DSCCimInstanceODataParameter -Properties $UpdateParameters
+        $UpdateParameters = Rename-M365DSCCimInstanceODataParameter -Properties $UpdateParameters
 
-        $UpdateParameters.Remove("Id") | Out-Null
-        $UpdateParameters.Remove("Verbose") | Out-Null
+        $UpdateParameters.Remove('Id') | Out-Null
+        $UpdateParameters.Remove('Verbose') | Out-Null
 
-        foreach($key in (($UpdateParameters.clone()).Keys|Sort-Object))
+        foreach ($key in (($UpdateParameters.clone()).Keys | Sort-Object))
         {
-            if($UpdateParameters.$key.getType().Fullname -like "*CimInstance*")
+            if ($UpdateParameters.$key.getType().Fullname -like '*CimInstance*')
             {
-                $UpdateParameters.$key=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
+                $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
 
-            if($key -ne '@odata.type')
+            if ($key -ne '@odata.type')
             {
-                $keyName=$key.substring(0,1).ToLower()+$key.substring(1,$key.length-1)
-                $keyValue=$UpdateParameters.$key
+                $keyName = $key.substring(0, 1).ToLower() + $key.substring(1, $key.length - 1)
+                $keyValue = $UpdateParameters.$key
                 $UpdateParameters.remove($key)
-                $UpdateParameters.add($keyName,$keyValue)
+                $UpdateParameters.add($keyName, $keyValue)
             }
         }
-        $UpdateParameters.add("@odata.type","#microsoft.graph.iosGeneralDeviceConfiguration")
+        $UpdateParameters.add('@odata.type', '#microsoft.graph.iosGeneralDeviceConfiguration')
 
         #region resource generator code
         Update-MgDeviceManagementDeviceConfiguration -BodyParameter $UpdateParameters `
             -DeviceConfigurationId $currentInstance.Id
-        $assignmentsHash=@()
-        foreach($assignment in $Assignments)
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
         {
-            $assignmentsHash+=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
         Update-DeviceConfigurationPolicyAssignments -DeviceConfigurationPolicyId $currentInstance.id `
             -Targets $assignmentsHash
@@ -2059,7 +2045,6 @@ function Set-TargetResource
         #region resource generator code
         Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
-
     }
 }
 
@@ -2171,7 +2156,7 @@ function Test-TargetResource
         $AppsVisibilityList,
 
         [Parameter()]
-        [ValidateSet('none','appsInListCompliant','appsNotInListCompliant')]
+        [ValidateSet('none', 'appsInListCompliant', 'appsNotInListCompliant')]
         [System.String]
         $AppsVisibilityListType,
 
@@ -2248,7 +2233,7 @@ function Test-TargetResource
         $ClassroomForceUnpromptedAppAndDeviceLock,
 
         [Parameter()]
-        [ValidateSet('none','appsInListCompliant','appsNotInListCompliant')]
+        [ValidateSet('none', 'appsInListCompliant', 'appsNotInListCompliant')]
         [System.String]
         $CompliantAppListType,
 
@@ -2509,7 +2494,7 @@ function Test-TargetResource
         $KioskModeAppStoreUrl,
 
         [Parameter()]
-        [ValidateSet('notConfigured','appStoreApp','managedApp','builtInApp')]
+        [ValidateSet('notConfigured', 'appStoreApp', 'managedApp', 'builtInApp')]
         [System.String]
         $KioskModeAppType,
 
@@ -2590,7 +2575,7 @@ function Test-TargetResource
         $ManagedPasteboardRequired,
 
         [Parameter()]
-        [ValidateSet('allAllowed','allBlocked','agesAbove4','agesAbove9','agesAbove12','agesAbove17')]
+        [ValidateSet('allAllowed', 'allBlocked', 'agesAbove4', 'agesAbove9', 'agesAbove12', 'agesAbove17')]
         [System.String]
         $MediaContentRatingApps,
 
@@ -2699,7 +2684,7 @@ function Test-TargetResource
         $PasscodeRequired,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','alphanumeric','numeric')]
+        [ValidateSet('deviceDefault', 'alphanumeric', 'numeric')]
         [System.String]
         $PasscodeRequiredType,
 
@@ -2752,7 +2737,7 @@ function Test-TargetResource
         $SafariBlockJavaScript,
 
         [Parameter()]
-        [ValidateSet('browserDefault','blockAlways','allowCurrentWebSite','allowFromWebsitesVisited','allowAlways')]
+        [ValidateSet('browserDefault', 'blockAlways', 'allowCurrentWebSite', 'allowFromWebsitesVisited', 'allowAlways')]
         [System.String]
         $SafariCookieSettings,
 
@@ -2877,7 +2862,7 @@ function Test-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -2890,33 +2875,33 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
     }
-    $testResult=$true
+    $testResult = $true
 
     #Compare Cim instances
-    foreach($key in $PSBoundParameters.Keys)
+    foreach ($key in $PSBoundParameters.Keys)
     {
-        $source=$PSBoundParameters.$key
-        $target=$CurrentValues.$key
-        if($source.getType().Name -like "*CimInstance*")
+        $source = $PSBoundParameters.$key
+        $target = $CurrentValues.$key
+        if ($source.getType().Name -like '*CimInstance*')
         {
-            $source=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
+            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
 
-            $testResult=Compare-M365DSCComplexObject `
+            $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
 
-            if(-Not $testResult)
+            if (-Not $testResult)
             {
-                $testResult=$false
+                $testResult = $false
                 break;
             }
 
-            $ValuesToCheck.Remove($key)|Out-Null
+            $ValuesToCheck.Remove($key) | Out-Null
 
         }
     }
@@ -2932,14 +2917,14 @@ function Test-TargetResource
     #Convert any DateTime to String
     foreach ($key in $ValuesToCheck.Keys)
     {
-        if(($null -ne $CurrentValues[$key]) `
-            -and ($CurrentValues[$key].getType().Name -eq 'DateTime'))
+        if (($null -ne $CurrentValues[$key]) `
+                -and ($CurrentValues[$key].getType().Name -eq 'DateTime'))
         {
-            $CurrentValues[$key]=$CurrentValues[$key].toString()
+            $CurrentValues[$key] = $CurrentValues[$key].toString()
         }
     }
 
-    if($testResult)
+    if ($testResult)
     {
         $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
             -Source $($MyInvocation.MyCommand.Source) `
@@ -2991,7 +2976,7 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -3007,7 +2992,7 @@ function Export-TargetResource
             -ErrorAction Stop -All:$true | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration'  `
-            }
+        }
         #endregion
 
 
@@ -3025,7 +3010,7 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($getValue.Count)] $($config.displayName)" -NoNewline
             $params = @{
-                id           = $config.id
+                id                    = $config.id
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -3039,163 +3024,175 @@ function Export-TargetResource
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
 
-        if ($Results.AppsSingleAppModeList)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.AppsSingleAppModeList -CIMInstanceName MicrosoftGraphapplistitem
-            if ($complexTypeStringResult)
+            if ($Results.AppsSingleAppModeList)
             {
-                $Results.AppsSingleAppModeList = $complexTypeStringResult
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.AppsSingleAppModeList -CIMInstanceName MicrosoftGraphapplistitem
+                if ($complexTypeStringResult)
+                {
+                    $Results.AppsSingleAppModeList = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('AppsSingleAppModeList') | Out-Null
+                }
             }
-            else
+            if ($Results.AppsVisibilityList)
             {
-                $Results.Remove('AppsSingleAppModeList') | Out-Null
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.AppsVisibilityList -CIMInstanceName MicrosoftGraphapplistitem
+                if ($complexTypeStringResult)
+                {
+                    $Results.AppsVisibilityList = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('AppsVisibilityList') | Out-Null
+                }
             }
-        }
-        if ($Results.AppsVisibilityList)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.AppsVisibilityList -CIMInstanceName MicrosoftGraphapplistitem
-            if ($complexTypeStringResult)
+            if ($Results.CompliantAppsList)
             {
-                $Results.AppsVisibilityList = $complexTypeStringResult            }
-            else
-            {
-                $Results.Remove('AppsVisibilityList') | Out-Null
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.CompliantAppsList -CIMInstanceName MicrosoftGraphapplistitem
+                if ($complexTypeStringResult)
+                {
+                    $Results.CompliantAppsList = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('CompliantAppsList') | Out-Null
+                }
             }
-        }
-        if ($Results.CompliantAppsList)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.CompliantAppsList -CIMInstanceName MicrosoftGraphapplistitem
-            if ($complexTypeStringResult)
+            if ($Results.MediaContentRatingAustralia)
             {
-                $Results.CompliantAppsList = $complexTypeStringResult            }
-            else
-            {
-                $Results.Remove('CompliantAppsList') | Out-Null
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingAustralia -CIMInstanceName MicrosoftGraphmediacontentratingaustralia
+                if ($complexTypeStringResult)
+                {
+                    $Results.MediaContentRatingAustralia = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('MediaContentRatingAustralia') | Out-Null
+                }
             }
-        }
-        if ($Results.MediaContentRatingAustralia)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingAustralia -CIMInstanceName MicrosoftGraphmediacontentratingaustralia
-            if ($complexTypeStringResult)
+            if ($Results.MediaContentRatingCanada)
             {
-                $Results.MediaContentRatingAustralia = $complexTypeStringResult            }
-            else
-            {
-                $Results.Remove('MediaContentRatingAustralia') | Out-Null
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingCanada -CIMInstanceName MicrosoftGraphmediacontentratingcanada
+                if ($complexTypeStringResult)
+                {
+                    $Results.MediaContentRatingCanada = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('MediaContentRatingCanada') | Out-Null
+                }
             }
-        }
-        if ($Results.MediaContentRatingCanada)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingCanada -CIMInstanceName MicrosoftGraphmediacontentratingcanada
-            if ($complexTypeStringResult)
+            if ($Results.MediaContentRatingFrance)
             {
-                $Results.MediaContentRatingCanada = $complexTypeStringResult            }
-            else
-            {
-                $Results.Remove('MediaContentRatingCanada') | Out-Null
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingFrance -CIMInstanceName MicrosoftGraphmediacontentratingfrance
+                if ($complexTypeStringResult)
+                {
+                    $Results.MediaContentRatingFrance = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('MediaContentRatingFrance') | Out-Null
+                }
             }
-        }
-        if ($Results.MediaContentRatingFrance)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingFrance -CIMInstanceName MicrosoftGraphmediacontentratingfrance
-            if ($complexTypeStringResult)
+            if ($Results.MediaContentRatingGermany)
             {
-                $Results.MediaContentRatingFrance = $complexTypeStringResult            }
-            else
-            {
-                $Results.Remove('MediaContentRatingFrance') | Out-Null
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingGermany -CIMInstanceName MicrosoftGraphmediacontentratinggermany
+                if ($complexTypeStringResult)
+                {
+                    $Results.MediaContentRatingGermany = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('MediaContentRatingGermany') | Out-Null
+                }
             }
-        }
-        if ($Results.MediaContentRatingGermany)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingGermany -CIMInstanceName MicrosoftGraphmediacontentratinggermany
-            if ($complexTypeStringResult)
+            if ($Results.MediaContentRatingIreland)
             {
-                $Results.MediaContentRatingGermany = $complexTypeStringResult            }
-            else
-            {
-                $Results.Remove('MediaContentRatingGermany') | Out-Null
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingIreland -CIMInstanceName MicrosoftGraphmediacontentratingireland
+                if ($complexTypeStringResult)
+                {
+                    $Results.MediaContentRatingIreland = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('MediaContentRatingIreland') | Out-Null
+                }
             }
-        }
-        if ($Results.MediaContentRatingIreland)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingIreland -CIMInstanceName MicrosoftGraphmediacontentratingireland
-            if ($complexTypeStringResult)
+            if ($Results.MediaContentRatingJapan)
             {
-                $Results.MediaContentRatingIreland = $complexTypeStringResult            }
-            else
-            {
-                $Results.Remove('MediaContentRatingIreland') | Out-Null
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingJapan -CIMInstanceName MicrosoftGraphmediacontentratingjapan
+                if ($complexTypeStringResult)
+                {
+                    $Results.MediaContentRatingJapan = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('MediaContentRatingJapan') | Out-Null
+                }
             }
-        }
-        if ($Results.MediaContentRatingJapan)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingJapan -CIMInstanceName MicrosoftGraphmediacontentratingjapan
-            if ($complexTypeStringResult)
+            if ($Results.MediaContentRatingNewZealand)
             {
-                $Results.MediaContentRatingJapan = $complexTypeStringResult            }
-            else
-            {
-                $Results.Remove('MediaContentRatingJapan') | Out-Null
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingNewZealand -CIMInstanceName MicrosoftGraphmediacontentratingnewzealand
+                if ($complexTypeStringResult)
+                {
+                    $Results.MediaContentRatingNewZealand = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('MediaContentRatingNewZealand') | Out-Null
+                }
             }
-        }
-        if ($Results.MediaContentRatingNewZealand)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingNewZealand -CIMInstanceName MicrosoftGraphmediacontentratingnewzealand
-            if ($complexTypeStringResult)
+            if ($Results.MediaContentRatingUnitedKingdom)
             {
-                $Results.MediaContentRatingNewZealand = $complexTypeStringResult            }
-            else
-            {
-                $Results.Remove('MediaContentRatingNewZealand') | Out-Null
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingUnitedKingdom -CIMInstanceName MicrosoftGraphmediacontentratingunitedkingdom
+                if ($complexTypeStringResult)
+                {
+                    $Results.MediaContentRatingUnitedKingdom = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('MediaContentRatingUnitedKingdom') | Out-Null
+                }
             }
-        }
-        if ($Results.MediaContentRatingUnitedKingdom)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingUnitedKingdom -CIMInstanceName MicrosoftGraphmediacontentratingunitedkingdom
-            if ($complexTypeStringResult)
+            if ($Results.MediaContentRatingUnitedStates)
             {
-                $Results.MediaContentRatingUnitedKingdom = $complexTypeStringResult            }
-            else
-            {
-                $Results.Remove('MediaContentRatingUnitedKingdom') | Out-Null
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingUnitedStates -CIMInstanceName MicrosoftGraphmediacontentratingunitedstates
+                if ($complexTypeStringResult)
+                {
+                    $Results.MediaContentRatingUnitedStates = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('MediaContentRatingUnitedStates') | Out-Null
+                }
             }
-        }
-        if ($Results.MediaContentRatingUnitedStates)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingUnitedStates -CIMInstanceName MicrosoftGraphmediacontentratingunitedstates
-            if ($complexTypeStringResult)
+            if ($Results.NetworkUsageRules)
             {
-                $Results.MediaContentRatingUnitedStates = $complexTypeStringResult            }
-            else
-            {
-                $Results.Remove('MediaContentRatingUnitedStates') | Out-Null
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.NetworkUsageRules -CIMInstanceName MicrosoftGraphiosnetworkusagerule
+                if ($complexTypeStringResult)
+                {
+                    $Results.NetworkUsageRules = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('NetworkUsageRules') | Out-Null
+                }
             }
-        }
-        if ($Results.NetworkUsageRules)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.NetworkUsageRules -CIMInstanceName MicrosoftGraphiosnetworkusagerule
-            if ($complexTypeStringResult)
-            {
-                $Results.NetworkUsageRules = $complexTypeStringResult            }
-            else
-            {
-                $Results.Remove('NetworkUsageRules') | Out-Null
-            }
-        }
 
-        if($Results.Assignments)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
-            if ($complexTypeStringResult)
+            if ($Results.Assignments)
             {
-                $Results.Assignments = $complexTypeStringResult
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
+                if ($complexTypeStringResult)
+                {
+                    $Results.Assignments = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Assignments') | Out-Null
+                }
             }
-            else
-            {
-                $Results.Remove('Assignments') | Out-Null
-            }
-        }
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
@@ -3205,78 +3202,78 @@ function Export-TargetResource
 
             if ($Results.AppsSingleAppModeList)
             {
-                $isCIMArray=$false
-                if($Results.AppsSingleAppModeList.getType().Fullname -like "*[[\]]")
+                $isCIMArray = $false
+                if ($Results.AppsSingleAppModeList.getType().Fullname -like '*[[\]]')
                 {
-                    $isCIMArray=$true
+                    $isCIMArray = $true
                 }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AppsSingleAppModeList" -isCIMArray:$isCIMArray
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AppsSingleAppModeList' -IsCIMArray:$isCIMArray
             }
             if ($Results.AppsVisibilityList)
             {
-                $isCIMArray=$false
-                if($Results.AppsVisibilityList.getType().Fullname -like "*[[\]]")
+                $isCIMArray = $false
+                if ($Results.AppsVisibilityList.getType().Fullname -like '*[[\]]')
                 {
-                    $isCIMArray=$true
+                    $isCIMArray = $true
                 }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AppsVisibilityList" -isCIMArray:$isCIMArray
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AppsVisibilityList' -IsCIMArray:$isCIMArray
             }
             if ($Results.CompliantAppsList)
             {
-                $isCIMArray=$false
-                if($Results.CompliantAppsList.getType().Fullname -like "*[[\]]")
+                $isCIMArray = $false
+                if ($Results.CompliantAppsList.getType().Fullname -like '*[[\]]')
                 {
-                    $isCIMArray=$true
+                    $isCIMArray = $true
                 }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CompliantAppsList" -isCIMArray:$isCIMArray
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'CompliantAppsList' -IsCIMArray:$isCIMArray
             }
 
             if ($Results.MediaContentRatingAustralia)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingAustralia"
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'MediaContentRatingAustralia'
             }
             if ($Results.MediaContentRatingCanada)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingCanada"
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'MediaContentRatingCanada'
             }
             if ($Results.MediaContentRatingFrance)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingFrance"
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'MediaContentRatingFrance'
             }
 
             if ($Results.MediaContentRatingGermany)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingGermany"
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'MediaContentRatingGermany'
             }
             if ($Results.MediaContentRatingIreland)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingIreland"
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'MediaContentRatingIreland'
             }
             if ($Results.MediaContentRatingJapan)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingJapan"
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'MediaContentRatingJapan'
             }
             if ($Results.MediaContentRatingNewZealand)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingNewZealand"
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'MediaContentRatingNewZealand'
             }
             if ($Results.MediaContentRatingUnitedKingdom)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingUnitedKingdom"
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'MediaContentRatingUnitedKingdom'
             }
             if ($Results.MediaContentRatingUnitedStates)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MediaContentRatingUnitedStates"
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'MediaContentRatingUnitedStates'
             }
 
             if ($Results.Assignments)
             {
-                $isCIMArray=$false
-                if($Results.Assignments.getType().Fullname -like "*[[\]]")
+                $isCIMArray = $false
+                if ($Results.Assignments.getType().Fullname -like '*[[\]]')
                 {
-                    $isCIMArray=$true
+                    $isCIMArray = $true
                 }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$isCIMArray
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$isCIMArray
             }
 
             $dscContent += $currentDSCBlock
@@ -3291,194 +3288,174 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }
-
 
 function Rename-M365DSCCimInstanceODataParameter
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param(
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.Collections.Hashtable]
         $Properties
     )
-        $CIMparameters=$Properties.getEnumerator()|Where-Object -FilterScript {$_.value.GetType().Fullname -like '*CimInstance*'}
-        foreach($CIMParam in $CIMparameters)
+
+    $CIMparameters = $Properties.getEnumerator() | Where-Object -FilterScript { $_.value.GetType().Fullname -like '*CimInstance*' }
+    foreach ($CIMParam in $CIMparameters)
+    {
+        if ($CIMParam.value.GetType().Fullname -like '*[[\]]')
         {
-            if($CIMParam.value.GetType().Fullname -like '*[[\]]')
+            $CIMvalues = @()
+            foreach ($item in $CIMParam.value)
             {
-                $CIMvalues=@()
-                foreach($item in $CIMParam.value)
+                $CIMHash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
+                $keys = ($CIMHash.clone()).keys
+                if ($keys -contains 'odataType')
                 {
-                    $CIMHash= Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
-                    $keys=($CIMHash.clone()).keys
-                    if($keys -contains 'odataType')
-                    {
-                        $CIMHash.add('@odata.type',$CIMHash.odataType)
-                        $CIMHash.remove('odataType')
-                    }
-                    $CIMvalues+=$CIMHash
-                }
-                $Properties.($CIMParam.key)=$CIMvalues
-            }
-            else
-            {
-                $CIMHash= Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $CIMParam.value
-                $keys=($CIMHash.clone()).keys
-                if($keys -contains 'odataType')
-                {
-                    $CIMHash.add('@odata.type',$CIMHash.odataType)
+                    $CIMHash.add('@odata.type', $CIMHash.odataType)
                     $CIMHash.remove('odataType')
-                    $Properties.($CIMParam.key)=$CIMHash
                 }
+                $CIMvalues += $CIMHash
+            }
+            $Properties.($CIMParam.key) = $CIMvalues
+        }
+        else
+        {
+            $CIMHash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $CIMParam.value
+            $keys = ($CIMHash.clone()).keys
+            if ($keys -contains 'odataType')
+            {
+                $CIMHash.add('@odata.type', $CIMHash.odataType)
+                $CIMHash.remove('odataType')
+                $Properties.($CIMParam.key) = $CIMHash
             }
         }
-        return $Properties
+    }
+    return $Properties
 }
 
 function Update-DeviceConfigurationPolicyAssignments
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param (
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.String]
         $DeviceConfigurationPolicyId,
         [Array]
         $Targets
     )
+
     try
     {
-        $deviceManagementPolicyAssignments=@()
+        $deviceManagementPolicyAssignments = @()
 
-        $Uri="https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations/$DeviceConfigurationPolicyId/assign"
+        $Uri = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations/$DeviceConfigurationPolicyId/assign"
 
-        foreach($target in $targets)
+        foreach ($target in $targets)
         {
-            $formattedTarget=@{"@odata.type"=$target.dataType}
-            if($target.groupId)
+            $formattedTarget = @{'@odata.type' = $target.dataType }
+            if ($target.groupId)
             {
-                $formattedTarget.Add('groupId',$target.groupId)
+                $formattedTarget.Add('groupId', $target.groupId)
             }
-            if($target.collectionId)
+            if ($target.collectionId)
             {
-                $formattedTarget.Add('collectionId',$target.collectionId)
+                $formattedTarget.Add('collectionId', $target.collectionId)
             }
-            if($target.deviceAndAppManagementAssignmentFilterType)
+            if ($target.deviceAndAppManagementAssignmentFilterType)
             {
-                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',$target.deviceAndAppManagementAssignmentFilterType)
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType', $target.deviceAndAppManagementAssignmentFilterType)
             }
-            if($target.deviceAndAppManagementAssignmentFilterId)
+            if ($target.deviceAndAppManagementAssignmentFilterId)
             {
-                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',$target.deviceAndAppManagementAssignmentFilterId)
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId', $target.deviceAndAppManagementAssignmentFilterId)
             }
-            $deviceManagementPolicyAssignments+=@{'target'= $formattedTarget}
+            $deviceManagementPolicyAssignments += @{'target' = $formattedTarget }
         }
-        $body=@{'assignments'=$deviceManagementPolicyAssignments}|ConvertTo-Json -Depth 20
+        $body = @{'assignments' = $deviceManagementPolicyAssignments } | ConvertTo-Json -Depth 20
         #write-verbose -Message $body
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
 
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $null
     }
-
-
 }
 
 function Get-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
-    [OutputType([hashtable],[hashtable[]])]
-    param(
+    [OutputType([hashtable], [hashtable[]])]
+    param
+    (
         [Parameter()]
         $ComplexObject
     )
 
-    if($null -eq $ComplexObject)
+    if ($null -eq $ComplexObject)
     {
         return $null
     }
 
-
-    if($ComplexObject.getType().Fullname -like "*hashtable")
+    if ($ComplexObject.getType().Fullname -like '*hashtable')
     {
         return $ComplexObject
     }
-    if($ComplexObject.getType().Fullname -like "*hashtable[[\]]")
+    if ($ComplexObject.getType().Fullname -like '*hashtable[[\]]')
     {
         return [hashtable[]]$ComplexObject
     }
 
-
-    if($ComplexObject.gettype().fullname -like "*[[\]]")
+    if ($ComplexObject.gettype().fullname -like '*[[\]]')
     {
-        $results=@()
+        $results = @()
 
-        foreach($item in $ComplexObject)
+        foreach ($item in $ComplexObject)
         {
-            if($item)
+            if ($item)
             {
                 $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
-                $results+=$hash
+                $results += $hash
             }
         }
 
         # PowerShell returns all non-captured stream output, not just the argument of the return statement.
         #An empty array is mangled into $null in the process.
         #However, an array can be preserved on return by prepending it with the array construction operator (,)
-        return ,[hashtable[]]$results
+        return , [hashtable[]]$results
     }
 
     $results = @{}
-    $keys = $ComplexObject | Get-Member | Where-Object -FilterScript {$_.MemberType -eq 'Property' -and $_.Name -ne 'AdditionalProperties'}
+    $keys = $ComplexObject | Get-Member | Where-Object -FilterScript { $_.MemberType -eq 'Property' -and $_.Name -ne 'AdditionalProperties' }
 
     foreach ($key in $keys)
     {
 
-        if($ComplexObject.$($key.Name))
+        if ($ComplexObject.$($key.Name))
         {
             $keyName = $key.Name[0].ToString().ToLower() + $key.Name.Substring(1, $key.Name.Length - 1)
 
-            if($ComplexObject.$($key.Name).gettype().fullname -like "*CimInstance*")
+            if ($ComplexObject.$($key.Name).gettype().fullname -like '*CimInstance*')
             {
                 $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$($key.Name)
 
@@ -3498,7 +3475,8 @@ function Get-M365DSCDRGComplexTypeToString
 {
     [CmdletBinding()]
     #[OutputType([System.String])]
-    param(
+    param
+    (
         [Parameter()]
         $ComplexObject,
 
@@ -3512,11 +3490,11 @@ function Get-M365DSCDRGComplexTypeToString
 
         [Parameter()]
         [System.String]
-        $Whitespace="",
+        $Whitespace = '',
 
         [Parameter()]
         [switch]
-        $isArray=$false
+        $isArray = $false
     )
 
     if ($null -eq $ComplexObject)
@@ -3525,33 +3503,32 @@ function Get-M365DSCDRGComplexTypeToString
     }
 
     #If ComplexObject  is an Array
-    if ($ComplexObject.GetType().FullName -like "*[[\]]")
+    if ($ComplexObject.GetType().FullName -like '*[[\]]')
     {
-        $currentProperty=@()
+        $currentProperty = @()
         foreach ($item in $ComplexObject)
         {
-            $split=@{
-                'ComplexObject'=$item
-                'CIMInstanceName'=$CIMInstanceName
-                'Whitespace'="                $whitespace"
+            $split = @{
+                'ComplexObject'   = $item
+                'CIMInstanceName' = $CIMInstanceName
+                'Whitespace'      = "                $whitespace"
             }
             if ($ComplexTypeMapping)
             {
-                $split.add('ComplexTypeMapping',$ComplexTypeMapping)
+                $split.add('ComplexTypeMapping', $ComplexTypeMapping)
             }
 
             $currentProperty += Get-M365DSCDRGComplexTypeToString -isArray:$true @split
-
         }
 
         # PowerShell returns all non-captured stream output, not just the argument of the return statement.
         #An empty array is mangled into $null in the process.
         #However, an array can be preserved on return by prepending it with the array construction operator (,)
-        return ,$currentProperty
+        return , $currentProperty
     }
 
-    $currentProperty=""
-    if($isArray)
+    $currentProperty = ''
+    if ($isArray)
     {
         $currentProperty += "`r`n"
     }
@@ -3559,71 +3536,70 @@ function Get-M365DSCDRGComplexTypeToString
     $keyNotNull = 0
     foreach ($key in $ComplexObject.Keys)
     {
-
         if ($ComplexObject[$key])
         {
             $keyNotNull++
-            if ($ComplexObject[$key].GetType().FullName -like "Microsoft.Graph.PowerShell.Models.*" -or $key -in $ComplexTypeMapping.Name)
+            if ($ComplexObject[$key].GetType().FullName -like 'Microsoft.Graph.PowerShell.Models.*' -or $key -in $ComplexTypeMapping.Name)
             {
-                $hashPropertyType=$ComplexObject[$key].GetType().Name.tolower()
+                $hashPropertyType = $ComplexObject[$key].GetType().Name.tolower()
 
                 #overwrite type if object defined in mapping complextypemapping
-                if($key -in $ComplexTypeMapping.Name)
+                if ($key -in $ComplexTypeMapping.Name)
                 {
-                    $hashPropertyType=($ComplexTypeMapping|Where-Object -FilterScript {$_.Name -eq $key}).CimInstanceName
-                    $hashProperty=$ComplexObject[$key]
+                    $hashPropertyType = ($ComplexTypeMapping | Where-Object -FilterScript { $_.Name -eq $key }).CimInstanceName
+                    $hashProperty = $ComplexObject[$key]
                 }
                 else
                 {
-                    $hashProperty=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key]
+                    $hashProperty = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key]
                 }
 
-                if($key -notin $ComplexTypeMapping.Name)
+                if ($key -notin $ComplexTypeMapping.Name)
                 {
-                    $Whitespace+="            "
+                    $Whitespace += '            '
                 }
 
-                if(-not $isArray -or ($isArray -and $key -in $ComplexTypeMapping.Name ))
+                if (-not $isArray -or ($isArray -and $key -in $ComplexTypeMapping.Name ))
                 {
-                    $currentProperty += $whitespace + $key + " = "
-                    if($ComplexObject[$key].GetType().FullName -like "*[[\]]")
+                    $currentProperty += $whitespace + $key + ' = '
+                    if ($ComplexObject[$key].GetType().FullName -like '*[[\]]')
                     {
-                        $currentProperty += "@("
+                        $currentProperty += '@('
                     }
                 }
 
-                if($key -in $ComplexTypeMapping.Name)
+                if ($key -in $ComplexTypeMapping.Name)
                 {
-                    $Whitespace=""
+                    $Whitespace = ''
 
                 }
                 $currentProperty += Get-M365DSCDRGComplexTypeToString `
-                                -ComplexObject $hashProperty `
-                                -CIMInstanceName $hashPropertyType `
-                                -Whitespace $Whitespace `
-                                -ComplexTypeMapping $ComplexTypeMapping
+                    -ComplexObject $hashProperty `
+                    -CIMInstanceName $hashPropertyType `
+                    -Whitespace $Whitespace `
+                    -ComplexTypeMapping $ComplexTypeMapping
 
-                if($ComplexObject[$key].GetType().FullName -like "*[[\]]")
+                if ($ComplexObject[$key].GetType().FullName -like '*[[\]]')
                 {
-                    $currentProperty += ")"
+                    $currentProperty += ')'
                 }
-        }
+            }
             else
             {
-                if(-not $isArray)
+                if (-not $isArray)
                 {
-                    $Whitespace= "            "
+                    $Whitespace = '            '
                 }
-                $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $ComplexObject[$key] -Space ($Whitespace+"    ")
+                $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $ComplexObject[$key] -Space ($Whitespace + '    ')
             }
         }
         else
         {
-            $mappedKey=$ComplexTypeMapping|where-object -filterscript {$_.name -eq $key}
+            $mappedKey = $ComplexTypeMapping | Where-Object -FilterScript { $_.name -eq $key }
 
-            if($mappedKey -and $mappedKey.isRequired)
+            if ($mappedKey -and $mappedKey.isRequired)
             {
-                if($mappedKey.isArray)
+                if ($mappedKey.isArray)
                 {
                     $currentProperty += "$Whitespace    $key = @()`r`n"
                 }
@@ -3639,11 +3615,12 @@ function Get-M365DSCDRGComplexTypeToString
     return $currentProperty
 }
 
-Function Get-M365DSCDRGSimpleObjectTypeToString
+function Get-M365DSCDRGSimpleObjectTypeToString
 {
     [CmdletBinding()]
     [OutputType([System.String])]
-    param(
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.String]
         $Key,
@@ -3653,49 +3630,48 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
 
         [Parameter()]
         [System.String]
-        $Space="                "
-
+        $Space = '                '
     )
 
-    $returnValue=""
+    $returnValue = ''
     switch -Wildcard ($Value.GetType().Fullname )
     {
-        "*.Boolean"
+        '*.Boolean'
         {
-            $returnValue= $Space + $Key + " = `$" + $Value.ToString() + "`r`n"
+            $returnValue = $Space + $Key + " = `$" + $Value.ToString() + "`r`n"
         }
-        "*.String"
+        '*.String'
         {
-            if($key -eq '@odata.type')
+            if ($key -eq '@odata.type')
             {
-                $key='odataType'
+                $key = 'odataType'
             }
-            $returnValue= $Space + $Key + " = '" + $Value + "'`r`n"
+            $returnValue = $Space + $Key + " = '" + $Value + "'`r`n"
         }
-        "*.DateTime"
+        '*.DateTime'
         {
-            $returnValue= $Space + $Key + " = '" + $Value + "'`r`n"
+            $returnValue = $Space + $Key + " = '" + $Value + "'`r`n"
         }
-        "*[[\]]"
+        '*[[\]]'
         {
-            $returnValue= $Space + $key + " = @("
-            $whitespace=""
-            $newline=""
-            if($Value.count -gt 1)
+            $returnValue = $Space + $key + ' = @('
+            $whitespace = ''
+            $newline = ''
+            if ($Value.count -gt 1)
             {
                 $returnValue += "`r`n"
-                $whitespace=$Space+"    "
-                $newline="`r`n"
+                $whitespace = $Space + '    '
+                $newline = "`r`n"
             }
             foreach ($item in $Value)
             {
                 switch -Wildcard ($item.GetType().Fullname )
                 {
-                    "*.String"
+                    '*.String'
                     {
                         $returnValue += "$whitespace'$item'$newline"
                     }
-                    "*.DateTime"
+                    '*.DateTime'
                     {
                         $returnValue += "$whitespace'$item'$newline"
                     }
@@ -3705,7 +3681,7 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
                     }
                 }
             }
-            if($Value.count -gt 1)
+            if ($Value.count -gt 1)
             {
                 $returnValue += "$Space)`r`n"
             }
@@ -3717,7 +3693,7 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
         }
         Default
         {
-            $returnValue= $Space + $Key + " = " + $Value + "`r`n"
+            $returnValue = $Space + $Key + ' = ' + $Value + "`r`n"
         }
     }
     return $returnValue
@@ -3727,59 +3703,61 @@ function Compare-M365DSCComplexObject
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-    param(
+    param
+    (
         [Parameter()]
         $Source,
+
         [Parameter()]
         $Target
     )
 
     #Comparing full objects
-    if($null -eq  $Source  -and $null -eq $Target)
+    if ($null -eq $Source -and $null -eq $Target)
     {
         return $true
     }
 
-    $sourceValue=""
-    $targetValue=""
+    $sourceValue = ''
+    $targetValue = ''
     if (($null -eq $Source) -xor ($null -eq $Target))
     {
-        if($null -eq $Source)
+        if ($null -eq $Source)
         {
-            $sourceValue="Source is null"
+            $sourceValue = 'Source is null'
         }
 
-        if($null -eq $Target)
+        if ($null -eq $Target)
         {
-            $targetValue="Target is null"
+            $targetValue = 'Target is null'
         }
         Write-Verbose -Message "Configuration drift - Complex object: {$sourceValue$targetValue}"
         return $false
     }
 
-    if($Source.getType().FullName -like "*CimInstance[[\]]" -or $Source.getType().FullName -like "*Hashtable[[\]]")
+    if ($Source.getType().FullName -like '*CimInstance[[\]]' -or $Source.getType().FullName -like '*Hashtable[[\]]')
     {
-        if($source.count -ne $target.count)
+        if ($source.count -ne $target.count)
         {
             Write-Verbose -Message "Configuration drift - The complex array have different number of items: Source {$($source.count)} Target {$($target.count)}"
             return $false
         }
-        if($source.count -eq 0)
+        if ($source.count -eq 0)
         {
             return $true
         }
 
-        $i=0
-        foreach($item in $Source)
+        $i = 0
+        foreach ($item in $Source)
         {
 
-            $compareResult= Compare-M365DSCComplexObject `
-                    -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Source[$i]) `
-                    -Target $Target[$i]
+            $compareResult = Compare-M365DSCComplexObject `
+                -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Source[$i]) `
+                -Target $Target[$i]
 
-            if(-not $compareResult)
+            if (-not $compareResult)
             {
-                Write-Verbose -Message "Configuration drift - The complex array items are not identical"
+                Write-Verbose -Message 'Configuration drift - The complex array items are not identical'
                 return $false
             }
             $i++
@@ -3787,40 +3765,39 @@ function Compare-M365DSCComplexObject
         return $true
     }
 
-    $keys= $Source.Keys|Where-Object -FilterScript {$_ -ne "PSComputerName"}
+    $keys = $Source.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
     foreach ($key in $keys)
     {
         #write-verbose -message "Comparing key: {$key}"
         #Matching possible key names between Source and Target
-        $skey=$key
-        $tkey=$key
-        if($key -eq 'odataType')
+        $skey = $key
+        $tkey = $key
+        if ($key -eq 'odataType')
         {
-            $skey='@odata.type'
+            $skey = '@odata.type'
         }
         else
         {
-            $tmpkey=$Target.keys|Where-Object -FilterScript {$_ -eq "$key"}
-            if($tkey)
+            $tmpkey = $Target.keys | Where-Object -FilterScript { $_ -eq "$key" }
+            if ($tkey)
             {
-                $tkey=$tmpkey|Select-Object -First 1
+                $tkey = $tmpkey | Select-Object -First 1
             }
         }
 
-        $sourceValue=$Source.$key
-        $targetValue=$Target.$tkey
+        $sourceValue = $Source.$key
+        $targetValue = $Target.$tkey
         #One of the item is null and not the other
         if (($null -eq $Source.$skey) -xor ($null -eq $Target.$tkey))
         {
-
-            if($null -eq $Source.$skey)
+            if ($null -eq $Source.$skey)
             {
-                $sourceValue="null"
+                $sourceValue = 'null'
             }
 
-            if($null -eq $Target.$tkey)
+            if ($null -eq $Target.$tkey)
             {
-                $targetValue="null"
+                $targetValue = 'null'
             }
 
             Write-Verbose -Message "Configuration drift - key: $key Source {$sourceValue} Target {$targetValue}"
@@ -3828,16 +3805,16 @@ function Compare-M365DSCComplexObject
         }
 
         #Both keys aren't null or empty
-        if(($null -ne $Source.$skey) -and ($null -ne $Target.$tkey))
+        if (($null -ne $Source.$skey) -and ($null -ne $Target.$tkey))
         {
-            if($Source.$skey.getType().FullName -like "*CimInstance*" -or $Source.$skey.getType().FullName -like "*hashtable*"  )
+            if ($Source.$skey.getType().FullName -like '*CimInstance*' -or $Source.$skey.getType().FullName -like '*hashtable*'  )
             {
                 #Recursive call for complex object
-                $compareResult= Compare-M365DSCComplexObject `
+                $compareResult = Compare-M365DSCComplexObject `
                     -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Source.$skey) `
                     -Target $Target.$tkey
 
-                if(-not $compareResult)
+                if (-not $compareResult)
                 {
                     Write-Verbose -Message "Configuration drift - complex object key: $key Source {$sourceValue} Target {$targetValue}"
                     return $false
@@ -3846,8 +3823,8 @@ function Compare-M365DSCComplexObject
             else
             {
                 #Simple object comparison
-                $referenceObject=$Target.$tkey
-                $differenceObject=$Source.$skey
+                $referenceObject = $Target.$tkey
+                $differenceObject = $Source.$skey
 
                 $compareResult = Compare-Object `
                     -ReferenceObject ($referenceObject) `
@@ -3858,58 +3835,57 @@ function Compare-M365DSCComplexObject
                     Write-Verbose -Message "Configuration drift - simple object key: $key Source {$sourceValue} Target {$targetValue}"
                     return $false
                 }
-
             }
-
         }
     }
 
     return $true
 }
+
 function Convert-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
-    [OutputType([hashtable],[hashtable[]])]
-    param(
+    [OutputType([hashtable], [hashtable[]])]
+    param
+    (
         [Parameter(Mandatory = 'true')]
         $ComplexObject
     )
 
-
-    if($ComplexObject.getType().Fullname -like "*[[\]]")
+    if ($ComplexObject.getType().Fullname -like '*[[\]]')
     {
-        $results=@()
-        foreach($item in $ComplexObject)
+        $results = @()
+        foreach ($item in $ComplexObject)
         {
-            $hash=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
-            $results+=$hash
+            $hash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
+            $results += $hash
         }
 
         #Write-Verbose -Message ("Convert-M365DSCDRGComplexTypeToHashtable >>> results: "+(convertTo-JSON $results -Depth 20))
         # PowerShell returns all non-captured stream output, not just the argument of the return statement.
         #An empty array is mangled into $null in the process.
         #However, an array can be preserved on return by prepending it with the array construction operator (,)
-        return ,[hashtable[]]$results
+        return , [hashtable[]]$results
     }
     $hashComplexObject = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject
 
-    if($hashComplexObject)
+    if ($hashComplexObject)
     {
 
-        $results=$hashComplexObject.clone()
-        $keys=$hashComplexObject.Keys|Where-Object -FilterScript {$_ -ne 'PSComputerName'}
+        $results = $hashComplexObject.clone()
+        $keys = $hashComplexObject.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
         foreach ($key in $keys)
         {
-            if($hashComplexObject[$key] -and $hashComplexObject[$key].getType().Fullname -like "*CimInstance*")
+            if ($hashComplexObject[$key] -and $hashComplexObject[$key].getType().Fullname -like '*CimInstance*')
             {
-                $results[$key]=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $hashComplexObject[$key]
+                $results[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $hashComplexObject[$key]
             }
             else
             {
                 $propertyName = $key[0].ToString().ToLower() + $key.Substring(1, $key.Length - 1)
-                $propertyValue=$results[$key]
-                $results.remove($key)|out-null
-                $results.add($propertyName,$propertyValue)
+                $propertyValue = $results[$key]
+                $results.remove($key) | Out-Null
+                $results.add($propertyName, $propertyValue)
             }
         }
     }

@@ -102,7 +102,9 @@ function Get-TargetResource
     catch
     {
         $Message = 'Error calling {Get-DkimSigningConfig}'
-        New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+        New-M365DSCLogEntry -Message $Message `
+            -Exception $_ `
+            -Source $MyInvocation.MyCommand.ModuleName
         return $nullReturn
     }
     $DkimSigningConfig = $DkimSigningConfigs | Where-Object -FilterScript { $_.Identity -eq $Identity }
