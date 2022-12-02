@@ -27,6 +27,8 @@
     * RoomPeopleNameUserOverride
 * MISC
   * Standardized and improved logging across all resources.
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.18.0;
 
 # 1.22.1130.1
 
