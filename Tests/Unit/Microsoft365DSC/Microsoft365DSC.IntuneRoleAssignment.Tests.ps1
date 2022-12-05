@@ -99,6 +99,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RoleDefinition             = '7fbbd347-98de-431d-942b-cf5bea92998d'
                     MembersDisplayNames        = @('FakeStringValue')
                     resourceScopesDisplayNames = @('FakeStringValue')
+                    ScopeType                  = 'resourceScope'
                     Credential                 = $Credential
                 }
 
@@ -107,6 +108,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description = 'FakeStringValue'
                         DisplayName = 'FakeStringValue'
                         Id          = 'FakeStringValue'
+                        ScopeType   = 'resourceScope'
                     }
                 }
                 Mock -CommandName Get-MgDeviceManagementRoleDefinition -MockWith {
@@ -146,6 +148,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RoleDefinition             = '7fbbd347-98de-431d-942b-cf5bea92998d'
                     MembersDisplayNames        = @('FakeStringValue')
                     resourceScopesDisplayNames = @('FakeStringValue')
+                    ScopeType                  = 'resourceScope'
                     Credential                 = $Credential
                 }
 
@@ -156,6 +159,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Id             = 'FakeStringValue'
                         Members        = @('FakeStringValue')
                         resourceScopes = @('FakeStringValue')
+                        ScopeType      = 'resourceScope'
 
                     }
                 }
@@ -189,6 +193,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RoleDefinition             = '7fbbd347-98de-431d-942b-cf5bea92998d'
                     MembersDisplayNames        = @('FakeStringValue')
                     resourceScopesDisplayNames = @('FakeStringValue')
+                    ScopeType                  = 'resourceScope'
                     Credential                 = $Credential
                 }
 
@@ -201,6 +206,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description          = 'StringValue'
                         DisplayName          = 'StringValue'
                         Id                   = 'StringValue'
+                        ScopeType            = 'resourceScope'
 
                     }
                 }
@@ -244,7 +250,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description = 'FakeStringValue'
                         DisplayName = 'FakeStringValue'
                         Id          = 'FakeStringValue'
-
+                        ScopeType   = 'resourceScope'
                     }
                 }
                 Mock -CommandName Get-MgDeviceManagementRoleDefinition -MockWith {
