@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* IntuneRoleAssignment
+  * Add support for ScopeType enabling the use of AllLicensedUser/AllDevice as Scope
 * TeamsMeetingPolicy
   * Added support for several new properties:
     * AllowAnnotations
