@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* TeamsChannelTab
+  * Added support for Credential and refactored to call into the Microsoft Graph PowerShell SDK directly.
 * TeamsMeetingPolicy
   * Added support for several new properties:
     * AllowAnnotations

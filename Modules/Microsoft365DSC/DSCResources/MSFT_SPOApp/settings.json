@@ -6,16 +6,10 @@
             "delegated": {
                 "read": [
                     {
-                        "name": "DeviceManagementServiceConfig.Read.All"
-                    },
-                    {
                         "name": "Domain.Read.All"
                     }
                 ],
                 "update": [
-                    {
-                        "name": "DeviceManagementServiceConfig.ReadWrite.All"
-                    },
                     {
                         "name": "Domain.Read.All"
                     }
@@ -24,16 +18,10 @@
             "application": {
                 "read": [
                     {
-                        "name": "DeviceManagementServiceConfig.Read.All"
-                    },
-                    {
                         "name": "Domain.Read.All"
                     }
                 ],
                 "update": [
-                    {
-                        "name": "DeviceManagementServiceConfig.ReadWrite.All"
-                    },
                     {
                         "name": "Domain.Read.All"
                     }
