@@ -27,8 +27,15 @@
     * MeetingInviteLanguages
     * QnAEngagementMode
     * RoomPeopleNameUserOverride
+* SPOBrowserIdleSignout
+  * Fixed incorrect Ensure parameter being added to the Export
+    FIXES [#2619](https://github.com/microsoft/Microsoft365DSC/issues/2619)
+* SPOSiteAuditSettings
+  * Fixed incorrect Ensure parameter being added to the Export
+    FIXES [#2619](https://github.com/microsoft/Microsoft365DSC/issues/2619)
 * MISC
   * Standardized and improved logging across all resources.
+  * Improved error handling in creating output when permissions are not correct.
 * DEPENDENCIES
   * Updated Microsoft.Graph.* to version 1.18.0;
 

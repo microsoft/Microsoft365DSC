@@ -1373,17 +1373,38 @@ function Get-M365DSCTenantDomain
         [Parameter(ParameterSetName = 'MID')]
         [Switch]
         $ManagedIdentity
-
     )
 
     if ([System.String]::IsNullOrEmpty($CertificatePath))
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
-        $tenantDetails = Get-MgOrganization
-        $defaultDomain = $tenantDetails.VerifiedDomains | Where-Object -FilterScript { $_.IsInitial }
-        return $defaultDomain.Name
+
+        try
+        {
+            $tenantDetails = Get-MgOrganization -ErrorAction 'Stop'
+            $defaultDomain = $tenantDetails.VerifiedDomains | Where-Object -FilterScript { $_.IsInitial }
+
+            return $defaultDomain.Name
+        }
+        catch
+        {
+            if ($_.Exception.Message -eq 'Insufficient privileges to complete the operation.')
+            {
+                New-M365DSCLogEntry `
+                    -Message 'Error retrieving Organizational information: Missing Organization.Read.All permission. ' `
+                    -Exception $_ `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
+
+                return ''
+            }
+
+            throw $_
+        }
     }
+
     if ($TenantId.Contains('onmicrosoft'))
     {
         return $TenantId
@@ -1392,7 +1413,6 @@ function Get-M365DSCTenantDomain
     {
         throw 'TenantID must be in format contoso.onmicrosoft.com'
     }
-
 }
 
 <#
@@ -3247,7 +3267,7 @@ function Get-M365DSCWorkloadsListFromResourceNames
                 {
                     $workloads += 'MicrosoftGraph'
                 }
-                elseif(-not $workloads.Contains('ExchangeOnline'))
+                elseif (-not $workloads.Contains('ExchangeOnline'))
                 {
                     $workloads += 'ExchangeOnline'
                 }
