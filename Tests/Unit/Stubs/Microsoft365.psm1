@@ -144,6 +144,14 @@ function Get-AntiPhishPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Impersonation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Advanced,
+
+        [Parameter()]
         [System.Object]
         $Identity,
 
@@ -187,6 +195,15 @@ function Get-App
     )
 }
 function Get-ApplicationAccessPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Get-AtpPolicyForO365
 {
     [CmdletBinding()]
     param(
@@ -1062,6 +1079,50 @@ function Get-RoleAssignmentPolicy
         $Identity
     )
 }
+function Get-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Get-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $State
+    )
+}
+function Get-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Get-SafeLinksRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $State
+    )
+}
 function Get-ServicePrincipal
 {
     [CmdletBinding()]
@@ -1347,8 +1408,20 @@ function New-AntiPhishPolicy
         $MakeDefault,
 
         [Parameter()]
+        [System.Object]
+        $DmarcRejectAction,
+
+        [Parameter()]
+        [System.Int32]
+        $PhishThresholdLevel,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
         [System.Boolean]
-        $EnableUnauthenticatedSender,
+        $EnableTargetedDomainsProtection,
 
         [Parameter()]
         [System.Boolean]
@@ -1367,12 +1440,116 @@ function New-AntiPhishPolicy
         $Name,
 
         [Parameter()]
+        [System.Object]
+        $TargetedDomainsToProtect,
+
+        [Parameter()]
         [System.Boolean]
         $EnableSpoofIntelligence,
 
         [Parameter()]
+        [System.Boolean]
+        $EnableSimilarUsersSafetyTips,
+
+        [Parameter()]
+        [System.Object]
+        $ExcludedDomains,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxIntelligenceProtectionAction,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedDomainActionRecipients,
+
+        [Parameter()]
         [System.Object]
         $DmarcQuarantineAction,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMailboxIntelligence,
+
+        [Parameter()]
+        [System.String]
+        $TargetedDomainQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        $SimilarUsersSafetyTipsCustomText,
+
+        [Parameter()]
+        [System.Object]
+        $ImpersonationProtectionState,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedDomainProtectionAction,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedUsersToProtect,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedUserProtectionAction,
+
+        [Parameter()]
+        [System.Object]
+        $RecommendedPolicyType,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxIntelligenceProtectionActionRecipients,
+
+        [Parameter()]
+        [System.String]
+        $MailboxIntelligenceQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        $UnusualCharactersSafetyTipsCustomText,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSimilarDomainsSafetyTips,
+
+        [Parameter()]
+        [System.String]
+        $SpoofQuarantineTag,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUnauthenticatedSender,
+
+        [Parameter()]
+        [System.String]
+        $PolicyTag,
+
+        [Parameter()]
+        [System.String]
+        $TargetedUserQuarantineTag,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableOrganizationDomainsProtection,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMailboxIntelligenceProtection,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUnusualCharactersSafetyTips,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTargetedUserProtection,
 
         [Parameter()]
         [System.Object]
@@ -1380,23 +1557,11 @@ function New-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
-        $RecommendedPolicyType,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.String]
-        $SpoofQuarantineTag,
+        $TargetedUserActionRecipients,
 
         [Parameter()]
         [System.Object]
-        $DmarcRejectAction,
-
-        [Parameter()]
-        [System.String]
-        $AdminDisplayName
+        $ExcludedSenders
     )
 }
 function New-AntiPhishRule
@@ -1724,6 +1889,35 @@ function New-DataClassification
         [Parameter()]
         [System.Object]
         $ClassificationRuleCollectionIdentity
+    )
+}
+function New-DataEncryptionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $AzureKeyIDs,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled
     )
 }
 function New-DistributionGroup
@@ -3319,6 +3513,63 @@ function New-OfflineAddressBook
         $AddressLists
     )
 }
+function New-OMEConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Double]
+        $ExternalMailExpiryInDays,
+
+        [Parameter()]
+        [System.String]
+        $ReadButtonText,
+
+        [Parameter()]
+        [System.String]
+        $PortalText,
+
+        [Parameter()]
+        [System.Byte[]]
+        $Image,
+
+        [Parameter()]
+        [System.String]
+        $IntroductionText,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $BackgroundColor,
+
+        [Parameter()]
+        [System.String]
+        $DisclaimerText,
+
+        [Parameter()]
+        [System.String]
+        $PrivacyStatementUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $SocialIdSignIn,
+
+        [Parameter()]
+        [System.String]
+        $EmailText,
+
+        [Parameter()]
+        [System.Boolean]
+        $OTPEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
 function New-OnPremisesOrganization
 {
     [CmdletBinding()]
@@ -3726,6 +3977,238 @@ function New-RoleAssignmentPolicy
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $IsDefault
+    )
+}
+function New-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Action,
+
+        [Parameter()]
+        [System.Object]
+        $RecommendedPolicyType,
+
+        [Parameter()]
+        [System.Boolean]
+        $Redirect,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $MakeBuiltInProtection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enable,
+
+        [Parameter()]
+        [System.Object]
+        $RedirectAddress,
+
+        [Parameter()]
+        [System.String]
+        $QuarantineTag,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $ActionOnError
+    )
+}
+function New-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $Priority,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object[]]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object[]]
+        $SentTo,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.Object[]]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $SafeAttachmentPolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled
+    )
+}
+function New-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $EnableOrganizationBranding,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseTranslatedNotificationText,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $MakeBuiltInProtection,
+
+        [Parameter()]
+        [System.Object]
+        $DoNotRewriteUrls,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSafeLinksForTeams,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableUrlRewrite,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSafeLinksForOffice,
+
+        [Parameter()]
+        [System.Boolean]
+        $TrackClicks,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowClickThrough,
+
+        [Parameter()]
+        [System.Object]
+        $RecommendedPolicyType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $CustomNotificationText,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeliverMessageAfterScan,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSafeLinksForEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $ScanUrls,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableForInternalSenders
+    )
+}
+function New-SafeLinksRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $Priority,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object[]]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object[]]
+        $SentTo,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.Object[]]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $SafeLinksPolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled
     )
 }
 function New-SharingPolicy
@@ -4969,6 +5452,19 @@ function Remove-OfflineAddressBook
         $Identity
     )
 }
+function Remove-OMEConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
 function Remove-OnPremisesOrganization
 {
     [CmdletBinding()]
@@ -5078,6 +5574,66 @@ function Remove-RemoteDomain
     )
 }
 function Remove-RoleAssignmentPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Remove-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Remove-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Remove-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Remove-SafeLinksRule
 {
     [CmdletBinding()]
     param(
@@ -5323,51 +5879,7 @@ function Set-AntiPhishPolicy
     param(
         [Parameter()]
         [System.Boolean]
-        $HonorDmarcPolicy,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableUnauthenticatedSender,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableSpoofIntelligence,
-
-        [Parameter()]
-        [System.Boolean]
         $EnableFirstContactSafetyTips,
-
-        [Parameter()]
-        [System.String]
-        $AdminDisplayName,
-
-        [Parameter()]
-        [System.String]
-        $SpoofQuarantineTag,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableViaTag,
-
-        [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $Enabled,
-
-        [Parameter()]
-        [System.Object]
-        $AuthenticationFailAction,
-
-        [Parameter()]
-        [System.Object]
-        $DmarcQuarantineAction,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -5375,7 +5887,147 @@ function Set-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
-        $DmarcRejectAction
+        $DmarcRejectAction,
+
+        [Parameter()]
+        [System.Int32]
+        $PhishThresholdLevel,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTargetedDomainsProtection,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $HonorDmarcPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableViaTag,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxIntelligenceProtectionAction,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedDomainsToProtect,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSpoofIntelligence,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSimilarUsersSafetyTips,
+
+        [Parameter()]
+        [System.Object]
+        $ExcludedDomains,
+
+        [Parameter()]
+        [System.String]
+        $PolicyTag,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedDomainActionRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $DmarcQuarantineAction,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMailboxIntelligence,
+
+        [Parameter()]
+        [System.String]
+        $TargetedDomainQuarantineTag,
+
+        [Parameter()]
+        [System.Object]
+        $ImpersonationProtectionState,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedDomainProtectionAction,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedUsersToProtect,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedUserProtectionAction,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxIntelligenceProtectionActionRecipients,
+
+        [Parameter()]
+        [System.String]
+        $MailboxIntelligenceQuarantineTag,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSimilarDomainsSafetyTips,
+
+        [Parameter()]
+        [System.String]
+        $SpoofQuarantineTag,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUnauthenticatedSender,
+
+        [Parameter()]
+        [System.String]
+        $TargetedUserQuarantineTag,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableOrganizationDomainsProtection,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMailboxIntelligenceProtection,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUnusualCharactersSafetyTips,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTargetedUserProtection,
+
+        [Parameter()]
+        [System.Object]
+        $AuthenticationFailAction,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedUserActionRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $ExcludedSenders
     )
 }
 function Set-AntiPhishRule
@@ -5483,6 +6135,35 @@ function Set-ApplicationAccessPolicy
         [Parameter()]
         [System.Object]
         $Identity
+    )
+}
+function Set-AtpPolicyForO365
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $AllowSafeDocsOpen,
+
+        [Parameter()]
+        [System.Object]
+        $BlockUrls,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableATPForSPOTeamsODB,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSafeDocs,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
     )
 }
 function Set-AuthenticationPolicy
@@ -5848,6 +6529,18 @@ function Set-DataEncryptionPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
         [System.Object]
         $DomainController,
 
@@ -5858,6 +6551,10 @@ function Set-DataEncryptionPolicy
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
 
         [Parameter()]
         [System.String]
@@ -5873,7 +6570,7 @@ function Set-DataEncryptionPolicy
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Force
+        $Refresh
     )
 }
 function Set-DistributionGroup
@@ -6836,16 +7533,16 @@ function Set-IRMConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Uri]
-        $RMSOnlineKeySharingLocation,
-
-        [Parameter()]
         [System.Object]
         $Identity,
 
         [Parameter()]
         [System.Object]
         $TransportDecryptionSetting,
+
+        [Parameter()]
+        [System.Uri]
+        $RMSOnlineKeySharingLocation,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -6857,7 +7554,7 @@ function Set-IRMConfiguration
 
         [Parameter()]
         [System.Boolean]
-        $EnablePdfEncryption,
+        $EnablePortalTrackingLogs,
 
         [Parameter()]
         [System.Boolean]
@@ -6882,6 +7579,10 @@ function Set-IRMConfiguration
         [Parameter()]
         [System.Boolean]
         $JournalReportDecryptionEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnablePdfEncryption,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -7228,6 +7929,10 @@ function Set-Mailbox
         [Parameter()]
         [System.String]
         $CustomAttribute6,
+
+        [Parameter()]
+        [System.Object]
+        $DataEncryptionPolicy,
 
         [Parameter()]
         [System.Object]
@@ -8268,8 +8973,8 @@ function Set-OMEConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $IntroductionText,
+        [System.Double]
+        $ExternalMailExpiryInDays,
 
         [Parameter()]
         [System.String]
@@ -8284,8 +8989,8 @@ function Set-OMEConfiguration
         $Image,
 
         [Parameter()]
-        [System.Boolean]
-        $OTPEnabled,
+        [System.String]
+        $IntroductionText,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -8310,6 +9015,10 @@ function Set-OMEConfiguration
         [Parameter()]
         [System.String]
         $EmailText,
+
+        [Parameter()]
+        [System.Boolean]
+        $OTPEnabled,
 
         [Parameter()]
         [System.Object]
@@ -8599,6 +9308,10 @@ function Set-OrganizationConfig
         $DistributionGroupNameBlockedWordsList,
 
         [Parameter()]
+        [System.Int32]
+        $RequiredCharsetCoverage,
+
+        [Parameter()]
         [System.Boolean]
         $AsyncSendEnabled,
 
@@ -8613,10 +9326,6 @@ function Set-OrganizationConfig
         [Parameter()]
         [System.Boolean]
         $ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $BookingsPaymentsEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -8651,8 +9360,8 @@ function Set-OrganizationConfig
         $CalendarVersionStoreEnabled,
 
         [Parameter()]
-        [System.Int32]
-        $RequiredCharsetCoverage,
+        [System.Boolean]
+        $BookingsPaymentsEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -8821,6 +9530,10 @@ function Set-OrganizationConfig
         [Parameter()]
         [System.Object]
         $EwsBlockList,
+
+        [Parameter()]
+        [System.Boolean]
+        $CustomerLockboxEnabled,
 
         [Parameter()]
         [System.Uri]
@@ -9751,6 +10464,222 @@ function Set-RoleAssignmentPolicy
         [Parameter()]
         [System.Object]
         $Identity
+    )
+}
+function Set-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Action,
+
+        [Parameter()]
+        [System.Boolean]
+        $Redirect,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enable,
+
+        [Parameter()]
+        [System.Object]
+        $RedirectAddress,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $QuarantineTag,
+
+        [Parameter()]
+        [System.Boolean]
+        $ActionOnError
+    )
+}
+function Set-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $Priority,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object[]]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object[]]
+        $SentTo,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.Object[]]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $SafeAttachmentPolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfSentToMemberOf
+    )
+}
+function Set-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $EnableOrganizationBranding,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseTranslatedNotificationText,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableUrlRewrite,
+
+        [Parameter()]
+        [System.Object]
+        $DoNotRewriteUrls,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSafeLinksForTeams,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSafeLinksForOffice,
+
+        [Parameter()]
+        [System.Boolean]
+        $TrackClicks,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowClickThrough,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $CustomNotificationText,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeliverMessageAfterScan,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSafeLinksForEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $ScanUrls,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableForInternalSenders
+    )
+}
+function Set-SafeLinksRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $Priority,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object[]]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object[]]
+        $SentTo,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.Object[]]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $SafeLinksPolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfSentToMemberOf
     )
 }
 function Set-SharingPolicy
@@ -31971,6 +32900,68 @@ function Get-AuditConfigurationPolicy
         $AsJob
     )
 }
+function Get-AutoSensitivityLabelPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceValidate,
+
+        [Parameter()]
+        [System.Object]
+        $IncludeTestModeResults,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeProgressFeedback,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DistributionDetail,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-AutoSensitivityLabelRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceValidate,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $IncludeExecutionRuleInformation,
+
+        [Parameter()]
+        [System.Object]
+        $Policy,
+
+        [Parameter()]
+        [System.Object]
+        $IncludeExecutionRuleGuids,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Get-CaseHoldPolicy
 {
     [CmdletBinding()]
@@ -32458,6 +33449,23 @@ function Get-RetentionComplianceRule
         $AsJob
     )
 }
+function Get-SupervisoryReviewPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Get-SupervisoryReviewPolicyV2
 {
     [CmdletBinding()]
@@ -32536,6 +33544,308 @@ function New-AuditConfigurationPolicy
         [Parameter()]
         [System.Object]
         $DomainController,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-AutoSensitivityLabelPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $PolicyTemplateInfo,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyRBACScopes,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $SharePointLocation,
+
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSenderException,
+
+        [Parameter()]
+        [System.Object]
+        $SharePointLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $OneDriveLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $UnifiedAuditLogEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ApplySensitivityLabel,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSender,
+
+        [Parameter()]
+        [System.Object]
+        $OneDriveLocation,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSenderMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSenderMemberOfException,
+
+        [Parameter()]
+        [System.Object]
+        $Mode,
+
+        [Parameter()]
+        [System.Object]
+        $OverwriteLabel,
+
+        [Parameter()]
+        [System.Object]
+        $ExternalMailRightsManagementOwner,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-AutoSensitivityLabelRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $HeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFrom,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Object]
+        $ExpiryDate,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $Workload,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $From,
+
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $Policy,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $SenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $SenderDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ActivationDate,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $Disabled,
+
+        [Parameter()]
+        [System.Object]
+        $RuleErrorAction,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $FromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $AccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfHeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ReportSeverityLevel,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Object]
+        $ImmutableId,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -33050,6 +34360,10 @@ function New-DlpCompliancePolicy
 
         [Parameter()]
         [System.Object]
+        $EndpointDlpLocationException,
+
+        [Parameter()]
+        [System.Object]
         $ExchangeSenderMemberOfException,
 
         [Parameter()]
@@ -33102,6 +34416,10 @@ function New-DlpCompliancePolicy
 
         [Parameter()]
         [System.Object]
+        $EndpointDlpLocation,
+
+        [Parameter()]
+        [System.Object]
         $ExceptIfOneDriveSharedByMemberOf,
 
         [Parameter()]
@@ -33111,6 +34429,10 @@ function New-DlpCompliancePolicy
         [Parameter()]
         [System.Object]
         $OneDriveSharedByMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ThirdPartyAppDlpLocation,
 
         [Parameter()]
         [System.Object]
@@ -33130,6 +34452,10 @@ function New-DlpCompliancePolicy
 
         [Parameter()]
         [System.Object]
+        $ThirdPartyAppDlpLocationException,
+
+        [Parameter()]
+        [System.Object]
         $SharePointLocationException,
 
         [Parameter()]
@@ -33146,168 +34472,12 @@ function New-DlpComplianceRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Object]
+        $ActivationDate,
 
         [Parameter()]
         [System.Object]
-        $DocumentNameMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSubjectOrBodyMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfRecipientDomainIs,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentCreatedByMemberOf,
-
-        [Parameter()]
-        [System.Object]
-        $MessageSizeOver,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfContentContainsSensitiveInformation,
-
-        [Parameter()]
-        [System.Object]
-        $Policy,
-
-        [Parameter()]
-        [System.Object]
-        $ContentIsNotLabeled,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfFromAddressContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfProcessingLimitExceeded,
-
-        [Parameter()]
-        [System.Object]
-        $AnyOfRecipientAddressMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $UnscannableDocumentExtensionIs,
-
-        [Parameter()]
-        [System.Object]
-        $RedirectMessageTo,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentNameMatchesWords,
-
-        [Parameter()]
-        [System.Object]
-        $RecipientADAttributeMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyUserType,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyAllowOverride,
-
-        [Parameter()]
-        [System.Object]
-        $WithImportance,
-
-        [Parameter()]
-        [System.Object]
-        $SubjectOrBodyMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyUser,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $NonBifurcatingAccessScope,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfAnyOfRecipientAddressContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $EncryptRMSTemplate,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSenderIPRanges,
-
-        [Parameter()]
-        [System.Object]
-        $FromAddressMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ContentFileTypeMatches,
-
-        [Parameter()]
-        [System.Object]
-        $AdvancedRule,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSubjectOrBodyContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentIsPasswordProtected,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyEmailCustomText,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSenderADAttributeContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSubjectMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ContentExtensionMatchesWords,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfMessageSizeOver,
-
-        [Parameter()]
-        [System.Object]
-        $HasSenderOverride,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyPolicyTipCustomTextTranslations,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfWithImportance,
-
-        [Parameter()]
-        [System.Object]
-        $HeaderContainsWords,
+        $ProcessingLimitExceeded,
 
         [Parameter()]
         [System.Object]
@@ -33315,63 +34485,7 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $BlockAccessScope,
-
-        [Parameter()]
-        [System.Object]
-        $AnyOfRecipientAddressContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfMessageTypeMatches,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentSizeOver,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfFromMemberOf,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfFromAddressMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfAccessScope,
-
-        [Parameter()]
-        [System.Object]
-        $PrependSubject,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfHeaderMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfFrom,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentCreatedBy,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyEmailCustomSubject,
-
-        [Parameter()]
-        [System.Object]
-        $IncidentReportContent,
-
-        [Parameter()]
-        [System.Object]
-        $Comment,
-
-        [Parameter()]
-        [System.Object]
-        $SenderIPRanges,
+        $NotifyUser,
 
         [Parameter()]
         [System.Object]
@@ -33379,39 +34493,11 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $GenerateIncidentReport,
+        $ExceptIfRecipientADAttributeContainsWords,
 
         [Parameter()]
         [System.Object]
-        $ExceptIfUnscannableDocumentExtensionIs,
-
-        [Parameter()]
-        [System.Object]
-        $From,
-
-        [Parameter()]
-        [System.Object]
-        $AccessScope,
-
-        [Parameter()]
-        [System.Object]
-        $RemoveRMSTemplate,
-
-        [Parameter()]
-        [System.Object]
-        $FromScope,
-
-        [Parameter()]
-        [System.Object]
-        $RecipientDomainIs,
-
-        [Parameter()]
-        [System.Object]
-        $ActivationDate,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfContentPropertyContainsWords,
+        $RecipientADAttributeMatchesPatterns,
 
         [Parameter()]
         [System.Object]
@@ -33419,83 +34505,19 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $SenderADAttributeContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $ContentCharacterSetContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSentToMemberOf,
-
-        [Parameter()]
-        [System.Object]
-        $SenderADAttributeMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSenderADAttributeMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfRecipientADAttributeContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $SenderAddressLocation,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentNameMatchesWords,
-
-        [Parameter()]
-        [System.Object]
-        $Priority,
-
-        [Parameter()]
-        [System.Object]
         $SubjectContainsWords,
 
         [Parameter()]
         [System.Object]
-        $ExceptIfHeaderContainsWords,
+        $NotifyEndpointUser,
 
         [Parameter()]
         [System.Object]
-        $RemoveHeader,
+        $ExceptIfSenderADAttributeContainsWords,
 
         [Parameter()]
         [System.Object]
-        $SetHeader,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfContentCharacterSetContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $SenderDomainIs,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfRecipientADAttributeMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ContentContainsSensitiveInformation,
-
-        [Parameter()]
-        [System.Object]
-        $SubjectOrBodyContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $Moderate,
-
-        [Parameter()]
-        [System.Object]
-        $OnPremisesScannerDlpRestrictions,
+        $NotifyEmailCustomSubject,
 
         [Parameter()]
         [System.Object]
@@ -33507,7 +34529,27 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $ExceptIfHasSenderOverride,
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $AddRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfUnscannableDocumentExtensionIs,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $SenderADAttributeContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfHeaderMatchesPatterns,
 
         [Parameter()]
         [System.Object]
@@ -33515,83 +34557,7 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $BlockAccess,
-
-        [Parameter()]
-        [System.Object]
-        $SentToMemberOf,
-
-        [Parameter()]
-        [System.Object]
-        $StopPolicyProcessing,
-
-        [Parameter()]
-        [System.Object]
-        $Disabled,
-
-        [Parameter()]
-        [System.Object]
-        $ReportSeverityLevel,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentIsUnsupported,
-
-        [Parameter()]
-        [System.Object]
-        $MessageTypeMatches,
-
-        [Parameter()]
-        [System.Object]
-        $RuleErrorAction,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentCreatedByMemberOf,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyPolicyTipCustomText,
-
-        [Parameter()]
-        [System.Object]
-        $Quarantine,
-
-        [Parameter()]
-        [System.Object]
-        $ContentPropertyContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $ProcessingLimitExceeded,
-
-        [Parameter()]
-        [System.Object]
-        $ModifySubject,
-
-        [Parameter()]
-        [System.Object]
-        $SentTo,
-
-        [Parameter()]
-        [System.Object]
-        $GenerateAlert,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentIsUnsupported,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfContentIsShared,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfContentFileTypeMatches,
-
-        [Parameter()]
-        [System.Object]
-        $SubjectMatchesPatterns,
+        $ExceptIfHeaderContainsWords,
 
         [Parameter()]
         [System.Object]
@@ -33599,59 +34565,27 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $ExceptIfSentTo,
+        $ContentPropertyContainsWords,
 
         [Parameter()]
         [System.Object]
-        $ExpiryDate,
+        $HasSenderOverride,
 
         [Parameter()]
         [System.Object]
-        $ExceptIfContentExtensionMatchesWords,
+        $SetHeader,
 
         [Parameter()]
         [System.Object]
-        $RecipientADAttributeContainsWords,
+        $ExceptIfSubjectOrBodyMatchesPatterns,
 
         [Parameter()]
         [System.Object]
-        $Name,
+        $ThirdPartyAppDlpRestrictions,
 
         [Parameter()]
         [System.Object]
-        $DocumentContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSubjectContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentCreatedBy,
-
-        [Parameter()]
-        [System.Object]
-        $FromAddressContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $AlertProperties,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyHtmlDisclaimer,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentSizeOver,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSenderDomainIs,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentMatchesPatterns,
+        $Quarantine,
 
         [Parameter()]
         [System.Object]
@@ -33659,7 +34593,423 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $AddRecipients,
+        $ExceptIfContentCharacterSetContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptRMSTemplate,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfMessageTypeMatches,
+
+        [Parameter()]
+        [System.Object]
+        $SenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentNameMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentFileTypeMatches,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveHeader,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyHtmlDisclaimer,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $Moderate,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $GenerateAlert,
+
+        [Parameter()]
+        [System.Object]
+        $PrependSubject,
+
+        [Parameter()]
+        [System.Object]
+        $From,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfWithImportance,
+
+        [Parameter()]
+        [System.Object]
+        $ContentCharacterSetContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $EndpointDlpRestrictions,
+
+        [Parameter()]
+        [System.Object]
+        $SenderADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $IncidentReportContent,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFrom,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $RestrictBrowserAccess,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentCreatedBy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $RuleErrorAction,
+
+        [Parameter()]
+        [System.Object]
+        $FromScope,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyPolicyTipCustomText,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentNameMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $RedirectMessageTo,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveRMSTemplate,
+
+        [Parameter()]
+        [System.Object]
+        $UnscannableDocumentExtensionIs,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentCreatedBy,
+
+        [Parameter()]
+        [System.Object]
+        $ReportSeverityLevel,
+
+        [Parameter()]
+        [System.Object]
+        $SenderDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $MessageSizeOver,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentNameMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $GenerateIncidentReport,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $AdvancedRule,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $EndpointDlpBrowserRestrictions,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentIsShared,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $HeaderContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $AlertProperties,
+
+        [Parameter()]
+        [System.Object]
+        $ContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $WithImportance,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentCreatedByMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ContentIsNotLabeled,
+
+        [Parameter()]
+        [System.Object]
+        $AccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentSizeOver,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyAllowOverride,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyOverrideRequirements,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientADAttributeContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $OnPremisesScannerDlpRestrictions,
+
+        [Parameter()]
+        [System.Object]
+        $ExpiryDate,
+
+        [Parameter()]
+        [System.Object]
+        $StopPolicyProcessing,
+
+        [Parameter()]
+        [System.Object]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentSizeOver,
+
+        [Parameter()]
+        [System.Object]
+        $ModifySubject,
+
+        [Parameter()]
+        [System.Object]
+        $Disabled,
+
+        [Parameter()]
+        [System.Object]
+        $ContentFileTypeMatches,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyEmailCustomText,
+
+        [Parameter()]
+        [System.Object]
+        $BlockAccess,
+
+        [Parameter()]
+        [System.Object]
+        $SenderAddressLocation,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyPolicyTipCustomTextTranslations,
+
+        [Parameter()]
+        [System.Object]
+        $Policy,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUserType,
+
+        [Parameter()]
+        [System.Object]
+        $NonBifurcatingAccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $BlockAccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentCreatedByMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfHasSenderOverride,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $MessageTypeMatches,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfMessageSizeOver,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -33786,55 +35136,11 @@ function New-Label
     param(
         [Parameter()]
         [System.Object]
-        $ApplyContentMarkingHeaderFontSize,
+        $EncryptionEncryptOnly,
 
         [Parameter()]
         [System.Object]
-        $SiteAndGroupProtectionBlockAccess,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyWaterMarkingText,
-
-        [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyContentMarkingFooterMargin,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyWaterMarkingFontColor,
-
-        [Parameter()]
-        [System.Object]
-        $DisplayName,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $Settings,
-
-        [Parameter()]
-        [System.Object]
-        $AdvancedSettings,
-
-        [Parameter()]
-        [System.Object]
-        $SiteAndGroupProtectionAllowLimitedAccess,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyWaterMarkingFontName,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyWaterMarkingEnabled,
+        $EncryptionDoubleKeyEncryptionUrl,
 
         [Parameter()]
         [System.Object]
@@ -33850,91 +35156,11 @@ function New-Label
 
         [Parameter()]
         [System.Object]
-        $ParentId,
-
-        [Parameter()]
-        [System.Object]
-        $Conditions,
-
-        [Parameter()]
-        [System.Object]
-        $Comment,
-
-        [Parameter()]
-        [System.Object]
-        $SiteAndGroupProtectionAllowAccessToGuestUsers,
-
-        [Parameter()]
-        [System.Object]
         $ApplyContentMarkingFooterEnabled,
 
         [Parameter()]
         [System.Object]
-        $ApplyContentMarkingFooterFontSize,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyContentMarkingHeaderFontColor,
-
-        [Parameter()]
-        [System.Object]
-        $SiteAndGroupProtectionPrivacy,
-
-        [Parameter()]
-        [System.Object]
-        $LocaleSettings,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyContentMarkingFooterText,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyWaterMarkingFontSize,
-
-        [Parameter()]
-        [System.Object]
-        $SiteExternalSharingControlType,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyContentMarkingHeaderAlignment,
-
-        [Parameter()]
-        [System.Object]
-        $Tooltip,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyContentMarkingHeaderEnabled,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyContentMarkingFooterAlignment,
-
-        [Parameter()]
-        [System.Object]
-        $DefaultContentLabel,
-
-        [Parameter()]
-        [System.Object]
-        $SiteAndGroupProtectionAllowEmailFromGuestUsers,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyWaterMarkingLayout,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyContentMarkingFooterFontColor,
-
-        [Parameter()]
-        [System.Object]
-        $LabelActions,
-
-        [Parameter()]
-        [System.Object]
-        $MigrationId,
+        $EncryptionEnabled,
 
         [Parameter()]
         [System.Object]
@@ -33942,15 +35168,107 @@ function New-Label
 
         [Parameter()]
         [System.Object]
-        $Name,
+        $TeamsEndToEndEncryptionEnabled,
 
         [Parameter()]
         [System.Object]
-        $ApplyContentMarkingHeaderMargin,
+        $ApplyContentMarkingFooterFontSize,
 
         [Parameter()]
         [System.Object]
-        $ApplyContentMarkingHeaderFontName,
+        $ApplyWaterMarkingFontSize,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingHeaderFontColor,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionContentExpiredOnDateInDaysOrNever,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyWaterMarkingText,
+
+        [Parameter()]
+        [System.Object]
+        $DefaultContentLabel,
+
+        [Parameter()]
+        [System.Object]
+        $Tooltip,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyWaterMarkingFontName,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionLevel,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsLobbyRestrictionEnforced,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionAllowEmailFromGuestUsers,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsLobbyBypassScope,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionAllowLimitedAccess,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionDoNotForward,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionAipTemplateScopes,
+
+        [Parameter()]
+        [System.Object]
+        $ParentId,
+
+        [Parameter()]
+        [System.Object]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Object]
+        $SchematizedDataCondition,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $Settings,
+
+        [Parameter()]
+        [System.Object]
+        $MigrationId,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyWaterMarkingLayout,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsWhoCanRecord,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingFooterFontColor,
+
+        [Parameter()]
+        [System.Object]
+        $ColumnAssetCondition,
 
         [Parameter()]
         [System.Object]
@@ -33958,7 +35276,151 @@ function New-Label
 
         [Parameter()]
         [System.Object]
+        $TeamsVideoWatermark,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingHeaderMargin,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionLinkedTemplateId,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionRightsDefinitions,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsCopyRestrictionEnforced,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingHeaderAlignment,
+
+        [Parameter()]
+        [System.Object]
+        $LabelActions,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsBypassLobbyForDialInUsers,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingHeaderFontSize,
+
+        [Parameter()]
+        [System.Object]
+        $LocaleSettings,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsAllowedPresenters,
+
+        [Parameter()]
+        [System.Object]
+        $AdvancedSettings,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionProtectionType,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingHeaderFontName,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingFooterAlignment,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsProtectionEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $SiteExternalSharingControlType,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsPresentersRestrictionEnforced,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsAllowMeetingChat,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionAllowAccessToGuestUsers,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionPrivacy,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionPromptUser,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingFooterText,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionBlockAccess,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionOfflineAccessDays,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingHeaderEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionTemplateId,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
         $SiteAndGroupProtectionAllowFullAccess,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyWaterMarkingFontColor,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionRightsUrl,
+
+        [Parameter()]
+        [System.Object]
+        $Conditions,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyWaterMarkingEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsRecordAutomatically,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingFooterMargin,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -34232,6 +35694,39 @@ function New-RetentionComplianceRule
         $AsJob
     )
 }
+function New-SupervisoryReviewPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $Condition,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyType,
+
+        [Parameter()]
+        [System.Object]
+        $Reviewers,
+
+        [Parameter()]
+        [System.Object]
+        $SamplingRate,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function New-SupervisoryReviewPolicyV2
 {
     [CmdletBinding()]
@@ -34341,6 +35836,40 @@ function Remove-AuditConfigurationPolicy
         [Parameter()]
         [System.Object]
         $DomainController,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Remove-AutoSensitivityLabelPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Remove-AutoSensitivityLabelRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -34781,6 +36310,19 @@ function Remove-RetentionComplianceRule
         $AsJob
     )
 }
+function Remove-SupervisoryReviewPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Remove-SupervisoryReviewPolicyV2
 {
     [CmdletBinding()]
@@ -34796,6 +36338,336 @@ function Remove-SupervisoryReviewPolicyV2
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ForceDeletion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-AutoSensitivityLabelPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $AddExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $SpoAipIntegrationEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyTemplateInfo,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Enabled,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveOneDriveLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $AddSharePointLocation,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSenderException,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyRBACScopes,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveSharePointLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddOneDriveLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RetryDistribution,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSender,
+
+        [Parameter()]
+        [System.Object]
+        $AddSharePointLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $ApplySensitivityLabel,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveSharePointLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSenderMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $StartSimulation,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSenderMemberOfException,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveOneDriveLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddOneDriveLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AutoEnableAfter,
+
+        [Parameter()]
+        [System.Object]
+        $Mode,
+
+        [Parameter()]
+        [System.Object]
+        $OverwriteLabel,
+
+        [Parameter()]
+        [System.Object]
+        $ExternalMailRightsManagementOwner,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-AutoSensitivityLabelRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $HeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFrom,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Object]
+        $ExpiryDate,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Workload,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $From,
+
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $SenderDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $SenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ActivationDate,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $Disabled,
+
+        [Parameter()]
+        [System.Object]
+        $RuleErrorAction,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $FromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $AccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfHeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ReportSeverityLevel,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentIsPasswordProtected,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -35257,11 +37129,15 @@ function Set-DlpCompliancePolicy
 
         [Parameter()]
         [System.Object]
+        $PolicyTemplateInfo,
+
+        [Parameter()]
+        [System.Object]
         $Identity,
 
         [Parameter()]
         [System.Object]
-        $RemoveTeamsLocationException,
+        $RemoveEndpointDlpLocation,
 
         [Parameter()]
         [System.Object]
@@ -35269,7 +37145,7 @@ function Set-DlpCompliancePolicy
 
         [Parameter()]
         [System.Object]
-        $PolicyTemplateInfo,
+        $AddThirdPartyAppDlpLocation,
 
         [Parameter()]
         [System.Object]
@@ -35285,7 +37161,15 @@ function Set-DlpCompliancePolicy
 
         [Parameter()]
         [System.Object]
+        $RemoveThirdPartyAppDlpLocation,
+
+        [Parameter()]
+        [System.Object]
         $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveTeamsLocationException,
 
         [Parameter()]
         [System.Object]
@@ -35321,6 +37205,10 @@ function Set-DlpCompliancePolicy
 
         [Parameter()]
         [System.Object]
+        $AddEndpointDlpLocation,
+
+        [Parameter()]
+        [System.Object]
         $AddSharePointLocation,
 
         [Parameter()]
@@ -35342,6 +37230,14 @@ function Set-DlpCompliancePolicy
         [Parameter()]
         [System.Object]
         $ExceptIfOneDriveSharedByMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $AddThirdPartyAppDlpLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $AddEndpointDlpLocationException,
 
         [Parameter()]
         [System.Object]
@@ -35385,7 +37281,15 @@ function Set-DlpCompliancePolicy
 
         [Parameter()]
         [System.Object]
+        $RemoveThirdPartyAppDlpLocationException,
+
+        [Parameter()]
+        [System.Object]
         $Mode,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveEndpointDlpLocationException,
 
         [Parameter()]
         [System.Object]
@@ -35401,84 +37305,12 @@ function Set-DlpComplianceRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Object]
+        $ActivationDate,
 
         [Parameter()]
         [System.Object]
-        $NotifyAllowOverride,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentNameMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSubjectOrBodyMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfRecipientDomainIs,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentCreatedByMemberOf,
-
-        [Parameter()]
-        [System.Object]
-        $MessageSizeOver,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfContentContainsSensitiveInformation,
-
-        [Parameter()]
-        [System.Object]
-        $ContentIsNotLabeled,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfFromAddressContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfProcessingLimitExceeded,
-
-        [Parameter()]
-        [System.Object]
-        $AnyOfRecipientAddressMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $UnscannableDocumentExtensionIs,
-
-        [Parameter()]
-        [System.Object]
-        $RedirectMessageTo,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentNameMatchesWords,
-
-        [Parameter()]
-        [System.Object]
-        $RecipientADAttributeMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyUserType,
-
-        [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Object]
-        $WithImportance,
-
-        [Parameter()]
-        [System.Object]
-        $SubjectOrBodyMatchesPatterns,
+        $ProcessingLimitExceeded,
 
         [Parameter()]
         [System.Object]
@@ -35486,207 +37318,7 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $ExceptIfDocumentContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $NonBifurcatingAccessScope,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfAnyOfRecipientAddressContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $EncryptRMSTemplate,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSenderIPRanges,
-
-        [Parameter()]
-        [System.Object]
-        $FromAddressMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ContentFileTypeMatches,
-
-        [Parameter()]
-        [System.Object]
-        $AdvancedRule,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSubjectOrBodyContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentIsPasswordProtected,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyEmailCustomText,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSenderADAttributeContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSubjectMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ContentExtensionMatchesWords,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfMessageSizeOver,
-
-        [Parameter()]
-        [System.Object]
-        $HasSenderOverride,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyPolicyTipCustomTextTranslations,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfWithImportance,
-
-        [Parameter()]
-        [System.Object]
-        $HeaderContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $BlockAccessScope,
-
-        [Parameter()]
-        [System.Object]
-        $AnyOfRecipientAddressContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfMessageTypeMatches,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentSizeOver,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfFromMemberOf,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfFromAddressMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfAccessScope,
-
-        [Parameter()]
-        [System.Object]
-        $PrependSubject,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfHeaderMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfFrom,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentCreatedBy,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyEmailCustomSubject,
-
-        [Parameter()]
-        [System.Object]
-        $IncidentReportContent,
-
-        [Parameter()]
-        [System.Object]
-        $Comment,
-
-        [Parameter()]
-        [System.Object]
-        $SenderIPRanges,
-
-        [Parameter()]
-        [System.Object]
         $ExceptIfDocumentIsPasswordProtected,
-
-        [Parameter()]
-        [System.Object]
-        $GenerateIncidentReport,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfUnscannableDocumentExtensionIs,
-
-        [Parameter()]
-        [System.Object]
-        $From,
-
-        [Parameter()]
-        [System.Object]
-        $AccessScope,
-
-        [Parameter()]
-        [System.Object]
-        $RemoveRMSTemplate,
-
-        [Parameter()]
-        [System.Object]
-        $FromScope,
-
-        [Parameter()]
-        [System.Object]
-        $RecipientDomainIs,
-
-        [Parameter()]
-        [System.Object]
-        $ActivationDate,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfContentPropertyContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentNameMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $SenderADAttributeContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $ContentCharacterSetContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSentToMemberOf,
-
-        [Parameter()]
-        [System.Object]
-        $SenderADAttributeMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSenderADAttributeMatchesPatterns,
 
         [Parameter()]
         [System.Object]
@@ -35694,19 +37326,7 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $SenderAddressLocation,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentNameMatchesWords,
-
-        [Parameter()]
-        [System.Object]
-        $Priority,
-
-        [Parameter()]
-        [System.Object]
-        $OnPremisesScannerDlpRestrictions,
+        $ExceptIfDocumentNameMatchesPatterns,
 
         [Parameter()]
         [System.Object]
@@ -35714,43 +37334,15 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $ExceptIfHeaderContainsWords,
+        $NotifyEndpointUser,
 
         [Parameter()]
         [System.Object]
-        $RemoveHeader,
+        $ExceptIfSenderADAttributeContainsWords,
 
         [Parameter()]
         [System.Object]
-        $SetHeader,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfContentCharacterSetContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $SenderDomainIs,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfRecipientADAttributeMatchesPatterns,
-
-        [Parameter()]
-        [System.Object]
-        $ContentContainsSensitiveInformation,
-
-        [Parameter()]
-        [System.Object]
-        $SubjectOrBodyContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $Moderate,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyOverrideRequirements,
+        $NotifyEmailCustomSubject,
 
         [Parameter()]
         [System.Object]
@@ -35762,7 +37354,27 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $ExceptIfHasSenderOverride,
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $AddRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfUnscannableDocumentExtensionIs,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $SenderADAttributeContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfHeaderMatchesPatterns,
 
         [Parameter()]
         [System.Object]
@@ -35770,83 +37382,7 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $BlockAccess,
-
-        [Parameter()]
-        [System.Object]
-        $SentToMemberOf,
-
-        [Parameter()]
-        [System.Object]
-        $StopPolicyProcessing,
-
-        [Parameter()]
-        [System.Object]
-        $Disabled,
-
-        [Parameter()]
-        [System.Object]
-        $ReportSeverityLevel,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentIsUnsupported,
-
-        [Parameter()]
-        [System.Object]
-        $MessageTypeMatches,
-
-        [Parameter()]
-        [System.Object]
-        $RuleErrorAction,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentCreatedByMemberOf,
-
-        [Parameter()]
-        [System.Object]
-        $NotifyPolicyTipCustomText,
-
-        [Parameter()]
-        [System.Object]
-        $Quarantine,
-
-        [Parameter()]
-        [System.Object]
-        $ContentPropertyContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $ProcessingLimitExceeded,
-
-        [Parameter()]
-        [System.Object]
-        $ModifySubject,
-
-        [Parameter()]
-        [System.Object]
-        $SentTo,
-
-        [Parameter()]
-        [System.Object]
-        $GenerateAlert,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentIsUnsupported,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfContentIsShared,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfContentFileTypeMatches,
-
-        [Parameter()]
-        [System.Object]
-        $SubjectMatchesPatterns,
+        $ExceptIfHeaderContainsWords,
 
         [Parameter()]
         [System.Object]
@@ -35854,55 +37390,27 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $ExceptIfSentTo,
+        $ContentPropertyContainsWords,
 
         [Parameter()]
         [System.Object]
-        $ExpiryDate,
+        $HasSenderOverride,
 
         [Parameter()]
         [System.Object]
-        $ExceptIfContentExtensionMatchesWords,
+        $SetHeader,
 
         [Parameter()]
         [System.Object]
-        $RecipientADAttributeContainsWords,
+        $ExceptIfSubjectOrBodyMatchesPatterns,
 
         [Parameter()]
         [System.Object]
-        $DocumentContainsWords,
+        $ExceptIfHasSenderOverride,
 
         [Parameter()]
         [System.Object]
-        $ExceptIfSubjectContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentCreatedBy,
-
-        [Parameter()]
-        [System.Object]
-        $FromAddressContainsWords,
-
-        [Parameter()]
-        [System.Object]
-        $AlertProperties,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyHtmlDisclaimer,
-
-        [Parameter()]
-        [System.Object]
-        $DocumentSizeOver,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfSenderDomainIs,
-
-        [Parameter()]
-        [System.Object]
-        $ExceptIfDocumentMatchesPatterns,
+        $Quarantine,
 
         [Parameter()]
         [System.Object]
@@ -35910,7 +37418,423 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $AddRecipients,
+        $ExceptIfContentCharacterSetContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptRMSTemplate,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfMessageTypeMatches,
+
+        [Parameter()]
+        [System.Object]
+        $SenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentNameMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentFileTypeMatches,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveHeader,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyHtmlDisclaimer,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $Moderate,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $GenerateAlert,
+
+        [Parameter()]
+        [System.Object]
+        $PrependSubject,
+
+        [Parameter()]
+        [System.Object]
+        $From,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfWithImportance,
+
+        [Parameter()]
+        [System.Object]
+        $ContentCharacterSetContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $EndpointDlpRestrictions,
+
+        [Parameter()]
+        [System.Object]
+        $SenderADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $IncidentReportContent,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFrom,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $RestrictBrowserAccess,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentCreatedBy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $RuleErrorAction,
+
+        [Parameter()]
+        [System.Object]
+        $FromScope,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyPolicyTipCustomText,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentNameMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $OnPremisesScannerDlpRestrictions,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $RedirectMessageTo,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveRMSTemplate,
+
+        [Parameter()]
+        [System.Object]
+        $UnscannableDocumentExtensionIs,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentCreatedBy,
+
+        [Parameter()]
+        [System.Object]
+        $ReportSeverityLevel,
+
+        [Parameter()]
+        [System.Object]
+        $SenderDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $MessageSizeOver,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentNameMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $GenerateIncidentReport,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ContentIsNotLabeled,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $AdvancedRule,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $EndpointDlpBrowserRestrictions,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentIsShared,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $HeaderContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $AlertProperties,
+
+        [Parameter()]
+        [System.Object]
+        $ContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $WithImportance,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentCreatedByMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $AccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentSizeOver,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyAllowOverride,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyOverrideRequirements,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientADAttributeContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ThirdPartyAppDlpRestrictions,
+
+        [Parameter()]
+        [System.Object]
+        $ExpiryDate,
+
+        [Parameter()]
+        [System.Object]
+        $StopPolicyProcessing,
+
+        [Parameter()]
+        [System.Object]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentSizeOver,
+
+        [Parameter()]
+        [System.Object]
+        $ModifySubject,
+
+        [Parameter()]
+        [System.Object]
+        $Disabled,
+
+        [Parameter()]
+        [System.Object]
+        $ContentFileTypeMatches,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyEmailCustomText,
+
+        [Parameter()]
+        [System.Object]
+        $BlockAccess,
+
+        [Parameter()]
+        [System.Object]
+        $SenderAddressLocation,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyPolicyTipCustomTextTranslations,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUserType,
+
+        [Parameter()]
+        [System.Object]
+        $NonBifurcatingAccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $BlockAccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentCreatedByMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $MessageTypeMatches,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfMessageSizeOver,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -35952,67 +37876,15 @@ function Set-Label
     param(
         [Parameter()]
         [System.Object]
-        $ApplyContentMarkingHeaderFontSize,
+        $EncryptionEncryptOnly,
 
         [Parameter()]
         [System.Object]
-        $SiteAndGroupProtectionBlockAccess,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyWaterMarkingText,
-
-        [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyContentMarkingFooterMargin,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyWaterMarkingFontColor,
-
-        [Parameter()]
-        [System.Object]
-        $DisplayName,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $Settings,
-
-        [Parameter()]
-        [System.Object]
-        $PreviousLabel,
-
-        [Parameter()]
-        [System.Object]
-        $AdvancedSettings,
-
-        [Parameter()]
-        [System.Object]
-        $SiteAndGroupProtectionAllowLimitedAccess,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyWaterMarkingFontName,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyWaterMarkingEnabled,
+        $EncryptionDoubleKeyEncryptionUrl,
 
         [Parameter()]
         [System.Object]
         $ApplyContentMarkingHeaderText,
-
-        [Parameter()]
-        [System.Object]
-        $Priority,
 
         [Parameter()]
         [System.Object]
@@ -36024,95 +37896,11 @@ function Set-Label
 
         [Parameter()]
         [System.Object]
-        $ParentId,
-
-        [Parameter()]
-        [System.Object]
-        $Conditions,
-
-        [Parameter()]
-        [System.Object]
-        $Comment,
-
-        [Parameter()]
-        [System.Object]
-        $SiteAndGroupProtectionAllowAccessToGuestUsers,
-
-        [Parameter()]
-        [System.Object]
         $ApplyContentMarkingFooterEnabled,
 
         [Parameter()]
         [System.Object]
-        $ApplyContentMarkingFooterFontSize,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyContentMarkingHeaderFontColor,
-
-        [Parameter()]
-        [System.Object]
-        $SiteAndGroupProtectionPrivacy,
-
-        [Parameter()]
-        [System.Object]
-        $LocaleSettings,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyContentMarkingFooterText,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyWaterMarkingFontSize,
-
-        [Parameter()]
-        [System.Object]
-        $SiteExternalSharingControlType,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyContentMarkingHeaderAlignment,
-
-        [Parameter()]
-        [System.Object]
-        $Tooltip,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyContentMarkingHeaderEnabled,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyContentMarkingFooterAlignment,
-
-        [Parameter()]
-        [System.Object]
-        $NextLabel,
-
-        [Parameter()]
-        [System.Object]
-        $DefaultContentLabel,
-
-        [Parameter()]
-        [System.Object]
-        $SiteAndGroupProtectionAllowEmailFromGuestUsers,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyWaterMarkingLayout,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyContentMarkingFooterFontColor,
-
-        [Parameter()]
-        [System.Object]
-        $LabelActions,
-
-        [Parameter()]
-        [System.Object]
-        $MigrationId,
+        $EncryptionEnabled,
 
         [Parameter()]
         [System.Object]
@@ -36120,11 +37908,119 @@ function Set-Label
 
         [Parameter()]
         [System.Object]
-        $ApplyContentMarkingHeaderMargin,
+        $TeamsEndToEndEncryptionEnabled,
 
         [Parameter()]
         [System.Object]
-        $ApplyContentMarkingHeaderFontName,
+        $ApplyContentMarkingFooterFontSize,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyWaterMarkingFontSize,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingHeaderFontColor,
+
+        [Parameter()]
+        [System.Object]
+        $Conditions,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionContentExpiredOnDateInDaysOrNever,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyWaterMarkingText,
+
+        [Parameter()]
+        [System.Object]
+        $DefaultContentLabel,
+
+        [Parameter()]
+        [System.Object]
+        $Tooltip,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyWaterMarkingFontName,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionLevel,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsLobbyRestrictionEnforced,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionAllowEmailFromGuestUsers,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsLobbyBypassScope,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionAllowLimitedAccess,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionDoNotForward,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsProtectionEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ParentId,
+
+        [Parameter()]
+        [System.Object]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Object]
+        $SchematizedDataCondition,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $Settings,
+
+        [Parameter()]
+        [System.Object]
+        $MigrationId,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyWaterMarkingLayout,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsWhoCanRecord,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionRightsDefinitions,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingFooterFontColor,
+
+        [Parameter()]
+        [System.Object]
+        $ColumnAssetCondition,
+
+        [Parameter()]
+        [System.Object]
+        $PreviousLabel,
 
         [Parameter()]
         [System.Object]
@@ -36132,7 +38028,135 @@ function Set-Label
 
         [Parameter()]
         [System.Object]
+        $TeamsVideoWatermark,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingHeaderMargin,
+
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsCopyRestrictionEnforced,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingHeaderAlignment,
+
+        [Parameter()]
+        [System.Object]
+        $LabelActions,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsBypassLobbyForDialInUsers,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingHeaderFontSize,
+
+        [Parameter()]
+        [System.Object]
+        $LocaleSettings,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsAllowedPresenters,
+
+        [Parameter()]
+        [System.Object]
+        $AdvancedSettings,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionProtectionType,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingHeaderFontName,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingFooterAlignment,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $SiteExternalSharingControlType,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsPresentersRestrictionEnforced,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsAllowMeetingChat,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionAllowAccessToGuestUsers,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionPrivacy,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionPromptUser,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingFooterText,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionBlockAccess,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionOfflineAccessDays,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingHeaderEnabled,
+
+        [Parameter()]
+        [System.Object]
         $SiteAndGroupProtectionAllowFullAccess,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyWaterMarkingFontColor,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionRightsUrl,
+
+        [Parameter()]
+        [System.Object]
+        $NextLabel,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyWaterMarkingEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsRecordAutomatically,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingFooterMargin,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -36520,6 +38544,47 @@ function Set-RetentionComplianceRule
         [Parameter()]
         [System.Object]
         $RetentionDurationDisplayHint,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-SupervisoryReviewPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Object]
+        $AddReviewers,
+
+        [Parameter()]
+        [System.Object]
+        $Condition,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyType,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveReviewers,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Reviewers,
+
+        [Parameter()]
+        [System.Object]
+        $SamplingRate,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
