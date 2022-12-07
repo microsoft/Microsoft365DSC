@@ -121,7 +121,6 @@ function Get-TargetResource
         }
         catch
         {
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
             $Message = 'Error calling {Get-SafeAttachmentRule}'
             New-M365DSCLogEntry -Message $Message `
                 -Exception $_ `

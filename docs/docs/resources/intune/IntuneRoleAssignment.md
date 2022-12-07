@@ -7,8 +7,9 @@
 | **Id** | Write | String | The unique idenfier for an entity. Read-only. ||
 | **Description** | Write | String | Description of the Role Assignment. ||
 | **DisplayName** | Key | String | The display or friendly name of the role Assignment. ||
-| **ResourceScopes** | Write | StringArray[] | List of ids of role scope member security groups. These are IDs from Azure Active Directory. ||
-| **ResourceScopesDisplayNames** | Write | StringArray[] | List of DisplayName of role scope member security groups. These are Displayname from Azure Active Directory. ||
+| **ResourceScopes** | Write | StringArray[] | List of ids of role scope member security groups. These are IDs from Azure Active Directory. Ignored if ScopeType is not 'ResourceScope' ||
+| **ResourceScopesDisplayNames** | Write | StringArray[] | List of DisplayName of role scope member security groups. These are Displayname from Azure Active Directory. Ignored if ScopeType is not 'ResourceScope' ||
+| **ScopeType** | Write | String | Specifies the type of scope for a Role Assignment. Default type 'ResourceScope' allows assignment of ResourceScopes. Possible values are: resourceScope, allDevices, allLicensedUsers, allDevicesAndLicensedUsers. ||
 | **Members** | Write | StringArray[] | The list of ids of role member security groups. These are IDs from Azure Active Directory. ||
 | **MembersDisplayNames** | Write | StringArray[] | The list of Displaynames of role member security groups. These are Displaynamnes from Azure Active Directory. ||
 | **RoleDefinition** | Write | String | The Role Definition Id. ||
@@ -56,6 +57,7 @@ Configuration Example
             MembersDisplayNames        = @("SecGroup2");
             ResourceScopes             = @("6eb76881-f56f-470f-be0d-672145d3dcb1");
             ResourceScopesDisplayNames = @("");
+            ScopeType				   = "resourceScope"
             RoleDefinition             = "2d00d0fd-45e9-4166-904f-b76ac5eed2c7";
             RoleDefinitionDisplayName  = "This is my role";
             Credential                 = $credsGlobalAdmin
