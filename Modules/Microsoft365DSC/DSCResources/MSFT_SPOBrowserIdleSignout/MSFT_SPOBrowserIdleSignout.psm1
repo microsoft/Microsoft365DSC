@@ -14,11 +14,6 @@ function Get-TargetResource
         $Enabled,
 
         [Parameter()]
-        [ValidateSet('Present')]
-        [System.String]
-        $Ensure = 'Present',
-
-        [Parameter()]
         [System.String]
         [ValidatePattern('^([0-9]{0,7}\.?[0-2][0-9]:[0-5][0-9]:[0-5][0-9])$')]
         $SignOutAfter,
@@ -96,7 +91,6 @@ function Get-TargetResource
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
             Managedidentity       = $ManagedIdentity.IsPresent
-            Ensure                = 'Present'
         }
     }
     catch
@@ -129,11 +123,6 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.Boolean]
         $Enabled,
-
-        [Parameter()]
-        [ValidateSet('Present')]
-        [System.String]
-        $Ensure = 'Present',
 
         [Parameter()]
         [System.String]
@@ -205,7 +194,6 @@ function Set-TargetResource
     $CurrentParameters.Remove('CertificatePassword') | Out-Null
     $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
     $CurrentParameters.Remove('ManagedIdentity') | Out-Null
-    $currentParameters.Remove('Ensure') | Out-Null
     $CurrentParameters.Remove('ApplicationSecret') | Out-Null
 
     Set-PnPBrowserIdleSignout @CurrentParameters | Out-Null
@@ -388,7 +376,7 @@ function Export-TargetResource
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `

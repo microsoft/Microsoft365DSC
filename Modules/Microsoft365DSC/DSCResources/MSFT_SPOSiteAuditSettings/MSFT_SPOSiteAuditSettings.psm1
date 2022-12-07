@@ -81,8 +81,6 @@ function Get-TargetResource
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
             Managedidentity       = $ManagedIdentity.IsPresent
-            Ensure                = 'Present'
-
         }
     }
     catch
@@ -385,11 +383,11 @@ function Export-TargetResource
             {
                 Write-Host $Global:M365DSCEmojiRedX
 
-                New-M365DSCLogEntry -Message "Error during Export:" `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
+                New-M365DSCLogEntry -Message 'Error during Export:' `
+                    -Exception $_ `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
 
                 Write-Verbose "There was an issue retrieving Audit Settings for $Url"
             }
@@ -407,7 +405,7 @@ function Export-TargetResource
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
