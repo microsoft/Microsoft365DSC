@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.1207.1
 
 * IntuneRoleAssignment
   * Add support for ScopeType enabling the use of AllLicensedUser/AllDevice as Scope
