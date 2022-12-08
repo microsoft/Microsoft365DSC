@@ -467,6 +467,16 @@ function Set-TargetResource
         }
         #endregion
 
+        $passwordValue = 'TempP@ss'
+        if ($null -ne $Password)
+        {
+            $passwordValue = $Password.GetNetworkCredential().Password
+        }
+        $PasswordProfile = @{
+            Password = $passwordValue
+        }
+        $CreationParams.Add('PasswordProfile', $PasswordProfile)
+
         if ($user.UserPrincipalName)
         {
             Write-Verbose -Message "Updating Office 365 User $UserPrincipalName Information"
@@ -477,10 +487,6 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Creating Office 365 User $UserPrincipalName"
             $CreationParams.Add('AccountEnabled', $true)
-            $PasswordProfile = @{
-                Password = 'TempP@ss'
-            }
-            $CreationParams.Add('PasswordProfile', $PasswordProfile)
             $CreationParams.Add('MailNickName', $UserPrincipalName.Split('@')[0])
             Write-Verbose -Message "Creating new user with values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
             $user = New-MgUser @CreationParams
