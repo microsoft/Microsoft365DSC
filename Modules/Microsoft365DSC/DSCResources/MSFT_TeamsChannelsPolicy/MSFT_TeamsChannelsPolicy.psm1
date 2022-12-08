@@ -22,7 +22,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllowPrivateTeamDiscovery,
+        $EnablePrivateTeamDiscovery,
 
         [Parameter()]
         [System.Boolean]
@@ -94,7 +94,7 @@ function Get-TargetResource
             Description                                   = $policy.Description
             AllowChannelSharingToExternalUser             = $policy.AllowChannelSharingToExternalUser
             AllowOrgWideTeamCreation                      = $policy.AllowOrgWideTeamCreation
-            AllowPrivateTeamDiscovery                     = $policy.AllowPrivateTeamDiscovery
+            EnablePrivateTeamDiscovery                    = $policy.EnablePrivateTeamDiscovery
             AllowPrivateChannelCreation                   = $policy.AllowPrivateChannelCreation
             AllowSharedChannelCreation                    = $policy.AllowSharedChannelCreation
             AllowUserToParticipateInExternalSharedChannel = $policy.AllowUserToParticipateInExternalSharedChannel
@@ -140,7 +140,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllowPrivateTeamDiscovery,
+        $EnablePrivateTeamDiscovery,
 
         [Parameter()]
         [System.Boolean]
@@ -245,7 +245,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllowPrivateTeamDiscovery,
+        $EnablePrivateTeamDiscovery,
 
         [Parameter()]
         [System.Boolean]
