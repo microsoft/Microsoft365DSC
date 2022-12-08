@@ -1178,7 +1178,7 @@ function Get-M365DSCCombinedLicenses
     {
         foreach ($license in $DesiredLicenses)
         {
-            if (-not $result.SkuId.Contains($license.SkuId))
+            if ($result.Length -eq 0)
             {
                 $result += @{
                     SkuId         = $license.SkuId
@@ -1187,12 +1187,22 @@ function Get-M365DSCCombinedLicenses
             }
             else
             {
-                #Set the Desired Disabled Plans if the sku is already added to the list
-                foreach ($item in $result)
+                if (-not $result.SkuId.Contains($license.SkuId))
                 {
-                    if ($item.SkuId -eq $license.SkuId)
+                    $result += @{
+                        SkuId         = $license.SkuId
+                        DisabledPlans = $license.DisabledPlans
+                    }
+                }
+                else
+                {
+                    #Set the Desired Disabled Plans if the sku is already added to the list
+                    foreach ($item in $result)
                     {
-                        $item.DisabledPlans = $license.DisabledPlans
+                        if ($item.SkuId -eq $license.SkuId)
+                        {
+                            $item.DisabledPlans = $license.DisabledPlans
+                        }
                     }
                 }
             }
