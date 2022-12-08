@@ -467,7 +467,7 @@ function Set-TargetResource
         }
         #endregion
 
-        $passwordValue = 'TempP@ss'
+        $passwordValue = [System.Web.Security.Membership]::GeneratePassword(30, 2)
         if ($null -ne $Password)
         {
             $passwordValue = $Password.GetNetworkCredential().Password
