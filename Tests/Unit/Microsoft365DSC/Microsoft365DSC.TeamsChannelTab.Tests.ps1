@@ -40,10 +40,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            Mock -CommandName New-M365DSCTeamsChannelTab -MockWith {
+            Mock -CommandName New-MgTeamChannelTab -MockWith {
             }
 
-            Mock -CommandName Set-M365DSCTeamsChannelTab -MockWith {
+            Mock -CommandName Update-MgTeamChannelTab -MockWith {
             }
 
             Mock -CommandName Remove-MgTeamChannelTab -MockWith {
@@ -71,9 +71,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     WebSiteUrl            = 'https://contoso.com'
                 }
 
-                Mock -CommandName Get-Team -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @{
-                        GroupId     = '12345-12345-12345-12345-12345'
+                        Id     = '12345-12345-12345-12345-12345'
                         DisplayName = 'Contoso Team'
                     }
                 }
@@ -85,7 +85,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-M365DSCTeamChannelTab -MockWith {
+                Mock -CommandName Get-MgTeamChannelTab -MockWith {
                     return $null
                 }
             }
@@ -100,7 +100,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create the tab in the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-M365DSCTeamsChannelTab -Exactly 1
+                Should -Invoke -CommandName New-MgTeamChannelTab -Exactly 1
             }
         }
 
@@ -120,9 +120,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     WebSiteUrl            = 'https://contoso.com'
                 }
 
-                Mock -CommandName Get-Team -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @{
-                        GroupId     = '12345-12345-12345-12345-12345'
+                        Id     = '12345-12345-12345-12345-12345'
                         DisplayName = 'Contoso Team'
                     }
                 }
@@ -135,12 +135,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgTeamChannelTab -MockWith {
-                    return @{
-
-                    }
-                }
-
-                Mock -CommandName Get-M365DSCTeamChannelTab -MockWith {
                     return @{
                         id             = '12345-12345-12345-12345-12345'
                         displayName    = 'TestTab'
@@ -169,7 +163,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the settings from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-M365DSCTeamsChannelTab -Exactly 1
+                Should -Invoke -CommandName Update-MgTeamChannelTab -Exactly 1
             }
         }
 
@@ -189,9 +183,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     WebSiteUrl            = 'https://contoso.com'
                 }
 
-                Mock -CommandName Get-Team -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @{
-                        GroupId     = '12345-12345-12345-12345-12345'
+                        Id     = '12345-12345-12345-12345-12345'
                         DisplayName = 'Contoso Team'
                     }
                 }
@@ -203,7 +197,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-M365DSCTeamChannelTab -MockWith {
+                Mock -CommandName Get-MgTeamChannelTab -MockWith {
                     return @{
                         id             = '12345-12345-12345-12345-12345'
                         displayName    = 'TestTab'
@@ -247,7 +241,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     WebSiteUrl            = 'https://contoso.com'
                 }
 
-                Mock -CommandName Get-Team -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         GroupId     = '12345-12345-12345-12345-12345'
                         DisplayName = 'Contoso Team'
@@ -261,7 +255,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-M365DSCTeamChannelTab -MockWith {
+                Mock -CommandName Get-MgTeamChannelTab -MockWith {
                     return @{
                         id             = '12345-12345-12345-12345-12345'
                         displayName    = 'TestTab'
@@ -303,7 +297,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     CertificateThumbprint = '111111111111'
                 }
 
-                Mock -CommandName Get-Team -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         GroupId     = '12345-12345-12345-12345-12345'
                         DisplayName = 'Contoso Team'
@@ -318,12 +312,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgTeamChannelTab -MockWith {
-                    return @{
-                        DisplayName = 'General'
-                    }
-                }
-
-                Mock -CommandName Get-M365DSCTeamChannelTab -MockWith {
                     return @{
                         id             = '12345-12345-12345-12345-12345'
                         displayName    = 'TestTab'

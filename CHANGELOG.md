@@ -4,6 +4,10 @@
 
 * IntuneRoleAssignment
   * Add support for ScopeType enabling the use of AllLicensedUser/AllDevice as Scope
+* TeamsChannelsPolicy
+  * Renamed the AllowPrivateTeamsDiscovery parameter to EnablePrivateTeamDiscovery.
+* TeamsChannelTab
+  * Added support for Credential and refactored to call into the Microsoft Graph PowerShell SDK directly.
 * TeamsMeetingPolicy
   * Added support for several new properties:
     * AllowAnnotations

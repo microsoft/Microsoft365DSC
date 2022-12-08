@@ -62,7 +62,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowChannelSharingToExternalUser             = $True
                     AllowOrgWideTeamCreation                      = $True
                     AllowPrivateChannelCreation                   = $True
-                    AllowPrivateTeamDiscovery                     = $True
+                    EnablePrivateTeamDiscovery                     = $True
                     AllowSharedChannelCreation                    = $True
                     AllowUserToParticipateInExternalSharedChannel = $True
                     Ensure                                        = 'Present'
@@ -96,7 +96,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowChannelSharingToExternalUser             = $True
                     AllowOrgWideTeamCreation                      = $True
                     AllowPrivateChannelCreation                   = $True
-                    AllowPrivateTeamDiscovery                     = $True
+                    EnablePrivateTeamDiscovery                     = $True
                     AllowSharedChannelCreation                    = $True
                     AllowUserToParticipateInExternalSharedChannel = $True
                     Ensure                                        = 'Present'
@@ -110,7 +110,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowChannelSharingToExternalUser             = $True
                         AllowOrgWideTeamCreation                      = $False
                         AllowPrivateChannelCreation                   = $True
-                        AllowPrivateTeamDiscovery                     = $True
+                        EnablePrivateTeamDiscovery                     = $True
                         AllowSharedChannelCreation                    = $True
                         AllowUserToParticipateInExternalSharedChannel = $True
                     }
@@ -140,7 +140,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowChannelSharingToExternalUser             = $True
                     AllowOrgWideTeamCreation                      = $True
                     AllowPrivateChannelCreation                   = $True
-                    AllowPrivateTeamDiscovery                     = $True
+                    EnablePrivateTeamDiscovery                     = $True
                     AllowSharedChannelCreation                    = $True
                     AllowUserToParticipateInExternalSharedChannel = $True
                     Ensure                                        = 'Present'
@@ -154,7 +154,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowChannelSharingToExternalUser             = $True
                         AllowOrgWideTeamCreation                      = $True
                         AllowPrivateChannelCreation                   = $True
-                        AllowPrivateTeamDiscovery                     = $True
+                        EnablePrivateTeamDiscovery                     = $True
                         AllowSharedChannelCreation                    = $True
                         AllowUserToParticipateInExternalSharedChannel = $True
                     }
@@ -178,7 +178,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowChannelSharingToExternalUser             = $True
                     AllowOrgWideTeamCreation                      = $True
                     AllowPrivateChannelCreation                   = $True
-                    AllowPrivateTeamDiscovery                     = $True
+                    EnablePrivateTeamDiscovery                     = $True
                     AllowSharedChannelCreation                    = $True
                     AllowUserToParticipateInExternalSharedChannel = $True
                     Ensure                                        = 'Absent'
@@ -192,7 +192,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowChannelSharingToExternalUser             = $True
                         AllowOrgWideTeamCreation                      = $True
                         AllowPrivateChannelCreation                   = $True
-                        AllowPrivateTeamDiscovery                     = $True
+                        EnablePrivateTeamDiscovery                     = $True
                         AllowSharedChannelCreation                    = $True
                         AllowUserToParticipateInExternalSharedChannel = $True
                     }
@@ -226,7 +226,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowChannelSharingToExternalUser             = $True
                         AllowOrgWideTeamCreation                      = $True
                         AllowPrivateChannelCreation                   = $True
-                        AllowPrivateTeamDiscovery                     = $True
+                        EnablePrivateTeamDiscovery                     = $True
                         AllowSharedChannelCreation                    = $True
                         AllowUserToParticipateInExternalSharedChannel = $True
                     }

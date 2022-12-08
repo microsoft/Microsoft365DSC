@@ -131,14 +131,15 @@ function New-M365DSCLogEntry
 
         # Write the error content into the log file;
         $LogFileName = Join-Path -Path (Get-Location).Path -ChildPath $LogFileName
+        $LogFileName = $LogFileName.Replace('\', '/')
         $LogContent | Out-File $LogFileName -Append
         if (Assert-M365DSCIsNonInteractiveShell)
         {
-            Write-Verbose -Message "Error Log created at {$LogFileName}"
+            Write-Verbose -Message "Error Log created at {file://$LogFileName}"
         }
         else
         {
-            Write-Host "Error Log created at {$LogFileName}" -ForegroundColor Cyan
+            Write-Host "Error Log created at {file://$LogFileName}" -ForegroundColor Cyan
         }
         #endregion
     }

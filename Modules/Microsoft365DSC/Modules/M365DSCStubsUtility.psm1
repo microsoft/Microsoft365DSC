@@ -56,6 +56,7 @@ function New-M365DSCStubFiles
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Planner'; },
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Teams'; },
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Users'; },
+        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Users.Actions';},
         @{Name = 'SecurityComplianceCenter'; ModuleName = 'ExchangeOnlineManagement'; CommandName = 'Get-Label' },
         @{Name = 'PnP'; ModuleName = 'PnP.PowerShell'; },
         @{Name = 'PowerPlatforms'; ModuleName = 'Microsoft.PowerApps.Administration.PowerShell'; },

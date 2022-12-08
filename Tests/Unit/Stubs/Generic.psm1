@@ -33,24 +33,6 @@ function New-MgGroup
     )
 }
 
-function Get-MgGroup
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $GroupId,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.Boolean]
-        $All
-    )
-}
-
 function New-MgGroupOwnerByRef
 {
 
