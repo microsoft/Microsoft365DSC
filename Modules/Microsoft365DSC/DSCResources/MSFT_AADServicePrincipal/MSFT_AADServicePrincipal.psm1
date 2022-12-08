@@ -299,6 +299,7 @@ function Set-TargetResource
     $currentParameters.Remove('Credential') | Out-Null
     $currentParameters.Remove('Ensure') | Out-Null
     $currentParameters.Remove('ObjectID') | Out-Null
+    $currentParameters.Remove('ApplicationSecret') | Out-Null
 
     # ServicePrincipal should exist but it doesn't
     if ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Absent')
