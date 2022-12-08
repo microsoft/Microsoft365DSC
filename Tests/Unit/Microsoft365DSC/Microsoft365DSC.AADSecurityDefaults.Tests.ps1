@@ -2,112 +2,111 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-    -ChildPath "..\..\Unit" `
+    -ChildPath '..\..\Unit' `
     -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -ChildPath '\Stubs\Microsoft365.psm1' `
         -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\Stubs\Generic.psm1" `
+        -ChildPath '\Stubs\Generic.psm1' `
         -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\UnitTestHelper.psm1" `
+        -ChildPath '\UnitTestHelper.psm1' `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "AADSecurityDefaults" -GenericStubModule $GenericStubPath
+    -DscResource 'AADSecurityDefaults' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
-            $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
             }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
-
             }
 
             Mock -CommandName Get-PSSession -MockWith {
-
             }
 
             Mock -CommandName Remove-PSSession -MockWith {
-
             }
 
             Mock -CommandName Update-MgPolicyIdentitySecurityDefaultEnforcementPolicy -MockWith {
-
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credentials"
+                return 'Credentials'
             }
 
 
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
             }
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
+            }
         }
 
         # Test contexts
-        Context -Name "The Defaults should be enabled but they are not" -Fixture {
+        Context -Name 'The Defaults should be enabled but they are not' -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance = 'Yes'
-                    DisplayName      = "Security Defaults"
-                    Description      = "Security Defaults description"
+                    DisplayName      = 'Security Defaults'
+                    Description      = 'Security Defaults description'
                     IsEnabled        = $True
                     Credential       = $credsGlobalAdmin
                 }
 
                 Mock -CommandName Get-MgPolicyIdentitySecurityDefaultEnforcementPolicy -MockWith {
                     return @{
-                        DisplayName = "Security Defaults"
-                        Id          = "000000000000"
-                        Description = "Security Defaults description"
+                        DisplayName = 'Security Defaults'
+                        Id          = '000000000000'
+                        Description = 'Security Defaults description'
                         IsEnabled   = $false
                     }
                 }
             }
 
-            It "Should return values from the get method" {
+            It 'Should return values from the get method' {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-MgPolicyIdentitySecurityDefaultEnforcementPolicy" -Exactly 1
+                Should -Invoke -CommandName 'Get-MgPolicyIdentitySecurityDefaultEnforcementPolicy' -Exactly 1
             }
             It 'Should return false from the test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
             It 'Should create the Enable from the set method' {
-                Set-TargetResource @testParams|
-                Should -Invoke -CommandName "Update-MgPolicyIdentitySecurityDefaultEnforcementPolicy" -Exactly 1
+                Set-TargetResource @testParams |
+                Should -Invoke -CommandName 'Update-MgPolicyIdentitySecurityDefaultEnforcementPolicy' -Exactly 1
             }
         }
-        Context -Name "The Security Defaults are already in the desired State" -Fixture {
+        Context -Name 'The Security Defaults are already in the desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance = 'Yes'
-                    DisplayName      = "Security Defaults"
-                    Description      = "Security Defaults description"
+                    DisplayName      = 'Security Defaults'
+                    Description      = 'Security Defaults description'
                     IsEnabled        = $True
                     Credential       = $credsGlobalAdmin
                 }
 
                 Mock -CommandName Get-MgPolicyIdentitySecurityDefaultEnforcementPolicy -MockWith {
                     return @{
-                        DisplayName = "Security Defaults"
-                        Id          = "000000000000"
-                        Description = "Security Defaults description"
+                        DisplayName = 'Security Defaults'
+                        Id          = '000000000000'
+                        Description = 'Security Defaults description'
                         IsEnabled   = $true
                     }
                 }
             }
 
-            It "Should return values from the get method" {
+            It 'Should return values from the get method' {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-MgPolicyIdentitySecurityDefaultEnforcementPolicy" -Exactly 1
+                Should -Invoke -CommandName 'Get-MgPolicyIdentitySecurityDefaultEnforcementPolicy' -Exactly 1
             }
 
             It 'Should return false from the test method' {

@@ -13,9 +13,9 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("Active", "Closed")]
+        [ValidateSet('Active', 'Closed')]
         [System.String]
-        $Status = "Active",
+        $Status = 'Active',
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -44,8 +44,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -69,14 +69,14 @@ function Get-TargetResource
             $Status = $Case.Status
             if ('Closing' -eq $Status)
             {
-                $Status = "Closed"
+                $Status = 'Closed'
             }
             $result = @{
-                Name               = $Case.Name
-                Description        = $Case.Description
-                Status             = $Status
-                Credential = $Credential
-                Ensure             = 'Present'
+                Name        = $Case.Name
+                Description = $Case.Description
+                Status      = $Status
+                Credential  = $Credential
+                Ensure      = 'Present'
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -85,26 +85,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -123,9 +109,9 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("Active", "Closed")]
+        [ValidateSet('Active', 'Closed')]
         [System.String]
-        $Status = "Active",
+        $Status = 'Active',
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -143,8 +129,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -159,9 +145,9 @@ function Set-TargetResource
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentCase.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove("Credential")
-        $CreationParams.Remove("Status")
-        $CreationParams.Remove("Ensure")
+        $CreationParams.Remove('Credential')
+        $CreationParams.Remove('Status')
+        $CreationParams.Remove('Ensure')
 
         Write-Verbose "Creating new Compliance Case $Name calling the New-ComplianceCase cmdlet."
         New-ComplianceCase @CreationParams
@@ -215,9 +201,9 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("Active", "Closed")]
+        [ValidateSet('Active', 'Closed')]
         [System.String]
-        $Status = "Active",
+        $Status = 'Active',
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -232,8 +218,8 @@ function Test-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -277,8 +263,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -289,7 +275,7 @@ function Export-TargetResource
     {
         [array]$Cases = Get-ComplianceCase -ErrorAction Stop
 
-        $dscContent = ""
+        $dscContent = ''
         $i = 1
         if ($Cases.Length -eq 0)
         {
@@ -303,7 +289,7 @@ function Export-TargetResource
         {
             Write-Host "    eDiscovery: [$i/$($Cases.Count)] $($Case.Name)" -NoNewline
             $Params = @{
-                Name               = $Case.Name
+                Name       = $Case.Name
                 Credential = $Credential
             }
             $Results = Get-TargetResource @Params
@@ -318,14 +304,14 @@ function Export-TargetResource
             $i++
         }
 
-        [array]$Cases = Get-ComplianceCase -CaseType "DSR" -ErrorAction Stop
+        [array]$Cases = Get-ComplianceCase -CaseType 'DSR' -ErrorAction Stop
 
         $i = 1
         foreach ($Case in $Cases)
         {
             Write-Host "    GDPR: [$i/$($Cases.Count)] $($Case.Name)" -NoNewline
             $Params = @{
-                Name               = $Case.Name
+                Name       = $Case.Name
                 Credential = $Credential
             }
             $Results = Get-TargetResource @Params
@@ -339,7 +325,7 @@ function Export-TargetResource
             $dscContent += $currentDSCBlock
 
             Save-M365DSCPartialExport -Content $currentDSCBlock `
-                            -FileName $Global:PartialExportFileName
+                -FileName $Global:PartialExportFileName
 
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
@@ -349,27 +335,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

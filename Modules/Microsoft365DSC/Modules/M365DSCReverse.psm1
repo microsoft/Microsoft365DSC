@@ -488,7 +488,9 @@ function Start-M365DSCConfigurationExtract
             }
             catch
             {
-                New-M365DSCLogEntry -Error $_ -Message $ResourceModule.Name -Source "[M365DSCReverse]$($ResourceModule.Name)"
+                New-M365DSCLogEntry -Message $ResourceModule.Name `
+                    -Exception $_ `
+                    -Source "[M365DSCReverse]$($ResourceModule.Name)"
             }
         }
 
@@ -783,6 +785,10 @@ function Start-M365DSCConfigurationExtract
                     {
                         # Export the certificate assigned to the LCM
                         $certPath = $OutputDSCPath + 'M365DSC.cer'
+                        if (Test-Path $certPath)
+                        {
+                            Remove-Item $certPath -Force
+                        }
                         Export-Certificate -FilePath $certPath `
                             -Cert "cert:\LocalMachine\my\$($LCMConfig.CertificateID)" `
                             -Type CERT `
@@ -790,9 +796,11 @@ function Start-M365DSCConfigurationExtract
                     }
                     catch
                     {
-                        Write-Verbose -Message $_
-                        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+                        New-M365DSCLogEntry -Message 'Error while exporting the DSC certificate:' `
+                            -Exception $_ `
+                            -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $TenantId `
+                            -Credential $Credential
                     }
 
                     Add-ConfigurationDataEntry -Node 'localhost' `

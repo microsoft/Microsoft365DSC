@@ -44,7 +44,7 @@ function Get-TargetResource
         $CertificatePassword
     )
 
-    Write-Verbose -Message "Getting configuration for Office 365 Audit Log"
+    Write-Verbose -Message 'Getting configuration for Office 365 Audit Log'
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
@@ -52,8 +52,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -61,14 +61,14 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
     try
     {
         $GetResults = Get-AdminAuditLogConfig -ErrorAction Stop
         if (-not $GetResults)
         {
             Write-Warning 'Unable to determine Unified Audit Log Ingestion State.'
-            Write-Verbose -Message "Returning Get-TargetResource NULL Result"
+            Write-Verbose -Message 'Returning Get-TargetResource NULL Result'
             return $nullReturn
         }
         else
@@ -85,7 +85,7 @@ function Get-TargetResource
             $Result = @{
                 IsSingleInstance                = $IsSingleInstance
                 Ensure                          = 'Present'
-                Credential              = $Credential
+                Credential                      = $Credential
                 UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabledReturnValue
             }
             return $Result
@@ -93,26 +93,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -162,14 +148,14 @@ function Set-TargetResource
         $CertificatePassword
     )
 
-    Write-Verbose -Message "Setting configuration for Office 365 Audit Log"
+    Write-Verbose -Message 'Setting configuration for Office 365 Audit Log'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -180,7 +166,7 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     $OldErrorActionPreference = $ErrorActionPreference
-    $ErrorActionPreference = "Continue"
+    $ErrorActionPreference = 'Continue'
     if ($UnifiedAuditLogIngestionEnabled -eq 'Enabled')
     {
         try
@@ -190,8 +176,10 @@ function Set-TargetResource
         catch
         {
             $Message = "Couldn't set the Audit Log Ingestion. Please run Enable-OrganizationCustomization first."
-            Write-Verbose $Message
-            New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+            New-M365DSCLogEntry -Message $Message `
+                -Exception $_ `
+                -Message $Message `
+                -Source $MyInvocation.MyCommand.ModuleName
         }
     }
     else
@@ -203,8 +191,10 @@ function Set-TargetResource
         catch
         {
             $Message = "Couldn't set the Audit Log Ingestion. Please run Enable-OrganizationCustomization first."
-            Write-Verbose $Message
-            New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+            New-M365DSCLogEntry -Message $Message `
+                -Exception $_ `
+                -Message $Message `
+                -Source $MyInvocation.MyCommand.ModuleName
         }
     }
     $ErrorActionPreference = $OldErrorActionPreference
@@ -260,15 +250,15 @@ function Test-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration for Office 365 Audit Log"
+    Write-Verbose -Message 'Testing configuration for Office 365 Audit Log'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -322,8 +312,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -333,17 +323,17 @@ function Export-TargetResource
     try
     {
         $O365AdminAuditLogConfig = Get-AdminAuditLogConfig -ErrorAction Stop
-        $value = "Disabled"
+        $value = 'Disabled'
         if ($O365AdminAuditLogConfig.UnifiedAuditLogIngestionEnabled)
         {
-            $value = "Enabled"
+            $value = 'Enabled'
         }
 
-        $dscContent = ""
+        $dscContent = ''
         $Params = @{
             IsSingleInstance                = 'Yes'
             UnifiedAuditLogIngestionEnabled = $value
-            Credential              = $Credential
+            Credential                      = $Credential
             ApplicationId                   = $ApplicationId
             TenantId                        = $TenantId
             CertificateThumbprint           = $CertificateThumbprint
@@ -369,27 +359,15 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

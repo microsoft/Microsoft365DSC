@@ -25,6 +25,10 @@ function Get-TargetResource
         $ResourceScopesDisplayNames,
 
         [Parameter()]
+        [System.String]
+        $ScopeType,
+
+        [Parameter()]
         [System.String[]]
         $Members,
 
@@ -156,6 +160,7 @@ function Get-TargetResource
             DisplayName                 = $getValue.DisplayName
             ResourceScopes              = $getValue.ResourceScopes
             ResourceScopesDisplayNames  = $ResourceScopesDisplayNames
+            ScopeType                   = $getValue.ScopeType
             Members                     = $getValue.Members
             MembersDisplayNames         = $MembersDisplayNames
             RoleDefinition              = $RoleDefinition
@@ -221,6 +226,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $ResourceScopesDisplayNames,
+
+        [Parameter()]
+        [System.String]
+        $ScopeType,
 
         [Parameter()]
         [System.String[]]
@@ -342,7 +351,13 @@ function Set-TargetResource
             Write-Verbose -Message "Nothing with displayname {$ResourceScopesDisplayName} was found"
         }
     }
-
+    if($ScopeType -match "AllDevices|AllLicensedUsers|AllDevicesAndLicensedUsers"){
+        $ResourceScopes = $null
+    }
+    else{
+        $ScopeType = "resourceScope"
+        $ResourceScopes = $ResourceScopes
+    }
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating {$DisplayName}"
@@ -351,12 +366,11 @@ function Set-TargetResource
             description = $Description
             displayName = $DisplayName
             resourceScopes = $ResourceScopes
-            scopeType = 'resourceScope'
+            scopeType = $ScopeType
             members = $Members
             '@odata.type' = '#microsoft.graph.deviceAndAppManagementRoleAssignment'
             'roleDefinition@odata.bind' = "https://graph.microsoft.com/beta/deviceManagement/roleDefinitions('$roleDefinition')"
         }
-
         $policy=New-MgDeviceManagementRoleAssignment -BodyParameter $CreateParameters
 
     }
@@ -368,7 +382,7 @@ function Set-TargetResource
             description = $Description
             displayName = $DisplayName
             resourceScopes = $ResourceScopes
-            scopeType = 'resourceScope'
+            scopeType = $ScopeType
             members = $Members
             '@odata.type' = '#microsoft.graph.deviceAndAppManagementRoleAssignment'
             'roleDefinition@odata.bind' = "https://graph.microsoft.com/beta/deviceManagement/roleDefinitions('$roleDefinition')"
@@ -410,6 +424,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $ResourceScopesDisplayNames,
+
+        [Parameter()]
+        [System.String]
+        $ScopeType,
 
         [Parameter()]
         [System.String[]]
