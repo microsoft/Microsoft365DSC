@@ -14,6 +14,9 @@
 * TeamsChannel
   * Fixes an issue where channels weren't created if a non-existing GroupId was specified.
     FIXES [#2622](https://github.com/microsoft/Microsoft365DSC/issues/2622)
+* TeamsUpdateManagementPolicy
+  * Fixed error with the export that wasn't properly returning the UpdateTimeOfDay if not in short time string format.
+    FIXES [#2639](https://github.com/microsoft/Microsoft365DSC/issues/2639)
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.0.99;
 

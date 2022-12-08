@@ -90,7 +90,7 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Found Teams Update Management Policy with Identity {$Identity}"
-        return @{
+        $results =  @{
             Identity              = $policy.Identity
             Description           = $policy.Description
             AllowManagedUpdates   = $policy.AllowManagedUpdates
@@ -98,13 +98,18 @@ function Get-TargetResource
             AllowPublicPreview    = $policy.AllowPublicPreview
             UpdateDayOfWeek       = $policy.UpdateDayOfWeek
             UpdateTime            = $policy.UpdateTime
-            UpdateTimeOfDay       = $policy.UpdateTimeOfDay.Split('T')[1].Replace('Z', '')
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
         }
+        if (-not [System.String]::IsNullOrEmpty($policy.UpdateTimeOfDay))
+        {
+            $updateTimeOfDayValue = $policy.UpdateTimeOfDay.ToShortTimeString()
+            $results.Add('UpdateTimeOfDay', $updateTimeOfDayValue)
+        }
+        return $results
     }
     catch
     {
