@@ -11,8 +11,10 @@
 * AADUser
   * Fixes an issue where provided password wa never honored.
     FIXES [#2599](https://github.com/microsoft/Microsoft365DSC/issues/2599)
+  * Added support for the PasswordPolicies property.
+    FIXES [#2598](https://github.com/microsoft/Microsoft365DSC/issues/2598)
 * PlannerBucket & PlannerPlan
-  * Changed invalid permissions in the setting.json files
+  * Changed invalid permissions in the setting.json files.
     FIXES [#2629](https://github.com/microsoft/Microsoft365DSC/issues/2629)
 * TeamsChannel
   * Fixes an issue where channels weren't created if a non-existing GroupId was specified.
