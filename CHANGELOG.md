@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADServicePrincipal
+  * Fixes an issue where the service principals weren't created or updated when using ApplicationSecret to authenticate.
+    FIXES [#2615](https://github.com/microsoft/Microsoft365DSC/issues/2615)
 * PlannerBucket & PlannerPlan
   * Changed invalid permissions in the setting.json files
     FIXES [#2629](https://github.com/microsoft/Microsoft365DSC/issues/2629)
