@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* PlannerBucket & PlannerPlan
+  * Changed invalid permissions in the setting.json files
+    FIXES [#2629](https://github.com/microsoft/Microsoft365DSC/issues/2629)
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.0.99;
 
