@@ -18,6 +18,9 @@
 * PlannerBucket & PlannerPlan
   * Changed invalid permissions in the setting.json files.
     FIXES [#2629](https://github.com/microsoft/Microsoft365DSC/issues/2629)
+* SCRetentionComplianceRule
+  * Fixed an Issue where properties weren't properly set at creation, causing drifts to be detected.
+    FIXES [#2471](https://github.com/microsoft/Microsoft365DSC/issues/2471)
 * SPOUserProfileProperty
   * Removed multi-threading to align with other resources.
   * Fixed an issue where we were contacting Microsoft Graph to retrieve users without authenticating to it.

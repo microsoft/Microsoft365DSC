@@ -216,11 +216,11 @@ function Set-TargetResource
         Write-Verbose -Message 'Checking to see if the policy is a Teams based one.'
         $RuleObject = Get-RetentionComplianceRule -Identity $Name `
             -ErrorAction SilentlyContinue
-        $AssociatedPolicy = Get-RetentionCompliancePolicy $RuleObject.Policy
+        $AssociatedPolicy = Get-RetentionCompliancePolicy $Policy
 
         if ($AssociatedPolicy.TeamsPolicy)
         {
-            Write-Verbose -Message 'The current policy is a Teams based one, removing invalid parameters.'
+            Write-Verbose -Message 'The current policy is a Teams based one, removing invalid parameters for Creation.'
             if ($CreationParams.ContainsKey('ApplyComplianceTag'))
             {
                 $CreationParams.Remove('ApplyComplianceTag') | Out-Null
@@ -251,6 +251,7 @@ function Set-TargetResource
             }
         }
 
+        Write-Verbose -Message "Creating new RetentionComplianceRule with values:`r`n$(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
         New-RetentionComplianceRule @CreationParams
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
@@ -269,7 +270,7 @@ function Set-TargetResource
 
         if ($AssociatedPolicy.TeamsPolicy)
         {
-            Write-Verbose -Message 'The current policy is a Teams based one, removing invalid parameters.'
+            Write-Verbose -Message 'The current policy is a Teams based one, removing invalid parameters for Update.'
 
             if ($CreationParams.ContainsKey('ApplyComplianceTag'))
             {
@@ -301,6 +302,7 @@ function Set-TargetResource
             }
         }
 
+        Write-Verbose -Message "Updating RetentionComplianceRule with values:`r`n$(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
         Set-RetentionComplianceRule @CreationParams
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
