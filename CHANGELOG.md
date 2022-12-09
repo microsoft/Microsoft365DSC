@@ -27,7 +27,8 @@
   * Fixed error with the export that wasn't properly returning the UpdateTimeOfDay if not in short time string format.
     FIXES [#2639](https://github.com/microsoft/Microsoft365DSC/issues/2639)
 * DEPENDENCIES
-  * Updated MSCloudLoginAssistant to version 1.0.99;
+  * Updated MSCloudLoginAssistant to version 1.0.100;
+    FIXES [#2484](https://github.com/microsoft/Microsoft365DSC/issues/2484)
 
 # 1.22.1207.1
 
