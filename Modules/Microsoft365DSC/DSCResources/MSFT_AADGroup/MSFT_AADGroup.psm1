@@ -613,7 +613,7 @@ function Set-TargetResource
         }
 
         #Members
-        if ($MembershipRuleProcessingState -ne 'On')
+        if ($MembershipRuleProcessingState -ne 'On' -and $PSBoundParameters.ContainsKey('Members'))
         {
             $currentMembersValue = @()
             if ($currentParameters.Members.Length -ne 0)
@@ -655,64 +655,67 @@ function Set-TargetResource
         }
 
         #MemberOf
-        $currentMemberOfValue = @()
-        if ($currentParameters.MemberOf.Length -ne 0)
+        if ($PSBoundParameters.ContainsKey('MemberOf'))
         {
-            $currentMemberOfValue = $backCurrentMemberOf
-        }
-        $desiredMemberOfValue = @()
-        if ($MemberOf.Length -ne 0)
-        {
-            $desiredMemberOfValue = $MemberOf
-        }
-        if ($null -eq $backCurrentMemberOf)
-        {
-            $backCurrentMemberOf = @()
-        }
-        $memberOfDiff = Compare-Object -ReferenceObject $backCurrentMemberOf -DifferenceObject $desiredMemberOfValue
-        foreach ($diff in $memberOfDiff)
-        {
-            try
+            $currentMemberOfValue = @()
+            if ($currentParameters.MemberOf.Length -ne 0)
             {
-                $memberOfGroup = Get-MgGroup -Filter "DisplayName -eq '$($diff.InputObject)'" -ErrorAction Stop
+                $currentMemberOfValue = $backCurrentMemberOf
             }
-            catch
+            $desiredMemberOfValue = @()
+            if ($MemberOf.Length -ne 0)
             {
-                $memberOfGroup = $null
+                $desiredMemberOfValue = $MemberOf
             }
-            if ($null -eq $memberOfGroup)
+            if ($null -eq $backCurrentMemberOf)
             {
-                throw "Security-group or directory role '$($diff.InputObject)' does not exist"
+                $backCurrentMemberOf = @()
             }
-            else
+            $memberOfDiff = Compare-Object -ReferenceObject $backCurrentMemberOf -DifferenceObject $desiredMemberOfValue
+            foreach ($diff in $memberOfDiff)
             {
-                if ($diff.SideIndicator -eq '=>')
+                try
                 {
-                    # see if memberOfGroup contains property SecurityEnabled (it can be true or false)
-                    if ($memberOfgroup.psobject.Typenames -match 'Group')
-                    {
-                        Write-Verbose -Message "Adding AAD group {$($currentGroup.DisplayName)} as member of AAD group {$($memberOfGroup.DisplayName)}"
-                        #$memberOfObject = @{
-                        #    "@odata.id"= "https://graph.microsoft.com/v1.0/groups/{$($group.Id)}"
-                        #}
-                        New-MgGroupMember -GroupId ($memberOfGroup.Id) -DirectoryObject ($currentGroup.Id) | Out-Null
-                    }
-                    else
-                    {
-                        Throw "Cannot add AAD group {$($currentGroup.DisplayName)} to {$($memberOfGroup.DisplayName)} as it is not a security-group"
-                    }
-
+                    $memberOfGroup = Get-MgGroup -Filter "DisplayName -eq '$($diff.InputObject)'" -ErrorAction Stop
                 }
-                elseif ($diff.SideIndicator -eq '<=')
+                catch
                 {
-                    if ($memberOfgroup.psobject.Typenames -match 'Group')
+                    $memberOfGroup = $null
+                }
+                if ($null -eq $memberOfGroup)
+                {
+                    throw "Security-group or directory role '$($diff.InputObject)' does not exist"
+                }
+                else
+                {
+                    if ($diff.SideIndicator -eq '=>')
                     {
-                        Write-Verbose -Message "Removing AAD Group {$($currentGroup.DisplayName)} from AAD group {$($memberOfGroup.DisplayName)}"
-                        Remove-MgGroupMemberByRef -GroupId ($memberOfGroup.Id) -DirectoryObjectId ($currentGroup.Id) | Out-Null
+                        # see if memberOfGroup contains property SecurityEnabled (it can be true or false)
+                        if ($memberOfgroup.psobject.Typenames -match 'Group')
+                        {
+                            Write-Verbose -Message "Adding AAD group {$($currentGroup.DisplayName)} as member of AAD group {$($memberOfGroup.DisplayName)}"
+                            #$memberOfObject = @{
+                            #    "@odata.id"= "https://graph.microsoft.com/v1.0/groups/{$($group.Id)}"
+                            #}
+                            New-MgGroupMember -GroupId ($memberOfGroup.Id) -DirectoryObject ($currentGroup.Id) | Out-Null
+                        }
+                        else
+                        {
+                            Throw "Cannot add AAD group {$($currentGroup.DisplayName)} to {$($memberOfGroup.DisplayName)} as it is not a security-group"
+                        }
+
                     }
-                    else
+                    elseif ($diff.SideIndicator -eq '<=')
                     {
-                        Throw "Cannot remove AAD group {$($currentGroup.DisplayName)} from {$($memberOfGroup.DisplayName)} as it is not a security-group"
+                        if ($memberOfgroup.psobject.Typenames -match 'Group')
+                        {
+                            Write-Verbose -Message "Removing AAD Group {$($currentGroup.DisplayName)} from AAD group {$($memberOfGroup.DisplayName)}"
+                            Remove-MgGroupMemberByRef -GroupId ($memberOfGroup.Id) -DirectoryObjectId ($currentGroup.Id) | Out-Null
+                        }
+                        else
+                        {
+                            Throw "Cannot remove AAD group {$($currentGroup.DisplayName)} from {$($memberOfGroup.DisplayName)} as it is not a security-group"
+                        }
                     }
                 }
             }
