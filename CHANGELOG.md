@@ -5,6 +5,8 @@
 * AADGroup
   * Fixes an issue where licenses aren't properly assigned when no existing licenses exist.
     FIXES [#2597](https://github.com/microsoft/Microsoft365DSC/issues/2597)
+  * Fixes an issue where if a dirft is detected and the Members parameter was ommitted, all existing members were removed.
+    FIXES [#2481](https://github.com/microsoft/Microsoft365DSC/issues/2481)
 * AADServicePrincipal
   * Fixes an issue where the service principals weren't created or updated when using ApplicationSecret to authenticate.
     FIXES [#2615](https://github.com/microsoft/Microsoft365DSC/issues/2615)
