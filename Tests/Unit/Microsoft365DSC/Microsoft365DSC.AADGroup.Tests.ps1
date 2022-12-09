@@ -421,7 +421,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName 'Get-MgGroup' -Exactly 1
-                Should -Invoke -CommandName 'New-MgGroupMember' -Exactly 1
             }
         }
 
