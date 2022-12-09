@@ -21,6 +21,9 @@
 * SCRetentionComplianceRule
   * Fixed an Issue where properties weren't properly set at creation, causing drifts to be detected.
     FIXES [#2471](https://github.com/microsoft/Microsoft365DSC/issues/2471)
+* SPOTenantCdnEnabled
+  * Fixed an issue where the export wasn't returning anything if the CDN was not enabled.
+    FIXES [#2466](https://github.com/microsoft/Microsoft365DSC/issues/2466)
 * SPOUserProfileProperty
   * Removed multi-threading to align with other resources.
   * Fixed an issue where we were contacting Microsoft Graph to retrieve users without authenticating to it.
