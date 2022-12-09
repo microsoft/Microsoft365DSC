@@ -37,6 +37,9 @@
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.0.100;
     FIXES [#2484](https://github.com/microsoft/Microsoft365DSC/issues/2484)
+* MISC
+  * Added support for the ExcludedProperties parameter in the New-M365DSCDeltaReport function.
+    FIXES [#2444](https://github.com/microsoft/Microsoft365DSC/issues/2444)
 
 # 1.22.1207.1
 
