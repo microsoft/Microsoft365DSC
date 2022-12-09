@@ -574,6 +574,7 @@ function Set-TargetResource
             AnonymousLinkExpirationInDays               = $AnonymousLinkExpirationInDays
             OverrideTenantAnonymousLinkExpirationPolicy = $OverrideTenantAnonymousLinkExpirationPolicy
             DenyAddAndCustomizePages                    = $deny
+            Title                                       = $Title
         }
         $UpdateParams = Remove-NullEntriesFromHashtable -Hash $UpdateParams
 
