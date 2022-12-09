@@ -16,6 +16,10 @@
 * PlannerBucket & PlannerPlan
   * Changed invalid permissions in the setting.json files.
     FIXES [#2629](https://github.com/microsoft/Microsoft365DSC/issues/2629)
+* SPOUserProfileProperty
+  * Removed multi-threading to align with other resources.
+  * Fixed an issue where we were contacting Microsoft Graph to retrieve users without authenticating to it.
+    FIXES [#2643](https://github.com/microsoft/Microsoft365DSC/issues/2643)
 * TeamsChannel
   * Fixes an issue where channels weren't created if a non-existing GroupId was specified.
     FIXES [#2622](https://github.com/microsoft/Microsoft365DSC/issues/2622)
