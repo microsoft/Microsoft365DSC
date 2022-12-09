@@ -430,7 +430,7 @@ Array that contains the list of configuration components for the source.
 Array that contains the list of configuration components for the destination.
 
 .Parameter ExcludedProperties
-Array that contains the list of configuration components for the destination.
+Array that contains the list of parameters to exclude.
 
 .Example
 Compare-M365DSCConfigurations -Source 'C:\DSC\source.ps1' -Destination 'C:\DSC\destination.ps1'
@@ -816,7 +816,7 @@ Specifies that file that contains a custom header for the report.
 An array with difference, already compiled from another source.
 
 .Parameter ExcludedProperties
-Array that contains the list of configuration components for the destination.
+Array that contains the list of parameters to exclude.
 
 .Example
 New-M365DSCDeltaReport -Source 'C:\DSC\Source.ps1' -Destination 'C:\DSC\Destination.ps1' -OutputPath 'C:\Dsc\DeltaReport.html'
