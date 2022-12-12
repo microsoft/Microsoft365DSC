@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADEntitlementManagementAccessPackageCatalogResource
+  * Fixes an issue where if no access resource were defined, an error was thrown trying to save the partial content.
+    FIXES [#2654](https://github.com/microsoft/Microsoft365DSC/issues/2654)
 * AADGroup
   * Fixes an issue where licenses aren't properly assigned when no existing licenses exist.
     FIXES [#2597](https://github.com/microsoft/Microsoft365DSC/issues/2597)
