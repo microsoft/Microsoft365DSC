@@ -27,6 +27,9 @@ function Get-TargetResource
         [System.String]$MembershipType,
 
         [Parameter()]
+        [System.String]$MembershipRule,
+
+        [Parameter()]
         [validateset('Paused', 'On')]
         [System.String]$MembershipRuleProcessingState,
 
@@ -305,6 +308,9 @@ function Set-TargetResource
         [System.String]$MembershipType,
 
         [Parameter()]
+        [System.String]$MembershipRule,
+
+        [Parameter()]
         [validateset('Paused', 'On')]
         [System.String]$MembershipRuleProcessingState,
 
@@ -409,11 +415,24 @@ function Set-TargetResource
     {
         $CreateParameters = $currentParameters.Clone()
 
-        if (-not [System.String]::IsNullOrEmpty($MembershipType))
+        if ($CreateParameters.Containskey('MembershipType') -or $CreateParameters.Containskey('MembershipRule') -or $CreateParameters.Containskey('MembershipRuleProcessingState'))
         {
             $CreateParameters.Remove('MembershipType') | Out-Null
+            $CreateParameters.Remove('MembershipRule') | Out-Null
             $CreateParameters.Remove('MembershipRuleProcessingState') | Out-Null
-            $CreateParameters.Add('AdditionalProperties', @{MembershipType = $MembershipType; MembershipRuleProcessingState = $MembershipRuleProcessingState })
+            $CreateParameters.Add('AdditionalProperties', @{})
+            if (-not [System.String]::IsNullOrEmpty($MembershipType))
+            {
+                $CreateParameters.AdditionalProperties.Add('MembershipType', $MembershipType)
+            }
+            if (-not [System.String]::IsNullOrEmpty($MembershipType))
+            {
+                $CreateParameters.AdditionalProperties.Add('MembershipRule', $MembershipRule)
+            }
+            if (-not [System.String]::IsNullOrEmpty($MembershipRuleProcessingState))
+            {
+                $CreateParameters.AdditionalProperties.Add('MembershipRuleProcessingState', $MembershipRuleProcessingState)
+            }
         }
 
         foreach ($key in ($CreateParameters.clone()).Keys)
@@ -583,14 +602,19 @@ function Set-TargetResource
         $UpdateParameters.Remove('Members') | Out-Null
         $UpdateParameters.Remove('ScopedRoleMembers') | Out-Null
 
-        if ($UpdateParameters.Containskey('MembershipType') -or $UpdateParameters.Containskey('MembershipRuleProcessingState'))
+        if ($UpdateParameters.Containskey('MembershipType') -or $UpdateParameters.Containskey('MembershipRule') -or $UpdateParameters.Containskey('MembershipRuleProcessingState'))
         {
             $UpdateParameters.Remove('MembershipType') | Out-Null
+            $UpdateParameters.Remove('MembershipRule') | Out-Null
             $UpdateParameters.Remove('MembershipRuleProcessingState') | Out-Null
             $UpdateParameters.Add('AdditionalProperties', @{})
             if (-not [System.String]::IsNullOrEmpty($MembershipType))
             {
                 $UpdateParameters.AdditionalProperties.Add('MembershipType', $MembershipType)
+            }
+            if (-not [System.String]::IsNullOrEmpty($MembershipType))
+            {
+                $UpdateParameters.AdditionalProperties.Add('MembershipRule', $MembershipRule)
             }
             if (-not [System.String]::IsNullOrEmpty($MembershipRuleProcessingState))
             {
@@ -856,6 +880,9 @@ function Test-TargetResource
         [Parameter()]
         [validateset('Assigned', 'Dynamic')]
         [System.String]$MembershipType,
+
+        [Parameter()]
+        [System.String]$MembershipRule,
 
         [Parameter()]
         [validateset('Paused', 'On')]
