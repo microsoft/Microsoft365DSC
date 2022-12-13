@@ -1,0 +1,128 @@
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphassignmentreviewsettings
+{
+    [Write, Description(""), ValueMap{"acceptAccessRecommendation","keepAccess","removeAccess","unknownFutureValue"}, Values{"acceptAccessRecommendation","keepAccess","removeAccess","unknownFutureValue"}] String AccessReviewTimeoutBehavior;
+    [Write, Description("")] UInt32 DurationInDays;
+    [Write, Description("")] Boolean IsAccessRecommendationEnabled;
+    [Write, Description("")] Boolean IsApprovalJustificationRequired;
+    [Write, Description("")] Boolean IsEnabled;
+    [Write, Description("")] String RecurrenceType;
+    [Write, Description("")] String ReviewerType;
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphuserset")] String Reviewers[];
+    [Write, Description("")] String StartDateTime;
+};
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphuserset
+{
+    [Write, Description(""), ValueMap{"#microsoft.graph.singleUser","#microsoft.graph.groupMembers","#microsoft.graph.requestorManager","#microsoft.graph.internalSponsors","#microsoft.graph.externalSponsors"}, Values{"#microsoft.graph.singleUser","#microsoft.graph.groupMembers","#microsoft.graph.requestorManager","#microsoft.graph.internalSponsors","#microsoft.graph.externalSponsors"}] String odataType;
+    [Write, Description("")] String Id;
+    [Write, Description("")] Boolean IsBackup;
+    [Write, Description("")] UInt32 ManagerLevel;
+};
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphaccesspackagequestion
+{
+    [Write, Description("")] String Id;
+    [Write, Description("")] Boolean IsAnswerEditable;
+    [Write, Description("")] Boolean IsRequired;
+    [Write, Description("")] UInt32 Sequence;
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphaccesspackagelocalizedcontent")] String Text;
+};
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphapprovalsettings
+{
+    [Write, Description(""), ValueMap{"SingleStage","Serial","Parallel","NoApproval"}, Values{"SingleStage","Serial","Parallel","NoApproval"}] String ApprovalMode;
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphapprovalstage1")] String ApprovalStages[];
+    [Write, Description("")] Boolean IsApprovalRequired;
+    [Write, Description("")] Boolean IsApprovalRequiredForExtension;
+    [Write, Description("")] Boolean IsRequestorJustificationRequired;
+};
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphapprovalstage1
+{
+    [Write, Description("")] UInt32 ApprovalStageTimeOutInDays;
+    [Write, Description("")] UInt32 EscalationTimeInMinutes;
+    [Write, Description("")] Boolean IsApproverJustificationRequired;
+    [Write, Description("")] Boolean IsEscalationEnabled;
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphuserset")] String PrimaryApprovers[];
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphuserset")] String EscalationApprovers[];
+};
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphrequestorsettings
+{
+    [Write, Description("")] Boolean AcceptRequests;
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphuserset")] String AllowedRequestors[];
+    [Write, Description(""), ValueMap{"NoSubjects","SpecificDirectorySubjects","SpecificConnectedOrganizationSubjects","AllConfiguredConnectedOrganizationSubjects","AllExistingConnectedOrganizationSubjects","AllExistingDirectoryMemberUsers","AllExistingDirectorySubjects","AllExternalSubjects"}, Values{"NoSubjects","SpecificDirectorySubjects","SpecificConnectedOrganizationSubjects","AllConfiguredConnectedOrganizationSubjects","AllExistingConnectedOrganizationSubjects","AllExistingDirectoryMemberUsers","AllExistingDirectorySubjects","AllExternalSubjects"}] String ScopeType;
+};
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphcustomextensionhandler
+{
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphcustomaccesspackageworkflowextension")] String CustomExtension;
+    [Write, Description(""), ValueMap{"assignmentRequestCreated","assignmentRequestApproved","assignmentRequestGranted","assignmentRequestRemoved","assignmentFourteenDaysBeforeExpiration","assignmentOneDayBeforeExpiration","unknownFutureValue"}, Values{"assignmentRequestCreated","assignmentRequestApproved","assignmentRequestGranted","assignmentRequestRemoved","assignmentFourteenDaysBeforeExpiration","assignmentOneDayBeforeExpiration","unknownFutureValue"}] String Stage;
+    [Write, Description("")] String Id;
+};
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphcustomaccesspackageworkflowextension
+{
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphcustomextensionauthenticationconfiguration")] String AuthenticationConfiguration;
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphcustomextensionclientconfiguration")] String ClientConfiguration;
+    [Write, Description("")] String Description;
+    [Write, Description("")] String DisplayName;
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphcustomextensionendpointconfiguration")] String EndpointConfiguration;
+    [Write, Description("")] String Id;
+};
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphcustomextensionauthenticationconfiguration
+{
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphcustomextensionauthenticationconfiguration")] String AuthenticationConfiguration;
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphcustomextensionclientconfiguration")] String ClientConfiguration;
+    [Write, Description("")] String Description;
+    [Write, Description("")] String DisplayName;
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphcustomextensionendpointconfiguration")] String EndpointConfiguration;
+    [Write, Description("")] String Id;
+};
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphcustomextensionclientconfiguration
+{
+    [Write, Description("")] UInt32 TimeoutInMilliseconds;
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphcustomextensionauthenticationconfiguration")] String AuthenticationConfiguration;
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphcustomextensionclientconfiguration")] String ClientConfiguration;
+    [Write, Description("")] String Description;
+    [Write, Description("")] String DisplayName;
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphcustomextensionendpointconfiguration")] String EndpointConfiguration;
+    [Write, Description("")] String Id;
+};
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphcustomextensionendpointconfiguration
+{
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphcustomextensionauthenticationconfiguration")] String AuthenticationConfiguration;
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphcustomextensionclientconfiguration")] String ClientConfiguration;
+    [Write, Description("")] String Description;
+    [Write, Description("")] String DisplayName;
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphcustomextensionendpointconfiguration")] String EndpointConfiguration;
+    [Write, Description("")] String Id;
+};
+
+[ClassVersion("1.0.0.0"), FriendlyName("AADEntitlementManagementAccessPackageAssignmentPolicy")]
+class MSFT_AADEntitlementManagementAccessPackageAssignmentPolicy : OMI_BaseResource
+{
+    [Write, Description("")] String Id;
+    [Write, Description("")] String AccessPackageId;
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphassignmentreviewsettings")] String AccessReviewSettings;
+    [Write, Description("")] Boolean CanExtend;
+    [Write, Description("")] String Description;
+    [Write, Description("")] String DisplayName;
+    [Write, Description("")] UInt32 DurationInDays;
+    [Write, Description("")] String ExpirationDateTime;
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphaccesspackagequestion")] String Questions[];
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphapprovalsettings")] String RequestApprovalSettings;
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphrequestorsettings")] String RequestorSettings;
+    [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphcustomextensionhandler")] String CustomExtensionHandlers[];
+    [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
+    [Write, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+	[Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+};

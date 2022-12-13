@@ -1,0 +1,25 @@
+{
+    "resourceName": "AADEntitlementManagementAccessPackageAssignmentPolicy",
+    "description": "This resource configures an A A D Entitlement Management Access Package Assignment Policy.",
+    "permissions":    {
+    "graph":  {
+                  "delegated":  {
+                                    "read":  [
+
+                                             ],
+                                    "update":  [
+
+                                               ]
+                                },
+                  "application":  {
+                                      "read":  [
+
+                                               ],
+                                      "update":  [
+
+                                                 ]
+                                  }
+              }
+}
+
+}
