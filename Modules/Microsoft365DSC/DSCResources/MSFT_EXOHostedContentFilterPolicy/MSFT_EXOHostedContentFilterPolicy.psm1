@@ -33,6 +33,10 @@ function Get-TargetResource
         $BlockedSenders = @(),
 
         [Parameter()]
+        [System.String]
+        $BulkQuarantineTag,
+
+        [Parameter()]
         [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $BulkSpamAction = 'MoveToJmf',
@@ -87,9 +91,17 @@ function Get-TargetResource
         $HighConfidencePhishAction = 'Quarantine',
 
         [Parameter()]
+        [System.String]
+        $HighConfidencePhishQuarantineTag,
+
+        [Parameter()]
         [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $HighConfidenceSpamAction = 'MoveToJmf',
+
+        [Parameter()]
+        [System.String]
+        $HighConfidenceSpamQuarantineTag,
 
         [Parameter()]
         [System.Boolean]
@@ -188,6 +200,14 @@ function Get-TargetResource
         $ModifySubjectValue,
 
         [Parameter()]
+        [System.String]
+        $PhishQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        $SpamQuarantineTag,
+
+        [Parameter()]
         [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $PhishSpamAction = 'MoveToJmf',
@@ -254,7 +274,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration of HostedContentFilterPolicy for $Identity"
@@ -275,8 +299,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -298,7 +322,7 @@ function Get-TargetResource
         else
         {
             $AllowedSendersValues = $HostedContentFilterPolicy.AllowedSenders.Sender | Select-Object Address -ExpandProperty Address
-            $BlockedSendersValues =  $HostedContentFilterPolicy.BlockedSenders.Sender | Select-Object Address -ExpandProperty Address
+            $BlockedSendersValues = $HostedContentFilterPolicy.BlockedSenders.Sender | Select-Object Address -ExpandProperty Address
             $result = @{
                 Ensure                               = 'Present'
                 Identity                             = $Identity
@@ -308,6 +332,7 @@ function Get-TargetResource
                 AllowedSenders                       = $AllowedSendersValues
                 BlockedSenderDomains                 = $HostedContentFilterPolicy.BlockedSenderDomains.Domain
                 BlockedSenders                       = $BlockedSendersValues
+                BulkQuarantineTag                    = $HostedContentFilterPolicy.BulkQuarantineTag
                 BulkSpamAction                       = $HostedContentFilterPolicy.BulkSpamAction
                 BulkThreshold                        = $HostedContentFilterPolicy.BulkThreshold
                 DownloadLink                         = $HostedContentFilterPolicy.DownloadLink
@@ -318,7 +343,9 @@ function Get-TargetResource
                 EndUserSpamNotificationFrequency     = $HostedContentFilterPolicy.EndUserSpamNotificationFrequency
                 EndUserSpamNotificationLanguage      = $HostedContentFilterPolicy.EndUserSpamNotificationLanguage
                 HighConfidencePhishAction            = $HostedContentFilterPolicy.HighConfidencePhishAction
+                HighConfidencePhishQuarantineTag     = $HostedContentFilterPolicy.HighConfidencePhishQuarantineTag
                 HighConfidenceSpamAction             = $HostedContentFilterPolicy.HighConfidenceSpamAction
+                HighConfidenceSpamQuarantineTag      = $HostedContentFilterPolicy.HighConfidenceSpamQuarantineTag
                 InlineSafetyTipsEnabled              = $HostedContentFilterPolicy.InlineSafetyTipsEnabled
                 IncreaseScoreWithBizOrInfoUrls       = $HostedContentFilterPolicy.IncreaseScoreWithBizOrInfoUrls
                 IncreaseScoreWithImageLinks          = $HostedContentFilterPolicy.IncreaseScoreWithImageLinks
@@ -340,6 +367,8 @@ function Get-TargetResource
                 MarkAsSpamWebBugsInHtml              = $HostedContentFilterPolicy.MarkAsSpamWebBugsInHtml
                 ModifySubjectValue                   = $HostedContentFilterPolicy.ModifySubjectValue
                 PhishSpamAction                      = $HostedContentFilterPolicy.PhishSpamAction
+                PhishQuarantineTag                   = $HostedContentFilterPolicy.PhishQuarantineTag
+                SpamQuarantineTag                    = $HostedContentFilterPolicy.SpamQuarantineTag
                 QuarantineRetentionPeriod            = $HostedContentFilterPolicy.QuarantineRetentionPeriod
                 RedirectToRecipients                 = $HostedContentFilterPolicy.RedirectToRecipients
                 RegionBlockList                      = $HostedContentFilterPolicy.RegionBlockList
@@ -353,6 +382,7 @@ function Get-TargetResource
                 CertificateThumbprint                = $CertificateThumbprint
                 CertificatePath                      = $CertificatePath
                 CertificatePassword                  = $CertificatePassword
+                Managedidentity                      = $ManagedIdentity.IsPresent
                 TenantId                             = $TenantId
             }
 
@@ -368,26 +398,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -426,6 +442,10 @@ function Set-TargetResource
         $BlockedSenders = @(),
 
         [Parameter()]
+        [System.String]
+        $BulkQuarantineTag,
+
+        [Parameter()]
         [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $BulkSpamAction = 'MoveToJmf',
@@ -480,9 +500,17 @@ function Set-TargetResource
         $HighConfidencePhishAction = 'Quarantine',
 
         [Parameter()]
+        [System.String]
+        $HighConfidencePhishQuarantineTag,
+
+        [Parameter()]
         [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $HighConfidenceSpamAction = 'MoveToJmf',
+
+        [Parameter()]
+        [System.String]
+        $HighConfidenceSpamQuarantineTag,
 
         [Parameter()]
         [System.Boolean]
@@ -581,6 +609,14 @@ function Set-TargetResource
         $ModifySubjectValue,
 
         [Parameter()]
+        [System.String]
+        $PhishQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        $SpamQuarantineTag,
+
+        [Parameter()]
         [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $PhishSpamAction = 'MoveToJmf',
@@ -647,7 +683,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of HostedContentFilterPolicy for $Identity"
@@ -656,8 +696,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -680,16 +720,17 @@ function Set-TargetResource
     $HostedContentFilterPolicyParams.Remove('CertificateThumbprint') | Out-Null
     $HostedContentFilterPolicyParams.Remove('CertificatePath') | Out-Null
     $HostedContentFilterPolicyParams.Remove('CertificatePassword') | Out-Null
+    $HostedContentFilterPolicyParams.Remove('ManagedIdentity') | Out-Null
 
     if ($HostedContentFilterPolicyParams.Contains('EndUserSpamNotificationCustomFromAddress'))
     {
         $HostedContentFilterPolicyParams.Remove('EndUserSpamNotificationCustomFromAddress') | Out-Null
-        Write-Verbose -Message "The EndUserSpamNotificationCustomFromAddress parameter is no longer available and will be deprecated."
+        Write-Verbose -Message 'The EndUserSpamNotificationCustomFromAddress parameter is no longer available and will be deprecated.'
     }
     if ($HostedContentFilterPolicyParams.Contains('EndUserSpamNotificationCustomFromName'))
     {
         $HostedContentFilterPolicyParams.Remove('EndUserSpamNotificationCustomFromName') | Out-Null
-        Write-Verbose -Message "The EndUserSpamNotificationCustomFromName parameter is no longer available and will be deprecated."
+        Write-Verbose -Message 'The EndUserSpamNotificationCustomFromName parameter is no longer available and will be deprecated.'
     }
 
     if (('Present' -eq $Ensure ) -and ($null -eq $HostedContentFilterPolicy))
@@ -702,7 +743,7 @@ function Set-TargetResource
         New-HostedContentFilterPolicy @HostedContentFilterPolicyParams
         if ($PSBoundParameters.MakeDefault)
         {
-            Write-Verbose -Message "Updating Policy as default"
+            Write-Verbose -Message 'Updating Policy as default'
             Set-HostedContentFilterPolicy @HostedContentFilterPolicyParams -MakeDefault -Confirm:$false
         }
     }
@@ -711,7 +752,7 @@ function Set-TargetResource
         Write-Verbose -Message "Setting HostedContentFilterPolicy $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $HostedContentFilterPolicyParams)."
         if ($PSBoundParameters.MakeDefault)
         {
-            Write-Verbose -Message "Updating Policy as default"
+            Write-Verbose -Message 'Updating Policy as default'
             Set-HostedContentFilterPolicy @HostedContentFilterPolicyParams -MakeDefault -Confirm:$false
         }
         else
@@ -761,6 +802,10 @@ function Test-TargetResource
         $BlockedSenders = @(),
 
         [Parameter()]
+        [System.String]
+        $BulkQuarantineTag,
+
+        [Parameter()]
         [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $BulkSpamAction = 'MoveToJmf',
@@ -815,9 +860,17 @@ function Test-TargetResource
         $HighConfidencePhishAction = 'Quarantine',
 
         [Parameter()]
+        [System.String]
+        $HighConfidencePhishQuarantineTag,
+
+        [Parameter()]
         [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $HighConfidenceSpamAction = 'MoveToJmf',
+
+        [Parameter()]
+        [System.String]
+        $HighConfidenceSpamQuarantineTag,
 
         [Parameter()]
         [System.Boolean]
@@ -916,6 +969,14 @@ function Test-TargetResource
         $ModifySubjectValue,
 
         [Parameter()]
+        [System.String]
+        $PhishQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        $SpamQuarantineTag,
+
+        [Parameter()]
         [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $PhishSpamAction = 'MoveToJmf',
@@ -982,14 +1043,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -1012,6 +1077,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     if ($null -ne $ValuesToCheck.AllowedSenders -and $ValuesToCheck.AllowedSenders.Length -eq 0)
     {
@@ -1071,7 +1137,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -1082,8 +1152,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -1113,6 +1183,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
             Write-Host "    |---[$i/$($HostedContentFilterPolicies.Length)] $($HostedContentFilterPolicy.Identity)" -NoNewline
@@ -1134,27 +1205,15 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

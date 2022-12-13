@@ -4,7 +4,7 @@
     "title": "Azure AD",
     "iconName": "AADLogo",
     "extractionModes": {
-      "full": ["AADMSGroup", "AADServicePrincipal"]
+      "full": ["AADGroup", "AADServicePrincipal", "AADUser"]
     }
   },
   {
@@ -25,7 +25,7 @@
     "title": "Office 365",
     "iconName": "OfficeLogo",
     "extractionModes": {
-      "full": ["O365Group", "O365User"]
+      "full": ["O365Group"]
     }
   },
   {

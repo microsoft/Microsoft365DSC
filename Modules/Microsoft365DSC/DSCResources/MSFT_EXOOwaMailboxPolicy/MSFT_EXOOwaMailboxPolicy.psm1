@@ -20,6 +20,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AdditionalAccountsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $AdditionalStorageProvidersAvailable,
 
         [Parameter()]
@@ -45,6 +49,14 @@ function Get-TargetResource
         [Parameter()]
         [System.String[]]
         $BlockedMimeTypes,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsMailboxCreationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ChangeSettingsAccountEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -86,6 +98,10 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $ExternalSPMySiteHostURL,
+
+        [Parameter()]
+        [System.Boolean]
+        $FeedbackEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -142,6 +158,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $ItemsToOtherAccountsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $IsDefault,
 
         [Parameter()]
@@ -158,11 +178,19 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $MessagePreviewsDisabled,
+
+        [Parameter()]
+        [System.Boolean]
         $NotesEnabled,
 
         [Parameter()]
         [System.Boolean]
         $NpsSurveysEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OneWinNativeOutlookEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -187,6 +215,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $PersonalAccountsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $PersonalAccountCalendarsEnabled,
 
         [Parameter()]
@@ -204,6 +236,10 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $PrintWithoutDownloadEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ProjectMocaEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -248,6 +284,10 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $SetPhotoURL,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShowOnlineArchiveEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -341,7 +381,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting OWA Mailbox Policy configuration for $Name"
@@ -361,8 +405,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -370,7 +414,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
     try
     {
         $AllOwaMailboxPolicies = Get-OwaMailboxPolicy -ErrorAction Stop
@@ -388,6 +432,7 @@ function Get-TargetResource
                 Name                                                 = $OwaMailboxPolicy.Name
                 ActionForUnknownFileAndMIMETypes                     = $OwaMailboxPolicy.ActionForUnknownFileAndMIMETypes
                 ActiveSyncIntegrationEnabled                         = $OwaMailboxPolicy.ActiveSyncIntegrationEnabled
+                AdditionalAccountsEnabled                            = $OwaMailboxPolicy.AdditionalAccountsEnabled
                 AdditionalStorageProvidersAvailable                  = $OwaMailboxPolicy.AdditionalStorageProvidersAvailable
                 AllAddressListsEnabled                               = $OwaMailboxPolicy.AllAddressListsEnabled
                 AllowCopyContactsToDeviceAddressBook                 = $OwaMailboxPolicy.AllowCopyContactsToDeviceAddressBook
@@ -395,6 +440,8 @@ function Get-TargetResource
                 AllowedMimeTypes                                     = $OwaMailboxPolicy.AllowedMimeTypes
                 BlockedFileTypes                                     = $OwaMailboxPolicy.BlockedFileTypes
                 BlockedMimeTypes                                     = $OwaMailboxPolicy.BlockedMimeTypes
+                BookingsMailboxCreationEnabled                       = $OwaMailboxPolicy.BookingsMailboxCreationEnabled
+                ChangeSettingsAccountEnabled                         = $OwaMailboxPolicy.ChangeSettingsAccountEnabled
                 ClassicAttachmentsEnabled                            = $OwaMailboxPolicy.ClassicAttachmentsEnabled
                 ConditionalAccessPolicy                              = $OwaMailboxPolicy.ConditionalAccessPolicy
                 DefaultTheme                                         = $OwaMailboxPolicy.DefaultTheme
@@ -405,6 +452,7 @@ function Get-TargetResource
                 ExplicitLogonEnabled                                 = $OwaMailboxPolicy.ExplicitLogonEnabled
                 ExternalImageProxyEnabled                            = $OwaMailboxPolicy.ExternalImageProxyEnabled
                 ExternalSPMySiteHostURL                              = $OwaMailboxPolicy.ExternalSPMySiteHostURL
+                FeedbackEnabled                                      = $OwaMailboxPolicy.FeedbackEnabled
                 ForceSaveAttachmentFilteringEnabled                  = $OwaMailboxPolicy.ForceSaveAttachmentFilteringEnabled
                 ForceSaveFileTypes                                   = $OwaMailboxPolicy.ForceSaveFileTypes
                 ForceSaveMimeTypes                                   = $OwaMailboxPolicy.ForceSaveMimeTypes
@@ -418,22 +466,27 @@ function Get-TargetResource
                 InterestingCalendarsEnabled                          = $OwaMailboxPolicy.InterestingCalendarsEnabled
                 InternalSPMySiteHostURL                              = $OwaMailboxPolicy.InternalSPMySiteHostURL
                 IRMEnabled                                           = $OwaMailboxPolicy.IRMEnabled
+                ItemsToOtherAccountsEnabled                          = $OwaMailboxPolicy.ItemsToOtherAccountsEnabled
                 IsDefault                                            = $OwaMailboxPolicy.IsDefault
                 JournalEnabled                                       = $OwaMailboxPolicy.JournalEnabled
                 LocalEventsEnabled                                   = $OwaMailboxPolicy.LocalEventsEnabled
                 LogonAndErrorLanguage                                = $OwaMailboxPolicy.LogonAndErrorLanguage
+                MessagePreviewsDisabled                              = $OwaMailboxPolicy.MessagePreviewsDisabled
                 NotesEnabled                                         = $OwaMailboxPolicy.NotesEnabled
                 NpsSurveysEnabled                                    = $OwaMailboxPolicy.NpsSurveysEnabled
+                OneWinNativeOutlookEnabled                           = $OwaMailboxPolicy.OneWinNativeOutlookEnabled
                 OrganizationEnabled                                  = $OwaMailboxPolicy.OrganizationEnabled
                 OnSendAddinsEnabled                                  = $OwaMailboxPolicy.OnSendAddinsEnabled
                 OutboundCharset                                      = $OwaMailboxPolicy.OutboundCharset
                 OutlookBetaToggleEnabled                             = $OwaMailboxPolicy.OutlookBetaToggleEnabled
                 OWALightEnabled                                      = $OwaMailboxPolicy.OWALightEnabled
                 PersonalAccountCalendarsEnabled                      = $OwaMailboxPolicy.PersonalAccountCalendarsEnabled
+                PersonalAccountsEnabled                              = $OwaMailboxPolicy.PersonalAccountsEnabled
                 PhoneticSupportEnabled                               = $OwaMailboxPolicy.PhoneticSupportEnabled
                 PlacesEnabled                                        = $OwaMailboxPolicy.PlacesEnabled
                 PremiumClientEnabled                                 = $OwaMailboxPolicy.PremiumClientEnabled
                 PrintWithoutDownloadEnabled                          = $OwaMailboxPolicy.PrintWithoutDownloadEnabled
+                ProjectMocaEnabled                                   = $OwaMailboxPolicy.ProjectMocaEnabled
                 PublicFoldersEnabled                                 = $OwaMailboxPolicy.PublicFoldersEnabled
                 RecoverDeletedItemsEnabled                           = $OwaMailboxPolicy.RecoverDeletedItemsEnabled
                 ReferenceAttachmentsEnabled                          = $OwaMailboxPolicy.ReferenceAttachmentsEnabled
@@ -445,6 +498,7 @@ function Get-TargetResource
                 SearchFoldersEnabled                                 = $OwaMailboxPolicy.SearchFoldersEnabled
                 SetPhotoEnabled                                      = $OwaMailboxPolicy.SetPhotoEnabled
                 SetPhotoURL                                          = $OwaMailboxPolicy.SetPhotoURL
+                ShowOnlineArchiveEnabled                             = $OwaMailboxPolicy.ShowOnlineArchiveEnabled
                 SignaturesEnabled                                    = $OwaMailboxPolicy.SignaturesEnabled
                 SkipCreateUnifiedGroupCustomSharepointClassification = $OwaMailboxPolicy.SkipCreateUnifiedGroupCustomSharepointClassification
                 TeamSnapCalendarsEnabled                             = $OwaMailboxPolicy.TeamSnapCalendarsEnabled
@@ -462,11 +516,12 @@ function Get-TargetResource
                 WeatherEnabled                                       = $OwaMailboxPolicy.WeatherEnabled
                 WebPartsFrameOptionsType                             = $OwaMailboxPolicy.WebPartsFrameOptionsType
                 Ensure                                               = 'Present'
-                Credential                                   = $Credential
+                Credential                                           = $Credential
                 ApplicationId                                        = $ApplicationId
                 CertificateThumbprint                                = $CertificateThumbprint
                 CertificatePath                                      = $CertificatePath
                 CertificatePassword                                  = $CertificatePassword
+                Managedidentity                                      = $ManagedIdentity.IsPresent
                 TenantId                                             = $TenantId
             }
 
@@ -476,26 +531,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -521,6 +562,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AdditionalAccountsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $AdditionalStorageProvidersAvailable,
 
         [Parameter()]
@@ -546,6 +591,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $BlockedMimeTypes,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsMailboxCreationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ChangeSettingsAccountEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -587,6 +640,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $ExternalSPMySiteHostURL,
+
+        [Parameter()]
+        [System.Boolean]
+        $FeedbackEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -643,6 +700,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $ItemsToOtherAccountsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $IsDefault,
 
         [Parameter()]
@@ -659,11 +720,19 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $MessagePreviewsDisabled,
+
+        [Parameter()]
+        [System.Boolean]
         $NotesEnabled,
 
         [Parameter()]
         [System.Boolean]
         $NpsSurveysEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OneWinNativeOutlookEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -688,6 +757,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $PersonalAccountsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $PersonalAccountCalendarsEnabled,
 
         [Parameter()]
@@ -705,6 +778,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $PrintWithoutDownloadEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ProjectMocaEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -749,6 +826,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $SetPhotoURL,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShowOnlineArchiveEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -842,7 +923,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting OWA Mailbox Policy configuration for $Name"
@@ -853,8 +938,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -871,19 +956,20 @@ function Set-TargetResource
     }
 
     $SetOwaMailboxPolicyParams = $PSBoundParameters
-    $SetOwaMailboxPolicyParams.Remove("Credential") | Out-Null
-    $SetOwaMailboxPolicyParams.Remove("ApplicationId") | Out-Null
-    $SetOwaMailboxPolicyParams.Remove("TenantId") | Out-Null
-    $SetOwaMailboxPolicyParams.Remove("ApplicationSecret") | Out-Null
-    $SetOwaMailboxPolicyParams.Remove("CertificateThumbprint") | Out-Null
-    $SetOwaMailboxPolicyParams.Remove("CertificatePath") | Out-Null
-    $SetOwaMailboxPolicyParams.Remove("CertificatePassword") | Out-Null
-    $SetOwaMailboxPolicyParams.Remove("Ensure") | Out-Null
-    $SetOwaMailboxPolicyParams.Add("Identity", $Name)
-    $SetOwaMailboxPolicyParams.Remove("Name") | Out-Null
+    $SetOwaMailboxPolicyParams.Remove('Credential') | Out-Null
+    $SetOwaMailboxPolicyParams.Remove('ApplicationId') | Out-Null
+    $SetOwaMailboxPolicyParams.Remove('TenantId') | Out-Null
+    $SetOwaMailboxPolicyParams.Remove('ApplicationSecret') | Out-Null
+    $SetOwaMailboxPolicyParams.Remove('CertificateThumbprint') | Out-Null
+    $SetOwaMailboxPolicyParams.Remove('CertificatePath') | Out-Null
+    $SetOwaMailboxPolicyParams.Remove('CertificatePassword') | Out-Null
+    $SetOwaMailboxPolicyParams.Remove('ManagedIdentity') | Out-Null
+    $SetOwaMailboxPolicyParams.Remove('Ensure') | Out-Null
+    $SetOwaMailboxPolicyParams.Add('Identity', $Name)
+    $SetOwaMailboxPolicyParams.Remove('Name') | Out-Null
 
     # CASE: OWA Mailbox Policy doesn't exist but should;
-    if ($Ensure -eq "Present" -and $currentOwaMailboxPolicyConfig.Ensure -eq "Absent")
+    if ($Ensure -eq 'Present' -and $currentOwaMailboxPolicyConfig.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "OWA Mailbox Policy '$($Name)' does not exist but it should. Create and configure it."
         # Create OWA Mailbox Policy
@@ -894,13 +980,13 @@ function Set-TargetResource
 
     }
     # CASE: OWA Mailbox Policy exists but it shouldn't;
-    elseif ($Ensure -eq "Absent" -and $currentOwaMailboxPolicyConfig.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Absent' -and $currentOwaMailboxPolicyConfig.Ensure -eq 'Present')
     {
         Write-Verbose -Message "OWA Mailbox Policy '$($Name)' exists but it shouldn't. Remove it."
         Remove-OwaMailboxPolicy -Identity $Name -Confirm:$false
     }
     # CASE: OWA Mailbox Policy exists and it should, but has different values than the desired ones
-    elseif ($Ensure -eq "Present" -and $currentOwaMailboxPolicyConfig.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Present' -and $currentOwaMailboxPolicyConfig.Ensure -eq 'Present')
     {
         Write-Verbose -Message "OWA Mailbox Policy '$($Name)' already exists, but needs updating."
         Write-Verbose -Message "Setting OWA Mailbox Policy $($Name) with values: $(Convert-M365DscHashtableToString -Hashtable $SetOwaMailboxPolicyParams)"
@@ -930,6 +1016,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AdditionalAccountsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $AdditionalStorageProvidersAvailable,
 
         [Parameter()]
@@ -955,6 +1045,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $BlockedMimeTypes,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsMailboxCreationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ChangeSettingsAccountEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -996,6 +1094,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $ExternalSPMySiteHostURL,
+
+        [Parameter()]
+        [System.Boolean]
+        $FeedbackEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -1052,6 +1154,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $ItemsToOtherAccountsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $IsDefault,
 
         [Parameter()]
@@ -1068,11 +1174,19 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $MessagePreviewsDisabled,
+
+        [Parameter()]
+        [System.Boolean]
         $NotesEnabled,
 
         [Parameter()]
         [System.Boolean]
         $NpsSurveysEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OneWinNativeOutlookEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -1097,6 +1211,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $PersonalAccountsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $PersonalAccountCalendarsEnabled,
 
         [Parameter()]
@@ -1114,6 +1232,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $PrintWithoutDownloadEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ProjectMocaEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -1158,6 +1280,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $SetPhotoURL,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShowOnlineArchiveEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -1251,14 +1377,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -1279,6 +1409,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -1318,7 +1449,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -1328,8 +1463,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -1340,7 +1475,7 @@ function Export-TargetResource
     {
         [array]$AllOwaMailboxPolicies = Get-OwaMailboxPolicy -ErrorAction Stop
 
-        $dscContent = ""
+        $dscContent = ''
 
         if ($AllOwaMailboxPolicies.Length -eq 0)
         {
@@ -1357,11 +1492,12 @@ function Export-TargetResource
 
             $Params = @{
                 Name                  = $OwaMailboxPolicy.Name
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
             $Results = Get-TargetResource @Params
@@ -1382,27 +1518,15 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message "Error during Export:" `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

@@ -14,6 +14,7 @@
     "powershell.codeFormatting.ignoreOneLineBlock": false,
     "powershell.codeFormatting.alignPropertyValuePairs": true,
     "powershell.codeFormatting.preset": "Custom",
+    "powershell.codeFormatting.useConstantStrings": true,
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true,
     "files.exclude": {

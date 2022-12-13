@@ -2,88 +2,84 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-    -ChildPath "..\..\Unit" `
+    -ChildPath '..\..\Unit' `
     -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -ChildPath '\Stubs\Microsoft365.psm1' `
         -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\Stubs\Generic.psm1" `
+        -ChildPath '\Stubs\Generic.psm1' `
         -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\UnitTestHelper.psm1" `
+        -ChildPath '\UnitTestHelper.psm1' `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "EXOAtpPolicyForO365" -GenericStubModule $GenericStubPath
+    -DscResource 'EXOAtpPolicyForO365' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
-            $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.com", $secpasswd)
+            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@contoso.com', $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
             }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
-
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credentials"
+                return 'Credentials'
             }
 
             Mock -CommandName Get-PSSession -MockWith {
-
             }
 
             Mock -CommandName Remove-PSSession -MockWith {
-
             }
 
             Mock -CommandName Get-AtpPolicyForO365 -MockWith {
-
             }
 
             Mock -CommandName Set-AtpPolicyForO365 -MockWith {
-
             }
 
             Mock -CommandName Confirm-ImportedCmdletIsAvailable -MockWith {
                 return $true
             }
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
+            }
         }
 
         # Test contexts
-        Context -Name "AtpPolicyForO365 update not required." -Fixture {
+        Context -Name 'AtpPolicyForO365 update not required.' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance              = 'Yes'
-                    Ensure                        = 'Present'
-                    Identity                      = 'Default'
-                    Credential                    = $Credential
-                    AllowSafeDocsOpen             = $false
-                    BlockUrls                     = @()
-                    EnableATPForSPOTeamsODB       = $true
-                    TrackClicks                   = $true
+                    IsSingleInstance        = 'Yes'
+                    Ensure                  = 'Present'
+                    Identity                = 'Default'
+                    Credential              = $Credential
+                    AllowSafeDocsOpen       = $false
+                    EnableATPForSPOTeamsODB = $true
                 }
 
                 Mock -CommandName Get-AtpPolicyForO365 -MockWith {
                     return @{
-                        IsSingleInstance              = 'Yes'
-                        Ensure                        = 'Present'
-                        Identity                      = 'Default'
-                        Credential                    = $Credential
-                        AllowSafeDocsOpen             = $false
-                        BlockUrls                     = @()
-                        EnableATPForSPOTeamsODB       = $true
-                        TrackClicks                   = $true
+                        IsSingleInstance        = 'Yes'
+                        Ensure                  = 'Present'
+                        Identity                = 'Default'
+                        Credential              = $Credential
+                        AllowSafeDocsOpen       = $false
+                        BlockUrls               = @()
+                        EnableATPForSPOTeamsODB = $true
+                        TrackClicks             = $true
                     }
                 }
             }
@@ -93,28 +89,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "AtpPolicyForO365 update needed." -Fixture {
+        Context -Name 'AtpPolicyForO365 update needed.' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance              = 'Yes'
-                    Ensure                        = 'Present'
-                    Identity                      = 'Default'
-                    Credential                    = $Credential
-                    AllowSafeDocsOpen             = $false
-                    BlockUrls                     = @()
-                    EnableATPForSPOTeamsODB       = $true
-                    TrackClicks                   = $true
+                    IsSingleInstance        = 'Yes'
+                    Ensure                  = 'Present'
+                    Identity                = 'Default'
+                    Credential              = $Credential
+                    AllowSafeDocsOpen       = $false
+                    EnableATPForSPOTeamsODB = $true
                 }
                 Mock -CommandName Get-AtpPolicyForO365 -MockWith {
                     return @{
-                        IsSingleInstance              = 'Yes'
-                        Ensure                        = 'Present'
-                        Identity                      = 'Default'
-                        Credential                    = $Credential
-                        AllowSafeDocsOpen             = $true
-                        BlockUrls                     = @()
-                        EnableATPForSPOTeamsODB       = $false
-                        TrackClicks                   = $false
+                        IsSingleInstance        = 'Yes'
+                        Ensure                  = 'Present'
+                        Identity                = 'Default'
+                        Credential              = $Credential
+                        AllowSafeDocsOpen       = $true
+                        BlockUrls               = @()
+                        EnableATPForSPOTeamsODB = $false
+                        TrackClicks             = $false
                     }
                 }
             }
@@ -123,31 +117,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Should call the Set method" {
+            It 'Should call the Set method' {
                 Set-TargetResource @testParams
             }
         }
 
-        Context -Name "AtpPolicyForO365 does not exist" -Fixture {
+        Context -Name 'AtpPolicyForO365 does not exist' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance              = 'Yes'
-                    Ensure                        = 'Present'
-                    Identity                      = 'Invalid'
-                    Credential                    = $Credential
-                    AllowSafeDocsOpen             = $false
-                    BlockUrls                     = @()
-                    EnableATPForSPOTeamsODB       = $true
-                    TrackClicks                   = $true
+                    IsSingleInstance        = 'Yes'
+                    Ensure                  = 'Present'
+                    Identity                = 'Invalid'
+                    Credential              = $Credential
+                    AllowSafeDocsOpen       = $false
+                    EnableATPForSPOTeamsODB = $true
                 }
                 Mock -CommandName Get-AtpPolicyForO365 -MockWith {
                     return @{
-                        Ensure                        = 'Present'
-                        Identity                      = 'Default2' # Drift
-                        AllowSafeDocsOpen             = $false
-                        BlockUrls                     = @()
-                        EnableATPForSPOTeamsODB       = $false
-                        TrackClicks                   = $false
+                        Ensure                  = 'Present'
+                        Identity                = 'Default2' # Drift
+                        AllowSafeDocsOpen       = $false
+                        EnableATPForSPOTeamsODB = $false
+                        TrackClicks             = $false
                     }
                 }
             }
@@ -156,11 +147,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Should return Absent from the Get method" {
+            It 'Should return Absent from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
 
-            It "Should throw an Error from the Set method" {
+            It 'Should throw an Error from the Set method' {
                 { Set-TargetResource @testParams } | Should -Throw "EXOAtpPolicyForO365 configurations MUST specify Identity value of 'Default'"
             }
         }
@@ -173,11 +164,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-AtpPolicyForO365 -MockWith {
                     return @{
-                        Identity                      = 'Default'
-                        AllowSafeDocsOpen             = $false
-                        BlockUrls                     = @()
-                        EnableATPForSPOTeamsODB       = $false
-                        TrackClicks                   = $false
+                        Identity                = 'Default'
+                        AllowSafeDocsOpen       = $false
+                        BlockUrls               = @()
+                        EnableATPForSPOTeamsODB = $false
+                        TrackClicks             = $false
                     }
                 }
             }

@@ -78,7 +78,7 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -157,7 +157,7 @@ function Get-TargetResource
             }
 
             [Array]$Owners = Get-MgApplicationOwner -ApplicationId $AADApp.Id -All:$true | `
-                    Where-Object { !$_.DeletedDateTime }
+                Where-Object { !$_.DeletedDateTime }
             $OwnersValues = @()
             foreach ($Owner in $Owners)
             {
@@ -179,7 +179,8 @@ function Get-TargetResource
                 IdentifierUris            = $AADApp.IdentifierUris
                 KnownClientApplications   = $AADApp.Api.KnownClientApplications
                 LogoutURL                 = $AADApp.web.LogoutURL
-                Oauth2RequirePostResponse = $currentOauth2RequirePostResponseValue
+                #DEPRECATED
+                #Oauth2RequirePostResponse = $currentOauth2RequirePostResponseValue
                 PublicClient              = $isPublicClient
                 ReplyURLs                 = $AADApp.web.RedirectUris
                 Owners                    = $OwnersValues
@@ -200,22 +201,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -299,7 +290,7 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -349,6 +340,15 @@ function Set-TargetResource
     $currentParameters.Remove('ManagedIdentity') | Out-Null
     $backCurrentOwners = $currentAADApp.Owners
     $currentParameters.Remove('Owners') | Out-Null
+
+    if ($PSBoundParameters.ContainsKey("Oauth2RequirePostResponse"))
+    {
+        Write-Warning -Message "The Oauth2PermissionScopes parameter has been deprecated. Please remove it from your configuration."
+
+        # Passing in the Oauth2RequirePostResponse parameter returns an error when calling update-mgapplication.
+        # Removing it temporarly for the update scenario.
+        $currentParameters.Remove('Oauth2RequirePostResponse') | Out-Null
+    }
 
     if ($KnownClientApplications)
     {
@@ -447,9 +447,6 @@ function Set-TargetResource
     {
         $currentParameters.Remove('ObjectId') | Out-Null
 
-        # Passing in the Oauth2RequirePostResponse parameter returns an error when calling update-mgapplication.
-        # Removing it temporarly for the update scenario.
-        $currentParameters.Remove('Oauth2RequirePostResponse') | Out-Null
         $currentParameters.Add('ApplicationId', $currentAADApp.ObjectId)
         Write-Verbose -Message "Updating existing AzureAD Application {$DisplayName} with values:`r`n$($currentParameters | Out-String)"
         Update-MgApplication @currentParameters
@@ -498,17 +495,11 @@ function Set-TargetResource
                 }
                 catch
                 {
-                    try
-                    {
-                        Write-Verbose -Message $_
-                        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                            -TenantId $tenantIdValue
-                    }
-                    catch
-                    {
-                        Write-Verbose -Message $_
-                    }
+                    New-M365DSCLogEntry -Message 'Error updating data:' `
+                        -Exception $_ `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
                 }
             }
             elseif ($diff.SideIndicator -eq '<=')
@@ -528,17 +519,11 @@ function Set-TargetResource
                 }
                 catch
                 {
-                    try
-                    {
-                        Write-Verbose -Message $_
-                        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                            -TenantId $tenantIdValue
-                    }
-                    catch
-                    {
-                        Write-Verbose -Message $_
-                    }
+                    New-M365DSCLogEntry -Message 'Error updating data:' `
+                        -Exception $_ `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
                 }
             }
         }
@@ -676,7 +661,7 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -750,6 +735,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('Oauth2RequirePostResponse') | Out-Null # DEPRECATED
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -784,7 +770,7 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -865,22 +851,13 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }

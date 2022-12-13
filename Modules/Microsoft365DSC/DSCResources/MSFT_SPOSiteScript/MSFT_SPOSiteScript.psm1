@@ -21,9 +21,9 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.String]
@@ -34,7 +34,7 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -51,7 +51,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
@@ -60,8 +64,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -69,7 +73,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -113,30 +117,17 @@ function Get-TargetResource
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -163,9 +154,9 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.String]
@@ -176,7 +167,7 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -193,7 +184,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting Site Script: $Title"
@@ -202,8 +197,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -216,9 +211,9 @@ function Set-TargetResource
     # region Telemetry
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("Ensure") | Out-Null
-    $CurrentParameters.Remove("Credential") | Out-Null
-    $CurrentParameters.Remove("ApplicationSecret") | Out-Null
+    $CurrentParameters.Remove('Ensure') | Out-Null
+    $CurrentParameters.Remove('Credential') | Out-Null
+    $CurrentParameters.Remove('ApplicationSecret') | Out-Null
     # end region
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
@@ -239,11 +234,11 @@ function Set-TargetResource
         $circuitBreaker = 0
         do
         {
-            Write-Verbose -Message "Waiting for another 3 seconds for Site Script to be ready."
+            Write-Verbose -Message 'Waiting for another 3 seconds for Site Script to be ready.'
             Start-Sleep -Seconds 3
             try
             {
-                $siteScript = Get-PnPSiteScript -Identity $newSiteScript.Id  -ErrorAction Stop
+                $siteScript = Get-PnPSiteScript -Identity $newSiteScript.Id -ErrorAction Stop
             }
             catch
             {
@@ -254,7 +249,7 @@ function Set-TargetResource
 
         Write-Verbose -Message "Site Script, {$Title}, has been successfully created."
     }
-    elseif ($Ensure -eq "Absent" -and $CurrentValues.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Site Script {$Title}"
         try
@@ -271,10 +266,12 @@ function Set-TargetResource
         }
         catch
         {
-            if ($Error[0].Exception.Message -eq "Site Script Not Found")
+            if ($Error[0].Exception.Message -eq 'Site Script Not Found')
             {
                 $Message = "The Site Script, $($Title), does not exist."
-                New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+                New-M365DSCLogEntry -Message $Message `
+                    -Exception $_ `
+                    -Source $MyInvocation.MyCommand.ModuleName
                 throw $Message
             }
         }
@@ -335,9 +332,9 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.String]
@@ -348,7 +345,7 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -365,14 +362,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -385,7 +386,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $CurrentValues.Remove("Credential") | Out-Null
+    $CurrentValues.Remove('Credential') | Out-Null
     $keysToCheck = $CurrentValues.Keys
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -416,7 +417,7 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -429,7 +430,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
@@ -441,15 +446,15 @@ function Export-TargetResource
         Confirm-M365DSCDependencies
 
         #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-        $CommandName  = $MyInvocation.MyCommand
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
         $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
             -CommandName $CommandName `
             -Parameters $PSBoundParameters
         Add-M365DSCTelemetryEvent -Data $data
         #endregion
 
-        $dscContent = ""
+        $dscContent = ''
         $i = 1
 
         [array]$siteScripts = Get-PnPSiteScript -ErrorAction Stop
@@ -474,7 +479,8 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
-                Credential    = $Credential
+                Managedidentity       = $ManagedIdentity.IsPresent
+                Credential            = $Credential
             }
 
             $Results = Get-TargetResource @Params
@@ -496,27 +502,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

@@ -4,9 +4,17 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
+| **dataType** | Write | String | The type of the target assignment. |#microsoft.graph.groupAssignmentTarget, #microsoft.graph.allLicensedUsersAssignmentTarget, #microsoft.graph.allDevicesAssignmentTarget, #microsoft.graph.exclusionGroupAssignmentTarget, #microsoft.graph.configurationManagerCollectionAssignmentTarget|
+| **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. |none, include, exclude|
+| **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. ||
+| **groupId** | Write | String | The group Id that is the target of the assignment. ||
+| **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) ||
 | **DisplayName** | Key | String | Display name of the device general configuration policy for Android WorkProfile. ||
 | **Description** | Write | String | Description of the device general configuration policy for Android WorkProfile ||
+| **Assignments** | Write | InstanceArray[] | Assignments of the Intune Policy. ||
+| **PasswordBlockFaceUnlock** | Write | Boolean | Indicates whether or not to block face unlock. ||
 | **PasswordBlockFingerprintUnlock** | Write | Boolean | Indicates whether or not to block fingerprint unlock ||
+| **PasswordBlockIrisUnlock** | Write | Boolean | Indicates whether or not to block iris unlock. ||
 | **passwordBlockTrustAgents** | Write | Boolean | Indicates whether or not to block Smart Lock and other trust agents. ||
 | **PasswordExpirationDays** | Write | UInt32 | Number of days before the password expires ||
 | **PasswordMinimumLength** | Write | UInt32 | Minimum length of passwords ||
@@ -14,6 +22,8 @@
 | **PasswordPreviousPasswordBlockCount** | Write | UInt32 | Number of previous passwords to block ||
 | **PasswordSignInFailureCountBeforeFactoryReset** | Write | UInt32 | Number of sign in failures allowed before factory reset ||
 | **PasswordRequiredType** | Write | String | Type of password that is required |deviceDefault, lowSecurityBiometric, required, atLeastNumeric, numericComplex, atLeastAlphabetic, atLeastAlphanumeric, alphanumericWithSymbols|
+| **RequiredPasswordComplexity** | Write | String | Indicates the required device password complexity on Android. One of: NONE, LOW, MEDIUM, HIGH. |none, low, medium, high|
+| **WorkProfileAllowAppInstallsFromUnknownSources** | Write | Boolean | Indicates whether to allow installation of apps from unknown sources. ||
 | **WorkProfileDataSharingType** | Write | String | Type of data sharing that is allowed |deviceDefault, preventAny, allowPersonalToWork, noRestrictions|
 | **WorkProfileBlockNotificationsWhileDeviceLocked** | Write | Boolean | Indicates whether or not to block notifications while device locked ||
 | **WorkProfileBlockAddingAccounts** | Write | Boolean | Block users from adding/removing accounts in work profile ||
@@ -24,7 +34,9 @@
 | **WorkProfileBlockCrossProfileContactsSearch** | Write | Boolean | Block work profile contacts availability in personal profile ||
 | **WorkProfileBlockCrossProfileCopyPaste** | Write | Boolean | Boolean that indicates if the setting disallow cross profile copy paste is enabled ||
 | **WorkProfileDefaultAppPermissionPolicy** | Write | String | Type of password that is required |deviceDefault, prompt, autoGrant, autoDeny|
-| **WorkProfilePasswordBlockFingerprintUnlock** | Write | Boolean | Indicates whether or not to block fingerprint unlock for work profile ||
+| **WorkProfilePasswordBlockFaceUnlock** | Write | Boolean | Indicates whether or not to block face unlock in work profile. ||
+| **WorkProfilePasswordBlockFingerprintUnlock** | Write | Boolean | Indicates whether or not to block fingerprint unlock in work profile ||
+| **WorkProfilePasswordBlockIrisUnlock** | Write | Boolean | Indicates whether or not to block iris unlock in work profile. ||
 | **WorkProfilePasswordBlockTrustAgents** | Write | Boolean | Indicates whether or not to block Smart Lock and other trust agents for work profile ||
 | **WorkProfilePasswordExpirationDays** | Write | UInt32 | Number of days before the work profile password expires ||
 | **WorkProfilePasswordMinimumLength** | Write | UInt32 | Minimum length of work profile password ||
@@ -38,13 +50,18 @@
 | **WorkProfilePasswordPreviousPasswordBlockCount** | Write | UInt32 | Number of previous work profile passwords to block ||
 | **WorkProfilePasswordSignInFailureCountBeforeFactoryReset** | Write | UInt32 | Number of sign in failures allowed before work profile is removed and all corporate data deleted ||
 | **WorkProfilePasswordRequiredType** | Write | String | Type of work profile password that is required |deviceDefault, lowSecurityBiometric, required, atLeastNumeric, numericComplex, atLeastAlphabetic, atLeastAlphanumeric, alphanumericWithSymbols|
+| **WorkProfileRequiredPasswordComplexity** | Write | String | Indicates the required device password complexity on Android. One of: NONE, LOW, MEDIUM, HIGH in work profile. |none, low, medium, high|
 | **WorkProfileRequirePassword** | Write | Boolean | Password is required or not for work profile ||
 | **SecurityRequireVerifyApps** | Write | Boolean | Require the Android Verify apps feature is turned on ||
+| **VpnAlwaysOnPackageIdentifier** | Write | String | Package identifier for always-on VPN. ||
+| **VpnEnableAlwaysOnLockdownMode** | Write | Boolean | Enable lockdown mode for always-on VPN. ||
+| **WorkProfileAllowWidgets** | Write | Boolean | Allow widgets from work profile apps. ||
+| **WorkProfileBlockPersonalAppInstallsFromUnknownSources** | Write | Boolean | Prevent app installations from unknown sources in the personal profile. ||
 | **Ensure** | Write | String | Present ensures the site collection exists, absent ensures it is removed |Present, Absent|
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin ||
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
 | **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||
-| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory tenant used for authentication. ||
+| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. ||
 

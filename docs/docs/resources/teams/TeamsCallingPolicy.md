@@ -12,9 +12,12 @@
 | **AllowDelegation** | Write | Boolean | Enables inbound calls to be routed to delegates; allows delegates to make outbound calls on behalf of the users for whom they have delegated permissions. ||
 | **AllowCallForwardingToUser** | Write | Boolean | Enables call forwarding or simultaneous ringing of inbound calls to other users in your tenant. ||
 | **AllowCallForwardingToPhone** | Write | Boolean | Enables call forwarding or simultaneous ringing of inbound calls to any phone number. ||
+| **AllowCallRedirect** | Write | String | Setting this parameter provides the ability to configure call redirection capabilities on Teams phones. |Enabled, Disabled, UserOverride|
+| **AllowSIPDevicesCalling** | Write | Boolean | Determines whether the user is allowed to use SIP devices for calling on behalf of a Teams client. ||
 | **AllowWebPSTNCalling** | Write | Boolean | Allows PSTN calling from the Team web client ||
 | **PreventTollBypass** | Write | Boolean | Setting this parameter to True will send calls through PSTN and incur charges rather than going through the network and bypassing the tolls. ||
 | **BusyOnBusyEnabledType** | Write | String | Setting this parameter lets you configure how incoming calls are handled when a user is already in a call or conference or has a call placed on hold. New or incoming calls will be rejected with a busy signal. Valid options are: Enabled, Disabled and Unanswered. |Enabled, Disabled, Unanswered, UserOverride|
+| **CallRecordingExpirationDays** | Write | UInt32 | Sets the expiration of the recorded 1:1 calls. ||
 | **MusicOnHoldEnabledType** | Write | String | Setting this parameter allows you to turn on or turn off music on hold when a PSTN caller is placed on hold. It is turned on by default. Valid options are: Enabled, Disabled, UserOverride. For now setting the value to UserOverride is the same as Enabled. This setting does not apply to call park and SLA boss delegate features. Valid options are: Enabled, Disabled, UserOverride. |Enabled, Disabled, UserOverride|
 | **SafeTransferEnabled** | Write | String | This parameter is not available for use. Valid options are: Enabled, Disabled, UserOverride. |Enabled, Disabled, UserOverride|
 | **AllowCloudRecordingForCalls** | Write | Boolean | Setting this parameter to True will allows 1:1 Calls to be recorded. ||
@@ -23,7 +26,10 @@
 | **AutoAnswerEnabledType** | Write | String | This setting allows the tenant admin to enable or disable the Auto-Answer setting. Valid options are: Enabled, Disabled. |Enabled, Disabled|
 | **SpamFilteringEnabledType** | Write | String | Setting this parameter determines whether calls identified as Spam will be rejected or not (probably). Valid options are: Enabled, Disabled. |Enabled, Disabled|
 | **Ensure** | Write | String | Present ensures the policyexists, absent ensures it is removed. |Present, Absent|
-| **Credential** | Required | PSCredential | Credentials of the Teams Global Admin. ||
+| **Credential** | Write | PSCredential | Credentials of the Teams Admin. ||
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
+| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
 
 # TeamsCallingPolicy

@@ -431,7 +431,7 @@ Configuration Master
         #>
         #endregion
         #region O365
-        O365User JohnSmith
+        AADUSer JohnSmith
         {
             UserPrincipalName = "John.Smith@$Domain"
             DisplayName       = "John Smith"
@@ -456,7 +456,7 @@ Configuration Master
                 Members      = @("John.Smith@$Domain")
                 Credential   = $GlobalAdmin
                 Ensure       = "Present"
-                DependsOn    = "[O365User]JohnSmith"
+                DependsOn    = "[AADUSer]JohnSmith"
             }
         }
         #endregion
@@ -554,7 +554,7 @@ Configuration Master
             SCCaseHoldPolicy DemoCaseHoldPolicy
             {
                 Case                 = "Integration Case"
-                ExchangeLocation     = "John.Smith@$Domain"
+                ExchangeLocation     = @("John.Smith@$Domain","AllPublicFolderUnderRoot")
                 Name                 = "Integration Hold"
                 PublicFolderLocation = "All"
                 Comment              = "This is a test for integration"
@@ -648,11 +648,12 @@ Configuration Master
 
             SCRetentionCompliancePolicy RCPolicy
             {
-                Name             = "MyRCPolicy"
-                Comment          = "Test Policy"
-                ExchangeLocation = @()
-                Ensure           = "Present"
-                Credential       = $GlobalAdmin
+                Name                 = "MyRCPolicy"
+                Comment              = "Test Policy"
+                RestrictiveRetention = $False;
+                Enabled              = $True
+                Ensure               = "Present"
+                Credential           = $GlobalAdmin
             }
 
             SCRetentionComplianceRule RCRule
@@ -861,13 +862,14 @@ Configuration Master
 
         TeamsChannelsPolicy IntegrationChannelPolicy
         {
-            AllowOrgWideTeamCreation    = $True
-            AllowPrivateChannelCreation = $True
-            AllowPrivateTeamDiscovery   = $True
-            Description                 = $null
-            Identity                    = "Integration Channel Policy"
-            Ensure                      = "Present"
-            Credential                  = $GlobalAdmin
+            AllowChannelSharingToExternalUser             = $True;
+            AllowOrgWideTeamCreation                      = $True;
+            AllowPrivateChannelCreation                   = $True;
+            AllowSharedChannelCreation                    = $True;
+            AllowUserToParticipateInExternalSharedChannel = $True;
+            Identity                                      = "Integration Channel Policy"
+            Ensure                                        = "Present"
+            Credential                                    = $GlobalAdmin
         }
 
         TeamsEmergencyCallingPolicy EmergencyCallingPolicy
@@ -909,31 +911,6 @@ Configuration Master
             Credential                     = $GlobalAdmin
         }
 
-        TeamsMeetingPolicy DemoMeetingPolicy
-        {
-            AllowAnonymousUsersToStartMeeting          = $False
-            AllowChannelMeetingScheduling              = $True
-            AllowCloudRecording                        = $True
-            AllowExternalParticipantGiveRequestControl = $False
-            AllowIPVideo                               = $True
-            AllowMeetNow                               = $True
-            AllowOutlookAddIn                          = $True
-            AllowParticipantGiveRequestControl         = $True
-            AllowPowerPointSharing                     = $True
-            AllowPrivateMeetingScheduling              = $True
-            AllowSharedNotes                           = $True
-            AllowTranscription                         = $False
-            AllowPSTNUsersToBypassLobby                = $true
-            AllowWhiteboard                            = $True
-            AutoAdmittedUsers                          = "Everyone"
-            Description                                = "Integration Meeting Policy"
-            Identity                                   = "Integration Meeting Policy"
-            MediaBitRateKb                             = 50000
-            ScreenSharingMode                          = "EntireScreen"
-            Ensure                                     = "Present"
-            Credential                                 = $GlobalAdmin
-        }
-
         TeamsTeam TeamAlpha
         {
             DisplayName          = "Alpha Team"
@@ -957,7 +934,7 @@ Configuration Master
         {
             TeamName   = "Alpha Team"
             User       = "John.Smith@$Domain"
-            DependsOn  = @("[O365User]JohnSmith", "[TeamsTeam]TeamAlpha")
+            DependsOn  = @("[AADUSer]JohnSmith", "[TeamsTeam]TeamAlpha")
             Ensure     = "Present"
             Credential = $GlobalAdmin
         }

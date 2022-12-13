@@ -79,12 +79,12 @@ function Get-TargetResource
         $HideDefaultThemes,
 
         [Parameter()]
-        [ValidateSet("AllowExternalSharing", "BlockExternalSharing")]
+        [ValidateSet('AllowExternalSharing', 'BlockExternalSharing')]
         [System.String]
         $MarkNewFilesSensitiveByDefault,
 
         [Parameter()]
-        [ValidateSet("AllowFullAccess", "AllowLimitedAccess", "BlockAccess")]
+        [ValidateSet('AllowFullAccess', 'AllowLimitedAccess', 'BlockAccess')]
         [System.String]
         $ConditionalAccessPolicy,
 
@@ -97,9 +97,9 @@ function Get-TargetResource
         $IsFluidEnabled,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -114,7 +114,7 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -127,30 +127,34 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
-    Write-Verbose -Message "Getting configuration for SPO Tenant"
+    Write-Verbose -Message 'Getting configuration for SPO Tenant'
     $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    if ($PSBoundParameters.ContainsKey("RequireAcceptingAccountMatchInvitedAccount"))
+    if ($PSBoundParameters.ContainsKey('RequireAcceptingAccountMatchInvitedAccount'))
     {
-        Write-Warning "RequireAcceptingAccountMatchInvitedAccount is deprecated. Please remove this parameter from your configuration."
+        Write-Warning 'RequireAcceptingAccountMatchInvitedAccount is deprecated. Please remove this parameter from your configuration.'
     }
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -193,35 +197,23 @@ function Get-TargetResource
             CertificatePassword                           = $CertificatePassword
             CertificatePath                               = $CertificatePath
             CertificateThumbprint                         = $CertificateThumbprint
-            Ensure                                        = "Present"
+            Managedidentity                               = $ManagedIdentity.IsPresent
+            Ensure                                        = 'Present'
         }
     }
     catch
     {
-        if ($error[0].Exception.Message -like "No connection available")
+        if ($_.Exception.Message -like 'No connection available')
         {
-            Write-Verbose -Message "Make sure that you are connected to your SPOService"
+            Write-Verbose -Message 'Make sure that you are connected to your SPOService'
         }
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -306,12 +298,12 @@ function Set-TargetResource
         $HideDefaultThemes,
 
         [Parameter()]
-        [ValidateSet("AllowExternalSharing", "BlockExternalSharing")]
+        [ValidateSet('AllowExternalSharing', 'BlockExternalSharing')]
         [System.String]
         $MarkNewFilesSensitiveByDefault,
 
         [Parameter()]
-        [ValidateSet("AllowFullAccess","AllowLimitedAccess", "BlockAccess")]
+        [ValidateSet('AllowFullAccess', 'AllowLimitedAccess', 'BlockAccess')]
         [System.String]
         $ConditionalAccessPolicy,
 
@@ -320,9 +312,9 @@ function Set-TargetResource
         $DisabledWebPartIds,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -337,7 +329,7 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -350,17 +342,21 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
-    Write-Verbose -Message "Setting configuration for SPO Tenant"
+    Write-Verbose -Message 'Setting configuration for SPO Tenant'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -369,26 +365,27 @@ function Set-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters
 
-    if ($PSBoundParameters.ContainsKey("RequireAcceptingAccountMatchInvitedAccount"))
+    if ($PSBoundParameters.ContainsKey('RequireAcceptingAccountMatchInvitedAccount'))
     {
-        Write-Warning "RequireAcceptingAccountMatchInvitedAccount is deprecated. Please remove this parameter from your configuration."
+        Write-Warning 'RequireAcceptingAccountMatchInvitedAccount is deprecated. Please remove this parameter from your configuration.'
     }
 
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("Credential") | Out-Null
-    $CurrentParameters.Remove("IsSingleInstance") | Out-Null
-    $CurrentParameters.Remove("Ensure") | Out-Null
-    $CurrentParameters.Remove("ApplicationId") | Out-Null
-    $CurrentParameters.Remove("TenantId") | Out-Null
-    $CurrentParameters.Remove("CertificatePath") | Out-Null
-    $CurrentParameters.Remove("CertificatePassword") | Out-Null
-    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
-    $CurrentParameters.Remove("ApplicationSecret") | Out-Null
+    $CurrentParameters.Remove('Credential') | Out-Null
+    $CurrentParameters.Remove('IsSingleInstance') | Out-Null
+    $CurrentParameters.Remove('Ensure') | Out-Null
+    $CurrentParameters.Remove('ApplicationId') | Out-Null
+    $CurrentParameters.Remove('TenantId') | Out-Null
+    $CurrentParameters.Remove('CertificatePath') | Out-Null
+    $CurrentParameters.Remove('CertificatePassword') | Out-Null
+    $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
+    $CurrentParameters.Remove('ManagedIdentity') | Out-Null
+    $CurrentParameters.Remove('ApplicationSecret') | Out-Null
 
     if ($PublicCdnEnabled -eq $false)
     {
-        Write-Verbose -Message "The use of the public CDN is not enabled, for that the PublicCdnAllowedFileTypes parameter can not be configured and will be removed"
-        $CurrentParameters.Remove("PublicCdnAllowedFileTypes") | Out-Null
+        Write-Verbose -Message 'The use of the public CDN is not enabled, for that the PublicCdnAllowedFileTypes parameter can not be configured and will be removed'
+        $CurrentParameters.Remove('PublicCdnAllowedFileTypes') | Out-Null
     }
     $tenant = Set-PnPTenant @CurrentParameters
 }
@@ -473,12 +470,12 @@ function Test-TargetResource
         $HideDefaultThemes,
 
         [Parameter()]
-        [ValidateSet("AllowExternalSharing", "BlockExternalSharing")]
+        [ValidateSet('AllowExternalSharing', 'BlockExternalSharing')]
         [System.String]
         $MarkNewFilesSensitiveByDefault,
 
         [Parameter()]
-        [ValidateSet("AllowFullAccess", "AllowLimitedAccess", "BlockAccess")]
+        [ValidateSet('AllowFullAccess', 'AllowLimitedAccess', 'BlockAccess')]
         [System.String]
         $ConditionalAccessPolicy,
 
@@ -487,9 +484,9 @@ function Test-TargetResource
         $DisabledWebPartIds,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -504,7 +501,7 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -517,26 +514,30 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    if ($PSBoundParameters.ContainsKey("RequireAcceptingAccountMatchInvitedAccount"))
+    if ($PSBoundParameters.ContainsKey('RequireAcceptingAccountMatchInvitedAccount'))
     {
-        Write-Warning "RequireAcceptingAccountMatchInvitedAccount is deprecated. Please remove this parameter from your configuration."
+        Write-Warning 'RequireAcceptingAccountMatchInvitedAccount is deprecated. Please remove this parameter from your configuration.'
     }
 
-    Write-Verbose -Message "Testing configuration for SPO Tenant"
+    Write-Verbose -Message 'Testing configuration for SPO Tenant'
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
@@ -545,27 +546,27 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("IsSingleInstance", `
-            "MaxCompatibilityLevel", `
-            "SearchResolveExactEmailOrUPN", `
-            "OfficeClientADALDisabled", `
-            "LegacyAuthProtocolsEnabled", `
-            "RequireAcceptingAccountMatchInvitedAccount", `
-            "SignInAccelerationDomain", `
-            "UsePersistentCookiesForExplorerView", `
-            "UserVoiceForFeedbackEnabled", `
-            "PublicCdnEnabled", `
-            "PublicCdnAllowedFileTypes", `
-            "UseFindPeopleInPeoplePicker", `
-            "NotificationsInSharePointEnabled", `
-            "OwnerAnonymousNotification", `
-            "ApplyAppEnforcedRestrictionsToAdHocRecipients", `
-            "FilePickerExternalImageSearchEnabled", `
-            "HideDefaultThemes", `
-            "MarkNewFilesSensitiveByDefault", `
-            "ConditionalAccessPolicy", `
-            "DisabledWebPartIds"
-            )
+        -ValuesToCheck @('IsSingleInstance', `
+            'MaxCompatibilityLevel', `
+            'SearchResolveExactEmailOrUPN', `
+            'OfficeClientADALDisabled', `
+            'LegacyAuthProtocolsEnabled', `
+            'RequireAcceptingAccountMatchInvitedAccount', `
+            'SignInAccelerationDomain', `
+            'UsePersistentCookiesForExplorerView', `
+            'UserVoiceForFeedbackEnabled', `
+            'PublicCdnEnabled', `
+            'PublicCdnAllowedFileTypes', `
+            'UseFindPeopleInPeoplePicker', `
+            'NotificationsInSharePointEnabled', `
+            'OwnerAnonymousNotification', `
+            'ApplyAppEnforcedRestrictionsToAdHocRecipients', `
+            'FilePickerExternalImageSearchEnabled', `
+            'HideDefaultThemes', `
+            'MarkNewFilesSensitiveByDefault', `
+            'ConditionalAccessPolicy', `
+            'DisabledWebPartIds'
+    )
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
     return $TestResult
@@ -590,7 +591,7 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -603,7 +604,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
@@ -611,17 +616,17 @@ function Export-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
             -InboundParameters $PSBoundParameters
 
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
 
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
 
         $Params = @{
             IsSingleInstance      = 'Yes'
@@ -631,17 +636,18 @@ function Export-TargetResource
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
-            Credential    = $Credential
+            Managedidentity       = $ManagedIdentity.IsPresent
+            Credential            = $Credential
         }
 
         $Results = Get-TargetResource @Params
         if ($null -eq $Results.MaxCompatibilityLevel)
         {
-            $Results.Remove("MaxCompatibilityLevel") | Out-Null
+            $Results.Remove('MaxCompatibilityLevel') | Out-Null
         }
         if ($null -eq $Results.MinCompatibilityLevel)
         {
-            $Results.Remove("MinCompatibilityLevel") | Out-Null
+            $Results.Remove('MinCompatibilityLevel') | Out-Null
         }
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
             -Results $Results
@@ -659,27 +665,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message "Error during Export:" `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

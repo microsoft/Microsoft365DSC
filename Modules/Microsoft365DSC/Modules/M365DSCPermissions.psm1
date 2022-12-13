@@ -16,10 +16,10 @@ Specifies what type of Graph permissions need to get returned.
 Specifies the workload of the permissions that need to get returned.
 
 .Example
-Get-M365DSCCompiledPermissionList -ResourceNameList @('O365User', 'AADApplication') -Source 'Graph' -PermissionsType 'Delegated'
+Get-M365DSCCompiledPermissionList -ResourceNameList @('AADUSer', 'AADApplication') -Source 'Graph' -PermissionsType 'Delegated'
 
 .Example
-Get-M365DSCCompiledPermissionList -ResourceNameList @('O365User', 'AADApplication') -Source 'Graph' -PermissionsType 'Application'
+Get-M365DSCCompiledPermissionList -ResourceNameList @('AADUSer', 'AADApplication') -Source 'Graph' -PermissionsType 'Application'
 
 .Example
 Get-M365DSCCompiledPermissionList -ResourceNameList @('EXOAcceptedDomain') -Source 'Exchange'
@@ -232,7 +232,7 @@ Specifies that the permissions should be determined for all resources.
 For which action should the permissions be updated: Read or Update.
 
 .Example
-Update-M365DSCAllowedGraphScopes -ResourceNameList @('O365User', 'AADApplication') -Type 'Read'
+Update-M365DSCAllowedGraphScopes -ResourceNameList @('AADUSer', 'AADApplication') -Type 'Read'
 
 .Example
 Update-M365DSCAllowedGraphScopes -All -Type 'Update' -Environment 'Global'
@@ -1275,6 +1275,7 @@ function Update-M365DSCAzureAdApplication
 
     $graphSvcprincipal = Get-AzADServicePrincipal | Where-Object -FilterScript { $_.DisplayName -eq "Microsoft Graph" }
     $spSvcprincipal = Get-AzADServicePrincipal | Where-Object -FilterScript { $_.DisplayName -eq "Office 365 SharePoint Online" }
+    $exSvcprincipal = Get-AzADServicePrincipal | Where-Object -FilterScript { $_.DisplayName -eq "Office 365 Exchange Online" }
 
     Write-LogEntry " "
     Write-LogEntry "Checking existance of AD Application"
@@ -1295,7 +1296,7 @@ function Update-M365DSCAzureAdApplication
         $permissionsSet = $false
         foreach ($permission in $Permissions)
         {
-            if ($permission.Api -eq $null -or $permission.Api -notin @("Graph", "SharePoint"))
+            if ($permission.Api -eq $null -or $permission.Api -notin @("Graph", "SharePoint", "Exchange"))
             {
                 Write-LogEntry "Specified permission is invalid $(Convert-M365DscHashtableToString -Hashtable $permission)" -Type Warning
                 continue
@@ -1311,6 +1312,10 @@ function Update-M365DSCAzureAdApplication
                 "SharePoint"
                 {
                     $svcprincipal = $spSvcprincipal
+                }
+                "Exchange"
+                {
+                    $svcprincipal = $exSvcprincipal
                 }
             }
 

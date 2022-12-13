@@ -47,210 +47,8 @@ function Get-TargetResource
         $RouteAllMessagesViaOnPremises,
 
         [Parameter()]
-        [System.String[]]
-        $SmartHosts = @(),
-
-        [Parameter()]
         [System.Boolean]
-        $TestMode,
-
-        [Parameter()]
-        [System.String]
-        $TlsDomain,
-
-        [Parameter()]
-        [ValidateSet('EncryptionOnly', 'CertificateValidation', 'DomainValidation')]
-        [System.String]
-        $TlsSettings,
-
-        [Parameter()]
-        [System.Boolean]
-        $UseMxRecord,
-
-        [Parameter()]
-        [System.String[]]
-        $ValidationRecipients = @(),
-
-        [Parameter()]
-        [ValidateSet("Present", "Absent")]
-        [System.String]
-        $Ensure = "Present",
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $Credential,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
-
-        [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
-    )
-    Write-Verbose -Message "Getting configuration of OutBoundConnector for $($Identity)"
-
-    if ($Global:CurrentModeIsExport)
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-    try
-    {
-        $OutBoundConnectors = Get-OutBoundConnector -IncludeTestModeConnectors:$true -ErrorAction Stop
-
-        $OutBoundConnector = $OutBoundConnectors | Where-Object -FilterScript { $_.Identity -eq $Identity }
-        if ($null -eq $OutBoundConnector)
-        {
-            Write-Verbose -Message "OutBoundConnector $($Identity) does not exist."
-            return $nullReturn
-        }
-        else
-        {
-            $ConnectorSourceValue = $OutBoundConnector.ConnectorSource
-            if ($ConnectorSourceValue -eq 'AdminUI' -or `
-                    [System.String]::IsNullOrEmpty($ConnectorSourceValue))
-            {
-                $ConnectorSourceValue = 'Default'
-            }
-
-            $result = @{
-                Identity                      = $Identity
-                AllAcceptedDomains            = $OutBoundConnector.AllAcceptedDomains
-                CloudServicesMailEnabled      = $OutBoundConnector.CloudServicesMailEnabled
-                Comment                       = $OutBoundConnector.Comment
-                ConnectorSource               = $ConnectorSourceValue
-                ConnectorType                 = $OutBoundConnector.ConnectorType
-                Enabled                       = $OutBoundConnector.Enabled
-                IsTransportRuleScoped         = $OutBoundConnector.IsTransportRuleScoped
-                RecipientDomains              = $OutBoundConnector.RecipientDomains
-                RouteAllMessagesViaOnPremises = $OutBoundConnector.RouteAllMessagesViaOnPremises
-                SmartHosts                    = $OutBoundConnector.SmartHosts
-                TestMode                      = $OutBoundConnector.TestMode
-                TlsDomain                     = $OutBoundConnector.TlsDomain
-                TlsSettings                   = $OutBoundConnector.TlsSettings
-                UseMxRecord                   = $OutBoundConnector.UseMxRecord
-                ValidationRecipients          = $OutBoundConnector.ValidationRecipients
-                Credential            = $Credential
-                Ensure                        = 'Present'
-                ApplicationId                 = $ApplicationId
-                CertificateThumbprint         = $CertificateThumbprint
-                CertificatePath               = $CertificatePath
-                CertificatePassword           = $CertificatePassword
-                TenantId                      = $TenantId
-            }
-
-            Write-Verbose -Message "Found OutBoundConnector $($Identity)"
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-            return $result
-        }
-    }
-    catch
-    {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return $nullReturn
-    }
-}
-
-function Set-TargetResource
-{
-    [CmdletBinding()]
-
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllAcceptedDomains,
-
-        [Parameter()]
-        [System.Boolean]
-        $CloudServicesMailEnabled,
-
-        [Parameter()]
-        [System.String]
-        $Comment,
-
-        [Parameter()]
-        [ValidateSet('Default', 'Migrated', 'HybridWizard')]
-        [System.String]
-        $ConnectorSource,
-
-        [Parameter()]
-        [ValidateSet('OnPremises', 'Partner')]
-        [System.String]
-        $ConnectorType,
-
-        [Parameter()]
-        [System.Boolean]
-        $Enabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $IsTransportRuleScoped,
-
-        [Parameter()]
-        [System.String[]]
-        $RecipientDomains = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $RouteAllMessagesViaOnPremises,
+        $SenderRewritingEnabled,
 
         [Parameter()]
         [System.String[]]
@@ -304,14 +102,220 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
+    )
+    Write-Verbose -Message "Getting configuration of OutBoundConnector for $($Identity)"
+
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters
+    }
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = 'Absent'
+    try
+    {
+        $OutBoundConnectors = Get-OutBoundConnector -IncludeTestModeConnectors:$true -ErrorAction Stop
+
+        $OutBoundConnector = $OutBoundConnectors | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        if ($null -eq $OutBoundConnector)
+        {
+            Write-Verbose -Message "OutBoundConnector $($Identity) does not exist."
+            return $nullReturn
+        }
+        else
+        {
+            $ConnectorSourceValue = $OutBoundConnector.ConnectorSource
+            if ($ConnectorSourceValue -eq 'AdminUI' -or `
+                    [System.String]::IsNullOrEmpty($ConnectorSourceValue))
+            {
+                $ConnectorSourceValue = 'Default'
+            }
+
+            $result = @{
+                Identity                      = $Identity
+                AllAcceptedDomains            = $OutBoundConnector.AllAcceptedDomains
+                CloudServicesMailEnabled      = $OutBoundConnector.CloudServicesMailEnabled
+                Comment                       = $OutBoundConnector.Comment
+                ConnectorSource               = $ConnectorSourceValue
+                ConnectorType                 = $OutBoundConnector.ConnectorType
+                Enabled                       = $OutBoundConnector.Enabled
+                IsTransportRuleScoped         = $OutBoundConnector.IsTransportRuleScoped
+                RecipientDomains              = $OutBoundConnector.RecipientDomains
+                RouteAllMessagesViaOnPremises = $OutBoundConnector.RouteAllMessagesViaOnPremises
+                SenderRewritingEnabled        = $OutBoundConnector.SenderRewritingEnabled
+                SmartHosts                    = $OutBoundConnector.SmartHosts
+                TestMode                      = $OutBoundConnector.TestMode
+                TlsDomain                     = $OutBoundConnector.TlsDomain
+                TlsSettings                   = $OutBoundConnector.TlsSettings
+                UseMxRecord                   = $OutBoundConnector.UseMxRecord
+                ValidationRecipients          = $OutBoundConnector.ValidationRecipients
+                Credential                    = $Credential
+                Ensure                        = 'Present'
+                ApplicationId                 = $ApplicationId
+                CertificateThumbprint         = $CertificateThumbprint
+                CertificatePath               = $CertificatePath
+                CertificatePassword           = $CertificatePassword
+                Managedidentity               = $ManagedIdentity.IsPresent
+                TenantId                      = $TenantId
+            }
+
+            Write-Verbose -Message "Found OutBoundConnector $($Identity)"
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $nullReturn
+    }
+}
+
+function Set-TargetResource
+{
+    [CmdletBinding()]
+
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllAcceptedDomains,
+
+        [Parameter()]
+        [System.Boolean]
+        $CloudServicesMailEnabled,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [ValidateSet('Default', 'Migrated', 'HybridWizard')]
+        [System.String]
+        $ConnectorSource,
+
+        [Parameter()]
+        [ValidateSet('OnPremises', 'Partner')]
+        [System.String]
+        $ConnectorType,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsTransportRuleScoped,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomains = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $RouteAllMessagesViaOnPremises,
+
+        [Parameter()]
+        [System.Boolean]
+        $SenderRewritingEnabled,
+
+        [Parameter()]
+        [System.String[]]
+        $SmartHosts = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $TestMode,
+
+        [Parameter()]
+        [System.String]
+        $TlsDomain,
+
+        [Parameter()]
+        [ValidateSet('EncryptionOnly', 'CertificateValidation', 'DomainValidation')]
+        [System.String]
+        $TlsSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseMxRecord,
+
+        [Parameter()]
+        [System.String[]]
+        $ValidationRecipients = @(),
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -333,19 +337,20 @@ function Set-TargetResource
     $OutBoundConnectorParams.Remove('CertificateThumbprint') | Out-Null
     $OutBoundConnectorParams.Remove('CertificatePath') | Out-Null
     $OutBoundConnectorParams.Remove('CertificatePassword') | Out-Null
+    $OutBoundConnectorParams.Remove('ManagedIdentity') | Out-Null
 
 
     if (('Present' -eq $Ensure ) -and ($null -eq $OutBoundConnector))
     {
         Write-Verbose -Message "Creating OutBoundConnector $($Identity)."
-        $OutBoundConnectorParams.Add("Name", $Identity)
+        $OutBoundConnectorParams.Add('Name', $Identity)
         $OutBoundConnectorParams.Remove('Identity') | Out-Null
-        $OutBoundConnectorParams.Remove("ValidationRecipients") | Out-Null
+        $OutBoundConnectorParams.Remove('ValidationRecipients') | Out-Null
         New-OutBoundConnector @OutBoundConnectorParams
 
         if ($null -ne $ValidationRecipients)
         {
-            Write-Verbose -Message "Updating ValidationRecipients"
+            Write-Verbose -Message 'Updating ValidationRecipients'
             Set-OutboundConnector -Identity $Identity -ValidationRecipients $ValidationRecipients -Confirm:$false
         }
     }
@@ -410,6 +415,10 @@ function Test-TargetResource
         $RouteAllMessagesViaOnPremises,
 
         [Parameter()]
+        [System.Boolean]
+        $SenderRewritingEnabled,
+
+        [Parameter()]
         [System.String[]]
         $SmartHosts = @(),
 
@@ -435,9 +444,9 @@ function Test-TargetResource
         $ValidationRecipients = @(),
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -461,14 +470,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -489,6 +502,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -529,7 +543,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -539,8 +557,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -558,7 +576,7 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
-        $dscContent = ""
+        $dscContent = ''
         $i = 1
         foreach ($OutboundConnector in $OutboundConnectors)
         {
@@ -566,11 +584,12 @@ function Export-TargetResource
 
             $Params = @{
                 Identity              = $OutboundConnector.Identity
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
             $Results = Get-TargetResource @Params
@@ -591,27 +610,15 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message "Error during Export:" `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 Export-ModuleMember -Function *-TargetResource

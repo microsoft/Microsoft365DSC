@@ -22,12 +22,12 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Disabled","Enabled","FollowOfficePreview")]
+        [ValidateSet('Disabled', 'Enabled', 'FollowOfficePreview')]
         $AllowPublicPreview,
 
         [Parameter()]
         [System.UInt32]
-        [ValidateRange(0,6)]
+        [ValidateRange(0, 6)]
         $UpdateDayOfWeek,
 
         [Parameter()]
@@ -43,9 +43,21 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -54,18 +66,18 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Checking the Teams Update Management Policies"
+    Write-Verbose -Message 'Checking the Teams Update Management Policies'
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
     try
     {
         $policy = Get-CsTeamsUpdateManagementPolicy -Identity $Identity `
@@ -78,41 +90,35 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Found Teams Update Management Policy with Identity {$Identity}"
-        return @{
-            Identity            = $policy.Identity
-            Description         = $policy.Description
-            AllowManagedUpdates = $policy.AllowManagedUpdates
-            AllowPreview        = $policy.AllowPreview
-            AllowPublicPreview  = $policy.AllowPublicPreview
-            UpdateDayOfWeek     = $policy.UpdateDayOfWeek
-            UpdateTime          = $policy.UpdateTime
-            UpdateTimeOfDay     = $policy.UpdateTimeOfDay.Split('T')[1].Replace('Z', '')
-            Ensure              = 'Present'
-            Credential          = $Credential
+        $results =  @{
+            Identity              = $policy.Identity
+            Description           = $policy.Description
+            AllowManagedUpdates   = $policy.AllowManagedUpdates
+            AllowPreview          = $policy.AllowPreview
+            AllowPublicPreview    = $policy.AllowPublicPreview
+            UpdateDayOfWeek       = $policy.UpdateDayOfWeek
+            UpdateTime            = $policy.UpdateTime
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
+        if (-not [System.String]::IsNullOrEmpty($policy.UpdateTimeOfDay))
+        {
+            $updateTimeOfDayValue = $policy.UpdateTimeOfDay.ToShortTimeString()
+            $results.Add('UpdateTimeOfDay', $updateTimeOfDayValue)
+        }
+        return $results
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -140,12 +146,12 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Disabled","Enabled","FollowOfficePreview")]
+        [ValidateSet('Disabled', 'Enabled', 'FollowOfficePreview')]
         $AllowPublicPreview,
 
         [Parameter()]
         [System.UInt32]
-        [ValidateRange(0,6)]
+        [ValidateRange(0, 6)]
         $UpdateDayOfWeek,
 
         [Parameter()]
@@ -161,17 +167,29 @@ function Set-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -188,8 +206,11 @@ function Set-TargetResource
     {
         Write-Verbose "Creating new Teams Update Management Policy {$Identity}"
         $newParams = $PSBoundParameters
-        $newParams.Remove("Ensure") | Out-Null
-        $newParams.Remove("Credential") | Out-Null
+        $newParams.Remove('Ensure') | Out-Null
+        $newParams.Remove('Credential') | Out-Null
+        $newParams.Remove('ApplicationId') | Out-Null
+        $newParams.Remove('TenantId') | Out-Null
+        $newParams.Remove('CertificateThumbprint') | Out-Null
 
         New-CsTeamsUpdateManagementPolicy @newParams | Out-Null
     }
@@ -197,8 +218,11 @@ function Set-TargetResource
     {
         Write-Verbose "Updating existing Teams Update Management Policy {$Identity}"
         $setParams = $PSBoundParameters
-        $setParams.Remove("Ensure") | Out-Null
-        $setParams.Remove("Credential") | Out-Null
+        $setParams.Remove('Ensure') | Out-Null
+        $setParams.Remove('Credential') | Out-Null
+        $setParams.Remove('ApplicationId') | Out-Null
+        $setParams.Remove('TenantId') | Out-Null
+        $setParams.Remove('CertificateThumbprint') | Out-Null
 
         Set-CsTeamsUpdateManagementPolicy @setParams | Out-Null
     }
@@ -234,12 +258,12 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Disabled","Enabled","FollowOfficePreview")]
+        [ValidateSet('Disabled', 'Enabled', 'FollowOfficePreview')]
         $AllowPublicPreview,
 
         [Parameter()]
         [System.UInt32]
-        [ValidateRange(0,6)]
+        [ValidateRange(0, 6)]
         $UpdateDayOfWeek,
 
         [Parameter()]
@@ -255,16 +279,28 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -278,7 +314,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -296,9 +331,21 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -307,18 +354,18 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $organization = ""
-    if ($Credential.UserName.Contains("@"))
+    $organization = ''
+    if ($null -ne $Credential -and $Credential.UserName.Contains('@'))
     {
-        $organization = $Credential.UserName.Split("@")[1]
+        $organization = $Credential.UserName.Split('@')[1]
     }
 
     try
@@ -331,23 +378,20 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity.Replace('Tag:', ''))" -NoNewline
             $params = @{
-                Identity   = $policy.Identity.Replace("Tag:", "")
-                Credential = $Credential
+                Identity              = $policy.Identity.Replace('Tag:', '')
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
             }
             $result = Get-TargetResource @params
-            $result = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Result
-            $currentDSCBlock = "        TeamsUpdateManagementPolicy " + (New-Guid).ToString() + "`r`n"
-            $currentDSCBlock += "        {`r`n"
-            $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
-                -ParameterName "Credential"
-            if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
-            }
-            $currentDSCBlock += $partialContent
-            $currentDSCBlock += "        }`r`n"
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $result
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -359,27 +403,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

@@ -4,7 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **DisplayName** | Key | String | Display name of the iOS App Protection Policy. ||
+| **Identity** | Write | String | Identity of the iOS App Protection Policy. ||
+| **DisplayName** | Write | String | Display name of the iOS App Protection Policy. ||
 | **Description** | Write | String | Description of the iOS App Protection Policy. ||
 | **PeriodOfflineBeforeAccessCheck** | Write | String | The period after which access is checked when the device is not connected to the internet. ||
 | **PeriodOnlineBeforeAccessCheck** | Write | String | The period after which access is checked when the device is connected to the internet. ||
@@ -31,20 +32,35 @@
 | **FaceIdBlocked** | Write | Boolean | Indicates whether use of the FaceID is allowed in place of a pin if PinRequired is set to True. ||
 | **ManagedBrowser** | Write | String | Indicates in which managed browser(s) that internet links should be opened. When this property is configured, ManagedBrowserToOpenLinksRequired should be true. Possible values are: notConfigured, microsoftEdge. |notConfigured, microsoftEdge|
 | **MinimumRequiredAppVersion** | Write | String | Versions less than the specified version will block the managed app from accessing company data. ||
+| **MinimumWarningAppVersion** | Write | String | Versions less than the specified version will result in warning message on the managed app from accessing company data. ||
 | **MinimumRequiredOSVersion** | Write | String | Versions less than the specified version will block the managed app from accessing company data. ||
-| **MinimumRequiredSdkVersion** | Write | String | Versions less than the specified version will block the managed app from accessing company data. ||
-| **MinimumWarningAppVersion** | Write | String | Versions less than the specified version will result in warning message on the managed app ||
 | **MinimumWarningOSVersion** | Write | String | Versions less than the specified version will result in warning message on the managed app from accessing company data. ||
-| **AppDataEncryptionType** | Write | String | Require app data to be encrypted. ||
+| **MinimumRequiredSdkVersion** | Write | String | Versions less than the specified version will block the managed app from accessing company data. ||
+| **MinimumWipeOsVersion** | Write | String | Versions less than or equal to the specified version will wipe the managed app and the associated company data. ||
+| **MinimumWipeAppVersion** | Write | String | Versions less than or equal to the specified version will wipe the managed app and the associated company data. ||
+| **AppActionIfDeviceComplianceRequired** | Write | String | Defines a managed app behavior, either block or wipe, when the device is either rooted or jailbroken, if DeviceComplianceRequired is set to true. |block, wipe, warn|
+| **AppActionIfMaximumPinRetriesExceeded** | Write | String | Defines a managed app behavior, either block or wipe, based on maximum number of incorrect pin retry attempts. |block, wipe, warn|
+| **PinRequiredInsteadOfBiometricTimeout** | Write | String | Timeout in minutes for an app pin instead of non biometrics passcode . ||
+| **AllowedOutboundClipboardSharingExceptionLength** | Write | UInt32 | Specify the number of characters that may be cut or copied from Org data and accounts to any application. This setting overrides the AllowedOutboundClipboardSharingLevel restriction. Default value of '0' means no exception is allowed. ||
+| **NotificationRestriction** | Write | String | Specify app notification restriction. |allow, blockOrganizationalData, block|
+| **TargetedAppManagementLevels** | Write | String | The intended app management levels for this policy. |unspecified, unmanaged, mdm, androidEnterprise|
+| **AppDataEncryptionType** | Write | String | Require app data to be encrypted. |useDeviceSettings, afterDeviceRestart, whenDeviceLockedExceptOpenFiles, whenDeviceLocked|
+| **ExemptedAppProtocols** | Write | StringArray[] | Apps in this list will be exempt from the policy and will be able to receive data from managed apps. ||
+| **MinimumWipeSdkVersion** | Write | String | Versions less than the specified version will block the managed app from accessing company data. ||
+| **AllowedIosDeviceModels** | Write | StringArray[] | Semicolon seperated list of device models allowed, as a string, for the managed app to work. ||
+| **AppActionIfIosDeviceModelNotAllowed** | Write | String | Defines a managed app behavior, either block or wipe, if the specified device model is not allowed. |block, wipe, warn|
+| **FilterOpenInToOnlyManagedApps** | Write | Boolean | Defines if open-in operation is supported from the managed app to the filesharing locations selected. This setting only applies when AllowedOutboundDataTransferDestinations is set to ManagedApps and DisableProtectionOfManagedOutboundOpenInData is set to False. ||
+| **DisableProtectionOfManagedOutboundOpenInData** | Write | Boolean | Disable protection of data transferred to other apps through IOS OpenIn option. This setting is only allowed to be True when AllowedOutboundDataTransferDestinations is set to ManagedApps. ||
+| **ProtectInboundDataFromUnknownSources** | Write | Boolean | Protect incoming data from unknown source. This setting is only allowed to be True when AllowedInboundDataTransferSources is set to AllApps. ||
+| **CustomBrowserProtocol** | Write | String | A custom browser protocol to open weblink on iOS. ||
 | **Apps** | Write | StringArray[] | List of IDs representing the iOS apps controlled by this protection policy. ||
 | **Assignments** | Write | StringArray[] | List of IDs of the groups assigned to this iOS Protection Policy. ||
 | **ExcludedGroups** | Write | StringArray[] | List of IDs of the groups that are excluded from this iOS Protection Policy. ||
-| **CustomBrowserProtocol** | Write | String | A custom browser protocol to open weblink on iOS. ||
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. |Present, Absent|
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin. ||
 | **ApplicationId** | Write | String | ID of the Azure Active Directory application to authenticate with. ||
 | **TenantId** | Write | String | ID of the Azure Active Directory tenant used for authentication. ||
-| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory tenant used for authentication. ||
+| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. ||
 

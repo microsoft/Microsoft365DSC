@@ -1,7 +1,8 @@
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneAppProtectionPolicyiOS")]
 class MSFT_IntuneAppProtectionPolicyiOS : OMI_BaseResource
 {
-    [Key, Description("Display name of the iOS App Protection Policy.")] String DisplayName;
+    [Write, Description("Identity of the iOS App Protection Policy.")] String Identity;
+    [Write, Description("Display name of the iOS App Protection Policy.")] String DisplayName;
     [Write, Description("Description of the iOS App Protection Policy.")] String Description;
     [Write, Description("The period after which access is checked when the device is not connected to the internet.")] String PeriodOfflineBeforeAccessCheck;
     [Write, Description("The period after which access is checked when the device is connected to the internet.")] String PeriodOnlineBeforeAccessCheck;
@@ -28,20 +29,35 @@ class MSFT_IntuneAppProtectionPolicyiOS : OMI_BaseResource
     [Write, Description("Indicates whether use of the FaceID is allowed in place of a pin if PinRequired is set to True.")] Boolean FaceIdBlocked;
     [Write, Description("Indicates in which managed browser(s) that internet links should be opened. When this property is configured, ManagedBrowserToOpenLinksRequired should be true. Possible values are: notConfigured, microsoftEdge."), ValueMap{"notConfigured","microsoftEdge"}, Values{"notConfigured","microsoftEdge"}] String ManagedBrowser;
     [Write, Description("Versions less than the specified version will block the managed app from accessing company data.")] String MinimumRequiredAppVersion;
+    [Write, Description("Versions less than the specified version will result in warning message on the managed app from accessing company data.")] String MinimumWarningAppVersion;
     [Write, Description("Versions less than the specified version will block the managed app from accessing company data.")] String MinimumRequiredOSVersion;
-    [Write, Description("Versions less than the specified version will block the managed app from accessing company data.")] String MinimumRequiredSdkVersion;
-    [Write, Description("Versions less than the specified version will result in warning message on the managed app")] String MinimumWarningAppVersion;
     [Write, Description("Versions less than the specified version will result in warning message on the managed app from accessing company data.")] String MinimumWarningOSVersion;
-    [Write, Description("Require app data to be encrypted.")] String AppDataEncryptionType;
+    [Write, Description("Versions less than the specified version will block the managed app from accessing company data.")] String MinimumRequiredSdkVersion;
+    [Write, Description("Versions less than or equal to the specified version will wipe the managed app and the associated company data.")] String MinimumWipeOsVersion;
+    [Write, Description("Versions less than or equal to the specified version will wipe the managed app and the associated company data.")] String MinimumWipeAppVersion;
+    [Write, Description("Defines a managed app behavior, either block or wipe, when the device is either rooted or jailbroken, if DeviceComplianceRequired is set to true."), ValueMap{"block","wipe","warn"}, Values{"block","wipe","warn"}] String AppActionIfDeviceComplianceRequired;
+    [Write, Description("Defines a managed app behavior, either block or wipe, based on maximum number of incorrect pin retry attempts."), ValueMap{"block","wipe","warn"}, Values{"block","wipe","warn"}] String AppActionIfMaximumPinRetriesExceeded;
+    [Write, Description("Timeout in minutes for an app pin instead of non biometrics passcode .")] String PinRequiredInsteadOfBiometricTimeout;
+    [Write, Description("Specify the number of characters that may be cut or copied from Org data and accounts to any application. This setting overrides the AllowedOutboundClipboardSharingLevel restriction. Default value of '0' means no exception is allowed.")] Uint32 AllowedOutboundClipboardSharingExceptionLength;
+    [Write, Description("Specify app notification restriction."), ValueMap{"allow","blockOrganizationalData","block"}, Values{"allow","blockOrganizationalData","block"}] String NotificationRestriction;
+    [Write, Description("The intended app management levels for this policy."), ValueMap{"unspecified","unmanaged","mdm","androidEnterprise"}, Values{"unspecified","unmanaged","mdm","androidEnterprise"}] String TargetedAppManagementLevels;
+    [Write, Description("Require app data to be encrypted."), Values{"useDeviceSettings","afterDeviceRestart","whenDeviceLockedExceptOpenFiles","whenDeviceLocked"}, ValueMap{"useDeviceSettings","afterDeviceRestart","whenDeviceLockedExceptOpenFiles","whenDeviceLocked"}] String AppDataEncryptionType;
+    [Write, Description("Apps in this list will be exempt from the policy and will be able to receive data from managed apps.")] String ExemptedAppProtocols[];
+    [Write, Description("Versions less than the specified version will block the managed app from accessing company data.")] String MinimumWipeSdkVersion;
+    [Write, Description("Semicolon seperated list of device models allowed, as a string, for the managed app to work.")] String AllowedIosDeviceModels[];
+    [Write, Description("Defines a managed app behavior, either block or wipe, if the specified device model is not allowed."), ValueMap{"block","wipe","warn"}, Values{"block","wipe","warn"}] String AppActionIfIosDeviceModelNotAllowed;
+    [Write, Description("Defines if open-in operation is supported from the managed app to the filesharing locations selected. This setting only applies when AllowedOutboundDataTransferDestinations is set to ManagedApps and DisableProtectionOfManagedOutboundOpenInData is set to False.")] Boolean FilterOpenInToOnlyManagedApps;
+    [Write, Description("Disable protection of data transferred to other apps through IOS OpenIn option. This setting is only allowed to be True when AllowedOutboundDataTransferDestinations is set to ManagedApps.")] Boolean DisableProtectionOfManagedOutboundOpenInData;
+    [Write, Description("Protect incoming data from unknown source. This setting is only allowed to be True when AllowedInboundDataTransferSources is set to AllApps.")] Boolean ProtectInboundDataFromUnknownSources;
+    [Write, Description("A custom browser protocol to open weblink on iOS.")] String CustomBrowserProtocol;
     [Write, Description("List of IDs representing the iOS apps controlled by this protection policy.")] String Apps[];
     [Write, Description("List of IDs of the groups assigned to this iOS Protection Policy.")] String Assignments[];
     [Write, Description("List of IDs of the groups that are excluded from this iOS Protection Policy.")] String ExcludedGroups[];
-    [Write, Description("A custom browser protocol to open weblink on iOS.")] String CustomBrowserProtocol;
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
     [Write, Description("Credentials of the Intune Admin."), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("ID of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("ID of the Azure Active Directory tenant used for authentication.")] String TenantId;
-    [Write, Description("Secret of the Azure Active Directory tenant used for authentication.")] String ApplicationSecret;
+    [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
 	[Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
 };

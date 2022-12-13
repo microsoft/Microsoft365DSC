@@ -26,9 +26,9 @@ function Get-TargetResource
         $EmailAddresses,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -52,7 +52,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration of Office 365 Shared Mailbox $DisplayName"
@@ -72,8 +76,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -81,23 +85,24 @@ function Get-TargetResource
     #endregion
 
     # Warning for deprecated parameter
-    if ($PSBoundParameters.ContainsKey("Aliases"))
+    if ($PSBoundParameters.ContainsKey('Aliases'))
     {
-        Write-Warning "Aliases is deprecated. Please use EmailAddresses instead and remove Aliases from your configuration."
-        if ($null -eq $EmailAddresses) {
+        Write-Warning 'Aliases is deprecated. Please use EmailAddresses instead and remove Aliases from your configuration.'
+        if ($null -eq $EmailAddresses)
+        {
             $EmailAddresses = $Aliases
         }
     }
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
         $mailbox = Get-Mailbox -Identity $DisplayName `
-                               -RecipientTypeDetails "SharedMailbox" `
-                               -ResultSize Unlimited `
-                               -ErrorAction Stop
+            -RecipientTypeDetails 'SharedMailbox' `
+            -ResultSize Unlimited `
+            -ErrorAction Stop
 
         if ($null -eq $mailbox)
         {
@@ -110,7 +115,7 @@ function Get-TargetResource
 
         foreach ($email in $mailbox.EmailAddresses)
         {
-            $emailValue = $email.Split(":")[1]
+            $emailValue = $email.Split(':')[1]
             if ($emailValue -and $emailValue -ne $mailbox.PrimarySMTPAddress)
             {
                 $CurrentEmailAddresses += $emailValue
@@ -123,12 +128,13 @@ function Get-TargetResource
             PrimarySMTPAddress    = $mailbox.PrimarySMTPAddress.ToString()
             Alias                 = $mailbox.Alias
             EmailAddresses        = $CurrentEmailAddresses
-            Ensure                = "Present"
+            Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             CertificateThumbprint = $CertificateThumbprint
             CertificatePath       = $CertificatePath
             CertificatePassword   = $CertificatePassword
+            Managedidentity       = $ManagedIdentity.IsPresent
             TenantId              = $TenantId
         }
 
@@ -137,26 +143,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -188,9 +180,9 @@ function Set-TargetResource
         $EmailAddresses = @(),
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -214,7 +206,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Shared Mailbox $DisplayName"
@@ -222,8 +218,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -237,7 +233,7 @@ function Set-TargetResource
     {
         if ($secondaryAlias.ToLower() -eq $PrimarySMTPAddress.ToLower())
         {
-            throw "You cannot have the EmailAddresses list contain the PrimarySMTPAddress"
+            throw 'You cannot have the EmailAddresses list contain the PrimarySMTPAddress'
         }
     }
     #endregion
@@ -247,9 +243,9 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     # Warning for deprecated parameter
-    if ($PSBoundParameters.ContainsKey("Aliases"))
+    if ($PSBoundParameters.ContainsKey('Aliases'))
     {
-        Write-Warning "Aliases is deprecated. Please use EmailAddresses instead and remove Aliases from your configuration."
+        Write-Warning 'Aliases is deprecated. Please use EmailAddresses instead and remove Aliases from your configuration.'
         if ($null -eq $EmailAddresses)
         {
             $EmailAddresses = $Aliases
@@ -257,37 +253,37 @@ function Set-TargetResource
     }
 
     # CASE: Mailbox doesn't exist but should;
-    if ($Ensure -eq "Present" -and $currentMailbox.Ensure -eq "Absent")
+    if ($Ensure -eq 'Present' -and $currentMailbox.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Shared Mailbox '$($DisplayName)' does not exist but it should. Creating it."
-        $emails = ""
+        $emails = ''
         foreach ($secondaryAlias in $EmailAddresses)
         {
-            $emails += $secondaryAlias + ","
+            $emails += $secondaryAlias + ','
         }
         $emails += $PrimarySMTPAddress
         $proxyAddresses = $emails -Split ','
         $CurrentParameters.EmailAddresses = $proxyAddresses
         $NewMailBoxParameters = @{
-            Name                  = $DisplayName
-            PrimarySMTPAddress    = $PrimarySMTPAddress
-            Shared                = $true
+            Name               = $DisplayName
+            PrimarySMTPAddress = $PrimarySMTPAddress
+            Shared             = $true
         }
         if ($Alias)
         {
-            $NewMailBoxParameters.Add("Alias", $Alias)
+            $NewMailBoxParameters.Add('Alias', $Alias)
         }
         New-MailBox @NewMailBoxParameters
         Set-Mailbox -Identity $DisplayName -EmailAddresses @{add = $EmailAddresses }
     }
     # CASE: Mailbox exists but it shouldn't;
-    elseif ($Ensure -eq "Absent" -and $currentMailbox.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Absent' -and $currentMailbox.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Shared Mailbox '$($DisplayName)' exists but it shouldn't. Deleting it."
         Remove-Mailbox -Identity $DisplayName -Confirm:$false
     }
     # CASE: Mailbox exists and it should, but has different values than the desired ones
-    elseif ($Ensure -eq "Present" -and $currentMailbox.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Present' -and $currentMailbox.Ensure -eq 'Present')
     {
         # CASE: EmailAddresses need to be updated
         Write-Verbose -Message "Shared Mailbox '$($DisplayName)' already exists, but needs updating."
@@ -298,14 +294,14 @@ function Set-TargetResource
         {
             # Add EmailAddresses
             Write-Verbose -Message "Updating the list of EmailAddresses for the Shared Mailbox '$($DisplayName)'"
-            $emails = ""
+            $emails = ''
             $emailAddressesToAdd = $diff | Where-Object -FilterScript { $_.SideIndicator -eq '=>' }
             if ($null -ne $emailAddressesToAdd)
             {
                 $emailsToAdd = ''
                 foreach ($secondaryAlias in $emailAddressesToAdd)
                 {
-                    $emailsToAdd += $secondaryAlias.InputObject + ","
+                    $emailsToAdd += $secondaryAlias.InputObject + ','
                 }
                 $emailsToAdd += $PrimarySMTPAddress
                 $proxyAddresses = $emailsToAdd -Split ','
@@ -320,7 +316,7 @@ function Set-TargetResource
                 $emailsToRemoved = ''
                 foreach ($secondaryAlias in $emailAddressesToRemove)
                 {
-                    $emailsToRemoved += $secondaryAlias.InputObject + ","
+                    $emailsToRemoved += $secondaryAlias.InputObject + ','
                 }
                 $emailsToRemoved += $PrimarySMTPAddress
                 $proxyAddresses = $emailsToRemoved -Split ','
@@ -368,9 +364,9 @@ function Test-TargetResource
         $EmailAddresses,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -394,14 +390,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -409,9 +409,9 @@ function Test-TargetResource
     #endregion
 
     # Warning for deprecated parameter
-    if ($PSBoundParameters.ContainsKey("Aliases"))
+    if ($PSBoundParameters.ContainsKey('Aliases'))
     {
-        Write-Warning "Aliases is deprecated. Please use EmailAddresses instead and remove Aliases from your configuration."
+        Write-Warning 'Aliases is deprecated. Please use EmailAddresses instead and remove Aliases from your configuration.'
         if ($null -eq $EmailAddresses)
         {
             $EmailAddresses = $Aliases
@@ -428,11 +428,11 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure", `
-            "DisplayName", `
-            "Alias", `
-            "PrimarySMTPAddress",
-        "EmailAddresses")
+        -ValuesToCheck @('Ensure', `
+            'DisplayName', `
+            'Alias', `
+            'PrimarySMTPAddress',
+        'EmailAddresses')
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -467,7 +467,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -477,8 +481,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -487,7 +491,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$mailboxes = Get-Mailbox -RecipientTypeDetails "SharedMailbox" `
+        [array]$mailboxes = Get-Mailbox -RecipientTypeDetails 'SharedMailbox' `
             -ResultSize Unlimited `
             -ErrorAction Stop
         $dscContent = ''
@@ -507,13 +511,14 @@ function Export-TargetResource
             if ($mailboxName)
             {
                 $params = @{
-                    Credential    = $Credential
+                    Credential            = $Credential
                     DisplayName           = $mailboxName
                     Alias                 = $mailbox.Alias
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     CertificatePassword   = $CertificatePassword
+                    Managedidentity       = $ManagedIdentity.IsPresent
                     CertificatePath       = $CertificatePath
                 }
                 $Results = Get-TargetResource @Params
@@ -535,27 +540,15 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

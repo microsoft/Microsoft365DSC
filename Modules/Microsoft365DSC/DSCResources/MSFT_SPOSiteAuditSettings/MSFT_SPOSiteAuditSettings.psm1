@@ -25,7 +25,7 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -38,7 +38,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting SPOSiteAuditSettings for {$Url}"
@@ -50,8 +54,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -76,36 +80,22 @@ function Get-TargetResource
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
-            Ensure                = "Present"
-
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
     }
     catch
     {
-        if ($error[0].Exception.Message -like "No connection available")
+        if ($error[0].Exception.Message -like 'No connection available')
         {
-            Write-Verbose -Message "Make sure that you are connected to your PnPConnection"
+            Write-Verbose -Message 'Make sure that you are connected to your PnPConnection'
         }
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message ($_ + " {Site Collection: $Url}") -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $null
     }
 }
@@ -136,7 +126,7 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -149,7 +139,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting Audit settings for {$Url}"
@@ -159,8 +153,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -208,7 +202,7 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -221,14 +215,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -244,7 +242,7 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("AuditFlags")
+        -ValuesToCheck @('AuditFlags')
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -270,7 +268,7 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -283,7 +281,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
@@ -295,8 +297,8 @@ function Export-TargetResource
         Confirm-M365DSCDependencies
 
         #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-        $CommandName  = $MyInvocation.MyCommand
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
         $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
             -CommandName $CommandName `
             -Parameters $PSBoundParameters
@@ -308,23 +310,23 @@ function Export-TargetResource
         $i = 1
         Write-Host "`r`n" -NoNewline
 
-        $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-        if ($null -ne $Credential -and $Credential.UserName.Contains("@"))
+        $principal = '' # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
+        if ($null -ne $Credential -and $Credential.UserName.Contains('@'))
         {
-            $organization = $Credential.UserName.Split("@")[1]
+            $organization = $Credential.UserName.Split('@')[1]
 
-            if ($organization.IndexOf(".") -gt 0)
+            if ($organization.IndexOf('.') -gt 0)
             {
-                $principal = $organization.Split(".")[0]
+                $principal = $organization.Split('.')[0]
             }
         }
         else
         {
             $organization = $TenantId
-            $principal = $organization.Split(".")[0]
+            $principal = $organization.Split('.')[0]
         }
 
-        $dscContent = ""
+        $dscContent = ''
         foreach ($site in $sites)
         {
             try
@@ -340,7 +342,8 @@ function Export-TargetResource
                     CertificatePassword   = $CertificatePassword
                     CertificatePath       = $CertificatePath
                     CertificateThumbprint = $CertificateThumbprint
-                    Credential    = $Credential
+                    Managedidentity       = $ManagedIdentity.IsPresent
+                    Credential            = $Credential
                 }
 
                 $Results = Get-TargetResource @params
@@ -379,21 +382,13 @@ function Export-TargetResource
             catch
             {
                 Write-Host $Global:M365DSCEmojiRedX
-                Write-Verbose -Message $_
-                $tenantIdValue = ""
-                if (-not [System.String]::IsNullOrEmpty($TenantId))
-                {
-                    $tenantIdValue = $TenantId
-                }
-                elseif ($null -ne $Credential)
-                {
-                    $tenantIdValue = $Credential.UserName.Split('@')[1]
-                }
-                $message = $_.ToString() + $site.Url
-                Add-M365DSCEvent -Message $message -EntryType 'Error' `
-                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                    -TenantId $tenantIdValue
-                Write-Host $Global:M365DSCEmojiRedX
+
+                New-M365DSCLogEntry -Message 'Error during Export:' `
+                    -Exception $_ `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
+
                 Write-Verbose "There was an issue retrieving Audit Settings for $Url"
             }
             $i++
@@ -401,35 +396,22 @@ function Export-TargetResource
 
         if ($i -eq 1)
         {
-            Write-Host ""
+            Write-Host ''
         }
 
         return $dscContent
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
         Write-Host $Global:M365DSCEmojiRedX
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

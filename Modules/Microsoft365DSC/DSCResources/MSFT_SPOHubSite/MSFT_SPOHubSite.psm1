@@ -33,9 +33,9 @@ function Get-TargetResource
         $SiteDesignId,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -50,7 +50,7 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -63,7 +63,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration for hub site collection $Url"
@@ -74,8 +78,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -83,7 +87,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -108,8 +112,8 @@ function Get-TargetResource
             $principals = @()
             foreach ($permission in $hubSite.Permissions.PrincipalName)
             {
-                $result = $permission.Split("|")
-                if ($result[0].StartsWith("c") -eq $true)
+                $result = $permission.Split('|')
+                if ($result[0].StartsWith('c') -eq $true)
                 {
                     # Group permissions
                     $group = Get-MgGroup -GroupId $result[2]
@@ -131,7 +135,7 @@ function Get-TargetResource
                 }
             }
 
-            if ($LogoUrl.StartsWith("http"))
+            if ($LogoUrl.StartsWith('http'))
             {
                 $configuredLogo = $hubSite.LogoUrl
             }
@@ -148,38 +152,25 @@ function Get-TargetResource
                 RequiresJoinApproval  = $hubSite.RequiresJoinApproval
                 AllowedToJoin         = $principals
                 SiteDesignId          = $hubSite.SiteDesignId
-                Ensure                = "Present"
+                Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
             return $result
         }
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -218,9 +209,9 @@ function Set-TargetResource
         $SiteDesignId,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -235,7 +226,7 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -248,7 +239,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration for hub site collection $Url"
@@ -257,8 +252,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -279,58 +274,60 @@ function Set-TargetResource
     catch
     {
         $Message = "The specified Site Collection {$Url} for SPOHubSite doesn't already exist."
-        New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+        New-M365DSCLogEntry -Message $Message `
+            -Exception $_ `
+            -Source $MyInvocation.MyCommand.ModuleName
         throw $Message
     }
 
     $currentValues = Get-TargetResource @PSBoundParameters
 
-    if ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Absent")
+    if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Configuring site collection as Hub Site"
+        Write-Verbose -Message 'Configuring site collection as Hub Site'
         Register-PnPHubSite -Site $site.Url | Out-Null
 
         $params = @{
             Identity = $site.Url
         }
 
-        if ($PSBoundParameters.ContainsKey("Title") -eq $true)
+        if ($PSBoundParameters.ContainsKey('Title') -eq $true)
         {
             $params.Title = $Title
         }
 
-        if ($PSBoundParameters.ContainsKey("Description") -eq $true)
+        if ($PSBoundParameters.ContainsKey('Description') -eq $true)
         {
             $params.Description = $Description
         }
 
-        if ($PSBoundParameters.ContainsKey("LogoUrl") -eq $true)
+        if ($PSBoundParameters.ContainsKey('LogoUrl') -eq $true)
         {
             $params.LogoUrl = $LogoUrl
         }
 
-        if ($PSBoundParameters.ContainsKey("RequiresJoinApproval") -eq $true)
+        if ($PSBoundParameters.ContainsKey('RequiresJoinApproval') -eq $true)
         {
             $params.RequiresJoinApproval = $RequiresJoinApproval
         }
 
-        if ($PSBoundParameters.ContainsKey("SiteDesignId") -eq $true)
+        if ($PSBoundParameters.ContainsKey('SiteDesignId') -eq $true)
         {
             $params.SiteDesignId = $SiteDesignId
         }
 
         if ($params.Count -ne 1)
         {
-            Write-Verbose -Message "Updating Hub Site properties"
+            Write-Verbose -Message 'Updating Hub Site properties'
             Set-PnPHubSite @params | Out-Null
         }
 
-        if ($PSBoundParameters.ContainsKey("AllowedToJoin") -eq $true)
+        if ($PSBoundParameters.ContainsKey('AllowedToJoin') -eq $true)
         {
             $groups = Get-MgGroup -All:$true
             $regex = "^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
 
-            Write-Verbose -Message "Validating AllowedToJoin principals"
+            Write-Verbose -Message 'Validating AllowedToJoin principals'
             foreach ($principal in $AllowedToJoin)
             {
                 Write-Verbose -Message "Processing $principal"
@@ -350,38 +347,38 @@ function Set-TargetResource
                 -Principals $AllowedToJoin | Out-Null
         }
     }
-    elseif ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating Hub Site settings"
+        Write-Verbose -Message 'Updating Hub Site settings'
         $params = @{
             Identity = $site.Url
         }
 
-        if ($PSBoundParameters.ContainsKey("Title") -eq $true -and
+        if ($PSBoundParameters.ContainsKey('Title') -eq $true -and
             $currentValues.Title -ne $Title)
         {
             $params.Title = $Title
         }
 
-        if ($PSBoundParameters.ContainsKey("Description") -eq $true -and
+        if ($PSBoundParameters.ContainsKey('Description') -eq $true -and
             $currentValues.Description -ne $Description)
         {
             $params.Description = $Description
         }
 
-        if ($PSBoundParameters.ContainsKey("LogoUrl") -eq $true -and
+        if ($PSBoundParameters.ContainsKey('LogoUrl') -eq $true -and
             $currentValues.LogoUrl -ne $LogoUrl)
         {
             $params.LogoUrl = $LogoUrl
         }
 
-        if ($PSBoundParameters.ContainsKey("RequiresJoinApproval") -eq $true -and
+        if ($PSBoundParameters.ContainsKey('RequiresJoinApproval') -eq $true -and
             $currentValues.RequiresJoinApproval -ne $RequiresJoinApproval)
         {
             $params.RequiresJoinApproval = $RequiresJoinApproval
         }
 
-        if ($PSBoundParameters.ContainsKey("SiteDesignId") -eq $true -and
+        if ($PSBoundParameters.ContainsKey('SiteDesignId') -eq $true -and
             $currentValues.SiteDesignId -ne $SiteDesignId)
         {
             $params.SiteDesignId = $SiteDesignId
@@ -389,11 +386,11 @@ function Set-TargetResource
 
         if ($params.Count -ne 1)
         {
-            Write-Verbose -Message "Updating Hub Site properties"
+            Write-Verbose -Message 'Updating Hub Site properties'
             Set-PnPHubSite @params | Out-Null
         }
 
-        if ($PSBoundParameters.ContainsKey("AllowedToJoin") -eq $true)
+        if ($PSBoundParameters.ContainsKey('AllowedToJoin') -eq $true)
         {
             if ($null -eq $currentValues.AllowedToJoin)
             {
@@ -409,12 +406,12 @@ function Set-TargetResource
                 $groups = Get-MgGroup -All:$true
                 $regex = "^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
 
-                Write-Verbose -Message "Updating Hub Site permissions"
+                Write-Verbose -Message 'Updating Hub Site permissions'
                 foreach ($item in $differences)
                 {
-                    if ($item.SideIndicator -eq "<=")
+                    if ($item.SideIndicator -eq '<=')
                     {
-                        Write-Verbose -Message "Validating AllowedToJoin principals"
+                        Write-Verbose -Message 'Validating AllowedToJoin principals'
                         foreach ($principal in $AllowedToJoin)
                         {
                             Write-Verbose -Message "Processing $principal"
@@ -485,9 +482,9 @@ function Test-TargetResource
         $SiteDesignId,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -502,7 +499,7 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -515,14 +512,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -539,14 +540,14 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure", `
-            "Url", `
-            "Title", `
-            "Description", `
-            "LogoUrl", `
-            "RequiresJoinApproval", `
-            "AllowedToJoin", `
-            "SiteDesignId")
+        -ValuesToCheck @('Ensure', `
+            'Url', `
+            'Title', `
+            'Description', `
+            'LogoUrl', `
+            'RequiresJoinApproval', `
+            'AllowedToJoin', `
+            'SiteDesignId')
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -572,7 +573,7 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -585,7 +586,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
@@ -597,8 +602,8 @@ function Export-TargetResource
         Confirm-M365DSCDependencies
 
         #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-        $CommandName  = $MyInvocation.MyCommand
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
         $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
             -CommandName $CommandName `
             -Parameters $PSBoundParameters
@@ -617,20 +622,20 @@ function Export-TargetResource
             Write-Host "`r`n" -NoNewline
         }
 
-        $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-        if ($null -ne $Credential -and $Credential.UserName.Contains("@"))
+        $principal = '' # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
+        if ($null -ne $Credential -and $Credential.UserName.Contains('@'))
         {
-            $organization = $Credential.UserName.Split("@")[1]
+            $organization = $Credential.UserName.Split('@')[1]
 
-            if ($organization.IndexOf(".") -gt 0)
+            if ($organization.IndexOf('.') -gt 0)
             {
-                $principal = $organization.Split(".")[0]
+                $principal = $organization.Split('.')[0]
             }
         }
         else
         {
             $organization = $TenantId
-            $principal = $organization.Split(".")[0]
+            $principal = $organization.Split('.')[0]
         }
 
         $dscContent = ''
@@ -643,7 +648,8 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
-                Credential    = $Credential
+                Managedidentity       = $ManagedIdentity.IsPresent
+                Credential            = $Credential
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 ApplicationSecret     = $ApplicationSecret
@@ -663,7 +669,7 @@ function Export-TargetResource
                     $currentDSCBlock.ToLower().Contains($principal.ToLower()))
             {
                 $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
-                $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+                $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape('@' + $organization), "@`$(`$OrganizationName)"
             }
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -676,27 +682,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

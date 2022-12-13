@@ -19,6 +19,7 @@
 | **LineWrapSize** | Write | String | The LineWrapSize parameter specifies the line-wrap size for messages to recipients in the remote domain. Valid values are an integer from 0 through 132 or the value to unlimited. The default value is unlimited. ||
 | **MeetingForwardNotificationEnabled** | Write | Boolean | The MeetingForwardNotificationEnabled parameter specifies whether to enable meeting forward notifications for recipients in the remote domain. ||
 | **Name** | Write | String | The Name parameter specifies a unique name for the remote domain object. The maximum length is 64 characters. If the value contains spaces, enclose the value in quotation marks. ||
+| **NDREnabled** | Write | Boolean | The NDREnabled parameter specifies whether to allow non-delivery reports (also known NDRs or bounce messages) from your organization to recipients in the remote domain. ||
 | **NonMimeCharacterSet** | Write | String | The NonMimeCharacterSet parameter specifies a character set for plain text messages without defined character sets that are sent from your organization to recipients in the remote domain. ||
 | **PreferredInternetCodePageForShiftJis** | Write | String | The PreferredInternetCodePageForShiftJis parameter specifies the specific code page to use for Shift JIS character encoding in messages that are sent to recipients in the remote domain. |50220, 50221, 50222, Undefined|
 | **RequiredCharsetCoverage** | Write | SInt32 | The RequiredCharsetCoverage parameter specifies a percentage threshold for characters in a message that must match to apply your organization's preferred character set before switching to automatic character set detection. ||
@@ -33,6 +34,7 @@
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword ||
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. ||
+| **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. ||
 
 # EXORemoteDomain
 

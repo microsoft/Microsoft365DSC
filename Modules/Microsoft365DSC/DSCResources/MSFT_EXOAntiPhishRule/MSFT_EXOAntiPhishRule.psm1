@@ -75,7 +75,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration of AntiPhishRule for $Identity"
@@ -96,8 +100,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -105,10 +109,10 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
     try
     {
-        Write-Verbose -Message "Global ExchangeOnlineSession status:"
+        Write-Verbose -Message 'Global ExchangeOnlineSession status:'
         Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
 
         try
@@ -117,7 +121,9 @@ function Get-TargetResource
         }
         catch
         {
-            New-M365DSCLogEntry -Error $_ -Message "Couldn't get AntiPhishRules" -Source $MyInvocation.MyCommand.ModuleName
+            New-M365DSCLogEntry -Message "Couldn't get AntiPhishRules" `
+                -Exception $_ `
+                -Source $MyInvocation.MyCommand.ModuleName
         }
 
         if ($null -ne $AntiPhishRules)
@@ -148,6 +154,7 @@ function Get-TargetResource
                     CertificateThumbprint     = $CertificateThumbprint
                     CertificatePath           = $CertificatePath
                     CertificatePassword       = $CertificatePassword
+                    Managedidentity           = $ManagedIdentity.IsPresent
                     TenantId                  = $TenantId
                 }
                 if ('Enabled' -eq $AntiPhishRule.State)
@@ -169,26 +176,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -269,7 +262,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of AntiPhishRule for $Identity"
@@ -278,8 +275,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -302,15 +299,16 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
         $CreationParams = [System.Collections.Hashtable]($PSBoundParameters)
-        $CreationParams.Remove("Ensure") | Out-Null
-        $CreationParams.Remove("Credential") | Out-Null
-        $CreationParams.Add("Name", $Identity) | Out-Null
-        $CreationParams.Remove("Identity") | Out-Null
+        $CreationParams.Remove('Ensure') | Out-Null
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Add('Name', $Identity) | Out-Null
+        $CreationParams.Remove('Identity') | Out-Null
         $CreationParams.Remove('ApplicationId') | Out-Null
         $CreationParams.Remove('TenantId') | Out-Null
         $CreationParams.Remove('CertificateThumbprint') | Out-Null
         $CreationParams.Remove('CertificatePath') | Out-Null
         $CreationParams.Remove('CertificatePassword') | Out-Null
+        $CreationParams.Remove('ManagedIdentity') | Out-Null
 
         # New-AntiPhishRule has the Enabled parameter, Set-AntiPhishRule does not.
         # There doesn't appear to be any way to change the Enabled state of a rule once created.
@@ -326,14 +324,15 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
     {
         $UpdateParams = $PSBoundParameters
-        $UpdateParams.Remove("Ensure") | Out-Null
-        $UpdateParams.Remove("Credential") | Out-Null
-        $UpdateParams.Remove("Enabled") | Out-Null
+        $UpdateParams.Remove('Ensure') | Out-Null
+        $UpdateParams.Remove('Credential') | Out-Null
+        $UpdateParams.Remove('Enabled') | Out-Null
         $UpdateParams.Remove('ApplicationId') | Out-Null
         $UpdateParams.Remove('TenantId') | Out-Null
         $UpdateParams.Remove('CertificateThumbprint') | Out-Null
         $UpdateParams.Remove('CertificatePath') | Out-Null
         $UpdateParams.Remove('CertificatePassword') | Out-Null
+        $UpdateParams.Remove('ManagedIdentity') | Out-Null
 
         # Check to see if the specified policy already has the rule assigned;
         $existingRule = Get-AntiPhishRule | Where-Object -FilterScript { $_.AntiPhishPolicy -eq $AntiPhishPolicy }
@@ -341,7 +340,7 @@ function Set-TargetResource
         if ($null -ne $existingRule)
         {
             # The rule is already assigned to the policy, do try to update the AntiPhishPolicy parameter;
-            $UpdateParams.Remove("AntiPhishPolicy") | Out-Null
+            $UpdateParams.Remove('AntiPhishPolicy') | Out-Null
         }
 
         Write-Verbose -Message "Updating AntiPhishRule {$Identity}."
@@ -431,14 +430,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -459,11 +462,12 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     if ($null -eq $PSBoundParameters.Enabled)
     {
-        Write-Verbose "Removing Enabled from the list of Parameters to Test"
-        $ValuesToCheck.Remove("Enabled") | Out-Null
+        Write-Verbose 'Removing Enabled from the list of Parameters to Test'
+        $ValuesToCheck.Remove('Enabled') | Out-Null
     }
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
@@ -504,7 +508,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -514,8 +522,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -525,7 +533,7 @@ function Export-TargetResource
     try
     {
         $AntiPhishRules = Get-AntiphishRule -ErrorAction Stop
-        $dscContent = ""
+        $dscContent = ''
         if ($AntiPhishRules.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
@@ -547,6 +555,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
             $Results = Get-TargetResource @Params
@@ -568,27 +577,15 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

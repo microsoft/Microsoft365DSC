@@ -8,9 +8,10 @@
 | **AddXHeaderValue** | Write | String | The AddXHeaderValue parameter specifies the X-header value to add to spam messages when an action parameter is set to the value AddXHeader. ||
 | **AdminDisplayName** | Write | String | The AdminDisplayName parameter specifies a description for the policy. ||
 | **AllowedSenderDomains** | Write | StringArray[] | The AllowedSenderDomains parameter specifies trusted domains that aren't processed by the spam filter. ||
-| **AllowedSenders** | Write | StringArray[] | The AllowedSenders parameter specifies a list of trusted senders that aren't processed by the spam filter.  ||
+| **AllowedSenders** | Write | StringArray[] | The AllowedSenders parameter specifies a list of trusted senders that aren't processed by the spam filter. ||
 | **BlockedSenderDomains** | Write | StringArray[] | The BlockedSenderDomains parameter specifies domains that are always marked as spam sources. ||
-| **BlockedSenders** | Write | StringArray[] | The BlockedSenders parameter specifies senders that are always marked as spam sources.  ||
+| **BlockedSenders** | Write | StringArray[] | The BlockedSenders parameter specifies senders that are always marked as spam sources. ||
+| **BulkQuarantineTag** | Write | String | The BulkQuarantineTag parameter specifies the quarantine policy that's used on messages that are quarantined as bulk email. ||
 | **BulkSpamAction** | Write | String | The BulkSpamAction parameter specifies the action to take on messages that are classified as bulk email. |MoveToJmf, AddXHeader, ModifySubject, Redirect, Delete, Quarantine, NoAction|
 | **BulkThreshold** | Write | UInt32 | The BulkThreshold parameter specifies the Bulk Complaint Level (BCL) threshold setting. Valid values are from 1 - 9, where 1 marks most bulk email as spam, and 9 allows the most bulk email to be delivered. The default value is 7. ||
 | **DownloadLink** | Write | Boolean | The DownloadLink parameter shows or hides a link in end-user spam notification messages to download the Junk Email Reporting Tool plugin for Outlook. Valid input for this parameter is $true or $false. The default value is $false. ||
@@ -23,7 +24,9 @@
 | **EndUserSpamNotificationFrequency** | Write | UInt32 | The EndUserSpamNotificationFrequency parameter specifies the repeat interval in days that end-user spam notification messages are sent. Valid input for this parameter is an integer between 1 and 15. The default value is 3. ||
 | **EndUserSpamNotificationLanguage** | Write | String | The EndUserSpamNotificationLanguage parameter specifies the language of end-user spam notification messages. The default value is Default. This means the default language of end-user spam notification messages is the default language of the cloud-based organization. |Default, English, French, German, Italian, Japanese, Spanish, Korean, Portuguese, Russian, ChineseSimplified, ChineseTraditional, Amharic, Arabic, Bulgarian, BengaliIndia, Catalan, Czech, Cyrillic, Danish, Greek, Estonian, Basque, Farsi, Finnish, Filipino, Galician, Gujarati, Hebrew, Hindi, Croatian, Hungarian, Indonesian, Icelandic, Kazakh, Kannada, Lithuanian, Latvian, Malayalam, Marathi, Malay, Dutch, NorwegianNynorsk, Norwegian, Oriya, Polish, PortuguesePortugal, Romanian, Slovak, Slovenian, SerbianCyrillic, Serbian, Swedish, Swahili, Tamil, Telugu, Thai, Turkish, Ukrainian, Urdu, Vietnamese|
 | **HighConfidencePhishAction** | Write | String | The HighConfidencePhishAction parameter specifies the action to take on messages that are marked as high confidence phishing |MoveToJmf, Redirect, Quarantine|
+| **HighConfidencePhishQuarantineTag** | Write | String | The HighConfidencePhishQuarantineTag parameter specifies the quarantine policy that's used on messages that are quarantined as high confidence phishing. ||
 | **HighConfidenceSpamAction** | Write | String | The HighConfidenceSpamAction parameter specifies the action to take on messages that are classified as high confidence spam. |MoveToJmf, AddXHeader, ModifySubject, Redirect, Delete, Quarantine, NoAction|
+| **HighConfidenceSpamQuarantineTag** | Write | String | The HighConfidenceSpamQuarantineTag parameter specifies the quarantine policy that's used on messages that are quarantined as high confidence spam. ||
 | **IncreaseScoreWithBizOrInfoUrls** | Write | String | The IncreaseScoreWithBizOrInfoUrls parameter increases the spam score of messages that contain links to .biz or .info domains. Valid values for this parameter are Off, On or Test. The default value is Off. |Off, On, Test|
 | **IncreaseScoreWithImageLinks** | Write | String | The IncreaseScoreWithImageLinks parameter increases the spam score of messages that contain image links to remote websites. Valid values for this parameter are Off, On or Test. The default value is Off. |Off, On, Test|
 | **IncreaseScoreWithNumericIps** | Write | String | The IncreaseScoreWithNumericIps parameter increases the spam score of messages that contain links to IP addresses. Valid values for this parameter are Off, On or Test. The default value is Off. |Off, On, Test|
@@ -45,6 +48,8 @@
 | **MarkAsSpamWebBugsInHtml** | Write | String | The MarkAsSpamWebBugsInHtml parameter classifies the message as spam when the message contains web bugs. Valid values for this parameter are Off, On or Test. The default value is Off. |Off, On, Test|
 | **ModifySubjectValue** | Write | String | The ModifySubjectValue parameter specifies the text to prepend to the existing subject of spam messages when an action parameter is set to the value ModifySubject. ||
 | **PhishSpamAction** | Write | String | The PhishSpamAction parameter specifies the action to take on messages that are classified as phishing |MoveToJmf, AddXHeader, ModifySubject, Redirect, Delete, Quarantine, NoAction|
+| **PhishQuarantineTag** | Write | String | The PhishQuarantineTag parameter specifies the quarantine policy that's used on messages that are quarantined as phishing. ||
+| **SpamQuarantineTag** | Write | String | The SpamQuarantineTag parameter specifies the quarantine policy that's used on messages that are quarantined as spam. ||
 | **QuarantineRetentionPeriod** | Write | UInt32 | The QuarantineRetentionPeriod parameter specifies the length of time in days that spam messages remain in the quarantine. Valid input for this parameter is an integer between 1 and 30. The default value is 15. ||
 | **RedirectToRecipients** | Write | StringArray[] | The RedirectToRecipients parameter specifies the replacement recipients in spam messages when an action parameter is set to the value Redirect. The action parameters that use the value of RedirectToRecipients are BulkSpamAction, HighConfidencePhishAction, HighConfidenceSpamAction, PhishSpamAction and SpamAction. ||
 | **RegionBlockList** | Write | StringArray[] | The RegionBlockList parameter specifies the region to block when messages are blocked based on their source region. Valid input for this parameter is a supported ISO 3166-1 uppercase two-letter country code. You can specify multiple values separated by commas. This parameter is only used when the EnableRegionBlockList parameter is set to $true. ||
@@ -60,6 +65,7 @@
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword ||
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. ||
+| **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. ||
 
 # EXOHostedContentFilterPolicy
 

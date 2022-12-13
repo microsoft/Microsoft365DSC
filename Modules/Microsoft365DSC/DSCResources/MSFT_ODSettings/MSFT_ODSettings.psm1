@@ -5,7 +5,7 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Yes")]
+        [ValidateSet('Yes')]
         [System.String]
         $IsSingleInstance,
 
@@ -31,12 +31,12 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("On", "Off", "Unspecified")]
+        [ValidateSet('On', 'Off', 'Unspecified')]
         $ODBMembersCanShare,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("On", "Off", "Unspecified")]
+        [ValidateSet('On', 'Off', 'Unspecified')]
         $ODBAccessRequests,
 
         [Parameter()]
@@ -61,13 +61,13 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("OptOut", "HardOptIn", "SoftOptIn")]
+        [ValidateSet('OptOut', 'HardOptIn', 'SoftOptIn')]
         $GrooveBlockOption,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -91,10 +91,14 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
-    Write-Verbose -Message "Getting configuration of OneDrive Settings"
+    Write-Verbose -Message 'Getting configuration of OneDrive Settings'
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
@@ -102,8 +106,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -111,26 +115,26 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
-        Write-Verbose -Message "Getting OneDrive quota size for tenant"
+        Write-Verbose -Message 'Getting OneDrive quota size for tenant'
         $tenant = Get-PnPTenant -ErrorAction Stop
 
         if ($null -eq $tenant)
         {
-            Write-Verbose -Message "Failed to get Tenant information"
+            Write-Verbose -Message 'Failed to get Tenant information'
             return $nullReturn
         }
 
         Write-Verbose -Message "Getting OneDrive quota size for tenant $($tenant.OneDriveStorageQuota)"
-        Write-Verbose -Message "Getting tenant client sync setting"
+        Write-Verbose -Message 'Getting tenant client sync setting'
         $tenantRestrictions = Get-PnPTenantSyncClientRestriction -ErrorAction Stop
 
         if ($null -eq $tenantRestrictions)
         {
-            Write-Verbose -Message "Failed to get Tenant client sync settings!"
+            Write-Verbose -Message 'Failed to get Tenant client sync settings!'
             return $nullReturn
         }
 
@@ -138,29 +142,29 @@ function Get-TargetResource
 
         if (($tenantRestrictions.OptOutOfGrooveBlock -eq $true) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $false))
         {
-            $GrooveOption = "SoftOptIn"
+            $GrooveOption = 'SoftOptIn'
         }
 
         if (($tenantRestrictions.OptOutOfGrooveBlock -eq $false) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $true))
         {
-            $GrooveOption = "HardOptIn"
+            $GrooveOption = 'HardOptIn'
         }
 
         if (($tenantRestrictions.OptOutOfGrooveBlock -eq $true) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $true))
         {
-            $GrooveOption = "OptOut"
+            $GrooveOption = 'OptOut'
         }
 
         $FixedExcludedFileExtensions = $tenantRestrictions.ExcludedFileExtensions
         if ($FixedExcludedFileExtensions.Count -eq 0 -or
-            ($FixedExcludedFileExtensions.Count -eq 1 -and $FixedExcludedFileExtensions[0] -eq ""))
+            ($FixedExcludedFileExtensions.Count -eq 1 -and $FixedExcludedFileExtensions[0] -eq ''))
         {
             $FixedExcludedFileExtensions = @()
         }
 
         $FixedAllowedDomainList = $tenantRestrictions.AllowedDomainList
         if ($FixedAllowedDomainList.Count -eq 0 -or
-            ($FixedAllowedDomainList.Count -eq 1 -and $FixedAllowedDomainList[0] -eq ""))
+            ($FixedAllowedDomainList.Count -eq 1 -and $FixedAllowedDomainList[0] -eq ''))
         {
             $FixedAllowedDomainList = @()
         }
@@ -171,7 +175,7 @@ function Get-TargetResource
             $ODBMembersCanShareValue = 'Unspecified'
         }
         return @{
-            IsSingleInstance                          = "Yes"
+            IsSingleInstance                          = 'Yes'
             BlockMacSync                              = $tenantRestrictions.BlockMacSync
             DisableReportProblemDialog                = $tenantRestrictions.DisableReportProblemDialog
             TenantRestrictionEnabled                  = $tenantRestrictions.TenantRestrictionEnabled
@@ -185,37 +189,24 @@ function Get-TargetResource
             ODBMembersCanShare                        = $ODBMembersCanShareValue
             NotifyOwnersWhenInvitationsAccepted       = $tenant.NotifyOwnersWhenInvitationsAccepted
             NotificationsInOneDriveForBusinessEnabled = $tenant.NotificationsInOneDriveForBusinessEnabled
-            Ensure                                    = "Present"
+            Ensure                                    = 'Present'
             ApplicationId                             = $ApplicationId
             TenantId                                  = $TenantId
             CertificatePassword                       = $CertificatePassword
             CertificatePath                           = $CertificatePath
             CertificateThumbprint                     = $CertificateThumbprint
-            Credential                        = $Credential
+            Credential                                = $Credential
+            Managedidentity                           = $ManagedIdentity.IsPresent
         }
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -226,7 +217,7 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Yes")]
+        [ValidateSet('Yes')]
         [System.String]
         $IsSingleInstance,
 
@@ -252,12 +243,12 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("On", "Off", "Unspecified")]
+        [ValidateSet('On', 'Off', 'Unspecified')]
         $ODBMembersCanShare,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("On", "Off", "Unspecified")]
+        [ValidateSet('On', 'Off', 'Unspecified')]
         $ODBAccessRequests,
 
         [Parameter()]
@@ -282,13 +273,13 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("OptOut", "HardOptIn", "SoftOptIn")]
+        [ValidateSet('OptOut', 'HardOptIn', 'SoftOptIn')]
         $GrooveBlockOption,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -312,17 +303,21 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
-    Write-Verbose -Message "Setting configuration of OneDrive Settings"
+    Write-Verbose -Message 'Setting configuration of OneDrive Settings'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -336,37 +331,37 @@ function Set-TargetResource
     ## Parameters below are remove for the Set-SPOTenant cmdlet
     ## they are used in the Set-SPOTenantSyncClientRestriction cmdlet
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("Credential") | Out-Null
+    $CurrentParameters.Remove('Credential') | Out-Null
     $Options = @{}
 
-    if ($CurrentParameters.ContainsKey("Ensure"))
+    if ($CurrentParameters.ContainsKey('Ensure'))
     {
-        $CurrentParameters.Remove("Ensure") | Out-Null
+        $CurrentParameters.Remove('Ensure') | Out-Null
     }
-    if ($CurrentParameters.ContainsKey("BlockMacSync"))
+    if ($CurrentParameters.ContainsKey('BlockMacSync'))
     {
-        $Options.Add("BlockMacSync", $CurrentParameters.BlockMacSync)
-        $CurrentParameters.Remove("BlockMacSync") | Out-Null
+        $Options.Add('BlockMacSync', $CurrentParameters.BlockMacSync)
+        $CurrentParameters.Remove('BlockMacSync') | Out-Null
     }
     # set the TenantRestrictionEnabled and DomainGuids values to avoid invalid configurations
     if ($TenantRestrictionEnabled -eq $true)
     {
-        if (!($CurrentParameters.ContainsKey("DomainGuids") -and ($CurrentParameters.DomainGuids.count -gt 0) -and ($CurrentParameters.DomainGuids[0] -ne '') ))
+        if (!($CurrentParameters.ContainsKey('DomainGuids') -and ($CurrentParameters.DomainGuids.count -gt 0) -and ($CurrentParameters.DomainGuids[0] -ne '') ))
         {
-            Write-Verbose -Message "Invalid configuration specified: TenantRestrictionEnabled is True but No DomainGuids Specified, this option will not be enabled"
+            Write-Verbose -Message 'Invalid configuration specified: TenantRestrictionEnabled is True but No DomainGuids Specified, this option will not be enabled'
             $TenantRestrictionEnabled = $false
             $DomainGuids = @()
 
         }
-        $CurrentParameters.Remove("TenantRestrictionEnabled") | Out-Null
+        $CurrentParameters.Remove('TenantRestrictionEnabled') | Out-Null
     }
     else
     {
-        if ($CurrentParameters.ContainsKey("TenantRestrictionEnabled"))
+        if ($CurrentParameters.ContainsKey('TenantRestrictionEnabled'))
         {
-            if ($CurrentParameters.ContainsKey("DomainGuids") -and ($CurrentParameters.DomainGuids.count -gt 0) -and ($CurrentParameters.DomainGuids[0] -ne '') )
+            if ($CurrentParameters.ContainsKey('DomainGuids') -and ($CurrentParameters.DomainGuids.count -gt 0) -and ($CurrentParameters.DomainGuids[0] -ne '') )
             {
-                Write-Verbose -Message "DomainGuids have been Specified but TenantRestrictionEnabled is set to False, DomainGuids value will be ignored"
+                Write-Verbose -Message 'DomainGuids have been Specified but TenantRestrictionEnabled is set to False, DomainGuids value will be ignored'
                 $TenantRestrictionEnabled = $false
                 $DomainGuids = @()
 
@@ -376,63 +371,67 @@ function Set-TargetResource
                 $TenantRestrictionEnabled = $false
                 $DomainGuids = @()
             }
-            $CurrentParameters.Remove("TenantRestrictionEnabled") | Out-Null
+            $CurrentParameters.Remove('TenantRestrictionEnabled') | Out-Null
         }
         else
         {
-            if ($CurrentParameters.ContainsKey("DomainGuids") -and ($CurrentParameters.DomainGuids.count -gt 0) -and ($CurrentParameters.DomainGuids[0] -ne '') )
+            if ($CurrentParameters.ContainsKey('DomainGuids') -and ($CurrentParameters.DomainGuids.count -gt 0) -and ($CurrentParameters.DomainGuids[0] -ne '') )
             {
-                Write-Verbose -Message "TenantRestrictionEnabled value not specified but a valid DomainGuids value is present - TenantRestrictionEnabled will be set to true"
+                Write-Verbose -Message 'TenantRestrictionEnabled value not specified but a valid DomainGuids value is present - TenantRestrictionEnabled will be set to true'
                 $TenantRestrictionEnabled = $true
                 $DomainGuids = $CurrentParameters.DomainGuids
             }
             else
             {
-                Write-Verbose -Message "TenantRestrictionEnabled value not specified - No valid DomainGuids value is present - TenantRestrictionEnabled will be set to False"
+                Write-Verbose -Message 'TenantRestrictionEnabled value not specified - No valid DomainGuids value is present - TenantRestrictionEnabled will be set to False'
                 $TenantRestrictionEnabled = $false
                 $DomainGuids = @()
             }
         }
     }
 
-    if ($CurrentParameters.ContainsKey("DomainGuids")) { $CurrentParameters.Remove("DomainGuids") | Out-Null }
-
-    $Options.Add("DomainGuids", [System.Guid[]]$DomainGuids)
-    $Options.Add("Enable", $TenantRestrictionEnabled)
-
-    if ($CurrentParameters.ContainsKey("DisableReportProblemDialog"))
+    if ($CurrentParameters.ContainsKey('DomainGuids'))
     {
-        $Options.Add("DisableReportProblemDialog", $CurrentParameters.DisableReportProblemDialog)
-        $CurrentParameters.Remove("DisableReportProblemDialog") | Out-Null
-    }
-    if ($CurrentParameters.ContainsKey("ExcludedFileExtensions"))
-    {
-        $Options.Add("ExcludedFileExtensions", $CurrentParameters.ExcludedFileExtensions)
-        $CurrentParameters.Remove("ExcludedFileExtensions") | Out-Null
-    }
-    if ($CurrentParameters.ContainsKey("GrooveBlockOption"))
-    {
-        $Options.Add("GrooveBlockOption", $CurrentParameters.GrooveBlockOption)
-        $CurrentParameters.Remove("GrooveBlockOption") | Out-Null
-    }
-    if ($CurrentParameters.ContainsKey("IsSingleInstance"))
-    {
-        $CurrentParameters.Remove("IsSingleInstance") | Out-Null
+        $CurrentParameters.Remove('DomainGuids') | Out-Null
     }
 
-    $CurrentParameters.Remove("ApplicationId") | Out-Null
-    $CurrentParameters.Remove("TenantId") | Out-Null
-    $CurrentParameters.Remove("CertificatePath") | Out-Null
-    $CurrentParameters.Remove("CertificatePassword") | Out-Null
-    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
+    $Options.Add('DomainGuids', [System.Guid[]]$DomainGuids)
+    $Options.Add('Enable', $TenantRestrictionEnabled)
 
-    Write-Verbose -Message "Configuring OneDrive settings."
+    if ($CurrentParameters.ContainsKey('DisableReportProblemDialog'))
+    {
+        $Options.Add('DisableReportProblemDialog', $CurrentParameters.DisableReportProblemDialog)
+        $CurrentParameters.Remove('DisableReportProblemDialog') | Out-Null
+    }
+    if ($CurrentParameters.ContainsKey('ExcludedFileExtensions'))
+    {
+        $Options.Add('ExcludedFileExtensions', $CurrentParameters.ExcludedFileExtensions)
+        $CurrentParameters.Remove('ExcludedFileExtensions') | Out-Null
+    }
+    if ($CurrentParameters.ContainsKey('GrooveBlockOption'))
+    {
+        $Options.Add('GrooveBlockOption', $CurrentParameters.GrooveBlockOption)
+        $CurrentParameters.Remove('GrooveBlockOption') | Out-Null
+    }
+    if ($CurrentParameters.ContainsKey('IsSingleInstance'))
+    {
+        $CurrentParameters.Remove('IsSingleInstance') | Out-Null
+    }
+
+    $CurrentParameters.Remove('ApplicationId') | Out-Null
+    $CurrentParameters.Remove('TenantId') | Out-Null
+    $CurrentParameters.Remove('CertificatePath') | Out-Null
+    $CurrentParameters.Remove('CertificatePassword') | Out-Null
+    $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
+    $CurrentParameters.Remove('ManagedIdentity') | Out-Null
+
+    Write-Verbose -Message 'Configuring OneDrive settings.'
     Set-PnPTenant @CurrentParameters
 
     ## Configure Sync Client restrictions
     ## Set-SPOTenantSyncClientRestriction has different parameter sets and they cannot be combined see article:
     ## https://docs.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenantsyncclientrestriction?view=sharepoint-ps
-    Write-Verbose -Message "Setting other configuration parameters"
+    Write-Verbose -Message 'Setting other configuration parameters'
     Write-Verbose -Message ($Options | Out-String)
 
     Set-PnPTenantSyncClientRestriction @Options
@@ -446,7 +445,7 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Yes")]
+        [ValidateSet('Yes')]
         [System.String]
         $IsSingleInstance,
 
@@ -472,12 +471,12 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("On", "Off", "Unspecified")]
+        [ValidateSet('On', 'Off', 'Unspecified')]
         $ODBMembersCanShare,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("On", "Off", "Unspecified")]
+        [ValidateSet('On', 'Off', 'Unspecified')]
         $ODBAccessRequests,
 
         [Parameter()]
@@ -502,13 +501,13 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("OptOut", "HardOptIn", "SoftOptIn")]
+        [ValidateSet('OptOut', 'HardOptIn', 'SoftOptIn')]
         $GrooveBlockOption,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -532,21 +531,25 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of OneDrive Settings"
+    Write-Verbose -Message 'Testing configuration of OneDrive Settings'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -556,20 +559,20 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("BlockMacSync", `
-            "ExcludedFileExtensions", `
-            "DisableReportProblemDialog", `
-            "GrooveBlockOption", `
-            "TenantRestrictionEnabled", `
-            "DomainGuids", `
-            "OneDriveStorageQuota", `
-            "OrphanedPersonalSitesRetentionPeriod", `
-            "OneDriveForGuestsEnabled", `
-            "ODBAccessRequests", `
-            "ODBMembersCanShare", `
-            "NotifyOwnersWhenInvitationsAccepted", `
-            "NotificationsInOneDriveForBusinessEnabled",
-        "Ensure")
+        -ValuesToCheck @('BlockMacSync', `
+            'ExcludedFileExtensions', `
+            'DisableReportProblemDialog', `
+            'GrooveBlockOption', `
+            'TenantRestrictionEnabled', `
+            'DomainGuids', `
+            'OneDriveStorageQuota', `
+            'OrphanedPersonalSitesRetentionPeriod', `
+            'OneDriveForGuestsEnabled', `
+            'ODBAccessRequests', `
+            'ODBMembersCanShare', `
+            'NotifyOwnersWhenInvitationsAccepted', `
+            'NotificationsInOneDriveForBusinessEnabled',
+        'Ensure')
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -604,7 +607,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
@@ -612,17 +619,17 @@ function Export-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
             -InboundParameters $PSBoundParameters
 
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
 
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
 
         $Params = @{
             IsSingleInstance      = 'Yes'
@@ -631,14 +638,15 @@ function Export-TargetResource
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
-            Credential    = $Credential
+            Managedidentity       = $ManagedIdentity.IsPresent
+            Credential            = $Credential
         }
 
         $Results = Get-TargetResource @Params
 
         if ([System.String]::IsNullOrEmpty($Results.GrooveBlockOption))
         {
-            $Results.Remove("GrooveBlockOption") | Out-Null
+            $Results.Remove('GrooveBlockOption') | Out-Null
         }
 
         $dscContent = ''
@@ -659,27 +667,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

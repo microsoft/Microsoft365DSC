@@ -118,6 +118,10 @@ function Get-TargetResource
         [System.String]
         $EnableControlledFolderAccess,
 
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+
         [Parameter(Mandatory = $True)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -136,7 +140,7 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -154,13 +158,6 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta' -ErrorAction Stop
 
-    $context = Get-MgContext
-    if ($null -eq $context)
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters -ErrorAction Stop -ProfileName 'beta'
-    }
-
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -176,60 +173,81 @@ function Get-TargetResource
     $nullResult = $PSBoundParameters
     $nullResult.Ensure = 'Absent'
 
+    $templateReferenceId = 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
+
     try
     {
         #Retrieve policy general settings
-        $policy = Get-MgDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction Stop
+        $policy = Get-MgDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction silentlyContinue
 
         if ($null -eq $policy)
         {
             Write-Verbose -Message "No Endpoint Protection Attack Surface Protection rules Policy {$Identity} was found"
+            $policy = Get-MgDeviceManagementConfigurationPolicy | Where-Object -FilterScript { $_.Name -eq "$DisplayName" -and $_.templateReference.TemplateId -eq "$templateReferenceId" }  -ErrorAction silentlyContinue
+        }
+
+        if ($null -eq $policy)
+        {
+            Write-Verbose -Message "No Endpoint Protection Attack Surface Protection rules Policy {$DisplayName} was found"
             return $nullResult
         }
 
+
         #Retrieve policy specific settings
         [array]$settings = Get-MgDeviceManagementConfigurationPolicySetting `
-            -DeviceManagementConfigurationPolicyId $Identity `
+            -DeviceManagementConfigurationPolicyId $policy.Id `
             -ErrorAction Stop
 
-        $settingDefinitionIdBase = 'device_vendor_msft_policy_config_defender_'
         $returnHashtable = @{}
-        $returnHashtable.Add('Identity', $Identity)
+        $returnHashtable.Add('Identity', $policy.Id)
         $returnHashtable.Add('DisplayName', $policy.name)
         $returnHashtable.Add('Description', $policy.description)
 
-        #write-host ($settings|out-string)
-        foreach ($setting in $settings.SettingInstance.AdditionalProperties)
+        foreach ($setting in $settings.SettingInstance)
         {
-            switch ($setting.'@odata.type')
+            switch ($setting.AdditionalProperties.'@odata.type')
             {
                 '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
                 {
-                    foreach ($settingInstance in $setting.groupSettingCollectionValue.children)
+                    foreach ($settingInstance in $setting.AdditionalProperties.groupSettingCollectionValue.children)
                     {
-                        $prefix = 'attacksurfacereductionrules_'
-                        $settingDefinitionIdPrefix = $settingDefinitionIdBase + $prefix
-                        $settingName = $settingInstance.settingDefinitionId.replace("$settingDefinitionIdPrefix", '')
-                        $settingValue = $settingInstance.choiceSettingValue.value.replace("$settingDefinitionIdPrefix$settingName`_", '')
+                        $settingName = $settingInstance.settingDefinitionId.split('_') | Select-Object -Last 1
+                        [String]$settingValue = $settingInstance.choiceSettingValue.value.split('_') | Select-Object -Last 1
                         $returnHashtable.Add($settingName, $settingValue)
                     }
                 }
                 '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
                 {
-                    $settingName = $setting.settingDefinitionId.replace("$settingDefinitionIdBase", '')
-                    [String]$settingValue = $setting.choiceSettingValue.value.replace("$settingDefinitionIdBase$settingName`_", '')
+                    $settingName = $setting.settingDefinitionId.split('_') | Select-Object -Last 1
+                    [String]$settingValue = $setting.AdditionalProperties.choiceSettingValue.value.split('_') | Select-Object -Last 1
                     $returnHashtable.Add($settingName, $settingValue)
                 }
                 '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
                 {
-                    $settingName = $setting.settingDefinitionId.replace("$settingDefinitionIdBase", '')
-                    [Array]$settingValue = $setting.simpleSettingCollectionValue.value
+                    $settingName = $setting.settingDefinitionId.split('_') | Select-Object -Last 1
+                    [Array]$settingValue = $setting.AdditionalProperties.simpleSettingCollectionValue.value
                     $returnHashtable.Add($settingName, $settingValue)
                 }
-                Default {}
+                Default
+                {
+                }
             }
-
         }
+
+        $returnAssignments = @()
+        $returnAssignments += Get-MgDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $policy.Id
+        $assignmentResult = @()
+        foreach ($assignmentEntry in $returnAssignments)
+        {
+            $assignmentValue = @{
+                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+                deviceAndAppManagementAssignmentFilterType = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.toString()
+                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
+                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
+            }
+            $assignmentResult += $assignmentValue
+        }
+        $returnHashtable.Add('Assignments', $assignmentResult)
 
         Write-Verbose -Message "Found Endpoint Protection Attack Surface Protection rules Policy {$($policy.name)}"
 
@@ -245,19 +263,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullResult
     }
 }
@@ -381,6 +392,10 @@ function Set-TargetResource
         [System.String]
         $EnableControlledFolderAccess,
 
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+
         [Parameter(Mandatory = $True)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -399,7 +414,7 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -437,44 +452,72 @@ function Set-TargetResource
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
 
+    $templateReferenceId = 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
+
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Endpoint Protection Attack Surface Protection rules Policy {$DisplayName}"
 
+        $PSBoundParameters.Remove('DisplayName') | Out-Null
+        $PSBoundParameters.Remove('Description') | Out-Null
+        $PSBoundParameters.Remove('Assignments') | Out-Null
+
         $settings = Format-M365DSCIntuneSettingCatalogASRRulesPolicySettings `
             -DSCParams ([System.Collections.Hashtable]$PSBoundParameters) `
-            -SettingDefinitionIDBase 'device_vendor_msft_policy_config_defender_'
+            -TemplateReferenceId $templateReferenceId
 
-        $Template = Get-MgDeviceManagementConfigurationPolicyTemplate -DeviceManagementConfigurationPolicyTemplateId 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
-
-        New-MgDeviceManagementConfigurationPolicy `
+        $policy = New-IntuneDeviceConfigurationPolicy `
             -Name $DisplayName `
             -Description $Description `
-            -TemplateReference $Template `
             -Platforms 'windows10' `
+            -TemplateReferenceId $templateReferenceId `
             -Technologies 'mdm,microsoftSense' `
             -Settings $settings
 
+        #region Assignments
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
+        {
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+        }
+        if ($policy.id)
+        {
+            Update-DeviceConfigurationPolicyAssignments -DeviceConfigurationPolicyId $policy.id `
+                -Targets $assignmentsHash
+        }
+        #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing Endpoint Protection Attack Surface Protection rules Policy {$DisplayName}"
+        $PSBoundParameters.Remove('DisplayName') | Out-Null
+        $PSBoundParameters.Remove('Description') | Out-Null
+        $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $settings = Format-M365DSCIntuneSettingCatalogASRRulesPolicySettings `
             -DSCParams ([System.Collections.Hashtable]$PSBoundParameters) `
-            -SettingDefinitionIDBase 'device_vendor_msft_policy_config_defender_'
+            -TemplateReferenceId $templateReferenceId
 
-        $Template = Get-MgDeviceManagementConfigurationPolicyTemplate -DeviceManagementConfigurationPolicyTemplateId 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
+        #write-verbose -message ($settings|convertto-json -Depth 20)
 
-        Update-MgDeviceManagementConfigurationPolicy `
-            -DeviceManagementConfigurationPolicyId $Identity `
+        Update-IntuneDeviceConfigurationPolicy `
+            -DeviceConfigurationPolicyId $Identity `
             -Name $DisplayName `
             -Description $Description `
-            -TemplateReference $Template `
+            -TemplateReferenceId $templateReferenceId `
             -Platforms 'windows10' `
             -Technologies 'mdm,microsoftSense' `
             -Settings $settings
 
+        #region Assignments
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
+        {
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+        }
+        Update-DeviceConfigurationPolicyAssignments -DeviceConfigurationPolicyId $Identity `
+            -Targets $assignmentsHash
+        #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
@@ -603,6 +646,10 @@ function Test-TargetResource
         [System.String]
         $EnableControlledFolderAccess,
 
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+
         [Parameter(Mandatory = $True)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -621,7 +668,7 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -656,13 +703,77 @@ function Test-TargetResource
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
+    if ($CurrentValues.Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message 'The policy was not found'
+        return $false
+    }
+    #region Assignments
+    $testResult = $true
+
+    if ((-not $CurrentValues.Assignments) -xor (-not $ValuesToCheck.Assignments))
+    {
+        Write-Verbose -Message 'Configuration drift: one the assignment is null'
+        return $false
+    }
+
+    if ($CurrentValues.Assignments)
+    {
+        if ($CurrentValues.Assignments.count -ne $ValuesToCheck.Assignments.count)
+        {
+            Write-Verbose -Message "Configuration drift: Number of assignment has changed - current {$($CurrentValues.Assignments.count)} target {$($ValuesToCheck.Assignments.count)}"
+            return $false
+        }
+        foreach ($assignment in $CurrentValues.Assignments)
+        {
+            #GroupId Assignment
+            if (-not [String]::IsNullOrEmpty($assignment.groupId))
+            {
+                $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.groupId -eq $assignment.groupId }
+                if (-not $source)
+                {
+                    Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
+                    $testResult = $false
+                    break;
+                }
+                $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
+                $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
+            }
+            #AllDevices/AllUsers assignment
+            else
+            {
+                $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.dataType -eq $assignment.dataType }
+                if (-not $source)
+                {
+                    Write-Verbose -Message "Configuration drift: {$($assignment.dataType)} not found"
+                    $testResult = $false
+                    break;
+                }
+                $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
+                $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
+            }
+
+            if (-not $testResult)
+            {
+                $testResult = $false
+                break;
+            }
+        }
+    }
+    if (-not $testResult)
+    {
+        return $false
+    }
+    $ValuesToCheck.Remove('Assignments') | Out-Null
+    #endregion
+
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
-
+    #return $false
     return $TestResult
 }
 
@@ -689,7 +800,7 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -726,8 +837,8 @@ function Export-TargetResource
         $policyTemplateID = 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
         [array]$policies = Get-MgDeviceManagementConfigurationPolicy `
             -ErrorAction Stop `
-            -All:$true `
-            -Filter $Filter
+            -All:$true
+
         $policies = $policies | Where-Object -FilterScript { $_.TemplateReference.TemplateId -eq $policyTemplateId }
 
         if ($policies.Length -eq 0)
@@ -755,45 +866,61 @@ function Export-TargetResource
 
             $Results = Get-TargetResource @params
 
-            if ($Results.Ensure -eq 'Present')
+            if ($Results.Assignments)
             {
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
-                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                    -ConnectionMode $ConnectionMode `
-                    -ModulePath $PSScriptRoot `
-                    -Results $Results `
-                    -Credential $Credential
-                $dscContent += $currentDSCBlock
-                Save-M365DSCPartialExport -Content $currentDSCBlock `
-                    -FileName $Global:PartialExportFileName
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Assignments) -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
 
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
-                $i++
+                if ($complexTypeStringResult)
+                {
+                    $Results.Assignments = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Assignments') | Out-Null
+                }
             }
+
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
+
+            if ($Results.Assignments)
+            {
+                $isCIMArray = $false
+                if ($Results.Assignments.getType().Fullname -like '*[[\]]')
+                {
+                    $isCIMArray = $true
+                }
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$isCIMArray
+            }
+
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+            $i++
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
         return $dscContent
     }
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
+
         if ($_.Exception -like '*401*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
 
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }
@@ -802,104 +929,107 @@ function Format-M365DSCParamsToSettingInstance
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param(
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.Collections.Hashtable]
         $DSCParams,
 
         [Parameter()]
-        [System.String]
-        $SettingDefinitionIdBase,
-
-        [Parameter(
-            ParameterSetName = 'GroupSettingCollectionInstance'
-        )]
-        [System.String]
-        $GroupSettingDefinitionIdName,
+        $TemplateSetting,
 
         [Parameter()]
-        [System.String]
-        $SettingInstanceTemplateId,
+        [System.Boolean]
+        $IncludeSettingInstanceTemplateId = $true,
 
         [Parameter()]
-        [System.String]
-        $SettingValueTemplateId
+        [System.Boolean]
+        $IncludeSettingValueTemplateId = $true
     )
 
     $DSCParams.Remove('Verbose') | Out-Null
     $results = @()
 
-    if (-Not[string]::IsNullOrEmpty($GroupSettingDefinitionIdName))
-    {
-        $settingInstance = [ordered]@{}
-        $settingInstance.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance')
-        $settingInstance.add('settingDefinitionId', $GroupSettingDefinitionIdName)
-        $settingInstance.add('settingInstanceTemplateReference', @{'settingInstanceTemplateId' = $settingInstanceTemplateId })
-        $groupSettingCollectionValues = @()
-
-        $groupSettingCollectionValueChildren = Format-M365DSCParamsToSettingInstance `
-            -DSCParams $DSCParams `
-            -SettingDefinitionIdBase "$GroupSettingDefinitionIdName`_"
-
-        $groupSettingCollectionValue = @{}
-        $groupSettingCollectionValue.add('children', $groupSettingCollectionValueChildren)
-        $groupSettingCollectionValues += $groupSettingCollectionValue
-        $settingInstance.add('groupSettingCollectionValue', $groupSettingCollectionValues)
-        $results += $settingInstance
-        return $results
-    }
-
     foreach ($param in $DSCParams.Keys)
     {
-        $settingName = $param
-        $settingIdentity = ($SettingDefinitionIdBase + $settingName).ToLower()
-
-        $settingDefinition = Get-MgDeviceManagementConfigurationPolicySetting -DeviceManagementConfigurationPolicyId $settingIdentity
-
         $settingInstance = [ordered]@{}
-
-        switch ($settingDefinition.'@odata.type')
+        $settingInstance.add('settingDefinitionId', $templateSetting.settingDefinitionId)
+        if ($IncludeSettingInstanceTemplateId -and -Not [string]::IsNullOrEmpty($templateSetting.settingInstanceTemplateId))
         {
-            '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+            $settingInstance.add('settingInstanceTemplateReference', @{'settingInstanceTemplateId' = $templateSetting.settingInstanceTemplateId })
+        }
+
+        $odataType = $templateSetting.AdditionalProperties.'@odata.type'
+        if ([string]::IsNullOrEmpty($odataType))
+        {
+            $odataType = $templateSetting.'@odata.type'
+        }
+        $settingInstance.add('@odata.type', $odataType.replace('Template', ''))
+
+        switch ($odataType)
+        {
+            '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
             {
-                $settingInstance.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance')
-                $settingInstance.add('settingDefinitionId', $settingIdentity)
-                if (-Not [string]::IsNullOrEmpty($settingInstanceTemplateId))
-                {
-                    $settingInstance.add('settingInstanceTemplateReference', @{'settingInstanceTemplateId' = $SettingInstanceTemplateId })
-                }
                 $choiceSettingValue = [ordered]@{}
+                $choiceSettingValue.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationChoiceSettingValue')
                 $choiceSettingValue.add('children', @())
-                if (-Not [string]::IsNullOrEmpty($settingValueTemplateId))
+                $settingValueTemplateId = $templateSetting.AdditionalProperties.choiceSettingValueTemplate.settingValueTemplateId
+                if ($IncludeSettingValueTemplateId -and -Not [string]::IsNullOrEmpty($settingValueTemplateId))
                 {
                     $choiceSettingValue.add('settingValueTemplateReference', @{'settingValueTemplateId' = $SettingValueTemplateId })
                 }
-                $choiceSettingValue.add('value', "$settingIdentity`_$($DSCParams.$param)")
+                $choiceSettingValue.add('value', "$($templateSetting.settingDefinitionId)`_$($DSCParams.$param)")
                 $settingInstance.add('choiceSettingValue', $choiceSettingValue)
                 $results += $settingInstance
             }
-            '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionDefinition'
+            '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstanceTemplate'
             {
-                $settingInstance.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance')
-                $settingInstance.add('settingDefinitionId', $settingIdentity)
-                if (-Not [string]::IsNullOrEmpty($settingInstanceTemplateId))
-                {
-                    $settingInstance.add('settingInstanceTemplateReference', @{'settingInstanceTemplateId' = $SettingInstanceTemplateId })
-                }
                 $simpleSettingCollectionValues = @()
+
                 foreach ($value in $DSCParams.$param)
                 {
                     $simpleSettingCollectionValue = @{}
-                    $simpleSettingCollectionValue.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationStringSettingValue')
+                    $settingValueTemplateId = $templateSetting.AdditionalProperties.simpleSettingCollectionValueTemplate.settingValueTemplateId
+                    if ($IncludeSettingValueTemplateId -and -Not [string]::IsNullOrEmpty($settingValueTemplateId))
+                    {
+                        $simpleSettingCollectionValue.add('settingValueTemplateReference', @{'settingValueTemplateId' = $SettingValueTemplateId })
+                    }
+                    $settingValueDataType = $templateSetting.AdditionalProperties.simpleSettingCollectionValueTemplate.'@odata.type'.replace('Template', '')
+                    $simpleSettingCollectionValue.add('@odata.type', $settingValueDataType)
                     $simpleSettingCollectionValue.add('value', $value)
                     $simpleSettingCollectionValues += $simpleSettingCollectionValue
                 }
                 $settingInstance.add('simpleSettingCollectionValue', $simpleSettingCollectionValues)
+
                 $results += $settingInstance
             }
-            Default {}
+            '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstanceTemplate'
+            {
+                $simpleSettingValue = @{}
+                $SettingValueType = $templateSetting.AdditionalProperties.simpleSettingValueTemplate.'@odata.type'
+                if (-Not [string]::IsNullOrEmpty($SettingValueType))
+                {
+                    $simpleSettingValue.add('@odata.type', $SettingValueType.replace('Template', ''))
+                }
+                $simpleSettingValue.add('value', $DSCParams.$param)
+
+                $settingValueTemplateId = $templateSetting.AdditionalProperties.simpleSettingValueTemplate.settingValueTemplateId
+                if (-Not [string]::IsNullOrEmpty($settingValueTemplateId))
+                {
+                    $simpleSettingValue.add('settingValueTemplateReference', @{'settingValueTemplateId' = $settingValueTemplateId })
+                }
+
+                $settingInstance.add('simpleSettingValue', $simpleSettingValue)
+                $results += $settingInstance
+            }
         }
     }
+
+    if ($results.count -eq 1)
+    {
+        return $results[0]
+    }
+
     return $results
 }
 
@@ -907,15 +1037,15 @@ function Format-M365DSCIntuneSettingCatalogASRRulesPolicySettings
 {
     [CmdletBinding()]
     [OutputType([System.Array])]
-    param(
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.Collections.Hashtable]
         $DSCParams,
 
         [Parameter(Mandatory = 'true')]
         [System.String]
-        $SettingDefinitionIdBase
-
+        $templateReferenceId
     )
 
     $DSCParams.Remove('Identity') | Out-Null
@@ -924,67 +1054,757 @@ function Format-M365DSCIntuneSettingCatalogASRRulesPolicySettings
 
     $settings = @()
 
-    #Prepare settings other than attacksurfacereductionrules
-    $otherSettings = @(
-        'AttackSurfaceReductionOnlyExclusions'
-        'ControlledFolderAccessProtectedFolders'
-        'ControlledFolderAccessAllowedApplications'
-        'EnableControlledFolderAccess'
-    )
+    $templateSettings = Get-MgDeviceManagementConfigurationPolicyTemplateSettingTemplate -DeviceManagementConfigurationPolicyTemplateId $templateReferenceId
 
-    foreach ($settingKey in $otherSettings)
+    $simpleSettings = @()
+    $simpleSettings += $templateSettings.SettingInstanceTemplate | Where-Object -FilterScript `
+    { $_.AdditionalProperties.'@odata.type' -ne '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstanceTemplate' }
+    foreach ($templateSetting in $simpleSettings)
     {
-        $settingInstanceTemplateId = ''
-        $settingValueTemplateId = ''
-
-        switch ($settingKey)
-        {
-            'AttackSurfaceReductionOnlyExclusions'{ $settingInstanceTemplateId = '0eaea6bb-736e-44ed-a450-b2ef5bea1377' }
-            'ControlledFolderAccessProtectedFolders'{ $settingInstanceTemplateId = '8f2096a7-d4f0-430c-9287-b08db7139163' }
-            'ControlledFolderAccessAllowedApplications'{ $settingInstanceTemplateId = 'e10f2cf5-121a-4890-af23-d4e91e0fab5f' }
-            'EnableControlledFolderAccess'
-            {
-                $settingInstanceTemplateId = '78c83b32-56c0-445a-932a-872d69af6e49'
-                $settingValueTemplateId = 'e57db701-c3c6-4264-ab50-7896cb90dfd6'
-            }
-
-        }
-
         $setting = @{}
-        if ($null -ne ($DSCParams."$settingKey"))
+        $settingKey = $DSCParams.keys | Where-Object -FilterScript { $templateSetting.settingDefinitionId -like "*$($_)" }
+        if ((-not [String]::IsNullOrEmpty($settingKey)) -and $DSCParams."$settingKey")
         {
             $setting.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationSetting')
-            $formatParams = @{}
-            $formatParams.Add('DSCParams', @{$settingKey = $DSCParams."$settingKey" })
-            $formatParams.Add('SettingDefinitionIdBase', $settingDefinitionIdBase)
-            $formatParams.Add('SettingInstanceTemplateId', $settingInstanceTemplateId)
-            if (-Not [string]::IsNullOrEmpty($settingValueTemplateId))
-            {
-                $formatParams.Add('SettingValueTemplateId', $settingValueTemplateId)
-            }
-            $myFormattedSetting = Format-M365DSCParamsToSettingInstance @formatParams
+            $myFormattedSetting = Format-M365DSCParamsToSettingInstance -DSCParams @{$settingKey = $DSCParams."$settingKey" } `
+                -TemplateSetting $templateSetting
 
             $setting.add('settingInstance', $myFormattedSetting)
+            $settings += $setting
+            $DSCParams.Remove($settingKey) | Out-Null
+        }
+    }
+
+    #Prepare attacksurfacereductionrules groupCollectionTemplateSettings
+    $groupCollectionTemplateSettings = @()
+    $groupCollectionTemplateSettings += $templateSettings.SettingInstanceTemplate | Where-Object -FilterScript `
+    { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstanceTemplate' }
+
+    foreach ($groupCollectionTemplateSetting in $groupCollectionTemplateSettings)
+    {
+        $setting = @{}
+        $setting.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationSetting')
+        $settingInstance = [ordered]@{}
+        $settingInstance.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance')
+        $settingInstance.add('settingDefinitionId', $groupCollectionTemplateSetting.settingDefinitionId)
+        $settingInstance.add('settingInstanceTemplateReference', @{
+                '@odata.type'               = '#microsoft.graph.deviceManagementConfigurationSettingInstanceTemplateReference'
+                'settingInstanceTemplateId' = $groupCollectionTemplateSetting.settingInstanceTemplateId
+            })
+        $groupSettingCollectionValues = @()
+        $groupSettingCollectionValueChildren = @()
+        $groupSettingCollectionValue = @{}
+        $groupSettingCollectionValue.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationGroupSettingValue')
+
+        $settingValueTemplateId = $groupCollectionTemplateSetting.AdditionalProperties.groupSettingCollectionValueTemplate.settingValueTemplateId
+        if (-Not [string]::IsNullOrEmpty($settingValueTemplateId))
+        {
+            $groupSettingCollectionValue.add('settingValueTemplateReference', @{'settingValueTemplateId' = $SettingValueTemplateId })
+        }
+
+        foreach ($key in $DSCParams.keys)
+        {
+            $templateValue = $groupCollectionTemplateSetting.AdditionalProperties.groupSettingCollectionValueTemplate.children | Where-Object `
+                -FilterScript { $_.settingDefinitionId -like "*$key" }
+            if ($templateValue)
+            {
+                $groupSettingCollectionValueChild = Format-M365DSCParamsToSettingInstance `
+                    -DSCParams @{$key = $DSCParams."$key" } `
+                    -TemplateSetting $templateValue `
+                    -IncludeSettingValueTemplateId $false `
+                    -IncludeSettingInstanceTemplateId $false
+
+                $groupSettingCollectionValueChildren += $groupSettingCollectionValueChild
+            }
+        }
+        $groupSettingCollectionValue.add('children', $groupSettingCollectionValueChildren)
+        $groupSettingCollectionValues += $groupSettingCollectionValue
+        $settingInstance.add('groupSettingCollectionValue', $groupSettingCollectionValues)
+        $setting.add('settingInstance', $settingInstance)
+
+        if ($setting.settingInstance.groupSettingCollectionValue.children.count -gt 0)
+        {
             $settings += $setting
         }
     }
 
-    $DSCParams.Remove('ControlledFolderAccessProtectedFolders') | Out-Null
-    $DSCParams.Remove('ControlledFolderAccessAllowedApplications') | Out-Null
-    $DSCParams.Remove('EnableControlledFolderAccess') | Out-Null
-    $DSCParams.Remove('AttackSurfaceReductionOnlyExclusions') | Out-Null
-
-    #Prepare attacksurfacereductionrules
-    $setting = @{}
-    $setting.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationSetting')
-    $ASRSettings = Format-M365DSCParamsToSettingInstance `
-        -DSCParams $DSCParams `
-        -GroupSettingDefinitionIdName 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules' `
-        -SettingInstanceTemplateId '19600663-e264-4c02-8f55-f2983216d6d7'
-    $setting.add('settingInstance', $ASRSettings)
-    $settings += $setting
-
     return $settings
+}
+
+function New-IntuneDeviceConfigurationPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Platforms,
+
+        [Parameter()]
+        [System.String]
+        $Technologies,
+
+        [Parameter()]
+        [System.String]
+        $TemplateReferenceId,
+
+        [Parameter()]
+        [Array]
+        $Settings
+    )
+
+    try
+    {
+        $Uri = 'https://graph.microsoft.com/beta/deviceManagement/configurationPolicies'
+
+        $policy = @{
+            'name'              = $Name
+            'description'       = $Description
+            'platforms'         = $Platforms
+            'technologies'      = $Technologies
+            'templateReference' = @{'templateId' = $TemplateReferenceId }
+            'settings'          = $Settings
+        }
+        $body = $policy | ConvertTo-Json -Depth 20
+        #write-verbose -Message $body
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $null
+    }
+}
+
+function Update-IntuneDeviceConfigurationPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceConfigurationPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Platforms,
+
+        [Parameter()]
+        [System.String]
+        $Technologies,
+
+        [Parameter()]
+        [System.String]
+        $TemplateReferenceId,
+
+        [Parameter()]
+        [Array]
+        $Settings
+    )
+
+    try
+    {
+        $Uri = "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/$DeviceConfigurationPolicyId"
+
+        $policy = @{
+            'name'              = $Name
+            'description'       = $Description
+            'platforms'         = $Platforms
+            'templateReference' = @{'templateId' = $TemplateReferenceId }
+            'technologies'      = $Technologies
+            'settings'          = $Settings
+        }
+        $body = $policy | ConvertTo-Json -Depth 20
+        #write-verbose -Message $body
+        Invoke-MgGraphRequest -Method PUT -Uri $Uri -Body $body -ErrorAction Stop
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $null
+    }
+}
+
+function Update-DeviceConfigurationPolicyAssignments
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceConfigurationPolicyId,
+
+        [Parameter()]
+        [Array]
+        $Targets
+    )
+
+    try
+    {
+        $configurationPolicyAssignments = @()
+
+        $Uri = "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/$DeviceConfigurationPolicyId/assign"
+
+        foreach ($target in $targets)
+        {
+            $formattedTarget = @{'@odata.type' = $target.dataType }
+            if ($target.groupId)
+            {
+                $formattedTarget.Add('groupId', $target.groupId)
+            }
+            if ($target.collectionId)
+            {
+                $formattedTarget.Add('collectionId', $target.collectionId)
+            }
+            if ($target.deviceAndAppManagementAssignmentFilterType)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType', $target.deviceAndAppManagementAssignmentFilterType)
+            }
+            if ($target.deviceAndAppManagementAssignmentFilterId)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId', $target.deviceAndAppManagementAssignmentFilterId)
+            }
+            $configurationPolicyAssignments += @{'target' = $formattedTarget }
+        }
+        $body = @{'assignments' = $configurationPolicyAssignments } | ConvertTo-Json -Depth 20
+        #write-verbose -Message $body
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
+
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $null
+    }
+}
+
+function Get-M365DSCDRGComplexTypeToHashtable
+{
+    [CmdletBinding()]
+    [OutputType([hashtable], [hashtable[]])]
+    param
+    (
+        [Parameter()]
+        $ComplexObject
+    )
+
+    if ($null -eq $ComplexObject)
+    {
+        return $null
+    }
+
+
+    if ($ComplexObject.getType().Fullname -like '*hashtable')
+    {
+        return $ComplexObject
+    }
+    if ($ComplexObject.getType().Fullname -like '*hashtable[[\]]')
+    {
+        return [hashtable[]]$ComplexObject
+    }
+
+
+    if ($ComplexObject.gettype().fullname -like '*[[\]]')
+    {
+        $results = @()
+
+        foreach ($item in $ComplexObject)
+        {
+            if ($item)
+            {
+                $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
+                $results += $hash
+            }
+        }
+
+        # PowerShell returns all non-captured stream output, not just the argument of the return statement.
+        #An empty array is mangled into $null in the process.
+        #However, an array can be preserved on return by prepending it with the array construction operator (,)
+        return , [hashtable[]]$results
+    }
+
+    $results = @{}
+    $keys = $ComplexObject | Get-Member | Where-Object -FilterScript { $_.MemberType -eq 'Property' -and $_.Name -ne 'AdditionalProperties' }
+
+    foreach ($key in $keys)
+    {
+
+        if ($ComplexObject.$($key.Name))
+        {
+            $keyName = $key.Name[0].ToString().ToLower() + $key.Name.Substring(1, $key.Name.Length - 1)
+
+            if ($ComplexObject.$($key.Name).gettype().fullname -like '*CimInstance*')
+            {
+                $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$($key.Name)
+
+                $results.Add($keyName, $hash)
+            }
+            else
+            {
+                $results.Add($keyName, $ComplexObject.$($key.Name))
+            }
+        }
+    }
+
+    return [hashtable]$results
+}
+
+function Get-M365DSCDRGComplexTypeToString
+{
+    [CmdletBinding()]
+    #[OutputType([System.String])]
+    param
+    (
+        [Parameter()]
+        $ComplexObject,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $CIMInstanceName,
+
+        [Parameter()]
+        [Array]
+        $ComplexTypeMapping,
+
+        [Parameter()]
+        [System.String]
+        $Whitespace = '',
+
+        [Parameter()]
+        [switch]
+        $isArray = $false
+    )
+
+    if ($null -eq $ComplexObject)
+    {
+        return $null
+    }
+
+    #If ComplexObject  is an Array
+    if ($ComplexObject.GetType().FullName -like '*[[\]]')
+    {
+        $currentProperty = @()
+        foreach ($item in $ComplexObject)
+        {
+            $split = @{
+                'ComplexObject'   = $item
+                'CIMInstanceName' = $CIMInstanceName
+                'Whitespace'      = "                $whitespace"
+            }
+            if ($ComplexTypeMapping)
+            {
+                $split.add('ComplexTypeMapping', $ComplexTypeMapping)
+            }
+
+            $currentProperty += Get-M365DSCDRGComplexTypeToString -isArray:$true @split
+
+        }
+
+        # PowerShell returns all non-captured stream output, not just the argument of the return statement.
+        #An empty array is mangled into $null in the process.
+        #However, an array can be preserved on return by prepending it with the array construction operator (,)
+        return , $currentProperty
+    }
+
+    $currentProperty = ''
+    if ($isArray)
+    {
+        $currentProperty += "`r`n"
+    }
+    $currentProperty += "$whitespace`MSFT_$CIMInstanceName{`r`n"
+    $keyNotNull = 0
+    foreach ($key in $ComplexObject.Keys)
+    {
+
+        if ($ComplexObject[$key])
+        {
+            $keyNotNull++
+            if ($ComplexObject[$key].GetType().FullName -like 'Microsoft.Graph.PowerShell.Models.*' -or $key -in $ComplexTypeMapping.Name)
+            {
+                $hashPropertyType = $ComplexObject[$key].GetType().Name.tolower()
+
+                #overwrite type if object defined in mapping complextypemapping
+                if ($key -in $ComplexTypeMapping.Name)
+                {
+                    $hashPropertyType = ($ComplexTypeMapping | Where-Object -FilterScript { $_.Name -eq $key }).CimInstanceName
+                    $hashProperty = $ComplexObject[$key]
+                }
+                else
+                {
+                    $hashProperty = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key]
+                }
+
+                if ($key -notin $ComplexTypeMapping.Name)
+                {
+                    $Whitespace += '            '
+                }
+
+                if (-not $isArray -or ($isArray -and $key -in $ComplexTypeMapping.Name ))
+                {
+                    $currentProperty += $whitespace + $key + ' = '
+                    if ($ComplexObject[$key].GetType().FullName -like '*[[\]]')
+                    {
+                        $currentProperty += '@('
+                    }
+                }
+
+                if ($key -in $ComplexTypeMapping.Name)
+                {
+                    $Whitespace = ''
+
+                }
+                $currentProperty += Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $hashProperty `
+                    -CIMInstanceName $hashPropertyType `
+                    -Whitespace $Whitespace `
+                    -ComplexTypeMapping $ComplexTypeMapping
+
+                if ($ComplexObject[$key].GetType().FullName -like '*[[\]]')
+                {
+                    $currentProperty += ')'
+                }
+            }
+            else
+            {
+                if (-not $isArray)
+                {
+                    $Whitespace = '            '
+                }
+                $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $ComplexObject[$key] -Space ($Whitespace + '    ')
+            }
+        }
+        else
+        {
+            $mappedKey = $ComplexTypeMapping | Where-Object -FilterScript { $_.name -eq $key }
+
+            if ($mappedKey -and $mappedKey.isRequired)
+            {
+                if ($mappedKey.isArray)
+                {
+                    $currentProperty += "$Whitespace    $key = @()`r`n"
+                }
+                else
+                {
+                    $currentProperty += "$Whitespace    $key = `$null`r`n"
+                }
+            }
+        }
+    }
+    $currentProperty += "$Whitespace}"
+
+    return $currentProperty
+}
+
+function Get-M365DSCDRGSimpleObjectTypeToString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $Key,
+
+        [Parameter(Mandatory = 'true')]
+        $Value,
+
+        [Parameter()]
+        [System.String]
+        $Space = '                '
+    )
+
+    $returnValue = ''
+    switch -Wildcard ($Value.GetType().Fullname )
+    {
+        '*.Boolean'
+        {
+            $returnValue = $Space + $Key + " = `$" + $Value.ToString() + "`r`n"
+        }
+        '*.String'
+        {
+            if ($key -eq '@odata.type')
+            {
+                $key = 'odataType'
+            }
+            $returnValue = $Space + $Key + " = '" + $Value + "'`r`n"
+        }
+        '*.DateTime'
+        {
+            $returnValue = $Space + $Key + " = '" + $Value + "'`r`n"
+        }
+        '*[[\]]'
+        {
+            $returnValue = $Space + $key + ' = @('
+            $whitespace = ''
+            $newline = ''
+            if ($Value.count -gt 1)
+            {
+                $returnValue += "`r`n"
+                $whitespace = $Space + '    '
+                $newline = "`r`n"
+            }
+            foreach ($item in $Value)
+            {
+                switch -Wildcard ($item.GetType().Fullname )
+                {
+                    '*.String'
+                    {
+                        $returnValue += "$whitespace'$item'$newline"
+                    }
+                    '*.DateTime'
+                    {
+                        $returnValue += "$whitespace'$item'$newline"
+                    }
+                    Default
+                    {
+                        $returnValue += "$whitespace$item$newline"
+                    }
+                }
+            }
+            if ($Value.count -gt 1)
+            {
+                $returnValue += "$Space)`r`n"
+            }
+            else
+            {
+                $returnValue += ")`r`n"
+            }
+        }
+        Default
+        {
+            $returnValue = $Space + $Key + ' = ' + $Value + "`r`n"
+        }
+    }
+    return $returnValue
+}
+
+function Compare-M365DSCComplexObject
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter()]
+        $Source,
+
+        [Parameter()]
+        $Target
+    )
+
+    #Comparing full objects
+    if ($null -eq $Source -and $null -eq $Target)
+    {
+        return $true
+    }
+
+    $sourceValue = ''
+    $targetValue = ''
+    if (($null -eq $Source) -xor ($null -eq $Target))
+    {
+        if ($null -eq $Source)
+        {
+            $sourceValue = 'Source is null'
+        }
+
+        if ($null -eq $Target)
+        {
+            $targetValue = 'Target is null'
+        }
+        Write-Verbose -Message "Configuration drift - Complex object: {$sourceValue$targetValue}"
+        return $false
+    }
+
+    if ($Source.getType().FullName -like '*CimInstance[[\]]' -or $Source.getType().FullName -like '*Hashtable[[\]]')
+    {
+        if ($source.count -ne $target.count)
+        {
+            Write-Verbose -Message "Configuration drift - The complex array have different number of items: Source {$($source.count)} Target {$($target.count)}"
+            return $false
+        }
+        if ($source.count -eq 0)
+        {
+            return $true
+        }
+
+        $i = 0
+        foreach ($item in $Source)
+        {
+
+            $compareResult = Compare-M365DSCComplexObject `
+                -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Source[$i]) `
+                -Target $Target[$i]
+
+            if (-not $compareResult)
+            {
+                Write-Verbose -Message 'Configuration drift - The complex array items are not identical'
+                return $false
+            }
+            $i++
+        }
+        return $true
+    }
+
+    $keys = $Source.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
+    foreach ($key in $keys)
+    {
+        #write-verbose -message "Comparing key: {$key}"
+        #Matching possible key names between Source and Target
+        $skey = $key
+        $tkey = $key
+        if ($key -eq 'odataType')
+        {
+            $skey = '@odata.type'
+        }
+        else
+        {
+            $tmpkey = $Target.keys | Where-Object -FilterScript { $_ -eq "$key" }
+            if ($tkey)
+            {
+                $tkey = $tmpkey | Select-Object -First 1
+            }
+        }
+
+        $sourceValue = $Source.$key
+        $targetValue = $Target.$tkey
+        #One of the item is null and not the other
+        if (($null -eq $Source.$skey) -xor ($null -eq $Target.$tkey))
+        {
+
+            if ($null -eq $Source.$skey)
+            {
+                $sourceValue = 'null'
+            }
+
+            if ($null -eq $Target.$tkey)
+            {
+                $targetValue = 'null'
+            }
+
+            Write-Verbose -Message "Configuration drift - key: $key Source {$sourceValue} Target {$targetValue}"
+            return $false
+        }
+
+        #Both keys aren't null or empty
+        if (($null -ne $Source.$skey) -and ($null -ne $Target.$tkey))
+        {
+            if ($Source.$skey.getType().FullName -like '*CimInstance*' -or $Source.$skey.getType().FullName -like '*hashtable*'  )
+            {
+                #Recursive call for complex object
+                $compareResult = Compare-M365DSCComplexObject `
+                    -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Source.$skey) `
+                    -Target $Target.$tkey
+
+                if (-not $compareResult)
+                {
+                    Write-Verbose -Message "Configuration drift - complex object key: $key Source {$sourceValue} Target {$targetValue}"
+                    return $false
+                }
+            }
+            else
+            {
+                #Simple object comparison
+                $referenceObject = $Target.$tkey
+                $differenceObject = $Source.$skey
+
+                $compareResult = Compare-Object `
+                    -ReferenceObject ($referenceObject) `
+                    -DifferenceObject ($differenceObject)
+
+                if ($null -ne $compareResult)
+                {
+                    Write-Verbose -Message "Configuration drift - simple object key: $key Source {$sourceValue} Target {$targetValue}"
+                    return $false
+                }
+            }
+        }
+    }
+
+    return $true
+}
+
+function Convert-M365DSCDRGComplexTypeToHashtable
+{
+    [CmdletBinding()]
+    [OutputType([hashtable], [hashtable[]])]
+    param
+    (
+        [Parameter(Mandatory = 'true')]
+        $ComplexObject
+    )
+
+    if ($ComplexObject.getType().Fullname -like '*[[\]]')
+    {
+        $results = @()
+        foreach ($item in $ComplexObject)
+        {
+            $hash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
+            $results += $hash
+        }
+
+        #Write-Verbose -Message ("Convert-M365DSCDRGComplexTypeToHashtable >>> results: "+(convertTo-JSON $results -Depth 20))
+        # PowerShell returns all non-captured stream output, not just the argument of the return statement.
+        #An empty array is mangled into $null in the process.
+        #However, an array can be preserved on return by prepending it with the array construction operator (,)
+        return , [hashtable[]]$results
+    }
+    $hashComplexObject = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject
+
+    if ($hashComplexObject)
+    {
+
+        $results = $hashComplexObject.clone()
+        $keys = $hashComplexObject.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
+        foreach ($key in $keys)
+        {
+            if ($hashComplexObject[$key] -and $hashComplexObject[$key].getType().Fullname -like '*CimInstance*')
+            {
+                $results[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $hashComplexObject[$key]
+            }
+            else
+            {
+                $propertyName = $key[0].ToString().ToLower() + $key.Substring(1, $key.Length - 1)
+                $propertyValue = $results[$key]
+                $results.remove($key) | Out-Null
+                $results.add($propertyName, $propertyValue)
+            }
+        }
+    }
+    return [hashtable]$results
 }
 
 Export-ModuleMember -Function *-TargetResource

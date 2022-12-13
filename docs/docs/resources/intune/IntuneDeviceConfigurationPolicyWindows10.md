@@ -4,12 +4,18 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
+| **dataType** | Write | String | The type of the target assignment. |#microsoft.graph.groupAssignmentTarget, #microsoft.graph.allLicensedUsersAssignmentTarget, #microsoft.graph.allDevicesAssignmentTarget, #microsoft.graph.exclusionGroupAssignmentTarget, #microsoft.graph.configurationManagerCollectionAssignmentTarget|
+| **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. |none, include, exclude|
+| **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. ||
+| **groupId** | Write | String | The group Id that is the target of the assignment. ||
+| **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) ||
 | **LowSeverity** | Write | String | Specifies the action to take when a low severity malware is detected. |deviceDefault, clean, quarantine, remove, allow, userDefined, block|
 | **ModerateSeverity** | Write | String | Specifies the action to take when a moderate severity malware is detected. |deviceDefault, clean, quarantine, remove, allow, userDefined, block|
 | **HighSeverity** | Write | String | Specifies the action to take when a high severity malware is detected. |deviceDefault, clean, quarantine, remove, allow, userDefined, block|
 | **SevereSeverity** | Write | String | Specifies the action to take when a severe malware is detected. |deviceDefault, clean, quarantine, remove, allow, userDefined, block|
 | **DisplayName** | Key | String | Description of the device configuration policy for Windows 10. ||
 | **Description** | Write | String | Display name of the device configuration policy for Windows 10. ||
+| **Assignments** | Write | InstanceArray[] | Represents the assignment to the Intune policy. ||
 | **EnterpriseCloudPrintDiscoveryEndPoint** | Write | String | Endpoint for discovering cloud printers. ||
 | **EnterpriseCloudPrintOAuthAuthority** | Write | String | Authentication endpoint for acquiring OAuth tokens. ||
 | **EnterpriseCloudPrintOAuthClientIdentifier** | Write | String | GUID of a client application authorized to retrieve OAuth tokens from the OAuth Authority. ||
@@ -215,7 +221,7 @@
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin ||
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
 | **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||
-| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory tenant used for authentication. ||
+| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. ||
 

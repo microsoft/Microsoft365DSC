@@ -10,6 +10,7 @@ function Start-M365DSCConfigurationExtract
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingConvertToSecureStringWithPlainText', '', Justification = 'Conversion for credential creation')]
     param(
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -90,11 +91,11 @@ function Start-M365DSCConfigurationExtract
     # PowerShell Gallery
     try
     {
-        Test-M365DSCNewVersionAvailable
+        Test-M365DSCModuleValidity
     }
     catch
     {
-        Add-M365DSCEvent -Message $_ -Source 'M365DSCReverse::Test-M365DSCNewVersionAvailable'
+        Add-M365DSCEvent -Message $_ -Source 'M365DSCReverse::Test-M365DSCModuleValidity'
     }
     try
     {
@@ -135,10 +136,17 @@ function Start-M365DSCConfigurationExtract
 
         Write-Host -Object ' '
         Write-Host -Object 'Authentication methods specified:'
-        if ($null -ne $Credential)
+        if ($null -ne $Credential -and `
+                [System.String]::IsNullOrEmpty($ApplicationId) )
         {
             Write-Host -Object '- Credentials'
             $AuthMethods += 'Credentials'
+        }
+        if ($null -ne $Credential -and `
+                -not [System.String]::IsNullOrEmpty($ApplicationId))
+        {
+            Write-Host -Object '- CredentialsWithApplicationId'
+            $AuthMethods += 'CredentialsWithApplicationId'
         }
         if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint))
         {
@@ -234,10 +242,21 @@ function Start-M365DSCConfigurationExtract
                 $AuthMethods -contains 'CertificatePath' -or `
                 $AuthMethods -contains 'ApplicationWithSecret')
         {
+            $AppSecretAsPSCredential = $null
+            if (-not [System.String]::IsNullOrEmpty($ApplicationSecret))
+            {
+                [SecureString]$secStringPassword = ConvertTo-SecureString $ApplicationSecret -AsPlainText -Force
+                [PSCredential]$AppSecretAsPSCredential = New-Object System.Management.Automation.PSCredential ('ApplicationSecret', $secStringPassword)
+            }
+
             $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
-                -TenantId $TenantId
+                -TenantId $TenantId `
+                -CertificateThumbprint $CertificateThumbprint `
+                -ApplicationSecret $AppSecretAsPSCredential `
+                -CertificatePath $CertificatePath
         }
-        elseif ($AuthMethods -Contains 'Credentials')
+        elseif ($AuthMethods -Contains 'Credentials' -or `
+                $AuthMethods -Contains 'CredentialsWithApplicationId')
         {
             if ($null -ne $Credential -and $Credential.UserName.Contains('@'))
             {
@@ -246,16 +265,19 @@ function Start-M365DSCConfigurationExtract
         }
         elseif ($AuthMethods -contains 'ManagedIdentity')
         {
-            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters @{'ManagedIdentity' = $true }
-            $TenantId = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.TenantId
-            $organization = $TenantId
+            # If tenantId comes in as a GUID then query to replace with string representation, else use what was provided
+            if ($TenantId -match ('^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$'))
+            {
+                $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters @{'ManagedIdentity' = $true; 'TenantId' = $TenantId }
+                $organization = Get-M365DSCTenantDomain -TenantId $TenantId -ManagedIdentity
+            }
+            else
+            {
+                $organization = $TenantId
+            }
         }
 
         $AzureAutomation = $false
-        if ($organization.IndexOf('.') -gt 0)
-        {
-            $principal = $organization.Split('.')[0]
-        }
 
         [array] $version = Get-Module 'Microsoft365DSC'
         $version = $version[0].Version
@@ -280,7 +302,7 @@ function Start-M365DSCConfigurationExtract
                 $DSCContent.Append("    `$CertificatePassword`r`n") | Out-Null
                 $newline = $true
             }
-            'Credentials'
+            { $_ -in 'Credentials', 'CredentialsWithApplicationId' }
             {
                 if ($newline)
                 {
@@ -382,7 +404,7 @@ function Start-M365DSCConfigurationExtract
                     -Value $ApplicationSecret `
                     -Description 'Azure AD Application Secret for Authentication'
             }
-            'Credentials'
+            { $_ -in 'Credentials', 'CredentialsWithApplicationId' }
             {
                 if ($newline)
                 {
@@ -413,6 +435,13 @@ function Start-M365DSCConfigurationExtract
             }
             'ManagedIdentity'
             {
+                $postParamContent.Append("    `$OrganizationName = `$ConfigurationData.NonNodeData.OrganizationName`r`n") | Out-Null
+
+                Add-ConfigurationDataEntry -Node 'NonNodeData' `
+                    -Key 'OrganizationName' `
+                    -Value $organization `
+                    -Description "Tenant's default verified domain name"
+
                 Add-ConfigurationDataEntry -Node 'NonNodeData' `
                     -Key 'TenantId' `
                     -Value $TenantId `
@@ -459,7 +488,9 @@ function Start-M365DSCConfigurationExtract
             }
             catch
             {
-                New-M365DSCLogEntry -Error $_ -Message $ResourceModule.Name -Source "[M365DSCReverse]$($ResourceModule.Name)"
+                New-M365DSCLogEntry -Message $ResourceModule.Name `
+                    -Exception $_ `
+                    -Source "[M365DSCReverse]$($ResourceModule.Name)"
             }
         }
 
@@ -482,6 +513,7 @@ function Start-M365DSCConfigurationExtract
                 Credential            = $Credential
                 Identity              = $ManagedIdentity.IsPresent
             }
+
             try
             {
                 Connect-M365Tenant @ConnectionParams | Out-Null
@@ -522,10 +554,15 @@ function Start-M365DSCConfigurationExtract
                 }
                 'ApplicationSecret'
                 {
-                    $parameters.Add('ApplicationSecret', $ApplicationSecret)
+                    $applicationSecretValue = New-Object System.Management.Automation.PSCredential ('ApplicationSecret', (ConvertTo-SecureString $ApplicationSecret -AsPlainText -Force));
+                    $parameters.Add('ApplicationSecret', $applicationSecretValue)
                 }
-                'Credentials'
+                { $_ -in 'Credentials', 'CredentialsWithApplicationId' }
                 {
+                    if ($AuthMethods -contains 'CredentialsWithApplicationId')
+                    {
+                        $parameters.Add('ApplicationId', $ApplicationId)
+                    }
                     $parameters.Add('Credential', $Credential)
                 }
                 'ManagedIdentity'
@@ -547,11 +584,11 @@ function Start-M365DSCConfigurationExtract
 
             if ($ComponentsToSkip -notcontains $resourceName)
             {
-                Write-Host "[$i/$($ResourcesToExport.Length)] Extracting [" -NoNewLine
-                Write-Host $resourceName -ForegroundColor Green -NoNewLine
-                Write-Host "] using {" -NoNewLine
+                Write-Host "[$i/$($ResourcesToExport.Length)] Extracting [" -NoNewline
+                Write-Host $resourceName -ForegroundColor Green -NoNewline
+                Write-Host '] using {' -NoNewline
                 Write-Host $mostSecureAuthMethod -ForegroundColor Cyan -NoNewline
-                Write-Host "}..." -NoNewline
+                Write-Host '}...' -NoNewline
                 $exportString = [System.Text.StringBuilder]::New()
                 if ($GenerateInfo)
                 {
@@ -605,7 +642,7 @@ function Start-M365DSCConfigurationExtract
                 $DSCContent = $DSCContent.Insert($startPosition, $credsContent)
                 $launchCommand += " -CertificatePassword `$CertificatePassword"
             }
-            'Credentials'
+            { $_ -in 'Credentials', 'CredentialsWithApplicationId' }
             {
                 #region Add the Prompt for Required Credentials at the top of the Configuration
                 $credsContent = ''
@@ -713,7 +750,7 @@ function Start-M365DSCConfigurationExtract
             else
             {
                 $filesToDownload = Get-AllSPOPackages -ApplicationId $ApplicationId -CertificateThumbprint $CertificateThumbprint `
-                    -CertificatePassword $CertificatePassword -TenantId $TenantId -CertificatePath $CertificatePath
+                    -CertificatePassword $CertificatePassword -TenantId $TenantId -CertificatePath $CertificatePath -ManagedIdentity:$ManagedIdentity.IsPresent
             }
             if ($filesToDownload.Count -gt 0)
             {
@@ -737,7 +774,7 @@ function Start-M365DSCConfigurationExtract
         }
         $DSCContent.ToString() | Out-File $outputDSCFile
 
-        if (!$AzureAutomation)
+        if (!$AzureAutomation -and !$ManagedIdentity.IsPresent)
         {
             if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
             {
@@ -748,6 +785,10 @@ function Start-M365DSCConfigurationExtract
                     {
                         # Export the certificate assigned to the LCM
                         $certPath = $OutputDSCPath + 'M365DSC.cer'
+                        if (Test-Path $certPath)
+                        {
+                            Remove-Item $certPath -Force
+                        }
                         Export-Certificate -FilePath $certPath `
                             -Cert "cert:\LocalMachine\my\$($LCMConfig.CertificateID)" `
                             -Type CERT `
@@ -755,9 +796,11 @@ function Start-M365DSCConfigurationExtract
                     }
                     catch
                     {
-                        Write-Verbose -Message $_
-                        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+                        New-M365DSCLogEntry -Message 'Error while exporting the DSC certificate:' `
+                            -Exception $_ `
+                            -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $TenantId `
+                            -Credential $Credential
                     }
 
                     Add-ConfigurationDataEntry -Node 'localhost' `
@@ -772,10 +815,9 @@ function Start-M365DSCConfigurationExtract
                 Write-Host "Cannot export Local Configuration Manager settings. This process isn't executed with Administrative Privileges!" -NoNewline -ForegroundColor DarkCyan
                 Write-Host '}'
             }
-            $outputConfigurationData = $OutputDSCPath + 'ConfigurationData.psd1'
-            New-ConfigurationDataDocument -Path $outputConfigurationData
         }
-
+        $outputConfigurationData = $OutputDSCPath + 'ConfigurationData.psd1'
+        New-ConfigurationDataDocument -Path $outputConfigurationData
         if ($shouldOpenOutputDirectory)
         {
             try

@@ -145,9 +145,9 @@ function Get-TargetResource
         $UniversalOutlookEnabled,
 
         [Parameter()]
-        [ValidateSet("Present")]
+        [ValidateSet('Present')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -171,7 +171,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration of Exchange Online CAS Mailbox Settings for $Identity"
@@ -192,7 +196,7 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -201,7 +205,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -214,7 +218,7 @@ function Get-TargetResource
 
     if ($null -eq $mailboxCasSettings)
     {
-        Write-Verbose -Message "The specified Mailbox does not exist."
+        Write-Verbose -Message 'The specified Mailbox does not exist.'
         return $nullReturn
     }
 
@@ -254,12 +258,13 @@ function Get-TargetResource
         ShowGalAsDefaultView                    = $mailboxCasSettings.ShowGalAsDefaultView
         SmtpClientAuthenticationDisabled        = $mailboxCasSettings.SmtpClientAuthenticationDisabled
         UniversalOutlookEnabled                 = $mailboxCasSettings.UniversalOutlookEnabled
-        Ensure                                  = "Present"
+        Ensure                                  = 'Present'
         Credential                              = $Credential
         ApplicationId                           = $ApplicationId
         CertificateThumbprint                   = $CertificateThumbprint
         CertificatePath                         = $CertificatePath
         CertificatePassword                     = $CertificatePassword
+        Managedidentity                         = $ManagedIdentity.IsPresent
         TenantId                                = $TenantId
     }
     Write-Verbose -Message "Found an existing instance of Mailbox '$($Identity)'"
@@ -412,9 +417,9 @@ function Set-TargetResource
         $UniversalOutlookEnabled,
 
         [Parameter()]
-        [ValidateSet("Present")]
+        [ValidateSet('Present')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -438,7 +443,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of Exchange Online CAS Mailbox settings for $Identity"
@@ -447,7 +456,7 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -467,9 +476,10 @@ function Set-TargetResource
     $CASMailboxParams.Remove('CertificateThumbprint') | Out-Null
     $CASMailboxParams.Remove('CertificatePath') | Out-Null
     $CASMailboxParams.Remove('CertificatePassword') | Out-Null
+    $CASMailboxParams.Remove('ManagedIdentity') | Out-Null
 
     # CASE: Mailbox doesn't exist but should;
-    if ($Ensure -eq "Present" -and $currentMailbox.Ensure -eq "Absent")
+    if ($Ensure -eq 'Present' -and $currentMailbox.Ensure -eq 'Absent')
     {
         throw "The specified mailbox {$($Identity)} does not exist."
     }
@@ -626,9 +636,9 @@ function Test-TargetResource
         $UniversalOutlookEnabled,
 
         [Parameter()]
-        [ValidateSet("Present")]
+        [ValidateSet('Present')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -652,13 +662,17 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -680,6 +694,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -719,7 +734,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -729,7 +748,7 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -762,6 +781,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
             $Results = Get-TargetResource @Params

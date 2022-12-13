@@ -18,22 +18,34 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Everyone", "EveryoneInCompany", "InvitedUsersInCompany", "EveryoneInCompanyAndExternal", "InvitedUsersInCompanyAndExternal")]
+        [ValidateSet('Everyone', 'EveryoneInCompany', 'InvitedUsersInCompany', 'EveryoneInCompanyAndExternal', 'InvitedUsersInCompanyAndExternal')]
         $BroadcastAttendeeVisibilityMode,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("AlwaysEnabled", "AlwaysDisabled", "UserOverride")]
+        [ValidateSet('AlwaysEnabled', 'AlwaysDisabled', 'UserOverride')]
         $BroadcastRecordingMode,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration of Teams Meeting Broadcast Policy {$Identity}"
@@ -45,8 +57,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -54,7 +66,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
     try
     {
         $config = Get-CsTeamsMeetingBroadcastPolicy -Identity $Identity `
@@ -68,33 +80,22 @@ function Get-TargetResource
                 BroadcastAttendeeVisibilityMode = $config.BroadcastAttendeeVisibilityMode
                 BroadcastRecordingMode          = $config.BroadcastRecordingMode
                 Ensure                          = 'Present'
-                Credential              = $Credential
+                Credential                      = $Credential
+                ApplicationId                   = $ApplicationId
+                TenantId                        = $TenantId
+                CertificateThumbprint           = $CertificateThumbprint
             }
         }
         return $nullReturn
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -118,22 +119,34 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Everyone", "EveryoneInCompany", "InvitedUsersInCompany", "EveryoneInCompanyAndExternal", "InvitedUsersInCompanyAndExternal")]
+        [ValidateSet('Everyone', 'EveryoneInCompany', 'InvitedUsersInCompany', 'EveryoneInCompanyAndExternal', 'InvitedUsersInCompanyAndExternal')]
         $BroadcastAttendeeVisibilityMode,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("AlwaysEnabled", "AlwaysDisabled", "UserOverride")]
+        [ValidateSet('AlwaysEnabled', 'AlwaysDisabled', 'UserOverride')]
         $BroadcastRecordingMode,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Write-Verbose -Message "Setting configuration of Teams Meeting Broadcast Policy {$Identity}"
 
@@ -150,7 +163,7 @@ function Set-TargetResource
 
     if ($inputValues.Count -eq 0)
     {
-        throw "You need to specify at least one optional parameter for the Set-TargetResource function" + `
+        throw 'You need to specify at least one optional parameter for the Set-TargetResource function' + `
             " of the [TeamsMeetingBroadcastPolicy] instance {$Identity}"
     }
 
@@ -158,8 +171,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -171,20 +184,23 @@ function Set-TargetResource
 
     $SetParams = $PSBoundParameters
     $currentValues = Get-TargetResource @PSBoundParameters
-    $SetParams.Remove("Credential") | Out-Null
-    $SetParams.Remove("Ensure") | Out-Null
+    $SetParams.Remove('Credential') | Out-Null
+    $SetParams.Remove('ApplicationId') | Out-Null
+    $SetParams.Remove('TenantId') | Out-Null
+    $SetParams.Remove('CertificateThumbprint') | Out-Null
+    $SetParams.Remove('Ensure') | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
     {
-        New-CSTeamsMeetingBroadcastPolicy @SetParams
+        New-CsTeamsMeetingBroadcastPolicy @SetParams
     }
     elseif ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Present')
     {
-        Set-CSTeamsMeetingBroadcastPolicy @SetParams
+        Set-CsTeamsMeetingBroadcastPolicy @SetParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentValues.Ensure -eq 'Present')
     {
-        Remove-CSTeamsMeetingBroadcastPolicy -Identity $Identity -Confirm:$false
+        Remove-CsTeamsMeetingBroadcastPolicy -Identity $Identity -Confirm:$false
     }
 }
 
@@ -208,36 +224,48 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Everyone", "EveryoneInCompany", "InvitedUsersInCompany", "EveryoneInCompanyAndExternal", "InvitedUsersInCompanyAndExternal")]
+        [ValidateSet('Everyone', 'EveryoneInCompany', 'InvitedUsersInCompany', 'EveryoneInCompanyAndExternal', 'InvitedUsersInCompanyAndExternal')]
         $BroadcastAttendeeVisibilityMode,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("AlwaysEnabled", "AlwaysDisabled", "UserOverride")]
+        [ValidateSet('AlwaysEnabled', 'AlwaysDisabled', 'UserOverride')]
         $BroadcastRecordingMode,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Teams Meeting Broadcast policies"
+    Write-Verbose -Message 'Testing configuration of Teams Meeting Broadcast policies'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -245,7 +273,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
+
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
@@ -262,9 +290,21 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -273,8 +313,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -291,8 +331,11 @@ function Export-TargetResource
         foreach ($policy in $policies)
         {
             $params = @{
-                Identity           = $policy.Identity
-                Credential = $Credential
+                Identity              = $policy.Identity
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
             }
             Write-Host "    |---[$i/$($policies.Length)] $($policy.Identity)" -NoNewline
             $Results = Get-TargetResource @Params
@@ -314,27 +357,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

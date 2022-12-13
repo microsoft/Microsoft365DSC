@@ -1,0 +1,38 @@
+﻿{
+    "resourceName": "AADUser",
+    "description": "",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "User.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Organization.Read.All"
+                    },
+                    {
+                        "name": "User.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "User.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Organization.Read.All"
+                    },
+                    {
+                        "name": "User.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
+}

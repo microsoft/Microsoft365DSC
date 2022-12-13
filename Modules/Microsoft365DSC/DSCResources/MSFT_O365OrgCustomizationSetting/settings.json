@@ -11,6 +11,12 @@
                 "read": [],
                 "update": []
             }
+        },
+        "exchange": {
+            "requiredroles": [
+                "Organization Configuration"
+            ],
+            "requiredrolegroups": []
         }
     }
 }

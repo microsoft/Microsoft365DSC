@@ -31,7 +31,7 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -44,21 +44,28 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
     {
-        Write-Verbose -Message "Getting configuration of SPO Cdn enabled"
+        Write-Verbose -Message 'Getting configuration of SPO Cdn enabled'
         $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
             -InboundParameters $PSBoundParameters
+
+        $nullResult = $PSBoundParameters
+        $nullResult.Ensure = 'Absent'
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
 
         #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-        $CommandName  = $MyInvocation.MyCommand
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
         $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
             -CommandName $CommandName `
             -Parameters $PSBoundParameters
@@ -71,7 +78,7 @@ function Get-TargetResource
         $result = @{
             CdnType               = $CdnType
             Enable                = $cdnEnabled.Value
-            Ensure                = "Present"
+            Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -79,38 +86,25 @@ function Get-TargetResource
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
         return $result
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
 
         # This method is not implemented in some sovereign clouds (e.g. GCCHigh)
         if ($_.Exception -like '*The method or operation is not implemented*')
         {
             throw $_
         }
-        return ""
+
+        return $nullResult
     }
 }
 
@@ -146,7 +140,7 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -159,17 +153,21 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
-    Write-Verbose -Message "Setting configuration of SPO Cdn enabled"
+    Write-Verbose -Message 'Setting configuration of SPO Cdn enabled'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -178,14 +176,15 @@ function Set-TargetResource
 
     $currentOrgSiteAsset = Get-TargetResource @PSBoundParameters
     $currentParameters = $PSBoundParameters
-    $currentParameters.Remove("Ensure") | Out-Null
-    $currentParameters.Remove("Credential") | Out-Null
-    $CurrentParameters.Remove("ApplicationId") | Out-Null
-    $CurrentParameters.Remove("TenantId") | Out-Null
-    $CurrentParameters.Remove("CertificatePath") | Out-Null
-    $CurrentParameters.Remove("CertificatePassword") | Out-Null
-    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
-    $CurrentParameters.Remove("ApplicationSecret") | Out-Null
+    $currentParameters.Remove('Ensure') | Out-Null
+    $currentParameters.Remove('Credential') | Out-Null
+    $CurrentParameters.Remove('ApplicationId') | Out-Null
+    $CurrentParameters.Remove('TenantId') | Out-Null
+    $CurrentParameters.Remove('CertificatePath') | Out-Null
+    $CurrentParameters.Remove('CertificatePassword') | Out-Null
+    $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
+    $CurrentParameters.Remove('ManagedIdentity') | Out-Null
+    $CurrentParameters.Remove('ApplicationSecret') | Out-Null
 
     #No add only a set
     Set-PnPTenantCdnEnabled @currentParameters
@@ -224,7 +223,7 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -237,35 +236,40 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of SPO Cdn enabled"
+    Write-Verbose -Message 'Testing configuration of SPO Cdn enabled'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    Write-Verbose -Message "Starting the test to compare"
+    Write-Verbose -Message 'Starting the test to compare'
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: `n $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove("ApplicationId") | Out-Null
-    $ValuesToCheck.Remove("TenantId") | Out-Null
-    $ValuesToCheck.Remove("CertificatePath") | Out-Null
-    $ValuesToCheck.Remove("CertificatePassword") | Out-Null
-    $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
-    $ValuesToCheck.Remove("ApplicationSecret") | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -296,7 +300,7 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -309,7 +313,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
@@ -321,8 +329,8 @@ function Export-TargetResource
         Confirm-M365DSCDependencies
 
         #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-        $CommandName  = $MyInvocation.MyCommand
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
         $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
             -CommandName $CommandName `
             -Parameters $PSBoundParameters
@@ -330,14 +338,14 @@ function Export-TargetResource
         #endregion
 
         $dscContent = ''
-        $cdnTypes = "Public", "Private"
+        $cdnTypes = 'Public', 'Private'
 
         $i = 1
         Write-Host "`r`n" -NoNewline
         foreach ($cType in $cdnTypes)
         {
             $Params = @{
-                Credential    = $Credential
+                Credential            = $Credential
                 CdnType               = $cType
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
@@ -345,23 +353,21 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
 
             $Results = Get-TargetResource @Params
             Write-Host "    |---[$i/2] $cType" -NoNewline
-            if ($Results.Enable -eq $True)
-            {
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
-                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                    -ConnectionMode $ConnectionMode `
-                    -ModulePath $PSScriptRoot `
-                    -Results $Results `
-                    -Credential $Credential
-                $dscContent += $currentDSCBlock
-                Save-M365DSCPartialExport -Content $currentDSCBlock `
-                    -FileName $Global:PartialExportFileName
-            }
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckmark
         }
@@ -378,28 +384,14 @@ function Export-TargetResource
         else
         {
             Write-Host $Global:M365DSCEmojiRedX
-            try
-            {
-                Write-Verbose -Message $_
-                $tenantIdValue = ""
-                if (-not [System.String]::IsNullOrEmpty($TenantId))
-                {
-                    $tenantIdValue = $TenantId
-                }
-                elseif ($null -ne $Credential)
-                {
-                    $tenantIdValue = $Credential.UserName.Split('@')[1]
-                }
-                Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                    -TenantId $tenantIdValue
-            }
-            catch
-            {
-                Write-Verbose -Message $_
-            }
+
+            New-M365DSCLogEntry -Message "Error during Export:" `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
         }
-        return ""
+        return ''
     }
 }
 

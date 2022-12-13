@@ -1,6 +1,6 @@
 function Get-TargetResource
 {
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPlainTextForPassword', '')]
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
@@ -27,9 +27,9 @@ function Get-TargetResource
         $TargetAutodiscoverEpr,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -53,7 +53,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     if ($Global:CurrentModeIsExport)
     {
@@ -71,8 +75,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -91,7 +95,9 @@ function Get-TargetResource
         }
         catch
         {
-            New-M365DSCLogEntry -Error $_ -Message "Couldn't get AvailabilityAddressSpaces" -Source $MyInvocation.MyCommand.ModuleName
+            New-M365DSCLogEntry -Message "Couldn't get AvailabilityAddressSpaces" `
+                -Exception $_ `
+                -Source $MyInvocation.MyCommand.ModuleName
         }
 
         $AvailabilityAddressSpace = $AvailabilityAddressSpaces | Where-Object -FilterScript { $_.Identity -eq $Identity }
@@ -104,9 +110,9 @@ function Get-TargetResource
         {
 
 
-            if ($Null -eq $AvailabilityAddressSpace.TargetAutodiscoverEpr -or $AvailabilityAddressSpace.TargetAutodiscoverEpr -eq "" )
+            if ($Null -eq $AvailabilityAddressSpace.TargetAutodiscoverEpr -or $AvailabilityAddressSpace.TargetAutodiscoverEpr -eq '' )
             {
-                $TargetAutodiscoverEpr = ""
+                $TargetAutodiscoverEpr = ''
             }
             else
             {
@@ -125,6 +131,7 @@ function Get-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePath       = $CertificatePath
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 TenantId              = $TenantId
             }
 
@@ -135,33 +142,19 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
 
 function Set-TargetResource
 {
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPlainTextForPassword', '')]
     [CmdletBinding()]
     param
     (
@@ -187,9 +180,9 @@ function Set-TargetResource
         $TargetAutodiscoverEpr,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -213,14 +206,18 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -238,7 +235,9 @@ function Set-TargetResource
     }
     catch
     {
-        New-M365DSCLogEntry -Error $_ -Message "Couldn't get AvailabilityAddressSpaces" -Source $MyInvocation.MyCommand.ModuleName
+        New-M365DSCLogEntry -Message "Couldn't get AvailabilityAddressSpaces" `
+            -Exception $_ `
+            -Source $MyInvocation.MyCommand.ModuleName
     }
 
     $AvailabilityAddressSpace = $AvailabilityAddressSpaces | Where-Object -FilterScript { $_.Identity -eq $Identity }
@@ -250,6 +249,7 @@ function Set-TargetResource
     $AvailabilityAddressSpaceParams.Remove('CertificateThumbprint') | Out-Null
     $AvailabilityAddressSpaceParams.Remove('CertificatePath') | Out-Null
     $AvailabilityAddressSpaceParams.Remove('CertificatePassword') | Out-Null
+    $AvailabilityAddressSpaceParams.Remove('ManagedIdentity') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($null -eq $AvailabilityAddressSpace))
     {
@@ -263,7 +263,9 @@ function Set-TargetResource
         }
         catch
         {
-            New-M365DSCLogEntry -Error $_ -Message "Couldn't add new AvailabilityAddressSpace" -Source $MyInvocation.MyCommand.ModuleName
+            New-M365DSCLogEntry -Message "Couldn't add new AvailabilityAddressSpace" `
+                -Exception $_ `
+                -Source $MyInvocation.MyCommand.ModuleName
         }
     }
     elseif (('Present' -eq $Ensure ) -and ($Null -ne $AvailabilityAddressSpace))
@@ -276,7 +278,9 @@ function Set-TargetResource
         }
         catch
         {
-            New-M365DSCLogEntry -Error $_ -Message "Couldn't remove AvailabilityAddressSpace" -Source $MyInvocation.MyCommand.ModuleName
+            New-M365DSCLogEntry -Message "Couldn't remove AvailabilityAddressSpace" `
+                -Exception $_ `
+                -Source $MyInvocation.MyCommand.ModuleName
         }
 
         try
@@ -287,7 +291,9 @@ function Set-TargetResource
         }
         catch
         {
-            New-M365DSCLogEntry -Error $_ -Message "Couldn't add new AvailabilityAddressSpace" -Source $MyInvocation.MyCommand.ModuleName
+            New-M365DSCLogEntry -Message "Couldn't add new AvailabilityAddressSpace" `
+                -Exception $_ `
+                -Source $MyInvocation.MyCommand.ModuleName
         }
     }
     elseif (('Absent' -eq $Ensure ) -and ($null -ne $AvailabilityAddressSpace))
@@ -299,13 +305,15 @@ function Set-TargetResource
         }
         catch
         {
-            New-M365DSCLogEntry -Error $_ -Message "Couldn't remove AvailabilityAddressSpace" -Source $MyInvocation.MyCommand.ModuleName
+            New-M365DSCLogEntry -Message "Couldn't remove AvailabilityAddressSpace" `
+                -Exception $_ `
+                -Source $MyInvocation.MyCommand.ModuleName
         }
     }
 }
 function Test-TargetResource
 {
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPlainTextForPassword', '')]
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
@@ -332,9 +340,9 @@ function Test-TargetResource
         $TargetAutodiscoverEpr,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -358,14 +366,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -386,6 +398,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -425,7 +438,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -435,8 +452,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -448,7 +465,7 @@ function Export-TargetResource
         if ($null -eq (Get-Command Get-AvailabilityAddressSpace -ErrorAction SilentlyContinue))
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiRedX) The specified account doesn't have permissions to access Availibility Address Space"
-            return ""
+            return ''
         }
         try
         {
@@ -456,10 +473,12 @@ function Export-TargetResource
         }
         catch
         {
-            New-M365DSCLogEntry -Error $_ -Message "Couldn't get AvailabilityAddressSpaces" -Source $MyInvocation.MyCommand.ModuleName
+            New-M365DSCLogEntry -Message "Couldn't get AvailabilityAddressSpaces" `
+                -Exception $_  `
+                -Source $MyInvocation.MyCommand.ModuleName
         }
 
-        $dscContent = ""
+        $dscContent = ''
         if ($AvailabilityAddressSpaces.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
@@ -480,6 +499,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
             $Results = Get-TargetResource @Params
@@ -501,27 +521,15 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 Export-ModuleMember -Function *-TargetResource

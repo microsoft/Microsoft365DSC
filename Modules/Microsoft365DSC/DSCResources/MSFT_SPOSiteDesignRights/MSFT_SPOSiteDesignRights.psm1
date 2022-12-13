@@ -13,14 +13,14 @@ function Get-TargetResource
         $UserPrincipals,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet("View", "None")]
+        [ValidateSet('View', 'None')]
         [System.String]
         $Rights,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -35,7 +35,7 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -48,7 +48,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration for SPO SiteDesignRights for $SiteDesignTitle"
@@ -59,8 +63,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -68,7 +72,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -95,7 +99,7 @@ function Get-TargetResource
 
         foreach ($siteDesignRight in $siteDesignRights)
         {
-            $curUserPrincipals += $siteDesignRight.PrincipalName.split("|")[2]
+            $curUserPrincipals += $siteDesignRight.PrincipalName.split('|')[2]
         }
 
         Write-Verbose -Message "Site Design Rights User Principals = $($curUserPrincipals)"
@@ -103,7 +107,7 @@ function Get-TargetResource
             SiteDesignTitle       = $SiteDesignTitle
             UserPrincipals        = $curUserPrincipals
             Rights                = $Rights
-            Ensure                = "Present"
+            Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -111,30 +115,17 @@ function Get-TargetResource
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -153,14 +144,14 @@ function Set-TargetResource
         $UserPrincipals,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet("View", "None")]
+        [ValidateSet('View', 'None')]
         [System.String]
         $Rights,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -175,7 +166,7 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -188,15 +179,19 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -214,28 +209,28 @@ function Set-TargetResource
     $currentSiteDesignRights = Get-TargetResource @PSBoundParameters
     $CurrentParameters = $PSBoundParameters
 
-    if ($currentSiteDesignRights.Ensure -eq "Present")
+    if ($currentSiteDesignRights.Ensure -eq 'Present')
     {
         $difference = Compare-Object -ReferenceObject $currentSiteDesignRights.UserPrincipals -DifferenceObject $CurrentParameters.UserPrincipals
 
         if ($difference.InputObject)
         {
-            Write-Verbose -Message "Detected a difference in the current design rights of user principals and the desired one"
+            Write-Verbose -Message 'Detected a difference in the current design rights of user principals and the desired one'
             $principalsToRemove = @()
             $principalsToAdd = @()
             foreach ($diff in $difference)
             {
-                if ($diff.SideIndicator -eq "<=")
+                if ($diff.SideIndicator -eq '<=')
                 {
                     $principalsToRemove += $diff.InputObject
                 }
-                elseif ($diff.SideIndicator -eq "=>")
+                elseif ($diff.SideIndicator -eq '=>')
                 {
                     $principalsToAdd += $diff.InputObject
                 }
             }
 
-            if ($principalsToAdd.Count -gt 0 -and $Ensure -eq "Present")
+            if ($principalsToAdd.Count -gt 0 -and $Ensure -eq 'Present')
             {
                 Write-Verbose -Message "Granting SiteDesign rights on site design $SiteDesignTitle"
                 Grant-PnPSiteDesignRights -Identity $cursiteDesign.Id -Principals $principalsToAdd -Rights $Rights
@@ -248,14 +243,14 @@ function Set-TargetResource
             }
         }
     }
-    if ($Ensure -eq "Absent")
+    if ($Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Revoking SiteDesign rights on  $UserPrincipals for site design $SiteDesignTitle"
         Revoke-PnPSiteDesignRights -Identity $cursiteDesign.Id -Principals $UserPrincipals
     }
 
     #No site design rights currently exist so add them
-    If ($currentSiteDesignRights.Ensure -eq "Absent")
+    If ($currentSiteDesignRights.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Granting SiteDesign rights on site design $SiteDesignTitle"
         Grant-PnPSiteDesignRights -Identity $cursiteDesign.Id -Principals $UserPrincipals -Rights $Rights
@@ -277,14 +272,14 @@ function Test-TargetResource
         $UserPrincipals,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet("View", "None")]
+        [ValidateSet('View', 'None')]
         [System.String]
         $Rights,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -299,7 +294,7 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -312,14 +307,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -336,9 +335,9 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("UserPrincipals", `
-            "Rights", `
-            "Ensure")
+        -ValuesToCheck @('UserPrincipals', `
+            'Rights', `
+            'Ensure')
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -364,7 +363,7 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -377,7 +376,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
@@ -389,8 +392,8 @@ function Export-TargetResource
         Confirm-M365DSCDependencies
 
         #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-        $CommandName  = $MyInvocation.MyCommand
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
         $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
             -CommandName $CommandName `
             -Parameters $PSBoundParameters
@@ -399,7 +402,7 @@ function Export-TargetResource
 
         [array]$siteDesigns = Get-PnPSiteDesign -ErrorAction Stop
 
-        $dscContent = ""
+        $dscContent = ''
         $i = 1
         if ($siteDesigns.Length -eq 0)
         {
@@ -415,17 +418,18 @@ function Export-TargetResource
 
             $Params = @{
                 SiteDesignTitle       = $siteDesign.Title
-                Rights                = "View"
+                Rights                = 'View'
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
-                Credential    = $Credential
+                Managedidentity       = $ManagedIdentity.IsPresent
+                Credential            = $Credential
             }
             $Results = Get-TargetResource @Params
-            if ($Results.Ensure -eq "Present")
+            if ($Results.Ensure -eq 'Present')
             {
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
@@ -442,17 +446,17 @@ function Export-TargetResource
 
             $Params = @{
                 SiteDesignTitle       = $siteDesign.Title
-                Rights                = "None"
+                Rights                = 'None'
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
-                Credential    = $Credential
+                Credential            = $Credential
             }
             $Results = Get-TargetResource @Params
-            if ($Results.Ensure -eq "Present")
+            if ($Results.Ensure -eq 'Present')
             {
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
@@ -474,28 +478,15 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
         Write-Host $Global:M365DSCEmojiRedX
-        return ""
+
+        New-M365DSCLogEntry -Message "Error during Export:" `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

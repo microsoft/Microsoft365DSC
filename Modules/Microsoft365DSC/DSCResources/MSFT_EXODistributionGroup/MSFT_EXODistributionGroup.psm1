@@ -115,7 +115,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration of Distribution Group for $Name"
@@ -136,8 +140,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -145,7 +149,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -191,6 +195,7 @@ function Get-TargetResource
                 CertificateThumbprint              = $CertificateThumbprint
                 CertificatePath                    = $CertificatePath
                 CertificatePassword                = $CertificatePassword
+                Managedidentity                    = $ManagedIdentity.IsPresent
                 TenantId                           = $TenantId
             }
 
@@ -201,26 +206,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -341,7 +332,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting Distribution Group configuration for {$Name}"
@@ -364,8 +359,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -373,36 +368,37 @@ function Set-TargetResource
     #endregion
 
     $currentParameters = $PSBoundParameters
-    $currentParameters.Remove("Ensure") | Out-Null
-    $currentParameters.Remove("Credential") | Out-Null
-    $currentParameters.Remove("ApplicationId") | Out-Null
-    $currentParameters.Remove("TenantId") | Out-Null
-    $currentParameters.Remove("CertificateThumbprint") | Out-Null
-    $currentParameters.Remove("CertificatePath") | Out-Null
-    $currentParameters.Remove("CertificatePassword") | Out-Null
+    $currentParameters.Remove('Ensure') | Out-Null
+    $currentParameters.Remove('Credential') | Out-Null
+    $currentParameters.Remove('ApplicationId') | Out-Null
+    $currentParameters.Remove('TenantId') | Out-Null
+    $currentParameters.Remove('CertificateThumbprint') | Out-Null
+    $currentParameters.Remove('CertificatePath') | Out-Null
+    $currentParameters.Remove('CertificatePassword') | Out-Null
+    $currentParameters.Remove('ManagedIdentity') | Out-Null
 
     # Distribution group doesn't exist but it should
-    if ($Ensure -eq "Present" -and $currentDistributionGroup.Ensure -eq "Absent")
+    if ($Ensure -eq 'Present' -and $currentDistributionGroup.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "The Distribution Group {$Name} does not exist but it should. Creating it."
         New-DistributionGroup @currentParameters
     }
     # Distribution group exists but shouldn't
-    elseif ($Ensure -eq "Absent" -and $currentDistributionGroup.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Absent' -and $currentDistributionGroup.Ensure -eq 'Present')
     {
         Write-Verbose -Message "The Distribution Group {$Name} exists but shouldn't. Removing it."
         Remove-DistributionGroup -Identity $Name -Confirm:$false
     }
-    elseif ($Ensure -eq "Present" -and $currentDistributionGroup.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Present' -and $currentDistributionGroup.Ensure -eq 'Present')
     {
         Write-Verbose -Message "The Distribution Group {$Name} already exists. Updating settings"
         Write-Verbose -Message "Setting Distribution Group {$Name} with values: $(Convert-M365DscHashtableToString -Hashtable $currentParameters)"
 
         if ($null -ne $OrganizationalUnit -and $currentDistributionGroup.OrganizationalUnit -ne $OrganizationalUnit)
         {
-            Write-Warning -Message "Desired and current OrganizationalUnit values differ. This property cannot be updated once the distribution group has been created. Delete and recreate the distribution group to update the value."
+            Write-Warning -Message 'Desired and current OrganizationalUnit values differ. This property cannot be updated once the distribution group has been created. Delete and recreate the distribution group to update the value.'
         }
-        $currentParameters.Remove("OrganizationalUnit") | Out-Null
+        $currentParameters.Remove('OrganizationalUnit') | Out-Null
         Set-DistributionGroup @currentParameters -Identity $Name
     }
 }
@@ -524,14 +520,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -549,7 +549,7 @@ function Test-TargetResource
 
     if (!$ValuesToCheck.OrganizationalUnit)
     {
-        $ValuesToCheck.Remove("OrganizationalUnit") | Out-Null
+        $ValuesToCheck.Remove('OrganizationalUnit') | Out-Null
     }
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
@@ -589,7 +589,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -599,8 +603,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -608,7 +612,7 @@ function Export-TargetResource
     #endregion
     try
     {
-        $dscContent = ""
+        $dscContent = ''
         [array]$distributionGroups = Get-DistributionGroup -ResultSize 'Unlimited' -ErrorAction Stop
         if ($distributionGroups.Length -eq 0)
         {
@@ -630,6 +634,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
             $Results = Get-TargetResource @Params
@@ -651,27 +656,15 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

@@ -63,7 +63,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting On-premises Organization configuration for $Identity"
@@ -83,8 +87,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -92,7 +96,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -117,11 +121,12 @@ function Get-TargetResource
                 OrganizationRelationship = $OnPremisesOrganization.OrganizationRelationship
                 OutboundConnector        = $OnPremisesOrganization.OutboundConnector
                 Ensure                   = 'Present'
-                Credential       = $Credential
+                Credential               = $Credential
                 ApplicationId            = $ApplicationId
                 CertificateThumbprint    = $CertificateThumbprint
                 CertificatePath          = $CertificatePath
                 CertificatePassword      = $CertificatePassword
+                Managedidentity          = $ManagedIdentity.IsPresent
                 TenantId                 = $TenantId
             }
 
@@ -131,26 +136,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -219,7 +210,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting On-premises Organization configuration for $Identity"
@@ -230,8 +225,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -265,7 +260,7 @@ function Set-TargetResource
     }
 
     # CASE: On-premises Organization doesn't exist but should;
-    if ($Ensure -eq "Present" -and $currentOnPremisesOrganizationConfig.Ensure -eq "Absent")
+    if ($Ensure -eq 'Present' -and $currentOnPremisesOrganizationConfig.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "On-premises Organization '$($Identity)' does not exist but it should. Create and configure it."
         # Create On-premises Organization
@@ -273,13 +268,13 @@ function Set-TargetResource
 
     }
     # CASE: On-premises Organization exists but it shouldn't;
-    elseif ($Ensure -eq "Absent" -and $currentOnPremisesOrganizationConfig.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Absent' -and $currentOnPremisesOrganizationConfig.Ensure -eq 'Present')
     {
         Write-Verbose -Message "On-premises Organization '$($Identity)' exists but it shouldn't. Remove it."
         Remove-OnPremisesOrganization -Identity $Identity -Confirm:$false
     }
     # CASE: On-premises Organization exists and it should, but has different values than the desired ones
-    elseif ($Ensure -eq "Present" -and $currentOnPremisesOrganizationConfig.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Present' -and $currentOnPremisesOrganizationConfig.Ensure -eq 'Present')
     {
         Write-Verbose -Message "On-premises Organization '$($Identity)' already exists, but needs updating."
         Write-Verbose -Message "Setting On-premises Organization $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $SetOnPremisesOrganizationParams)"
@@ -352,14 +347,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -380,6 +379,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -419,7 +419,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -429,8 +433,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -441,7 +445,7 @@ function Export-TargetResource
     {
         [array]$AllOnPremisesOrganizations = Get-OnPremisesOrganization -ErrorAction Stop
 
-        $dscContent = ""
+        $dscContent = ''
 
         if ($AllOnPremisesOrganizations.Length -eq 0)
         {
@@ -458,11 +462,12 @@ function Export-TargetResource
 
             $Params = @{
                 Identity              = $OnPremisesOrganization.Identity
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
             $Results = Get-TargetResource @Params
@@ -483,27 +488,15 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message "Error during Export:" `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

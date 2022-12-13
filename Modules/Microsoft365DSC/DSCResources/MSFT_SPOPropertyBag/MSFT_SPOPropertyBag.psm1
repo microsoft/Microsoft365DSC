@@ -34,7 +34,7 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -47,11 +47,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration of SPOPropertyBag for $Key"
-    Write-Verbose -Message "Connecting to PnP from the Get method"
+    Write-Verbose -Message 'Connecting to PnP from the Get method'
 
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters `
@@ -61,8 +65,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -70,7 +74,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
     try
     {
         try
@@ -78,16 +82,16 @@ function Get-TargetResource
             Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
             [array]$property = Get-PnPPropertyBag -Key $Key -ErrorAction 'Stop'
 
-            Write-Verbose -Message "Properties obtained correctly"
+            Write-Verbose -Message 'Properties obtained correctly'
         }
         catch
         {
             Write-Verbose "Credential or service principal specified does not have admin access to site {$Url}"
-            if ($_.Exception -like "*Unable to cast object of type*")
+            if ($_.Exception -like '*Unable to cast object of type*')
             {
                 [array]$property = Get-PnPPropertyBag | Where-Object -FilterScript { $_.Key -ceq $Key }
             }
-            elseif ($_.Exception -like "*The underlying connection was closed*")
+            elseif ($_.Exception -like '*The underlying connection was closed*')
             {
                 $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
                     -InboundParameters $PSBoundParameters `
@@ -98,7 +102,9 @@ function Get-TargetResource
             }
             else
             {
-                New-M365DSCLogEntry -Error $_ -Message "Couldn't get Property Bag for {$Url}" -Source $MyInvocation.MyCommand.ModuleName
+                New-M365DSCLogEntry -Message "Couldn't get Property Bag for {$Url}" `
+                    -Exception $_ `
+                    -Source $MyInvocation.MyCommand.ModuleName
                 Write-Verbose "Credential specified does not have admin access to site {$Url}"
             }
         }
@@ -119,13 +125,14 @@ function Get-TargetResource
                 Url                   = $Url
                 Key                   = $Key
                 Value                 = $property[0]
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -134,26 +141,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -193,7 +186,7 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -206,7 +199,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of SPOPropertyBag property for $Key at {$Url}"
@@ -215,8 +212,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -279,7 +276,7 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -292,14 +289,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -313,12 +314,13 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove("ApplicationId") | Out-Null
-    $ValuesToCheck.Remove("TenantId") | Out-Null
-    $ValuesToCheck.Remove("CertificatePath") | Out-Null
-    $ValuesToCheck.Remove("CertificatePassword") | Out-Null
-    $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
-    $ValuesToCheck.Remove("ApplicationSecret") | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -353,7 +355,7 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -366,7 +368,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
@@ -378,14 +384,14 @@ function Export-TargetResource
         Confirm-M365DSCDependencies
 
         #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-        $CommandName  = $MyInvocation.MyCommand
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
         $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
             -CommandName $CommandName `
             -Parameters $PSBoundParameters
         Add-M365DSCTelemetryEvent -Data $data
         #endregion
-        $result = ""
+        $result = ''
 
         # Get all Site Collections in tenant;
         $instances = Get-PnPTenantSite -ErrorAction Stop
@@ -441,21 +447,25 @@ function Export-TargetResource
 
                     [Parameter()]
                     [System.String]
-                    $CertificateThumbprint
+                    $CertificateThumbprint,
+
+                    [Parameter()]
+                    [Switch]
+                    $ManagedIdentity
                 )
                 $WarningPreference = 'SilentlyContinue'
 
                 # Implicitly load the M365DSCUtil.psm1 module in order to be able to call
                 # into the Invoke-O36DSCCommand cmdlet;
-                Import-Module ($ScriptRoot + "\..\..\Modules\M365DSCUtil.psm1") -Force | Out-Null
+                Import-Module ($ScriptRoot + '\..\..\Modules\M365DSCUtil.psm1') -Force | Out-Null
 
                 # Invoke the logic that extracts the all the Property Bag values of the current site using the
                 # the invokation wrapper that handles throttling;
-                $returnValue = ""
+                $returnValue = ''
                 $returnValue += Invoke-M365DSCCommand -Arguments $PSBoundParameters -InvokationPath $ScriptRoot -ScriptBlock {
                     $VerbosePreference = 'SilentlyContinue'
                     $params = $args[0]
-                    $dscContent = ""
+                    $dscContent = ''
                     foreach ($item in $params.instances)
                     {
                         foreach ($site in $item)
@@ -487,13 +497,14 @@ function Export-TargetResource
                                         CertificatePassword   = $CertificatePassword
                                         CertificatePath       = $CertificatePath
                                         CertificateThumbprint = $CertificateThumbprint
-                                        Credential    = $Credential
+                                        Managedidentity       = $ManagedIdentity.IsPresent
+                                        Credential            = $Credential
                                     }
 
                                     $Results = Get-TargetResource @Params
                                     $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                                         -Results $Results
-                                    $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName "SPOPropertyBag" `
+                                    $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName 'SPOPropertyBag' `
                                         -ConnectionMode $ConnectionMode `
                                         -ModulePath $PSScriptRoot `
                                         -Results $Results `
@@ -512,14 +523,14 @@ function Export-TargetResource
                     return $dscContent
                 }
                 return $returnValue
-            } -ArgumentList @($batch, $PSScriptRoot, $Credential, $ApplicationId, $TenantId, $ApplicationSecret, $CertificateThumbprint, $CertificatePassword, $CertificatePath) | Out-Null
+            } -ArgumentList @($batch, $PSScriptRoot, $Credential, $ApplicationId, $TenantId, $ApplicationSecret, $CertificateThumbprint, $CertificatePassword, $CertificatePath, $ManagedIdentity) | Out-Null
             $i++
         }
 
         Write-Verbose -Message "    Broke extraction process down into {$MaxProcesses} jobs of {$($instances[0].Length)} item(s) each"
         $totalJobs = $MaxProcesses
         $jobsCompleted = 0
-        $status = "Running..."
+        $status = 'Running...'
         $elapsedTime = 0
         do
         {
@@ -527,7 +538,7 @@ function Export-TargetResource
             $count = $jobs.Length
             foreach ($job in $jobs)
             {
-                if ($job.JobStateInfo.State -eq "Complete")
+                if ($job.JobStateInfo.State -eq 'Complete')
                 {
                     $result += Receive-Job -Name $job.name
                     Remove-Job -Name $job.name | Out-Null
@@ -542,61 +553,49 @@ function Export-TargetResource
 
                 $status = "Completed $jobsCompleted/$totalJobs jobs in $elapsedTime seconds"
                 $percentCompleted = $jobsCompleted / $totalJobs * 100
-                Write-Progress -Activity "SPOPropertyBag Extraction" -PercentComplete $percentCompleted -Status $status
+                Write-Progress -Activity 'SPOPropertyBag Extraction' -PercentComplete $percentCompleted -Status $status
             }
             $elapsedTime ++
             Start-Sleep -Seconds 1
         } while ($count -ne 0)
-        Write-Progress -Activity "SPOPropertyBag Extraction" -PercentComplete 100 -Status "Completed" -Completed
-        $organization = ""
-        $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-        if ($null -ne $Credential -and $Credential.UserName.Contains("@"))
+        Write-Progress -Activity 'SPOPropertyBag Extraction' -PercentComplete 100 -Status 'Completed' -Completed
+        $organization = ''
+        $principal = '' # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
+        if ($null -ne $Credential -and $Credential.UserName.Contains('@'))
         {
-            $organization = $Credential.UserName.Split("@")[1]
+            $organization = $Credential.UserName.Split('@')[1]
 
-            if ($organization.IndexOf(".") -gt 0)
+            if ($organization.IndexOf('.') -gt 0)
             {
-                $principal = $organization.Split(".")[0]
+                $principal = $organization.Split('.')[0]
             }
         }
         else
         {
             $organization = $TenantId
-            $principal = $organization.Split(".")[0]
+            $principal = $organization.Split('.')[0]
         }
 
         if ($result.ToLower().Contains($organization.ToLower()) -or `
                 $result.ToLower().Contains($principal.ToLower()))
         {
             $result = $result -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
-            $result = $result -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+            $result = $result -ireplace [regex]::Escape('@' + $organization), "@`$(`$OrganizationName)"
         }
+        Write-Host $Global:M365DSCEmojiGreenCheckmark
         return $result
     }
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

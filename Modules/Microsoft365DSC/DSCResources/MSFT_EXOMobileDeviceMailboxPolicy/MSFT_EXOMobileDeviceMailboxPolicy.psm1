@@ -1,6 +1,6 @@
 function Get-TargetResource
 {
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPlainTextForPassword', '')]
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
@@ -258,7 +258,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting Mobile Device Mailbox Policy configuration for $Name"
@@ -278,8 +282,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -287,7 +291,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -359,11 +363,12 @@ function Get-TargetResource
                 UNCAccessEnabled                         = $MobileDeviceMailboxPolicy.UNCAccessEnabled
                 WSSAccessEnabled                         = $MobileDeviceMailboxPolicy.WSSAccessEnabled
                 Ensure                                   = 'Present'
-                Credential                       = $Credential
+                Credential                               = $Credential
                 ApplicationId                            = $ApplicationId
                 CertificateThumbprint                    = $CertificateThumbprint
                 CertificatePath                          = $CertificatePath
                 CertificatePassword                      = $CertificatePassword
+                Managedidentity                          = $ManagedIdentity.IsPresent
                 TenantId                                 = $TenantId
             }
 
@@ -373,33 +378,19 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
 
 function Set-TargetResource
 {
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPlainTextForPassword', '')]
     [CmdletBinding()]
     param
     (
@@ -656,7 +647,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting Mobile Device Mailbox Policy configuration for $Name"
@@ -667,8 +662,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -743,11 +738,11 @@ function Set-TargetResource
     # Remove the MinPasswordLength property if it is empty
     if ([System.String]::IsNullOrEmpty($MinPasswordLength))
     {
-        $NewMobileDeviceMailboxPolicyParams.Remove("MinPasswordLength") | Out-Null
+        $NewMobileDeviceMailboxPolicyParams.Remove('MinPasswordLength') | Out-Null
     }
 
     # CASE: Mobile Device Mailbox Policy doesn't exist but should;
-    if ($Ensure -eq "Present" -and $currentMobileDeviceMailboxPolicyConfig.Ensure -eq "Absent")
+    if ($Ensure -eq 'Present' -and $currentMobileDeviceMailboxPolicyConfig.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Mobile Device Mailbox Policy '$($Name)' does not exist but it should. Create and configure it."
         # Create Mobile Device Mailbox Policy
@@ -755,13 +750,13 @@ function Set-TargetResource
 
     }
     # CASE: Mobile Device Mailbox Policy exists but it shouldn't;
-    elseif ($Ensure -eq "Absent" -and $currentMobileDeviceMailboxPolicyConfig.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Absent' -and $currentMobileDeviceMailboxPolicyConfig.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Mobile Device Mailbox Policy '$($Name)' exists but it shouldn't. Remove it."
         Remove-MobileDeviceMailboxPolicy -Identity $Name -Confirm:$false
     }
     # CASE: Mobile Device Mailbox Policy exists and it should, but has different values than the desired ones
-    elseif ($Ensure -eq "Present" -and $currentMobileDeviceMailboxPolicyConfig.Ensure -eq "Present")
+    elseif ($Ensure -eq 'Present' -and $currentMobileDeviceMailboxPolicyConfig.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Mobile Device Mailbox Policy '$($Name)' already exists, but needs updating."
         Write-Verbose -Message "Setting Mobile Device Mailbox Policy $($Name) with values: $(Convert-M365DscHashtableToString -Hashtable $SetMobileDeviceMailboxPolicyParams)"
@@ -771,7 +766,7 @@ function Set-TargetResource
 
 function Test-TargetResource
 {
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPlainTextForPassword', '')]
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
@@ -1029,14 +1024,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -1057,6 +1056,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -1096,7 +1096,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -1106,8 +1110,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -1118,7 +1122,7 @@ function Export-TargetResource
     {
         [array]$AllMobileDeviceMailboxPolicies = Get-MobileDeviceMailboxPolicy -ErrorAction Stop
 
-        $dscContent = ""
+        $dscContent = ''
 
         if ($AllMobileDeviceMailboxPolicies.Length -eq 0)
         {
@@ -1135,11 +1139,12 @@ function Export-TargetResource
 
             $Params = @{
                 Name                  = $MobileDeviceMailboxPolicy.Name
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
             $Results = Get-TargetResource @Params
@@ -1160,27 +1165,15 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

@@ -4,6 +4,8 @@ nav:
   - Home:
       - 'Introduction': 'index.md'
       - 'What is Microsoft365DSC?': 'home/what-is-M365DSC.md'
+  - Blog:
+      - 'October 2022 - Major Release': 'blog/october-2022-major-release.md'
   - User Guide:
       - 'Get Started':
           - 'Introduction': 'user-guide/get-started/introduction.md'
@@ -31,18 +33,20 @@ nav:
           - 'Export-M365DSCDiagnosticData': 'user-guide/cmdlets/Export-M365DSCDiagnosticData.md'
           - 'Get-M365DSCAllResources': 'user-guide/cmdlets/Get-M365DSCAllResources.md'
           - 'Get-M365DSCCompiledPermissionList': 'user-guide/cmdlets/Get-M365DSCCompiledPermissionList.md'
+          - 'Get-M365DSCNotificationEndPointRegistration': 'user-guide/cmdlets/Get-M365DSCNotificationEndPointRegistration.md'
           - 'Get-M365DSCTelemetryOption': 'user-guide/cmdlets/Get-M365DSCTelemetryOption.md'
           - 'Get-M365DSCWorkloadsListFromResourceNames': 'user-guide/cmdlets/Get-M365DSCWorkloadsListFromResourceNames.md'
           - 'Import-M365DSCDependencies': 'user-guide/cmdlets/Import-M365DSCDependencies.md'
           - 'Install-M365DSCDevBranch': 'user-guide/cmdlets/Install-M365DSCDevBranch.md'
           - 'New-M365DSCDeltaReport': 'user-guide/cmdlets/New-M365DSCDeltaReport.md'
+          - 'New-M365DSCNotificationEndPointRegistration': 'user-guide/cmdlets/New-M365DSCNotificationEndPointRegistration.md'
           - 'New-M365DSCReportFromConfiguration': 'user-guide/cmdlets/New-M365DSCReportFromConfiguration.md'
+          - 'Remove-M365DSCNotificationEndPointRegistration': 'user-guide/cmdlets/Remove-M365DSCNotificationEndPointRegistration.md'
           - 'Set-M365DSCAgentCertificateConfiguration': 'user-guide/cmdlets/Set-M365DSCAgentCertificateConfiguration.md'
           - 'Set-M365DSCTelemetryOption': 'user-guide/cmdlets/Set-M365DSCTelemetryOption.md'
           - 'Test-M365DSCAgent': 'user-guide/cmdlets/Test-M365DSCAgent.md'
           - 'Test-M365DSCDependenciesForNewVersions': 'user-guide/cmdlets/Test-M365DSCDependenciesForNewVersions.md'
           - 'Test-M365DSCModuleValidity': 'user-guide/cmdlets/Test-M365DSCModuleValidity.md'
-          - 'Test-M365DSCNewVersionAvailable': 'user-guide/cmdlets/Test-M365DSCNewVersionAvailable.md'
           - 'Uninstall-M365DSCOutdatedDependencies': 'user-guide/cmdlets/Uninstall-M365DSCOutdatedDependencies.md'
           - 'Update-M365DSCAllowedGraphScopes': 'user-guide/cmdlets/Update-M365DSCAllowedGraphScopes.md'
           - 'Update-M365DSCAzureAdApplication': 'user-guide/cmdlets/Update-M365DSCAzureAdApplication.md'
@@ -121,7 +125,7 @@ extra:
   generator: false
   analytics:
     provider: google
-    property: UA-209929913-1
+    property: UA-246073771-1
 extra_css:
   - stylesheets/extra.css
 repo_url: https://github.com/microsoft/Microsoft365DSC

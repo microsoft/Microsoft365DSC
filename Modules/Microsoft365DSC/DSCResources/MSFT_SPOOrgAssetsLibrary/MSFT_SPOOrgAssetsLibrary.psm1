@@ -35,7 +35,7 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -48,10 +48,14 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
-    Write-Verbose -Message "Getting configuration of SPO Org Assets Library"
+    Write-Verbose -Message 'Getting configuration of SPO Org Assets Library'
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
@@ -59,8 +63,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -68,7 +72,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -78,26 +82,11 @@ function Get-TargetResource
         }
         catch
         {
-            try
-            {
-                Write-Verbose -Message $_
-                $tenantIdValue = ""
-                if (-not [System.String]::IsNullOrEmpty($TenantId))
-                {
-                    $tenantIdValue = $TenantId
-                }
-                elseif ($null -ne $Credential)
-                {
-                    $tenantIdValue = $Credential.UserName.Split('@')[1]
-                }
-                Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                    -TenantId $tenantIdValue
-            }
-            catch
-            {
-                Write-Verbose -Message $_
-            }
+            New-M365DSCLogEntry -Message 'Error retrieving data:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
         }
 
         $cdn = $null
@@ -105,7 +94,7 @@ function Get-TargetResource
         {
             if (Get-PnPTenantCdnEnabled -CdnType $CdnType)
             {
-                $cdn = "Public"
+                $cdn = 'Public'
             }
         }
 
@@ -113,7 +102,7 @@ function Get-TargetResource
         {
             if (Get-PnPTenantCdnEnabled -CdnType $CdnType)
             {
-                $cdn = "Private"
+                $cdn = 'Private'
             }
         }
 
@@ -129,7 +118,7 @@ function Get-TargetResource
             }
             else
             {
-                $tenantName = $TenantId.Split(".")[0]
+                $tenantName = $TenantId.Split('.')[0]
             }
 
             foreach ($orgAsset in $orgAssets)
@@ -141,14 +130,14 @@ function Get-TargetResource
                     Write-Verbose -Message "Found existing SharePoint Org Site Assets for $LibraryUrl"
                     if ($null -ne $orgAsset.ThumbnailUrl.DecodedUrl)
                     {
-                        $orgthumbnailUrl = "https://$tenantName.sharepoint.com/$($orgAsset.LibraryUrl.decodedurl.Substring(0,$orgAsset.LibraryUrl.decodedurl.LastIndexOf("/")))/$($orgAsset.ThumbnailUrl.decodedurl)"
+                        $orgthumbnailUrl = "https://$tenantName.sharepoint.com/$($orgAsset.LibraryUrl.decodedurl.Substring(0,$orgAsset.LibraryUrl.decodedurl.LastIndexOf('/')))/$($orgAsset.ThumbnailUrl.decodedurl)"
                     }
 
                     $result = @{
                         LibraryUrl            = $orgLibraryUrl
                         ThumbnailUrl          = $orgthumbnailUrl
                         CdnType               = $cdn
-                        Ensure                = "Present"
+                        Ensure                = 'Present'
                         Credential            = $Credential
                         ApplicationId         = $ApplicationId
                         TenantId              = $TenantId
@@ -156,38 +145,25 @@ function Get-TargetResource
                         CertificatePassword   = $CertificatePassword
                         CertificatePath       = $CertificatePath
                         CertificateThumbprint = $CertificateThumbprint
+                        Managedidentity       = $ManagedIdentity.IsPresent
                     }
                     Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
                     return $result
                 }
             }
             $currentValues = $PSBoundParameters
-            $currentValues.Ensure = "Absent"
+            $currentValues.Ensure = 'Absent'
             return $currentValues
         }
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -228,7 +204,7 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -241,17 +217,21 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
-    Write-Verbose -Message "Setting configuration of SharePoint Org Site Assets"
+    Write-Verbose -Message 'Setting configuration of SharePoint Org Site Assets'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -260,21 +240,22 @@ function Set-TargetResource
 
     $currentOrgSiteAsset = Get-TargetResource @PSBoundParameters
     $currentParameters = $PSBoundParameters
-    $currentParameters.Remove("Ensure") | Out-Null
-    $currentParameters.Remove("Credential") | Out-Null
-    $currentParameters.Remove("ApplicationId") | Out-Null
-    $currentParameters.Remove("TenantId") | Out-Null
-    $currentParameters.Remove("CertificatePath") | Out-Null
-    $currentParameters.Remove("CertificatePassword") | Out-Null
-    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
-    $CurrentParameters.Remove("ApplicationSecret") | Out-Null
+    $currentParameters.Remove('Ensure') | Out-Null
+    $currentParameters.Remove('Credential') | Out-Null
+    $currentParameters.Remove('ApplicationId') | Out-Null
+    $currentParameters.Remove('TenantId') | Out-Null
+    $currentParameters.Remove('CertificatePath') | Out-Null
+    $currentParameters.Remove('CertificatePassword') | Out-Null
+    $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
+    $CurrentParameters.Remove('ManagedIdentity') | Out-Null
+    $CurrentParameters.Remove('ApplicationSecret') | Out-Null
 
     $cdn = $null
     if ($CdnType -eq 'Public')
     {
         if (Get-PnPTenantCdnEnabled -CdnType $CdnType)
         {
-            $cdn = "Public"
+            $cdn = 'Public'
         }
     }
 
@@ -282,7 +263,7 @@ function Set-TargetResource
     {
         if (Get-PnPTenantCdnEnabled -CdnType $CdnType)
         {
-            $cdn = "Private"
+            $cdn = 'Private'
         }
     }
 
@@ -293,13 +274,13 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentOrgSiteAsset.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing existing Org Asset Library"
+        Write-Verbose -Message 'Removing existing Org Asset Library'
         ## No set so remove / add
         Remove-PnPOrgAssetsLibrary -LibraryUrl $currentOrgSiteAsset.LibraryUrl
         ### add slight delay fails if you immediately try to add
-        Write-Verbose -Message "Waiting 30 seconds"
+        Write-Verbose -Message 'Waiting 30 seconds'
         Start-Sleep -Seconds 30
-        Write-Verbose -Message "Adding Org Asset Library"
+        Write-Verbose -Message 'Adding Org Asset Library'
         Add-PnPOrgAssetsLibrary @currentParameters
     }
     elseif ($Ensure -eq 'Present' -and $currentOrgSiteAsset.Ensure -eq 'Absent')
@@ -312,7 +293,7 @@ function Set-TargetResource
         catch
         {
             Write-Information -Message "Exception: $($_.Exception)"
-            if ($_ -notlike "*This library is already an organization assets library.*")
+            if ($_ -notlike '*This library is already an organization assets library.*')
             {
                 throw $_
             }
@@ -320,7 +301,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentOrgSiteAsset.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing existing Org Asset Library"
+        Write-Verbose -Message 'Removing existing Org Asset Library'
         Remove-PnPOrgAssetsLibrary -LibraryUrl $currentOrgSiteAsset.LibraryUrl
     }
 }
@@ -363,7 +344,7 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -376,34 +357,39 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of SharePoint Org Site Assets"
+    Write-Verbose -Message 'Testing configuration of SharePoint Org Site Assets'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    Write-Verbose -Message "Starting the test to compare"
+    Write-Verbose -Message 'Starting the test to compare'
     Write-Verbose -Message "Target Values: `n $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove("ApplicationId") | Out-Null
-    $ValuesToCheck.Remove("TenantId") | Out-Null
-    $ValuesToCheck.Remove("CertificatePath") | Out-Null
-    $ValuesToCheck.Remove("CertificatePassword") | Out-Null
-    $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
-    $ValuesToCheck.Remove("ApplicationSecret") | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -434,7 +420,7 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -447,7 +433,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
@@ -459,8 +449,8 @@ function Export-TargetResource
         Confirm-M365DSCDependencies
 
         #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-        $CommandName  = $MyInvocation.MyCommand
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
         $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
             -CommandName $CommandName `
             -Parameters $PSBoundParameters
@@ -485,13 +475,14 @@ function Export-TargetResource
             {
                 Write-Host "    [$i/$($orgAssets.Length)] $($orgAssetLib.libraryurl.DecodedUrl)" -NoNewline
                 $Params = @{
-                    Credential    = $Credential
+                    Credential            = $Credential
                     LibraryUrl            = "https://$tenantName.sharepoint.com/$($orgAssetLib.libraryurl.DecodedUrl)"
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificatePassword   = $CertificatePassword
                     CertificatePath       = $CertificatePath
                     CertificateThumbprint = $CertificateThumbprint
+                    Managedidentity       = $ManagedIdentity.IsPresent
                     ApplicationSecret     = $ApplicationSecret
                 }
                 $Results = Get-TargetResource @Params
@@ -514,27 +505,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

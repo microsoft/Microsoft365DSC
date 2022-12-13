@@ -22,23 +22,23 @@ class PlannerTaskObject
     {
         switch ($ColorName)
         {
-            "Pink"
-            { return "category1"
+            'Pink'
+            { return 'category1'
             }
-            "Red"
-            { return "category2"
+            'Red'
+            { return 'category2'
             }
-            "Yellow"
-            { return "category3"
+            'Yellow'
+            { return 'category3'
             }
-            "Green"
-            { return "category4"
+            'Green'
+            { return 'category4'
             }
-            "Blue"
-            { return "category5"
+            'Blue'
+            { return 'category5'
             }
-            "Purple"
-            { return "category6"
+            'Purple'
+            { return 'category6'
             }
         }
         return $null
@@ -48,23 +48,23 @@ class PlannerTaskObject
     {
         switch ($CategoryName)
         {
-            "category1"
-            { return "Pink"
+            'category1'
+            { return 'Pink'
             }
-            "category2"
-            { return "Red"
+            'category2'
+            { return 'Red'
             }
-            "category3"
-            { return "Yellow"
+            'category3'
+            { return 'Yellow'
             }
-            "category4"
-            { return "Green"
+            'category4'
+            { return 'Green'
             }
-            "category5"
-            { return "Blue"
+            'category5'
+            { return 'Blue'
             }
-            "category6"
-            { return "Purple"
+            'category6'
+            { return 'Purple'
             }
         }
         return $null
@@ -77,7 +77,7 @@ class PlannerTaskObject
             -Uri $uri `
             -Method Get
         $taskDetailsResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -Credential $Credential `
-            -Uri ($uri + "/details") `
+            -Uri ($uri + '/details') `
             -Method Get
 
         #region Assignments
@@ -164,7 +164,7 @@ class PlannerTaskObject
     [string]ConvertToJSONTask()
     {
         $sb = [System.Text.StringBuilder]::New()
-        $sb.Append("{") | Out-Null
+        $sb.Append('{') | Out-Null
         $sb.Append("`"planId`":`"$($this.PlanId)`"") | Out-Null
         $sb.Append(",`"title`":`"$($this.Title)`"") | Out-Null
         if (-not [System.String]::IsNullOrEmpty($this.BucketId))
@@ -195,7 +195,7 @@ class PlannerTaskObject
             {
                 if ($id -gt 1)
                 {
-                    $sb.Append(",") | Out-Null
+                    $sb.Append(',') | Out-Null
                 }
                 $sb.Append("`"$assignment`":{") | Out-Null
                 $sb.Append("`"@odata.type`":`"#microsoft.graph.plannerAssignment`"") | Out-Null
@@ -204,10 +204,10 @@ class PlannerTaskObject
                 {
                     $sb.Append(",`"orderHint`": `" !`"")
                 }
-                $sb.Append("}") | Out-Null
+                $sb.Append('}') | Out-Null
                 $id++
             }
-            $sb.Append("}") | Out-Null
+            $sb.Append('}') | Out-Null
         }
         if ($this.Categories.Length -gt 0)
         {
@@ -217,22 +217,22 @@ class PlannerTaskObject
             {
                 if ($id -gt 1)
                 {
-                    $sb.Append(",") | Out-Null
+                    $sb.Append(',') | Out-Null
                 }
                 $categoryName = $this.GetTaskCategoryNameByColor($category)
                 $sb.Append("`"$categoryName`":true") | Out-Null
                 $id++
             }
-            $sb.Append("}") | Out-Null
+            $sb.Append('}') | Out-Null
         }
-        $sb.Append("}") | Out-Null
+        $sb.Append('}') | Out-Null
         return $sb.ToString()
     }
 
     [string]ConvertToJSONTaskDetails()
     {
         $sb = [System.Text.StringBuilder]::New()
-        $sb.Append("{") | Out-Null
+        $sb.Append('{') | Out-Null
         $sb.Append("`"description`":`"$($this.Notes)`"") | Out-Null
 
         if ($this.Attachments.Length -gt 0)
@@ -243,16 +243,16 @@ class PlannerTaskObject
             {
                 if ($i -gt 1)
                 {
-                    $sb.Append(",") | Out-Null
+                    $sb.Append(',') | Out-Null
                 }
                 $sb.Append("`"$($attachment.Uri)`": {") | Out-Null
                 $sb.Append("`"@odata.type`": `"#microsoft.graph.plannerExternalReference`",") | Out-Null
                 $sb.Append("`"alias`":`"$($attachment.Alias)`",") | Out-Null
                 $sb.Append("`"type`":`"$($attachment.Type)`"") | Out-Null
-                $sb.Append("}") | Out-Null
+                $sb.Append('}') | Out-Null
                 $i++
             }
-            $sb.Append("}") | Out-Null
+            $sb.Append('}') | Out-Null
         }
 
         if ($this.Checklist.Length -gt 0)
@@ -263,28 +263,28 @@ class PlannerTaskObject
             {
                 if ($i -gt 1)
                 {
-                    $sb.Append(",") | Out-Null
+                    $sb.Append(',') | Out-Null
                 }
                 $sb.Append("`"$((New-Guid).ToString())`": {") | Out-Null
                 $sb.Append("`"@odata.type`": `"#microsoft.graph.plannerChecklistItem`",") | Out-Null
                 $sb.Append("`"title`":`"$($checkListItem.Title)`",") | Out-Null
                 $sb.Append("`"isChecked`": $($checkListItem.Completed.ToString().Replace('`$', '').ToLower())") | Out-Null
-                $sb.Append("}") | Out-Null
+                $sb.Append('}') | Out-Null
                 $i++
             }
-            $sb.Append("}") | Out-Null
+            $sb.Append('}') | Out-Null
         }
-        $sb.Append("}") | Out-Null
+        $sb.Append('}') | Out-Null
         return $sb.ToString()
     }
 
     [void]Create([System.Management.Automation.PSCredential]$Credential)
     {
-        $uri = "https://graph.microsoft.com/v1.0/planner/tasks"
+        $uri = 'https://graph.microsoft.com/v1.0/planner/tasks'
         $body = $this.ConvertToJSONTask()
         $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -Credential $Credential `
             -Uri $uri `
-            -Method "POST" `
+            -Method 'POST' `
             -Body $body
         $this.TaskId = $taskResponse.id
         Write-Verbose -Message "New Planner Task created with Id {$($taskResponse.id)}"
@@ -296,10 +296,10 @@ class PlannerTaskObject
         $uri = "https://graph.microsoft.com/v1.0/planner/tasks/$($this.TaskId)"
         $body = $this.ConvertToJSONTask()
         $Headers = @{}
-        $Headers.Add("If-Match", $this.ETag)
+        $Headers.Add('If-Match', $this.ETag)
         $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -Credential $Credential `
             -Uri $uri `
-            -Method "PATCH" `
+            -Method 'PATCH' `
             -Body $body `
             -Headers $Headers
     }
@@ -312,12 +312,12 @@ class PlannerTaskObject
         # Get ETag for the details
         $currentTaskDetails = Invoke-MSCloudLoginMicrosoftGraphAPI -Credential $Credential `
             -Uri $uri `
-            -Method "GET"
+            -Method 'GET'
         $Headers = @{}
-        $Headers.Add("If-Match", $currentTaskDetails.'@odata.etag')
+        $Headers.Add('If-Match', $currentTaskDetails.'@odata.etag')
         $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -Credential $Credential `
             -Uri $uri `
-            -Method "PATCH" `
+            -Method 'PATCH' `
             -Body $body `
             -Headers $Headers
     }
@@ -331,13 +331,13 @@ class PlannerTaskObject
         # Get ETag for the details
         $currentTaskDetails = Invoke-MSCloudLoginMicrosoftGraphAPI -Credential $Credential `
             -Uri $uri `
-            -Method "GET"
+            -Method 'GET'
         $Headers = @{}
-        $Headers.Add("If-Match", $currentTaskDetails.'@odata.etag')
+        $Headers.Add('If-Match', $currentTaskDetails.'@odata.etag')
         Write-Verbose -Message "Retrieved Task's ETag {$($currentTaskDetails.'@odata.etag')}"
         $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -Credential $Credential `
             -Uri $uri `
-            -Method "DELETE" `
+            -Method 'DELETE' `
             -Headers $Headers
     }
 }

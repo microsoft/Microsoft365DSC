@@ -1,0 +1,62 @@
+{
+    "resourceName": "AADAdministrativeUnit",
+    "description": "This resource configures an Azure Active Directory administrative unit.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "AdministrativeUnit.Read.All"
+                    },
+                    {
+                        "name": "Directory.Read.All"
+                    },
+                    {
+                        "name": "RoleManagement.Read.Directory"
+                    },
+                    {
+                        "name": "Member.Read.Hidden"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "AdministrativeUnit.ReadWrite.All"
+                    },
+                    {
+                        "name": "Directory.ReadWrite.All"
+                    },
+                    {
+                        "name": "RoleManagement.ReadWrite.Directory"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "AdministrativeUnit.Read.All"
+                    },
+                    {
+                        "name": "Directory.Read.All"
+                    },
+                    {
+                        "name": "RoleManagement.Read.Directory"
+                    },
+                    {
+                        "name": "Member.Read.Hidden"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "AdministrativeUnit.ReadWrite.All"
+                    },
+                    {
+                        "name": "Directory.ReadWrite.All"
+                    },
+                    {
+                        "name": "RoleManagement.ReadWrite.Directory"
+                    }
+                ]
+            }
+        }
+    }
+}

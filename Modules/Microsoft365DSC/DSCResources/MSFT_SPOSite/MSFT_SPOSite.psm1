@@ -34,7 +34,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Disabled", "ExistingExternalUserSharingOnly", "ExternalUserSharingOnly", "ExternalUserAndGuestSharing")]
+        [ValidateSet('Disabled', 'ExistingExternalUserSharingOnly', 'ExternalUserSharingOnly', 'ExternalUserAndGuestSharing')]
         $SharingCapability,
 
         [Parameter()]
@@ -55,22 +55,22 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "View", "Edit")]
+        [ValidateSet('None', 'View', 'Edit')]
         $DefaultLinkPermission,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "AnonymousAccess", "Internal", "Direct")]
+        [ValidateSet('None', 'AnonymousAccess', 'Internal', 'Direct')]
         $DefaultSharingLinkType,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Unknown", "Disabled", "NotDisabled")]
+        [ValidateSet('Unknown', 'Disabled', 'NotDisabled')]
         $DisableAppViews,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Unknown", "Disabled", "NotDisabled")]
+        [ValidateSet('Unknown', 'Disabled', 'NotDisabled')]
         $DisableCompanyWideSharingLinks,
 
         [Parameter()]
@@ -87,7 +87,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown")]
+        [ValidateSet('NoRestriction', 'BlockMoveOnly', 'BlockFull', 'Unknown')]
         $RestrictedToRegion,
 
         [Parameter()]
@@ -100,7 +100,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "AllowList", "BlockList")]
+        [ValidateSet('None', 'AllowList', 'BlockList')]
         $SharingDomainRestrictionMode,
 
         [Parameter()]
@@ -116,9 +116,9 @@ function Get-TargetResource
         $OverrideTenantAnonymousLinkExpirationPolicy,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -133,7 +133,7 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -146,7 +146,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
@@ -155,8 +159,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -164,7 +168,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -254,30 +258,17 @@ function Get-TargetResource
             CertificatePassword                         = $CertificatePassword
             CertificatePath                             = $CertificatePath
             CertificateThumbprint                       = $CertificateThumbprint
+            Managedidentity                             = $ManagedIdentity.IsPresent
         }
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -317,7 +308,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Disabled", "ExistingExternalUserSharingOnly", "ExternalUserSharingOnly", "ExternalUserAndGuestSharing")]
+        [ValidateSet('Disabled', 'ExistingExternalUserSharingOnly', 'ExternalUserSharingOnly', 'ExternalUserAndGuestSharing')]
         $SharingCapability,
 
         [Parameter()]
@@ -338,22 +329,22 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "View", "Edit")]
+        [ValidateSet('None', 'View', 'Edit')]
         $DefaultLinkPermission,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "AnonymousAccess", "Internal", "Direct")]
+        [ValidateSet('None', 'AnonymousAccess', 'Internal', 'Direct')]
         $DefaultSharingLinkType,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Unknown", "Disabled", "NotDisabled")]
+        [ValidateSet('Unknown', 'Disabled', 'NotDisabled')]
         $DisableAppViews,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Unknown", "Disabled", "NotDisabled")]
+        [ValidateSet('Unknown', 'Disabled', 'NotDisabled')]
         $DisableCompanyWideSharingLinks,
 
         [Parameter()]
@@ -370,7 +361,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown")]
+        [ValidateSet('NoRestriction', 'BlockMoveOnly', 'BlockFull', 'Unknown')]
         $RestrictedToRegion,
 
         [Parameter()]
@@ -383,7 +374,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "AllowList", "BlockList")]
+        [ValidateSet('None', 'AllowList', 'BlockList')]
         $SharingDomainRestrictionMode,
 
         [Parameter()]
@@ -399,9 +390,9 @@ function Set-TargetResource
         $OverrideTenantAnonymousLinkExpirationPolicy,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -416,7 +407,7 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -429,7 +420,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration for site collection $Url"
@@ -438,8 +433,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -469,7 +464,7 @@ function Set-TargetResource
         if ($supportedLanguages -notcontains $CreationParams.Lcid)
         {
             Write-Verbose -Message ("Specified LocaleId {$($CreationParams.Lcid)} " + `
-                    "is not supported. Creating the site collection in English {1033}")
+                    'is not supported. Creating the site collection in English {1033}')
             $CreationParams.Lcid = 1033
         }
 
@@ -481,7 +476,7 @@ function Set-TargetResource
             $circuitBreaker = 0
             do
             {
-                Write-Verbose -Message "Waiting for another 15 seconds for site to be ready."
+                Write-Verbose -Message 'Waiting for another 15 seconds for site to be ready.'
                 Start-Sleep -Seconds 15
                 try
                 {
@@ -499,13 +494,15 @@ function Set-TargetResource
         catch
         {
             $Message = "Creation of the site $($Url) failed: $($_.Exception.Message)"
-            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
+            New-M365DSCLogEntry -Message $Message `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
             throw $Message
         }
     }
-    elseif ($Ensure -eq "Absent" -and $CurrentValues.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing site {$Url}"
         try
@@ -514,16 +511,20 @@ function Set-TargetResource
         }
         catch
         {
-            if ($Error[0].Exception.Message -eq "File Not Found")
+            if ($Error[0].Exception.Message -eq 'File Not Found')
             {
                 $Message = "The site $($Url) does not exist."
-                New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+                New-M365DSCLogEntry -Message $Message `
+                    -Exception $_ `
+                    -Source $MyInvocation.MyCommand.ModuleName
                 throw $Message
             }
-            if ($Error[0].Exception.Message -eq "This site belongs to a Microsoft 365 group. To delete the site, you must delete the group.")
+            if ($Error[0].Exception.Message -eq 'This site belongs to a Microsoft 365 group. To delete the site, you must delete the group.')
             {
                 $Message = "This site $($Url) belongs to a Microsoft 365 group. To delete the site, you must delete the group."
-                New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+                New-M365DSCLogEntry -Message $Message `
+                    -Exception $_ `
+                    -Source $MyInvocation.MyCommand.ModuleName
                 throw $Message
             }
         }
@@ -573,15 +574,16 @@ function Set-TargetResource
             AnonymousLinkExpirationInDays               = $AnonymousLinkExpirationInDays
             OverrideTenantAnonymousLinkExpirationPolicy = $OverrideTenantAnonymousLinkExpirationPolicy
             DenyAddAndCustomizePages                    = $deny
+            Title                                       = $Title
         }
         $UpdateParams = Remove-NullEntriesFromHashtable -Hash $UpdateParams
 
-        $UpdateParams.Add("StorageQuota", $StorageMaximumLevel)
-        $UpdateParams.Remove("StorageMaximumLevel") | Out-Null
-        $UpdateParams.Add("StorageQuotaWarningLevel", $StorageWarningLevel)
-        $UpdateParams.Remove("StorageWarningLevel") | Out-Null
-        $UpdateParams.Add("Identity", $Url)
-        $UpdateParams.Remove("Url") | Out-Null
+        $UpdateParams.Add('StorageQuota', $StorageMaximumLevel)
+        $UpdateParams.Remove('StorageMaximumLevel') | Out-Null
+        $UpdateParams.Add('StorageQuotaWarningLevel', $StorageWarningLevel)
+        $UpdateParams.Remove('StorageWarningLevel') | Out-Null
+        $UpdateParams.Add('Identity', $Url)
+        $UpdateParams.Remove('Url') | Out-Null
 
         Set-PnPTenantSite @UpdateParams -ErrorAction Stop
 
@@ -596,10 +598,9 @@ function Set-TargetResource
             $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
                 -InboundParameters $PSBoundParameters `
                 -Url $Url
-            Write-Verbose -Message "Updating props via Set-PNPSite on $($Url)"
+            Write-Verbose -Message "Updating props via Set-PNPSite on $($Url) with parameters:`r`n$(Convert-M365DscHashtableToString -Hashtable $UpdateParams)"
             Set-PnPSite @UpdateParams -ErrorAction Stop
         }
-
 
         $site = Get-PnPTenantSite $Url
 
@@ -620,14 +621,14 @@ function Set-TargetResource
             $ctx.ExecuteQuery()
         }
 
-        Write-Verbose -Message "Settings Updated"
-        if ($PSBoundParameters.ContainsKey("HubUrl"))
+        Write-Verbose -Message 'Settings Updated'
+        if ($PSBoundParameters.ContainsKey('HubUrl'))
         {
-            if ($PSBoundParameters.HubUrl.TrimEnd("/") -ne $PSBoundParameters.Url.TrimEnd("/"))
+            if ($PSBoundParameters.HubUrl.TrimEnd('/') -ne $PSBoundParameters.Url.TrimEnd('/'))
             {
                 if ([System.String]::IsNullOrEmpty($HubUrl))
                 {
-                    if ($site.HubSiteId -ne "00000000-0000-0000-0000-000000000000")
+                    if ($site.HubSiteId -ne '00000000-0000-0000-0000-000000000000')
                     {
                         Write-Verbose -Message "Removing Hub Site Association for {$Url}"
                         Remove-PnPHubSiteAssociation -Site $Url
@@ -640,7 +641,7 @@ function Set-TargetResource
                     if ($null -eq $hubSite)
                     {
                         throw ("Specified HubUrl ($HubUrl) is not a Hub site. Make sure you " + `
-                                "have promoted that to a Hub site first.")
+                                'have promoted that to a Hub site first.')
                     }
 
                     if ($site.HubSiteId -ne $hubSite.Id)
@@ -652,8 +653,8 @@ function Set-TargetResource
             }
             else
             {
-                Write-Verbose -Message ("Ignoring the HubUrl parameter because it is equal to " + `
-                        "the site collection Url")
+                Write-Verbose -Message ('Ignoring the HubUrl parameter because it is equal to ' + `
+                        'the site collection Url')
             }
         }
     }
@@ -695,7 +696,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Disabled", "ExistingExternalUserSharingOnly", "ExternalUserSharingOnly", "ExternalUserAndGuestSharing")]
+        [ValidateSet('Disabled', 'ExistingExternalUserSharingOnly', 'ExternalUserSharingOnly', 'ExternalUserAndGuestSharing')]
         $SharingCapability,
 
         [Parameter()]
@@ -716,22 +717,22 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "View", "Edit")]
+        [ValidateSet('None', 'View', 'Edit')]
         $DefaultLinkPermission,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "AnonymousAccess", "Internal", "Direct")]
+        [ValidateSet('None', 'AnonymousAccess', 'Internal', 'Direct')]
         $DefaultSharingLinkType,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Unknown", "Disabled", "NotDisabled")]
+        [ValidateSet('Unknown', 'Disabled', 'NotDisabled')]
         $DisableAppViews,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Unknown", "Disabled", "NotDisabled")]
+        [ValidateSet('Unknown', 'Disabled', 'NotDisabled')]
         $DisableCompanyWideSharingLinks,
 
         [Parameter()]
@@ -748,7 +749,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown")]
+        [ValidateSet('NoRestriction', 'BlockMoveOnly', 'BlockFull', 'Unknown')]
         $RestrictedToRegion,
 
         [Parameter()]
@@ -761,7 +762,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "AllowList", "BlockList")]
+        [ValidateSet('None', 'AllowList', 'BlockList')]
         $SharingDomainRestrictionMode,
 
         [Parameter()]
@@ -777,9 +778,9 @@ function Test-TargetResource
         $OverrideTenantAnonymousLinkExpirationPolicy,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -794,7 +795,7 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -807,14 +808,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -826,12 +831,13 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove("ApplicationId") | Out-Null
-    $ValuesToCheck.Remove("TenantId") | Out-Null
-    $ValuesToCheck.Remove("CertificatePath") | Out-Null
-    $ValuesToCheck.Remove("CertificatePassword") | Out-Null
-    $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
-    $ValuesToCheck.Remove("ApplicationSecret") | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -865,7 +871,7 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -878,7 +884,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
@@ -890,8 +900,8 @@ function Export-TargetResource
         Confirm-M365DSCDependencies
 
         #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-        $CommandName  = $MyInvocation.MyCommand
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
         $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
             -CommandName $CommandName `
             -Parameters $PSBoundParameters
@@ -899,21 +909,21 @@ function Export-TargetResource
         #endregion
 
         $sites = Get-PnPTenantSite -ErrorAction Stop | Where-Object -FilterScript { $_.Template -ne 'SRCHCEN#0' -and $_.Template -ne 'SPSMSITEHOST#0' }
-        $organization = ""
-        $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-        if ($null -ne $Credential -and $Credential.UserName.Contains("@"))
+        $organization = ''
+        $principal = '' # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
+        if ($null -ne $Credential -and $Credential.UserName.Contains('@'))
         {
-            $organization = $Credential.UserName.Split("@")[1]
+            $organization = $Credential.UserName.Split('@')[1]
 
-            if ($organization.IndexOf(".") -gt 0)
+            if ($organization.IndexOf('.') -gt 0)
             {
-                $principal = $organization.Split(".")[0]
+                $principal = $organization.Split('.')[0]
             }
         }
         else
         {
             $organization = $TenantId
-            $principal = $organization.Split(".")[0]
+            $principal = $organization.Split('.')[0]
         }
         $dscContent = ''
         $i = 1
@@ -922,7 +932,7 @@ function Export-TargetResource
         {
             Write-Host "    [$i/$($sites.Length)] $($site.Url)" -NoNewline
             $site = Get-PnPTenantSite -Identity $site.Url
-            $siteTitle = "Null"
+            $siteTitle = 'Null'
             if (-not [System.String]::IsNullOrEmpty($site.Title))
             {
                 $siteTitle = $site.Title
@@ -931,7 +941,7 @@ function Export-TargetResource
             $Params = @{
                 Url                   = $site.Url
                 Template              = $site.Template
-                Owner                 = "admin@contoso.com" # Passing in bogus value to bypass null owner error
+                Owner                 = 'admin@contoso.com' # Passing in bogus value to bypass null owner error
                 Title                 = $siteTitle
                 TimeZoneId            = $site.TimeZoneID
                 ApplicationId         = $ApplicationId
@@ -940,7 +950,8 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
-                Credential    = $Credential
+                Managedidentity       = $ManagedIdentity.IsPresent
+                Credential            = $Credential
             }
 
             try
@@ -949,27 +960,27 @@ function Export-TargetResource
 
                 if ([System.String]::IsNullOrEmpty($Results.SharingDomainRestrictionMode))
                 {
-                    $Results.Remove("SharingDomainRestrictionMode") | Out-Null
+                    $Results.Remove('SharingDomainRestrictionMode') | Out-Null
                 }
                 if ([System.String]::IsNullOrEmpty($Results.RestrictedToRegion))
                 {
-                    $Results.Remove("RestrictedToRegion") | Out-Null
+                    $Results.Remove('RestrictedToRegion') | Out-Null
                 }
                 if ([System.String]::IsNullOrEmpty($Results.SharingAllowedDomainList))
                 {
-                    $Results.Remove("SharingAllowedDomainList") | Out-Null
+                    $Results.Remove('SharingAllowedDomainList') | Out-Null
                 }
                 if ([System.String]::IsNullOrEmpty($Results.SharingBlockedDomainList))
                 {
-                    $Results.Remove("SharingBlockedDomainList") | Out-Null
+                    $Results.Remove('SharingBlockedDomainList') | Out-Null
                 }
                 # Removing the HubUrl parameter if the value is equal to the Url parameter.
                 # This to prevent issues if the site col has just been created and not yet
                 # configured as a hubsite.
                 if ([System.String]::IsNullOrEmpty($Results.HubUrl) -or `
-                    ($Results.Url.TrimEnd("/") -eq $Results.HubUrl.TrimEnd("/")))
+                    ($Results.Url.TrimEnd('/') -eq $Results.HubUrl.TrimEnd('/')))
                 {
-                    $Results.Remove("HubUrl") | Out-Null
+                    $Results.Remove('HubUrl') | Out-Null
                 }
 
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -984,7 +995,7 @@ function Export-TargetResource
                         $currentDSCBlock.ToLower().Contains($principal.ToLower()))
                 {
                     $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
-                    $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+                    $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape('@' + $organization), "@`$(`$OrganizationName)"
                 }
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -1002,27 +1013,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

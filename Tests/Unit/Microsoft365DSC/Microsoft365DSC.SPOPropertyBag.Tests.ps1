@@ -2,63 +2,69 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath '..\..\Unit' `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath '\Stubs\Microsoft365.psm1' `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath '\Stubs\Generic.psm1' `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\UnitTestHelper.psm1" `
+        -ChildPath '\UnitTestHelper.psm1' `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SPOPropertyBag" -GenericStubModule $GenericStubPath
+    -DscResource 'SPOPropertyBag' -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         BeforeAll {
-            $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            if ($null -eq (Get-Module PnP.PowerShell))
+            {
+                Import-Module PnP.PowerShell
+
+            }
+
+            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
             }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
-
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credentials"
+                return 'Credentials'
             }
 
             Mock -CommandName Set-PnPPropertyBagValue -MockWith {
-
             }
 
             Mock -CommandName Remove-PnpPropertyBagValue -MockWith {
+            }
 
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
             }
         }
 
         # Test contexts
-        Context -Name "Need to Configure New Key" -Fixture {
+        Context -Name 'Need to Configure New Key' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Url                = "https://contoso.sharepoint.com"
-                    Key                = "MyKey"
-                    Value              = "MyValue"
+                    Url        = 'https://contoso.sharepoint.com'
+                    Key        = 'MyKey'
+                    Value      = 'MyValue'
                     Credential = $Credential
-                    Ensure             = 'Present'
+                    Ensure     = 'Present'
                 }
 
                 Mock -CommandName Get-PnPPropertyBag -MockWith {
@@ -66,53 +72,53 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Sets the property in Set method" {
+            It 'Sets the property in Set method' {
                 Set-TargetResource @testParams
             }
 
-            It "Return ensure is Absent from the Get method" {
+            It 'Return ensure is Absent from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
         }
 
-        Context -Name "Need to remove the Key" -Fixture {
+        Context -Name 'Need to remove the Key' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Url                = "https://contoso.sharepoint.com"
-                    Key                = "MyKey"
-                    Value              = "MyValue"
+                    Url        = 'https://contoso.sharepoint.com'
+                    Key        = 'MyKey'
+                    Value      = 'MyValue'
                     Credential = $Credential
-                    Ensure             = 'Absent'
+                    Ensure     = 'Absent'
                 }
 
                 Mock -CommandName Get-PnPPropertyBag -MockWith {
                     return @(
                         @{
-                            Key   = "MyKey"
-                            Value = "MyValue"
+                            Key   = 'MyKey'
+                            Value = 'MyValue'
                         }
                     )
                 }
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Remove the property in Set method" {
+            It 'Remove the property in Set method' {
                 Set-TargetResource @testParams
             }
 
-            It "Return ensure is Absent from the Get method" {
+            It 'Return ensure is Absent from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
         }
 
-        Context -Name "ReverseDSC Tests" -Fixture {
+        Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $testParams = @{
@@ -122,7 +128,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-PnPTenantSite -MockWith {
                     return @(
                         @{
-                            Url = "https://contoso.sharepoint.com"
+                            Url = 'https://contoso.sharepoint.com'
                         }
                     )
                 }
@@ -130,14 +136,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-PnPPropertyBag -MockWith {
                     return @(
                         @{
-                            Key   = "MyKey"
-                            Value = "MyValue"
+                            Key   = 'MyKey'
+                            Value = 'MyValue'
                         }
                     )
                 }
             }
 
-            It "Should Reverse Engineer resource from the Export method" {
+            It 'Should Reverse Engineer resource from the Export method' {
                 Export-TargetResource @testParams
             }
         }

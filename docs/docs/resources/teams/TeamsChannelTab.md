@@ -15,6 +15,7 @@
 | **RemoveUrl** | Write | String | Url of the location used to remove the app. ||
 | **EntityId** | Write | String | Id of the Entity linked to the Channel Tab. ||
 | **Ensure** | Write | String | Present ensures the Tab exists, absent ensures it is removed. |Present, Absent|
+| **Credential** | Write | PSCredential | Credentials of the Teams Admin ||
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||

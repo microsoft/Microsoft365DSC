@@ -44,8 +44,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -67,11 +67,11 @@ function Get-TargetResource
         {
             Write-Verbose "Found existing SupervisoryReviewPolicy $($Name)"
             $result = @{
-                Name               = $PolicyObject.Name
-                Comment            = $PolicyObject.Comment
-                Reviewers          = $PolicyObject.Reviewers
-                Ensure             = 'Present'
-                Credential         = $Credential
+                Name       = $PolicyObject.Name
+                Comment    = $PolicyObject.Comment
+                Reviewers  = $PolicyObject.Reviewers
+                Ensure     = 'Present'
+                Credential = $Credential
             }
 
             Write-Verbose -Message "Found SupervisoryReviewPolicy $($Name)"
@@ -81,26 +81,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -139,8 +125,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -155,17 +141,17 @@ function Set-TargetResource
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentPolicy.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove("Credential")
-        $CreationParams.Remove("Ensure")
+        $CreationParams.Remove('Credential')
+        $CreationParams.Remove('Ensure')
         New-SupervisoryReviewPolicyV2 @CreationParams
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove("Credential")
-        $CreationParams.Remove("Ensure")
-        $CreationParams.Remove("Name")
-        $CreationParams.Add("Identity", $Name)
+        $CreationParams.Remove('Credential')
+        $CreationParams.Remove('Ensure')
+        $CreationParams.Remove('Name')
+        $CreationParams.Add('Identity', $Name)
 
         # Reviewers
         $currentReviewers = $CurrentPolicy.Reviewers
@@ -187,14 +173,14 @@ function Set-TargetResource
             }
         }
 
-        $CreationParams.Remove("Reviewers") | Out-Null
+        $CreationParams.Remove('Reviewers') | Out-Null
         if ($reviewersToAdd.Length -gt 0)
         {
-            $CreationParams.Add("AddReviewers", $reviewersToAdd)
+            $CreationParams.Add('AddReviewers', $reviewersToAdd)
         }
         if ($reviewersToRemove.Length -gt 0)
         {
-            $CreationParams.Add("RemoveReviewers", $reviewersToRemove)
+            $CreationParams.Add('RemoveReviewers', $reviewersToRemove)
         }
 
         Set-SupervisoryReviewPolicyV2 @CreationParams
@@ -238,8 +224,8 @@ function Test-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -282,8 +268,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -308,8 +294,8 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($policies.Length)] $($policy.Name)" -NoNewline
             $Params = @{
-                Name               = $policy.Name
-                Reviewers          = "Microsoft365DSC"
+                Name       = $policy.Name
+                Reviewers  = 'Microsoft365DSC'
                 Credential = $Credential
             }
             $Results = Get-TargetResource @Params
@@ -331,27 +317,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message "Error during Export:" `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

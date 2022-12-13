@@ -1,34 +1,34 @@
 
 $InfoMapping = @(
     @{
-        Protocol   = "Local"
-        Type       = "SharePoint"
-        ProviderID = "fa947043-6046-4f97-9714-40d4c113963d"
+        Protocol   = 'Local'
+        Type       = 'SharePoint'
+        ProviderID = 'fa947043-6046-4f97-9714-40d4c113963d'
     },
     @{
-        Protocol   = "Remote"
-        Type       = "SharePoint"
-        ProviderID = "1e0c8601-2e5d-4ccb-9561-53743b5dbde7"
+        Protocol   = 'Remote'
+        Type       = 'SharePoint'
+        ProviderID = '1e0c8601-2e5d-4ccb-9561-53743b5dbde7'
     },
     @{
-        Protocol   = "Exchange"
-        Type       = "SharePoint"
-        ProviderID = "3a17e140-1574-4093-bad6-e19cdf1c0122"
+        Protocol   = 'Exchange'
+        Type       = 'SharePoint'
+        ProviderID = '3a17e140-1574-4093-bad6-e19cdf1c0122'
     },
     @{
-        Protocol   = "OpenSearch"
-        Type       = "SharePoint"
-        ProviderID = "3a17e140-1574-4093-bad6-e19cdf1c0121"
+        Protocol   = 'OpenSearch'
+        Type       = 'SharePoint'
+        ProviderID = '3a17e140-1574-4093-bad6-e19cdf1c0121'
     },
     @{
-        Protocol   = "Local"
-        Type       = "People"
-        ProviderID = "e4bcc058-f133-4425-8ffc-1d70596ffd33"
+        Protocol   = 'Local'
+        Type       = 'People'
+        ProviderID = 'e4bcc058-f133-4425-8ffc-1d70596ffd33'
     },
     @{
-        Protocol   = "Remote"
-        Type       = "People"
-        ProviderID = "e377caaa-fcaf-4a1b-b7a1-e69a506a07aa"
+        Protocol   = 'Remote'
+        Type       = 'People'
+        ProviderID = 'e377caaa-fcaf-4a1b-b7a1-e69a506a07aa'
     }
 )
 function Get-TargetResource
@@ -46,7 +46,7 @@ function Get-TargetResource
         $Description,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Local", "Remote", "OpenSearch", "Exchange")]
+        [ValidateSet('Local', 'Remote', 'OpenSearch', 'Exchange')]
         [System.String]
         $Protocol,
 
@@ -55,9 +55,9 @@ function Get-TargetResource
         $SourceURL,
 
         [Parameter()]
-        [ValidateSet("SharePoint", "People")]
+        [ValidateSet('SharePoint', 'People')]
         [System.String]
-        $Type = "SharePoint",
+        $Type = 'SharePoint',
 
         [Parameter()]
         [System.String]
@@ -72,9 +72,9 @@ function Get-TargetResource
         $UseAutoDiscover,
 
         [Parameter()]
-        [ValidateSet("Present")]
+        [ValidateSet('Present')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -89,7 +89,7 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -102,7 +102,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration for Result Source instance $Name"
@@ -113,8 +117,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -122,7 +126,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
     try
     {
         if ($null -eq $Script:RecentExtract)
@@ -140,13 +144,13 @@ function Get-TargetResource
 
         $ExoSource = [string] $source.ConnectionUrlTemplate
         $SourceHasAutoDiscover = $false
-        if ("http://auto?autodiscover=true" -eq $ExoSource)
+        if ('http://auto?autodiscover=true' -eq $ExoSource)
         {
             $SourceHasAutoDiscover = $true
         }
 
         $allowPartial = $source.QueryTransform.OverridePropertiesForSeralization.KeyValueOfstringanyType `
-        | Where-Object -FilterScript { $_.Key -eq "AllowPartialResults" }
+        | Where-Object -FilterScript { $_.Key -eq 'AllowPartialResults' }
 
         $mapping = $InfoMapping | Where-Object -FilterScript { $_.ProviderID -eq $source.ProviderId }
 
@@ -158,7 +162,7 @@ function Get-TargetResource
             QueryTransform        = [string] $source.QueryTransform._QueryTemplate
             SourceURL             = [string] $source.ConnectionUrlTemplate
             UseAutoDiscover       = $SourceHasAutoDiscover
-            Ensure                = "Present"
+            Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -166,37 +170,24 @@ function Get-TargetResource
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
 
         if ($null -ne $allowPartial)
         {
-            $returnValue.Add("ShowPartialSearch", [System.Boolean]$allowPartial.Value.InnerText)
+            $returnValue.Add('ShowPartialSearch', [System.Boolean]$allowPartial.Value.InnerText)
         }
 
         return $returnValue
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -215,7 +206,7 @@ function Set-TargetResource
         $Description,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Local", "Remote", "OpenSearch", "Exchange")]
+        [ValidateSet('Local', 'Remote', 'OpenSearch', 'Exchange')]
         [System.String]
         $Protocol,
 
@@ -224,9 +215,9 @@ function Set-TargetResource
         $SourceURL,
 
         [Parameter()]
-        [ValidateSet("SharePoint", "People")]
+        [ValidateSet('SharePoint', 'People')]
         [System.String]
-        $Type = "SharePoint",
+        $Type = 'SharePoint',
 
         [Parameter()]
         [System.String]
@@ -241,9 +232,9 @@ function Set-TargetResource
         $UseAutoDiscover,
 
         [Parameter()]
-        [ValidateSet("Present")]
+        [ValidateSet('Present')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -258,7 +249,7 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -271,7 +262,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration for Result Source instance $Name"
@@ -280,8 +275,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -291,9 +286,9 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
-    Write-Verbose -Message "Reading SearchConfigurationSettings XML file"
+    Write-Verbose -Message 'Reading SearchConfigurationSettings XML file'
     $SearchConfigTemplatePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\..\Dependencies\SearchConfigurationSettings.xml" `
+        -ChildPath '..\..\Dependencies\SearchConfigurationSettings.xml' `
         -Resolve
     $SearchConfigXML = [Xml] (Get-Content $SearchConfigTemplatePath -Raw)
 
@@ -310,31 +305,31 @@ function Set-TargetResource
         $currentID = $source.Id
     }
 
-    Write-Verbose -Message "Generating new SearchConfigurationSettings XML file"
-    $newSource = $SearchConfigXML.CreateElement("d4p1:Source", `
-            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
+    Write-Verbose -Message 'Generating new SearchConfigurationSettings XML file'
+    $newSource = $SearchConfigXML.CreateElement('d4p1:Source', `
+            'http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query')
 
-    Write-Verbose -Message "Setting ConnectionUrlTemplate"
-    $node = $SearchConfigXML.CreateElement("d4p1:ConnectionUrlTemplate", `
-            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
+    Write-Verbose -Message 'Setting ConnectionUrlTemplate'
+    $node = $SearchConfigXML.CreateElement('d4p1:ConnectionUrlTemplate', `
+            'http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query')
     $node.InnerText = $SourceUrl
     $newSource.AppendChild($node) | Out-Null
 
-    Write-Verbose -Message "Setting CreatedDate"
-    $node = $SearchConfigXML.CreateElement("d4p1:CreatedDate", `
-            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
-    $node.InnerText = [DateTime]::Now.ToString("yyyy-MM-ddThh:mm:ss.00")
+    Write-Verbose -Message 'Setting CreatedDate'
+    $node = $SearchConfigXML.CreateElement('d4p1:CreatedDate', `
+            'http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query')
+    $node.InnerText = [DateTime]::Now.ToString('yyyy-MM-ddThh:mm:ss.00')
     $newSource.AppendChild($node) | Out-Null
 
-    Write-Verbose -Message "Setting Description"
-    $node = $SearchConfigXML.CreateElement("d4p1:Description", `
-            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
+    Write-Verbose -Message 'Setting Description'
+    $node = $SearchConfigXML.CreateElement('d4p1:Description', `
+            'http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query')
     $node.InnerText = $Description
     $newSource.AppendChild($node) | Out-Null
 
-    Write-Verbose -Message "Setting Existing Id"
-    $node = $SearchConfigXML.CreateElement("d4p1:Id", `
-            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
+    Write-Verbose -Message 'Setting Existing Id'
+    $node = $SearchConfigXML.CreateElement('d4p1:Id', `
+            'http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query')
 
     if ($null -ne $currentID)
     {
@@ -346,85 +341,85 @@ function Set-TargetResource
     }
     $newSource.AppendChild($node) | Out-Null
 
-    Write-Verbose -Message "Setting Name"
-    $node = $SearchConfigXML.CreateElement("d4p1:Name", `
-            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
+    Write-Verbose -Message 'Setting Name'
+    $node = $SearchConfigXML.CreateElement('d4p1:Name', `
+            'http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query')
     $node.InnerText = $Name
     $newSource.AppendChild($node) | Out-Null
 
-    Write-Verbose -Message "Setting ProviderId"
+    Write-Verbose -Message 'Setting ProviderId'
     $mapping = $InfoMapping | Where-Object -FilterScript { $_.Protocol -eq $Protocol -and $_.Type -eq $Type }
-    $node = $SearchConfigXML.CreateElement("d4p1:ProviderId", `
-            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
+    $node = $SearchConfigXML.CreateElement('d4p1:ProviderId', `
+            'http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query')
     $node.InnerText = $mapping.ProviderID
     $catch = $newSource.AppendChild($node)
 
-    Write-Verbose -Message "Setting QueryTransform"
-    $queryTransformNode = $SearchConfigXML.CreateElement("d4p1:QueryTransform", `
-            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
-    $queryTransformNode.SetAttribute("xmlns:d6p1", "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
+    Write-Verbose -Message 'Setting QueryTransform'
+    $queryTransformNode = $SearchConfigXML.CreateElement('d4p1:QueryTransform', `
+            'http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query')
+    $queryTransformNode.SetAttribute('xmlns:d6p1', 'http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08')
 
-    Write-Verbose -Message "Setting QueryTransform:Id"
-    $node = $SearchConfigXML.CreateElement("d6p1:Id", `
-            "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
+    Write-Verbose -Message 'Setting QueryTransform:Id'
+    $node = $SearchConfigXML.CreateElement('d6p1:Id', `
+            'http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08')
     $node.InnerText = (New-Guid).ToString()
     $queryTransformNode.AppendChild($node)
 
-    Write-Verbose -Message "Setting QueryTransform:ParentType"
-    $queryTransformNode = $SearchConfigXML.CreateElement("d6p1:ParentType", `
-            "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
-    $node.InnerText = "Source"
+    Write-Verbose -Message 'Setting QueryTransform:ParentType'
+    $queryTransformNode = $SearchConfigXML.CreateElement('d6p1:ParentType', `
+            'http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08')
+    $node.InnerText = 'Source'
     $queryTransformNode.AppendChild($node)
 
-    Write-Verbose -Message "Setting QueryTransform:QueryPropertyExpressions"
-    $QueryPropertyExpressions = $SearchConfigXML.CreateElement("d6p1:QueryPropertyExpressions", `
-            "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
+    Write-Verbose -Message 'Setting QueryTransform:QueryPropertyExpressions'
+    $QueryPropertyExpressions = $SearchConfigXML.CreateElement('d6p1:QueryPropertyExpressions', `
+            'http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08')
 
-    Write-Verbose -Message "Setting QueryTransform:QueryPropertyExpressions:MaxSize"
-    $node = $SearchConfigXML.CreateElement("d6p1:MaxSize", `
-            "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
-    $node.InnerText = "2147483647"
+    Write-Verbose -Message 'Setting QueryTransform:QueryPropertyExpressions:MaxSize'
+    $node = $SearchConfigXML.CreateElement('d6p1:MaxSize', `
+            'http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08')
+    $node.InnerText = '2147483647'
     $QueryPropertyExpressions.AppendChild($node)
 
-    Write-Verbose -Message "Setting QueryTransform:QueryPropertyExpressions:OrderedItems"
-    $node = $SearchConfigXML.CreateElement("d6p1:OrderedItems", `
-            "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
+    Write-Verbose -Message 'Setting QueryTransform:QueryPropertyExpressions:OrderedItems'
+    $node = $SearchConfigXML.CreateElement('d6p1:OrderedItems', `
+            'http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08')
     $QueryPropertyExpressions.AppendChild($node)
 
     $queryTransformNode.AppendChild($QueryPropertyExpressions)
 
-    Write-Verbose -Message "Setting QueryTransform:_IsReadOnly"
-    $node = $SearchConfigXML.CreateElement("d6p1:_IsReadOnly", `
-            "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
-    $node.InnerText = "true"
+    Write-Verbose -Message 'Setting QueryTransform:_IsReadOnly'
+    $node = $SearchConfigXML.CreateElement('d6p1:_IsReadOnly', `
+            'http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08')
+    $node.InnerText = 'true'
     $queryTransformNode.AppendChild($node)
 
-    Write-Verbose -Message "Setting QueryTransform:_QueryTemplate"
-    $node = $SearchConfigXML.CreateElement("d6p1:_QueryTemplate", `
-            "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
+    Write-Verbose -Message 'Setting QueryTransform:_QueryTemplate'
+    $node = $SearchConfigXML.CreateElement('d6p1:_QueryTemplate', `
+            'http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08')
     $node.InnerText = $QueryTransform
     $queryTransformNode.AppendChild($node) | Out-Null
 
-    Write-Verbose -Message "Setting QueryTransform:_SourceId"
-    $node = $SearchConfigXML.CreateElement("d6p1:_SourceId", `
-            "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
-    $node.SetAttribute("i:nil", "true")
+    Write-Verbose -Message 'Setting QueryTransform:_SourceId'
+    $node = $SearchConfigXML.CreateElement('d6p1:_SourceId', `
+            'http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08')
+    $node.SetAttribute('i:nil', 'true')
     $queryTransformNode.AppendChild($node)
 
-    Write-Verbose -Message "Inserting QueryTransform"
+    Write-Verbose -Message 'Inserting QueryTransform'
     $newSource.AppendChild($queryTransformNode) | Out-Null
 
-    Write-Verbose -Message "Inserting new Source Node"
+    Write-Verbose -Message 'Inserting new Source Node'
     $xmlNode = $SearchConfigXML.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.OwnerDocument.ImportNode($newSource, $true)
     $SearchConfigXML.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.AppendChild($xmlNode)
 
-    Write-Verbose -Message "Saving XML file in a temporary location"
+    Write-Verbose -Message 'Saving XML file in a temporary location'
     $tempPath = Join-Path -Path $ENV:TEMP `
-        -ChildPath ((New-Guid).ToString().Split('-')[0] + ".config")
+        -ChildPath ((New-Guid).ToString().Split('-')[0] + '.config')
     $SearchConfigXML.OuterXml | Out-File $tempPath
 
     # Create the Result Source if it doesn't already exist
-    Write-Verbose -Message "Applying new Search Configuration back to the Office365 Tenant"
+    Write-Verbose -Message 'Applying new Search Configuration back to the Office365 Tenant'
     Set-PnPSearchConfiguration -Scope Subscription -Path $tempPath
 }
 
@@ -443,7 +438,7 @@ function Test-TargetResource
         $Description,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Local", "Remote", "OpenSearch", "Exchange")]
+        [ValidateSet('Local', 'Remote', 'OpenSearch', 'Exchange')]
         [System.String]
         $Protocol,
 
@@ -452,9 +447,9 @@ function Test-TargetResource
         $SourceURL,
 
         [Parameter()]
-        [ValidateSet("SharePoint", "People")]
+        [ValidateSet('SharePoint', 'People')]
         [System.String]
-        $Type = "SharePoint",
+        $Type = 'SharePoint',
 
         [Parameter()]
         [System.String]
@@ -469,9 +464,9 @@ function Test-TargetResource
         $UseAutoDiscover,
 
         [Parameter()]
-        [ValidateSet("Present")]
+        [ValidateSet('Present')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -486,7 +481,7 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -499,14 +494,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -548,7 +547,7 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -561,7 +560,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
@@ -573,8 +576,8 @@ function Export-TargetResource
         Confirm-M365DSCDependencies
 
         #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-        $CommandName  = $MyInvocation.MyCommand
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
         $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
             -CommandName $CommandName `
             -Parameters $PSBoundParameters
@@ -604,11 +607,12 @@ function Export-TargetResource
             $Params = @{
                 Name                  = $source.Name
                 Protocol              = $mapping.Protocol
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
                 CertificatePassword   = $CertificatePassword
             }
@@ -631,27 +635,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message "Error during Export:" `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

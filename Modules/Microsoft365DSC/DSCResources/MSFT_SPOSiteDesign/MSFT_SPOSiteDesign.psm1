@@ -13,7 +13,7 @@ function Get-TargetResource
         $SiteScriptNames,
 
         [Parameter()]
-        [ValidateSet("CommunicationSite", "TeamSite", "GrouplessTeamSite")]
+        [ValidateSet('CommunicationSite', 'TeamSite', 'GrouplessTeamSite')]
         [System.String]
         $WebTemplate,
 
@@ -38,9 +38,9 @@ function Get-TargetResource
         $Version,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -55,7 +55,7 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -68,7 +68,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration for SPO SiteDesign for $Title"
@@ -79,8 +83,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -88,7 +92,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
     try
     {
         Write-Verbose -Message "Getting Site Design for $Title"
@@ -113,17 +117,17 @@ function Get-TargetResource
         ## Todo need to see if we can get this somehow from PNP module instead of hard coded in script
         ## https://github.com/SharePoint/PnP-PowerShell/blob/master/Commands/Enums/SiteWebTemplate.cs
         $webtemp = $null
-        if ($siteDesign.WebTemplate -eq "64")
+        if ($siteDesign.WebTemplate -eq '64')
         {
-            $webtemp = "TeamSite"
+            $webtemp = 'TeamSite'
         }
-        elseif ($siteDesign.WebTemplate -eq "1")
+        elseif ($siteDesign.WebTemplate -eq '1')
         {
-            $webtemp = "GrouplessTeamSite"
+            $webtemp = 'GrouplessTeamSite'
         }
         else
         {
-            $webtemp = "CommunicationSite"
+            $webtemp = 'CommunicationSite'
         }
 
         return @{
@@ -135,7 +139,7 @@ function Get-TargetResource
             PreviewImageAltText   = $siteDesign.PreviewImageAltText
             PreviewImageUrl       = $siteDesign.PreviewImageUrl
             Version               = $siteDesign.Version
-            Ensure                = "Present"
+            Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -143,30 +147,17 @@ function Get-TargetResource
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -181,7 +172,7 @@ function Set-TargetResource
         $Title,
 
         [Parameter()]
-        [ValidateSet("CommunicationSite", "TeamSite", "GrouplessTeamSite")]
+        [ValidateSet('CommunicationSite', 'TeamSite', 'GrouplessTeamSite')]
         [System.String]
         $WebTemplate,
 
@@ -210,9 +201,9 @@ function Set-TargetResource
         $Version,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -227,7 +218,7 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -240,7 +231,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration for SPO SiteDesign for $Title"
@@ -249,8 +244,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -271,33 +266,34 @@ function Set-TargetResource
     }
 
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("Credential") | Out-Null
-    $CurrentParameters.Remove("SiteScriptNames") | Out-Null
-    $CurrentParameters.Remove("Ensure") | Out-Null
-    $CurrentParameters.Remove("ApplicationId") | Out-Null
-    $CurrentParameters.Remove("TenantId") | Out-Null
-    $CurrentParameters.Remove("CertificatePath") | Out-Null
-    $CurrentParameters.Remove("CertificatePassword") | Out-Null
-    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
-    $CurrentParameters.Remove("ApplicationSecret") | Out-Null
-    $CurrentParameters.Add("SiteScriptIds", $scriptIds)
+    $CurrentParameters.Remove('Credential') | Out-Null
+    $CurrentParameters.Remove('SiteScriptNames') | Out-Null
+    $CurrentParameters.Remove('Ensure') | Out-Null
+    $CurrentParameters.Remove('ApplicationId') | Out-Null
+    $CurrentParameters.Remove('TenantId') | Out-Null
+    $CurrentParameters.Remove('CertificatePath') | Out-Null
+    $CurrentParameters.Remove('CertificatePassword') | Out-Null
+    $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
+    $CurrentParameters.Remove('ManagedIdentity') | Out-Null
+    $CurrentParameters.Remove('ApplicationSecret') | Out-Null
+    $CurrentParameters.Add('SiteScriptIds', $scriptIds)
 
-    if ($curSiteDesign.Ensure -eq "Absent" -and "Present" -eq $Ensure )
+    if ($curSiteDesign.Ensure -eq 'Absent' -and 'Present' -eq $Ensure )
     {
-        $CurrentParameters.Remove("Version")
+        $CurrentParameters.Remove('Version')
         Write-Verbose -Message "Adding new site design $Title"
         Add-PnPSiteDesign @CurrentParameters
     }
-    elseif (($curSiteDesign.Ensure -eq "Present" -and "Present" -eq $Ensure))
+    elseif (($curSiteDesign.Ensure -eq 'Present' -and 'Present' -eq $Ensure))
     {
         $siteDesign = Get-PnPSiteDesign -Identity $Title -ErrorAction SilentlyContinue
         if ($null -ne $siteDesign)
         {
             Write-Verbose -Message "Updating current site design $Title"
-            Set-PnPSiteDesign -Identity $siteDesign.Id  @CurrentParameters
+            Set-PnPSiteDesign -Identity $siteDesign.Id @CurrentParameters
         }
     }
-    elseif (($Ensure -eq "Absent" -and $curSiteDesign.Ensure -eq "Present"))
+    elseif (($Ensure -eq 'Absent' -and $curSiteDesign.Ensure -eq 'Present'))
     {
         $siteDesign = Get-PnPSiteDesign -Identity $Title -ErrorAction SilentlyContinue
         if ($null -ne $siteDesign)
@@ -319,7 +315,7 @@ function Test-TargetResource
         $Title,
 
         [Parameter()]
-        [ValidateSet("CommunicationSite", "TeamSite", "GrouplessTeamSite")]
+        [ValidateSet('CommunicationSite', 'TeamSite', 'GrouplessTeamSite')]
         [System.String]
         $WebTemplate,
 
@@ -348,9 +344,9 @@ function Test-TargetResource
         $Version,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -365,7 +361,7 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -378,14 +374,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -400,12 +400,13 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove("ApplicationId") | Out-Null
-    $ValuesToCheck.Remove("TenantId") | Out-Null
-    $ValuesToCheck.Remove("CertificatePath") | Out-Null
-    $ValuesToCheck.Remove("CertificatePassword") | Out-Null
-    $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
-    $ValuesToCheck.Remove("ApplicationSecret") | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -436,7 +437,7 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
@@ -449,7 +450,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     try
@@ -461,8 +466,8 @@ function Export-TargetResource
         Confirm-M365DSCDependencies
 
         #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-        $CommandName  = $MyInvocation.MyCommand
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
         $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
             -CommandName $CommandName `
             -Parameters $PSBoundParameters
@@ -494,7 +499,8 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
-                Credential    = $Credential
+                Managedidentity       = $ManagedIdentity.IsPresent
+                Credential            = $Credential
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -516,27 +522,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message "Error during Export:" `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 
