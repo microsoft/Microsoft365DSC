@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.1214.1
 
 * AADEntitlementManagementAccessPackageCatalogResource
   * Fixes an issue where if no access resource were defined, an error was thrown trying to save the partial content.
