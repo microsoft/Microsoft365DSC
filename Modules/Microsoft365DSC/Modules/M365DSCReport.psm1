@@ -427,7 +427,10 @@ Local path of the destination configuraton.
 Array that contains the list of configuration components for the source.
 
 .Parameter DestinationObject
-Array that contains the list of configuration components for the destination. |
+Array that contains the list of configuration components for the destination.
+
+.Parameter ExcludedProperties
+Array that contains the list of parameters to exclude.
 
 .Example
 Compare-M365DSCConfigurations -Source 'C:\DSC\source.ps1' -Destination 'C:\DSC\destination.ps1'
@@ -459,7 +462,11 @@ function Compare-M365DSCConfigurations
 
         [Parameter()]
         [Array]
-        $DestinationObject
+        $DestinationObject,
+
+        [Parameter()]
+        [Array]
+        $ExcludedProperties
     )
 
     if ($CaptureTelemetry)
@@ -532,6 +539,8 @@ function Compare-M365DSCConfigurations
                     'ApplicationSecret',
                     'ManagedIdentity'
                 )
+
+                $filteredProperties = ($filteredProperties + $ExcludedProperties) | Select-Object -Unique
 
                 [System.Collections.Hashtable]$destinationResource = $destinationResource[0]
                 # The resource instance exists in both the source and the destination. Compare each property;
@@ -806,6 +815,9 @@ Specifies that file that contains a custom header for the report.
 .Parameter Delta
 An array with difference, already compiled from another source.
 
+.Parameter ExcludedProperties
+Array that contains the list of parameters to exclude.
+
 .Example
 New-M365DSCDeltaReport -Source 'C:\DSC\Source.ps1' -Destination 'C:\DSC\Destination.ps1' -OutputPath 'C:\Dsc\DeltaReport.html'
 
@@ -851,7 +863,11 @@ function New-M365DSCDeltaReport
         [Parameter()]
         [System.String]
         [ValidateSet('HTML', 'JSON')]
-        $Type = 'HTML'
+        $Type = 'HTML',
+
+        [Parameter()]
+        [Array]
+        $ExcludedProperties
     )
 
     # Validate that the latest version of the module is installed.
@@ -898,11 +914,17 @@ function New-M365DSCDeltaReport
         {
             # Parse the blueprint file, pass to Compare-M365DSCConfigurations as object (including comments aka metadata)
             [Array] $ParsedBlueprintWithMetadata = Initialize-M365DSCReporting -ConfigurationPath $Destination -IncludeComments:$true
-            $Delta = Compare-M365DSCConfigurations -Source $Source -DestinationObject $ParsedBlueprintWithMetadata -CaptureTelemetry $false
+            $Delta = Compare-M365DSCConfigurations -Source $Source `
+                -DestinationObject $ParsedBlueprintWithMetadata `
+                -CaptureTelemetry $false `
+                -ExcludedProperties $ExcludedProperties
         }
         Else
         {
-            $Delta = Compare-M365DSCConfigurations -Source $Source -Destination $Destination -CaptureTelemetry $false
+            $Delta = Compare-M365DSCConfigurations `-Source $Source `
+                -Destination $Destination `
+                -CaptureTelemetry $false `
+                -ExcludedProperties $ExcludedProperties
         }
     }
 

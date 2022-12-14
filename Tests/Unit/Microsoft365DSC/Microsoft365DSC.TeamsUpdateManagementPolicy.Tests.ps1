@@ -24,7 +24,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         BeforeAll {
             $secpasswd = ConvertTo-SecureString 'Pass@word1' -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
-
+            $DateTimeValue = [System.DateTime]::Parse("2022-12-08 6:00:00PM")
             $Global:PartialExportFileName = 'c:\TestPath'
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -66,7 +66,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity            = 'Tag:TestPolicy'
                     UpdateDayOfWeek     = 1
                     UpdateTime          = '18:00'
-                    UpdateTimeOfDay     = '18:00:00'
+                    UpdateTimeOfDay     = '6:00 PM'
                     Ensure              = 'Present'
                     Credential          = $Credential
                 }
@@ -100,7 +100,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity            = 'TestPolicy'
                     UpdateDayOfWeek     = 1
                     UpdateTime          = '18:00'
-                    UpdateTimeOfDay     = '18:00:00'
+                    UpdateTimeOfDay     = '6:00 PM'
                     Ensure              = 'Present'
                     Credential          = $Credential
                 }
@@ -114,7 +114,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Identity            = 'TestPolicy'
                         UpdateDayOfWeek     = 3; #Drift
                         UpdateTime          = '18:00'
-                        UpdateTimeOfDay     = '2022-05-06T18:00:00'
+                        UpdateTimeOfDay     = $DateTimeValue
                     }
                 }
             }
@@ -144,7 +144,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity            = 'Tag:TestPolicy'
                     UpdateDayOfWeek     = 1
                     UpdateTime          = '18:00'
-                    UpdateTimeOfDay     = '18:00:00'
+                    UpdateTimeOfDay     = '6:00 PM'
                     Ensure              = 'Present'
                     Credential          = $Credential
                 }
@@ -158,7 +158,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Identity            = 'Tag:TestPolicy'
                         UpdateDayOfWeek     = 1
                         UpdateTime          = '18:00'
-                        UpdateTimeOfDay     = '2022-05-06T18:00:00'
+                        UpdateTimeOfDay     = $DateTimeValue
                     }
                 }
             }
@@ -189,7 +189,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Identity            = 'Tag:TestPolicy'
                         UpdateDayOfWeek     = 1
                         UpdateTime          = '18:00'
-                        UpdateTimeOfDay     = '2022-05-06T18:00:00'
+                        UpdateTimeOfDay     = $DateTimeValue
                     }
                 }
             }
@@ -224,7 +224,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Identity            = 'Tag:TestPolicy'
                         UpdateDayOfWeek     = 1
                         UpdateTime          = '18:00'
-                        UpdateTimeOfDay     = '2022-05-06T18:00:00'
+                        UpdateTimeOfDay     = $DateTimeValue
                     }
                 }
             }

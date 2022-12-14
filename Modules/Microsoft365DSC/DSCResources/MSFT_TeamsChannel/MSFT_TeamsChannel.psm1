@@ -214,12 +214,19 @@ function Set-TargetResource
     Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
 
     $CurrentParameters.Remove('TeamName') | Out-Null
-    $CurrentParameters.Add('GroupId', $team.GroupId)
     $CurrentParameters.Remove('Credential') | Out-Null
     $CurrentParameters.Remove('ApplicationId') | Out-Null
     $CurrentParameters.Remove('TenantId') | Out-Null
     $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
     $CurrentParameters.Remove('Ensure') | Out-Null
+    if ($CurrentParameters.ContainsKey('GroupId'))
+    {
+        $CurrentParameters.GroupId = $team.GroupId
+    }
+    else
+    {
+        $CurrentParameters.Add("GroupId", $team.GroupId)
+    }
 
     if ($Ensure -eq 'Present')
     {
@@ -240,6 +247,7 @@ function Set-TargetResource
                 $CurrentParameters.Remove('NewDisplayName')
             }
             Write-Verbose -Message "Creating team channel $DisplayName"
+            Write-Verbose -Message "Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentParameters)"
             New-TeamChannel @CurrentParameters
         }
     }

@@ -62,6 +62,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $PasswordPolicies,
+
+        [Parameter()]
+        [System.String]
         $PhoneNumber,
 
         [Parameter()]
@@ -163,7 +167,7 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
-        $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType')
+        $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
         $user = Get-MgUser -UserId $UserPrincipalName -Property $propertiesToRetrieve -ErrorAction SilentlyContinue
         if ($null -eq $user)
         {
@@ -207,6 +211,7 @@ function Get-TargetResource
             MobilePhone           = $user.Mobile
             Office                = $user.OfficeLocation
             PasswordNeverExpires  = $passwordNeverExpires
+            PasswordPolicies      = $user.PasswordPolicies
             PhoneNumber           = $user.TelephoneNumber
             PostalCode            = $user.PostalCode
             PreferredLanguage     = $user.PreferredLanguage
@@ -296,6 +301,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $PasswordNeverExpires = $false,
+
+        [Parameter()]
+        [System.String]
+        $PasswordPolicies,
 
         [Parameter()]
         [System.String]
@@ -467,6 +476,16 @@ function Set-TargetResource
         }
         #endregion
 
+        $passwordValue = [System.Web.Security.Membership]::GeneratePassword(30, 2)
+        if ($null -ne $Password)
+        {
+            $passwordValue = $Password.GetNetworkCredential().Password
+        }
+        $PasswordProfile = @{
+            Password = $passwordValue
+        }
+        $CreationParams.Add('PasswordProfile', $PasswordProfile)
+
         if ($user.UserPrincipalName)
         {
             Write-Verbose -Message "Updating Office 365 User $UserPrincipalName Information"
@@ -477,10 +496,6 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Creating Office 365 User $UserPrincipalName"
             $CreationParams.Add('AccountEnabled', $true)
-            $PasswordProfile = @{
-                Password = 'TempP@ss'
-            }
-            $CreationParams.Add('PasswordProfile', $PasswordProfile)
             $CreationParams.Add('MailNickName', $UserPrincipalName.Split('@')[0])
             Write-Verbose -Message "Creating new user with values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
             $user = New-MgUser @CreationParams
@@ -612,6 +627,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $PasswordNeverExpires = $false,
+
+        [Parameter()]
+        [System.String]
+        $PasswordPolicies,
 
         [Parameter()]
         [System.String]

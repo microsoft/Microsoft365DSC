@@ -19,6 +19,7 @@
 | **MobilePhone** | Write | String | The Mobile Phone Number of the user ||
 | **Office** | Write | String | The Office Name of the user ||
 | **PasswordNeverExpires** | Write | Boolean | Specifies whether the user password expires periodically. Default value is false ||
+| **PasswordPolicies** | Write | String | Specifies password policies for the user. ||
 | **PhoneNumber** | Write | String | The Phone Number of the user ||
 | **PostalCode** | Write | String | The Postal Code of the user ||
 | **PreferredDataLocation** | Write | String | The Prefered location to store data of the user ||

@@ -248,7 +248,7 @@ function Get-TargetResource
             $parentLabelID = $null
             if ($null -ne $label.ParentId)
             {
-                $parentLabel = Get-Label -Identity $label.ParentId -ErrorAction SilentlyContinue
+                $parentLabel = Get-Label -Identity $label.ParentId -IncludeDetailedLabelActions $true -ErrorAction 'SilentlyContinue'
                 $parentLabelID = $parentLabel.Name
             }
             if ($null -ne $label.LocaleSettings)

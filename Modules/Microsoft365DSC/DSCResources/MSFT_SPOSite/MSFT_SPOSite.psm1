@@ -574,6 +574,7 @@ function Set-TargetResource
             AnonymousLinkExpirationInDays               = $AnonymousLinkExpirationInDays
             OverrideTenantAnonymousLinkExpirationPolicy = $OverrideTenantAnonymousLinkExpirationPolicy
             DenyAddAndCustomizePages                    = $deny
+            Title                                       = $Title
         }
         $UpdateParams = Remove-NullEntriesFromHashtable -Hash $UpdateParams
 
@@ -597,10 +598,9 @@ function Set-TargetResource
             $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
                 -InboundParameters $PSBoundParameters `
                 -Url $Url
-            Write-Verbose -Message "Updating props via Set-PNPSite on $($Url)"
+            Write-Verbose -Message "Updating props via Set-PNPSite on $($Url) with parameters:`r`n$(Convert-M365DscHashtableToString -Hashtable $UpdateParams)"
             Set-PnPSite @UpdateParams -ErrorAction Stop
         }
-
 
         $site = Get-PnPTenantSite $Url
 

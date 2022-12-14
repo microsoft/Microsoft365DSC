@@ -57,6 +57,9 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
             -InboundParameters $PSBoundParameters
 
+        $nullResult = $PSBoundParameters
+        $nullResult.Ensure = 'Absent'
+
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
 
@@ -101,7 +104,7 @@ function Get-TargetResource
             throw $_
         }
 
-        return @{}
+        return $nullResult
     }
 }
 
@@ -355,19 +358,16 @@ function Export-TargetResource
 
             $Results = Get-TargetResource @Params
             Write-Host "    |---[$i/2] $cType" -NoNewline
-            if ($Results.Enable -eq $True)
-            {
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
-                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                    -ConnectionMode $ConnectionMode `
-                    -ModulePath $PSScriptRoot `
-                    -Results $Results `
-                    -Credential $Credential
-                $dscContent += $currentDSCBlock
-                Save-M365DSCPartialExport -Content $currentDSCBlock `
-                    -FileName $Global:PartialExportFileName
-            }
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckmark
         }

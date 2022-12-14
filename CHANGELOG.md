@@ -1,5 +1,51 @@
 # Change log for Microsoft365DSC
 
+# 1.22.1214.1
+
+* AADEntitlementManagementAccessPackageCatalogResource
+  * Fixes an issue where if no access resource were defined, an error was thrown trying to save the partial content.
+    FIXES [#2654](https://github.com/microsoft/Microsoft365DSC/issues/2654)
+* AADGroup
+  * Fixes an issue where licenses aren't properly assigned when no existing licenses exist.
+    FIXES [#2597](https://github.com/microsoft/Microsoft365DSC/issues/2597)
+  * Fixes an issue where if a dirft is detected and the Members parameter was omitted, all existing members were removed.
+    FIXES [#2481](https://github.com/microsoft/Microsoft365DSC/issues/2481)
+* AADServicePrincipal
+  * Fixes an issue where the service principals weren't created or updated when using ApplicationSecret to authenticate.
+    FIXES [#2615](https://github.com/microsoft/Microsoft365DSC/issues/2615)
+* AADUser
+  * Fixes an issue where provided password wa never honored.
+    FIXES [#2599](https://github.com/microsoft/Microsoft365DSC/issues/2599)
+  * Added support for the PasswordPolicies property.
+    FIXES [#2598](https://github.com/microsoft/Microsoft365DSC/issues/2598)
+* PlannerBucket & PlannerPlan
+  * Changed invalid permissions in the setting.json files.
+    FIXES [#2629](https://github.com/microsoft/Microsoft365DSC/issues/2629)
+* SCRetentionComplianceRule
+  * Fixed an Issue where properties weren't properly set at creation, causing drifts to be detected.
+    FIXES [#2471](https://github.com/microsoft/Microsoft365DSC/issues/2471)
+* SCSensitivityLabel
+  * Adds the -IncludeDetailed LAbelActions switch when retrieving instances to get all advanced parameters from the Get-TargetResource function.
+* SPOTenantCdnEnabled
+  * Fixed an issue where the export wasn't returning anything if the CDN was not enabled.
+    FIXES [#2466](https://github.com/microsoft/Microsoft365DSC/issues/2466)
+* SPOUserProfileProperty
+  * Removed multi-threading to align with other resources.
+  * Fixed an issue where we were contacting Microsoft Graph to retrieve users without authenticating to it.
+    FIXES [#2643](https://github.com/microsoft/Microsoft365DSC/issues/2643)
+* TeamsChannel
+  * Fixes an issue where channels weren't created if a non-existing GroupId was specified.
+    FIXES [#2622](https://github.com/microsoft/Microsoft365DSC/issues/2622)
+* TeamsUpdateManagementPolicy
+  * Fixed error with the export that wasn't properly returning the UpdateTimeOfDay if not in short time string format.
+    FIXES [#2639](https://github.com/microsoft/Microsoft365DSC/issues/2639)
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.100;
+    FIXES [#2484](https://github.com/microsoft/Microsoft365DSC/issues/2484)
+* MISC
+  * Added support for the ExcludedProperties parameter in the New-M365DSCDeltaReport function.
+    FIXES [#2444](https://github.com/microsoft/Microsoft365DSC/issues/2444)
+
 # 1.22.1207.1
 
 * IntuneRoleAssignment

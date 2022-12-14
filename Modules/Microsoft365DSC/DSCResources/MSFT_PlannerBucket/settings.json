@@ -6,12 +6,12 @@
             "delegated": {
                 "read": [
                     {
-                        "name": "Tasks.Read.All"
+                        "name": "Tasks.Read"
                     }
                 ],
                 "update": [
                     {
-                        "name": "Tasks.ReadWrite.All"
+                        "name": "Tasks.ReadWrite"
                     }
                 ]
             },
