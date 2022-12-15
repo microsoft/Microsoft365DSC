@@ -9,6 +9,8 @@
 * MISC
   * Added support for the ExcludedProperties parameter in the Assert-M365DSCBlueprint function.
     FIXES [#2671](https://github.com/microsoft/Microsoft365DSC/issues/2671)
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.19.0;
 
 # 1.22.1214.1
 
