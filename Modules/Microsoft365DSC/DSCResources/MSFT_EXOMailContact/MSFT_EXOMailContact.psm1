@@ -135,8 +135,7 @@ function Get-TargetResource
 
     try
     {
-        $contactList = Get-MailContact -ErrorAction Stop
-        $contact = $contactList | Where-Object -FilterScript { $_.Name -eq $Name }
+        $contact = Get-MailContact -Identity $Name -ErrorAction Stop
 
         if ($null -eq $contact)
         {

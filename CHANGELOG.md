@@ -5,6 +5,7 @@
 * EXOMailContact
   * Ensures all results are returned from the Export scenario. Currently limited at 1,000 results.
     FIXES [#2672](https://github.com/microsoft/Microsoft365DSC/issues/2672)
+    FIXES [#2673](https://github.com/microsoft/Microsoft365DSC/issues/2672)
 
 # 1.22.1214.1
 
