@@ -2283,6 +2283,9 @@ Specifies the credentials that will be used for authentication.
 .Parameter HeaderFilePath
 Specifies that file that contains a custom header for the report.
 
+.Parameter ExcludedProperties
+Specifies the name of parameters that should not be assessed as part of the report. The names will speficied will apply to all resources where they are encountered.
+
 .Example
 Assert-M365DSCBlueprint -BluePrintUrl 'C:\DS\blueprint.m365' -OutputReportPath 'C:\DSC\BlueprintReport.html'
 
@@ -2315,7 +2318,11 @@ function Assert-M365DSCBlueprint
         [Parameter()]
         [System.String]
         [ValidateSet('HTML', 'JSON')]
-        $Type = 'HTML'
+        $Type = 'HTML',
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedProperties
     )
     $InformationPreference = 'SilentlyContinue'
     $WarningPreference = 'SilentlyContinue'
@@ -2399,7 +2406,8 @@ function Assert-M365DSCBlueprint
             -DriftOnly:$true `
             -IsBlueprintAssessment:$true `
             -HeaderFilePath $HeaderFilePath `
-            -Type $Type
+            -Type $Type `
+            -ExcludedProperties $ExcludedProperties
     }
     else
     {
