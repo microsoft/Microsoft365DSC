@@ -2,6 +2,12 @@
 
 # UNRELEASED
 
+* EXOMailContact
+  * Ensures all results are returned from the Export scenario. Currently limited at 1,000 results.
+    FIXES [#2672](https://github.com/microsoft/Microsoft365DSC/issues/2672)
+
+# 1.22.1214.1
+
 * AADEntitlementManagementAccessPackageCatalogResource
   * Fixes an issue where if no access resource were defined, an error was thrown trying to save the partial content.
     FIXES [#2654](https://github.com/microsoft/Microsoft365DSC/issues/2654)

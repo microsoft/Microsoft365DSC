@@ -549,7 +549,7 @@ function Export-TargetResource
     try
     {
         $dscContent = [System.Text.StringBuilder]::new()
-        [array]$contactList = Get-MailContact -ErrorAction Stop
+        [array]$contactList = Get-MailContact -ResultSize 'unlimited' -ErrorAction Stop
         if ($contactList.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
