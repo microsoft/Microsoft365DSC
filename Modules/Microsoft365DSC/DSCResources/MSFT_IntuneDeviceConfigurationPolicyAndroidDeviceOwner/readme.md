@@ -3,5 +3,4 @@
 
 ## Description
 
-This resource configures the settings of Android WorkProfile Device policies
-in your cloud-based organization.
+This resource configures an Intune Device Configuration Policy Android Device Owner.
