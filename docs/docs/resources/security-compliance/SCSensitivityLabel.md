@@ -38,7 +38,7 @@
 | **ApplyWaterMarkingFontSize** | Write | SInt32 | The ApplyWaterMarkingFontSize parameter specifies the font size (in points) of the watermark text. ||
 | **ApplyWaterMarkingLayout** | Write | String | The ApplyContentMarkingFooterAlignment parameter specifies the header alignment. |Horizontal, Diagonal|
 | **ApplyWaterMarkingText** | Write | String | The ApplyWaterMarkingText parameter specifies the watermark text. If the value contains spaces, enclose the value in quotation marks. ||
-| **EncryptionAipTemplateScopes** | Write | String | The EncryptionAipTemplateScopes parameter specifies that the label is still published and usable in the AIP classic client. ||
+| **EncryptionAipTemplateScopes** | Write | String | The EncryptionAipTemplateScopes parameter specifies that the label is still published and usable in the AIP classic client. Once set, this parameter cannot be updated. ||
 | **EncryptionContentExpiredOnDateInDaysOrNever** | Write | String | The EncryptionContentExpiredOnDateInDaysOrNever parameter specifies when the encrypted content expires. Valid values are integer or never. ||
 | **EncryptionDoNotForward** | Write | Boolean | The EncryptionDoNotForward parameter specifies whether the Do Not Forward template is applied. ||
 | **EncryptionEnabled** | Write | Boolean | The EncryptionEnabled parameter specifies whether encryption in enabled. ||
