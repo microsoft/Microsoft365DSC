@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# 1.22.1221.1
+# UNRELEASED
 
 * EXOMailContact
   * Ensures all results are returned from the Export scenario. Currently limited at 1,000 results.
@@ -12,6 +12,8 @@
 * MISC
   * Added support for the ExcludedProperties parameter in the Assert-M365DSCBlueprint function.
     FIXES [#2671](https://github.com/microsoft/Microsoft365DSC/issues/2671)
+  * Updated Get-M365DSCCompiledPermissionList to output all permissions consistently.
+    It can now also be used as input for Update-M365DscAzureAdApplication.
 * DEPENDENCIES
   * Updated Microsoft.Graph.* to version 1.19.0;
 
