@@ -4,54 +4,30 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Write | String | The unique idenfier for an entity. Read-only. | |
-| **Description** | Write | String | Description of the Role Assignment. | |
-| **DisplayName** | Key | String | The display or friendly name of the role Assignment. | |
-| **ResourceScopes** | Write | StringArray[] | List of ids of role scope member security groups. These are IDs from Azure Active Directory. Ignored if ScopeType is not 'ResourceScope' | |
-| **ResourceScopesDisplayNames** | Write | StringArray[] | List of DisplayName of role scope member security groups. These are Displayname from Azure Active Directory. Ignored if ScopeType is not 'ResourceScope' | |
-| **ScopeType** | Write | String | Specifies the type of scope for a Role Assignment. Default type 'ResourceScope' allows assignment of ResourceScopes. Possible values are: resourceScope, allDevices, allLicensedUsers, allDevicesAndLicensedUsers. | |
-| **Members** | Write | StringArray[] | The list of ids of role member security groups. These are IDs from Azure Active Directory. | |
-| **MembersDisplayNames** | Write | StringArray[] | The list of Displaynames of role member security groups. These are Displaynamnes from Azure Active Directory. | |
-| **RoleDefinition** | Write | String | The Role Definition Id. | |
-| **RoleDefinitionDisplayName** | Write | String | The Role Definition Displayname. | |
-| **Ensure** | Write | String | Present ensures the Role exists, absent ensures it is removed. | `Present`, `Absent` |
-| **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
-| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
-| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
-| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
-| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
-| **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **Id** | Write | String | The unique idenfier for an entity. Read-only. ||
+| **Description** | Write | String | Description of the Role Assignment. ||
+| **DisplayName** | Key | String | The display or friendly name of the role Assignment. ||
+| **ResourceScopes** | Write | StringArray[] | List of ids of role scope member security groups. These are IDs from Azure Active Directory. Ignored if ScopeType is not 'ResourceScope' ||
+| **ResourceScopesDisplayNames** | Write | StringArray[] | List of DisplayName of role scope member security groups. These are Displayname from Azure Active Directory. Ignored if ScopeType is not 'ResourceScope' ||
+| **ScopeType** | Write | String | Specifies the type of scope for a Role Assignment. Default type 'ResourceScope' allows assignment of ResourceScopes. Possible values are: resourceScope, allDevices, allLicensedUsers, allDevicesAndLicensedUsers. ||
+| **Members** | Write | StringArray[] | The list of ids of role member security groups. These are IDs from Azure Active Directory. ||
+| **MembersDisplayNames** | Write | StringArray[] | The list of Displaynames of role member security groups. These are Displaynamnes from Azure Active Directory. ||
+| **RoleDefinition** | Write | String | The Role Definition Id. ||
+| **RoleDefinitionDisplayName** | Write | String | The Role Definition Displayname. ||
+| **Ensure** | Write | String | Present ensures the Role exists, absent ensures it is removed. |Present, Absent|
+| **Credential** | Write | PSCredential | Credentials of the Intune Admin ||
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
+| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. ||
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
+| **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. ||
 
 
-## Description
+# IntuneRoleAssignment
+
+### Description
 
 This resource configures an Intune Role Assignment.
-
-## Permissions
-
-### Microsoft Graph
-
-To authenticate with the Microsoft Graph API, this resource required the following permissions:
-
-#### Delegated permissions
-
-- **Read**
-
-    - DeviceManagementRBAC.Read.All, DeviceManagementRBAC.ReadWrite.All
-
-- **Update**
-
-    - DeviceManagementRBAC.ReadWrite.All
-
-#### Application permissions
-
-- **Read**
-
-    - DeviceManagementRBAC.Read.All, DeviceManagementRBAC.ReadWrite.All
-
-- **Update**
-
-    - DeviceManagementRBAC.ReadWrite.All
 
 ## Examples
 

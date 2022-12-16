@@ -4,53 +4,20 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **IsSingleInstance** | Key | String | Should be set to yes | `Yes` |
-| **Enabled** | Write | Boolean | When set to true this will enable the tenant isolation settings. | |
-| **Rules** | Write | MSFT_PPTenantRule[] | The exact list of tenant rules to be configured. | |
-| **RulesToInclude** | Write | MSFT_PPTenantRule[] | A list of tenant rules that has to be added. | |
-| **RulesToExclude** | Write | MSFT_PPTenantRule[] | A list of tenant rules that is now allowed to be added. | |
-| **Credential** | Write | PSCredential | Credentials of the Power Platform Admin | |
-
-### MSFT_PPTenantRule
-
-#### Parameters
-
-| Parameter | Attribute | DataType | Description | Allowed Values |
-| --- | --- | --- | --- | --- |
-| **TenantName** | Required | String | Name of the trusted tenant. | |
-| **Direction** | Required | String | Direction of tenant trust. | `Inbound`, `Outbound`, `Both` |
+| **TenantName** | Required | String | Name of the trusted tenant. ||
+| **Direction** | Required | String | Direction of tenant trust. |Inbound, Outbound, Both|
+| **IsSingleInstance** | Key | String | Should be set to yes |Yes|
+| **Enabled** | Write | Boolean | When set to true this will enable the tenant isolation settings. ||
+| **Rules** | Write | InstanceArray[] | The exact list of tenant rules to be configured. ||
+| **RulesToInclude** | Write | InstanceArray[] | A list of tenant rules that has to be added. ||
+| **RulesToExclude** | Write | InstanceArray[] | A list of tenant rules that is now allowed to be added. ||
+| **Credential** | Write | PSCredential | Credentials of the Power Platform Admin ||
 
 # PPTenantSettingsIsolationSettings
 
-## Description
+### Description
 
 This resource configures the Tenant Isolation settings for a Power Platform Tenant.
-
-## Permissions
-
-### Microsoft Graph
-
-To authenticate with the Microsoft Graph API, this resource required the following permissions:
-
-#### Delegated permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
-
-#### Application permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
 
 ## Examples
 
