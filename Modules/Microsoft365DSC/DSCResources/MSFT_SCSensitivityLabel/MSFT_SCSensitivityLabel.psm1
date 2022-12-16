@@ -574,7 +574,6 @@ function Set-TargetResource
         Write-Verbose -Message 'The Disabled parameter is no longer available and will be deprecated.'
     }
 
-
     if (('Present' -eq $Ensure) -and ('Absent' -eq $label.Ensure))
     {
         Write-Verbose -Message "Label {$Name} doesn't already exist, creating it from the Set-TargetResource function."
@@ -592,10 +591,10 @@ function Set-TargetResource
             $CreationParams['LocaleSettings'] = $locale
         }
 
-        $CreationParams.Remove('Credential')
-        $CreationParams.Remove('Ensure')
-        $CreationParams.Remove('Priority')
-        $CreationParams.Remove('Disabled')
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('Ensure') | Out-Null
+        $CreationParams.Remove('Priority') | Out-Null
+        $CreationParams.Remove('Disabled') | Out-Null
 
         try
         {
@@ -631,11 +630,21 @@ function Set-TargetResource
             $SetParams['LocaleSettings'] = $locale
         }
 
+        if ($PSBoundParameters.ContainsKey('EncryptionAipTemplateScopes'))
+        {
+            if ($label.EncryptionAipTemplateScopes -ne $PSBoundParameters.EncryptionAipTemplateScopes)
+            {
+                Write-Verbose -Message "The EncryptionAipTemplateScopes specified has a different value than the one on the existing label. `
+                    This parameter cannot be updated and will be ignored."
+            }
+            $SetParams.Remove('EncryptionAipTemplateScopes') | Out-Null
+        }
+
         #Remove unused parameters for Set-Label cmdlet
-        $SetParams.Remove('Credential')
-        $SetParams.Remove('Ensure')
-        $SetParams.Remove('Name')
-        $SetParams.Remove('Disabled')
+        $SetParams.Remove('Credential') | Out-Null
+        $SetParams.Remove('Ensure') | Out-Null
+        $SetParams.Remove('Name') | Out-Null
+        $SetParams.Remove('Disabled') | Out-Null
 
         try
         {
