@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* MISC
+  * Updated Get-M365DSCCompiledPermissionList to output all permissions consistently.
+    It can now also be used as input for Update-M365DscAzureAdApplication.
+
 # 1.22.1214.1
 
 * EXOMailContact
