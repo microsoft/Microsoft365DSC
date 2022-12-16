@@ -2,7 +2,7 @@
 
 # UNRELEASED
 
-*AADGroup
+* AADGroup
   * Extraction not longer exports Distribution List or mail enabled security list since these are not supported by the Microsoft Graph API.
     FIXES [#2587](https://github.com/microsoft/Microsoft365DSC/issues/2587)
 * EXOMailContact
