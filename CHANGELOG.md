@@ -2,19 +2,18 @@
 
 # UNRELEASED
 
-* MISC
-  * Updated Get-M365DSCCompiledPermissionList to output all permissions consistently.
-    It can now also be used as input for Update-M365DscAzureAdApplication.
-
-# 1.22.1214.1
-
 * EXOMailContact
   * Ensures all results are returned from the Export scenario. Currently limited at 1,000 results.
     FIXES [#2672](https://github.com/microsoft/Microsoft365DSC/issues/2672)
     FIXES [#2673](https://github.com/microsoft/Microsoft365DSC/issues/2672)
+* SCSensitivityLabel
+  * Removed the EncryptionAipTemplateScopes parameter from being evaluated in the Test and removed it from the update scenario in the Set.
+    FIXES [#2205](https://github.com/microsoft/Microsoft365DSC/issues/2205)
 * MISC
   * Added support for the ExcludedProperties parameter in the Assert-M365DSCBlueprint function.
     FIXES [#2671](https://github.com/microsoft/Microsoft365DSC/issues/2671)
+  * Updated Get-M365DSCCompiledPermissionList to output all permissions consistently.
+    It can now also be used as input for Update-M365DscAzureAdApplication.
 * DEPENDENCIES
   * Updated Microsoft.Graph.* to version 1.19.0;
 
