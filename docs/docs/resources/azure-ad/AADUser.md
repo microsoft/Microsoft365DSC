@@ -4,43 +4,67 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **UserPrincipalName** | Key | String | The login name of the user ||
-| **DisplayName** | Write | String | The display name for the user ||
-| **FirstName** | Write | String | The first name of the user ||
-| **LastName** | Write | String | The last name of the user ||
-| **Roles** | Write | StringArray[] | The list of Azure Active Directory roles assigned to the user. ||
-| **UsageLocation** | Write | String | The country code the user will be assigned to ||
-| **LicenseAssignment** | Write | StringArray[] | The account SKU Id for the license to be assigned to the user ||
-| **Password** | Write | PSCredential | The password for the account. The parameter is a PSCredential object, but only the Password component will be used ||
-| **City** | Write | String | The City name of the user ||
-| **Country** | Write | String | The Country name of the user ||
-| **Department** | Write | String | The Department name of the user ||
-| **Fax** | Write | String | The Fax Number of the user ||
-| **MobilePhone** | Write | String | The Mobile Phone Number of the user ||
-| **Office** | Write | String | The Office Name of the user ||
-| **PasswordNeverExpires** | Write | Boolean | Specifies whether the user password expires periodically. Default value is false ||
-| **PasswordPolicies** | Write | String | Specifies password policies for the user. ||
-| **PhoneNumber** | Write | String | The Phone Number of the user ||
-| **PostalCode** | Write | String | The Postal Code of the user ||
-| **PreferredDataLocation** | Write | String | The Prefered location to store data of the user ||
-| **PreferredLanguage** | Write | String | The Prefered Language of the user ||
-| **State** | Write | String | Specifies the state or province where the user is located ||
-| **StreetAddress** | Write | String | Specifies the street address of the user ||
-| **Title** | Write | String | Specifies the title of the user ||
-| **UserType** | Write | String | Specifies the title of the user |Guest, Member, Other, Viral|
-| **Ensure** | Write | String | Present ensures the user exists, absent ensures it is removed |Present, Absent|
-| **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin ||
-| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
-| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||
-| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory application used for authentication. ||
-| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
-| **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. ||
+| **UserPrincipalName** | Key | String | The login name of the user | |
+| **DisplayName** | Write | String | The display name for the user | |
+| **FirstName** | Write | String | The first name of the user | |
+| **LastName** | Write | String | The last name of the user | |
+| **Roles** | Write | StringArray[] | The list of Azure Active Directory roles assigned to the user. | |
+| **UsageLocation** | Write | String | The country code the user will be assigned to | |
+| **LicenseAssignment** | Write | StringArray[] | The account SKU Id for the license to be assigned to the user | |
+| **Password** | Write | PSCredential | The password for the account. The parameter is a PSCredential object, but only the Password component will be used | |
+| **City** | Write | String | The City name of the user | |
+| **Country** | Write | String | The Country name of the user | |
+| **Department** | Write | String | The Department name of the user | |
+| **Fax** | Write | String | The Fax Number of the user | |
+| **MobilePhone** | Write | String | The Mobile Phone Number of the user | |
+| **Office** | Write | String | The Office Name of the user | |
+| **PasswordNeverExpires** | Write | Boolean | Specifies whether the user password expires periodically. Default value is false | |
+| **PasswordPolicies** | Write | String | Specifies password policies for the user. | |
+| **PhoneNumber** | Write | String | The Phone Number of the user | |
+| **PostalCode** | Write | String | The Postal Code of the user | |
+| **PreferredDataLocation** | Write | String | The Prefered location to store data of the user | |
+| **PreferredLanguage** | Write | String | The Prefered Language of the user | |
+| **State** | Write | String | Specifies the state or province where the user is located | |
+| **StreetAddress** | Write | String | Specifies the street address of the user | |
+| **Title** | Write | String | Specifies the title of the user | |
+| **UserType** | Write | String | Specifies the title of the user | `Guest`, `Member`, `Other`, `Viral` |
+| **Ensure** | Write | String | Present ensures the user exists, absent ensures it is removed | `Present`, `Absent` |
+| **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com | |
+| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory application used for authentication. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
+| **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 
-# AADUser
-
-### Description
+## Description
 
 This resource allows users to create Azure AD Users and assign them licenses.
+
+## Permissions
+
+### Microsoft Graph
+
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
+
+#### Delegated permissions
+
+- **Read**
+
+    - User.Read.All
+
+- **Update**
+
+    - Organization.Read.All, User.ReadWrite.All
+
+#### Application permissions
+
+- **Read**
+
+    - User.Read.All
+
+- **Update**
+
+    - Organization.Read.All, User.ReadWrite.All
 
 ## Examples
 

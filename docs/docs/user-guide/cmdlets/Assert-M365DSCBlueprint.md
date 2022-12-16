@@ -16,6 +16,7 @@ This function does not generate any output.
 | OutputReportPath | True | String |  |  | Specifies the path of the report that will be created. |
 | Credentials | True | PSCredential |  |  | Specifies the credentials that will be used for authentication. |
 | HeaderFilePath | False | String |  |  | Specifies that file that contains a custom header for the report. |
+| Type | False | String | HTML | HTML, JSON |  |
 
 ## Examples
 
