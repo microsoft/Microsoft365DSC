@@ -884,6 +884,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('AdvancedSettings') | Out-Null
     $ValuesToCheck.Remove('LocaleSettings') | Out-Null
     $ValuesToCheck.Remove('Disabled') | Out-Null
+    $ValuesToCheck.Remove('EncryptionAipTemplateScopes') | Out-Null
 
     if ($null -ne $AdvancedSettings -and $null -ne $CurrentValues.AdvancedSettings)
     {
