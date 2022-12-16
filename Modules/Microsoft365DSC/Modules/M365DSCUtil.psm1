@@ -270,7 +270,7 @@ function New-EXOSafeAttachmentRule
     }
     catch
     {
-       Write-M365DSCLogEvent -Message $_ -EventSource $($MyInvocation.MyCommand.Source) -TenantId $tenantid -Credential $Credential
+        Write-M365DSCLogEvent -Message $_ -EventSource $($MyInvocation.MyCommand.Source) -TenantId $tenantid -Credential $Credential
     }
 }
 
@@ -3653,7 +3653,7 @@ function Test-M365DSCModuleValidity
 
     if ('AzureAutomation/' -eq $env:AZUREPS_HOST_ENVIRONMENT)
     {
-        $message = 'Skipping check for newer version of Microsoft 365 DSC due to Azure Automation Environment restrictions.'
+        $message = 'Skipping check for newer version of Microsoft365DSC due to Azure Automation Environment restrictions.'
         Write-Verbose -Message $message
         return
     }
@@ -3701,7 +3701,7 @@ This function writes messages and adds M365DSCEvents to Eventlog
 Write-M365DSCLogEvent -Message $_ -EventSource $($MyInvocation.MyCommand.Source) -TenantId $tenantid -Credential $Credential
 
 .Functionality
-Public
+Internal
 #>
 function Write-M365DSCLogEvent
 {
@@ -3714,7 +3714,7 @@ function Write-M365DSCLogEvent
 
         [Parameter()]
         [System.String]
-        $EventSource = "M365DSC",
+        $EventSource = 'M365DSC',
 
         [Parameter()]
         [System.Uint32]
@@ -3733,18 +3733,23 @@ function Write-M365DSCLogEvent
         [PSCredential]
         $Credential
     )
-    try {
+
+    try
+    {
         Write-Verbose -Message $Message
         $tenantIdValue = ''
-        if (-not [System.String]::IsNullOrEmpty($TenantId)) {
+        if (-not [System.String]::IsNullOrEmpty($TenantId))
+        {
             $tenantIdValue = $TenantId
         }
-        elseif ($null -ne $Credential) {
+        elseif ($null -ne $Credential)
+        {
             $tenantIdValue = $Credential.UserName.Split('@')[1]
         }
         Add-M365DSCEvent -Message $Message -EntryType $EventEntryType -EventID $EventID -Source $EventSource -TenantId $tenantIdValue
     }
-    catch {
+    catch
+    {
         Write-Verbose -Message $_
     }
     return $nullReturn

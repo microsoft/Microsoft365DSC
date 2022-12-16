@@ -22,7 +22,7 @@ This function does not generate any output.
 
 -------------------------- EXAMPLE 1 --------------------------
 
-`Update-M365DSCAllowedGraphScopes -ResourceNameList @('AADUser', 'AADApplication') -Type 'Read'`
+`Update-M365DSCAllowedGraphScopes -ResourceNameList @('AADUSer', 'AADApplication') -Type 'Read'`
 
 -------------------------- EXAMPLE 2 --------------------------
 

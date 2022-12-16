@@ -848,7 +848,7 @@ Update-M365DSCResourceDocumentationPage `
 This example shows how to generate wiki documentation for a specific module.
 
 .Functionality
-Public
+Internal
 #>
 function Update-M365DSCResourceDocumentationPage
 {
