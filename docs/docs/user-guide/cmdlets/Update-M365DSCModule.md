@@ -1,8 +1,8 @@
-﻿# Test-M365DSCDependenciesForNewVersions
+﻿# Update-M365DSCModule
 
 ## Description
 
-This function checks if new versions are available for the M365DSC dependencies
+This function updates the module, dependencies and uninstalls outdated dependencies.
 
 ## Output
 
@@ -15,6 +15,6 @@ This function does not have any input parameters.
 
 -------------------------- EXAMPLE 1 --------------------------
 
-`Test-M365DSCDependenciesForNewVersions`
+`Update-M365DSCModule`
 
 

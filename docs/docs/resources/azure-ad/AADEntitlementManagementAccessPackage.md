@@ -30,6 +30,6 @@
 
 ### Description
 
-This resource configures an A A D Entitlement Management Access Package.
+This resource configures an Azure AD Entitlement Management Access Package.
 
 
