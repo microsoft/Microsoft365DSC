@@ -1,0 +1,16 @@
+﻿{
+    "resourceName": "SCProtectionAlert",
+    "description": "",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        }
+    }
+}
