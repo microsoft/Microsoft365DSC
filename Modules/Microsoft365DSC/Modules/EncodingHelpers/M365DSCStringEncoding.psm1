@@ -44,17 +44,17 @@ function Format-M365DSCString
     # This avoids fetching the definition multiple times for the same resource, thus increasing overall speed.
     try
     {
-        if (-not($Global:DSCResources.ContainsKey($ResourceName)))
+        if (-not($Script:DSCResources.ContainsKey($ResourceName)))
         {
-            $DSCResource = $Global:DSCResources[$ResourceName]
+            $DSCResource = $Script:DSCResources[$ResourceName]
         }
     }
     catch
     {
-        $Global:DSCResources = @{
+        $Script:DSCResources = @{
             $ResourceName = Get-DscResource -Module 'Microsoft365DSC' -Name $ResourceName
         }
-        $DSCResource = $Global:DSCResources[$ResourceName]
+        $DSCResource = $Script:DSCResources[$ResourceName]
     }
 
     # For each invalid character, look for an instance in the string,
