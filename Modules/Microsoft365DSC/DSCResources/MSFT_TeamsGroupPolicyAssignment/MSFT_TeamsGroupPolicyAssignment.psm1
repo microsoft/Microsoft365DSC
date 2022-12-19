@@ -220,6 +220,7 @@ function Set-TargetResource
         }
         elseif($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
         {
+            #Set-CsGroupPolicyAssignment not implemented jet / use remove-add as described in docs
             Write-Verbose -Message "Remove GroupPolicyAssignment for $GroupDisplayname"
             Remove-CsGroupPolicyAssignment -GroupId $CurrentValues.GroupId -PolicyType $CurrentValues.PolicyType
             Write-Verbose -Message "Adding GroupPolicyAssignment for $GroupDisplayname"
