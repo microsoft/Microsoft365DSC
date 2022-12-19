@@ -254,7 +254,7 @@ function Add-M365DSCEvent
         # Check call stack to prevent indefinite loop between New-M365DSCLogEntry and this function
         if ((Get-PSCallStack)[1].FunctionName -ne 'New-M365DSCLogEntry')
         {
-            New-M365DSCLogEntry -Error $_ -Message $MessageText `
+            New-M365DSCLogEntry -Exception $_ -Message $MessageText `
                 -Source '[M365DSCLogEngine]' `
                 -TenantId $TenantId
         }
