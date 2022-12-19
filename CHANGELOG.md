@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADGroup
+  * Extraction no longer exports Distribution List or mail enabled security list since these are not supported by the Microsoft Graph API.
+    FIXES [#2587](https://github.com/microsoft/Microsoft365DSC/issues/2587)
 * EXOMailContact
   * Ensures all results are returned from the Export scenario. Currently limited at 1,000 results.
     FIXES [#2672](https://github.com/microsoft/Microsoft365DSC/issues/2672)
