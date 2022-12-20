@@ -40,8 +40,22 @@ function Format-M365DSCString
         }
     )
 
-    $DSCResource = Get-DscResource -Module 'Microsoft365DSC' `
-        -Name $ResourceName
+    # Cache the DSC resource to a global variable.
+    # This avoids fetching the definition multiple times for the same resource, thus increasing overall speed.
+    try
+    {
+        if (-not($Script:DSCResources.ContainsKey($ResourceName)))
+        {
+            $DSCResource = $Script:DSCResources[$ResourceName]
+        }
+    }
+    catch
+    {
+        $Script:DSCResources = @{
+            $ResourceName = Get-DscResource -Module 'Microsoft365DSC' -Name $ResourceName
+        }
+        $DSCResource = $Script:DSCResources[$ResourceName]
+    }
 
     # For each invalid character, look for an instance in the string,
     # if an instance is found,
