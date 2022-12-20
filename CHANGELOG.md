@@ -12,6 +12,8 @@
 * SCSensitivityLabel
   * Removed the EncryptionAipTemplateScopes parameter from being evaluated in the Test and removed it from the update scenario in the Set.
     FIXES [#2205](https://github.com/microsoft/Microsoft365DSC/issues/2205)
+* TeamsShiftsPolicy
+  * Initial Release
 * MISC
   * Added support for the ExcludedProperties parameter in the Assert-M365DSCBlueprint function.
     FIXES [#2671](https://github.com/microsoft/Microsoft365DSC/issues/2671)
