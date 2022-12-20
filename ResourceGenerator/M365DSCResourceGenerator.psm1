@@ -257,7 +257,7 @@ function New-M365DSCResource
         Write-TokenReplacement -Token '<ResourceName>' -value $ResourceName -FilePath $unitTestPath
 
         Write-TokenReplacement -Token '<GetCmdletName>' -value $GetcmdletName -FilePath $unitTestPath
-        Write-TokenReplacement -Token '<SetCmdletName>' -value "Update-$($CmdLetNoun)" -FilePath $unitTestPath
+        Write-TokenReplacement -Token '<SetCmdletName>' -value "Set-$($CmdLetNoun)" -FilePath $unitTestPath
         Write-TokenReplacement -Token '<RemoveCmdletName>' -value "Remove-$($CmdLetNoun)" -FilePath $unitTestPath
         Write-TokenReplacement -Token '<NewCmdletName>' -value "New-$($CmdLetNoun)" -FilePath $unitTestPath
         #endregion
@@ -549,6 +549,7 @@ function New-M365DSCResource
         $returnContent = [System.Text.StringBuilder]::New()
         $exportAuthContent = [System.Text.StringBuilder]::New()
         $mofSchemaContent = [System.Text.StringBuilder]::New()
+        $fakeValues = @{}
         foreach ($property in $properties)
         {
             $propertyTypeMOF = $property.ParameterType.Name
@@ -577,6 +578,8 @@ function New-M365DSCResource
                 $paramContent.AppendLine("        [Parameter()]") | Out-Null
                 $mofSchemaContent.AppendLine("    [Write, Description(`"$($property.Description)`")] $propertyTypeMOF $($property.Name);") | Out-Null
             }
+
+            $fakeValues.Add($property.Name, (Get-M365DSCDRGFakeValueForParameter -ParameterType $property.ParameterType.Name))
 
             $spacingRequired = " "
             for ($i = 0; $i -lt ($longuestParameterName - $property.Name.Length); $i++)
@@ -688,7 +691,6 @@ function New-M365DSCResource
             }
         }
 
-
         $parameterBlock = $paramContent.ToString()
         $parameterBlock = $parameterBlock.Remove($parameterBlock.Length -5, 5) # remove trailing comma
         Write-TokenReplacement -Token '<ParameterBlock>' -Value $parameterBlock -FilePath $moduleFilePath
@@ -696,7 +698,8 @@ function New-M365DSCResource
         Write-TokenReplacement -Token '<HashTableMapping>' -Value $returnContent.ToString() -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<PrimaryKey>' -Value $primaryKey  -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<NewCmdLetName>' -Value "New-$cmdletNoun"  -FilePath $moduleFilePath
-        Write-TokenReplacement -Token '<UpdateCmdLetName>' -Value "Update-$cmdletNoun"  -FilePath $moduleFilePath
+        Write-TokenReplacement -Token '<UpdateCmdLetName>' -Value "Set-$cmdletNoun"  -FilePath $moduleFilePath
+        Write-TokenReplacement -Token '<RemoveCmdLetName>' -Value "Remove-$cmdletNoun" -FilePath $moduleFilePath
         #endregion
 
         #region GetKeyIdentifier
@@ -711,6 +714,104 @@ function New-M365DSCResource
         Write-TokenReplacement -Token '<Properties>' -Value $mofSchemaContent -FilePath $schemaFilePath
         Write-TokenReplacement -Token '<ResourceName>' -Value $ResourceName -FilePath $schemaFilePath
         Write-TokenReplacement -Token '<CIMInstances>' -Value '' -FilePath $schemaFilePath
+
+        #region Readme & Settings
+        $cmdName = "New-$cmdletNoun"
+        $cmdletInfo = & $cmdName -?
+        $synopsis = $cmdletInfo.Synopsis.Replace('cmdlet', 'resource')
+        Write-TokenReplacement -Token '<ResourceFriendlyName>' -Value $ResourceName -FilePath $readmeFilePath
+        Write-TokenReplacement -Token '<ResourceDescription>' -Value $synopsis -FilePath $readmeFilePath
+        Write-TokenReplacement -Token '<ResourceFriendlyName>' -Value $ResourceName -FilePath $settingsFilePath
+        Write-TokenReplacement -Token '<ResourceDescription>' -Value $synopsis -FilePath $settingsFilePath
+        Write-TokenReplacement -Token '<ResourcePermissions>' -Value '[]' -FilePath $settingsFilePath
+        #endregion
+
+        #region UnitTests
+        $fakeValuesString = [System.Text.StringBuilder]::New()
+        $fakeValuesDriftString = [System.Text.StringBuilder]::New()
+
+        $numberOfProperties = $fakeValues.Keys.Count
+        $currentKeyIndex = 1
+        foreach ($key in $fakeValues.Keys)
+        {
+            $spacingRequired = ' '
+
+            for ($i = 0; $i -lt ($longuestParameterName - $key.Length); $i++)
+            {
+                $spacingRequired += " "
+            }
+
+            $propertyValue = $null
+            $propertyDriftValue = $null
+            switch ($fakeValues.$key.GetType().Name)
+            {
+                "String"
+                {
+                    $propertyValue = "`"$($fakeValues.$key)`""
+                    if ($currentKeyIndex -eq $numberOfProperties)
+                    {
+                        $propertyDriftValue = "`"" + (Get-M365DSCDRGFakeValueForParameter -ParameterType 'String' `
+                            -Drift:$true) + "`""
+                    }
+                    else
+                    {
+                        $propertyDriftValue = $propertyValue
+                    }
+                }
+                "Boolean"
+                {
+                    $propertyValue = "`$$($fakeValues.$key)"
+                    if ($currentKeyIndex -eq $numberOfProperties)
+                    {
+                        $propertyDriftValue = "`$" + (Get-M365DSCDRGFakeValueForParameter -ParameterType 'Boolean' `
+                            -Drift:$true)
+                    }
+                    else
+                    {
+                        $propertyDriftValue = $propertyValue
+                    }
+                }
+                "Int32"
+                {
+                    $propertyValue = $fakeValues.$key.ToString()
+                    if ($currentKeyIndex -eq $numberOfProperties)
+                    {
+                        $propertyDriftValue = (Get-M365DSCDRGFakeValueForParameter -ParameterType 'Int32' `
+                            -Drift:$true)
+                    }
+                    else
+                    {
+                        $propertyDriftValue = $propertyValue
+                    }
+                }
+                "Int64"
+                {
+                    $propertyValue = $fakeValues.$key.ToString()
+                    if ($currentKeyIndex -eq $numberOfProperties)
+                    {
+                        $propertyDriftValue = (Get-M365DSCDRGFakeValueForParameter -ParameterType 'Int64' `
+                            -Drift:$true)
+                    }
+                    else
+                    {
+                        $propertyDriftValue = $propertyValue
+                    }
+                }
+            }
+
+            $fakeValuesString.AppendLine("#$#$key$spacingRequired= $propertyValue") | Out-Null
+            $fakeValuesDriftString.AppendLine("#$#$key$spacingRequired= $propertyDriftValue") | Out-Null
+
+            $currentKeyIndex++
+        }
+        Write-TokenReplacement -Token '<ResourceName>' -Value $ResourceName -FilePath $unitTestPath
+        Write-TokenReplacement -Token '<GetCmdletName>' -Value "Get-$cmdletNoun" -FilePath $unitTestPath
+        Write-TokenReplacement -Token '<SetCmdletName>' -Value "Set-$cmdletNoun" -FilePath $unitTestPath
+        Write-TokenReplacement -Token '<NewCmdletName>' -Value "New-$cmdletNoun" -FilePath $unitTestPath
+        Write-TokenReplacement -Token '<RemoveCmdletName>' -Value "Remove-$cmdletNoun" -FilePath $unitTestPath
+        Write-TokenReplacement -Token '<FakeValues>' -Value $fakeValuesString.ToString().Replace('#$#', '                    ') -FilePath $unitTestPath
+        Write-TokenReplacement -Token '<DriftValues>' -Value $fakeValuesDriftString.ToString().Replace('#$#', '                    ') -FilePath $unitTestPath
+        #endregion
     }
 }
 
@@ -1308,6 +1409,68 @@ function New-M365CmdLetHelper
         if ($property.IsMandatory -eq $true)
         {
             $returnValue += "-$($property.Name) `$$($property.Name)0"
+        }
+    }
+}
+
+function Get-M365DSCDRGFakeValueForParameter
+{
+    [CmdletBinding()]
+    [OutputType([System.Object])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ParameterType,
+
+        [Parameter()]
+        [System.String[]]
+        $ValidateSetValues,
+
+        [Parameter()]
+        [System.Boolean]
+        $Drift = $false
+    )
+
+    switch ($ParameterType)
+    {
+        "String"
+        {
+            if ($ValidateSetValues -ne $null -and $ValidateSetValues.Length -gt 0)
+            {
+
+            }
+            else
+            {
+                if ($Drift)
+                {
+                    return "FakeStringValueDrift #Drift"
+                }
+                return "FakeStringValue"
+            }
+        }
+        "Boolean"
+        {
+            if ($Drift)
+            {
+                return $false
+            }
+            return $true
+        }
+        "Int32"
+        {
+            if ($Drift)
+            {
+                return 2
+            }
+            return 3
+        }
+        "Int64"
+        {
+            if ($Drift)
+            {
+                return 2
+            }
+            return 3
         }
     }
 }
