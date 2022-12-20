@@ -285,7 +285,7 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $NewManagementRoleParams = ([Hashtable]$PSBoundParameters).CLone()
+    $NewManagementRoleParams = ([Hashtable]$PSBoundParameters).Clone()
     $NewManagementRoleParams.Remove('Ensure') | Out-Null
     $NewManagementRoleParams.Remove('Credential') | Out-Null
     $NewManagementRoleParams.Remove('ApplicationId') | Out-Null
