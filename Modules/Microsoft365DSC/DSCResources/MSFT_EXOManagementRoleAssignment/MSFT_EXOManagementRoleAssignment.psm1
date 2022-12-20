@@ -328,15 +328,21 @@ function Set-TargetResource
     $retries = 6
     do
     {
-        Start-Sleep -Seconds 10
         Write-Verbose -Message "Testing to ensure changes were applied."
         $testResults = Test-TargetResource @PSBoundParameters
+        if (-not $testResults)
+        {
+            Start-Sleep -Seconds 10
+        }
         $retries--
     } while (-not $testResults -and $retries -gt 0)
 
     # Need to force reconnect to Exchange for the new permissions to kick in.
-    Write-Verbose -Message "Disconnecting from Exchange Online"
-    $Global:MSCloudLoginConnectionProfile.ExchangeOnline.Disconnect()
+    if ($null -ne $Global:MSCloudLoginConnectionProfile.ExchangeOnline)
+    {
+        Write-Verbose -Message "Disconnecting from Exchange Online"
+        $Global:MSCloudLoginConnectionProfile.ExchangeOnline.Disconnect()
+     }
 }
 
 function Test-TargetResource
