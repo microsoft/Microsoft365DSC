@@ -649,7 +649,7 @@ function Set-TargetResource
                 }
             }
         }
-        else
+        elseif ($MembershipRuleProcessingState -ne 'On')
         {
             Write-Verbose -Message 'Ignoring membership since this is a dynamic group.'
         }
@@ -1016,6 +1016,8 @@ function Export-TargetResource
     try
     {
         [array] $groups = Get-MgGroup -Filter $Filter -All:$true -ErrorAction Stop
+        $groups = $groups | Where-Object -FilterScript {-not ($_.MailEnabled -and ($null -eq $_.GroupTypes -or $_.GroupTypes.Length -eq 0)) -and
+                                                        -not ($_.MailEnabled -and $_.SecurityEnabled)}
         $i = 1
         $dscContent = ''
         Write-Host "`r`n" -NoNewline
