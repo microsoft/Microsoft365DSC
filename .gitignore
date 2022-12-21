@@ -18,6 +18,7 @@ docker/Monitor.ps1
 Modules/start-extraction.ps1
 Modules/Microsoft365DSC/DSCResources/MSFT_EXOAvailabilityAddressSpace/Add-AvailabilityAddressSpace-parameterset.txt
 *.log
+DscResource.Tests/*
 
 # generated docs
 docs/site

@@ -3341,9 +3341,7 @@ function Get-M365DSCAuthenticationMode
 <#
 .Description
 This function creates Markdown documentation of all public M365DSC cmdlets
-
-.Parameter OutputPath
-Specifies the path to where the generated Markdown files should be saved.
+and places these in the correct location of the docs folder.
 
 .Functionality
 Internal
@@ -3351,32 +3349,16 @@ Internal
 function New-M365DSCCmdletDocumentation
 {
     param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $OutputPath,
+    ()
 
-        [Parameter()]
-        [System.String]
-        $ModulePath
-    )
+    $cmdletDocsRoot = Join-Path -Path $PSScriptRoot -ChildPath '..\..\..\docs\docs\user-guide\cmdlets'
 
-    if ($null -eq $ModulePath)
+    if ((Test-Path -Path $cmdletDocsRoot) -eq $false)
     {
-        Import-Module Microsoft365Dsc -Force
-    }
-    else
-    {
-        Get-Module Microsoft365DSC -ErrorAction SilentlyContinue | Remove-Module -ErrorAction SilentlyContinue
-        Import-Module $ModulePath -Force
+        $null = New-Item -Path $cmdletDocsRoot -ItemType Directory
     }
 
-    if ((Test-Path -Path $OutputPath) -eq $false)
-    {
-        $null = New-Item -Path $OutputPath -ItemType Directory
-    }
-
-    $filesInFolder = Get-ChildItem -Path $OutputPath
+    $filesInFolder = Get-ChildItem -Path $cmdletDocsRoot
     if ($filesInFolder.Count -ne 0)
     {
         Remove-Item -Path $filesInFolder.FullName -Confirm:$false
@@ -3479,7 +3461,7 @@ function New-M365DSCCmdletDocumentation
                 }
             }
 
-            $savePath = Join-Path -Path $OutputPath -ChildPath "$commandName.md"
+            $savePath = Join-Path -Path $cmdletDocsRoot -ChildPath "$commandName.md"
             $null = Out-File `
                 -InputObject ($output.ToString() -replace '\r?\n', "`r`n") `
                 -FilePath $savePath `

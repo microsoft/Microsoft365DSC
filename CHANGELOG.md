@@ -19,6 +19,7 @@
     It can now also be used as input for Update-M365DscAzureAdApplication.
   * Fixes issue where the wrong parameter is being passed to the Erro log function.
     FIXES [#2682](https://github.com/microsoft/Microsoft365DSC/issues/2682)
+  * Updated automatic website documentation generation
 * DEPENDENCIES
   * Updated Microsoft.Graph.* to version 1.19.0;
 
