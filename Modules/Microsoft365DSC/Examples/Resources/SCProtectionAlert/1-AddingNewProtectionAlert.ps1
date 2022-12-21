@@ -22,16 +22,12 @@ Configuration Example
             Credential              = $Credscredential;
             Disabled                = $False;
             Ensure                  = "Present";
-            IsSystemRule            = $False;
             Name                    = "Custom Suspicious email sending patterns detected";
             NotificationEnabled     = $True;
             NotifyUser              = @("admin@contoso.com");
             NotifyUserOnFilterMatch = $False;
             Operation               = @("CompromisedWarningAccount");
-            Scenario                = "AuditProtectionAlert";
             Severity                = "Medium";
-            StreamType              = "Activity";
-            ThreatType              = "Activity";
         }
 
         SCProtectionAlert 'CustomEmailMessagesFromAcampaignRemovedAfterDelivery'
@@ -43,14 +39,11 @@ Configuration Example
             Disabled                = $False;
             Ensure                  = "Present";
             Filter                  = "(Mail.IsMailZAPSuccessful -eq 1) -and Mail.IsCampaignZapped -eq 1 -and (Mail.TenantPolicyFinalVerdictSource -ne 'PhishEdu') -and (Mail.TenantPolicyFinalVerdictSource -ne 'SecOps') -and (Mail.TenantPolicyFinalVerdictSource -ne 'ThirdPartyFiltering')";
-            IsSystemRule            = $False;
             Name                    = "Custom Email messages from a campaign removed after delivery​";
             NotificationEnabled     = $False;
             NotifyUser              = @("TenantAdmins");
             NotifyUserOnFilterMatch = $False;
-            Scenario                = "ProtectionAlert";
             Severity                = "Informational";
-            StreamType              = "Mail";
             ThreatType              = "Malicious";
         }
     }

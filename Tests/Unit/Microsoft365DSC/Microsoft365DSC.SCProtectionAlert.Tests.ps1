@@ -77,15 +77,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Comment                 = "User has been detected as sending suspicious messages outside the organization and will be restricted if this activity continues. -V1.0.0.1";
                     Credential              = $Credential
                     Ensure                  = "Present";
-                    IsSystemRule            = $False;
                     Name                    = "Suspicious email sending patterns detected";
                     NotificationEnabled     = $True;
                     NotifyUser              = @("test.alert@contoso.onmicrosoft.com");
                     NotifyUserOnFilterMatch = $False;
                     Operation               = @("CompromisedWarningAccount");
-                    Scenario                = "AuditProtectionAlert";
                     Severity                = "Medium";
-                    StreamType              = "Activity";
                     ThreatType              = "Activity";
                 }
 
@@ -117,15 +114,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Comment                 = "User has been detected as sending suspicious messages outside the organization and will be restricted if this activity continues. -V1.0.0.1";
                     Credential              = $Credential
                     Ensure                  = "Present";
-                    IsSystemRule            = $False;
                     Name                    = "Suspicious email sending patterns detected";
                     NotificationEnabled     = $True;
                     NotifyUser              = @("test.alert@contoso.onmicrosoft.com");
                     NotifyUserOnFilterMatch = $False;
                     Operation               = @("CompromisedWarningAccount");
-                    Scenario                = "AuditProtectionAlert";
                     Severity                = "Medium";
-                    StreamType              = "Activity";
                     ThreatType              = "Activity";
                 }
 
@@ -134,15 +128,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AggregationType         = "None";
                         Category                = "ThreatManagement";
                         Comment                 = "Other Comment";
-                        IsSystemRule            = $False;
                         Name                    = "Suspicious email sending patterns detected";
                         NotificationEnabled     = $False;
                         NotifyUser              = @("other.alert@contoso.onmicrosoft.com");
                         NotifyUserOnFilterMatch = $False;
                         Operation               = @("CompromisedWarningAccount");
-                        Scenario                = "AuditProtectionAlert";
                         Severity                = "Medium";
-                        StreamType              = "Activity";
                         ThreatType              = "Activity";
                     }
                 }
@@ -170,15 +161,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Comment                 = "User has been detected as sending suspicious messages outside the organization and will be restricted if this activity continues. -V1.0.0.1";
                     Credential              = $Credential
                     Ensure                  = "Absent";
-                    IsSystemRule            = $False;
                     Name                    = "Suspicious email sending patterns detected";
                     NotificationEnabled     = $True;
                     NotifyUser              = @("test.alert@contoso.onmicrosoft.com");
                     NotifyUserOnFilterMatch = $False;
                     Operation               = @("CompromisedWarningAccount");
-                    Scenario                = "AuditProtectionAlert";
                     Severity                = "Medium";
-                    StreamType              = "Activity";
                     ThreatType              = "Activity";
                 }
 
@@ -187,15 +175,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AggregationType         = "None";
                         Category                = "ThreatManagement";
                         Comment                 = "Other Comment";
-                        IsSystemRule            = $False;
                         Name                    = "Suspicious email sending patterns detected";
                         NotificationEnabled     = $False;
                         NotifyUser              = @("other.alert@contoso.onmicrosoft.com");
                         NotifyUserOnFilterMatch = $False;
                         Operation               = @("CompromisedWarningAccount");
-                        Scenario                = "AuditProtectionAlert";
                         Severity                = "Medium";
-                        StreamType              = "Activity";
                         ThreatType              = "Activity";
                     }
                 }
@@ -227,15 +212,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AggregationType         = "None";
                         Category                = "ThreatManagement";
                         Comment                 = "Other Comment";
-                        IsSystemRule            = $False;
                         Name                    = "Suspicious email sending patterns detected";
                         NotificationEnabled     = $False;
                         NotifyUser              = @("other.alert@contoso.onmicrosoft.com");
                         NotifyUserOnFilterMatch = $False;
                         Operation               = @("CompromisedWarningAccount");
-                        Scenario                = "AuditProtectionAlert";
                         Severity                = "Medium";
-                        StreamType              = "Activity";
                         ThreatType              = "Activity";
                     }
                 }

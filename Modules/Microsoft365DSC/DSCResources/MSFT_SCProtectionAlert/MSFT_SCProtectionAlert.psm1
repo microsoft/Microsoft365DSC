@@ -42,10 +42,6 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter()]
-        [System.Boolean]
-        $IsSystemRule,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
@@ -95,21 +91,9 @@ function Get-TargetResource
         $PrivacyManagementScopedSensitiveInformationTypesThreshold,
 
         [Parameter()]
-        [System.String]
-        $Scenario,
-
-        [Parameter()]
         [ValidateSet('Low', 'Medium', 'High')]
         [System.String]
         $Severity = 'Low',
-
-        [Parameter()]
-        [System.String]
-        $StreamType,
-
-        [Parameter()]
-        [System.String]
-        $TagFilter,
 
         [Parameter()]
         [ValidateSet('Activity', 'Malware', 'Phish', 'Malicious','MaliciousUrlClick')]
@@ -125,10 +109,6 @@ function Get-TargetResource
         [ValidateRange(60,2147483647)]
         [System.Int32]
         $TimeWindow,
-
-        [Parameter()]
-        [System.String[]]
-        $UserTags = @(),
 
         [Parameter()]
         [System.Int32]
@@ -186,7 +166,6 @@ function Get-TargetResource
                 Credential                                                  = $Credential
                 Disabled                                                    = $AlertObject.Disabled
                 Filter                                                      = $AlertObject.Filter
-                IsSystemRule                                                = $AlertObject.IsSystemRule
                 Name                                                        = $AlertObject.Name
                 NotificationCulture                                         = $AlertObject.NotificationCulture
                 NotificationEnabled                                         = $AlertObject.NotificationEnabled
@@ -199,14 +178,10 @@ function Get-TargetResource
                 PrivacyManagementScopedSensitiveInformationTypes            = $AlertObject.PrivacyManagementScopedSensitiveInformationTypes
                 PrivacyManagementScopedSensitiveInformationTypesForCounting = $AlertObject.PrivacyManagementScopedSensitiveInformationTypesForCounting
                 PrivacyManagementScopedSensitiveInformationTypesThreshold   = $AlertObject.PrivacyManagementScopedSensitiveInformationTypesThreshold
-                Scenario                                                    = $AlertObject.Scenario
                 Severity                                                    = $AlertObject.Severity
-                StreamType                                                  = $AlertObject.StreamType
-                TagFilter                                                   = $AlertObject.TagFilter
                 ThreatType                                                  = $AlertObject.ThreatType
                 Threshold                                                   = $AlertObject.Threshold
                 TimeWindow                                                  = $AlertObject.TimeWindow
-                UserTags                                                    = $AlertObject.UserTags
                 VolumeThreshold                                             = $AlertObject.VolumeThreshold
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -268,10 +243,6 @@ function Set-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter()]
-        [System.Boolean]
-        $IsSystemRule,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
@@ -321,21 +292,9 @@ function Set-TargetResource
         $PrivacyManagementScopedSensitiveInformationTypesThreshold,
 
         [Parameter()]
-        [System.String]
-        $Scenario,
-
-        [Parameter()]
         [ValidateSet('Low', 'Medium', 'High')]
         [System.String]
         $Severity = 'Low',
-
-        [Parameter()]
-        [System.String]
-        $StreamType,
-
-        [Parameter()]
-        [System.String]
-        $TagFilter,
 
         [Parameter()]
         [ValidateSet('Activity', 'Malware', 'Phish', 'Malicious','MaliciousUrlClick')]
@@ -351,10 +310,6 @@ function Set-TargetResource
         [ValidateRange(60,2147483647)]
         [System.Int32]
         $TimeWindow,
-
-        [Parameter()]
-        [System.String[]]
-        $UserTags = @(),
 
         [Parameter()]
         [System.Int32]
@@ -381,20 +336,11 @@ function Set-TargetResource
 
     $CurrentAlert = Get-TargetResource @PSBoundParameters
 
-    if ($CurrentAlert.IsSystemRule)
-    {
-        Write-Verbose "Amending or creating a 'SystemRule' is currently not supported. "
-    }
-    elseif (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentAlert.Ensure))
+    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentAlert.Ensure))
     {
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove('Credential')
         $CreationParams.Remove('Ensure')
-        $CreationParams.Remove('IsSystemRule')
-        $CreationParams.Remove('Scenario')
-        $CreationParams.Remove('StreamType')
-        $CreationParams.Remove('TagFilter')
-        $CreationParams.Remove('UserTags')
 
         New-ProtectionAlert @CreationParams
     }
@@ -405,11 +351,6 @@ function Set-TargetResource
         $CreationParams.Remove('Ensure')
         $CreationParams.Remove('Name')
         $CreationParams.Remove('ThreatType')
-        $CreationParams.Remove('IsSystemRule')
-        $CreationParams.Remove('Scenario')
-        $CreationParams.Remove('StreamType')
-        $CreationParams.Remove('TagFilter')
-        $CreationParams.Remove('UserTags')
 
         $Alert = Get-ProtectionAlert -Identity $Name
         $CreationParams.Add('Identity', $Alert.Name)
@@ -469,10 +410,6 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter()]
-        [System.Boolean]
-        $IsSystemRule,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
@@ -522,21 +459,9 @@ function Test-TargetResource
         $PrivacyManagementScopedSensitiveInformationTypesThreshold,
 
         [Parameter()]
-        [System.String]
-        $Scenario,
-
-        [Parameter()]
         [ValidateSet('Low', 'Medium', 'High')]
         [System.String]
         $Severity = 'Low',
-
-        [Parameter()]
-        [System.String]
-        $StreamType,
-
-        [Parameter()]
-        [System.String]
-        $TagFilter,
 
         [Parameter()]
         [ValidateSet('Activity', 'Malware', 'Phish', 'Malicious','MaliciousUrlClick')]
@@ -552,10 +477,6 @@ function Test-TargetResource
         [ValidateRange(60,2147483647)]
         [System.Int32]
         $TimeWindow,
-
-        [Parameter()]
-        [System.String[]]
-        $UserTags = @(),
 
         [Parameter()]
         [System.Int32]
