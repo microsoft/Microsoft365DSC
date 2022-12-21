@@ -14,16 +14,9 @@ Configuration Example
 
     node localhost
     {
-        AADGroup 'MyGroups'
+        <ResourceName> 'Example'
         {
-            DisplayName     = "DSCGroup"
-            Description     = "Microsoft DSC Group"
-            SecurityEnabled = $True
-            MailEnabled     = $True
-            GroupTypes      = @("Unified")
-            MailNickname    = "M365DSC"
-            Visibility      = "Private"
-            Ensure          = "Present"
+<FakeValues>            Ensure          = "Present"
             Credential      = $credentals
         }
     }

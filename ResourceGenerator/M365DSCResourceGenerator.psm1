@@ -812,6 +812,17 @@ function New-M365DSCResource
         Write-TokenReplacement -Token '<FakeValues>' -Value $fakeValuesString.ToString().Replace('#$#', '                    ') -FilePath $unitTestPath
         Write-TokenReplacement -Token '<DriftValues>' -Value $fakeValuesDriftString.ToString().Replace('#$#', '                    ') -FilePath $unitTestPath
         #endregion
+
+        #region Generate Examples
+        $exampleFileFullPath = "$ExampleFilePath\$ResourceName\1-$ResourceName-Example.psm1"
+        $folderPath = "$ExampleFilePath\$ResourceName"
+        New-Item $folderPath -ItemType Directory -Force | Out-Null
+        $templatePath = '.\Example.Template.ps1'
+        Copy-Item -Path $templatePath -Destination $exampleFileFullPath -Force
+
+        Write-TokenReplacement -Token '<FakeValues>' -Value $fakeValuesString.Replace('#$#', '            ') -FilePath $exampleFileFullPath
+        Write-TokenReplacement -Token '<ResourceName>' -Value $ResourceName -FilePath $exampleFileFullPath
+        #endregion
     }
 }
 
