@@ -417,7 +417,7 @@ function Set-TargetResource
         Write-Verbose "Updating ProtectionAlert with values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
         Set-ProtectionAlert @CreationParams
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
+    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentAlert.Ensure))
     {
         # If the Alert exists and it shouldn't, simply remove it;
         $Alert = Get-ProtectionAlert -Identity $Name

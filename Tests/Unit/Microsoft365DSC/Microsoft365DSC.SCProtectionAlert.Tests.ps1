@@ -69,7 +69,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts
-        Context -Name "Protection Alert doesn't already exists and should be Active" -Fixture {
+        Context -Name "Protection Alert doesn't already exists but should" -Fixture {
             BeforeAll {
                 $testParams = @{
                     AggregationType         = "None";
@@ -104,11 +104,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
+                Should -Invoke -CommandName New-ProtectionAlert -Exactly 1
             }
         }
 
 
-        Context -Name 'Protection Alert already exists' -Fixture {
+        Context -Name 'Protection Alert already exists but should be changed' -Fixture {
             BeforeAll {
                 $testParams = @{
                     AggregationType         = "None";
@@ -151,39 +152,66 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $False
             }
 
-            It 'Should update from the Set method' {
-                Set-TargetResource @testParams
-            }
-
             It 'Should return Present from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
+
+            It 'Should update from the Set method' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Set-ProtectionAlert -Exactly 1
+            }
         }
 
-        Context -Name "Protection Alert already exists but shouldn't" -Fixture {
+        Context -Name 'Protection Alert already exists but should not' -Fixture {
             BeforeAll {
                 $testParams = @{
-                        Credential              = $Credential
-                        Ensure                  = 'Absent'
-                        Name                    = 'Suspicious'
-                    }
+                    AggregationType         = "None";
+                    Category                = "ThreatManagement";
+                    Comment                 = "User has been detected as sending suspicious messages outside the organization and will be restricted if this activity continues. -V1.0.0.1";
+                    Credential              = $Credential
+                    Ensure                  = "Absent";
+                    IsSystemRule            = $False;
+                    Name                    = "Suspicious email sending patterns detected";
+                    NotificationEnabled     = $True;
+                    NotifyUser              = @("test.alert@contoso.onmicrosoft.com");
+                    NotifyUserOnFilterMatch = $False;
+                    Operation               = @("CompromisedWarningAccount");
+                    Scenario                = "AuditProtectionAlert";
+                    Severity                = "Medium";
+                    StreamType              = "Activity";
+                    ThreatType              = "Activity";
                 }
 
                 Mock -CommandName Get-ProtectionAlert -MockWith {
                     return @{
-                        Name                    = 'Suspicious'
+                        AggregationType         = "None";
+                        Category                = "ThreatManagement";
+                        Comment                 = "Other Comment";
+                        IsSystemRule            = $False;
+                        Name                    = "Suspicious email sending patterns detected";
+                        NotificationEnabled     = $False;
+                        NotifyUser              = @("other.alert@contoso.onmicrosoft.com");
+                        NotifyUserOnFilterMatch = $False;
+                        Operation               = @("CompromisedWarningAccount");
+                        Scenario                = "AuditProtectionAlert";
+                        Severity                = "Medium";
+                        StreamType              = "Activity";
+                        ThreatType              = "Activity";
                     }
                 }
+            }
+
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $False
             }
 
-            It 'Should remove it from the Set method' {
-                Set-TargetResource @testParams
-            }
-
             It 'Should return Present from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It 'Should update from the Set method' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Remove-ProtectionAlert -Exactly 1
             }
         }
     }
