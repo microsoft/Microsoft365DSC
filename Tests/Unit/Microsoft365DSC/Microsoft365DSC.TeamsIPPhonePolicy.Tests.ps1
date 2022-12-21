@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "TeamsShiftsPolicy" -GenericStubModule $GenericStubPath
+    -DscResource "TeamsIPPhonePolicy" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -33,13 +33,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName Set-CsTeamsShiftsPolicy -MockWith {
+            Mock -CommandName Set-CsTeamsIPPhonePolicy -MockWith {
             }
 
-            Mock -CommandName New-CsTeamsShiftsPolicy -MockWith {
+            Mock -CommandName New-CsTeamsIPPhonePolicy -MockWith {
             }
 
-            Mock -CommandName Remove-CsTeamsShiftsPolicy -MockWith {
+            Mock -CommandName Remove-CsTeamsIPPhonePolicy -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -47,22 +47,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
         # Test contexts
-        Context -Name "The TeamsShiftsPolicy should exist but it DOES NOT" -Fixture {
+        Context -Name "The TeamsIPPhonePolicy should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    EnableShiftPresence            = $True
-                    AccessType                     = "FakeStringValue"
-                    ShiftNoticeMessageType         = "FakeStringValue"
-                    ShiftNoticeMessageCustom       = "FakeStringValue"
-                    AccessGracePeriodMinutes       = 3
+                    AllowHotDesking                = $True
+                    AllowBetterTogether            = "FakeStringValue"
+                    SearchOnCommonAreaPhoneMode    = "FakeStringValue"
+                    Description                    = "FakeStringValue"
+                    HotDeskingIdleTimeoutInMinutes = 3
+                    SignInMode                     = "FakeStringValue"
                     Identity                       = "FakeStringValue"
-                    ShiftNoticeFrequency           = "FakeStringValue"
-                    EnableScheduleOwnerPermissions = $True
+                    AllowHomeScreen                = "FakeStringValue"
                     Ensure                        = "Present"
                     Credential                    = $Credential;
                 }
 
-                Mock -CommandName Get-CsTeamsShiftsPolicy -MockWith {
+                Mock -CommandName Get-CsTeamsIPPhonePolicy -MockWith {
                     return $null
                 }
             }
@@ -74,35 +74,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should Create the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-CsTeamsShiftsPolicy -Exactly 1
+                Should -Invoke -CommandName New-CsTeamsIPPhonePolicy -Exactly 1
             }
         }
 
-        Context -Name "The TeamsShiftsPolicy exists but it SHOULD NOT" -Fixture {
+        Context -Name "The TeamsIPPhonePolicy exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    EnableShiftPresence            = $True
-                    AccessType                     = "FakeStringValue"
-                    ShiftNoticeMessageType         = "FakeStringValue"
-                    ShiftNoticeMessageCustom       = "FakeStringValue"
-                    AccessGracePeriodMinutes       = 3
+                    AllowHotDesking                = $True
+                    AllowBetterTogether            = "FakeStringValue"
+                    SearchOnCommonAreaPhoneMode    = "FakeStringValue"
+                    Description                    = "FakeStringValue"
+                    HotDeskingIdleTimeoutInMinutes = 3
+                    SignInMode                     = "FakeStringValue"
                     Identity                       = "FakeStringValue"
-                    ShiftNoticeFrequency           = "FakeStringValue"
-                    EnableScheduleOwnerPermissions = $True
+                    AllowHomeScreen                = "FakeStringValue"
                     Ensure                        = "Absent"
                     Credential                    = $Credential;
                 }
 
-                Mock -CommandName Get-CsTeamsShiftsPolicy -MockWith {
+                Mock -CommandName Get-CsTeamsIPPhonePolicy -MockWith {
                     return @{
-                    EnableShiftPresence            = $True
-                    AccessType                     = "FakeStringValue"
-                    ShiftNoticeMessageType         = "FakeStringValue"
-                    ShiftNoticeMessageCustom       = "FakeStringValue"
-                    AccessGracePeriodMinutes       = 3
+                    AllowHotDesking                = $True
+                    AllowBetterTogether            = "FakeStringValue"
+                    SearchOnCommonAreaPhoneMode    = "FakeStringValue"
+                    Description                    = "FakeStringValue"
+                    HotDeskingIdleTimeoutInMinutes = 3
+                    SignInMode                     = "FakeStringValue"
                     Identity                       = "FakeStringValue"
-                    ShiftNoticeFrequency           = "FakeStringValue"
-                    EnableScheduleOwnerPermissions = $True
+                    AllowHomeScreen                = "FakeStringValue"
 
                     }
                 }
@@ -118,34 +118,34 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-CsTeamsShiftsPolicy -Exactly 1
+                Should -Invoke -CommandName Remove-CsTeamsIPPhonePolicy -Exactly 1
             }
         }
-        Context -Name "The TeamsShiftsPolicy Exists and Values are already in the desired state" -Fixture {
+        Context -Name "The TeamsIPPhonePolicy Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    EnableShiftPresence            = $True
-                    AccessType                     = "FakeStringValue"
-                    ShiftNoticeMessageType         = "FakeStringValue"
-                    ShiftNoticeMessageCustom       = "FakeStringValue"
-                    AccessGracePeriodMinutes       = 3
+                    AllowHotDesking                = $True
+                    AllowBetterTogether            = "FakeStringValue"
+                    SearchOnCommonAreaPhoneMode    = "FakeStringValue"
+                    Description                    = "FakeStringValue"
+                    HotDeskingIdleTimeoutInMinutes = 3
+                    SignInMode                     = "FakeStringValue"
                     Identity                       = "FakeStringValue"
-                    ShiftNoticeFrequency           = "FakeStringValue"
-                    EnableScheduleOwnerPermissions = $True
+                    AllowHomeScreen                = "FakeStringValue"
                     Ensure                        = "Present"
                     Credential                    = $Credential;
                 }
 
-                Mock -CommandName Get-CsTeamsShiftsPolicy -MockWith {
+                Mock -CommandName Get-CsTeamsIPPhonePolicy -MockWith {
                     return @{
-                    EnableShiftPresence            = $True
-                    AccessType                     = "FakeStringValue"
-                    ShiftNoticeMessageType         = "FakeStringValue"
-                    ShiftNoticeMessageCustom       = "FakeStringValue"
-                    AccessGracePeriodMinutes       = 3
+                    AllowHotDesking                = $True
+                    AllowBetterTogether            = "FakeStringValue"
+                    SearchOnCommonAreaPhoneMode    = "FakeStringValue"
+                    Description                    = "FakeStringValue"
+                    HotDeskingIdleTimeoutInMinutes = 3
+                    SignInMode                     = "FakeStringValue"
                     Identity                       = "FakeStringValue"
-                    ShiftNoticeFrequency           = "FakeStringValue"
-                    EnableScheduleOwnerPermissions = $True
+                    AllowHomeScreen                = "FakeStringValue"
 
                     }
                 }
@@ -157,31 +157,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "The TeamsShiftsPolicy exists and values are NOT in the desired state" -Fixture {
+        Context -Name "The TeamsIPPhonePolicy exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    EnableShiftPresence            = $True
-                    AccessType                     = "FakeStringValue"
-                    ShiftNoticeMessageType         = "FakeStringValue"
-                    ShiftNoticeMessageCustom       = "FakeStringValue"
-                    AccessGracePeriodMinutes       = 3
+                    AllowHotDesking                = $True
+                    AllowBetterTogether            = "FakeStringValue"
+                    SearchOnCommonAreaPhoneMode    = "FakeStringValue"
+                    Description                    = "FakeStringValue"
+                    HotDeskingIdleTimeoutInMinutes = 3
+                    SignInMode                     = "FakeStringValue"
                     Identity                       = "FakeStringValue"
-                    ShiftNoticeFrequency           = "FakeStringValue"
-                    EnableScheduleOwnerPermissions = $True
+                    AllowHomeScreen                = "FakeStringValue"
                     Ensure                = "Present"
                     Credential            = $Credential;
                 }
 
-                Mock -CommandName Get-CsTeamsShiftsPolicy -MockWith {
+                Mock -CommandName Get-CsTeamsIPPhonePolicy -MockWith {
                     return @{
-                    EnableShiftPresence            = $False
-                    AccessType                     = "FakeStringValueDrift #Drift"
-                    ShiftNoticeMessageType         = "FakeStringValueDrift #Drift"
-                    ShiftNoticeMessageCustom       = "FakeStringValueDrift #Drift"
-                    AccessGracePeriodMinutes       = 2
+                    AllowHotDesking                = $False
+                    AllowBetterTogether            = "FakeStringValueDrift #Drift"
+                    SearchOnCommonAreaPhoneMode    = "FakeStringValueDrift #Drift"
+                    Description                    = "FakeStringValueDrift #Drift"
+                    HotDeskingIdleTimeoutInMinutes = 2
+                    SignInMode                     = "FakeStringValueDrift #Drift"
                     Identity                       = "FakeStringValue"
-                    ShiftNoticeFrequency           = "FakeStringValueDrift #Drift"
-                    EnableScheduleOwnerPermissions = $False
+                    AllowHomeScreen                = "FakeStringValueDrift #Drift"
                     }
                 }
             }
@@ -196,7 +196,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-CsTeamsShiftsPolicy -Exactly 1
+                Should -Invoke -CommandName Set-CsTeamsIPPhonePolicy -Exactly 1
             }
         }
 
@@ -207,16 +207,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-CsTeamsShiftsPolicy -MockWith {
+                Mock -CommandName Get-CsTeamsIPPhonePolicy -MockWith {
                     return @{
-                    EnableShiftPresence            = $True
-                    AccessType                     = "FakeStringValue"
-                    ShiftNoticeMessageType         = "FakeStringValue"
-                    ShiftNoticeMessageCustom       = "FakeStringValue"
-                    AccessGracePeriodMinutes       = 3
+                    AllowHotDesking                = $True
+                    AllowBetterTogether            = "FakeStringValue"
+                    SearchOnCommonAreaPhoneMode    = "FakeStringValue"
+                    Description                    = "FakeStringValue"
+                    HotDeskingIdleTimeoutInMinutes = 3
+                    SignInMode                     = "FakeStringValue"
                     Identity                       = "FakeStringValue"
-                    ShiftNoticeFrequency           = "FakeStringValue"
-                    EnableScheduleOwnerPermissions = $True
+                    AllowHomeScreen                = "FakeStringValue"
 
                     }
                 }

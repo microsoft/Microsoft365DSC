@@ -748,7 +748,7 @@ function New-M365DSCResource
                 "String"
                 {
                     $propertyValue = "`"$($fakeValues.$key)`""
-                    if ($currentKeyIndex -eq $numberOfProperties)
+                    if ($key -ne $primaryKey)
                     {
                         $propertyDriftValue = "`"" + (Get-M365DSCDRGFakeValueForParameter -ParameterType 'String' `
                             -Drift:$true) + "`""
@@ -761,7 +761,7 @@ function New-M365DSCResource
                 "Boolean"
                 {
                     $propertyValue = "`$$($fakeValues.$key)"
-                    if ($currentKeyIndex -eq $numberOfProperties)
+                    if ($key -ne $primaryKey)
                     {
                         $propertyDriftValue = "`$" + (Get-M365DSCDRGFakeValueForParameter -ParameterType 'Boolean' `
                             -Drift:$true)
@@ -774,7 +774,7 @@ function New-M365DSCResource
                 "Int32"
                 {
                     $propertyValue = $fakeValues.$key.ToString()
-                    if ($currentKeyIndex -eq $numberOfProperties)
+                    if ($key -ne $primaryKey)
                     {
                         $propertyDriftValue = (Get-M365DSCDRGFakeValueForParameter -ParameterType 'Int32' `
                             -Drift:$true)
@@ -787,7 +787,7 @@ function New-M365DSCResource
                 "Int64"
                 {
                     $propertyValue = $fakeValues.$key.ToString()
-                    if ($currentKeyIndex -eq $numberOfProperties)
+                    if ($key -ne $primaryKey)
                     {
                         $propertyDriftValue = (Get-M365DSCDRGFakeValueForParameter -ParameterType 'Int64' `
                             -Drift:$true)
@@ -2245,11 +2245,11 @@ function New-M365DSCModuleFile
     $filePath = "$Path\MSFT_$ResourceName\MSFT_$($ResourceName).psm1"
     if ($workload -eq 'Microsoft.Graph')
     {
-        Copy-Item -Path .\Module.Template.psm1 -Destination $filePath
+        Copy-Item -Path .\Module.Template.psm1 -Destination $filePath -Force
     }
     else
     {
-        Copy-Item -Path .\Module.Workloads.Template.psm1 -Destination $filePath
+        Copy-Item -Path .\Module.Workloads.Template.psm1 -Destination $filePath -Force
     }
     return $filePath
 }
