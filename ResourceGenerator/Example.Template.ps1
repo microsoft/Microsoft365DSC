@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credentals
+        $credentials
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -16,8 +16,8 @@ Configuration Example
     {
         <ResourceName> 'Example'
         {
-<FakeValues>            Ensure          = "Present"
-            Credential      = $credentals
+<FakeValues>            Ensure<EnsureSpacing> = "Present"
+            Credential<CredentialSpacing> = $credentials
         }
     }
 }
