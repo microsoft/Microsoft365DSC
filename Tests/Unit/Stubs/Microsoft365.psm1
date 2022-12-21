@@ -28248,6 +28248,10 @@ function Set-MgEntitlementManagementAccessPackageAssignmentPolicy
         $AccessPackage,
 
         [Parameter()]
+        [String]
+        $AccessPackageAssignmentPolicyId,
+
+        [Parameter()]
         [PSObject]
         $AccessPackageCatalog,
 
