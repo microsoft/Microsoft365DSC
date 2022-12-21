@@ -174,13 +174,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-CsTeamsShiftsPolicy -MockWith {
                     return @{
-                    EnableShiftPresence            = $True
-                    AccessType                     = "FakeStringValue"
-                    ShiftNoticeMessageType         = "FakeStringValue"
-                    ShiftNoticeMessageCustom       = "FakeStringValue"
-                    AccessGracePeriodMinutes       = 3
+                    EnableShiftPresence            = $False
+                    AccessType                     = "FakeStringValueDrift #Drift"
+                    ShiftNoticeMessageType         = "FakeStringValueDrift #Drift"
+                    ShiftNoticeMessageCustom       = "FakeStringValueDrift #Drift"
+                    AccessGracePeriodMinutes       = 2
                     Identity                       = "FakeStringValue"
-                    ShiftNoticeFrequency           = "FakeStringValue"
+                    ShiftNoticeFrequency           = "FakeStringValueDrift #Drift"
                     EnableScheduleOwnerPermissions = $False
                     }
                 }

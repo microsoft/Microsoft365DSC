@@ -35,8 +35,12 @@
     )
     MicrosoftTeams = @(
         @{
-            ResourceName             = 'TeamsShiftsPolicy'
-            CmdletNoun               = 'CsTeamsShiftsPolicy'
+            ResourceName = 'TeamsFilesPolicy'
+            CmdletNoun   = 'CsTeamsFilesPolicy'
+        },
+        @{
+            ResourceName = 'TeamsShiftsPolicy'
+            CmdletNoun   = 'CsTeamsShiftsPolicy'
         }
     )
 }
