@@ -263,26 +263,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -508,9 +494,11 @@ function Set-TargetResource
         catch
         {
             $Message = "Creation of the site $($Url) failed: $($_.Exception.Message)"
-            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
+            New-M365DSCLogEntry -Message $Message `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
             throw $Message
         }
     }
@@ -526,13 +514,17 @@ function Set-TargetResource
             if ($Error[0].Exception.Message -eq 'File Not Found')
             {
                 $Message = "The site $($Url) does not exist."
-                New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+                New-M365DSCLogEntry -Message $Message `
+                    -Exception $_ `
+                    -Source $MyInvocation.MyCommand.ModuleName
                 throw $Message
             }
             if ($Error[0].Exception.Message -eq 'This site belongs to a Microsoft 365 group. To delete the site, you must delete the group.')
             {
                 $Message = "This site $($Url) belongs to a Microsoft 365 group. To delete the site, you must delete the group."
-                New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+                New-M365DSCLogEntry -Message $Message `
+                    -Exception $_ `
+                    -Source $MyInvocation.MyCommand.ModuleName
                 throw $Message
             }
         }
@@ -582,6 +574,7 @@ function Set-TargetResource
             AnonymousLinkExpirationInDays               = $AnonymousLinkExpirationInDays
             OverrideTenantAnonymousLinkExpirationPolicy = $OverrideTenantAnonymousLinkExpirationPolicy
             DenyAddAndCustomizePages                    = $deny
+            Title                                       = $Title
         }
         $UpdateParams = Remove-NullEntriesFromHashtable -Hash $UpdateParams
 
@@ -605,10 +598,9 @@ function Set-TargetResource
             $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
                 -InboundParameters $PSBoundParameters `
                 -Url $Url
-            Write-Verbose -Message "Updating props via Set-PNPSite on $($Url)"
+            Write-Verbose -Message "Updating props via Set-PNPSite on $($Url) with parameters:`r`n$(Convert-M365DscHashtableToString -Hashtable $UpdateParams)"
             Set-PnPSite @UpdateParams -ErrorAction Stop
         }
-
 
         $site = Get-PnPTenantSite $Url
 
@@ -1021,26 +1013,13 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }

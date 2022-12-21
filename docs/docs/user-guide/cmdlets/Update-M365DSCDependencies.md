@@ -13,6 +13,7 @@ This function does not generate any output.
 | Parameter | Required | DataType | Default Value | Allowed Values | Description |
 | --- | --- | --- | --- | --- | --- |
 | Force | False | SwitchParameter |  |  | Specifies that all dependencies should be forcefully imported again. |
+| ValidateOnly | False | SwitchParameter |  |  |  |
 
 ## Examples
 

@@ -12,16 +12,20 @@ function New-M365DSCLogEntry
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.Object]
-        $Error,
+        [System.String]
+        $Source,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Message,
 
         [Parameter()]
-        [System.String]
-        $Source,
+        [System.Object]
+        $Exception,
+
+        [Parameter()]
+        [PSCredential]
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -30,44 +34,114 @@ function New-M365DSCLogEntry
 
     try
     {
-        Write-Host "$($Global:M365DSCEmojiRedX)"
+        $tenantIdValue = ''
+        if (-not [System.String]::IsNullOrEmpty($TenantId))
+        {
+            $tenantIdValue = $TenantId
+        }
+        elseif ($null -ne $Credential)
+        {
+            $tenantIdValue = $Credential.UserName.Split('@')[1]
+        }
+
+        #region Verbose message
+        $outputMessage = $Message
+        if ($PSBoundParameters.ContainsKey('Exception'))
+        {
+            $exceptionMessage = '{ ' + $Exception.Exception.Message + ' } \ ' + $Exception.ScriptStackTrace -replace '\n', ' \ '
+            $outputMessage += ' ' + $exceptionMessage
+        }
+        Write-Verbose -Message $outputMessage
+        #endregion
+
+        #region Event Log logging
+        $errorMessage = $Message
+        if ($PSBoundParameters.ContainsKey('Exception'))
+        {
+            $errorMessage += "`n`n" + $exceptionMessage
+        }
+
+        if ($tenantIdValue -eq '')
+        {
+            Add-M365DSCEvent -Message $errorMessage `
+                -EntryType 'Error' `
+                -EventID 1 `
+                -Source $Source
+        }
+        else
+        {
+            Add-M365DSCEvent -Message $errorMessage `
+                -EntryType 'Error' `
+                -EventID 1 `
+                -Source $Source `
+                -TenantId $tenantIdValue
+        }
+        #endregion
 
         #region Telemetry
         $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-        $driftedData.Add("Event", "Error")
-        $driftedData.Add("Category", $Error.CategoryInfo.Category.ToString())
-        $driftedData.Add("Exception", $Error.Exception.ToString())
-        $driftedData.Add("CustomMessage", $Message)
-        $driftedData.Add("Source", $Source)
-        $driftedData.Add("StackTrace", $Error.ScriptStackTrace)
+        $driftedData.Add('Event', 'Error')
+        $driftedData.Add('CustomMessage', $Message)
+        $driftedData.Add('Source', $Source)
 
-        if ($null -ne $TenantId)
+        if ($PSBoundParameters.ContainsKey('Exception'))
         {
-            $driftedData.Add("TenantId", $TenantId)
+            $driftedData.Add('Category', $Exception.CategoryInfo.Category.ToString())
+            $driftedData.Add('Exception', $Exception.Exception.ToString())
+            $driftedData.Add('StackTrace', $Exception.ScriptStackTrace)
         }
-        Add-M365DSCTelemetryEvent -Type "Error" -Data $driftedData
-        Add-M365DSCEvent -EventType "Error" Source $Source -Message $Message -EntryType 'Error'
+
+        if ($tenantIdValue -ne '')
+        {
+            $driftedData.Add('TenantId', $tenantIdValue)
+        }
+        Add-M365DSCTelemetryEvent -Type 'Error' -Data $driftedData
         #endregion
 
+        #region Error log file
+
         # Obtain the ID of the current PowerShell session. While this may
-        # not be unique, it will;
+        # not be unique, it will result in varying file names
         $SessionID = [System.Diagnostics.Process]::GetCurrentProcess().Id.ToString()
 
         # Generate the Error log file name based on the SessionID;
-        $LogFileName = $SessionID + "-M365DSC-ErrorLog.log"
+        $LogFileName = $SessionID + '-M365DSC-ErrorLog.log'
 
         # Build up the Error message to append to our log file;
-        $LogContent = "[" + [System.DateTime]::Now.ToString("yyyy/MM/dd hh:mm:ss") + "]`r`n"
-        $LogContent += "{" + $Error.CategoryInfo.Category.ToString() + "}`r`n"
-        $LogContent += $Error.Exception.ToString() + "`r`n"
+        $LogContent = '[' + [System.DateTime]::Now.ToString('yyyy/MM/dd hh:mm:ss') + "]`r`n"
+        if ($PSBoundParameters.ContainsKey('Exception'))
+        {
+            $LogContent += '{' + $Exception.CategoryInfo.Category.ToString() + "}`r`n"
+            $LogContent += $Exception.Exception.ToString() + "`r`n"
+        }
         $LogContent += "`"" + $Message + "`"`r`n"
-        $LogContent += $Error.ScriptStackTrace + "`r`n"
+        if ($PSBoundParameters.ContainsKey('Exception'))
+        {
+            $LogContent += $Exception.ScriptStackTrace + "`r`n"
+        }
+        if ($null -ne $Credential)
+        {
+            $LogContent += $Credential.UserName + "`r`n"
+        }
+        if ($tenantIdValue -ne '')
+        {
+            $LogContent += 'TenantId: ' + $tenantIdValue + "`r`n"
+        }
         $LogContent += "`r`n`r`n"
 
         # Write the error content into the log file;
         $LogFileName = Join-Path -Path (Get-Location).Path -ChildPath $LogFileName
+        $LogFileName = $LogFileName.Replace('\', '/')
         $LogContent | Out-File $LogFileName -Append
-        Write-Host "Error Log created at {$LogFileName}" -ForegroundColor Cyan
+        if (Assert-M365DSCIsNonInteractiveShell)
+        {
+            Write-Verbose -Message "Error Log created at {file://$LogFileName}"
+        }
+        else
+        {
+            Write-Host "Error Log created at {file://$LogFileName}" -ForegroundColor Cyan
+        }
+        #endregion
     }
     catch
     {
@@ -85,7 +159,8 @@ Internal
 function Add-M365DSCEvent
 {
     [CmdletBinding()]
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [System.String]
         $Message,
@@ -118,7 +193,7 @@ function Add-M365DSCEvent
     {
         if ([System.Diagnostics.EventLog]::SourceExists($Source))
         {
-            $sourceLogName = [System.Diagnostics.EventLog]::LogNameFromSourceName($Source, ".")
+            $sourceLogName = [System.Diagnostics.EventLog]::LogNameFromSourceName($Source, '.')
             if ($LogName -ne $sourceLogName)
             {
                 Write-Verbose -Message "[ERROR] Specified source {$Source} already exists on log {$sourceLogName}"
@@ -139,34 +214,54 @@ function Add-M365DSCEvent
         }
 
         # Limit the size of the message. Maximum is about 32,766
-        if ($message.Length -gt 32766)
+        $outputMessage = $Message
+        if ($PSBoundParameters.ContainsKey('TenantId'))
         {
-            $message = $message.Substring(0, 32766)
+            $outputMessage += "`n`nTenantId: " + $TenantId
+        }
+
+        if ($PSBoundParameters.ContainsKey('Credential'))
+        {
+            $outputMessage += "`n`nCredential: " + $Credential.UserName
+        }
+
+        if ($outputMessage.Length -gt 32766)
+        {
+            $outputMessage = $outputMessage.Substring(0, 32766)
         }
 
         if (-not [System.String]::IsNullOrEmpty($EventType))
         {
-            Send-M365DSCNotificationEndPointMessage -EventDetails $Message `
+            Send-M365DSCNotificationEndPointMessage -EventDetails $outputMessage `
                 -EventType $EventType
         }
 
         try
         {
             Write-EventLog -LogName $LogName -Source $Source `
-                -EventId $EventID -Message $Message -EntryType $EntryType -ErrorAction Stop
+                -EventId $EventID -Message $outputMessage -EntryType $EntryType -ErrorAction Stop
         }
         catch
         {
-            Write-Verbose $_
+            Write-Verbose -Message $_
         }
     }
     catch
     {
         Write-Verbose -Message $_
+
         $MessageText = "Could not write to event log Source {$Source} EntryType {$EntryType} Message {$Message}"
-        New-M365DSCLogEntry -Error $_ -Message $MessageText `
-            -Source "[M365DSCLogEngine]" `
-            -TenantId $TenantId
+        # Check call stack to prevent indefinite loop between New-M365DSCLogEntry and this function
+        if ((Get-PSCallStack)[1].FunctionName -ne 'New-M365DSCLogEntry')
+        {
+            New-M365DSCLogEntry -Exception $_ -Message $MessageText `
+                -Source '[M365DSCLogEngine]' `
+                -TenantId $TenantId
+        }
+        else
+        {
+            Write-Verbose -Message $MessageText
+        }
     }
 }
 
@@ -235,9 +330,9 @@ function Export-M365DSCDiagnosticData
     )
     Write-Host 'Exporting logging information' -ForegroundColor Yellow
 
-    if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator") -eq $false)
+    if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator') -eq $false)
     {
-        Write-Host -Object "[ERROR] You need to run this cmdlet with Administrator privileges!" -ForegroundColor Red
+        Write-Host -Object '[ERROR] You need to run this cmdlet with Administrator privileges!' -ForegroundColor Red
         return
     }
 
@@ -281,8 +376,8 @@ function Export-M365DSCDiagnosticData
             $newLog = Import-Csv $evtExportLog
             foreach ($entry in $newLog)
             {
-                $entry.MachineName = "[SERVER]"
-                $entry.UserName = "[USER]"
+                $entry.MachineName = '[SERVER]'
+                $entry.UserName = '[USER]'
                 $entry.Message = $entry.Message -replace $Domain, '[DOMAIN]' -replace $Url, 'fqdn.com' -replace $Server, '[SERVER]'
             }
 
@@ -353,7 +448,7 @@ function New-M365DSCNotificationEndPointRegistration
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Drift','Error','Warning')]
+        [ValidateSet('Drift', 'Error', 'Warning')]
         $EventType
     )
 
@@ -367,7 +462,7 @@ function New-M365DSCNotificationEndPointRegistration
     }
 
     # Check to see if a notification endpoint registration with the same url and for the same event type already exists or not
-    $existingInstance = $CurrentNotificationEndpointsAsObject | Where-Object -FilterScript {$_.Url -eq $url -and $_.EventType -eq $EventType}
+    $existingInstance = $CurrentNotificationEndpointsAsObject | Where-Object -FilterScript { $_.Url -eq $url -and $_.EventType -eq $EventType }
     if ($null -ne $existingInstance)
     {
         throw "An existing endpoint notification registration on {$url} for {$EventType} already exists."
@@ -376,7 +471,7 @@ function New-M365DSCNotificationEndPointRegistration
     # If no exisiting instances, add the current one to the registry entry
     $CurrentNotificationEndpoints += "$($Url.Replace('|','').Replace(';',''))|$EventType;"
     [System.Environment]::SetEnvironmentVariable('M365DSCNotificationEndPointRegistrations', $CurrentNotificationEndpoints, `
-                [System.EnvironmentVariableTarget]::Machine)
+            [System.EnvironmentVariableTarget]::Machine)
 }
 
 <#
@@ -403,13 +498,13 @@ function Remove-M365DSCNotificationEndPointRegistration
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Drift','Error','Warning')]
+        [ValidateSet('Drift', 'Error', 'Warning')]
         $EventType
     )
 
     # Get current notification endpoint registrations from registry and parse them into an object.
     $CurrentNotificationEndpoints = ([System.Environment]::GetEnvironmentVariable('M365DSCNotificationEndPointRegistrations', `
-        [System.EnvironmentVariableTarget]::Machine))
+                [System.EnvironmentVariableTarget]::Machine))
     if ($null -ne $CurrentNotificationEndpoints)
     {
         $template = '{Url*:https://contoso.com}|{EventType:Error};{Url*:https://contoso.com}|{EventType:Error};'
@@ -417,7 +512,7 @@ function Remove-M365DSCNotificationEndPointRegistration
     }
 
     # Check to see if a notification endpoint registration with the same url and for the same event type already exists or not
-    $existingInstance = $CurrentNotificationEndpointsAsObject | Where-Object -FilterScript {$_.Url -eq $url -and $_.EventType -eq $EventType}
+    $existingInstance = $CurrentNotificationEndpointsAsObject | Where-Object -FilterScript { $_.Url -eq $url -and $_.EventType -eq $EventType }
     if ($null -eq $existingInstance)
     {
         throw "No existing endpoint notification registration on {$url} for {$EventType} were found."
@@ -428,7 +523,7 @@ function Remove-M365DSCNotificationEndPointRegistration
 
     # If we found an exisiting instance, remove it from registry entry's value.
     [System.Environment]::SetEnvironmentVariable('M365DSCNotificationEndPointRegistrations', $CurrentNotificationEndpoints, `
-                [System.EnvironmentVariableTarget]::Machine)
+            [System.EnvironmentVariableTarget]::Machine)
 }
 
 <#
@@ -455,7 +550,7 @@ function Get-M365DSCNotificationEndPointRegistration
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Drift','Error','Warning')]
+        [ValidateSet('Drift', 'Error', 'Warning')]
         $EventType
     )
 
@@ -472,20 +567,20 @@ function Get-M365DSCNotificationEndPointRegistration
         {
             return $CurrentNotificationEndpointsAsObject
         }
-        elseif([System.String]::IsNullOrEmpty($EventType) -and -not[System.String]::IsNullOrEmpty($Url))
+        elseif ([System.String]::IsNullOrEmpty($EventType) -and -not[System.String]::IsNullOrEmpty($Url))
         {
             # If Url is specified but EventType is null, return all endpoints on the given Url, no matter the EventType.
-            return $CurrentNotificationEndpointsAsObject | Where-Object -FilterScript {$_.Url -eq $Url}
+            return $CurrentNotificationEndpointsAsObject | Where-Object -FilterScript { $_.Url -eq $Url }
         }
-        elseif(-not [System.String]::IsNullOrEmpty($EventType) -and [System.String]::IsNullOrEmpty($Url))
+        elseif (-not [System.String]::IsNullOrEmpty($EventType) -and [System.String]::IsNullOrEmpty($Url))
         {
             # If EventType is specified but $Url is null, return all endpoints matching the specified EventType.
-            return $CurrentNotificationEndpointsAsObject | Where-Object -FilterScript {$_.EventType -eq $EventType}
+            return $CurrentNotificationEndpointsAsObject | Where-Object -FilterScript { $_.EventType -eq $EventType }
         }
-        elseif(-not [System.String]::IsNullOrEmpty($EventType) -and -not [System.String]::IsNullOrEmpty($Url))
+        elseif (-not [System.String]::IsNullOrEmpty($EventType) -and -not [System.String]::IsNullOrEmpty($Url))
         {
             # If both Url and EventType are specified, return endpoints that match both.
-            return $CurrentNotificationEndpointsAsObject | Where-Object -FilterScript {$_.EventType -eq $EventType -and $Url -eq $Url}
+            return $CurrentNotificationEndpointsAsObject | Where-Object -FilterScript { $_.EventType -eq $EventType -and $Url -eq $Url }
         }
     }
     return $null
@@ -511,7 +606,7 @@ function Send-M365DSCNotificationEndPointMessage
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Drift','Error','Warning')]
+        [ValidateSet('Drift', 'Error', 'Warning')]
         $EventType
     )
 
@@ -531,17 +626,17 @@ function Send-M365DSCNotificationEndPointMessage
         ContentType = 'application/json'
     }
 
-    foreach($endpoint in $endpointsToContact)
+    foreach ($endpoint in $endpointsToContact)
     {
         try
         {
-            $variableValue = Get-Variable -Name ("M365DSCNotificationEndpointBearer" + $domain) -Scope Global -ErrorAction SilentlyContinue
+            $variableValue = Get-Variable -Name ('M365DSCNotificationEndpointBearer' + $domain) -Scope Global -ErrorAction SilentlyContinue
 
             if (-not [System.String]::IsNullOrEMpty($variableValue))
             {
                 $domain = $endpoint.Url.Replace('https://', '').Replace('http://', '').Split('/')[0].Split('.')[0]
-                $bearerTokenValue = (Get-Variable -Name ("M365DSCNotificationEndpointBearer" + $domain) -Scope Global).Value
-                $Parameters.Headers = @{'Authorization' = "Bearer $bearerTokenValue"}
+                $bearerTokenValue = (Get-Variable -Name ('M365DSCNotificationEndpointBearer' + $domain) -Scope Global).Value
+                $Parameters.Headers = @{'Authorization' = "Bearer $bearerTokenValue" }
             }
             else
             {
@@ -555,6 +650,29 @@ function Send-M365DSCNotificationEndPointMessage
             Write-Verbose -Message "$_"
         }
     }
+}
+
+<#
+.Description
+This function determines if the process is running interactively or unattended.
+
+.Functionality
+Private
+#>
+function Assert-M365DSCIsNonInteractiveShell
+{
+    param ()
+
+    # Test each Arg for match of abbreviated '-NonInteractive' command.
+    $NonInteractive = [Environment]::GetCommandLineArgs() | Where-Object -FilterScript { $_ -like '-NonI*' }
+
+    if ([Environment]::UserInteractive -and -not $NonInteractive)
+    {
+        # We are in an interactive shell.
+        return $false
+    }
+
+    return $true
 }
 
 Export-ModuleMember -Function @(

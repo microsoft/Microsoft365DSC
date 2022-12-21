@@ -47,6 +47,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Remove-CsTeamsChannelsPolicy -MockWith {
             }
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
+            }
         }
 
         # Test contexts
@@ -55,12 +59,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Identity                                      = 'Test Channels Policy'
                     Description                                   = 'Test Description'
-                    AllowChannelSharingToExternalUser             = $True;
-                    AllowOrgWideTeamCreation                      = $True;
-                    AllowPrivateChannelCreation                   = $True;
-                    AllowPrivateTeamDiscovery                     = $True;
-                    AllowSharedChannelCreation                    = $True;
-                    AllowUserToParticipateInExternalSharedChannel = $True;
+                    AllowChannelSharingToExternalUser             = $True
+                    AllowOrgWideTeamCreation                      = $True
+                    AllowPrivateChannelCreation                   = $True
+                    EnablePrivateTeamDiscovery                     = $True
+                    AllowSharedChannelCreation                    = $True
+                    AllowUserToParticipateInExternalSharedChannel = $True
                     Ensure                                        = 'Present'
                     Credential                                    = $Credential
                 }
@@ -89,12 +93,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Identity                                      = 'Test Channels Policy'
                     Description                                   = 'Test Description'
-                    AllowChannelSharingToExternalUser             = $True;
-                    AllowOrgWideTeamCreation                      = $True;
-                    AllowPrivateChannelCreation                   = $True;
-                    AllowPrivateTeamDiscovery                     = $True;
-                    AllowSharedChannelCreation                    = $True;
-                    AllowUserToParticipateInExternalSharedChannel = $True;
+                    AllowChannelSharingToExternalUser             = $True
+                    AllowOrgWideTeamCreation                      = $True
+                    AllowPrivateChannelCreation                   = $True
+                    EnablePrivateTeamDiscovery                     = $True
+                    AllowSharedChannelCreation                    = $True
+                    AllowUserToParticipateInExternalSharedChannel = $True
                     Ensure                                        = 'Present'
                     Credential                                    = $Credential
                 }
@@ -103,12 +107,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Identity                                      = 'Test Channels Policy'
                         Description                                   = 'Test Description'
-                        AllowChannelSharingToExternalUser             = $True;
-                        AllowOrgWideTeamCreation                      = $False;
-                        AllowPrivateChannelCreation                   = $True;
-                        AllowPrivateTeamDiscovery                     = $True;
-                        AllowSharedChannelCreation                    = $True;
-                        AllowUserToParticipateInExternalSharedChannel = $True;
+                        AllowChannelSharingToExternalUser             = $True
+                        AllowOrgWideTeamCreation                      = $False
+                        AllowPrivateChannelCreation                   = $True
+                        EnablePrivateTeamDiscovery                     = $True
+                        AllowSharedChannelCreation                    = $True
+                        AllowUserToParticipateInExternalSharedChannel = $True
                     }
                 }
             }
@@ -133,12 +137,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Identity                                      = 'Test Channels Policy'
                     Description                                   = 'Test Description'
-                    AllowChannelSharingToExternalUser             = $True;
-                    AllowOrgWideTeamCreation                      = $True;
-                    AllowPrivateChannelCreation                   = $True;
-                    AllowPrivateTeamDiscovery                     = $True;
-                    AllowSharedChannelCreation                    = $True;
-                    AllowUserToParticipateInExternalSharedChannel = $True;
+                    AllowChannelSharingToExternalUser             = $True
+                    AllowOrgWideTeamCreation                      = $True
+                    AllowPrivateChannelCreation                   = $True
+                    EnablePrivateTeamDiscovery                     = $True
+                    AllowSharedChannelCreation                    = $True
+                    AllowUserToParticipateInExternalSharedChannel = $True
                     Ensure                                        = 'Present'
                     Credential                                    = $Credential
                 }
@@ -147,12 +151,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Identity                                      = 'Test Channels Policy'
                         Description                                   = 'Test Description'
-                        AllowChannelSharingToExternalUser             = $True;
-                        AllowOrgWideTeamCreation                      = $True;
-                        AllowPrivateChannelCreation                   = $True;
-                        AllowPrivateTeamDiscovery                     = $True;
-                        AllowSharedChannelCreation                    = $True;
-                        AllowUserToParticipateInExternalSharedChannel = $True;
+                        AllowChannelSharingToExternalUser             = $True
+                        AllowOrgWideTeamCreation                      = $True
+                        AllowPrivateChannelCreation                   = $True
+                        EnablePrivateTeamDiscovery                     = $True
+                        AllowSharedChannelCreation                    = $True
+                        AllowUserToParticipateInExternalSharedChannel = $True
                     }
                 }
             }
@@ -171,12 +175,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Identity                                      = 'Test Channels Policy'
                     Description                                   = 'Test Description'
-                    AllowChannelSharingToExternalUser             = $True;
-                    AllowOrgWideTeamCreation                      = $True;
-                    AllowPrivateChannelCreation                   = $True;
-                    AllowPrivateTeamDiscovery                     = $True;
-                    AllowSharedChannelCreation                    = $True;
-                    AllowUserToParticipateInExternalSharedChannel = $True;
+                    AllowChannelSharingToExternalUser             = $True
+                    AllowOrgWideTeamCreation                      = $True
+                    AllowPrivateChannelCreation                   = $True
+                    EnablePrivateTeamDiscovery                     = $True
+                    AllowSharedChannelCreation                    = $True
+                    AllowUserToParticipateInExternalSharedChannel = $True
                     Ensure                                        = 'Absent'
                     Credential                                    = $Credential
                 }
@@ -185,12 +189,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Identity                                      = 'Test Channels Policy'
                         Description                                   = 'Test Description'
-                        AllowChannelSharingToExternalUser             = $True;
-                        AllowOrgWideTeamCreation                      = $True;
-                        AllowPrivateChannelCreation                   = $True;
-                        AllowPrivateTeamDiscovery                     = $True;
-                        AllowSharedChannelCreation                    = $True;
-                        AllowUserToParticipateInExternalSharedChannel = $True;
+                        AllowChannelSharingToExternalUser             = $True
+                        AllowOrgWideTeamCreation                      = $True
+                        AllowPrivateChannelCreation                   = $True
+                        EnablePrivateTeamDiscovery                     = $True
+                        AllowSharedChannelCreation                    = $True
+                        AllowUserToParticipateInExternalSharedChannel = $True
                     }
                 }
             }
@@ -219,12 +223,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Identity                                      = 'Test Channels Policy'
                         Description                                   = 'Test Description'
-                        AllowChannelSharingToExternalUser             = $True;
-                        AllowOrgWideTeamCreation                      = $True;
-                        AllowPrivateChannelCreation                   = $True;
-                        AllowPrivateTeamDiscovery                     = $True;
-                        AllowSharedChannelCreation                    = $True;
-                        AllowUserToParticipateInExternalSharedChannel = $True;
+                        AllowChannelSharingToExternalUser             = $True
+                        AllowOrgWideTeamCreation                      = $True
+                        AllowPrivateChannelCreation                   = $True
+                        EnablePrivateTeamDiscovery                     = $True
+                        AllowSharedChannelCreation                    = $True
+                        AllowUserToParticipateInExternalSharedChannel = $True
                     }
                 }
             }

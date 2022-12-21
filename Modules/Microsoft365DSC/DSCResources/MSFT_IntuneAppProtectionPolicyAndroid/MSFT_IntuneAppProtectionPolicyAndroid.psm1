@@ -308,7 +308,9 @@ function Get-TargetResource
                 }
 
                 DEFAULT
-                { $policy.add($param, $policyInfo.$param) }
+                {
+                    $policy.add($param, $policyInfo.$param)
+                }
             }
         }
         # loop credential parameters and add them from input params
@@ -336,18 +338,13 @@ function Get-TargetResource
     {
         Write-Verbose -Message "ERROR on get-targetresource for $displayName"
         $nullResult.Ensure = 'ERROR'
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullResult
     }
 }
@@ -625,14 +622,20 @@ function Set-TargetResource
     if ($PSBoundParameters.keys -contains 'Assignments' )
     {
         $PSBoundParameters.Assignments | ForEach-Object {
-            if ($_ -ne $null) { $assignmentsArray += set-JSONstring -id $_ -type 'Assignments' }
+            if ($_ -ne $null)
+            {
+                $assignmentsArray += set-JSONstring -id $_ -type 'Assignments'
+            }
         }
         $configstring += ( 'Assignments' + ":`r`n" + ($PSBoundParameters.Assignments | Out-String) + "`r`n" )
     }
     if ($PSBoundParameters.keys -contains 'ExcludedGroups' )
     {
         $PSBoundParameters.ExcludedGroups | ForEach-Object {
-            if ($_ -ne $null) { $assignmentsArray += set-JSONstring -id $_ -type 'ExcludedGroups' }
+            if ($_ -ne $null)
+            {
+                $assignmentsArray += set-JSONstring -id $_ -type 'ExcludedGroups'
+            }
         }
         $configstring += ( 'ExcludedGroups' + ":`r`n" + ($PSBoundParameters.ExcludedGroups | Out-String) + "`r`n" )
 
@@ -640,7 +643,10 @@ function Set-TargetResource
     # set the apps values
     $AppsHash = set-AppsHash -AppGroupType $AppGroupType -apps $apps
     $appshash.Apps | ForEach-Object {
-        if ($_ -ne $null) { $appsarray += set-JSONstring -id $_ -type 'Apps' }
+        if ($_ -ne $null)
+        {
+            $appsarray += set-JSONstring -id $_ -type 'Apps'
+        }
     }
     $configstring += ('AppGroupType:' + $appshash.AppGroupType + "`r`n")
     $configstring += ('Apps' + ":`r`n" + ($appshash.Apps | Out-String) + "`r`n" )
@@ -660,7 +666,7 @@ function Set-TargetResource
         Write-Verbose -Message "Creating new Android App Protection Policy {$DisplayName}"
         if ($id -ne '')
         {
-            Write-Verbose -Message "ID in Configuration Document will be ignored, Policy will be created with a new ID"
+            Write-Verbose -Message 'ID in Configuration Document will be ignored, Policy will be created with a new ID'
         }
         $setParams.add('Assignments', $assignmentsArray)
         $newpolicy = New-MgDeviceAppMgtAndroidManagedAppProtection @setParams
@@ -895,7 +901,7 @@ function Test-TargetResource
     Confirm-M365DSCDependencies
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -ProfileName beta `
-    -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
@@ -994,11 +1000,13 @@ function Test-TargetResource
     $targetvalues.add('Apps', $AppsHash.Apps)
     $targetvalues.add('AppGroupType', $AppsHash.AppGroupType)
     # wipe out the current apps value if AppGroupType is anything but selectedpublicapps to match the appshash values
-    if ($CurrentValues.AppGroupType -ne 'selectedPublicApps') { $CurrentValues.Apps = @() }
+    if ($CurrentValues.AppGroupType -ne 'selectedPublicApps')
+    {
+        $CurrentValues.Apps = @()
+    }
 
     # remove thre ID from the values to check as it may not match
     $targetvalues.remove('ID') | Out-Null
-
 
     Write-Verbose -Message "Current Values: $((Convert-M365DscHashtableToString -Hashtable $CurrentValues) -replace ';', "`r`n")"
     Write-Verbose -Message "Target Values: $((Convert-M365DscHashtableToString -Hashtable $targetvalues) -replace ';', "`r`n")"
@@ -1115,27 +1123,22 @@ function Export-TargetResource
         else
         {
             Write-Host $Global:M365DSCEmojiRedX
-        }
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
 
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
+            New-M365DSCLogEntry -Message 'Error during Export:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
         }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+
         return ''
     }
 }
 
-function set-JSONstring
+function Set-JSONstring
 {
-    param(
+    param
+    (
         [string]$id,
         [string]$type
     )
@@ -1189,11 +1192,13 @@ function set-JSONstring
 
 }
 
-function set-Timespan
+function Set-Timespan
 {
-    param(
+    param
+    (
         [string]$duration
     )
+
     try
     {
         if ($duration.startswith('P'))
@@ -1211,17 +1216,25 @@ function set-Timespan
     }
     return $timespan
 }
-function set-AppsHash
+
+function Set-AppsHash
 {
-    param (
+    param
+    (
         [string]$AppGroupType,
         [array]$Apps
     )
 
     if ($AppGroupType -eq '')
     {
-        if ($apps.count -eq 0 ) { $AppGroupType = 'allApps' }
-        else { $AppGroupType = 'selectedPublicApps' }
+        if ($apps.count -eq 0 )
+        {
+            $AppGroupType = 'allApps'
+        }
+        else
+        {
+            $AppGroupType = 'selectedPublicApps'
+        }
         Write-Verbose -Message "setting AppGroupType to $AppGroupType"
     }
 
@@ -1239,36 +1252,37 @@ function set-AppsHash
     return $AppsHash
 }
 
-Function set-ManagedBrowserValues
+function Set-ManagedBrowserValues
 {
-    param (
+    param
+    (
         [string]$ManagedBrowser,
         [switch]$ManagedBrowserToOpenLinksRequired,
         [string]$CustomBrowserDisplayName,
         [string]$CustomBrowserPackageId
     )
 
-   # via the gui there are only 3 possible configs:
-   # edge - edge, true, empty id strings
-   # any app - not configured, false, empty strings
-   # unmanaged browser not configured, true, strings must not be empty
+    # via the gui there are only 3 possible configs:
+    # edge - edge, true, empty id strings
+    # any app - not configured, false, empty strings
+    # unmanaged browser not configured, true, strings must not be empty
 
-   write-host 'Setting Managed Browser Properties'
+    Write-Host 'Setting Managed Browser Properties'
 
-   if (!$ManagedBrowserToOpenLinksRequired)
-   {
-        write-host 'Setting Managed Browser to Any App'
+    if (!$ManagedBrowserToOpenLinksRequired)
+    {
+        Write-Host 'Setting Managed Browser to Any App'
         $ManagedBrowser = 'notConfigured'
         $ManagedBrowserToOpenLinksRequired = $false
         $CustomBrowserDisplayName = ''
         $CustomBrowserPackageId = ''
 
-   }
-   else
-   {
-        if(($CustomBrowserDisplayName -ne '') -and ($CustomBrowserPackageId -ne ''))
+    }
+    else
+    {
+        if (($CustomBrowserDisplayName -ne '') -and ($CustomBrowserPackageId -ne ''))
         {
-            write-host 'Setting Managed Browser to Custom Browser'
+            Write-Host 'Setting Managed Browser to Custom Browser'
             $ManagedBrowser = 'notConfigured'
             $ManagedBrowserToOpenLinksRequired = $true
             $CustomBrowserDisplayName = $CustomBrowserDisplayName
@@ -1276,26 +1290,26 @@ Function set-ManagedBrowserValues
         }
         else
         {
-            write-host 'Setting Managed Browser to Microsoft Edge'
+            Write-Host 'Setting Managed Browser to Microsoft Edge'
             $ManagedBrowser = 'microsoftEdge'
             $ManagedBrowserToOpenLinksRequired = $true
             $CustomBrowserDisplayName = ''
             $CustomBrowserPackageId = ''
         }
 
-   }
+    }
 
     $ManagedBrowserHash = @{
-        'ManagedBrowser' = $ManagedBrowser;
+        'ManagedBrowser'                    = $ManagedBrowser;
         'ManagedBrowserToOpenLinksRequired' = $ManagedBrowserToOpenLinksRequired;
-        'CustomBrowserDisplayName' = $CustomBrowserDisplayName;
-        'CustomBrowserPackageId' = $CustomBrowserPackageId
+        'CustomBrowserDisplayName'          = $CustomBrowserDisplayName;
+        'CustomBrowserPackageId'            = $CustomBrowserPackageId
     }
 
     return $ManagedBrowserHash
 }
 
-function get-InputParameters
+function Get-InputParameters
 {
     return @{
         AllowedDataStorageLocations                     = @{Type = 'Parameter'        ; ExportFileType = 'Array'; };

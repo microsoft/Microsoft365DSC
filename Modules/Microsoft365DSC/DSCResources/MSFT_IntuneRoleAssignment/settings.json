@@ -1,35 +1,35 @@
 {
-    "resourceName": "IntuneDeviceConfigurationPolicyIOS",
-    "description": "This resource configures an Intune Device Configuration Policy for iOS.",
+    "resourceName": "IntuneRoleAssignment",
+    "description": "This resource configures an Intune Role Assignment.",
     "permissions":    {
     "graph":  {
                   "delegated":  {
                                     "read":  [
                                                  {
-                                                     "name":  "DeviceManagementConfiguration.Read.All"
+                                                     "name":  "DeviceManagementRBAC.Read.All"
                                                  },
                                                  {
-                                                     "name":  "DeviceManagementConfiguration.ReadWrite.All"
+                                                     "name":  "DeviceManagementRBAC.ReadWrite.All"
                                                  }
                                              ],
                                     "update":  [
                                                    {
-                                                       "name":  "DeviceManagementConfiguration.ReadWrite.All"
+                                                       "name":  "DeviceManagementRBAC.ReadWrite.All"
                                                    }
                                                ]
                                 },
                   "application":  {
                                       "read":  [
                                                    {
-                                                       "name":  "DeviceManagementConfiguration.Read.All"
+                                                       "name":  "DeviceManagementRBAC.Read.All"
                                                    },
                                                    {
-                                                       "name":  "DeviceManagementConfiguration.ReadWrite.All"
+                                                       "name":  "DeviceManagementRBAC.ReadWrite.All"
                                                    }
                                                ],
                                       "update":  [
                                                      {
-                                                         "name":  "DeviceManagementConfiguration.ReadWrite.All"
+                                                         "name":  "DeviceManagementRBAC.ReadWrite.All"
                                                      }
                                                  ]
                                   }

@@ -1,6 +1,6 @@
 {
     "resourceName": "IntuneDeviceConfigurationPolicyAndroidDeviceOwner",
-    "description": "This resource configures the settings of Windows 10 compliance policies in your cloud-based organization.",
+    "description": "This resource configures an Intune Device Configuration Policy Android Device Owner.",
     "permissions": {
         "graph": {
             "delegated": {

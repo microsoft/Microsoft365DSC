@@ -168,26 +168,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -299,7 +285,7 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $NewManagementRoleParams = $PSBoundParameters
+    $NewManagementRoleParams = ([Hashtable]$PSBoundParameters).Clone()
     $NewManagementRoleParams.Remove('Ensure') | Out-Null
     $NewManagementRoleParams.Remove('Credential') | Out-Null
     $NewManagementRoleParams.Remove('ApplicationId') | Out-Null
@@ -315,7 +301,6 @@ function Set-TargetResource
         Write-Verbose -Message "Management Role Assignment'$($Name)' does not exist but it should. Create and configure it."
         # Create Management Role
         New-ManagementRoleAssignment @NewManagementRoleParams
-
     }
     # CASE: Management Role exists but it shouldn't;
     elseif ($Ensure -eq 'Absent' -and $currentManagementRoleConfig.Ensure -eq 'Present')
@@ -337,6 +322,27 @@ function Set-TargetResource
         $NewManagementRoleParams.Remove('SecurityGroup') | Out-Null
         Set-ManagementRoleAssignment @NewManagementRoleParams
     }
+
+    # Wait for the permission to be applied
+    $testResults = $false
+    $retries = 6
+    do
+    {
+        Write-Verbose -Message "Testing to ensure changes were applied."
+        $testResults = Test-TargetResource @PSBoundParameters
+        if (-not $testResults)
+        {
+            Start-Sleep -Seconds 10
+        }
+        $retries--
+    } while (-not $testResults -and $retries -gt 0)
+
+    # Need to force reconnect to Exchange for the new permissions to kick in.
+    if ($null -ne $Global:MSCloudLoginConnectionProfile.ExchangeOnline)
+    {
+        Write-Verbose -Message "Disconnecting from Exchange Online"
+        $Global:MSCloudLoginConnectionProfile.ExchangeOnline.Disconnect()
+     }
 }
 
 function Test-TargetResource
@@ -571,27 +577,14 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Host $Global:M365DSCEmojiRedX
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }

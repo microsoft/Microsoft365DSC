@@ -270,7 +270,7 @@ function New-EXOSafeAttachmentRule
     }
     catch
     {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+        Write-M365DSCLogEvent -Message $_ -EventSource $($MyInvocation.MyCommand.Source) -TenantId $tenantid -Credential $Credential
     }
 }
 
@@ -298,7 +298,7 @@ function New-EXOSafeLinksRule
     }
     catch
     {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+        Write-M365DSCLogEvent -Message $_ -EventSource $($MyInvocation.MyCommand.Source) -TenantId $tenantid -Credential $Credential
     }
 }
 
@@ -369,7 +369,7 @@ function Set-EXOSafeAttachmentRule
     }
     catch
     {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+        Write-M365DSCLogEvent -Message $_ -EventSource $($MyInvocation.MyCommand.Source) -TenantId $tenantid -Credential $Credential
     }
 }
 
@@ -405,7 +405,7 @@ function Set-EXOSafeLinksRule
     }
     catch
     {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+        Write-M365DSCLogEvent -Message $_ -EventSource $($MyInvocation.MyCommand.Source) -TenantId $tenantid -Credential $Credential
     }
 }
 
@@ -1373,17 +1373,38 @@ function Get-M365DSCTenantDomain
         [Parameter(ParameterSetName = 'MID')]
         [Switch]
         $ManagedIdentity
-
     )
 
     if ([System.String]::IsNullOrEmpty($CertificatePath))
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
-        $tenantDetails = Get-MgOrganization
-        $defaultDomain = $tenantDetails.VerifiedDomains | Where-Object -FilterScript { $_.IsInitial }
-        return $defaultDomain.Name
+
+        try
+        {
+            $tenantDetails = Get-MgOrganization -ErrorAction 'Stop'
+            $defaultDomain = $tenantDetails.VerifiedDomains | Where-Object -FilterScript { $_.IsInitial }
+
+            return $defaultDomain.Name
+        }
+        catch
+        {
+            if ($_.Exception.Message -eq 'Insufficient privileges to complete the operation.')
+            {
+                New-M365DSCLogEntry `
+                    -Message 'Error retrieving Organizational information: Missing Organization.Read.All permission. ' `
+                    -Exception $_ `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
+
+                return ''
+            }
+
+            throw $_
+        }
     }
+
     if ($TenantId.Contains('onmicrosoft'))
     {
         return $TenantId
@@ -1392,7 +1413,6 @@ function Get-M365DSCTenantDomain
     {
         throw 'TenantID must be in format contoso.onmicrosoft.com'
     }
-
 }
 
 <#
@@ -1558,7 +1578,7 @@ function New-M365DSCConnection
             }
             catch
             {
-                Write-Verbose $_
+                Write-Verbose -Message $_
             }
 
             Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
@@ -1581,7 +1601,7 @@ function New-M365DSCConnection
             }
             catch
             {
-                Write-Verbose $_
+                Write-Verbose -Message $_
             }
 
             Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
@@ -1610,7 +1630,7 @@ function New-M365DSCConnection
             }
             catch
             {
-                Write-Verbose $_
+                Write-Verbose -Message $_
             }
 
             Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
@@ -1633,7 +1653,7 @@ function New-M365DSCConnection
             }
             catch
             {
-                Write-Verbose $_
+                Write-Verbose -Message $_
             }
 
             Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
@@ -1725,7 +1745,7 @@ function New-M365DSCConnection
             }
             catch
             {
-                Write-Verbose $_
+                Write-Verbose -Message $_
             }
             Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
             return 'Credential'
@@ -2064,35 +2084,6 @@ function Get-SPOUserProfilePropertyInstance
 
 <#
 .Description
-This function converts the custom object array into a string
-
-.Functionality
-Internal
-#>
-function ConvertTo-SPOUserProfilePropertyInstanceString
-{
-    [CmdletBinding()]
-    [OutputType([System.String[]])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Object[]]
-        $Properties
-    )
-
-    $results = @()
-    foreach ($property in $Properties)
-    {
-        $content = "             MSFT_SPOUserProfilePropertyInstance`r`n            {`r`n"
-        $content += "                Key   = `"$($property.Key)`"`r`n"
-        $content += "                Value = `"$($property.Value)`"`r`n"
-        $content += "            }`r`n"
-        $results += $content
-    }
-    return $results
-}
-
-<#
-.Description
 This function downloads and installs the Dev branch of Microsoft365DSC on the local machine
 
 .Example
@@ -2160,7 +2151,7 @@ function Install-M365DSCDevBranch
         }
         catch
         {
-            Write-Verbose $_
+            Write-Verbose -Message $_
         }
     }
     Write-Host 'Done' -ForegroundColor Green
@@ -2292,6 +2283,9 @@ Specifies the credentials that will be used for authentication.
 .Parameter HeaderFilePath
 Specifies that file that contains a custom header for the report.
 
+.Parameter ExcludedProperties
+Specifies the name of parameters that should not be assessed as part of the report. The names will speficied will apply to all resources where they are encountered.
+
 .Example
 Assert-M365DSCBlueprint -BluePrintUrl 'C:\DS\blueprint.m365' -OutputReportPath 'C:\DSC\BlueprintReport.html'
 
@@ -2324,7 +2318,11 @@ function Assert-M365DSCBlueprint
         [Parameter()]
         [System.String]
         [ValidateSet('HTML', 'JSON')]
-        $Type = 'HTML'
+        $Type = 'HTML',
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedProperties
     )
     $InformationPreference = 'SilentlyContinue'
     $WarningPreference = 'SilentlyContinue'
@@ -2408,7 +2406,8 @@ function Assert-M365DSCBlueprint
             -DriftOnly:$true `
             -IsBlueprintAssessment:$true `
             -HeaderFilePath $HeaderFilePath `
-            -Type $Type
+            -Type $Type `
+            -ExcludedProperties $ExcludedProperties
     }
     else
     {
@@ -3243,9 +3242,13 @@ function Get-M365DSCWorkloadsListFromResourceNames
             }
             'O3'
             {
-                if (-not $workloads.Contains('MicrosoftGraph'))
+                if (-not $workloads.Contains('MicrosoftGraph') -and $resource -eq 'O365Group')
                 {
                     $workloads += 'MicrosoftGraph'
+                }
+                elseif (-not $workloads.Contains('ExchangeOnline'))
+                {
+                    $workloads += 'ExchangeOnline'
                 }
             }
             'OD'
@@ -3338,9 +3341,7 @@ function Get-M365DSCAuthenticationMode
 <#
 .Description
 This function creates Markdown documentation of all public M365DSC cmdlets
-
-.Parameter OutputPath
-Specifies the path to where the generated Markdown files should be saved.
+and places these in the correct location of the docs folder.
 
 .Functionality
 Internal
@@ -3348,32 +3349,16 @@ Internal
 function New-M365DSCCmdletDocumentation
 {
     param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $OutputPath,
+    ()
 
-        [Parameter()]
-        [System.String]
-        $ModulePath
-    )
+    $cmdletDocsRoot = Join-Path -Path $PSScriptRoot -ChildPath '..\..\..\docs\docs\user-guide\cmdlets'
 
-    if ($null -eq $ModulePath)
+    if ((Test-Path -Path $cmdletDocsRoot) -eq $false)
     {
-        Import-Module Microsoft365Dsc -Force
-    }
-    else
-    {
-        Get-Module Microsoft365DSC -ErrorAction SilentlyContinue | Remove-Module -ErrorAction SilentlyContinue
-        Import-Module $ModulePath -Force
+        $null = New-Item -Path $cmdletDocsRoot -ItemType Directory
     }
 
-    if ((Test-Path -Path $OutputPath) -eq $false)
-    {
-        $null = New-Item -Path $OutputPath -ItemType Directory
-    }
-
-    $filesInFolder = Get-ChildItem -Path $OutputPath
+    $filesInFolder = Get-ChildItem -Path $cmdletDocsRoot
     if ($filesInFolder.Count -ne 0)
     {
         Remove-Item -Path $filesInFolder.FullName -Confirm:$false
@@ -3476,7 +3461,7 @@ function New-M365DSCCmdletDocumentation
                 }
             }
 
-            $savePath = Join-Path -Path $OutputPath -ChildPath "$commandName.md"
+            $savePath = Join-Path -Path $cmdletDocsRoot -ChildPath "$commandName.md"
             $null = Out-File `
                 -InputObject ($output.ToString() -replace '\r?\n', "`r`n") `
                 -FilePath $savePath `
@@ -3650,7 +3635,7 @@ function Test-M365DSCModuleValidity
 
     if ('AzureAutomation/' -eq $env:AZUREPS_HOST_ENVIRONMENT)
     {
-        $message = 'Skipping check for newer version of Microsoft 365 DSC due to Azure Automation Environment restrictions.'
+        $message = 'Skipping check for newer version of Microsoft365DSC due to Azure Automation Environment restrictions.'
         Write-Verbose -Message $message
         return
     }
@@ -3689,6 +3674,69 @@ function Update-M365DSCModule
     Update-M365DSCDependencies
     Uninstall-M365DSCOutdatedDependencies
 }
+
+<#
+.Description
+This function writes messages and adds M365DSCEvents to Eventlog
+
+.Example
+Write-M365DSCLogEvent -Message $_ -EventSource $($MyInvocation.MyCommand.Source) -TenantId $tenantid -Credential $Credential
+
+.Functionality
+Internal
+#>
+function Write-M365DSCLogEvent
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Message,
+
+        [Parameter()]
+        [System.String]
+        $EventSource = 'M365DSC',
+
+        [Parameter()]
+        [System.Uint32]
+        $EventID = 1,
+
+        [Parameter()]
+        [ValidateSet('Error', 'Information', 'FailureAudit', 'SuccessAudit', 'Warning')]
+        [System.String]
+        $EventEntryType = 'Error',
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [PSCredential]
+        $Credential
+    )
+
+    try
+    {
+        Write-Verbose -Message $Message
+        $tenantIdValue = ''
+        if (-not [System.String]::IsNullOrEmpty($TenantId))
+        {
+            $tenantIdValue = $TenantId
+        }
+        elseif ($null -ne $Credential)
+        {
+            $tenantIdValue = $Credential.UserName.Split('@')[1]
+        }
+        Add-M365DSCEvent -Message $Message -EntryType $EventEntryType -EventID $EventID -Source $EventSource -TenantId $tenantIdValue
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+    }
+    return $nullReturn
+}
+
 
 Export-ModuleMember -Function @(
     'Assert-M365DSCBlueprint',
@@ -3729,5 +3777,6 @@ Export-ModuleMember -Function @(
     'Uninstall-M365DSCOutdatedDependencies',
     'Update-M365DSCDependencies',
     'Update-M365DSCExportAuthenticationResults',
-    'Update-M365DSCModule'
+    'Update-M365DSCModule',
+    'Write-M365DSCLogEvent'
 )

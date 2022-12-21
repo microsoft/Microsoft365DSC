@@ -39,8 +39,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -64,10 +64,10 @@ function Get-TargetResource
         {
             Write-Verbose "Found existing RetentionComplianceEventType $($Name)"
             $result = @{
-                Name               = $EventTypeObject.Name
-                Comment            = $EventTypeObject.Comment
+                Name       = $EventTypeObject.Name
+                Comment    = $EventTypeObject.Comment
                 Credential = $Credential
-                Ensure             = 'Present'
+                Ensure     = 'Present'
             }
 
             Write-Verbose -Message "Found RetentionComplianceEventType $($Name)"
@@ -77,26 +77,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -130,8 +116,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -146,17 +132,17 @@ function Set-TargetResource
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentEventType.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove("Credential") | Out-Null
-        $CreationParams.Remove("Ensure") | Out-Null
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('Ensure') | Out-Null
         New-ComplianceRetentionEventType @CreationParams
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentEventType.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove("Credential") | Out-Null
-        $CreationParams.Remove("Ensure") | Out-Null
-        $CreationParams.Remove("Name") | Out-Null
-        $CreationParams.Add("Identity", $Name)
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('Ensure') | Out-Null
+        $CreationParams.Remove('Name') | Out-Null
+        $CreationParams.Add('Identity', $Name)
         Set-ComplianceRetentionEventType @CreationParams
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentEventType.Ensure))
@@ -194,8 +180,8 @@ function Test-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -239,8 +225,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -268,7 +254,7 @@ function Export-TargetResource
 
             $Params = @{
                 Credential = $Credential
-                Name               = $eventType.Name
+                Name       = $eventType.Name
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -289,27 +275,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message "Error during Export:" `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

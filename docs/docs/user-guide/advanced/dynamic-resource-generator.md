@@ -12,7 +12,7 @@ The DRG files are located at the root of the project under the /ResourceGenerato
 ---|---|---|---|
 |ResourceName|**True**|String|The name of the resource to be generated. E.g., AADDomain, IntuneResourcex, etc.|
 |Workload|**True**|String. Any of: "ExchangeOnline", "Intune", "MicrosoftGraph", "MicrosoftTeams", "PnP", "PowerPlatforms", "SecurityComplianceCenter"|The name of the Microsoft 365 workload associated with the resource to be generated|
-|GraphModuleCmdLetNoun|False|String|The noun part of the cmdlet associated with the resource. E.g., for the AADDomain resource, the associated cmdlets is Get-MgDomain. Therefore the value for this property is 'MgDomain'.|
+|CmdLetNoun|False|String|The noun part of the cmdlet associated with the resource. E.g., for the AADDomain resource, the associated cmdlets is Get-MgDomain. Therefore the value for this property is 'MgDomain'.|
 |Path|False|String|Local path to the root DSCResources folder where all the DSC Resources are being stored (e.g., C:\Github\Microsoft365DSC\Modules\Microsoft365DSC\DSCResources)|
 |UnitTestPath|False|String|Local path to the root of the unit test folder (e.g., C:\GitHub\Microsoft365DSC\Tests\Unit\Microsoft365DSC)|
 |ExampleFilePath|False|String|Local path to the root of the examples Ressources' folder (e.g. C:\GitHub\Microsoft365DSC\Modules\Microsoft365DSC\Examples\Resources)|
@@ -33,4 +33,4 @@ $creds = Get-Credential
 New-M365DSCResource -ResourceName AADDomain -Workload MicrosoftGraph -GraphModuleCmdletNoun 'MgDomain' -Path $ResourcePath -UnitTestPath $UnitTestPath -ExampleFilePath $ExamplePath -Credential $creds
 ```
 
-We are currently looking for users to help us test and improve the DRG. If you are interested in helping out, please try it out with the instructions above and report any issues or questions in the Issues section of the GitHub repository (https://GitHub.com/Microsoft/Microsoft365DSC) mentioning that the item is related to the DRG testing. 
+We are currently looking for users to help us test and improve the DRG. If you are interested in helping out, please try it out with the instructions above and report any issues or questions in the Issues section of the GitHub repository (https://GitHub.com/Microsoft/Microsoft365DSC) mentioning that the item is related to the DRG testing.

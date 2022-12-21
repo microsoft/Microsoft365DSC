@@ -20,6 +20,8 @@ This function does not generate any output.
 | IsBlueprintAssessment | False | Boolean |  |  | Specifies that the report is a comparison with a Blueprint. |
 | HeaderFilePath | False | String |  |  | Specifies that file that contains a custom header for the report. |
 | Delta | False | Array |  |  | An array with difference, already compiled from another source. |
+| Type | False | String | HTML | HTML, JSON |  |
+| ExcludedProperties | False | Array |  |  | Array that contains the list of parameters to exclude. |
 
 ## Examples
 

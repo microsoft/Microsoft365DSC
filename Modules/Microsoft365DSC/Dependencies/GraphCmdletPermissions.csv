@@ -8,11 +8,11 @@ Get-MgGroup,Group.Read.All,Group.Read.All
 Get-MgGroupLifecyclePolicy,Directory.Read.All,Directory.Read.All
 Get-MgGroupMember,Group.Read.All,Group.Read.All
 Get-MgGroupOwner,Group.Read.All,Group.Read.All
-Get-MgGroupPlannerPlan,Tasks.Read,NotSupported
+Get-MgGroupPlannerPlan,Tasks.Read.All,NotSupported
 Get-MgIdentityConditionalAccessNamedLocation,Policy.Read.All,Policy.Read.All
 Get-MgIdentityConditionalAccessPolicy,Policy.Read.All,Policy.Read.All
 Get-MgOrganization,Organization.Read.All,Organization.Read.All
-Get-MgPlannerPlanBucket,Tasks.Read,NotSupported
+Get-MgPlannerPlanBucket,Tasks.Read.All,NotSupported
 Get-MgPolicyTokenLifetimePolicy,Policy.Read.All,Policy.Read.All
 Get-MgRoleManagementDirectoryRoleDefinition,RoleManagement.Read.Directory,RoleManagement.Read.Directory
 Get-MgServicePrincipal,Application.Read.All,Application.Read.All
@@ -27,8 +27,8 @@ New-MgGroupLifecyclePolicy,Directory.ReadWrite.All,Directory.ReadWrite.All
 New-MgGroupMember,Group.ReadWrite.All,Group.ReadWrite.All
 New-MgGroupOwnerByRef,Group.ReadWrite.All,Group.ReadWrite.All
 New-MgIdentityConditionalAccessPolicy,Policy.Read.All/Policy.ReadWrite.ConditionalAccess,Policy.Read.All/Policy.ReadWrite.ConditionalAccess
-New-MgPlannerBucket,Tasks.ReadWrite,NotSupported
-New-MgPlannerPlan,Tasks.ReadWrite,NotSupported
+New-MgPlannerBucket,Tasks.ReadWrite.All,NotSupported
+New-MgPlannerPlan,Tasks.ReadWrite.All,NotSupported
 New-MgPolicyTokenLifetimePolicy,Policy.ReadWrite.ApplicationConfiguration,Policy.ReadWrite.ApplicationConfiguration
 New-MgRoleManagementDirectoryRoleDefinition,RoleManagement.ReadWrite.Directory,RoleManagement.ReadWrite.Directory
 New-MgServicePrincipal,Application.ReadWrite.All,Application.ReadWrite.All
@@ -51,7 +51,7 @@ Update-MgGroup,Group.ReadWrite.All,Group.ReadWrite.All
 Update-MgGroupLifecyclePolicy,Directory.ReadWrite.All,Directory.ReadWrite.All
 Update-MgIdentityConditionalAccessPolicy,Policy.Read.All/Policy.ReadWrite.ConditionalAccess,Policy.Read.All/Policy.ReadWrite.ConditionalAccess
 Update-MgOrganization,Organization.ReadWrite.All,Organization.ReadWrite.All
-Update-MgPlannerPlan,Tasks.ReadWrite,NotSupported
+Update-MgPlannerPlan,Tasks.ReadWrite.All,NotSupported
 Update-MgPolicyTokenLifetimePolicy,Policy.ReadWrite.ApplicationConfiguration,Policy.ReadWrite.ApplicationConfiguration
 Update-MgRoleManagementDirectoryRoleDefinition,RoleManagement.ReadWrite.Directory,RoleManagement.ReadWrite.Directory
 Update-MgServicePrincipal,Application.ReadWrite.All,Application.ReadWrite.All

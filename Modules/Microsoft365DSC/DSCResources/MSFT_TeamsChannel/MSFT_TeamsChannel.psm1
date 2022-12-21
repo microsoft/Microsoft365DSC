@@ -28,9 +28,9 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -57,8 +57,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -66,8 +66,8 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
-    Write-Verbose -Message "Checking for existance of team channels"
+    $nullReturn.Ensure = 'Absent'
+    Write-Verbose -Message 'Checking for existance of team channels'
 
     try
     {
@@ -95,7 +95,7 @@ function Get-TargetResource
         }
 
         #Current channel doesnt exist and trying to rename throw an error
-        if (($null -eq $channel) -and $PSBoundParameters.ContainsKey("NewDisplayName"))
+        if (($null -eq $channel) -and $PSBoundParameters.ContainsKey('NewDisplayName'))
         {
             Write-Verbose -Message "Cannot rename channel $DisplayName , doesnt exist in current Team"
             throw "Channel named $DisplayName doesn't exist in current Team"
@@ -107,12 +107,12 @@ function Get-TargetResource
             return $nullReturn
         }
 
-        $results =  @{
+        $results = @{
             DisplayName           = $channel.DisplayName
             TeamName              = $team.DisplayName
             GroupId               = $team.GroupId
             Description           = $channel.Description
-            Ensure                = "Present"
+            Ensure                = 'Present'
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
@@ -121,32 +121,18 @@ function Get-TargetResource
 
         if ($NewDisplayName)
         {
-            $results.Add("NewDisplayName", $NewDisplayName)
+            $results.Add('NewDisplayName', $NewDisplayName)
         }
         return $results
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -180,9 +166,9 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -207,8 +193,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -227,33 +213,41 @@ function Set-TargetResource
     }
     Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
 
-    $CurrentParameters.Remove("TeamName") | Out-Null
-    $CurrentParameters.Add("GroupId", $team.GroupId)
-    $CurrentParameters.Remove("Credential") | Out-Null
-    $CurrentParameters.Remove("ApplicationId") | Out-Null
-    $CurrentParameters.Remove("TenantId") | Out-Null
-    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
-    $CurrentParameters.Remove("Ensure") | Out-Null
+    $CurrentParameters.Remove('TeamName') | Out-Null
+    $CurrentParameters.Remove('Credential') | Out-Null
+    $CurrentParameters.Remove('ApplicationId') | Out-Null
+    $CurrentParameters.Remove('TenantId') | Out-Null
+    $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
+    $CurrentParameters.Remove('Ensure') | Out-Null
+    if ($CurrentParameters.ContainsKey('GroupId'))
+    {
+        $CurrentParameters.GroupId = $team.GroupId
+    }
+    else
+    {
+        $CurrentParameters.Add("GroupId", $team.GroupId)
+    }
 
-    if ($Ensure -eq "Present")
+    if ($Ensure -eq 'Present')
     {
         # Remap attribute from DisplayName to current display name for Set-TeamChannel cmdlet
-        if ($channel.Ensure -eq "Present")
+        if ($channel.Ensure -eq 'Present')
         {
-            if ($CurrentParameters.ContainsKey("NewDisplayName"))
+            if ($CurrentParameters.ContainsKey('NewDisplayName'))
             {
                 Write-Verbose -Message "Updating team channel to new channel name $NewDisplayName"
-                $CurrentParameters.Remove("DisplayName") | Out-Null
+                $CurrentParameters.Remove('DisplayName') | Out-Null
                 Set-TeamChannel @CurrentParameters -CurrentDisplayName $DisplayName
             }
         }
         else
         {
-            if ($CurrentParameters.ContainsKey("NewDisplayName"))
+            if ($CurrentParameters.ContainsKey('NewDisplayName'))
             {
-                $CurrentParameters.Remove("NewDisplayName")
+                $CurrentParameters.Remove('NewDisplayName')
             }
             Write-Verbose -Message "Creating team channel $DisplayName"
+            Write-Verbose -Message "Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentParameters)"
             New-TeamChannel @CurrentParameters
         }
     }
@@ -297,9 +291,9 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -321,8 +315,8 @@ function Test-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -339,7 +333,7 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure")
+        -ValuesToCheck @('Ensure')
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -375,8 +369,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -427,27 +421,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message "Error during Export:" `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

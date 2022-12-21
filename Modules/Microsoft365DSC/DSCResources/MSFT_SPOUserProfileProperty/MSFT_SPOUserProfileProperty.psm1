@@ -95,26 +95,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -316,154 +302,44 @@ function Export-TargetResource
         Add-M365DSCTelemetryEvent -Data $data
         #endregion
 
-        $result = ''
-
         # Get all instances;
-        $instances = Get-MgUser -All:$true
-
-        # Split the complete list of instances into batches;
-        if ($instances.Length -ge $MaxProcesses)
-        {
-            $instances = Split-ArrayByParts -Array $instances -Parts $MaxProcesses
-            $batchSize = $instances[0].Length
-        }
-        else
-        {
-            $MaxProcesses = $instances.Length
-            $batchSize = 1
-        }
-
-        # For each batch of 8 items, start and asynchronous background PowerShell job. Each
-        # job will be given the name of the current resource followed by its ID;
+        $instances = Get-PnPUser | Where-Object -FilterScript {$_.PrincipalType -eq 'User' -and '' -ne $_.Email}
+        $dscContent = ''
+        Write-Host "`r`n" -NoNewline
         $i = 1
-        foreach ($batch in $instances)
+        foreach ($instance in $Instances)
         {
-            Start-Job -Name "SPOUserProfileProperty$i" -ScriptBlock {
-                Param(
-                    [Parameter(Mandatory = $true)]
-                    [System.Object[]]
-                    $Instances,
+            Write-Host "    |---[$i/$($Instances.Count)] $($instance.Email)" -NoNewline
+            $Params = @{
+                UserName              = $instance.Email
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
+                Credential            = $Credential
+            }
 
-                    [Parameter(Mandatory = $true)]
-                    [System.String]
-                    $ScriptRoot,
+            $Results = Get-TargetResource @Params
+            $Results.Properties = ConvertTo-M365DSCSPOUserProfilePropertyInstanceString -Properties $Results.Properties
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                            -Results $Results
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                                -ConnectionMode $ConnectionMode `
+                                -ModulePath $PSScriptRoot `
+                                -Results $Results `
+                                -Credential $Credential
+            if ($null -ne $Results.Properties)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Properties'
+            }
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
 
-                    [Parameter()]
-                    [System.Management.Automation.PSCredential]
-                    $Credential,
-
-                    [Parameter()]
-                    [System.String]
-                    $ApplicationId,
-
-                    [Parameter()]
-                    [System.String]
-                    $TenantId,
-
-                    [Parameter()]
-                    [System.String]
-                    $ApplicationSecret,
-
-                    [Parameter()]
-                    [System.String]
-                    $CertificateThumbprint,
-
-                    [Parameter()]
-                    [Switch]
-                    $ManagedIdentity
-                )
-
-
-                $WarningPreference = 'SilentlyContinue'
-
-                # Implicitly load the M365DSCUtil.psm1 module in order to be able to call
-                # into the Invoke-O36DSCCommand cmdlet;
-                Import-Module ($ScriptRoot + '\..\..\Modules\M365DSCUtil.psm1') -Force | Out-Null
-
-                # Invoke the logic that extracts the all the Property Bag values of the current site using the
-                # the invokation wrapper that handles throttling;
-                $returnValue = Invoke-M365DSCCommand -Arguments $PSBoundParameters -InvokationPath $ScriptRoot -ScriptBlock {
-                    $WarningPreference = 'SilentlyContinue'
-                    $params = $args[0]
-                    $dscContent = ''
-                    foreach ($instance in $params.Instances)
-                    {
-                        foreach ($user in $instance)
-                        {
-                            $Params = @{
-                                UserName              = $user.UserPrincipalName
-                                ApplicationId         = $ApplicationId
-                                TenantId              = $TenantId
-                                ApplicationSecret     = $ApplicationSecret
-                                CertificateThumbprint = $CertificateThumbprint
-                                Managedidentity       = $ManagedIdentity.IsPresent
-                                Credential            = $Credential
-                            }
-                            $CurrentModulePath = $params.ScriptRoot + '\MSFT_SPOUserProfileProperty.psm1'
-                            Import-Module $CurrentModulePath -Force | Out-Null
-
-                            $Results = Get-TargetResource @Params
-
-                            if ($result.Ensure -eq 'Present')
-                            {
-                                Import-Module ($params.ScriptRoot + '\..\..\Modules\M365DSCUtil.psm1') -Force | Out-Null
-                                Import-Module ($params.ScriptRoot + '\..\..\Modules\M365DSCTelemetryEngine.psm1') -Force | Out-Null
-
-                                $Results.Properties = ConvertTo-SPOUserProfilePropertyInstanceString -Properties $result.Properties
-                                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                                    -Results $Results
-                                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                                    -ConnectionMode $ConnectionMode `
-                                    -ModulePath $PSScriptRoot `
-                                    -Results $Results `
-                                    -Credential $Credential
-                                $dscContent += $currentDSCBlock
-                                Save-M365DSCPartialExport -Content $currentDSCBlock `
-                                    -FileName $Global:PartialExportFileName
-                            }
-                        }
-                    }
-
-                    return $dscContent
-                }
-                return $returnValue
-            } -ArgumentList @($batch, $PSScriptRoot, $Credential, $ApplicationId, $TenantId, $ApplicationSecret, $CertificateThumbprint) | Out-Null
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
-
-        Write-Host "`r`n    Broke extraction process down into {$MaxProcesses} jobs of {$batchSize} item(s) each"
-        $totalJobs = $MaxProcesses
-        $jobsCompleted = 0
-        $status = 'Running...'
-        $elapsedTime = 0
-        do
-        {
-            $jobs = Get-Job | Where-Object -FilterScript { $_.Name -like '*SPOUserProfileProperty*' }
-            $count = $jobs.Length
-            foreach ($job in $jobs)
-            {
-                if ($job.JobStateInfo.State -eq 'Complete')
-                {
-                    $currentContent = Receive-Job -Name $job.name
-                    $result += $currentContent
-                    Remove-Job -Name $job.name
-                    $jobsCompleted++
-                }
-                elseif ($job.JobStateInfo.State -eq 'Failed')
-                {
-                    Remove-Job -Name $job.name
-                    Write-Warning "{$($job.name)} failed"
-                    break
-                }
-
-                $status = "Completed $jobsCompleted/$totalJobs jobs in $elapsedTime seconds"
-                $percentCompleted = $jobsCompleted / $totalJobs * 100
-                Write-Progress -Activity 'SPOUserProfileProperty Extraction' -PercentComplete $percentCompleted -Status $status
-            }
-            $elapsedTime ++
-            Start-Sleep -Seconds 1
-        } while ($count -ne 0)
-        Write-Progress -Activity 'SPOUserProfileProperty Extraction' -PercentComplete 100 -Status 'Completed' -Completed
         $organization = ''
         $principal = '' # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
         $organization = Get-M365DSCOrganization -Credential $Credential -TenantId $Tenantid
@@ -471,40 +347,57 @@ function Export-TargetResource
         {
             $principal = $organization.Split('.')[0]
         }
-        if ($result.ToLower().Contains($organization.ToLower()) -or `
-                $result.ToLower().Contains($principal.ToLower()))
+        if ($dscContent.ToLower().Contains($organization.ToLower()) -or `
+                $dscContent.ToLower().Contains($principal.ToLower()))
         {
-            $result = $result -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
-            $result = $result -ireplace [regex]::Escape('@' + $organization), "@`$(`$OrganizationName)"
+            $dscContent = $dscContent -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
+            $dscContent = $dscContent -ireplace [regex]::Escape('@' + $organization), "@`$(`$OrganizationName)"
         }
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        return $result
+        return $dscContent
     }
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
+}
+
+<#
+.Description
+This function converts the custom object array into a string
+
+.Functionality
+Internal
+#>
+function ConvertTo-M365DSCSPOUserProfilePropertyInstanceString
+{
+    [CmdletBinding()]
+    [OutputType([System.String[]])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $Properties
+    )
+
+    $results = @()
+    $content = "@(`r`n"
+    foreach ($property in $Properties)
+    {
+        $content += "             MSFT_SPOUserProfilePropertyInstance`r`n"
+        $content += "             {`r`n"
+        $content += "                Key   = '$($property.Key)'`r`n"
+        $content += "                Value = '$($property.Value)'`r`n"
+        $content += "            }`r`n"
+    }
+    $content += "            )"
+    return $content
 }
 
 Export-ModuleMember -Function *-TargetResource

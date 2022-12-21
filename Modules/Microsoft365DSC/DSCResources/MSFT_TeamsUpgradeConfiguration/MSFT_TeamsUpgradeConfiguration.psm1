@@ -15,7 +15,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("SkypeMeetingsApp", "NativeLimitedClient")]
+        [ValidateSet('SkypeMeetingsApp', 'NativeLimitedClient')]
         $SfBMeetingJoinUx,
 
         [Parameter()]
@@ -34,7 +34,7 @@ function Get-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    Write-Verbose -Message "Checking the Teams Upgrade Configuration"
+    Write-Verbose -Message 'Checking the Teams Upgrade Configuration'
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -43,8 +43,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -66,27 +66,15 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        throw $_
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return @{}
     }
 }
 
@@ -106,7 +94,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("SkypeMeetingsApp", "NativeLimitedClient")]
+        [ValidateSet('SkypeMeetingsApp', 'NativeLimitedClient')]
         $SfBMeetingJoinUx,
 
         [Parameter()]
@@ -126,14 +114,14 @@ function Set-TargetResource
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Setting Teams Upgrade Configuration"
+    Write-Verbose -Message 'Setting Teams Upgrade Configuration'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -144,11 +132,11 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     $SetParameters = $PSBoundParameters
-    $SetParameters.Remove("IsSingleInstance") | Out-Null
-    $SetParameters.Remove("Credential") | Out-Null
-    $SetParameters.Remove("ApplicationId") | Out-Null
-    $SetParameters.Remove("TenantId") | Out-Null
-    $SetParameters.Remove("CertificateThumbprint") | Out-Null
+    $SetParameters.Remove('IsSingleInstance') | Out-Null
+    $SetParameters.Remove('Credential') | Out-Null
+    $SetParameters.Remove('ApplicationId') | Out-Null
+    $SetParameters.Remove('TenantId') | Out-Null
+    $SetParameters.Remove('CertificateThumbprint') | Out-Null
 
     Set-CsTeamsUpgradeConfiguration @SetParameters
 }
@@ -170,7 +158,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("SkypeMeetingsApp", "NativeLimitedClient")]
+        [ValidateSet('SkypeMeetingsApp', 'NativeLimitedClient')]
         $SfBMeetingJoinUx,
 
         [Parameter()]
@@ -193,15 +181,15 @@ function Test-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Team Upgrade Settings"
+    Write-Verbose -Message 'Testing configuration of Team Upgrade Settings'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -250,8 +238,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -285,27 +273,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

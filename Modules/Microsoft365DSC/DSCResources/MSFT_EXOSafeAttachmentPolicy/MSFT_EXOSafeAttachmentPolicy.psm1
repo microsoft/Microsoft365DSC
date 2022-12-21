@@ -137,26 +137,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -284,18 +270,19 @@ function Set-TargetResource
             }
             if ($StopProcessingPolicy -eq $true)
             {
-                Write-Verbose $Message
+                Write-Verbose -Message $Message
                 try
                 {
                     $Message = 'Please ensure that if Redirect is set to true then  ' + `
                         'ActionOnError is also set to true and RedirectAddress is not null'
-                    Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                        -TenantId $tenantIdValue
+                    New-M365DSCLogEntry -Message $Message `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
                 }
                 catch
                 {
-                    Write-Verbose $_
+                    Write-Verbose -Message $_
                 }
                 break
             }
@@ -321,13 +308,15 @@ function Set-TargetResource
             {
                 try
                 {
-                    Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                        -TenantId $tenantIdValue
+                    New-M365DSCLogEntry -Message 'Error updating data:' `
+                        -Exception $_ `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
                 }
                 catch
                 {
-                    Write-Verbose $_
+                    Write-Verbose -Message $_
                 }
             }
         }
@@ -342,13 +331,15 @@ function Set-TargetResource
             {
                 try
                 {
-                    Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                        -TenantId $tenantIdValue
+                    New-M365DSCLogEntry -Message 'Error updating data:' `
+                        -Exception $_ `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
                 }
                 catch
                 {
-                    Write-Verbose $_
+                    Write-Verbose -Message $_
                 }
             }
         }
@@ -571,26 +562,14 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }

@@ -215,8 +215,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -248,7 +248,7 @@ function Get-TargetResource
             $parentLabelID = $null
             if ($null -ne $label.ParentId)
             {
-                $parentLabel = Get-Label -Identity $label.ParentId -ErrorAction SilentlyContinue
+                $parentLabel = Get-Label -Identity $label.ParentId -IncludeDetailedLabelActions $true -ErrorAction 'SilentlyContinue'
                 $parentLabelID = $parentLabel.Name
             }
             if ($null -ne $label.LocaleSettings)
@@ -339,26 +339,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -570,8 +556,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -583,40 +569,39 @@ function Set-TargetResource
 
     $label = Get-TargetResource @PSBoundParameters
 
-    if ($PSBoundParameters.ContainsKey("Disabled"))
+    if ($PSBoundParameters.ContainsKey('Disabled'))
     {
-        Write-Verbose -Message "The Disabled parameter is no longer available and will be deprecated."
+        Write-Verbose -Message 'The Disabled parameter is no longer available and will be deprecated.'
     }
-
 
     if (('Present' -eq $Ensure) -and ('Absent' -eq $label.Ensure))
     {
         Write-Verbose -Message "Label {$Name} doesn't already exist, creating it from the Set-TargetResource function."
         $CreationParams = $PSBoundParameters
 
-        if ($PSBoundParameters.ContainsKey("AdvancedSettings"))
+        if ($PSBoundParameters.ContainsKey('AdvancedSettings'))
         {
             $advanced = Convert-CIMToAdvancedSettings $AdvancedSettings
-            $CreationParams["AdvancedSettings"] = $advanced
+            $CreationParams['AdvancedSettings'] = $advanced
         }
 
-        if ($PSBoundParameters.ContainsKey("LocaleSettings"))
+        if ($PSBoundParameters.ContainsKey('LocaleSettings'))
         {
             $locale = Convert-CIMToLocaleSettings $LocaleSettings
-            $CreationParams["LocaleSettings"] = $locale
+            $CreationParams['LocaleSettings'] = $locale
         }
 
-        $CreationParams.Remove("Credential")
-        $CreationParams.Remove("Ensure")
-        $CreationParams.Remove("Priority")
-        $CreationParams.Remove("Disabled")
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('Ensure') | Out-Null
+        $CreationParams.Remove('Priority') | Out-Null
+        $CreationParams.Remove('Disabled') | Out-Null
 
         try
         {
             Write-Verbose -Message "Creating Label {$Name}"
             New-Label @CreationParams
             ## Can't set priority until label created
-            if ($PSBoundParameters.ContainsKey("Priority"))
+            if ($PSBoundParameters.ContainsKey('Priority'))
             {
                 Start-Sleep 5
                 Write-Verbose -Message "Updating the priority for newly created label {$Name}"
@@ -633,23 +618,33 @@ function Set-TargetResource
         Write-Verbose -Message "Label {$Name} already exist, updating it from the Set-TargetResource function."
         $SetParams = $PSBoundParameters
 
-        if ($PSBoundParameters.ContainsKey("AdvancedSettings"))
+        if ($PSBoundParameters.ContainsKey('AdvancedSettings'))
         {
             $advanced = Convert-CIMToAdvancedSettings  $AdvancedSettings
-            $SetParams["AdvancedSettings"] = $advanced
+            $SetParams['AdvancedSettings'] = $advanced
         }
 
-        if ($PSBoundParameters.ContainsKey("LocaleSettings"))
+        if ($PSBoundParameters.ContainsKey('LocaleSettings'))
         {
             $locale = Convert-CIMToLocaleSettings $LocaleSettings
-            $SetParams["LocaleSettings"] = $locale
+            $SetParams['LocaleSettings'] = $locale
+        }
+
+        if ($PSBoundParameters.ContainsKey('EncryptionAipTemplateScopes'))
+        {
+            if ($label.EncryptionAipTemplateScopes -ne $PSBoundParameters.EncryptionAipTemplateScopes)
+            {
+                Write-Verbose -Message "The EncryptionAipTemplateScopes specified has a different value than the one on the existing label. `
+                    This parameter cannot be updated and will be ignored."
+            }
+            $SetParams.Remove('EncryptionAipTemplateScopes') | Out-Null
         }
 
         #Remove unused parameters for Set-Label cmdlet
-        $SetParams.Remove("Credential")
-        $SetParams.Remove("Ensure")
-        $SetParams.Remove("Name")
-        $SetParams.Remove("Disabled")
+        $SetParams.Remove('Credential') | Out-Null
+        $SetParams.Remove('Ensure') | Out-Null
+        $SetParams.Remove('Name') | Out-Null
+        $SetParams.Remove('Disabled') | Out-Null
 
         try
         {
@@ -879,8 +874,8 @@ function Test-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -898,6 +893,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('AdvancedSettings') | Out-Null
     $ValuesToCheck.Remove('LocaleSettings') | Out-Null
     $ValuesToCheck.Remove('Disabled') | Out-Null
+    $ValuesToCheck.Remove('EncryptionAipTemplateScopes') | Out-Null
 
     if ($null -ne $AdvancedSettings -and $null -ne $CurrentValues.AdvancedSettings)
     {
@@ -944,8 +940,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -956,7 +952,7 @@ function Export-TargetResource
     {
         [array]$labels = Get-Label -ErrorAction Stop
 
-        $dscContent = ""
+        $dscContent = ''
         $i = 1
         if ($labels.Length -eq 0)
         {
@@ -971,7 +967,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($labels.Count)] $($label.Name)" -NoNewline
 
             $Params = @{
-                Name               = $label.Name
+                Name       = $label.Name
                 Credential = $Credential
             }
             $Results = Get-TargetResource @Params
@@ -994,11 +990,11 @@ function Export-TargetResource
                 -Credential $Credential
             if ($null -ne $Results.AdvancedSettings)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AdvancedSettings"
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AdvancedSettings'
             }
             if ($null -ne $Results.LocaleSettings)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "LocaleSettings"
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'LocaleSettings'
             }
 
             Write-Host $Global:M365DSCEmojiGreenCheckMark
@@ -1011,27 +1007,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
     return $dscContent
 }
@@ -1040,10 +1023,12 @@ function Convert-JSONToLocaleSettings
 {
     [CmdletBinding()]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance[]])]
-    Param(
+    param
+    (
         [parameter(Mandatory = $true)]
         $JSONLocalSettings
     )
+
     $localeSettings = $JSONLocalSettings | ConvertFrom-Json
 
     $entries = @()
@@ -1061,7 +1046,7 @@ function Convert-JSONToLocaleSettings
             }
             $settings += $entry
         }
-        $result.Add("LabelSettings", $settings)
+        $result.Add('LabelSettings', $settings)
         $settings = @()
         $entries += $result
         $result = @{ }
@@ -1074,22 +1059,24 @@ function Convert-StringToAdvancedSettings
 {
     [CmdletBinding()]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance[]])]
-    Param(
+    param
+    (
         [parameter(Mandatory = $true)]
         [System.String[]]
         $AdvancedSettings
     )
+
     $settings = @()
     foreach ($setting in $AdvancedSettings)
     {
-        $settingString = $setting.Replace("[", "").Replace("]", "")
-        $settingKey = $settingString.Split(",")[0]
+        $settingString = $setting.Replace('[', '').Replace(']', '')
+        $settingKey = $settingString.Split(',')[0]
 
         if ($settingKey -ne 'displayname')
         {
-            $startPos = $settingString.IndexOf(",", 0) + 1
+            $startPos = $settingString.IndexOf(',', 0) + 1
             $valueString = $settingString.Substring($startPos, $settingString.Length - $startPos).Trim()
-            $values = $valueString.Split(",")
+            $values = $valueString.Split(',')
 
             $entry = @{
                 Key   = $settingKey
@@ -1100,11 +1087,13 @@ function Convert-StringToAdvancedSettings
     }
     return $settings
 }
+
 function Convert-CIMToAdvancedSettings
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    Param(
+    param
+    (
         [parameter(Mandatory = $true)]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $AdvancedSettings
@@ -1113,11 +1102,11 @@ function Convert-CIMToAdvancedSettings
     $entry = @{ }
     foreach ($obj in $AdvancedSettings)
     {
-        $settingsValues = ""
+        $settingsValues = ''
         foreach ($objVal in $obj.Value)
         {
             $settingsValues += $objVal
-            $settingsValues += ","
+            $settingsValues += ','
         }
         $entry[$obj.Key] = $settingsValues.Substring(0, ($settingsValues.Length - 1))
     }
@@ -1129,7 +1118,8 @@ function Convert-EncryptionRightDefinition
 {
     [CmdletBinding()]
     [OutputType([System.String])]
-    Param(
+    param
+    (
         [parameter(Mandatory = $true)]
         [System.String]
         $RightsDefinition
@@ -1140,7 +1130,7 @@ function Convert-EncryptionRightDefinition
     {
         $StringContent += "$($right.Identity):$($right.Rights);"
     }
-    if ($StringContent.EndsWith(";"))
+    if ($StringContent.EndsWith(';'))
     {
         $StringContent = $StringContent.Substring(0, ($StringContent.Length - 1))
     }
@@ -1152,11 +1142,13 @@ function Convert-CIMToLocaleSettings
 {
     [CmdletBinding()]
     [OutputType([System.Collections.ArrayList])]
-    Param(
+    param
+    (
         [parameter(Mandatory = $true)]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $localeSettings
     )
+
     $entry = [System.Collections.ArrayList]@()
     foreach ($localset in $localeSettings)
     {
@@ -1172,7 +1164,7 @@ function Convert-CIMToLocaleSettings
             }
             $settings += $settingEntry
         }
-        $localeEntries.Add("Settings", $settings)
+        $localeEntries.Add('Settings', $settings)
         [void]$entry.Add(($localeEntries | ConvertTo-Json))
         $localeEntries = @{ }
         $settings = @( )
@@ -1185,7 +1177,8 @@ function Test-AdvancedSettings
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-    param(
+    param
+    (
         [Parameter (Mandatory = $true)]
         $DesiredProperty,
 
@@ -1215,9 +1208,11 @@ function Test-LocaleSettings
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-    param(
+    param
+    (
         [Parameter (Mandatory = $true)]
         $DesiredProperty,
+
         [Parameter (Mandatory = $true)]
         $CurrentProperty
     )
@@ -1269,7 +1264,7 @@ function ConvertTo-AdvancedSettingsString
         $StringContent += "                    Value = '$($advancedSetting.Value.Replace("'", "''"))'`r`n"
         $StringContent += "                }`r`n"
     }
-    $StringContent += "            )"
+    $StringContent += '            )'
     return $StringContent
 }
 
@@ -1301,7 +1296,7 @@ function ConvertTo-LocaleSettingsString
         $StringContent += "                    )`r`n"
         $StringContent += "                }`r`n"
     }
-    $StringContent += "            )"
+    $StringContent += '            )'
     return $StringContent
 }
 
