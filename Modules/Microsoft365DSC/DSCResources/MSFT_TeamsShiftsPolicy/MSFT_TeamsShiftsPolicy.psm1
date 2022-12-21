@@ -58,7 +58,6 @@ function Get-TargetResource
         $CertificateThumbprint
     )
 
-    {
     New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters | Out-Null
 
