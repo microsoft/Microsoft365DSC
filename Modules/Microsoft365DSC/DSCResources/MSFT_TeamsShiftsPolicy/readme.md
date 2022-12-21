@@ -1,6 +1,6 @@
 
-# <ResourceFriendlyName>
+# TeamsShiftsPolicy
 
 ## Description
 
-This resource configures an <ResourceDescription>.
+This resource allows you to create a new TeamsShiftPolicy instance and set it's properties.

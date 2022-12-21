@@ -820,8 +820,21 @@ function New-M365DSCResource
         $templatePath = '.\Example.Template.ps1'
         Copy-Item -Path $templatePath -Destination $exampleFileFullPath -Force
 
+        $ensureSpacing = ""
+        for ($i = 0; $i -lt ($longuestParameterName - "Ensure".Length); $i++)
+        {
+            $ensureSpacing += " "
+        }
+
+        $credentialSpacing = ""
+        for ($i = 0; $i -lt ($longuestParameterName - "Credential".Length); $i++)
+        {
+            $credentialSpacing += " "
+        }
         Write-TokenReplacement -Token '<FakeValues>' -Value $fakeValuesString.Replace('#$#', '            ') -FilePath $exampleFileFullPath
         Write-TokenReplacement -Token '<ResourceName>' -Value $ResourceName -FilePath $exampleFileFullPath
+        Write-TokenReplacement -Token '<EnsureSpacing>' -Value $ensureSpacing -FilePath $exampleFileFullPath
+        Write-TokenReplacement -Token '<CredentialSpacing>' -Value $credentialSpacing -FilePath $exampleFileFullPath
         #endregion
     }
 }
