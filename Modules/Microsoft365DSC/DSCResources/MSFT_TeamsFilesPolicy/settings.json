@@ -1,0 +1,8 @@
+{
+    "resourceName": "TeamsFilesPolicy",
+    "description": "This resource configures an 
+New-CsTeamsFilesPolicy [-Identity] <string> [-NativeFileEntryPoints <string>] [-SPChannelFilesTab <string>] [-MsftInternalProcessingMode <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+.",
+    "permissions":[]
+
+}

@@ -2,27 +2,31 @@ using namespace System.Management.Automation.Language
 
 <#
 .Description
-This function lists all Graph or Exchange permissions required for the specified resources,
-both for reading and updating. With the parameters, you can specify which permissions you
-are interested in.
+This function lists all Graph, SharePoint or Exchange permissions required for the specified
+resources, both for reading/updating and Delegated/Applications. With the parameters, you can
+specify a specific subset of permissions, to be use with the Permissions parameter of
+Update-M365DSCAzureAdApplication.
 
 .Parameter ResourceNameList
 An array of resource names for which the permissions should be determined.
 
 .Parameter PermissionsType
-Specifies what type of Graph permissions need to get returned.
+Specifies what type of permissions need to get returned, Delegated or Application.
 
-.Parameter Source
+.Parameter AccessType
 Specifies the workload of the permissions that need to get returned.
 
 .Example
-Get-M365DSCCompiledPermissionList -ResourceNameList @('AADUSer', 'AADApplication') -Source 'Graph' -PermissionsType 'Delegated'
+Get-M365DSCCompiledPermissionList -ResourceNameList @('EXOAcceptedDomain')
 
 .Example
-Get-M365DSCCompiledPermissionList -ResourceNameList @('AADUSer', 'AADApplication') -Source 'Graph' -PermissionsType 'Application'
+Get-M365DSCCompiledPermissionList -ResourceNameList (Get-M365DSCAllResources)
 
 .Example
-Get-M365DSCCompiledPermissionList -ResourceNameList @('EXOAcceptedDomain') -Source 'Exchange'
+Get-M365DSCCompiledPermissionList -ResourceNameList (Get-M365DSCAllResources) -PermissionType 'Application' -AccessType 'Update'
+
+.Example
+Get-M365DSCCompiledPermissionList -ResourceNameList (Get-M365DSCAllResources) -PermissionType 'Delegated' -AccessType 'Read'
 
 .Functionality
 Public
@@ -38,38 +42,40 @@ function Get-M365DSCCompiledPermissionList
         $ResourceNameList,
 
         [Parameter()]
-        [ValidateSet('Delegated', 'Application')]
         [System.String]
-        $PermissionsType = 'Delegated',
+        [ValidateSet('Delegated', 'Application')]
+        $PermissionType,
 
         [Parameter()]
-        [ValidateSet('Exchange', 'Graph', 'SharePoint')]
         [System.String]
-        $Source = 'Graph'
+        [ValidateSet('Read', 'Update')]
+        $AccessType
     )
 
-    switch ($Source)
+    if (($PSBoundParameters.ContainsKey('PermissionType') -eq $true -and $PSBoundParameters.ContainsKey('AccessType') -eq $false))
     {
-        { $_ -in @('Graph', 'SharePoint') }
-        {
-            Write-Verbose -Message "Retrieving $Source $PermissionsType Permissions"
-            $results = @{
-                ReadPermissions   = @()
-                UpdatePermissions = @()
-            }
-        }
-        'Exchange'
-        {
-            Write-Verbose -Message "Retrieving Exchange Permissions"
-            $results = @{
-                RequiredRoles      = @()
-                RequiredRoleGroups = @()
-            }
-        }
+        throw 'You specified parameter PermissionType without AccessType. Please specify both parameters.'
     }
 
+    if (($PSBoundParameters.ContainsKey('PermissionType') -eq $false -and $PSBoundParameters.ContainsKey('AccessType') -eq $true))
+    {
+        throw 'You specified parameter AccessType without PermissionType. Please specify both parameters.'
+    }
+
+    $results = @{
+        Read               = @()
+        Update             = @()
+        RequiredRoles      = @()
+        RequiredRoleGroups = @()
+    }
+
+    $total = $ResourceNameList.Count
+    $count = 1
     foreach ($resourceName in $ResourceNameList)
     {
+        $percentage = ($count / $total) * 100
+        Write-Progress -Activity 'Retrieving required permissions' -PercentComplete $percentage -Status 'Processing resource' -CurrentOperation $resourceName
+
         Write-Verbose -Message "Processing $resourceName"
         $settingsFilePath = $null
         try
@@ -95,126 +101,218 @@ function Get-M365DSCCompiledPermissionList
                 continue
             }
 
-            switch ($Source)
+            # Graph permissions
+            if ($null -ne $resourceSettings.permissions.graph)
             {
-                'Graph'
-                {
-                    if ($null -ne $resourceSettings.permissions.graph)
-                    {
-                        # Update permissions
-                        foreach ($updatePermission in $resourceSettings.permissions.graph.$PermissionsType.update)
-                        {
-                            if (-not $results.UpdatePermissions.Contains($updatePermission.name))
-                            {
-                                Write-Verbose -Message "Found new Update permission {$($updatePermission.name)}"
-                                $results.UpdatePermissions += $updatePermission.name
-                            }
-                            else
-                            {
-                                Write-Verbose -Message "Update permission {$($updatePermission.name)} was already added"
-                            }
-                        }
+                Write-Verbose -Message '  Retrieving Graph permissions'
 
-                        # Read permissions
-                        foreach ($readPermission in $resourceSettings.permissions.graph.$PermissionsType.read)
-                        {
-                            if (-not $results.ReadPermissions.Contains($readPermission.name))
-                            {
-                                Write-Verbose -Message "Found new Read permission {$($readPermission.name)}"
-                                $results.ReadPermissions += $readPermission.name
-                            }
-                            else
-                            {
-                                Write-Verbose -Message "Read permission {$($readPermission.name)} was already added"
-                            }
-                        }
+                # Delegated Update permissions
+                Update-M365DSCPermissionsMatrix -Source 'Graph' `
+                    -PermissionType 'Delegated' `
+                    -AccessType 'Update' `
+                    -Matrix ([ref]$results) `
+                    -Settings ($resourceSettings)
+
+                # Application Update permissions
+                Update-M365DSCPermissionsMatrix -Source 'Graph' `
+                    -PermissionType 'Application' `
+                    -AccessType 'Update' `
+                    -Matrix ([ref]$results) `
+                    -Settings ($resourceSettings)
+
+                # Delegated Read permissions
+                Update-M365DSCPermissionsMatrix -Source 'Graph' `
+                    -PermissionType 'Delegated' `
+                    -AccessType 'Read' `
+                    -Matrix ([ref]$results) `
+                    -Settings ($resourceSettings)
+
+                # Application Read permissions
+                Update-M365DSCPermissionsMatrix -Source 'Graph' `
+                    -PermissionType 'Application' `
+                    -AccessType 'Read' `
+                    -Matrix ([ref]$results) `
+                    -Settings ($resourceSettings)
+            }
+            else
+            {
+                Write-Verbose "  No Graph node in settings.json for $resourceName."
+            }
+
+            # Exchange permissions
+            if ($null -ne $resourceSettings.permissions.exchange)
+            {
+                Write-Verbose -Message '  Retrieving Exchange permissions'
+                # Required Role
+                foreach ($requiredRole in $resourceSettings.permissions.exchange.requiredroles)
+                {
+                    if (-not $results.RequiredRoles.Contains($requiredRole))
+                    {
+                        Write-Verbose -Message "    Found new Required Role {$($requiredRole)}"
+                        $results.RequiredRoles += $requiredRole
                     }
                     else
                     {
-                        Write-Warning "Error in reading Graph permissions. Missing graph node in settings.json for $resourceName."
-                        continue
+                        Write-Verbose -Message "    Required Role {$($requiredRole)} was already added"
                     }
                 }
-                'Exchange'
-                {
-                    if ($null -ne $resourceSettings.permissions.exchange)
-                    {
-                        # Required Role
-                        foreach ($requiredRole in $resourceSettings.permissions.exchange.requiredroles)
-                        {
-                            if (-not $results.RequiredRoles.Contains($requiredRole))
-                            {
-                                Write-Verbose -Message "Found new Required Role {$($requiredRole)}"
-                                $results.RequiredRoles += $requiredRole
-                            }
-                            else
-                            {
-                                Write-Verbose -Message "Required Role {$($requiredRole)} was already added"
-                            }
-                        }
 
-                        # Required RoleGroups
-                        foreach ($requiredRoleGroup in $resourceSettings.permissions.exchange.requiredrolegroups)
-                        {
-                            if (-not $results.RequiredRoleGroups.Contains($requiredRoleGroup))
-                            {
-                                Write-Verbose -Message "Found new Required Role Group {$($requiredRoleGroup)}"
-                                $results.RequiredRoleGroups += $requiredRoleGroup
-                            }
-                            else
-                            {
-                                Write-Verbose -Message "Required Role Group {$($requiredRoleGroup)} was already added"
-                            }
-                        }
+                # Required RoleGroups
+                foreach ($requiredRoleGroup in $resourceSettings.permissions.exchange.requiredrolegroups)
+                {
+                    if (-not $results.RequiredRoleGroups.Contains($requiredRoleGroup))
+                    {
+                        Write-Verbose -Message "    Found new Required Role Group {$($requiredRoleGroup)}"
+                        $results.RequiredRoleGroups += $requiredRoleGroup
                     }
                     else
                     {
-                        Write-Warning "Error in reading Exchange permissions. Missing exchange node in settings.json."
-                        continue
+                        Write-Verbose -Message "    Required Role Group {$($requiredRoleGroup)} was already added"
                     }
                 }
-                'SharePoint'
-                {
-                    if ($null -ne $resourceSettings.permissions.sharepoint)
-                    {
-                        # Update permissions
-                        foreach ($updatePermission in $resourceSettings.permissions.sharepoint.$PermissionsType.update)
-                        {
-                            if (-not $results.UpdatePermissions.Contains($updatePermission.name))
-                            {
-                                Write-Verbose -Message "Found new Update permission {$($updatePermission.name)}"
-                                $results.UpdatePermissions += $updatePermission.name
-                            }
-                            else
-                            {
-                                Write-Verbose -Message "Update permission {$($updatePermission.name)} was already added"
-                            }
-                        }
 
-                        # Read permissions
-                        foreach ($readPermission in $resourceSettings.permissions.sharepoint.$PermissionsType.read)
-                        {
-                            if (-not $results.ReadPermissions.Contains($readPermission.name))
-                            {
-                                Write-Verbose -Message "Found new Read permission {$($readPermission.name)}"
-                                $results.ReadPermissions += $readPermission.name
-                            }
-                            else
-                            {
-                                Write-Verbose -Message "Read permission {$($readPermission.name)} was already added"
-                            }
+                $exchangeRead = $results.Read | Where-Object -FilterScript { $_.API -eq 'Exchange' -and $_.Permission.Name -eq 'Exchange.ManageAsApp' }
+                if ($null -eq $exchangeRead)
+                {
+                    $results.Read += @{
+                        API        = 'Exchange'
+                        Permission = @{
+                            Type = 'Application'
+                            Name = 'Exchange.ManageAsApp'
                         }
                     }
-                    else
-                    {
-                        Write-Warning "Error in reading SharePoint permissions. Missing sharepoint node in settings.json for $resourceName."
-                        continue
+                }
+
+                $exchangeUpdate = $results.Update | Where-Object -FilterScript { $_.API -eq 'Exchange' -and $_.Permission.Name -eq 'Exchange.ManageAsApp' }
+                if ($null -eq $exchangeUpdate)
+                {
+                    $results.Update += @{
+                        API        = 'Exchange'
+                        Permission = @{
+                            Type = 'Application'
+                            Name = 'Exchange.ManageAsApp'
+                        }
                     }
                 }
             }
+            else
+            {
+                Write-Verbose "  No Exchange node in settings.json for $resourceName."
+            }
+
+            # SharePoint permissions
+            if ($null -ne $resourceSettings.permissions.sharepoint)
+            {
+                Write-Verbose -Message '  Retrieving SharePoint permissions'
+
+                # Delegated Update permissions
+                Update-M365DSCPermissionsMatrix -Source 'SharePoint' `
+                    -PermissionType 'Delegated' `
+                    -AccessType 'Update' `
+                    -Matrix ([ref]$results) `
+                    -Settings ($resourceSettings)
+
+                # Application Update permissions
+                Update-M365DSCPermissionsMatrix -Source 'SharePoint' `
+                    -PermissionType 'Application' `
+                    -AccessType 'Update' `
+                    -Matrix ([ref]$results) `
+                    -Settings ($resourceSettings)
+
+                # Delegated Read permissions
+                Update-M365DSCPermissionsMatrix -Source 'SharePoint' `
+                    -PermissionType 'Delegated' `
+                    -AccessType 'Read' `
+                    -Matrix ([ref]$results) `
+                    -Settings ($resourceSettings)
+
+                # Application Read permissions
+                Update-M365DSCPermissionsMatrix -Source 'SharePoint' `
+                    -PermissionType 'Application' `
+                    -AccessType 'Read' `
+                    -Matrix ([ref]$results) `
+                    -Settings ($resourceSettings)
+            }
+            else
+            {
+                Write-Verbose "  No SharePoint node in settings.json for $resourceName."
+            }
+        }
+        $count++
+    }
+
+    if ($PSBoundParameters.ContainsKey('PermissionType'))
+    {
+        $results = $results.$AccessType | Where-Object -FilterScript { $_. Permission.Type -eq $PermissionType }
+        $results | ForEach-Object -Process {
+            $_.PermissionName = $_.Permission.Name
+            $_.Remove('Permission')
         }
     }
+
     return $results
+}
+
+<#
+.Description
+This function updates the inputted permissions matrix.
+It is generic code used in the Get-M365DSCCompiledPermissionList function.
+
+.Functionality
+Internal, Hidden
+#>
+function Update-M365DSCPermissionsMatrix
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Source,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('Delegated', 'Application')]
+        $PermissionType,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('Read', 'Update')]
+        $AccessType,
+
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        [ref]$Matrix,
+
+        [Parameter(Mandatory = $true)]
+        [PSCustomObject]
+        $Settings
+    )
+
+    foreach ($permission in $Settings.permissions.$Source.$PermissionType.$AccessType)
+    {
+        if ($permission.Name -ne 'NotSupported')
+        {
+            $matrixPermission = $results.$AccessType | Where-Object -FilterScript {
+                $_.API -eq $Source -and $_.Permission.Name -eq $permission.name -and $_.Permission.Type -eq $PermissionType
+            }
+
+            if ($null -eq $matrixPermission)
+            {
+                Write-Verbose -Message "    Found new $AccessType permission {$($permission.name)} for API {$Source}"
+                $results.$AccessType += @{
+                    API        = $Source
+                    Permission = @{
+                        Type = $PermissionType
+                        Name = $permission.name
+                    }
+                }
+            }
+            else
+            {
+                Write-Verbose -Message "    $AccessType permission {$($permission.name)} was already added for API {$Source}"
+            }
+        }
+    }
 }
 
 <#
@@ -268,36 +366,26 @@ function Update-M365DSCAllowedGraphScopes
     if ($All)
     {
         Write-Verbose -Message 'All parameter specified'
-        $dscResourcesRoot = Join-Path -Path $PSScriptRoot -ChildPath '..\DSCResources'
-        $resourceNames = (Get-ChildItem -Path $dscResourcesRoot -Directory).Name -replace "MSFT_", ''
-        $permissions = Get-M365DSCCompiledPermissionList -ResourceNameList $resourceNames -Source 'Graph' -PermissionsType 'Delegated'
+        $resourceNames = Get-M365DSCAllResources
     }
     else
     {
         if ($PSBoundParameters.ContainsKey('ResourceNameList') -eq $false)
         {
-            throw "You have to specify either the All or ResourceNameList parameter!"
+            throw 'You have to specify either the All or ResourceNameList parameter!'
         }
 
-        Write-Verbose -Message "Specified resources: $($ResourceNameList -join ", ")"
-        $permissions = Get-M365DSCCompiledPermissionList -ResourceNameList $ResourceNameList -Source 'Graph' -PermissionsType 'Delegated'
+        Write-Verbose -Message "Specified resources: $($ResourceNameList -join ', ')"
+        $resourceNames = $ResourceNameList
     }
 
-    if ($Type -eq 'Read')
-    {
-        Write-Verbose -Message 'Specified type: Read'
-        Write-Verbose -Message "Found permissions: $($permissions.ReadPermissions -join ", ")"
-        $params = @{
-            Scopes = $permissions.ReadPermissions
-        }
-    }
-    else
-    {
-        Write-Verbose -Message 'Specified type: Update'
-        Write-Verbose -Message "Found permissions: $($permissions.UpdatePermissions -join ", ")"
-        $params = @{
-            Scopes = $permissions.UpdatePermissions
-        }
+    Write-Verbose -Message "Specified type: $Type"
+    $results = Get-M365DSCCompiledPermissionList -ResourceNameList $resourceNames -PermissionType 'Delegated' -AccessType $Type
+    $permissions = ($results | Where-Object -FilterScript { $_.API -eq 'Graph' }).PermissionName
+
+    Write-Verbose -Message "Found permissions: $($permissions -join ', ')"
+    $params = @{
+        Scopes = $permissions
     }
 
     Write-Verbose -Message 'Connecting to MS Graph to update permissions'
@@ -471,20 +559,20 @@ function Update-M365DSCResourcesSettingsJSON
     [CmdletBinding()]
     param()
 
-    Write-Verbose "Determining DSCResources path"
+    Write-Verbose 'Determining DSCResources path'
     $dscResourcesRoot = Join-Path -Path $PSScriptRoot -ChildPath '..\DSCResources'
     Write-Verbose "  DSCResouces path: $dscResourcesRoot"
 
-    Write-Verbose "Reading Graph Cmdlet Permissions input file"
+    Write-Verbose 'Reading Graph Cmdlet Permissions input file'
     $graphCmdletPermissionsFile = Join-Path -Path $PSScriptRoot -ChildPath '..\Dependencies\GraphCmdletPermissions.csv'
-    $cmdletPermissions = Import-Csv -Path $graphCmdletPermissionsFile -Delimiter "," -Encoding UTF8
+    $cmdletPermissions = Import-Csv -Path $graphCmdletPermissionsFile -Delimiter ',' -Encoding UTF8
     Write-Verbose "  Input file path: $graphCmdletPermissionsFile"
 
-    Write-Verbose "Getting all psm1 files"
+    Write-Verbose 'Getting all psm1 files'
     $files = Get-ChildItem -Path "$dscResourcesRoot\*.psm1" -Recurse
     Write-Verbose "  Found $($files.Count) psm1 files"
 
-    $ignoredCmdlets = @("Get-MgContext")
+    $ignoredCmdlets = @('Get-MgContext')
 
     foreach ($file in $files)
     {
@@ -492,7 +580,7 @@ function Update-M365DSCResourcesSettingsJSON
         $delegatedUpdatePermissions = @()
         $applicationReadPermissions = @()
         $applicationUpdatePermissions = @()
-        if ($file -notlike "*Intune*")
+        if ($file -notlike '*Intune*')
         {
             Write-Verbose "Processing file: $($file.BaseName)"
 
@@ -502,7 +590,7 @@ function Update-M365DSCResourcesSettingsJSON
 
             $functions = $sb.Ast.FindAll({ $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] }, $true)
 
-            $functions = $functions | Where-Object { $_.Name -in ("Get-TargetResource", "Set-TargetResource") }
+            $functions = $functions | Where-Object { $_.Name -in ('Get-TargetResource', 'Set-TargetResource') }
 
             foreach ($function in $functions)
             {
@@ -519,8 +607,8 @@ function Update-M365DSCResourcesSettingsJSON
                 {
                     if ($cmdlet -notin $ignoredCmdlets)
                     {
-                        $delegatedFunctionPermissions += ($cmdletPermissions | Where-Object { $_.Cmdlet -eq $cmdlet }).DelegatedPermissions -split "/"
-                        $applicationFunctionPermissions += ($cmdletPermissions | Where-Object { $_.Cmdlet -eq $cmdlet }).ApplicationPermissions -split "/"
+                        $delegatedFunctionPermissions += ($cmdletPermissions | Where-Object { $_.Cmdlet -eq $cmdlet }).DelegatedPermissions -split '/'
+                        $applicationFunctionPermissions += ($cmdletPermissions | Where-Object { $_.Cmdlet -eq $cmdlet }).ApplicationPermissions -split '/'
                     }
                 }
                 $cleanDelegatedFunctionPermissions = $delegatedFunctionPermissions | Sort-Object | Select-Object -Unique
@@ -540,7 +628,7 @@ function Update-M365DSCResourcesSettingsJSON
                 {
                     switch ($function.Name)
                     {
-                        "Get-TargetResource"
+                        'Get-TargetResource'
                         {
                             $delegatedReadPermissions = @()
                             foreach ($item in $cleanDelegatedFunctionPermissions)
@@ -550,7 +638,7 @@ function Update-M365DSCResourcesSettingsJSON
                                 }
                             }
                         }
-                        "Set-TargetResource"
+                        'Set-TargetResource'
                         {
                             $delegatedUpdatePermissions = @()
                             foreach ($item in $cleanDelegatedFunctionPermissions)
@@ -567,7 +655,7 @@ function Update-M365DSCResourcesSettingsJSON
                 {
                     switch ($function.Name)
                     {
-                        "Get-TargetResource"
+                        'Get-TargetResource'
                         {
                             $applicationReadPermissions = @()
                             foreach ($item in $cleanApplicationFunctionPermissions)
@@ -577,7 +665,7 @@ function Update-M365DSCResourcesSettingsJSON
                                 }
                             }
                         }
-                        "Set-TargetResource"
+                        'Set-TargetResource'
                         {
                             $applicationUpdatePermissions = @()
                             foreach ($item in $cleanApplicationFunctionPermissions)
@@ -594,7 +682,7 @@ function Update-M365DSCResourcesSettingsJSON
             $settingsFile = Join-Path -Path $file.DirectoryName -ChildPath 'settings.json'
             if (Test-Path -Path $settingsFile)
             {
-                Write-Verbose "  Updating existing settings.json file"
+                Write-Verbose '  Updating existing settings.json file'
                 $settingsJson = Get-Content -Path $settingsFile -Raw
                 $settings = ConvertFrom-Json $settingsJson
 
@@ -647,10 +735,10 @@ function Update-M365DSCResourcesSettingsJSON
             }
             else
             {
-                Write-Verbose "    Creating new settings.json file"
+                Write-Verbose '    Creating new settings.json file'
                 $settings = [PSCustomObject]@{
                     resourceName = $file.BaseName -replace 'MSFT_'
-                    description  = ""
+                    description  = ''
                     permissions  = @{
                         graph = @{
                             delegated   = [PSCustomObject]@{
@@ -697,18 +785,18 @@ function Update-M365DSCExchangeResourcesSettingsJSON
         $UserPrincipalName
     )
 
-    Write-Verbose "Connecting to Exchange Online"
+    Write-Verbose 'Connecting to Exchange Online'
     if ($null -eq (Get-Command -Name Get-Mailbox -ErrorAction SilentlyContinue))
     {
         Import-Module ExchangeOnlineManagement
         Connect-ExchangeOnline -UserPrincipalName $UserPrincipalName
     }
 
-    Write-Verbose "Determining DSCResources path"
+    Write-Verbose 'Determining DSCResources path'
     $dscResourcesRoot = Join-Path -Path $PSScriptRoot -ChildPath '..\DSCResources'
     Write-Verbose "  DSCResouces path: $dscResourcesRoot"
 
-    Write-Verbose "Getting all psm1 files"
+    Write-Verbose 'Getting all psm1 files'
     $files = Get-ChildItem -Path "$dscResourcesRoot\MSFT_EXO*\*.psm1" -Recurse
     Write-Verbose "  Found $($files.Count) psm1 files"
 
@@ -722,7 +810,7 @@ function Update-M365DSCExchangeResourcesSettingsJSON
 
         $functions = $sb.Ast.FindAll({ $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] }, $true)
 
-        $functions = $functions | Where-Object { $_.Name -in ("Get-TargetResource", "Set-TargetResource") }
+        $functions = $functions | Where-Object { $_.Name -in ('Get-TargetResource', 'Set-TargetResource') }
 
         $roleGroups = @()
         $allRoles = @()
@@ -732,7 +820,7 @@ function Update-M365DSCExchangeResourcesSettingsJSON
 
             $functionCode = [ScriptBlock]::Create($function.Extent.Text)
             $tokens = [System.Management.Automation.PSParser]::Tokenize($functionCode, [ref]$errors)
-            $allCmdlets = $tokens | Where-Object { $_.Type -eq "Command" } | Select-Object -Property Content -Unique -ExpandProperty Content
+            $allCmdlets = $tokens | Where-Object { $_.Type -eq 'Command' } | Select-Object -Property Content -Unique -ExpandProperty Content
 
             foreach ($cmdlet in $allCmdlets)
             {
@@ -778,13 +866,13 @@ function Update-M365DSCExchangeResourcesSettingsJSON
             }
         }
 
-        Write-Verbose "  Required Roles      : $($allRoles -join ", ")"
-        Write-Verbose "  Required Role Groups: $($roleGroups -join ", ")"
+        Write-Verbose "  Required Roles      : $($allRoles -join ', ')"
+        Write-Verbose "  Required Role Groups: $($roleGroups -join ', ')"
 
         $settingsFile = Join-Path -Path $file.DirectoryName -ChildPath 'settings.json'
         if (Test-Path -Path $settingsFile)
         {
-            Write-Verbose "  Updating existing settings.json file"
+            Write-Verbose '  Updating existing settings.json file'
             $settingsJson = Get-Content -Path $settingsFile -Raw
             $settings = ConvertFrom-Json $settingsJson
 
@@ -817,10 +905,10 @@ function Update-M365DSCExchangeResourcesSettingsJSON
         }
         else
         {
-            Write-Verbose "    Creating new settings.json file"
+            Write-Verbose '    Creating new settings.json file'
             $settings = [PSCustomObject]@{
                 resourceName = $file.BaseName -replace 'MSFT_'
-                description  = ""
+                description  = ''
                 permissions  = [PSCustomObject]@{
                     graph    = [PSCustomObject]@{
                         delegated   = [PSCustomObject]@{
@@ -862,11 +950,11 @@ function Update-M365DSCSharePointResourcesSettingsJSON
     [CmdletBinding()]
     param ()
 
-    Write-Verbose "Determining DSCResources path"
+    Write-Verbose 'Determining DSCResources path'
     $dscResourcesRoot = Join-Path -Path $PSScriptRoot -ChildPath '..\DSCResources'
     Write-Verbose "  DSCResouces path: $dscResourcesRoot"
 
-    Write-Verbose "Getting all psm1 files"
+    Write-Verbose 'Getting all psm1 files'
     $files = Get-ChildItem -Path "$dscResourcesRoot\MSFT_SPO*\*.psm1" -Recurse
     Write-Verbose "  Found $($files.Count) psm1 files"
 
@@ -877,7 +965,7 @@ function Update-M365DSCSharePointResourcesSettingsJSON
         $settingsFile = Join-Path -Path $file.DirectoryName -ChildPath 'settings.json'
         if (Test-Path -Path $settingsFile)
         {
-            Write-Verbose "  Updating existing settings.json file"
+            Write-Verbose '  Updating existing settings.json file'
             $settingsJson = Get-Content -Path $settingsFile -Raw
             $settings = ConvertFrom-Json $settingsJson
 
@@ -1028,10 +1116,10 @@ function Update-M365DSCSharePointResourcesSettingsJSON
         }
         else
         {
-            Write-Verbose "    Creating new settings.json file"
+            Write-Verbose '    Creating new settings.json file'
             $settings = [PSCustomObject]@{
                 resourceName = $file.BaseName -replace 'MSFT_'
-                description  = ""
+                description  = ''
                 permissions  = [PSCustomObject]@{
                     graph      = [PSCustomObject]@{
                         delegated   = [PSCustomObject]@{
@@ -1171,28 +1259,28 @@ function Update-M365DSCAzureAdApplication
             $Type = 'Info'
         )
 
-        $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+        $timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
 
         switch ($Type)
         {
             'Error'
             {
                 $params = @{
-                    Object          = ("{0} - [ERROR] {1}" -f $timestamp, $Message)
+                    Object          = ('{0} - [ERROR] {1}' -f $timestamp, $Message)
                     ForegroundColor = 'Red'
                 }
             }
             'Warning'
             {
                 $params = @{
-                    Object          = ("{0} - [WARNING] {1}" -f $timestamp, $Message)
+                    Object          = ('{0} - [WARNING] {1}' -f $timestamp, $Message)
                     ForegroundColor = 'Yellow'
                 }
             }
             'Info'
             {
                 $params = @{
-                    Object          = ("{0} - {1}" -f $timestamp, $Message)
+                    Object          = ('{0} - {1}' -f $timestamp, $Message)
                     ForegroundColor = 'White'
                 }
             }
@@ -1201,44 +1289,44 @@ function Update-M365DSCAzureAdApplication
         Write-Host @params
     }
 
-    Write-LogEntry -Message "Checking specified parameters"
+    Write-LogEntry -Message 'Checking specified parameters'
     switch ($Type)
     {
         'Secret'
         {
-            Write-LogEntry -Message "  Using a Secret as credential"
+            Write-LogEntry -Message '  Using a Secret as credential'
         }
         'Certificate'
         {
-            Write-LogEntry -Message "  Using a Certificate as credential"
-            Write-LogEntry -Message " "
-            Write-LogEntry -Message "  Make sure your certificate has the following prerequisites:"
-            Write-LogEntry -Message "    KeySpec           : Signature"
-            Write-LogEntry -Message "    KeyLength         : 2048"
-            Write-LogEntry -Message "    KeyAlgorithm      : RSA"
-            Write-LogEntry -Message "    HashAlgorithm     : SHA256 or SHA1"
-            Write-LogEntry -Message "    Enhanced Key Uses : Client Authentication and Server Authentication"
-            Write-LogEntry -Message "    And the entire certificate chain is available!"
-            Write-LogEntry -Message " "
+            Write-LogEntry -Message '  Using a Certificate as credential'
+            Write-LogEntry -Message ' '
+            Write-LogEntry -Message '  Make sure your certificate has the following prerequisites:'
+            Write-LogEntry -Message '    KeySpec           : Signature'
+            Write-LogEntry -Message '    KeyLength         : 2048'
+            Write-LogEntry -Message '    KeyAlgorithm      : RSA'
+            Write-LogEntry -Message '    HashAlgorithm     : SHA256 or SHA1'
+            Write-LogEntry -Message '    Enhanced Key Uses : Client Authentication and Server Authentication'
+            Write-LogEntry -Message '    And the entire certificate chain is available!'
+            Write-LogEntry -Message ' '
 
-            if ($PSBoundParameters.ContainsKey("CertificatePath") -eq $false)
+            if ($PSBoundParameters.ContainsKey('CertificatePath') -eq $false)
             {
-                if ($PSBoundParameters.ContainsKey("CreateSelfSignedCertificate"))
+                if ($PSBoundParameters.ContainsKey('CreateSelfSignedCertificate'))
                 {
                     # CreateSelfSignedCertificate is specified, but CertificatePath is missing.
-                    Write-LogEntry -Message "You have to specify CertificatePath, when specifying the CreateSelfSignedCertificate parameter." -Type Error
+                    Write-LogEntry -Message 'You have to specify CertificatePath, when specifying the CreateSelfSignedCertificate parameter.' -Type Error
                     return
                 }
                 else
                 {
                     # Neither CertificatePath and CreateSelfSignedCertificate are specified.
-                    Write-LogEntry -Message "Certificate is specified as Type, but neither the CertificatePath or CreateSelfSignedCertificate parameters are specified." -Type Error
+                    Write-LogEntry -Message 'Certificate is specified as Type, but neither the CertificatePath or CreateSelfSignedCertificate parameters are specified.' -Type Error
                     return
                 }
             }
             else
             {
-                if ($PSBoundParameters.ContainsKey("CreateSelfSignedCertificate"))
+                if ($PSBoundParameters.ContainsKey('CreateSelfSignedCertificate'))
                 {
                     # CreateSelfSignedCertificate is specified and path specified in CertificatePath already exists.
                     if ((Test-Path -Path $CertificatePath) -eq $true)
@@ -1273,12 +1361,13 @@ function Update-M365DSCAzureAdApplication
         $context = Get-AzContext
     }
 
-    $graphSvcprincipal = Get-AzADServicePrincipal | Where-Object -FilterScript { $_.DisplayName -eq "Microsoft Graph" }
-    $spSvcprincipal = Get-AzADServicePrincipal | Where-Object -FilterScript { $_.DisplayName -eq "Office 365 SharePoint Online" }
-    $exSvcprincipal = Get-AzADServicePrincipal | Where-Object -FilterScript { $_.DisplayName -eq "Office 365 Exchange Online" }
+    $allPrincipals = Get-AzADServicePrincipal
+    $graphSvcprincipal = $allPrincipals | Where-Object -FilterScript { $_.DisplayName -eq 'Microsoft Graph' }
+    $spSvcprincipal = $allPrincipals | Where-Object -FilterScript { $_.DisplayName -eq 'Office 365 SharePoint Online' }
+    $exSvcprincipal = $allPrincipals | Where-Object -FilterScript { $_.DisplayName -eq 'Office 365 Exchange Online' }
 
-    Write-LogEntry " "
-    Write-LogEntry "Checking existance of AD Application"
+    Write-LogEntry ' '
+    Write-LogEntry 'Checking existance of AD Application'
     if (-not ($azureADApp = Get-AzADApplication -Filter "DisplayName eq '$($ApplicationName)'" -ErrorAction SilentlyContinue))
     {
         $azureADApp = New-AzADApplication -DisplayName $ApplicationName
@@ -1291,12 +1380,12 @@ function Update-M365DSCAzureAdApplication
 
     if ($null -ne $azureADApp)
     {
-        Write-LogEntry " "
-        Write-LogEntry "Checking app permissions"
+        Write-LogEntry ' '
+        Write-LogEntry 'Checking app permissions'
         $permissionsSet = $false
         foreach ($permission in $Permissions)
         {
-            if ($permission.Api -eq $null -or $permission.Api -notin @("Graph", "SharePoint", "Exchange"))
+            if ($permission.Api -eq $null -or $permission.Api -notin @('Graph', 'SharePoint', 'Exchange'))
             {
                 Write-LogEntry "Specified permission is invalid $(Convert-M365DscHashtableToString -Hashtable $permission)" -Type Warning
                 continue
@@ -1305,15 +1394,15 @@ function Update-M365DSCAzureAdApplication
 
             switch ($permission.Api)
             {
-                "Graph"
+                'Graph'
                 {
                     $svcprincipal = $graphSvcprincipal
                 }
-                "SharePoint"
+                'SharePoint'
                 {
                     $svcprincipal = $spSvcprincipal
                 }
-                "Exchange"
+                'Exchange'
                 {
                     $svcprincipal = $exSvcprincipal
                 }
@@ -1330,7 +1419,7 @@ function Update-M365DSCAzureAdApplication
             if ($null -eq (Get-AzADAppPermission -ObjectId $azureAdApp.Id | Where-Object { $_.Id -eq $appRole.Id }))
             {
                 $null = Add-AzADAppPermission -ObjectId $azureADApp.Id -ApiId $svcprincipal.AppId -PermissionId $appRole.Id -Type Role
-                Write-LogEntry "    Permission added to application"
+                Write-LogEntry '    Permission added to application'
                 $permissionsSet = $true
             }
             else
@@ -1341,15 +1430,15 @@ function Update-M365DSCAzureAdApplication
 
         if ($AdminConsent)
         {
-            Write-LogEntry " "
-            Write-LogEntry "Waiting 10 seconds for application creation"
-            Write-LogEntry "  ..."
+            Write-LogEntry ' '
+            Write-LogEntry 'Waiting 10 seconds for application creation'
+            Write-LogEntry '  ...'
             Start-Sleep -Seconds 10
 
-            Write-LogEntry " "
-            Write-LogEntry "Providing Admin Consent for application permissions"
+            Write-LogEntry ' '
+            Write-LogEntry 'Providing Admin Consent for application permissions'
             $token = [Microsoft.Azure.Commands.Common.Authentication.AzureSession]::Instance.AuthenticationFactory.Authenticate(
-                $context.Account, $context.Environment, $context.Tenant.Id, $null, "Never", $null, "74658136-14ec-4630-ad9b-26e160ff0fc6")
+                $context.Account, $context.Environment, $context.Tenant.Id, $null, 'Never', $null, '74658136-14ec-4630-ad9b-26e160ff0fc6')
 
             $headers = @{
                 'Authorization'          = 'Bearer ' + $token.AccessToken
@@ -1363,17 +1452,17 @@ function Update-M365DSCAzureAdApplication
             try
             {
                 $null = Invoke-RestMethod -Uri $url -Headers $headers -Method POST -ErrorAction Stop
-                Write-LogEntry "  Admin Consent for application permissions provided"
+                Write-LogEntry '  Admin Consent for application permissions provided'
             }
             catch
             {
-                Write-LogEntry "[ERROR] Error while providing consent to the requested permissions. Please make sure you provide consent via the Azure AD Admin Portal." -Type Error
+                Write-LogEntry '[ERROR] Error while providing consent to the requested permissions. Please make sure you provide consent via the Azure AD Admin Portal.' -Type Error
                 Write-LogEntry "Error details: $($_.Exception.Message)"
             }
         }
 
-        Write-LogEntry " "
-        Write-LogEntry "Checking app credentials"
+        Write-LogEntry ' '
+        Write-LogEntry 'Checking app credentials'
         $appCreds = Get-AzADAppCredential -ObjectId $azureADApp.Id
         $endDate = (Get-Date).AddMonths($MonthsValid)
         switch ($Type)
@@ -1388,20 +1477,20 @@ function Update-M365DSCAzureAdApplication
                 $createSecret = $false
                 if ($null -eq $passwordCreds)
                 {
-                    Write-LogEntry "  No app credentials found, creating new"
-                    Write-LogEntry "    Creating App Secret"
+                    Write-LogEntry '  No app credentials found, creating new'
+                    Write-LogEntry '    Creating App Secret'
                     $createSecret = $true
                 }
                 else
                 {
                     if ($CreateNewSecret)
                     {
-                        Write-LogEntry "  Existing app credentials found, but CreateNewSecret specified. Creating new secret!"
+                        Write-LogEntry '  Existing app credentials found, but CreateNewSecret specified. Creating new secret!'
                         $createSecret = $true
                     }
                     else
                     {
-                        Write-LogEntry "  Existing app credentials found, but CreateNewSecret not specified. Please use an existing secret!"
+                        Write-LogEntry '  Existing app credentials found, but CreateNewSecret not specified. Please use an existing secret!'
                     }
                 }
 
@@ -1419,37 +1508,37 @@ function Update-M365DSCAzureAdApplication
                     $_ -is [Microsoft.Azure.PowerShell.Cmdlets.Resources.MSGraph.Models.ApiV10.MicrosoftGraphKeyCredential]
                 }
 
-                if ($PSBoundParameters.ContainsKey("CertificatePath"))
+                if ($PSBoundParameters.ContainsKey('CertificatePath'))
                 {
                     $cerCert = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Certificate2 -ArgumentList $CertificatePath
                 }
 
                 if ($null -eq $certCreds)
                 {
-                    Write-LogEntry "  Uploading App Certificate"
+                    Write-LogEntry '  Uploading App Certificate'
                     $createCertificate = $true
                 }
                 else
                 {
-                    if ($PSBoundParameters.ContainsKey("CreateSelfSignedCertificate") -eq $false)
+                    if ($PSBoundParameters.ContainsKey('CreateSelfSignedCertificate') -eq $false)
                     {
                         Write-LogEntry "  CertificatePath specified '$CertificatePath', using that certificate"
                         $certCred = $certCreds | Where-Object { $_.DisplayName -eq $cerCert.Subject -and $_.EndDateTime -eq $cerCert.NotAfter.ToUniversalTime() }
                         if ($null -eq $certCred)
                         {
-                            Write-LogEntry "    Specified certificate does not exist in the app, uploading now"
+                            Write-LogEntry '    Specified certificate does not exist in the app, uploading now'
                             $createCertificate = $true
                         }
                         else
                         {
-                            Write-LogEntry "    Specified certificate already exists in the app, continuing"
+                            Write-LogEntry '    Specified certificate already exists in the app, continuing'
                         }
 
                     }
                     else
                     {
-                        Write-LogEntry "Parameter CreateSelfSignedCertificate has been specified, but a Certificate has already been added to the application." -Type Warning
-                        Write-LogEntry "Ignoring creating a new self signed certificate." -Type Warning
+                        Write-LogEntry 'Parameter CreateSelfSignedCertificate has been specified, but a Certificate has already been added to the application.' -Type Warning
+                        Write-LogEntry 'Ignoring creating a new self signed certificate.' -Type Warning
                     }
                 }
 
@@ -1457,8 +1546,8 @@ function Update-M365DSCAzureAdApplication
                 {
                     if ($CreateSelfSignedCertificate)
                     {
-                        Write-LogEntry "    CreateSelfSignedCertificate specified, generating new Self Signed Certificate"
-                        $cerCert = New-SelfSignedCertificate -CertStoreLocation "Cert:\CurrentUser\My" `
+                        Write-LogEntry '    CreateSelfSignedCertificate specified, generating new Self Signed Certificate'
+                        $cerCert = New-SelfSignedCertificate -CertStoreLocation 'Cert:\CurrentUser\My' `
                             -Subject "CN=$ApplicationName" `
                             -KeySpec Signature `
                             -NotAfter $endDate `
@@ -1477,20 +1566,20 @@ function Update-M365DSCAzureAdApplication
             }
         }
 
-        Write-LogEntry " "
+        Write-LogEntry ' '
         Write-LogEntry "Application Id: $($azureADapp.AppId)"
         Write-LogEntry "Tenant Id     : $($context.Tenant)"
 
         if ($null -ne $appCred)
         {
             Write-LogEntry "Secret        : $($appCred.SecretText)"
-            Write-LogEntry " "
-            Write-LogEntry "IMPORTANT: A new secret has been created. This is only displayed once: Make sure you store this information!"
+            Write-LogEntry ' '
+            Write-LogEntry 'IMPORTANT: A new secret has been created. This is only displayed once: Make sure you store this information!'
         }
 
-        Write-LogEntry " "
-        Write-LogEntry "NOTE: Make sure you add the application to the required Microsoft 365 (e.g. Global Admin) or Exchange (e.g. Organization Management) role groups as well!"
-        Write-LogEntry "      See the documentation for any required permissions."
+        Write-LogEntry ' '
+        Write-LogEntry 'NOTE: Make sure you add the application to the required Microsoft 365 (e.g. Global Admin) or Exchange (e.g. Organization Management) role groups as well!'
+        Write-LogEntry '      See the documentation for any required permissions.'
     }
 }
 

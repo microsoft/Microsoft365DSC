@@ -91,9 +91,9 @@ function Get-TargetResource
     {
         try
         {
-            if ($null -ne $Id -or $Id -ne '')
+            if (($null -ne $Id) -and ($Id -ne ''))
             {
-                $AADRoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -Id $Id
+                $AADRoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -Filter "Id eq '$($Id)'"
             }
         }
         catch

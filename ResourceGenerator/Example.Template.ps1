@@ -8,23 +8,14 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credentals
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
-        AADGroup 'MyGroups'
-        {
-            DisplayName     = "DSCGroup"
-            Description     = "Microsoft DSC Group"
-            SecurityEnabled = $True
-            MailEnabled     = $True
-            GroupTypes      = @("Unified")
-            MailNickname    = "M365DSC"
-            Visibility      = "Private"
-            Ensure          = "Present"
-            Credential      = $credentals
+        <ResourceName> 'Example'
+        {<FakeValues>
         }
     }
 }

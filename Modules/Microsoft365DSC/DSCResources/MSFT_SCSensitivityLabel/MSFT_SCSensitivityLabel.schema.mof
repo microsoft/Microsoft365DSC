@@ -43,7 +43,7 @@ class MSFT_SCSensitivityLabel : OMI_BaseResource
     [Write, Description("The ApplyWaterMarkingFontSize parameter specifies the font size (in points) of the watermark text.")] SInt32 ApplyWaterMarkingFontSize;
     [Write, Description("The ApplyContentMarkingFooterAlignment parameter specifies the header alignment."), ValueMap{"Horizontal","Diagonal"}, Values{"Horizontal","Diagonal"}] String ApplyWaterMarkingLayout;
     [Write, Description("The ApplyWaterMarkingText parameter specifies the watermark text. If the value contains spaces, enclose the value in quotation marks.")] String ApplyWaterMarkingText;
-    [Write, Description("The EncryptionAipTemplateScopes parameter specifies that the label is still published and usable in the AIP classic client.")] String EncryptionAipTemplateScopes;
+    [Write, Description("The EncryptionAipTemplateScopes parameter specifies that the label is still published and usable in the AIP classic client. Once set, this parameter cannot be updated.")] String EncryptionAipTemplateScopes;
     [Write, Description("The EncryptionContentExpiredOnDateInDaysOrNever parameter specifies when the encrypted content expires. Valid values are integer or never.")] String EncryptionContentExpiredOnDateInDaysOrNever;
     [Write, Description("The EncryptionDoNotForward parameter specifies whether the Do Not Forward template is applied.")] Boolean EncryptionDoNotForward;
     [Write, Description("The EncryptionEnabled parameter specifies whether encryption in enabled.")] Boolean EncryptionEnabled;

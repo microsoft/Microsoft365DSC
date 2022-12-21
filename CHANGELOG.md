@@ -1,5 +1,42 @@
 # Change log for Microsoft365DSC
 
+# 1.22.1221.1
+
+* AADGroup
+  * Extraction no longer exports Distribution List or mail enabled security list since these are not supported by the Microsoft Graph API.
+    FIXES [#2587](https://github.com/microsoft/Microsoft365DSC/issues/2587)
+* EXOMailContact
+  * Ensures all results are returned from the Export scenario. Currently limited at 1,000 results.
+    FIXES [#2672](https://github.com/microsoft/Microsoft365DSC/issues/2672)
+    FIXES [#2673](https://github.com/microsoft/Microsoft365DSC/issues/2672)
+* EXOManagementRoleAssignment
+  * Force refresh permissions after the Set-TargetResource is called to ensure the correct cmdlets are loaded in the session.
+    FIXES [#2523](https://github.com/microsoft/Microsoft365DSC/issues/2523)
+* SCSensitivityLabel
+  * Removed the EncryptionAipTemplateScopes parameter from being evaluated in the Test and removed it from the update scenario in the Set.
+    FIXES [#2205](https://github.com/microsoft/Microsoft365DSC/issues/2205)
+* SCProtectionAlert
+  * Initial Release
+* TeamsFilesPolicy
+  * Initial Release
+* TeamsIPPhonePolicy
+  * Initial Release
+* TeamsShiftsPolicy
+  * Initial Release
+* MISC
+  * Fixed a typo in the reporting logic that caused issue evaluating certain resources in the NEw-M365DSCDelaaReport function
+    FIXES [#2685](https://github.com/microsoft/Microsoft365DSC/issues/2685)
+  * Added support for the ExcludedProperties parameter in the Assert-M365DSCBlueprint function.
+    FIXES [#2671](https://github.com/microsoft/Microsoft365DSC/issues/2671)
+  * Updated Get-M365DSCCompiledPermissionList to output all permissions consistently.
+    It can now also be used as input for Update-M365DscAzureAdApplication.
+  * Fixes issue where the wrong parameter is being passed to the Erro log function.
+    FIXES [#2682](https://github.com/microsoft/Microsoft365DSC/issues/2682)
+  * Updated automatic website documentation generation
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.19.0;
+  * Updated MSCloudLoginAssistant to version 1.0.101;
+
 # 1.22.1214.1
 
 * AADEntitlementManagementAccessPackageCatalogResource

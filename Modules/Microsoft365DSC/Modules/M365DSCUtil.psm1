@@ -270,7 +270,7 @@ function New-EXOSafeAttachmentRule
     }
     catch
     {
-       Write-M365DSCLogEvent -Message $_ -EventSource $($MyInvocation.MyCommand.Source) -TenantId $tenantid -Credential $Credential
+        Write-M365DSCLogEvent -Message $_ -EventSource $($MyInvocation.MyCommand.Source) -TenantId $tenantid -Credential $Credential
     }
 }
 
@@ -2283,6 +2283,9 @@ Specifies the credentials that will be used for authentication.
 .Parameter HeaderFilePath
 Specifies that file that contains a custom header for the report.
 
+.Parameter ExcludedProperties
+Specifies the name of parameters that should not be assessed as part of the report. The names will speficied will apply to all resources where they are encountered.
+
 .Example
 Assert-M365DSCBlueprint -BluePrintUrl 'C:\DS\blueprint.m365' -OutputReportPath 'C:\DSC\BlueprintReport.html'
 
@@ -2315,7 +2318,11 @@ function Assert-M365DSCBlueprint
         [Parameter()]
         [System.String]
         [ValidateSet('HTML', 'JSON')]
-        $Type = 'HTML'
+        $Type = 'HTML',
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedProperties
     )
     $InformationPreference = 'SilentlyContinue'
     $WarningPreference = 'SilentlyContinue'
@@ -2399,7 +2406,8 @@ function Assert-M365DSCBlueprint
             -DriftOnly:$true `
             -IsBlueprintAssessment:$true `
             -HeaderFilePath $HeaderFilePath `
-            -Type $Type
+            -Type $Type `
+            -ExcludedProperties $ExcludedProperties
     }
     else
     {
@@ -3333,9 +3341,7 @@ function Get-M365DSCAuthenticationMode
 <#
 .Description
 This function creates Markdown documentation of all public M365DSC cmdlets
-
-.Parameter OutputPath
-Specifies the path to where the generated Markdown files should be saved.
+and places these in the correct location of the docs folder.
 
 .Functionality
 Internal
@@ -3343,32 +3349,16 @@ Internal
 function New-M365DSCCmdletDocumentation
 {
     param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $OutputPath,
+    ()
 
-        [Parameter()]
-        [System.String]
-        $ModulePath
-    )
+    $cmdletDocsRoot = Join-Path -Path $PSScriptRoot -ChildPath '..\..\..\docs\docs\user-guide\cmdlets'
 
-    if ($null -eq $ModulePath)
+    if ((Test-Path -Path $cmdletDocsRoot) -eq $false)
     {
-        Import-Module Microsoft365Dsc -Force
-    }
-    else
-    {
-        Get-Module Microsoft365DSC -ErrorAction SilentlyContinue | Remove-Module -ErrorAction SilentlyContinue
-        Import-Module $ModulePath -Force
+        $null = New-Item -Path $cmdletDocsRoot -ItemType Directory
     }
 
-    if ((Test-Path -Path $OutputPath) -eq $false)
-    {
-        $null = New-Item -Path $OutputPath -ItemType Directory
-    }
-
-    $filesInFolder = Get-ChildItem -Path $OutputPath
+    $filesInFolder = Get-ChildItem -Path $cmdletDocsRoot
     if ($filesInFolder.Count -ne 0)
     {
         Remove-Item -Path $filesInFolder.FullName -Confirm:$false
@@ -3471,7 +3461,7 @@ function New-M365DSCCmdletDocumentation
                 }
             }
 
-            $savePath = Join-Path -Path $OutputPath -ChildPath "$commandName.md"
+            $savePath = Join-Path -Path $cmdletDocsRoot -ChildPath "$commandName.md"
             $null = Out-File `
                 -InputObject ($output.ToString() -replace '\r?\n', "`r`n") `
                 -FilePath $savePath `
@@ -3645,7 +3635,7 @@ function Test-M365DSCModuleValidity
 
     if ('AzureAutomation/' -eq $env:AZUREPS_HOST_ENVIRONMENT)
     {
-        $message = 'Skipping check for newer version of Microsoft 365 DSC due to Azure Automation Environment restrictions.'
+        $message = 'Skipping check for newer version of Microsoft365DSC due to Azure Automation Environment restrictions.'
         Write-Verbose -Message $message
         return
     }
@@ -3693,7 +3683,7 @@ This function writes messages and adds M365DSCEvents to Eventlog
 Write-M365DSCLogEvent -Message $_ -EventSource $($MyInvocation.MyCommand.Source) -TenantId $tenantid -Credential $Credential
 
 .Functionality
-Public
+Internal
 #>
 function Write-M365DSCLogEvent
 {
@@ -3706,7 +3696,7 @@ function Write-M365DSCLogEvent
 
         [Parameter()]
         [System.String]
-        $EventSource = "M365DSC",
+        $EventSource = 'M365DSC',
 
         [Parameter()]
         [System.Uint32]
@@ -3725,18 +3715,23 @@ function Write-M365DSCLogEvent
         [PSCredential]
         $Credential
     )
-    try {
+
+    try
+    {
         Write-Verbose -Message $Message
         $tenantIdValue = ''
-        if (-not [System.String]::IsNullOrEmpty($TenantId)) {
+        if (-not [System.String]::IsNullOrEmpty($TenantId))
+        {
             $tenantIdValue = $TenantId
         }
-        elseif ($null -ne $Credential) {
+        elseif ($null -ne $Credential)
+        {
             $tenantIdValue = $Credential.UserName.Split('@')[1]
         }
         Add-M365DSCEvent -Message $Message -EntryType $EventEntryType -EventID $EventID -Source $EventSource -TenantId $tenantIdValue
     }
-    catch {
+    catch
+    {
         Write-Verbose -Message $_
     }
     return $nullReturn
