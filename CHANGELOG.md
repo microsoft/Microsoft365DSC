@@ -15,6 +15,8 @@
 * SCSensitivityLabel
   * Removed the EncryptionAipTemplateScopes parameter from being evaluated in the Test and removed it from the update scenario in the Set.
     FIXES [#2205](https://github.com/microsoft/Microsoft365DSC/issues/2205)
+* TeamsFilesPolicy
+  * Initial Release
 * TeamsShiftsPolicy
   * Initial Release
 * MISC
