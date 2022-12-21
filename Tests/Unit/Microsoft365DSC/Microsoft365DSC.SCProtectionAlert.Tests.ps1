@@ -69,7 +69,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts
-        Context -Name "Protection Alert doesn't already exists but should" -Fixture {
+        Context -Name "Protection Alert doesn't exist but should exist" -Fixture {
             BeforeAll {
                 $testParams = @{
                     AggregationType         = "None";
@@ -109,7 +109,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
 
-        Context -Name 'Protection Alert already exists but should be changed' -Fixture {
+        Context -Name 'Protection Alert alert exists but with wrong parameters' -Fixture {
             BeforeAll {
                 $testParams = @{
                     AggregationType         = "None";
@@ -162,7 +162,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'Protection Alert already exists but should not' -Fixture {
+        Context -Name 'Protection Alert exists but should not exist' -Fixture {
             BeforeAll {
                 $testParams = @{
                     AggregationType         = "None";
@@ -212,6 +212,37 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should update from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Remove-ProtectionAlert -Exactly 1
+            }
+        }
+
+        Context -Name 'ReverseDSC Tests' -Fixture {
+            BeforeAll {
+                $Global:CurrentModeIsExport = $true
+                $testParams = @{
+                    Credential = $Credential
+                }
+
+                Mock -CommandName Get-ProtectionAlert -MockWith {
+                    return @{
+                        AggregationType         = "None";
+                        Category                = "ThreatManagement";
+                        Comment                 = "Other Comment";
+                        IsSystemRule            = $False;
+                        Name                    = "Suspicious email sending patterns detected";
+                        NotificationEnabled     = $False;
+                        NotifyUser              = @("other.alert@contoso.onmicrosoft.com");
+                        NotifyUserOnFilterMatch = $False;
+                        Operation               = @("CompromisedWarningAccount");
+                        Scenario                = "AuditProtectionAlert";
+                        Severity                = "Medium";
+                        StreamType              = "Activity";
+                        ThreatType              = "Activity";
+                    }
+                }
+            }
+
+            It 'Should Reverse Engineer resource from the Export method' {
+                Export-TargetResource @testParams
             }
         }
     }
