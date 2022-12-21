@@ -17,9 +17,13 @@
     FIXES [#2205](https://github.com/microsoft/Microsoft365DSC/issues/2205)
 * TeamsFilesPolicy
   * Initial Release
+* TeamsIPPhonePolicy
+  * Initial Release
 * TeamsShiftsPolicy
   * Initial Release
 * MISC
+  * Fixed a typo in the reporting logic that caused issue evaluating certain resources in the NEw-M365DSCDelaaReport function
+    FIXES [#2685](https://github.com/microsoft/Microsoft365DSC/issues/2685)
   * Added support for the ExcludedProperties parameter in the Assert-M365DSCBlueprint function.
     FIXES [#2671](https://github.com/microsoft/Microsoft365DSC/issues/2671)
   * Updated Get-M365DSCCompiledPermissionList to output all permissions consistently.
