@@ -58,15 +58,9 @@ function Get-TargetResource
         $CertificateThumbprint
     )
 
-    try
     {
-        New-M365DSCConnection -Workload 'MicrosoftTeams' `
-            -InboundParameters $PSBoundParameters | Out-Null
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-    }
+    New-M365DSCConnection -Workload 'MicrosoftTeams' `
+        -InboundParameters $PSBoundParameters | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -179,15 +173,8 @@ function Set-TargetResource
         $CertificateThumbprint
     )
 
-    try
-    {
-        New-M365DSCConnection -Workload 'MicrosoftTeams' `
-            -InboundParameters $PSBoundParameters | Out-Null
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-    }
+    New-M365DSCConnection -Workload 'MicrosoftTeams' `
+        -InboundParameters $PSBoundParameters | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -248,12 +235,12 @@ function Set-TargetResource
             }
         }
 
-        Update-CsTeamsShiftsPolicy @UpdateParameters | Out-Null
+        Set-CsTeamsShiftsPolicy @UpdateParameters | Out-Null
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing {$Identity}"
-        <RemoveCmdLetName> -Identity $currentInstance.Identity
+        Remove-CsTeamsShiftsPolicy -Identity $currentInstance.Identity
     }
 }
 

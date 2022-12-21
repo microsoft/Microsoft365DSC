@@ -1,6 +1,6 @@
 {
-    "resourceName": "<ResourceFriendlyName>",
-    "description": "This resource configures an <ResourceDescription>.",
-    "permissions":<ResourcePermissions>
+    "resourceName": "TeamsShiftsPolicy",
+    "description": "This resource configures an This resource allows you to create a new TeamsShiftPolicy instance and set it's properties..",
+    "permissions":[]
 
 }
