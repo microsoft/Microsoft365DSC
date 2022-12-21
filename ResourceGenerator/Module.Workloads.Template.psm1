@@ -7,7 +7,6 @@ function Get-TargetResource
 <ParameterBlock>
     )
 
-    {
     New-M365DSCConnection -Workload '<#Workload#>' `
         -InboundParameters $PSBoundParameters | Out-Null
 
