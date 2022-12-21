@@ -7,15 +7,9 @@ function Get-TargetResource
 <ParameterBlock>
     )
 
-    try
     {
-        New-M365DSCConnection -Workload '<#Workload#>' `
-            -InboundParameters $PSBoundParameters | Out-Null
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-    }
+    New-M365DSCConnection -Workload '<#Workload#>' `
+        -InboundParameters $PSBoundParameters | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -64,15 +58,8 @@ function Set-TargetResource
 <ParameterBlock>
     )
 
-    try
-    {
-        New-M365DSCConnection -Workload '<#Workload#>' `
-            -InboundParameters $PSBoundParameters | Out-Null
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-    }
+    New-M365DSCConnection -Workload '<#Workload#>' `
+        -InboundParameters $PSBoundParameters | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
