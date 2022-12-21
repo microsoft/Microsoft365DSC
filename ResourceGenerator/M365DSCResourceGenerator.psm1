@@ -814,27 +814,27 @@ function New-M365DSCResource
         #endregion
 
         #region Generate Examples
+        $exportPath = Join-Path -Path $env:temp -ChildPath $ResourceName
+        Export-M365DSCConfiguration -Credential $Credential `
+            -Components $ResourceName -Path $exportPath `
+            -FileName "$ResourceName.ps1" `
+            -ConfigurationName 'Example' | Out-Null
+
+        $exportedFilePath = Join-Path -Path $exportPath -ChildPath "$ResourceName.ps1"
+        $exportContent = Get-Content $exportedFilePath -Raw
+        $start = $exportContent.IndexOf("`r`n        $ResourceName ")
+        $end = $exportContent.IndexOf("`r`n        }", $start)
+        $start = $exportContent.IndexOf("{", $start) + 1
+        $exampleContent = $exportContent.Substring($start, $end-$start)
+
         $exampleFileFullPath = "$ExampleFilePath\$ResourceName\1-$ResourceName-Example.psm1"
         $folderPath = "$ExampleFilePath\$ResourceName"
         New-Item $folderPath -ItemType Directory -Force | Out-Null
         $templatePath = '.\Example.Template.ps1'
         Copy-Item -Path $templatePath -Destination $exampleFileFullPath -Force
 
-        $ensureSpacing = ""
-        for ($i = 0; $i -lt ($longuestParameterName - "Ensure".Length); $i++)
-        {
-            $ensureSpacing += " "
-        }
-
-        $credentialSpacing = ""
-        for ($i = 0; $i -lt ($longuestParameterName - "Credential".Length); $i++)
-        {
-            $credentialSpacing += " "
-        }
-        Write-TokenReplacement -Token '<FakeValues>' -Value $fakeValuesString.Replace('#$#', '            ') -FilePath $exampleFileFullPath
+        Write-TokenReplacement -Token '<FakeValues>' -Value $exampleContent -FilePath $exampleFileFullPath
         Write-TokenReplacement -Token '<ResourceName>' -Value $ResourceName -FilePath $exampleFileFullPath
-        Write-TokenReplacement -Token '<EnsureSpacing>' -Value $ensureSpacing -FilePath $exampleFileFullPath
-        Write-TokenReplacement -Token '<CredentialSpacing>' -Value $credentialSpacing -FilePath $exampleFileFullPath
         #endregion
     }
 }

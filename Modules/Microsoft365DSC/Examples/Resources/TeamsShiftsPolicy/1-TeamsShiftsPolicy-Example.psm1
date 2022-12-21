@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credentials
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -18,13 +18,14 @@ Configuration Example
         {
             AccessGracePeriodMinutes       = 15;
             AccessType                     = "UnrestrictedAccess_TeamsApp";
+            Credential                     = $Credscredential;
             EnableScheduleOwnerPermissions = $False;
             EnableShiftPresence            = $False;
+            Ensure                         = "Present";
             Identity                       = "Global";
             ShiftNoticeFrequency           = "Never";
+            ShiftNoticeMessageCustom       = "";
             ShiftNoticeMessageType         = "DefaultMessage";
-            Ensure                         = "Present"
-            Credential                     = $credentials
         }
     }
 }
