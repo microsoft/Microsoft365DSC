@@ -183,6 +183,7 @@ function Get-TargetResource
                 AggregationType                                             = $AlertObject.AggregationType
                 Category                                                    = $AlertObject.Category
                 Comment                                                     = $AlertObject.Comment
+                Credential                                                  = $Credential
                 Disabled                                                    = $AlertObject.Disabled
                 Filter                                                      = $AlertObject.Filter
                 IsSystemRule                                                = $AlertObject.IsSystemRule
@@ -223,7 +224,6 @@ function Get-TargetResource
         return $nullReturn
     }
 }
-
 function Set-TargetResource
 {
 
@@ -381,7 +381,8 @@ function Set-TargetResource
 
     $CurrentAlert = Get-TargetResource @PSBoundParameters
 
-    if ($CurrentAlert.IsSystemRule) {
+    if ($CurrentAlert.IsSystemRule)
+    {
         Write-Verbose "Amending or creating a 'SystemRule' is currently not supported. "
     }
     elseif (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentAlert.Ensure))
@@ -394,7 +395,6 @@ function Set-TargetResource
         $CreationParams.Remove('StreamType')
         $CreationParams.Remove('TagFilter')
         $CreationParams.Remove('UserTags')
-
 
         New-ProtectionAlert @CreationParams
     }
