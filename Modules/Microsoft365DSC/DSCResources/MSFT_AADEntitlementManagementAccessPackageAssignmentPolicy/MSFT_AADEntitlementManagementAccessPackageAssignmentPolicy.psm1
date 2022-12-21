@@ -119,7 +119,7 @@ function Get-TargetResource
         $getValue = $null
         $getValue = Get-MgEntitlementManagementAccessPackageAssignmentPolicy `
             -AccessPackageAssignmentPolicyId $id `
-            -ExpandProperty CustomExtensionHandlers `
+            -ExpandProperty "customExtensionHandlers(`$expand=customExtension)" `
             -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
@@ -127,7 +127,7 @@ function Get-TargetResource
             Write-Verbose -Message "The access package assignment policy with id {$id} was not found"
             $getValue = Get-MgEntitlementManagementAccessPackageAssignmentPolicy `
                 -DisplayNameEq $DisplayName `
-                -ExpandProperty CustomExtensionHandlers `
+                -ExpandProperty "customExtensionHandlers(`$expand=customExtension)" `
                 -ErrorAction SilentlyContinue
         }
 
@@ -139,118 +139,156 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found access package assignment policy with id {$($getValue.Id)} and DisplayName {$DisplayName}"
 
+        #region Format AccessReviewSettings
         $formattedAccessReviewSettings=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.AccessReviewSettings
-        if ($null -ne $getValue.AccessReviewSettings.StartDateTime )
+        if($null -ne $formattedAccessReviewSettings)
         {
-            #$formattedAccessReviewSettings.StartDateTime=$getValue.AccessReviewSettings.StartDateTime.ToString()
+            $formattedAccessReviewSettings.remove('additionalProperties')
         }
-        if ($null -ne $getValue.AccessReviewSettings.Reviewers -and  $getValue.AccessReviewSettings.Reviewers.count -gt 0 )
+        if ($null -ne $formattedAccessReviewSettings.Reviewers -and  $formattedAccessReviewSettings.Reviewers.count -gt 0 )
         {
-            $formattedParameters=@()
-            foreach($setting in $getValue.AccessReviewSettings.Reviewers)
+            foreach($setting in $formattedAccessReviewSettings.Reviewers)
             {
-                $parameter=@{
-                    odataType=$setting.AdditionalProperties."@odata.type"
-                    IsBackup=$setting.IsBackup
-                }
+                $setting.add('odataType',$setting.AdditionalProperties."@odata.type")
                 if(-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
                 {
-                    $parameter.add('Id',$setting.AdditionalProperties.id)
+                    $setting.add('Id',$setting.AdditionalProperties.id)
                 }
                 if(-not [String]::isNullOrEmpty($setting.AdditionalProperties.managerLevel))
                 {
-                    $parameter.add('ManagerLevel',$setting.AdditionalProperties.managerLevel)
+                    $setting.add('ManagerLevel',$setting.AdditionalProperties.managerLevel)
                 }
-                $formattedParameters+=$parameter
+                $setting.remove('additionalProperties')
             }
-            $formattedAccessReviewSettings.Reviewers=$formattedParameters
         }
+        #endregion
 
+        #region Format RequestApprovalSettings
         $formattedRequestApprovalSettings=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.RequestApprovalSettings
-        if ($null -ne $getValue.RequestApprovalSettings.approvalStages -and  $getValue.RequestApprovalSettings.approvalStages.count -gt 0 )
+        if($null -ne $formattedRequestApprovalSettings)
         {
-            $approvalStages=@()
-            foreach($approvalStage in $getValue.RequestApprovalSettings.approvalStages)
+            $formattedRequestApprovalSettings.remove('additionalProperties')
+        }
+        if ($null -ne $formattedRequestApprovalSettings.approvalStages -and  $formattedRequestApprovalSettings.approvalStages.count -gt 0 )
+        {
+            foreach($approvalStage in $formattedRequestApprovalSettings.approvalStages)
             {
-                $formattedApprovalStage=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $approvalStage
                 if($null -ne $approvalStage.PrimaryApprovers -and $approvalStage.PrimaryApprovers.count -gt 0)
                 {
-                    $formattedParameters=@()
                     foreach($setting in $approvalStage.PrimaryApprovers)
                     {
-                        $parameter=@{
-                            odataType=$setting.AdditionalProperties."@odata.type"
-                            IsBackup=$setting.IsBackup
-                        }
+                        $setting.add('odataType',$setting.AdditionalProperties."@odata.type")
                         if(-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
                         {
-                            $parameter.add('Id',$setting.AdditionalProperties.id)
+                            $setting.add('Id',$setting.AdditionalProperties.id)
                         }
                         if(-not [String]::isNullOrEmpty($setting.AdditionalProperties.managerLevel))
                         {
-                            $parameter.add('ManagerLevel',$setting.AdditionalProperties.managerLevel)
+                            $setting.add('ManagerLevel',$setting.AdditionalProperties.managerLevel)
                         }
-                        $formattedParameters+=$parameter
+                        $setting.remove('additionalProperties')
                     }
-                    $formattedApprovalStage.PrimaryApprovers=$formattedParameters
                 }
 
                 if($null -ne $approvalStage.EscalationApprovers -and $approvalStage.EscalationApprovers.count -gt 0)
                 {
-                    $formattedParameters=@()
                     foreach($setting in $approvalStage.EscalationApprovers)
                     {
-                        $parameter=@{
-                            odataType=$setting.AdditionalProperties."@odata.type"
-                            IsBackup=$setting.IsBackup
-                        }
+                        $setting.add('odataType',$setting.AdditionalProperties."@odata.type")
                         if(-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
                         {
-                            $parameter.add('Id',$setting.AdditionalProperties.id)
+                            $setting.add('Id',$setting.AdditionalProperties.id)
                         }
                         if(-not [String]::isNullOrEmpty($setting.AdditionalProperties.managerLevel))
                         {
-                            $parameter.add('ManagerLevel',$setting.AdditionalProperties.managerLevel)
+                            $setting.add('ManagerLevel',$setting.AdditionalProperties.managerLevel)
                         }
-                        $formattedParameters+=$parameter
+                        $setting.remove('additionalProperties')
                     }
-                    $formattedApprovalStage.EscalationApprovers=$formattedParameters
                 }
-
-                $approvalStages+=$formattedApprovalStage
+                $approvalStage.remove('additionalProperties')
             }
-
-            $formattedRequestApprovalSettings.ApprovalStages=$approvalStages
         }
+        #endregion
 
+        #region Format RequestorSettings
         $formattedRequestorSettings=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.RequestorSettings
-        if ($null -ne $getValue.RequestorSettings.allowedRequestors -and  $getValue.RequestorSettings.allowedRequestors.count -gt 0 )
+        if($null -ne $formattedRequestorSettings)
         {
-            $formattedParameters=@()
-            foreach($setting in $getValue.RequestorSettings.allowedRequestors)
+            $formattedRequestorSettings.remove('additionalProperties')
+        }
+        if ($null -ne $formattedRequestorSettings.allowedRequestors -and  $formattedRequestorSettings.allowedRequestors.count -gt 0 )
+        {
+            foreach($setting in $formattedRequestorSettings.allowedRequestors)
             {
-                $parameter=@{
-                    odataType=$setting.AdditionalProperties."@odata.type"
-                    IsBackup=$setting.IsBackup
-                }
+                $setting.add('odataType',$setting.AdditionalProperties."@odata.type")
                 if(-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
                 {
-                    $parameter.add('Id',$setting.AdditionalProperties.id)
+                    $setting.add('Id',$setting.AdditionalProperties.id)
                 }
                 if(-not [String]::isNullOrEmpty($setting.AdditionalProperties.managerLevel))
                 {
-                    $parameter.add('ManagerLevel',$setting.AdditionalProperties.managerLevel)
+                    $setting.add('ManagerLevel',$setting.AdditionalProperties.managerLevel)
                 }
-                $formattedParameters+=$parameter
+                $setting.remove('additionalProperties')
             }
-            $formattedRequestorSettings.AllowedRequestors=$formattedParameters
         }
+        #endregion
 
+        #region Format Questions
+        $formattedQuestions=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.Questions
+        foreach ($question in $formattedQuestions)
+        {
+            $question.add("odataType",$question.AdditionalProperties."@odata.type")
+            if ($null -ne $question.Text)
+            {
+                $question.add("QuestionText", $question.Text)
+                $question.remove("Text")
+                $question.QuestionText.remove('additionalProperties')
+                foreach ($localizedText in $question.QuestionText.localizedTexts)
+                {
+                    $localizedText.remove('additionalProperties')
+                }
+            }
+            if ($null -ne $question.AdditionalProperties.isSingleLineQuestion)
+            {
+                $question.add("IsSingleLineQuestion",$question.AdditionalProperties.isSingleLineQuestion)
+            }
+            if ($null -ne $question.AdditionalProperties.choices)
+            {
+                $question.add("Choices",[Array]$question.AdditionalProperties.choices)
+            }
+            if ($null -ne $question.AdditionalProperties.allowsMultipleSelection)
+            {
+                $question.add("AllowsMultipleSelection",$question.AdditionalProperties.allowsMultipleSelection)
+            }
+            $question.remove('additionalProperties')
+        }
+        #endregion
+
+        #region Format CustomExtensionHandlers
+        $formattedCustomExtensionHandlers=@()
+        foreach ($customExtensionHandler in $getValue.CustomExtensionHandlers)
+        {
+            $customExt=@{
+                Id = $customExtensionHandler.Id
+                Stage = $customExtensionHandler.Stage
+                CustomExtension= @{
+                    Id = $customExtensionHandler.CustomExtension.Id
+                }
+            }
+            $formattedCustomExtensionHandlers += $customExt
+        }
+        #endregion
+
+        #region Format ExpirationDateTime
         $formattedExpirationDateTime=$getValue.ExpirationDateTime
         if($null -ne $getValue.ExpirationDateTime)
         {
             #$formattedExpirationDateTime=$getValue.ExpirationDateTime.ToString()
         }
+        #endregion
+
         $results = @{
 
             #region resource generator code
@@ -258,12 +296,12 @@ function Get-TargetResource
             AccessPackageId         = $getValue.AccessPackageId
             AccessReviewSettings    = $formattedAccessReviewSettings
             CanExtend               = $getValue.CanExtend
-            CustomExtensionHandlers = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.CustomExtensionHandlers
+            CustomExtensionHandlers = $formattedCustomExtensionHandlers
             Description             = $getValue.Description
             DisplayName             = $getValue.DisplayName
             DurationInDays          = $getValue.DurationInDays
             ExpirationDateTime      = $formattedExpirationDateTime
-            Questions               = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.Questions
+            Questions               = $formattedQuestions
             RequestApprovalSettings = $formattedRequestApprovalSettings
             RequestorSettings       = $formattedRequestorSettings
             Ensure                  = 'Present'
@@ -430,7 +468,7 @@ function Set-TargetResource
         Write-Verbose -Message "Creating a new access package assignment policy {$DisplayName}"
 
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
-        $CreateParameters = Rename-M365DSCCimInstanceODataParameter -Properties $CreateParameters
+        $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
 
 
         $CreateParameters.Remove('Id') | Out-Null
@@ -439,17 +477,13 @@ function Set-TargetResource
         $keys=(([Hashtable]$CreateParameters).clone()).Keys
         foreach($key in $keys)
         {
-            #$keyName=$key.substring(0,1).toLower()+$key.substring(1,$key.length-1)
             $keyValue= $CreateParameters.$key
             if($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like "*cimInstance*")
             {
                 $keyValue= Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
                 $CreateParameters.$key=$keyValue
             }
-            #$CreateParameters.remove($key)
-            #$CreateParameters.add($keyName,$keyValue)
         }
-        #$CreateParameters.add('@odata.type','#microsoft.graph.accessPackageAssignmentPolicy')
 
         #region resource generator code
         New-MgEntitlementManagementAccessPackageAssignmentPolicy `
@@ -463,28 +497,25 @@ function Set-TargetResource
         Write-Verbose -Message "Updating the access package assignment policy {$DisplayName}"
 
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
-        $UpdateParameters = Rename-M365DSCCimInstanceODataParameter -Properties $UpdateParameters
+        $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
         $UpdateParameters.Remove('Id') | Out-Null
         $UpdateParameters.Remove('Verbose') | Out-Null
-        $UpdateParameters.Remove('AccessPackageId') | Out-Null
 
         $keys=(([Hashtable]$UpdateParameters).clone()).Keys
         foreach($key in $keys)
         {
-            #$keyName=$key#.substring(0,1).toLower()+$key.substring(1,$key.length-1)
             $keyValue= $UpdateParameters.$key
             if($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like "*cimInstance*")
             {
                 $keyValue= Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
                 $UpdateParameters.$key=$keyValue
             }
-            #$UpdateParameters.remove($key)
-            #$UpdateParameters.add($keyName,$keyValue)
         }
-        #$UpdateParameters.add('@odata.type','#microsoft.graph.accessPackageAssignmentPolicy')
-
         #region resource generator code
+        #$UpdateParameters.add('accessReviewSettings',$null)
+        #$UpdateParameters.add('expirationDateTime',$null)
+
         write-verbose ($UpdateParameters|convertto-json -depth 20)
 
         Set-MgEntitlementManagementAccessPackageAssignmentPolicy `
@@ -753,8 +784,8 @@ function Export-TargetResource
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
 
-            #if ($null -ne $Results.AccessReviewSettings)
-            #{
+            if ($null -ne $Results.AccessReviewSettings)
+            {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.AccessReviewSettings -CIMInstanceName MicrosoftGraphassignmentreviewsettings
                 if ($complexTypeStringResult)
                 {
@@ -764,10 +795,36 @@ function Export-TargetResource
                 {
                     $Results.Remove('AccessReviewSettings') | Out-Null
                 }
-            #}
-            #if ($null -ne $Results.Questions -and $Results.Questions.count -gt 0)
-            #{
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Questions -CIMInstanceName MicrosoftGraphaccesspackagequestion
+            }
+            if ($null -ne $Results.Questions)
+            {
+                $complexMapping=@(
+                    @{
+                        Name="QuestionText"
+                        CimInstanceName="MicrosoftGraphaccessPackageLocalizedContent"
+                        IsRequired=$false
+                    }
+                    @{
+                        Name="Choices"
+                        CimInstanceName="MicrosoftGraphaccessPackageAnswerChoice"
+                        IsRequired=$false
+                    }
+                    @{
+                        Name="DisplayValue"
+                        CimInstanceName="MicrosoftGraphaccessPackageLocalizedContent"
+                        IsRequired=$false
+                    }
+                    @{
+                        Name="localizedTexts"
+                        CimInstanceName="MicrosoftGraphaccessPackageLocalizedText"
+                        IsRequired=$false
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Questions `
+                    -CIMInstanceName MicrosoftGraphaccesspackagequestion `
+                    -ComplexTypeMapping $complexMapping
+
                 if ($complexTypeStringResult)
                 {
                     $Results.Questions = $complexTypeStringResult
@@ -776,9 +833,9 @@ function Export-TargetResource
                 {
                     $Results.Remove('Questions') | Out-Null
                 }
-            #}
-            #if ($null -ne $Results.RequestApprovalSettings)
-            #{
+            }
+            if ($null -ne $Results.RequestApprovalSettings)
+            {
                 $complexMapping=@(
                     @{
                         Name="ApprovalStages"
@@ -808,9 +865,9 @@ function Export-TargetResource
                 {
                     $Results.Remove('RequestApprovalSettings') | Out-Null
                 }
-            #}
-            #if ($null -ne $Results.RequestorSettings)
-            #{
+            }
+            if ($null -ne $Results.RequestorSettings)
+            {
                 $complexMapping=@(
                     @{
                         Name="AllowedRequestors"
@@ -831,9 +888,9 @@ function Export-TargetResource
                 {
                     $Results.Remove('RequestorSettings') | Out-Null
                 }
-            #}
-            #if ($null -ne $Results.CustomExtensionHandlers -and $Results.CustomExtensionHandlers.count -gt 0)
-            #{
+            }
+            if ($null -ne $Results.CustomExtensionHandlers )
+            {
                 $complexMapping=@(
                     @{
                         Name="AuthenticationConfiguration"
@@ -864,7 +921,7 @@ function Export-TargetResource
                 {
                     $Results.Remove('CustomExtensionHandlers') | Out-Null
                 }
-            #}
+            }
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
@@ -929,127 +986,68 @@ function Export-TargetResource
     }
 }
 
-function Rename-M365DSCCimInstanceODataParameter
+function Rename-M365DSCCimInstanceParameter
 {
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
+    [OutputType([System.Collections.Hashtable],[System.Collections.Hashtable[]])]
     param(
         [Parameter(Mandatory = 'true')]
         #[System.Collections.Hashtable[]]
         $Properties
     )
 
+    $keyToRename=@{
+        "odataType"="@odata.type"
+        "QuestionText"="text"
+    }
+
+    $result=$Properties
+
     $type=$Properties.getType().FullName
+
+    #region Array
     if ($type -like '*[[\]]')
     {
         $values = @()
         foreach ($item in $Properties)
         {
-            $values += Rename-M365DSCCimInstanceODataParameter $item
+            $values += Rename-M365DSCCimInstanceParameter $item
         }
-        $Properties=$values
+        $result=$values
+
+        return ,$result
     }
-    else
+    #endregion
+
+    #region Single
+    if($type -like "*Hashtable")
     {
-        if($type -like '*CimInstance*' -or $type -like '*Hashtable*'-or $type -like '*Object*')
+        $result=([Hashtable]$Properties).clone()
+    }
+    if($type -like '*CimInstance*' -or $type -like '*Hashtable*'-or $type -like '*Object*')
+    {
+        $hashProperties = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $result
+        $keys=($hashProperties.clone()).keys
+        foreach($key in $keys)
         {
-            $hashProperties = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Properties
-            $keys=($hashProperties.clone()).keys
-            foreach($key in $keys)
+            $keyName=$key.substring(0,1).tolower()+$key.substring(1,$key.length-1)
+            if ($key -in $keyToRename.Keys)
             {
-                write-verbose ("Key: "+$key)
+                $keyName=$keyToRename.$key
+            }
 
-                if ($key -eq 'odataType')
-                {
-                    $hashProperties.add('@odata.type', $hashProperties.odataType)
-                    $hashProperties.remove('odataType')
-                    $Properties = $hashProperties
-                }
-                else
-                {
-                    $property=$Properties.$key
-                    if($null -ne $property)
-                    {
-                        write-verbose ("Key ----- "+$key+": "+($property.getType().FullName))
-
-                        $Properties.$key = Rename-M365DSCCimInstanceODataParameter $hashProperties.$key
-                    }
-                }
+            $property=$hashProperties.$key
+            if($null -ne $property)
+            {
+                $hashProperties.Remove($key)
+                $hashProperties.add($keyName,(Rename-M365DSCCimInstanceParameter $property))
             }
         }
+        $result = $hashProperties
     }
 
-    return $Properties
-
-<#
-    $keys=($Properties.clone()).keys
-    write-verbose ("properties Type ----- "+$properties.getType().FullName)
-
-
-    foreach($key in $keys)
-    {
-        write-verbose ("Key: "+$key)
-        $property=$Properties.$key
-        if($null -ne $property)
-        {
-            $propertyType=$property.getType().FullName
-            write-verbose ("Key ----- "+$key+": "+($property.getType().FullName))
-            if($propertyType -like '*CimInstance*' -or $propertyType -like '*Hashtable*'-or $propertyType -like '*Object*')
-            {
-                if ($propertyType -like '*[[\]]')
-                {
-                    $values = @()
-                    foreach ($item in $property)
-                    {
-                        $hashItem = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
-                        $values += Rename-M365DSCCimInstanceODataParameter $hashItem
-                    }
-                    $Properties.$key=$values
-                }
-                else
-                {
-                    write-verbose ("propertyType ----- "+$property.getType().FullName)
-
-                    $hashProperty = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $property
-                    write-verbose ("hashPropertyType ----- "+$hashProperty.getType().FullName)
-
-                    $propertyKeys=($hashProperty.clone()).keys
-                    foreach($propertyKey in $propertyKeys)
-                    {
-                        write-verbose ("propertyKey: "+$propertyKey)
-
-                        if ($propertyKey -eq 'odataType')
-                        {
-                            $hashProperty.add('@odata.type', $hashProperty.odataType)
-                            $hashProperty.remove('odataType')
-                            $Properties.$key = $hashProperty
-                        }
-                        else
-                        {
-                            $childProperty=$hashProperty.$propertyKey
-                            if($null -ne $childProperty )
-                            {
-                                write-verbose ("Child ----- "+$propertyKey+": "+$childProperty.getType().FullName)
-                                $childType=$childProperty.getType().FullName
-                                if($childType -like '*CimInstance*' -or $childType -like '*Hashtable*' -or $propertyType -like '*Object*')
-                                {
-                                    $hashProperty.$propertyKey=Rename-M365DSCCimInstanceODataParameter $childProperty
-                                    #$property=$hashProperty
-                                }
-
-                            }
-                        }
-
-
-
-                    }
-                }
-            }
-        }
-    }
-    return $Properties
-
-#>
+    return $result
+    #endregion
 }
 function Get-M365DSCDRGComplexTypeToHashtable
 {
@@ -1066,14 +1064,14 @@ function Get-M365DSCDRGComplexTypeToHashtable
     }
 
 
-    if($ComplexObject.getType().Fullname -like "*hashtable")
-    {
-        return $ComplexObject
-    }
-    if($ComplexObject.getType().Fullname -like "*hashtable[[\]]")
-    {
-        return ,[hashtable[]]$ComplexObject
-    }
+    #if($ComplexObject.getType().Fullname -like "*hashtable")
+    #{
+    #    return $ComplexObject
+    #}
+    #if($ComplexObject.getType().Fullname -like "*hashtable[[\]]")
+    #{
+    #    return ,[hashtable[]]$ComplexObject
+    #}
 
 
     if($ComplexObject.gettype().fullname -like "*[[\]]")
@@ -1095,10 +1093,10 @@ function Get-M365DSCDRGComplexTypeToHashtable
         return ,[hashtable[]]$results
     }
 
-    $results = @{}
-
-    if($ComplexObject.getType().Name -like 'Dictionary*')
+    if($ComplexObject.getType().fullname -like '*Dictionary*')
     {
+        $results = @{}
+
         $ComplexObject=[hashtable]::new($ComplexObject)
         $keys=$ComplexObject.Keys
         foreach ($key in $keys)
@@ -1109,7 +1107,9 @@ function Get-M365DSCDRGComplexTypeToHashtable
                 $keyName = $key#.Name[0].ToString().ToLower() + $key.Name.Substring(1, $key.Name.Length - 1)
 
                 $keyType=$ComplexObject.$key.gettype().fullname
-                if($keyType -like "*CimInstance*" -or $keyType -like "Microsoft.Graph.PowerShell.Models.*" )
+            #write-host ("key: $key -- type: $keyType")
+
+                if($keyType -like "*CimInstance*" -or $keyType -like "*Dictionary*" -or $keyType -like "Microsoft.Graph.PowerShell.Models.*"  -or $keyType -like "*[[\]]")
                 {
                     $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$key
 
@@ -1124,24 +1124,40 @@ function Get-M365DSCDRGComplexTypeToHashtable
         return [hashtable]$results
     }
 
-    $keys = $ComplexObject | Get-Member | Where-Object -FilterScript {$_.MemberType -eq 'Property' -and $_.Name -ne 'AdditionalProperties'}
+    $results = @{}
+
+    if($ComplexObject.getType().Fullname -like "*hashtable")
+    {
+        $keys = $ComplexObject.keys
+    }
+    else
+    {
+        $keys = $ComplexObject | Get-Member | Where-Object -FilterScript {$_.MemberType -eq 'Property'}
+    }
 
     foreach ($key in $keys)
     {
-
-        if($null -ne $ComplexObject.$($key.Name))
+        $keyName=$key
+        if($ComplexObject.getType().Fullname -notlike "*hashtable")
         {
-            $keyName = $key.Name[0].ToString().ToLower() + $key.Name.Substring(1, $key.Name.Length - 1)
+            $keyName=$key.Name
 
-            if($ComplexObject.$($key.Name).gettype().fullname -like "*CimInstance*")
+        }
+
+        if($null -ne $ComplexObject.$keyName)
+        {
+            #$keyName = $key.Name[0].ToString().ToLower() + $key.Name.Substring(1, $key.Name.Length - 1)
+
+            $keyType=$ComplexObject.$keyName.gettype().fullname
+            if($keyType -like "*CimInstance*" -or $keyType -like "*Dictionary*" -or $keyType -like "Microsoft.Graph.PowerShell.Models.*" )
             {
-                $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$($key.Name)
+                $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$keyName
 
                 $results.Add($keyName, $hash)
             }
             else
             {
-                $results.Add($keyName, $ComplexObject.$($key.Name))
+                $results.Add($keyName, $ComplexObject.$keyName)
             }
         }
     }
@@ -1222,6 +1238,7 @@ function Get-M365DSCDRGComplexTypeToString
         $currentProperty += $indent
     }
 
+    $CIMInstanceName=$CIMInstanceName.replace("MSFT_","")
     $currentProperty += "MSFT_$CIMInstanceName{`r`n"
     $IndentLevel++
     $indent=''
@@ -1282,10 +1299,6 @@ function Get-M365DSCDRGComplexTypeToString
                     $IndentLevel++
                     foreach ($item in $ComplexObject[$key])
                     {
-                        write-host ($item.GetType().FullName)
-
-                        write-host ($item|convertTo-Json -depth 20)
-                        write-host ($item.keys|out-string)
                         if ($ComplexObject.$key.GetType().FullName -like "Microsoft.Graph.PowerShell.Models.*")
                         {
                             $item=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
@@ -1347,7 +1360,7 @@ function Get-M365DSCDRGComplexTypeToString
         $indent+='    '
     }
     $currentProperty += "$indent}"
-    if($isArray)
+    if($isArray  -or $IndentLevel -gt 4)
     {
         $currentProperty += "`r`n"
     }
@@ -1607,7 +1620,7 @@ function Compare-M365DSCComplexObject
 
                 if ($null -ne $compareResult)
                 {
-                    #Write-Verbose -Message "Configuration drift - simple object key: $key Source {$sourceValue} Target {$targetValue}"
+                    Write-Verbose -Message "Configuration drift - simple object key: $key Source {$sourceValue} Target {$targetValue}"
                     return $false
                 }
 
