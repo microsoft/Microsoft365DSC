@@ -16,14 +16,13 @@ Configuration Example
     {
         TeamsShiftsPolicy 'Example'
         {
-            EnableShiftPresence            = $True
-            AccessType                     = "FakeStringValue"
-            ShiftNoticeMessageType         = "FakeStringValue"
-            ShiftNoticeMessageCustom       = "FakeStringValue"
-            AccessGracePeriodMinutes       = 3
-            Identity                       = "FakeStringValue"
-            ShiftNoticeFrequency           = "FakeStringValue"
-            EnableScheduleOwnerPermissions = $True
+            AccessGracePeriodMinutes       = 15;
+            AccessType                     = "UnrestrictedAccess_TeamsApp";
+            EnableScheduleOwnerPermissions = $False;
+            EnableShiftPresence            = $False;
+            Identity                       = "Global";
+            ShiftNoticeFrequency           = "Never";
+            ShiftNoticeMessageType         = "DefaultMessage";
             Ensure                         = "Present"
             Credential                     = $credentials
         }
