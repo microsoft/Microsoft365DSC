@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.1221.1
 
 * AADGroup
   * Extraction no longer exports Distribution List or mail enabled security list since these are not supported by the Microsoft Graph API.
