@@ -144,9 +144,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-CsTeamsFilesPolicy -MockWith {
                     return @{
-                    NativeFileEntryPoints = "FakeStringValue"
-                    SPChannelFilesTab     = "FakeStringValue"
-                    Identity              = "FakeStringValueDrift #Drift"
+                    NativeFileEntryPoints = "FakeStringValueDrift #Drift"
+                    SPChannelFilesTab     = "FakeStringValueDrift #Drift"
+                    Identity              = "FakeStringValue"
                     }
                 }
             }
