@@ -39,6 +39,10 @@
             CmdletNoun   = 'CsTeamsFilesPolicy'
         },
         @{
+            ResourceName = 'TeamsIPPhonePolicy'
+            CmdletNoun ='CsTeamsIPPhonePolicy'
+        }
+        @{
             ResourceName = 'TeamsShiftsPolicy'
             CmdletNoun   = 'CsTeamsShiftsPolicy'
         }
