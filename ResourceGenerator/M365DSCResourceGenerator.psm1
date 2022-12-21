@@ -2245,11 +2245,11 @@ function New-M365DSCModuleFile
     $filePath = "$Path\MSFT_$ResourceName\MSFT_$($ResourceName).psm1"
     if ($workload -eq 'Microsoft.Graph')
     {
-        Copy-Item -Path .\Module.Template.psm1 -Destination $filePath
+        Copy-Item -Path .\Module.Template.psm1 -Destination $filePath -Force
     }
     else
     {
-        Copy-Item -Path .\Module.Workloads.Template.psm1 -Destination $filePath
+        Copy-Item -Path .\Module.Workloads.Template.psm1 -Destination $filePath -Force
     }
     return $filePath
 }
