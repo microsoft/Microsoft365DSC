@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADEntitlementManagementAccessPackageAssignmentPolicy
+  * Initial release
+
 # 1.22.1221.1
 
 * AADGroup
