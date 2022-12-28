@@ -13,7 +13,7 @@ function Get-TargetResource
         $CatalogStatus,
 
         [Parameter()]
-        [ValidateSet("UserManaged","ServiceDefault")]
+        [ValidateSet('UserManaged', 'ServiceDefault')]
         [System.String]
         $CatalogType,
 
@@ -97,13 +97,13 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Nothing with id {$id} was found"
 
-            if(-Not [string]::IsNullOrEmpty($DisplayName))
+            if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
                 $getValue = Get-MgEntitlementManagementAccessPackageCatalog `
                     -ErrorAction Stop | Where-Object `
                     -FilterScript { `
                         $_.DisplayName -eq "$($DisplayName)" `
-                    }
+                }
             }
         }
         #endregion
@@ -137,26 +137,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullResult
     }
 }
@@ -176,7 +162,7 @@ function Set-TargetResource
         $CatalogStatus,
 
         [Parameter()]
-        [ValidateSet("UserManaged","ServiceDefault")]
+        [ValidateSet('UserManaged', 'ServiceDefault')]
         [System.String]
         $CatalogType,
 
@@ -265,10 +251,10 @@ function Set-TargetResource
         $CreateParameters.Remove('Id') | Out-Null
         $CreateParameters.Remove('Verbose') | Out-Null
 
-        $CreateParameters.add('@odata.type','#microsoft.graph.accessPackageCatalog')
+        $CreateParameters.add('@odata.type', '#microsoft.graph.accessPackageCatalog')
 
         #region resource generator code
-        $policy=New-MgEntitlementManagementAccessPackageCatalog -BodyParameter $CreateParameters
+        $policy = New-MgEntitlementManagementAccessPackageCatalog -BodyParameter $CreateParameters
 
         #endregion
 
@@ -282,7 +268,7 @@ function Set-TargetResource
         $UpdateParameters.Remove('Id') | Out-Null
         $UpdateParameters.Remove('Verbose') | Out-Null
 
-        $UpdateParameters.add('@odata.type','#microsoft.graph.accessPackageCatalog')
+        $UpdateParameters.add('@odata.type', '#microsoft.graph.accessPackageCatalog')
 
         #region resource generator code
         Update-MgEntitlementManagementAccessPackageCatalog -BodyParameter $UpdateParameters `
@@ -317,7 +303,7 @@ function Test-TargetResource
         $CatalogStatus,
 
         [Parameter()]
-        [ValidateSet("UserManaged","ServiceDefault")]
+        [ValidateSet('UserManaged', 'ServiceDefault')]
         [System.String]
         $CatalogType,
 
@@ -380,12 +366,12 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if($CurrentValues.Ensure -eq "Absent")
+    if ($CurrentValues.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
     }
-    $testResult=$true
+    $testResult = $true
 
     $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
@@ -460,7 +446,7 @@ function Export-TargetResource
     {
 
         #region resource generator code
-            [array]$getValue = Get-MgEntitlementManagementAccessPackageCatalog -All -ErrorAction Stop
+        [array]$getValue = Get-MgEntitlementManagementAccessPackageCatalog -All -ErrorAction Stop
         #endregion
 
 
@@ -476,10 +462,10 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
-            $displayedKey=$config.id
-            if(-not [String]::IsNullOrEmpty($config.displayName))
+            $displayedKey = $config.id
+            if (-not [String]::IsNullOrEmpty($config.displayName))
             {
-                $displayedKey=$config.displayName
+                $displayedKey = $config.displayName
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
@@ -516,27 +502,14 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message "Error during Export:" `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }

@@ -27,7 +27,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Moderate", "Strict", "NoRestriction")]
+        [ValidateSet('Moderate', 'Strict', 'NoRestriction')]
         $GiphyRatingType = 'Moderate',
 
         [Parameter()]
@@ -59,7 +59,7 @@ function Get-TargetResource
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Getting configuration of Teams Guest Messaging settings"
+    Write-Verbose -Message 'Getting configuration of Teams Guest Messaging settings'
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -68,8 +68,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -98,27 +98,13 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        throw $_
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return @{}
     }
 }
 
@@ -150,7 +136,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Moderate", "Strict", "NoRestriction")]
+        [ValidateSet('Moderate', 'Strict', 'NoRestriction')]
         $GiphyRatingType = 'Moderate',
 
         [Parameter()]
@@ -182,16 +168,16 @@ function Set-TargetResource
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Setting configuration of Teams Guest Messaging settings"
+    Write-Verbose -Message 'Setting configuration of Teams Guest Messaging settings'
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
     # Check that at least one optional parameter is specified
     $inputValues = $PSBoundParameters
-    $inputValues.Remove("Credential") | Out-Null
-    $inputValues.Remove("ApplicationId") | Out-Null
-    $inputValues.Remove("TenantId") | Out-Null
-    $inputValues.Remove("CertificateThumbprint") | Out-Null
-    $inputValues.Remove("Identity") | Out-Null
+    $inputValues.Remove('Credential') | Out-Null
+    $inputValues.Remove('ApplicationId') | Out-Null
+    $inputValues.Remove('TenantId') | Out-Null
+    $inputValues.Remove('CertificateThumbprint') | Out-Null
+    $inputValues.Remove('Identity') | Out-Null
     foreach ($item in $inputValues)
     {
         if ([System.String]::IsNullOrEmpty($item.Value))
@@ -210,8 +196,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -219,7 +205,7 @@ function Set-TargetResource
     #endregion
 
     $SetParams = $PSBoundParameters
-    $SetParams.Remove("Credential") | Out-Null
+    $SetParams.Remove('Credential') | Out-Null
 
     Set-CsTeamsGuestMessagingConfiguration @SetParams
 }
@@ -253,7 +239,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Moderate", "Strict", "NoRestriction")]
+        [ValidateSet('Moderate', 'Strict', 'NoRestriction')]
         $GiphyRatingType = 'Moderate',
 
         [Parameter()]
@@ -288,15 +274,15 @@ function Test-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Teams Guest Messaging settings"
+    Write-Verbose -Message 'Testing configuration of Teams Guest Messaging settings'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -345,8 +331,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -357,7 +343,7 @@ function Export-TargetResource
     {
         $dscContent = ''
         $params = @{
-            Identity              = "Global"
+            Identity              = 'Global'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -380,27 +366,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

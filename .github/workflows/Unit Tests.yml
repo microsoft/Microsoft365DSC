@@ -13,7 +13,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Run Test Harness
         shell: powershell
         run: |
@@ -28,79 +28,79 @@ jobs:
             },
             @{
                 ModuleName      = 'Microsoft.Graph.Applications'
-                RequiredVersion = '1.12.3'
+                RequiredVersion = '1.19.0'
             },
             @{
                 ModuleName      = 'Microsoft.Graph.Authentication'
-                RequiredVersion = '1.12.3'
+                RequiredVersion = '1.19.0'
             },
             @{
                 ModuleName      = 'Microsoft.Graph.DeviceManagement'
-                RequiredVersion = '1.12.3'
+                RequiredVersion = '1.19.0'
             },
             @{
                 ModuleName      = 'Microsoft.Graph.DeviceManagement.Administration'
-                RequiredVersion = '1.12.3'
+                RequiredVersion = '1.19.0'
             },
             @{
                 ModuleName      = 'Microsoft.Graph.DeviceManagement.Enrolment'
-                RequiredVersion = '1.12.3'
+                RequiredVersion = '1.19.0'
             },
             @{
                 ModuleName      = 'Microsoft.Graph.Devices.CorporateManagement'
-                RequiredVersion = '1.12.3'
+                RequiredVersion = '1.19.0'
             },
             @{
                 ModuleName      = 'Microsoft.Graph.Groups'
-                RequiredVersion = '1.12.3'
+                RequiredVersion = '1.19.0'
             },
             @{
                 ModuleName      = 'Microsoft.Graph.Identity.DirectoryManagement'
-                RequiredVersion = '1.12.3'
+                RequiredVersion = '1.19.0'
             },
             @{
                 ModuleName      = 'Microsoft.Graph.Identity.Governance'
-                RequiredVersion = '1.12.3'
+                RequiredVersion = '1.19.0'
             },
             @{
                 ModuleName      = 'Microsoft.Graph.Identity.SignIns'
-                RequiredVersion = '1.12.3'
+                RequiredVersion = '1.19.0'
             },
             @{
                 ModuleName      = 'Microsoft.Graph.Planner'
-                RequiredVersion = '1.12.3'
+                RequiredVersion = '1.19.0'
             },
             @{
                 ModuleName      = 'Microsoft.Graph.Teams'
-                RequiredVersion = '1.12.3'
+                RequiredVersion = '1.19.0'
             },
             @{
                 ModuleName      = 'Microsoft.Graph.Users'
-                RequiredVersion = '1.12.3'
+                RequiredVersion = '1.19.0'
             },
             @{
                 ModuleName      = 'Microsoft.Graph.Users.Actions'
-                RequiredVersion = '1.12.3'
+                RequiredVersion = '1.19.0'
             },
             @{
                 ModuleName      = 'Microsoft.PowerApps.Administration.PowerShell'
-                RequiredVersion = '2.0.152'
+                RequiredVersion = '2.0.154'
             },
             @{
                 ModuleName      = 'MicrosoftTeams'
-                RequiredVersion = '4.7.0'
+                RequiredVersion = '4.9.1'
             },
             @{
                 ModuleName      = "MSCloudLoginAssistant"
-                RequiredVersion = "1.0.89"
+                RequiredVersion = "1.0.101"
             },
             @{
                 ModuleName      = 'PnP.PowerShell'
-                RequiredVersion = '1.11.0'
+                RequiredVersion = '1.12.0'
             },
             @{
                 ModuleName      = 'ReverseDSC'
-                RequiredVersion = '2.0.0.12'
+                RequiredVersion = '2.0.0.13'
             }
           )
 

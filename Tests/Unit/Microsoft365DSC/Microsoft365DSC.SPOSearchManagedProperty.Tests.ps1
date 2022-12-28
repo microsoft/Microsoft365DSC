@@ -2,43 +2,47 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath '..\..\Unit' `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath '\Stubs\Microsoft365.psm1' `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath '\Stubs\Generic.psm1' `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\UnitTestHelper.psm1" `
+        -ChildPath '\UnitTestHelper.psm1' `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SPOSearchManagedProperty" -GenericStubModule $GenericStubPath
+    -DscResource 'SPOSearchManagedProperty' -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         BeforeAll {
-            $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            if ($null -eq (Get-Module PnP.PowerShell))
+            {
+                Import-Module PnP.PowerShell
+
+            }
+
+            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
             }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
-
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credentials"
+                return 'Credentials'
             }
             $existingValueXML = "<?xml version=`"1.0`" encoding=`"ISO-8859-1`"?>
             <SearchConfigurationSettings xmlns:i=`"http://www.w3.org/2001/XMLSchema-instance`" xmlns=`"http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Portability`">
@@ -133,34 +137,38 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             <SearchSubscriptionSettingsConfigurationSettings i:nil=`"true`"/>
             <SearchTaxonomyConfigurationSettings i:nil=`"true`"/>
             </SearchConfigurationSettings>"
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
+            }
         }
 
         # Test contexts
         Context -Name "When the Managed Property doesn't already exist" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Name                        = "TestMPWrongName"
-                    Type                        = "Text"
-                    Description                 = "This is a test"
+                    Name                        = 'TestMPWrongName'
+                    Type                        = 'Text'
+                    Description                 = 'This is a test'
                     Searchable                  = $false
                     FullTextContext             = 0
                     Queryable                   = $false
                     Retrievable                 = $false
                     AllowMultipleValues         = $false
-                    Refinable                   = "Yes"
-                    Sortable                    = "Yes"
+                    Refinable                   = 'Yes'
+                    Sortable                    = 'Yes'
                     Safe                        = $false
-                    Aliases                     = @("Alias1")
+                    Aliases                     = @('Alias1')
                     TokenNormalization          = $true
                     CompleteMatching            = $false
                     LanguageNeutralTokenization = $true
                     FinerQueryTokenization      = $false
                     CompanyNameExtraction       = $true
-                    Ensure                      = "Present"
-                    Credential          = $Credential
+                    Ensure                      = 'Present'
+                    Credential                  = $Credential
                 }
                 $xmlTemplatePath = Join-Path -Path $PSScriptRoot `
-                    -ChildPath "..\..\..\Modules\Microsoft365DSC\Dependencies\SearchConfigurationSettings.xml" `
+                    -ChildPath '..\..\..\Modules\Microsoft365DSC\Dependencies\SearchConfigurationSettings.xml' `
                     -Resolve
                 $emptyXMLTemplate = Get-Content $xmlTemplatePath
                 Mock -CommandName Get-PnPSearchConfiguration -MockWith {
@@ -172,42 +180,42 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should return Absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Absent"
+            It 'Should return Absent from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Creates the managed property in the Set method" {
+            It 'Creates the managed property in the Set method' {
                 Set-TargetResource @testParams
             }
         }
 
-        Context -Name "When the Managed Property already exists" -Fixture {
+        Context -Name 'When the Managed Property already exists' -Fixture {
             BeforeAll {
                 $Script:RecentMPExtract = $null
                 $testParams = @{
-                    Name                        = "TestMP"
-                    Type                        = "Text"
-                    Description                 = "This is a test"
+                    Name                        = 'TestMP'
+                    Type                        = 'Text'
+                    Description                 = 'This is a test'
                     Searchable                  = $false
                     FullTextContext             = 0
                     Queryable                   = $false
                     Retrievable                 = $false
                     AllowMultipleValues         = $false
-                    Refinable                   = "Yes"
-                    Sortable                    = "Yes"
+                    Refinable                   = 'Yes'
+                    Sortable                    = 'Yes'
                     Safe                        = $false
-                    Aliases                     = @("Alias1")
+                    Aliases                     = @('Alias1')
                     TokenNormalization          = $true
                     CompleteMatching            = $false
                     LanguageNeutralTokenization = $true
                     FinerQueryTokenization      = $false
                     CompanyNameExtraction       = $true
-                    Ensure                      = "Present"
-                    Credential          = $Credential
+                    Ensure                      = 'Present'
+                    Credential                  = $Credential
                 }
                 Mock -CommandName Get-PnPSearchConfiguration -MockWith {
                     return $existingValueXML
@@ -218,54 +226,54 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should return Present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+            It 'Should return Present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It "Should return true from the Test method" {
+            It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
 
-            It "Update the managed property in the Set method" {
+            It 'Update the managed property in the Set method' {
                 Set-TargetResource @testParams
             }
         }
 
-        Context -Name "When Invalid values are used" -Fixture {
+        Context -Name 'When Invalid values are used' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Name                        = "TestMP"
-                    Type                        = "Text"
-                    Description                 = "This is a test"
+                    Name                        = 'TestMP'
+                    Type                        = 'Text'
+                    Description                 = 'This is a test'
                     Searchable                  = $false
                     FullTextContext             = 0
                     Queryable                   = $false
                     Retrievable                 = $false
                     AllowMultipleValues         = $false
-                    Refinable                   = "Yes"
-                    Sortable                    = "Yes"
+                    Refinable                   = 'Yes'
+                    Sortable                    = 'Yes'
                     Safe                        = $false
-                    Aliases                     = @("Alias1")
+                    Aliases                     = @('Alias1')
                     TokenNormalization          = $true
                     CompleteMatching            = $true
                     LanguageNeutralTokenization = $true
                     FinerQueryTokenization      = $false
                     CompanyNameExtraction       = $true
-                    Ensure                      = "Present"
-                    Credential          = $Credential
+                    Ensure                      = 'Present'
+                    Credential                  = $Credential
                 }
             }
 
-            It "Should throw and errors" {
-                { Set-TargetResource @testParams } | Should -Throw "You cannot have CompleteMatching set to True if LanguageNeutralTokenization is set to True"
+            It 'Should throw and errors' {
+                { Set-TargetResource @testParams } | Should -Throw 'You cannot have CompleteMatching set to True if LanguageNeutralTokenization is set to True'
             }
         }
 
-        Context -Name "ReverseDSC Tests" -Fixture {
+        Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $testParams = @{
-                    Credential          = $Credential
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-PnPSearchConfiguration -MockWith {
@@ -273,7 +281,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should Reverse Engineer resource from the Export method" {
+            It 'Should Reverse Engineer resource from the Export method' {
                 Export-TargetResource @testParams
             }
         }

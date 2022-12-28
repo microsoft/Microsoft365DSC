@@ -22,56 +22,56 @@ function Get-PropertyReport
     )
 
     # list of cmdlet parameters to be ignored
-    $invalidParameters = @("ErrorVariable", `
-                        "ErrorAction", `
-                        "InformationVariable", `
-                        "InformationAction", `
-                        "WarningVariable", `
-                        "WarningAction", `
-                        "OutVariable", `
-                        "OutBuffer", `
-                        "PipelineVariable", `
-                        "Verbose", `
-                        "WhatIf", `
-                        "Debug",
-                        "Confirm",
-                        "AsJob")
+    $invalidParameters = @('ErrorVariable', `
+            'ErrorAction', `
+            'InformationVariable', `
+            'InformationAction', `
+            'WarningVariable', `
+            'WarningAction', `
+            'OutVariable', `
+            'OutBuffer', `
+            'PipelineVariable', `
+            'Verbose', `
+            'WhatIf', `
+            'Debug',
+        'Confirm',
+        'AsJob')
 
     # list of M365 DSC resource properties to be ignored
-    $invalidProperties = @("ErrorVariable", `
-                        "ErrorAction", `
-                        "InformationVariable", `
-                        "InformationAction", `
-                        "WarningVariable", `
-                        "WarningAction", `
-                        "OutVariable", `
-                        "OutBuffer", `
-                        "PipelineVariable", `
-                        "Verbose", `
-                        "WhatIf", `
-                        "Debug",
-                        "Credential",
-                        "ApplicationId",
-                        "Ensure",
-                        "TenantId",
-                        "CertificateThumbprint",
-                        "CertificatePath",
-                        "CertificatePassword",
-                        "IsSingleInstance")
+    $invalidProperties = @('ErrorVariable', `
+            'ErrorAction', `
+            'InformationVariable', `
+            'InformationAction', `
+            'WarningVariable', `
+            'WarningAction', `
+            'OutVariable', `
+            'OutBuffer', `
+            'PipelineVariable', `
+            'Verbose', `
+            'WhatIf', `
+            'Debug',
+        'Credential',
+        'ApplicationId',
+        'Ensure',
+        'TenantId',
+        'CertificateThumbprint',
+        'CertificatePath',
+        'CertificatePassword',
+        'IsSingleInstance')
 
     # list of M365 workloads to check
     $workloads = @(
-        @{Name = 'ExchangeOnline'; ModuleName = "ExchangeOnlineManagement"; CommandName = "Get-Mailbox"; Prefix = "EXO"; }
-        @{Name = 'MicrosoftTeams'; ModuleName = "MicrosoftTeams"; Prefix = "Teams"; }
-        @{Name = 'SecurityComplianceCenter'; ModuleName = "ExchangeOnlineManagement"; CommandName = "Set-ComplianceCase"; Prefix = "SC"; }
+        @{Name = 'ExchangeOnline'; ModuleName = 'ExchangeOnlineManagement'; CommandName = 'Get-Mailbox'; Prefix = 'EXO'; }
+        @{Name = 'MicrosoftTeams'; ModuleName = 'MicrosoftTeams'; Prefix = 'Teams'; }
+        @{Name = 'SecurityComplianceCenter'; ModuleName = 'ExchangeOnlineManagement'; CommandName = 'Set-ComplianceCase'; Prefix = 'SC'; }
     )
 
     # mapping table for resources with names different from cmdlet name
     $cmdletMapping = @{
-        CasMailbox                   = "CASMailboxSettings"
-        Mailbox                      = "SharedMailbox"
-        MailboxRegionalConfiguration = "MailboxSettings"
-        EXOPerimeterConfig           = "PerimeterConfiguration"
+        CasMailbox                   = 'CASMailboxSettings'
+        Mailbox                      = 'SharedMailbox'
+        MailboxRegionalConfiguration = 'MailboxSettings'
+        EXOPerimeterConfig           = 'PerimeterConfiguration'
     }
 
     $missingResources = @()
@@ -80,10 +80,10 @@ function Get-PropertyReport
     if ($null -eq $Credential)
     {
         $Credential = Get-Credential
-        $PSBoundParameters.Add("Credential", $Credential)
+        $PSBoundParameters.Add('Credential', $Credential)
     }
 
-    $folderPath = Join-Path $PSScriptRoot -ChildPath "../DSCResources"
+    $folderPath = Join-Path $PSScriptRoot -ChildPath '../DSCResources'
     Write-Verbose "Folderpath of DSC resources: $folderPath"
 
     foreach ($module in $workloads)
@@ -113,20 +113,20 @@ function Get-PropertyReport
         Write-Verbose "Found $($setCmdlets.Count) Set-* cmdlets for $($Module.ModuleName) ($($cmdlets.Count) in total)"
 
         $i = 1
-        foreach($cmdlet in $setCmdlets)
+        foreach ($cmdlet in $setCmdlets)
         {
-            Write-Progress -Activity "Checking resources" -Status $cmdlet.Name -PercentComplete (($i / $setCmdlets.Length) * 100)
+            Write-Progress -Activity 'Checking resources' -Status $cmdlet.Name -PercentComplete (($i / $setCmdlets.Length) * 100)
 
             $resourceExists = $false
-            $resourceName = "MSFT_" + $module.Prefix + $cmdlet.Name.split('-')[1]
+            $resourceName = 'MSFT_' + $module.Prefix + $cmdlet.Name.split('-')[1]
 
-            if ($module.ModuleName -eq "MicrosoftTeams" -and $resourceName -like "*TeamsCsTeams*")
+            if ($module.ModuleName -eq 'MicrosoftTeams' -and $resourceName -like '*TeamsCsTeams*')
             {
-                $resourceName = $resourceName -replace("TeamsCsTeams","Teams")
+                $resourceName = $resourceName -replace ('TeamsCsTeams', 'Teams')
             }
-            if ($module.ModuleName -eq "MicrosoftTeams" -and $resourceName -like "*TeamsCs*")
+            if ($module.ModuleName -eq 'MicrosoftTeams' -and $resourceName -like '*TeamsCs*')
             {
-                $resourceName = $resourceName -replace ("TeamsCs", "Teams")
+                $resourceName = $resourceName -replace ('TeamsCs', 'Teams')
             }
             $foundInFiles = Get-ChildItem -Path $folderPath | Where-Object { $_.Name -like $resourceName }
 
@@ -135,7 +135,7 @@ function Get-PropertyReport
                 $resourceNameFromMapping = $cmdletMapping[$cmdlet.Name.split('-')[1]]
                 if ($null -ne $resourceNameFromMapping)
                 {
-                    $resourceName = "MSFT_" + $module.Prefix + $resourceNameFromMapping
+                    $resourceName = 'MSFT_' + $module.Prefix + $resourceNameFromMapping
                     $foundInFiles = Get-ChildItem -Path $folderPath | Where-Object { $_.Name -like $resourceName }
                     if ($null -ne $foundInFiles)
                     {
@@ -166,7 +166,7 @@ function Get-PropertyReport
 
                 # Get properties of DSC resource
                 Write-Verbose "Get properties of resource $resourceName"
-                Import-Module $($folderPath + "\" + $resourceName) -Force
+                Import-Module $($folderPath + '\' + $resourceName) -Force
                 $resourceProperties = (Get-Command Set-TargetResource -Module $resourceName).Parameters
 
                 foreach ($property in $resourceProperties.Keys)
@@ -181,16 +181,16 @@ function Get-PropertyReport
                 # Compare properties
                 Write-Verbose "Compare parameters of $resourceName"
                 $difference = Compare-Object -ReferenceObject @($targetParameters | Select-Object) -DifferenceObject @($resourceParamters | Select-Object) -IncludeEqual
-                $missingProperties = ($difference | Where-Object { $_.SideIndicator -eq "<="}).InputObject
-                $addtionalProperties = ($difference | Where-Object { $_.SideIndicator -eq "=>" }).InputObject
+                $missingProperties = ($difference | Where-Object { $_.SideIndicator -eq '<=' }).InputObject
+                $addtionalProperties = ($difference | Where-Object { $_.SideIndicator -eq '=>' }).InputObject
 
                 # Add to report
                 $cmdletResult = [PSCustomObject]@{
-                    "M365DSCResource"       = $resourceName
-                    "Cmdlet"                = $cmdlet.Name
-                    "Service"               = $module.Name
-                    "MissingProperties"     = $missingProperties -join('; ')
-                    "AdditionalProperties"  = $addtionalProperties -join('; ')
+                    'M365DSCResource'      = $resourceName
+                    'Cmdlet'               = $cmdlet.Name
+                    'Service'              = $module.Name
+                    'MissingProperties'    = $missingProperties -join ('; ')
+                    'AdditionalProperties' = $addtionalProperties -join ('; ')
                 }
                 $report += $cmdletResult
             }
@@ -204,8 +204,8 @@ function Get-PropertyReport
     }
 
     # Export reports
-    Write-Verbose "Export reports"
-    $report | Export-Csv -NoTypeInformation -Path "$DestinationFolder\M365DSC-Properties-Report.csv" -Delimiter ","
+    Write-Verbose 'Export reports'
+    $report | Export-Csv -NoTypeInformation -Path "$DestinationFolder\M365DSC-Properties-Report.csv" -Delimiter ','
     $missingResources | Out-File "$DestinationFolder\MissingDSCResources.csv"
 }
 

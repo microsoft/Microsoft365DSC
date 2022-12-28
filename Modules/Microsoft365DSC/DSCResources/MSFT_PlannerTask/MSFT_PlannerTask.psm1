@@ -37,7 +37,7 @@ function Get-TargetResource
         $DueDateTime,
 
         [Parameter()]
-        [ValidateSet("Pink", "Red", "Yellow", "Green", "Blue", "Purple")]
+        [ValidateSet('Pink', 'Red', 'Yellow', 'Green', 'Blue', 'Purple')]
         [System.String[]]
         $Categories,
 
@@ -65,7 +65,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -98,7 +98,7 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -107,7 +107,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -127,7 +127,7 @@ function Get-TargetResource
         catch
         {
             $ModulePath = Join-Path -Path $PSScriptRoot `
-                -ChildPath "../../Modules/GraphHelpers/PlannerTaskObject.psm1"
+                -ChildPath '../../Modules/GraphHelpers/PlannerTaskObject.psm1'
             $usingScriptBody = "using module '$ModulePath'"
             $usingScript = [ScriptBlock]::Create($usingScriptBody)
             . $usingScript
@@ -189,7 +189,7 @@ function Get-TargetResource
                 StartDateTime         = $StartDateTimeValue
                 DueDateTime           = $DueDateTimeValue
                 Notes                 = $NotesValue
-                Ensure                = "Present"
+                Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
@@ -203,26 +203,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -265,7 +251,7 @@ function Set-TargetResource
         $DueDateTime,
 
         [Parameter()]
-        [ValidateSet("Pink", "Red", "Yellow", "Green", "Blue", "Purple")]
+        [ValidateSet('Pink', 'Red', 'Yellow', 'Green', 'Blue', 'Purple')]
         [System.String[]]
         $Categories,
 
@@ -293,7 +279,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -326,7 +312,7 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -346,7 +332,7 @@ function Set-TargetResource
     catch
     {
         $ModulePath = Join-Path -Path $PSScriptRoot `
-            -ChildPath "../../Modules/GraphHelpers/PlannerTaskObject.psm1"
+            -ChildPath '../../Modules/GraphHelpers/PlannerTaskObject.psm1'
         $usingScriptBody = "using module '$ModulePath'"
         $usingScript = [ScriptBlock]::Create($usingScriptBody)
         . $usingScript
@@ -488,7 +474,7 @@ function Test-TargetResource
         $DueDateTime,
 
         [Parameter()]
-        [ValidateSet("Pink", "Red", "Yellow", "Green", "Blue", "Purple")]
+        [ValidateSet('Pink', 'Red', 'Yellow', 'Green', 'Blue', 'Purple')]
         [System.String[]]
         $Categories,
 
@@ -516,7 +502,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -547,7 +533,7 @@ function Test-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -572,7 +558,7 @@ function Test-TargetResource
     }
     else
     {
-        $ValuesToCheck.Remove("Checklist") | Out-Null
+        $ValuesToCheck.Remove('Checklist') | Out-Null
         if (-not (Test-M365DSCPlannerTaskCheckListValues -CurrentValues $CurrentValues `
                     -DesiredValues $ValuesToCheck))
         {
@@ -623,7 +609,7 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -659,7 +645,7 @@ function Export-TargetResource
                     foreach ($task in $tasks)
                     {
                         Write-Host "            |---[$k/$($tasks.Length)] $($task.Title)" -NoNewline
-                        $currentDSCBlock = ""
+                        $currentDSCBlock = ''
 
                         $params = @{
                             TaskId                = $task.Id
@@ -677,7 +663,7 @@ function Export-TargetResource
 
                         if ($result.AssignedUsers.Count -eq 0)
                         {
-                            $result.Remove("AssignedUsers") | Out-Null
+                            $result.Remove('AssignedUsers') | Out-Null
                         }
                         $result = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                             -Results $Result
@@ -688,7 +674,7 @@ function Export-TargetResource
                         }
                         else
                         {
-                            $result.Remove("Attachments") | Out-Null
+                            $result.Remove('Attachments') | Out-Null
                         }
 
                         if ($result.Checklist.Length -gt 0)
@@ -698,28 +684,28 @@ function Export-TargetResource
                         }
                         else
                         {
-                            $result.Remove("Checklist") | Out-Null
+                            $result.Remove('Checklist') | Out-Null
                         }
 
                         # Fix Notes which can have multiple lines
                         $result.Notes = $result.Notes.Replace('"', '``"')
-                        $result.Notes = $result.Notes.Replace("&", "``&")
+                        $result.Notes = $result.Notes.Replace('&', "``&")
 
-                        $currentDSCBlock += "        PlannerTask " + (New-Guid).ToString() + "`r`n"
+                        $currentDSCBlock += '        PlannerTask ' + (New-Guid).ToString() + "`r`n"
                         $currentDSCBlock += "        {`r`n"
                         $content = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
                         $content = Convert-DSCStringParamToVariable -DSCBlock $content `
-                            -ParameterName "Credential"
+                            -ParameterName 'Credential'
                         if ($result.Attachments.Length -gt 0)
                         {
                             $content = Convert-DSCStringParamToVariable -DSCBlock $content `
-                                -ParameterName "Attachments" `
+                                -ParameterName 'Attachments' `
                                 -IsCIMArray $true
                         }
                         if ($result.Checklist.Length -gt 0)
                         {
                             $content = Convert-DSCStringParamToVariable -DSCBlock $content `
-                                -ParameterName "Checklist" `
+                                -ParameterName 'Checklist' `
                                 -IsCIMArray $true
                         }
                         $currentDSCBlock += $content
@@ -736,26 +722,13 @@ function Export-TargetResource
             }
             catch
             {
-                try
-                {
-                    Write-Verbose -Message $_
-                    $tenantIdValue = ""
-                    if (-not [System.String]::IsNullOrEmpty($TenantId))
-                    {
-                        $tenantIdValue = $TenantId
-                    }
-                    elseif ($null -ne $Credential)
-                    {
-                        $tenantIdValue = $Credential.UserName.Split('@')[1]
-                    }
-                    Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                        -TenantId $tenantIdValue
-                }
-                catch
-                {
-                    Write-Verbose -Message $_
-                }
+                Write-Host $Global:M365DSCEmojiRedX
+
+                New-M365DSCLogEntry -Message 'Error during Export:' `
+                    -Exception $_ `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
             }
             $i++
         }
@@ -763,27 +736,15 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

@@ -133,7 +133,7 @@ function Get-TargetResource
         $FaceIdBlocked,
 
         [Parameter()]
-        [ValidateSet("useDeviceSettings","afterDeviceRestart","whenDeviceLockedExceptOpenFiles","whenDeviceLocked")]
+        [ValidateSet('useDeviceSettings', 'afterDeviceRestart', 'whenDeviceLockedExceptOpenFiles', 'whenDeviceLocked')]
         [System.String]
         $AppDataEncryptionType,
 
@@ -149,13 +149,13 @@ function Get-TargetResource
 
 
         [Parameter()]
-        [ValidateSet("block","wipe","warn")]
+        [ValidateSet('block', 'wipe', 'warn')]
         [System.String]
         $AppActionIfDeviceComplianceRequired,
 
 
         [Parameter()]
-        [ValidateSet("block","wipe","warn")]
+        [ValidateSet('block', 'wipe', 'warn')]
         [System.String]
         $AppActionIfMaximumPinRetriesExceeded,
 
@@ -170,12 +170,12 @@ function Get-TargetResource
 
 
         [Parameter()]
-        [ValidateSet("allow","blockOrganizationalData","block")]
+        [ValidateSet('allow', 'blockOrganizationalData', 'block')]
         [System.String]
         $NotificationRestriction,
 
         [Parameter()]
-        [ValidateSet("unspecified","unmanaged","mdm","androidEnterprise")]
+        [ValidateSet('unspecified', 'unmanaged', 'mdm', 'androidEnterprise')]
         [System.String]
         $TargetedAppManagementLevels,
 
@@ -193,7 +193,7 @@ function Get-TargetResource
 
 
         [Parameter()]
-        [ValidateSet("block","wipe","warn")]
+        [ValidateSet('block', 'wipe', 'warn')]
         [System.String]
         $AppActionIfIosDeviceModelNotAllowed,
 
@@ -309,129 +309,123 @@ function Get-TargetResource
         $exclusionArray = @()
         foreach ($policyAssignment in $policyAssignments)
         {
-           if($policyAssignment.target.'@odata.type' -eq '#microsoft.graph.groupAssignmentTarget')
-           {
+            if ($policyAssignment.target.'@odata.type' -eq '#microsoft.graph.groupAssignmentTarget')
+            {
                 $assignmentsArray += $policyAssignment.target.groupId
-           }
+            }
 
-           if($policyAssignment.target.'@odata.type' -eq '#microsoft.graph.exclusionGroupAssignmentTarget')
-           {
+            if ($policyAssignment.target.'@odata.type' -eq '#microsoft.graph.exclusionGroupAssignmentTarget')
+            {
                 $exclusionArray += $policyAssignment.target.groupId
-           }
+            }
         }
 
         $exemptedAppProtocolsArray = @()
         foreach ($exemptedAppProtocol in [Array]$policy.exemptedAppProtocols)
         {
-            $exemptedAppProtocolsArray += ($exemptedAppProtocol.Name+':'+$exemptedAppProtocol.Value)
+            $exemptedAppProtocolsArray += ($exemptedAppProtocol.Name + ':' + $exemptedAppProtocol.Value)
         }
 
-        $myPeriodOfflineBeforeAccessCheck=$policy.PeriodOfflineBeforeAccessCheck
-        if($null -ne $policy.PeriodOfflineBeforeAccessCheck)
+        $myPeriodOfflineBeforeAccessCheck = $policy.PeriodOfflineBeforeAccessCheck
+        if ($null -ne $policy.PeriodOfflineBeforeAccessCheck)
         {
-            $myPeriodOfflineBeforeAccessCheck=$policy.PeriodOfflineBeforeAccessCheck.toString()
+            $myPeriodOfflineBeforeAccessCheck = $policy.PeriodOfflineBeforeAccessCheck.toString()
         }
 
-        $myPeriodOnlineBeforeAccessCheck=$policy.PeriodOnlineBeforeAccessCheck
-        if($null -ne $policy.PeriodOnlineBeforeAccessCheck)
+        $myPeriodOnlineBeforeAccessCheck = $policy.PeriodOnlineBeforeAccessCheck
+        if ($null -ne $policy.PeriodOnlineBeforeAccessCheck)
         {
-            $myPeriodOnlineBeforeAccessCheck=$policy.PeriodOnlineBeforeAccessCheck.toString()
+            $myPeriodOnlineBeforeAccessCheck = $policy.PeriodOnlineBeforeAccessCheck.toString()
         }
 
-        $myPeriodOfflineBeforeWipeIsEnforced=$policy.PeriodOfflineBeforeWipeIsEnforced
-        if($null -ne $policy.PeriodOfflineBeforeWipeIsEnforced)
+        $myPeriodOfflineBeforeWipeIsEnforced = $policy.PeriodOfflineBeforeWipeIsEnforced
+        if ($null -ne $policy.PeriodOfflineBeforeWipeIsEnforced)
         {
-            $myPeriodOfflineBeforeWipeIsEnforced=$policy.PeriodOfflineBeforeWipeIsEnforced.toString()
+            $myPeriodOfflineBeforeWipeIsEnforced = $policy.PeriodOfflineBeforeWipeIsEnforced.toString()
         }
 
-        $myPeriodBeforePinReset=$policy.PeriodBeforePinReset
-        if($null -ne $policy.PeriodBeforePinReset)
+        $myPeriodBeforePinReset = $policy.PeriodBeforePinReset
+        if ($null -ne $policy.PeriodBeforePinReset)
         {
-            $myPeriodBeforePinReset=$policy.PeriodBeforePinReset.toString()
+            $myPeriodBeforePinReset = $policy.PeriodBeforePinReset.toString()
         }
 
-        $myPinRequiredInsteadOfBiometricTimeout=$policy.PinRequiredInsteadOfBiometricTimeout
-        if($null -ne $policy.PinRequiredInsteadOfBiometricTimeout)
+        $myPinRequiredInsteadOfBiometricTimeout = $policy.PinRequiredInsteadOfBiometricTimeout
+        if ($null -ne $policy.PinRequiredInsteadOfBiometricTimeout)
         {
-            $myPinRequiredInsteadOfBiometricTimeout=$policy.PinRequiredInsteadOfBiometricTimeout.toString()
+            $myPinRequiredInsteadOfBiometricTimeout = $policy.PinRequiredInsteadOfBiometricTimeout.toString()
         }
 
         return [ordered]@{
-            Identity                                        = $policy.id
-            DisplayName                                     = $policy.DisplayName
-            Description                                     = $policy.Description
-            PeriodOfflineBeforeAccessCheck                  = $myPeriodOfflineBeforeAccessCheck
-            PeriodOnlineBeforeAccessCheck                   = $myPeriodOnlineBeforeAccessCheck
-            AllowedInboundDataTransferSources               = [String]$policy.AllowedInboundDataTransferSources
-            AllowedOutboundDataTransferDestinations         = [String]$policy.AllowedOutboundDataTransferDestinations
-            OrganizationalCredentialsRequired               = $policy.OrganizationalCredentialsRequired
-            AllowedOutboundClipboardSharingLevel            = [String]$policy.AllowedOutboundClipboardSharingLevel
-            DataBackupBlocked                               = $policy.DataBackupBlocked
-            DeviceComplianceRequired                        = $policy.DeviceComplianceRequired
-            ManagedBrowser                                  = [String]$policy.ManagedBrowser
-            MinimumRequiredAppVersion                       = $policy.MinimumRequiredAppVersion
-            MinimumRequiredOsVersion                        = $policy.MinimumRequiredOsVersion
-            MinimumRequiredSdkVersion                       = $policy.MinimumRequiredSDKVersion
-            MinimumWarningAppVersion                        = $policy.MinimumWarningAppVersion
-            MinimumWarningOSVersion                         = $policy.MinimumWarningOSVersion
-            ManagedBrowserToOpenLinksRequired               = $policy.ManagedBrowserToOpenLinksRequired
-            SaveAsBlocked                                   = $policy.SaveAsBlocked
-            PeriodOfflineBeforeWipeIsEnforced               = $myPeriodOfflineBeforeWipeIsEnforced
-            PinRequired                                     = $policy.PinRequired
-            DisableAppPinIfDevicePinIsSet                   = $policy.disableAppPinIfDevicePinIsSet
-            MaximumPinRetries                               = $policy.MaximumPinRetries
-            SimplePinBlocked                                = $policy.SimplePinBlocked
-            MinimumPinLength                                = $policy.MinimumPinLength
-            PinCharacterSet                                 = [String]$policy.PinCharacterSet
-            AllowedDataStorageLocations                     = [String[]]$policy.AllowedDataStorageLocations
-            ContactSyncBlocked                              = $policy.ContactSyncBlocked
-            PeriodBeforePinReset                            = $myPeriodBeforePinReset
-            FaceIdBlocked                                   = $policy.FaceIdBlocked
-            PrintBlocked                                    = $policy.PrintBlocked
-            FingerprintBlocked                              = $policy.FingerprintBlocked
-            AppDataEncryptionType                           = [String]$policy.AppDataEncryptionType
-            Assignments                                     = $assignmentsArray
-            ExcludedGroups                                  = $exclusionArray
-            CustomBrowserProtocol                           = $policy.CustomBrowserProtocol
-            Apps                                            = $appsArray
-            MinimumWipeOSVersion                            = $policy.minimumWipeOSVersion
-            MinimumWipeAppVersion                           = $policy.MinimumWipeAppVersion
-            AppActionIfDeviceComplianceRequired             = [String]$policy.AppActionIfDeviceComplianceRequired
-            AppActionIfMaximumPinRetriesExceeded            = [String]$policy.AppActionIfMaximumPinRetriesExceeded
-            PinRequiredInsteadOfBiometricTimeout            = $myPinRequiredInsteadOfBiometricTimeout
-            AllowedOutboundClipboardSharingExceptionLength  = $policy.AllowedOutboundClipboardSharingExceptionLength
-            NotificationRestriction                         = [String]$policy.NotificationRestriction
-            TargetedAppManagementLevels                     = [String]$policy.TargetedAppManagementLevels
-            ExemptedAppProtocols                            = $exemptedAppProtocolsArray
-            MinimumWipeSdkVersion                           = $policy.MinimumWipeSdkVersion
-            AllowedIosDeviceModels                          = $policy.AllowedIosDeviceModels
-            AppActionIfIosDeviceModelNotAllowed             = [String]$policy.AppActionIfIosDeviceModelNotAllowed
-            FilterOpenInToOnlyManagedApps                   = $policy.FilterOpenInToOnlyManagedApps
-            DisableProtectionOfManagedOutboundOpenInData    = $policy.DisableProtectionOfManagedOutboundOpenInData
-            ProtectInboundDataFromUnknownSources            = $policy.ProtectInboundDataFromUnknownSources
-            Ensure                                          = 'Present'
-            Credential                                      = $Credential
-            ApplicationId                                   = $ApplicationId
-            ApplicationSecret                               = $ApplicationSecret
-            TenantId                                        = $TenantId
-            CertificateThumbprint                           = $CertificateThumbprint
-            Managedidentity                                 = $ManagedIdentity.IsPresent
+            Identity                                       = $policy.id
+            DisplayName                                    = $policy.DisplayName
+            Description                                    = $policy.Description
+            PeriodOfflineBeforeAccessCheck                 = $myPeriodOfflineBeforeAccessCheck
+            PeriodOnlineBeforeAccessCheck                  = $myPeriodOnlineBeforeAccessCheck
+            AllowedInboundDataTransferSources              = [String]$policy.AllowedInboundDataTransferSources
+            AllowedOutboundDataTransferDestinations        = [String]$policy.AllowedOutboundDataTransferDestinations
+            OrganizationalCredentialsRequired              = $policy.OrganizationalCredentialsRequired
+            AllowedOutboundClipboardSharingLevel           = [String]$policy.AllowedOutboundClipboardSharingLevel
+            DataBackupBlocked                              = $policy.DataBackupBlocked
+            DeviceComplianceRequired                       = $policy.DeviceComplianceRequired
+            ManagedBrowser                                 = [String]$policy.ManagedBrowser
+            MinimumRequiredAppVersion                      = $policy.MinimumRequiredAppVersion
+            MinimumRequiredOsVersion                       = $policy.MinimumRequiredOsVersion
+            MinimumRequiredSdkVersion                      = $policy.MinimumRequiredSDKVersion
+            MinimumWarningAppVersion                       = $policy.MinimumWarningAppVersion
+            MinimumWarningOSVersion                        = $policy.MinimumWarningOSVersion
+            ManagedBrowserToOpenLinksRequired              = $policy.ManagedBrowserToOpenLinksRequired
+            SaveAsBlocked                                  = $policy.SaveAsBlocked
+            PeriodOfflineBeforeWipeIsEnforced              = $myPeriodOfflineBeforeWipeIsEnforced
+            PinRequired                                    = $policy.PinRequired
+            DisableAppPinIfDevicePinIsSet                  = $policy.disableAppPinIfDevicePinIsSet
+            MaximumPinRetries                              = $policy.MaximumPinRetries
+            SimplePinBlocked                               = $policy.SimplePinBlocked
+            MinimumPinLength                               = $policy.MinimumPinLength
+            PinCharacterSet                                = [String]$policy.PinCharacterSet
+            AllowedDataStorageLocations                    = [String[]]$policy.AllowedDataStorageLocations
+            ContactSyncBlocked                             = $policy.ContactSyncBlocked
+            PeriodBeforePinReset                           = $myPeriodBeforePinReset
+            FaceIdBlocked                                  = $policy.FaceIdBlocked
+            PrintBlocked                                   = $policy.PrintBlocked
+            FingerprintBlocked                             = $policy.FingerprintBlocked
+            AppDataEncryptionType                          = [String]$policy.AppDataEncryptionType
+            Assignments                                    = $assignmentsArray
+            ExcludedGroups                                 = $exclusionArray
+            CustomBrowserProtocol                          = $policy.CustomBrowserProtocol
+            Apps                                           = $appsArray
+            MinimumWipeOSVersion                           = $policy.minimumWipeOSVersion
+            MinimumWipeAppVersion                          = $policy.MinimumWipeAppVersion
+            AppActionIfDeviceComplianceRequired            = [String]$policy.AppActionIfDeviceComplianceRequired
+            AppActionIfMaximumPinRetriesExceeded           = [String]$policy.AppActionIfMaximumPinRetriesExceeded
+            PinRequiredInsteadOfBiometricTimeout           = $myPinRequiredInsteadOfBiometricTimeout
+            AllowedOutboundClipboardSharingExceptionLength = $policy.AllowedOutboundClipboardSharingExceptionLength
+            NotificationRestriction                        = [String]$policy.NotificationRestriction
+            TargetedAppManagementLevels                    = [String]$policy.TargetedAppManagementLevels
+            ExemptedAppProtocols                           = $exemptedAppProtocolsArray
+            MinimumWipeSdkVersion                          = $policy.MinimumWipeSdkVersion
+            AllowedIosDeviceModels                         = $policy.AllowedIosDeviceModels
+            AppActionIfIosDeviceModelNotAllowed            = [String]$policy.AppActionIfIosDeviceModelNotAllowed
+            FilterOpenInToOnlyManagedApps                  = $policy.FilterOpenInToOnlyManagedApps
+            DisableProtectionOfManagedOutboundOpenInData   = $policy.DisableProtectionOfManagedOutboundOpenInData
+            ProtectInboundDataFromUnknownSources           = $policy.ProtectInboundDataFromUnknownSources
+            Ensure                                         = 'Present'
+            Credential                                     = $Credential
+            ApplicationId                                  = $ApplicationId
+            ApplicationSecret                              = $ApplicationSecret
+            TenantId                                       = $TenantId
+            CertificateThumbprint                          = $CertificateThumbprint
+            Managedidentity                                = $ManagedIdentity.IsPresent
         }
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullResult
     }
 }
@@ -570,7 +564,7 @@ function Set-TargetResource
         $FaceIdBlocked,
 
         [Parameter()]
-        [ValidateSet("useDeviceSettings","afterDeviceRestart","whenDeviceLockedExceptOpenFiles","whenDeviceLocked")]
+        [ValidateSet('useDeviceSettings', 'afterDeviceRestart', 'whenDeviceLockedExceptOpenFiles', 'whenDeviceLocked')]
         [System.String]
         $AppDataEncryptionType,
 
@@ -586,13 +580,13 @@ function Set-TargetResource
 
 
         [Parameter()]
-        [ValidateSet("block","wipe","warn")]
+        [ValidateSet('block', 'wipe', 'warn')]
         [System.String]
         $AppActionIfDeviceComplianceRequired,
 
 
         [Parameter()]
-        [ValidateSet("block","wipe","warn")]
+        [ValidateSet('block', 'wipe', 'warn')]
         [System.String]
         $AppActionIfMaximumPinRetriesExceeded,
 
@@ -607,12 +601,12 @@ function Set-TargetResource
 
 
         [Parameter()]
-        [ValidateSet("allow","blockOrganizationalData","block")]
+        [ValidateSet('allow', 'blockOrganizationalData', 'block')]
         [System.String]
         $NotificationRestriction,
 
         [Parameter()]
-        [ValidateSet("unspecified","unmanaged","mdm","androidEnterprise")]
+        [ValidateSet('unspecified', 'unmanaged', 'mdm', 'androidEnterprise')]
         [System.String]
         $TargetedAppManagementLevels,
 
@@ -630,7 +624,7 @@ function Set-TargetResource
 
 
         [Parameter()]
-        [ValidateSet("block","wipe","warn")]
+        [ValidateSet('block', 'wipe', 'warn')]
         [System.String]
         $AppActionIfIosDeviceModelNotAllowed,
 
@@ -710,7 +704,7 @@ function Set-TargetResource
     #endregion
 
     $currentPolicy = Get-TargetResource @PSBoundParameters
-    $Identity=$currentPolicy.Identity
+    $Identity = $currentPolicy.Identity
 
     $PSBoundParameters.Remove('Ensure') | Out-Null
     $PSBoundParameters.Remove('Credential') | Out-Null
@@ -724,40 +718,40 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new iOS App Protection Policy {$DisplayName}"
-        $createParameters=([Hashtable]$PSBoundParameters).clone()
+        $createParameters = ([Hashtable]$PSBoundParameters).clone()
         $createParameters.remove('Identity')
         $createParameters.remove('Assignments')
         $createParameters.remove('Apps')
 
         $myApps = Get-IntuneAppProtectionPolicyiOSAppsToHashtable -Parameters $PSBoundParameters
-        $myAssignments=Get-IntuneAppProtectionPolicyiOSAssignmentToHashtable -Parameters $PSBoundParameters
+        $myAssignments = Get-IntuneAppProtectionPolicyiOSAssignmentToHashtable -Parameters $PSBoundParameters
 
-        $durationParameters=@(
+        $durationParameters = @(
             'PeriodOfflineBeforeAccessCheck'
             'PeriodOnlineBeforeAccessCheck'
             'PeriodOfflineBeforeWipeIsEnforced'
             'PeriodBeforePinReset'
             'PinRequiredInsteadOfBiometricTimeout'
         )
-        foreach($duration in $durationParameters)
+        foreach ($duration in $durationParameters)
         {
-            if(-not [String]::IsNullOrEmpty($createParameters.$duration))
+            if (-not [String]::IsNullOrEmpty($createParameters.$duration))
             {
-                $createParameters.$duration=[TimeSpan]::parse($createParameters.$duration)
+                $createParameters.$duration = [TimeSpan]::parse($createParameters.$duration)
             }
         }
         $myExemptedAppProtocols = @()
-        foreach($exemptedAppProtocol in $ExemptedAppProtocols)
+        foreach ($exemptedAppProtocol in $ExemptedAppProtocols)
         {
             $myExemptedAppProtocols += @{
-                Name = $exemptedAppProtocol.split(":")[0]
-                Value = $exemptedAppProtocol.split(":")[1]
+                Name  = $exemptedAppProtocol.split(':')[0]
+                Value = $exemptedAppProtocol.split(':')[1]
             }
         }
         $createParameters.ExemptedAppProtocols = $myExemptedAppProtocols
 
 
-        $policy=New-MgDeviceAppManagementiOSManagedAppProtection -BodyParameter $createParameters
+        $policy = New-MgDeviceAppManagementiOSManagedAppProtection -BodyParameter $createParameters
 
         Update-IntuneAppProtectionPolicyiOSApp -IosManagedAppProtectionId $policy.id -Apps $myApps
 
@@ -766,34 +760,34 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing iOS App Protection Policy {$DisplayName}"
-        $updateParameters=([Hashtable]$PSBoundParameters).clone()
+        $updateParameters = ([Hashtable]$PSBoundParameters).clone()
         $updateParameters.remove('Identity')
         $updateParameters.remove('Assignments')
         $updateParameters.remove('Apps')
 
         $myApps = Get-IntuneAppProtectionPolicyiOSAppsToHashtable -Parameters $PSBoundParameters
-        $myAssignments=Get-IntuneAppProtectionPolicyiOSAssignmentToHashtable -Parameters $PSBoundParameters
+        $myAssignments = Get-IntuneAppProtectionPolicyiOSAssignmentToHashtable -Parameters $PSBoundParameters
 
-        $durationParameters=@(
+        $durationParameters = @(
             'PeriodOfflineBeforeAccessCheck'
             'PeriodOnlineBeforeAccessCheck'
             'PeriodOfflineBeforeWipeIsEnforced'
             'PeriodBeforePinReset'
             'PinRequiredInsteadOfBiometricTimeout'
         )
-        foreach($duration in $durationParameters)
+        foreach ($duration in $durationParameters)
         {
-            if(-not [String]::IsNullOrEmpty($updateParameters.$duration))
+            if (-not [String]::IsNullOrEmpty($updateParameters.$duration))
             {
-                $updateParameters.$duration=[TimeSpan]::parse($updateParameters.$duration)
+                $updateParameters.$duration = [TimeSpan]::parse($updateParameters.$duration)
             }
         }
         $myExemptedAppProtocols = @()
-        foreach($exemptedAppProtocol in $ExemptedAppProtocols)
+        foreach ($exemptedAppProtocol in $ExemptedAppProtocols)
         {
             $myExemptedAppProtocols += @{
-                Name = $exemptedAppProtocol.split(":")[0]
-                Value = $exemptedAppProtocol.split(":")[1]
+                Name  = $exemptedAppProtocol.split(':')[0]
+                Value = $exemptedAppProtocol.split(':')[1]
             }
         }
         $updateParameters.ExemptedAppProtocols = $myExemptedAppProtocols
@@ -948,7 +942,7 @@ function Test-TargetResource
         $FaceIdBlocked,
 
         [Parameter()]
-        [ValidateSet("useDeviceSettings","afterDeviceRestart","whenDeviceLockedExceptOpenFiles","whenDeviceLocked")]
+        [ValidateSet('useDeviceSettings', 'afterDeviceRestart', 'whenDeviceLockedExceptOpenFiles', 'whenDeviceLocked')]
         [System.String]
         $AppDataEncryptionType,
 
@@ -964,13 +958,13 @@ function Test-TargetResource
 
 
         [Parameter()]
-        [ValidateSet("block","wipe","warn")]
+        [ValidateSet('block', 'wipe', 'warn')]
         [System.String]
         $AppActionIfDeviceComplianceRequired,
 
 
         [Parameter()]
-        [ValidateSet("block","wipe","warn")]
+        [ValidateSet('block', 'wipe', 'warn')]
         [System.String]
         $AppActionIfMaximumPinRetriesExceeded,
 
@@ -985,12 +979,12 @@ function Test-TargetResource
 
 
         [Parameter()]
-        [ValidateSet("allow","blockOrganizationalData","block")]
+        [ValidateSet('allow', 'blockOrganizationalData', 'block')]
         [System.String]
         $NotificationRestriction,
 
         [Parameter()]
-        [ValidateSet("unspecified","unmanaged","mdm","androidEnterprise")]
+        [ValidateSet('unspecified', 'unmanaged', 'mdm', 'androidEnterprise')]
         [System.String]
         $TargetedAppManagementLevels,
 
@@ -1008,7 +1002,7 @@ function Test-TargetResource
 
 
         [Parameter()]
-        [ValidateSet("block","wipe","warn")]
+        [ValidateSet('block', 'wipe', 'warn')]
         [System.String]
         $AppActionIfIosDeviceModelNotAllowed,
 
@@ -1204,20 +1198,14 @@ function Export-TargetResource
         else
         {
             Write-Host $Global:M365DSCEmojiRedX
-        }
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
 
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
+            New-M365DSCLogEntry -Message 'Error during Export:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
         }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+
         return ''
     }
 }
@@ -1232,18 +1220,18 @@ function Get-IntuneAppProtectionPolicyiOSAppsToHashtable
         $Parameters
     )
 
-    $apps=@()
+    $apps = @()
     foreach ($app in $Parameters.Apps)
     {
         $apps += @{
-                id=$app+'.ios'
-                mobileAppIdentifier = @{
-                    '@odata.type' = '#microsoft.graph.iosMobileAppIdentifier'
-                    bundleId = $app
-                }
+            id                  = $app + '.ios'
+            mobileAppIdentifier = @{
+                '@odata.type' = '#microsoft.graph.iosMobileAppIdentifier'
+                bundleId      = $app
             }
+        }
     }
-    return @{apps=$apps}
+    return @{apps = $apps }
 }
 
 
@@ -1257,37 +1245,39 @@ function Get-IntuneAppProtectionPolicyiOSAssignmentToHashtable
         $Parameters
     )
 
-    $assignments=@()
+    $assignments = @()
     foreach ($assignment in $Parameters.Assignments)
     {
         $assignments += @{
-            "target"=@{
-                groupId=$assignment
-                "@odata.type"="#microsoft.graph.groupAssignmentTarget"
+            'target' = @{
+                groupId       = $assignment
+                '@odata.type' = '#microsoft.graph.groupAssignmentTarget'
             }
         }
     }
     foreach ($exclusion in $Parameters.Exclusions)
     {
         $assignments += @{
-            "target"=@{
-                groupId=$assignment
-                "@odata.type"="#microsoft.graph.exclusionGroupAssignmentTarget"
+            'target' = @{
+                groupId       = $assignment
+                '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
             }
         }
     }
 
-    return @{'assignments'=$assignments}
+    return @{'assignments' = $assignments }
 }
 function Get-IntuneAppProtectionPolicyiOSAssignment
 {
     [CmdletBinding()]
     [OutputType([PSCustomObject])]
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [System.String]
         $IosManagedAppProtectionId
     )
+
     try
     {
         $Url = "https://graph.microsoft.com/beta/deviceAppManagement/iosManagedAppProtections('$IosManagedAppProtectionId')/assignments"
@@ -1297,18 +1287,20 @@ function Get-IntuneAppProtectionPolicyiOSAssignment
     }
     catch
     {
-        Write-Verbose -Message $_
-        $tenantIdValue = $Credential.UserName.Split('@')[1]
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $tenantIdValue
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
     }
     return $null
 }
+
 function Update-IntuneAppProtectionPolicyiOSAssignment
 {
     [CmdletBinding()]
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]
         $Assignments,
@@ -1320,26 +1312,27 @@ function Update-IntuneAppProtectionPolicyiOSAssignment
     try
     {
         $Url = "https://graph.microsoft.com/beta/deviceAppManagement/iosManagedAppProtections('$IosManagedAppProtectionId')/assign"
-       # Write-Verbose -Message "Group Assignment for iOS App Protection policy with JSON payload: `r`n$JSONContent"
+        # Write-Verbose -Message "Group Assignment for iOS App Protection policy with JSON payload: `r`n$JSONContent"
         Invoke-MgGraphRequest -Method POST `
             -Uri $Url `
-            -Body ($Assignments| convertTo-Json -Depth 20) `
+            -Body ($Assignments | ConvertTo-Json -Depth 20) `
             -Headers @{'Content-Type' = 'application/json' } | Out-Null
     }
     catch
     {
-        Write-Verbose -Message $_
-        $tenantIdValue = $Credential.UserName.Split('@')[1]
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $tenantIdValue
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
     }
 }
 
 function Update-IntuneAppProtectionPolicyiOSApp
 {
     [CmdletBinding()]
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]
         $Apps,
@@ -1348,22 +1341,23 @@ function Update-IntuneAppProtectionPolicyiOSApp
         [System.String]
         $IosManagedAppProtectionId
     )
+
     try
     {
         $Url = "https://graph.microsoft.com/beta/deviceAppManagement/iosManagedAppProtections('$IosManagedAppProtectionId')/targetApps"
-       # Write-Verbose -Message "Group Assignment for iOS App Protection policy with JSON payload: `r`n$JSONContent"
+        # Write-Verbose -Message "Group Assignment for iOS App Protection policy with JSON payload: `r`n$JSONContent"
         Invoke-MgGraphRequest -Method POST `
             -Uri $Url `
-            -Body ($Apps| convertTo-Json -Depth 20) `
+            -Body ($Apps | ConvertTo-Json -Depth 20) `
             -Headers @{'Content-Type' = 'application/json' } | Out-Null
     }
     catch
     {
-        Write-Verbose -Message $_
-        $tenantIdValue = $Credential.UserName.Split('@')[1]
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $tenantIdValue
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
     }
 }
 

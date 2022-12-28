@@ -2,27 +2,27 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath '..\..\Unit' `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath '\Stubs\Microsoft365.psm1' `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath '\Stubs\Generic.psm1' `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\UnitTestHelper.psm1" `
+        -ChildPath '\UnitTestHelper.psm1' `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SCComplianceSearchAction" -GenericStubModule $GenericStubPath
+    -DscResource 'SCComplianceSearchAction' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         BeforeAll {
-            $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
 
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
@@ -30,28 +30,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
             }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
-
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credentials"
+                return 'Credentials'
             }
 
             Mock -CommandName Import-PSSession -MockWith {
-
             }
 
             Mock -CommandName New-PSSession -MockWith {
-
             }
 
             Mock -CommandName Get-ComplianceCase {
                 return @{
-                    Name = "Test Compliance Case"
+                    Name = 'Test Compliance Case'
                 }
             }
 
@@ -66,22 +62,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 }
             }
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
+            }
         }
 
         # Test contexts
         Context -Name "Action doesn't already exist" -Fixture {
             BeforeEach {
                 $testParams = @{
-                    IncludeSharePointDocumentVersions   = $False;
-                    Action                              = "Export";
-                    SearchName                          = "Test Search";
-                    Credential                  = $Credential;
-                    FileTypeExclusionsForUnindexedItems = $null;
-                    IncludeCredential                   = $False;
-                    RetryOnError                        = $False;
-                    ActionScope                         = "IndexedItemsOnly";
-                    Ensure                              = "Present";
-                    EnableDedupe                        = $False;
+                    IncludeSharePointDocumentVersions   = $False
+                    Action                              = 'Export'
+                    SearchName                          = 'Test Search'
+                    Credential                          = $Credential
+                    FileTypeExclusionsForUnindexedItems = $null
+                    IncludeCredential                   = $False
+                    RetryOnError                        = $False
+                    ActionScope                         = 'IndexedItemsOnly'
+                    Ensure                              = 'Present'
+                    EnableDedupe                        = $False
                 }
 
                 Mock -CommandName Get-ComplianceSearchAction -MockWith {
@@ -98,25 +98,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It '[Export]Should return Absent from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Absent"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
 
-            It "[Export]Should call the Set method" {
+            It '[Export]Should call the Set method' {
                 Set-TargetResource @testParams
             }
 
             BeforeEach {
                 $testParams = @{
-                    IncludeSharePointDocumentVersions   = $False;
-                    Action                              = "Retention";
-                    SearchName                          = "Test Search";
-                    Credential                  = $Credential;
-                    FileTypeExclusionsForUnindexedItems = $null;
-                    IncludeCredential                   = $False;
-                    RetryOnError                        = $False;
-                    ActionScope                         = "IndexedItemsOnly";
-                    Ensure                              = "Present";
-                    EnableDedupe                        = $False;
+                    IncludeSharePointDocumentVersions   = $False
+                    Action                              = 'Retention'
+                    SearchName                          = 'Test Search'
+                    Credential                          = $Credential
+                    FileTypeExclusionsForUnindexedItems = $null
+                    IncludeCredential                   = $False
+                    RetryOnError                        = $False
+                    ActionScope                         = 'IndexedItemsOnly'
+                    Ensure                              = 'Present'
+                    EnableDedupe                        = $False
                 }
 
                 Mock -CommandName Get-ComplianceSearchAction -MockWith {
@@ -129,21 +129,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It '[Retention]Should return Absent from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Absent"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
 
-            It "[Retention]Should call the Set method" {
+            It '[Retention]Should call the Set method' {
                 Set-TargetResource @testParams
             }
 
             BeforeEach {
                 $testParams = @{
-                    Action             = "Purge";
-                    SearchName         = "Test Search";
-                    Credential = $Credential;
-                    IncludeCredential  = $False;
-                    RetryOnError       = $False;
-                    Ensure             = "Present";
+                    Action            = 'Purge'
+                    SearchName        = 'Test Search'
+                    Credential        = $Credential
+                    IncludeCredential = $False
+                    RetryOnError      = $False
+                    Ensure            = 'Present'
                 }
 
                 Mock -CommandName Get-ComplianceSearchAction -MockWith {
@@ -156,45 +156,45 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It '[Purge]Should return Absent from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Absent"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
 
-            It "[Purge]Should call the Set method" {
+            It '[Purge]Should call the Set method' {
                 Set-TargetResource @testParams
             }
         }
 
-        Context -Name "Action already exists" -Fixture {
+        Context -Name 'Action already exists' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IncludeSharePointDocumentVersions   = $False;
-                    Action                              = "Retention";
-                    SearchName                          = "Test Search";
-                    Credential                  = $Credential;
-                    FileTypeExclusionsForUnindexedItems = $null;
-                    IncludeCredential                   = $False;
-                    RetryOnError                        = $False;
-                    ActionScope                         = "IndexedItemsOnly";
-                    Ensure                              = "Present";
-                    EnableDedupe                        = $False;
+                    IncludeSharePointDocumentVersions   = $False
+                    Action                              = 'Retention'
+                    SearchName                          = 'Test Search'
+                    Credential                          = $Credential
+                    FileTypeExclusionsForUnindexedItems = $null
+                    IncludeCredential                   = $False
+                    RetryOnError                        = $False
+                    ActionScope                         = 'IndexedItemsOnly'
+                    Ensure                              = 'Present'
+                    EnableDedupe                        = $False
                 }
 
                 Mock -CommandName Get-ComplianceSearch -MockWith {
                     return @{
-                        Name = "Test Search"
+                        Name = 'Test Search'
                     }
                 }
 
                 Mock -CommandName Get-ComplianceSearchAction -MockWith {
                     return @{
-                        IncludeSharePointDocumentVersions   = $False;
-                        Action                              = "Export";
-                        SearchName                          = "Test Search";
-                        FileTypeExclusionsForUnindexedItems = $null;
-                        IncludeCredential                   = $False;
-                        Retry                               = $False;
-                        ActionScope                         = "IndexedItemsOnly";
-                        EnableDedupe                        = $False;
+                        IncludeSharePointDocumentVersions   = $False
+                        Action                              = 'Export'
+                        SearchName                          = 'Test Search'
+                        FileTypeExclusionsForUnindexedItems = $null
+                        IncludeCredential                   = $False
+                        Retry                               = $False
+                        ActionScope                         = 'IndexedItemsOnly'
+                        EnableDedupe                        = $False
                         Results                             = 'Container url:
                         https://contoso.blob.core.windows.net/267bbbb1-2630-41ba-d56b-08d73612df43;
                         SAS token: <Specify -IncludeCredential parameter to show the SAS token>;
@@ -215,35 +215,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
         }
 
         Context -Name "Action is set to 'Purge'" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Action                              = "Purge";
-                    SearchName                          = "Test Search";
-                    Credential                  = $Credential;
-                    Ensure                              = "Present";
+                    Action     = 'Purge'
+                    SearchName = 'Test Search'
+                    Credential = $Credential
+                    Ensure     = 'Present'
                 }
 
                 Mock -CommandName Get-ComplianceSearch -MockWith {
                     return @{
-                        Name = "Test Search"
+                        Name = 'Test Search'
                     }
                 }
 
                 Mock -CommandName Get-ComplianceSearchAction -MockWith {
                     return @{
-                        IncludeSharePointDocumentVersions   = $False;
-                        Action                              = "Purge";
-                        SearchName                          = "Test Search";
-                        FileTypeExclusionsForUnindexedItems = $null;
-                        IncludeCredential                   = $False;
-                        Retry                               = $False;
-                        ActionScope                         = "IndexedItemsOnly";
-                        EnableDedupe                        = $False;
+                        IncludeSharePointDocumentVersions   = $False
+                        Action                              = 'Purge'
+                        SearchName                          = 'Test Search'
+                        FileTypeExclusionsForUnindexedItems = $null
+                        IncludeCredential                   = $False
+                        Retry                               = $False
+                        ActionScope                         = 'IndexedItemsOnly'
+                        EnableDedupe                        = $False
                         Results                             = 'Container url:
                         https://gabwedisccan.blob.core.windows.net/267bbbb1-2630-41ba-d56b-08d73612df43;
                         SAS token: <Specify -IncludeCredential parameter to show the SAS token>;
@@ -264,41 +264,41 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
         }
 
-        Context -Name "Action already exists, but need to update properties" -Fixture {
+        Context -Name 'Action already exists, but need to update properties' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IncludeSharePointDocumentVersions   = $False;
-                    Action                              = "Retention";
-                    SearchName                          = "Test Search";
-                    Credential                  = $Credential;
-                    FileTypeExclusionsForUnindexedItems = $null;
-                    IncludeCredential                   = $True;
-                    RetryOnError                        = $True;
-                    ActionScope                         = "IndexedItemsOnly";
-                    Ensure                              = "Present";
-                    EnableDedupe                        = $True;
+                    IncludeSharePointDocumentVersions   = $False
+                    Action                              = 'Retention'
+                    SearchName                          = 'Test Search'
+                    Credential                          = $Credential
+                    FileTypeExclusionsForUnindexedItems = $null
+                    IncludeCredential                   = $True
+                    RetryOnError                        = $True
+                    ActionScope                         = 'IndexedItemsOnly'
+                    Ensure                              = 'Present'
+                    EnableDedupe                        = $True
                 }
 
                 Mock -CommandName Get-ComplianceSearch -MockWith {
                     return @{
-                        Name = "Test Search"
+                        Name = 'Test Search'
                     }
                 }
 
                 Mock -CommandName Get-ComplianceSearchAction -MockWith {
                     return @{
-                        IncludeSharePointDocumentVersions   = $False;
-                        Action                              = "Export";
-                        SearchName                          = "Test Search";
-                        FileTypeExclusionsForUnindexedItems = $null;
-                        IncludeCredential                   = $False;
-                        Retry                               = $False;
-                        ActionScope                         = "IndexedItemsOnly";
-                        EnableDedupe                        = $False;
+                        IncludeSharePointDocumentVersions   = $False
+                        Action                              = 'Export'
+                        SearchName                          = 'Test Search'
+                        FileTypeExclusionsForUnindexedItems = $null
+                        IncludeCredential                   = $False
+                        Retry                               = $False
+                        ActionScope                         = 'IndexedItemsOnly'
+                        EnableDedupe                        = $False
                         Results                             = 'Container url:
                             https://gabwedisccan.blob.core.windows.net/267bbbb1-2630-41ba-d56b-08d73612df43;
                             SAS token: <Specify -IncludeCredential parameter to show the SAS token>;
@@ -323,41 +323,41 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
         }
 
-        Context -Name "Action should not exist" -Fixture {
+        Context -Name 'Action should not exist' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IncludeSharePointDocumentVersions   = $False;
-                    Action                              = "Retention";
-                    SearchName                          = "Test Search";
-                    Credential                  = $Credential;
-                    FileTypeExclusionsForUnindexedItems = $null;
-                    IncludeCredential                   = $True;
-                    RetryOnError                        = $True;
-                    ActionScope                         = "IndexedItemsOnly";
-                    Ensure                              = "Absent";
-                    EnableDedupe                        = $True;
+                    IncludeSharePointDocumentVersions   = $False
+                    Action                              = 'Retention'
+                    SearchName                          = 'Test Search'
+                    Credential                          = $Credential
+                    FileTypeExclusionsForUnindexedItems = $null
+                    IncludeCredential                   = $True
+                    RetryOnError                        = $True
+                    ActionScope                         = 'IndexedItemsOnly'
+                    Ensure                              = 'Absent'
+                    EnableDedupe                        = $True
                 }
 
                 Mock -CommandName Get-ComplianceSearch -MockWith {
                     return @{
-                        Name = "Test Search"
+                        Name = 'Test Search'
                     }
                 }
 
                 Mock -CommandName Get-ComplianceSearchAction -MockWith {
                     return @{
-                        IncludeSharePointDocumentVersions   = $False;
-                        Action                              = "Export";
-                        SearchName                          = "Test Search";
-                        FileTypeExclusionsForUnindexedItems = $null;
-                        IncludeCredential                   = $False;
-                        Retry                               = $False;
-                        ActionScope                         = "IndexedItemsOnly";
-                        EnableDedupe                        = $False;
+                        IncludeSharePointDocumentVersions   = $False
+                        Action                              = 'Export'
+                        SearchName                          = 'Test Search'
+                        FileTypeExclusionsForUnindexedItems = $null
+                        IncludeCredential                   = $False
+                        Retry                               = $False
+                        ActionScope                         = 'IndexedItemsOnly'
+                        EnableDedupe                        = $False
                         Results                             = 'Container url:
                                 https://gabwedisccan.blob.core.windows.net/267bbbb1-2630-41ba-d56b-08d73612df43;
                                 SAS token: <Specify -IncludeCredential parameter to show the SAS token>;
@@ -382,11 +382,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
         }
 
-        Context -Name "ReverseDSC Tests" -Fixture {
+        Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $testParams = @{
@@ -394,7 +394,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should Reverse Engineer resource from the Export method" {
+            It 'Should Reverse Engineer resource from the Export method' {
                 Export-TargetResource @testParams
             }
         }
