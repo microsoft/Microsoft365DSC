@@ -195,9 +195,10 @@ function Get-TargetResource
     catch
     {
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
-            -Error $_ `
+            -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId
+            -TenantId $TenantId `
+            -Credential $Credential
 
         return $nullResult
     }
@@ -686,11 +687,11 @@ function Export-TargetResource
     }
     catch
     {
-        write-host ($_|out-string)
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
-            -Error $_ `
+            -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId
+            -TenantId $TenantId `
+            -Credential $Credential
 
         return ''
     }
