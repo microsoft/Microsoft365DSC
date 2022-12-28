@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADEntitlementManagementConnectedOrganization
+  * Initial release
 * SCRetentionCompliancePolicy
   * Fixes issue with the TeamsChannelLocation and TeamsChatsLocation parameters that were improperly returned by the Get- function.
     FIXES [#2472](https://github.com/microsoft/Microsoft365DSC/issues/2472)
