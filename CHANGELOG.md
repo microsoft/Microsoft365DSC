@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+ * DRG
+  * Various fixes for Graph and Intune resources automation
+
 # 1.22.1221.1
 
 * AADGroup
