@@ -64,7 +64,8 @@ function New-M365DSCResource
     $readmeFilePath = New-M365DSCReadmeFile -ResourceName $ResourceName -Path $Path
     $unitTestPath = New-M365DSCUnitTest -ResourceName $ResourceName -Path $UnitTestPath
 
-    if ($Workload -eq 'MicrosoftGraph')
+    $graphWorkloads=@('MicrosoftGraph','Intune')
+    if ($Workload -in $graphWorkloads)
     {
         $Global:CIMInstancesAlreadyFound = @()
         $GetcmdletName = "Get-$CmdLetNoun"
@@ -90,11 +91,6 @@ function New-M365DSCResource
         $defaultParameterSet = $cmdletCommandDetails.ParameterSets | Where-Object -FilterScript { $_.IsDefault -eq $true }
 
         $defaultParameterSetProperties = $defaultParameterSet.Parameters
-
-        # if ([System.String]::IsNullOrEmpty($commandDetails.OutputType) -eq $false) {
-        #     Write-Error "There was an error obtaining command information"
-        # }
-
         $outputTypes = $commandDetails | Select-Object OutputType | Get-Unique
 
         if ($outputTypes.GetType().BaseType.Name -eq 'Array')
@@ -193,17 +189,17 @@ function New-M365DSCResource
             }
         }
 
-        $propertiesDefinitions = Get-PropertiesDefinition -APIVersion $ApiVersion
-        $PropertiesDefinitions = $PropertiesDefinitions | Where-Object -FilterScript { $_.id -like "*$($selectedODataType.Name)*" }
+        $propertiesDefinitions=$null
+        if($workload -eq 'Intune')
+        {
+            $propertiesDefinitions = Get-PropertiesDefinition -APIVersion $ApiVersion
+            $PropertiesDefinitions = $PropertiesDefinitions | Where-Object -FilterScript { $_.id -like "*$($selectedODataType.Name)*" }
+        }
         $typeProperties = $selectedODataType.Properties | Where-Object -FilterScript { $_.Name -notin $ParametersToSkip }
-        #$typeProperties
-
-        #$defaultParameterSetProperties.name
 
         $parameterInformation = Get-ParameterBlockInformation -Properties $typeProperties `
             -DefaultParameterSetProperties $defaultParameterSetProperties `
             -PropertiesDefinitions $PropertiesDefinitions
-        #write-host ($parameterInformation|out-string)
 
         $script:DiscoveredComplexTypes = @()
         $CimInstances = Get-M365DSCDRGCimInstances -ResourceName $ResourceName `
@@ -261,23 +257,19 @@ function New-M365DSCResource
         Write-TokenReplacement -Token '<RemoveCmdletName>' -value "Remove-$($CmdLetNoun)" -FilePath $unitTestPath
         Write-TokenReplacement -Token '<NewCmdletName>' -value "New-$($CmdLetNoun)" -FilePath $unitTestPath
         #endregion
-        $platforms = @(
-            'Windows10'
-            'Android'
-            'Mac O S'
-            'I O S'
-        )
+        $platforms = @{
+            'Windows10' = 'for Windows10'
+            'Android' = 'for Android'
+            'Mac O S' = 'for macOS'
+            'I O S' = 'for iOS'
+            'A A D' = 'Azure AD'
+        }
         $resourceDescription = ($ResourceName -split '_')[0] -creplace '(?<=\w)([A-Z])', ' $1'
-        foreach ($platform in $platforms)
+        foreach ($platform in $platforms.keys)
         {
-            if ($resourceDescription -like "*$platform")
+            if ($resourceDescription -like "*$platform*")
             {
-                $platformName = $platform.replace(' ', '')
-                if ($platformName -eq 'IOS')
-                {
-                    $platformName = 'iOS'
-                }
-                $resourceDescription = $resourceDescription.replace($platform, "for $($platformName)")
+                $resourceDescription = $resourceDescription.replace($platform, $platforms.$platform)
             }
         }
 
@@ -291,14 +283,21 @@ function New-M365DSCResource
         Write-TokenReplacement -Token '<ResourceDescription>' -Value $resourceDescription -FilePath $readmeFilePath
 
         $getCmdlet = Get-Command -Name "Get-$($CmdLetNoun)" -Module $GraphModule
-        $getDefaultParameterSet = $getCmdlet.ParameterSets | Where-Object -FilterScript { $_.Name -eq 'Get' }
+        $getDefaultParameterSet = $getCmdlet.ParameterSets | Where-Object -FilterScript { $_.IsDefault }
         $getKeyIdentifier = ($getDefaultParameterSet.Parameters | Where-Object -FilterScript { $_.IsMandatory }).Name
+
         if ([String]::isNullOrEmpty($getKeyIdentifier))
         {
             $getKeyIdentifier = $typeProperties[0].Name
         }
+        if ($getKeyIdentifier.getType().Name -like "*[[\]]")
+        {
+            $getKeyIdentifier = $getKeyIdentifier[0]
+        }
 
         Write-TokenReplacement -Token '<ParameterBlock>' -Value $parameterString -FilePath $moduleFilePath
+        Write-TokenReplacement -Token '<#Workload#>' -Value $Workload -FilePath $moduleFilePath
+        Write-TokenReplacement -Token '<#APIVersion#>' -Value $ApiVersion -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<PrimaryKey>' -Value $typeProperties[0].Name  -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<getKeyIdentifier>' -Value $getKeyIdentifier  -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<GetCmdLetName>' -Value "Get-$($CmdLetNoun)" -FilePath $moduleFilePath
@@ -307,24 +306,29 @@ function New-M365DSCResource
         Write-TokenReplacement -Token '<UpdateCmdLetName>' -Value "Update-$($CmdLetNoun)" -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<RemoveCmdLetName>' -Value "Remove-$($CmdLetNoun)" -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<ODataType>' -Value $selectedODataType.Name -FilePath $moduleFilePath
-        Write-TokenReplacement -Token '<additionalProperties>' -Value $hashtableResults.addtionalProperties -FilePath $moduleFilePath
-
+        #Write-TokenReplacement -Token '<additionalProperties>' -Value $hashtableResults.addtionalProperties -FilePath $moduleFilePath
+        Write-TokenReplacement -Token '<ResourceDescription>' -Value $resourceDescription -FilePath $moduleFilePath
 
         Write-TokenReplacement -Token '<FilterScript>' -Value 'DisplayName' -FilePath $moduleFilePath
-        Write-TokenReplacement -Token '<FilterScriptShort>' -Value "`$_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.$($selectedODataType.Name)' " -FilePath $moduleFilePath
-        $NonIntuneResource = ''
-        if (-not $isAdditionalProperty)
+        $exportGetCommand = [System.Text.StringBuilder]::New()
+        $exportGetCommand.AppendLine("        [array]`$getValue = Get-$CmdLetNoun ``") |out-null
+        if ($getDefaultParameterSet.Parameters.Name -contains "All")
         {
-            $NonIntuneResource = @"
-            if (-not `$getValue)
-            {
-                [array]`$getValue = Get-$CmdLetNoun `
-                    -ErrorAction Stop
-            }
-"@
+            $exportGetCommand.AppendLine("            -All ``")|out-null
+        }
+        if ($isAdditionalProperty)
+        {
+            $exportGetCommand.AppendLine("        -ErrorAction Stop | Where-Object ``")|out-null
+            $exportGetCommand.AppendLine("        -FilterScript { ``")|out-null
+            $exportGetCommand.AppendLine("            `$_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.$($selectedODataType.Name)' ``")|out-null
+            $exportGetCommand.AppendLine("        }")|out-null
+        }
+        else
+        {
+            $exportGetCommand.AppendLine("            -ErrorAction Stop")|out-null
         }
 
-        Write-TokenReplacement -Token '<NonIntuneResource>' -Value $NonIntuneResource -FilePath $moduleFilePath
+        Write-TokenReplacement -Token '<exportGetCommand>' -Value $exportGetCommand -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<HashTableMapping>' -Value $hashTableMapping -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<#ComplexTypeContent#>' -Value $hashtableResults.ComplexTypeContent -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<#ConvertComplexToString#>' -Value $hashtableResults.ConvertToString -FilePath $moduleFilePath
@@ -332,8 +336,12 @@ function New-M365DSCResource
 
         $updateCmdlet = Get-Command -Name "Update-$($CmdLetNoun)" -Module $GraphModule
         $updateDefaultParameterSet = $updateCmdlet.ParameterSets | Where-Object -FilterScript { $_.IsDefault }
-        $updateKeyIdentifier = $updateDefaultParameterSet.Parameters | Where-Object -FilterScript { $_.IsMandatory }
-        Write-TokenReplacement -Token '<#UpdateKeyIdentifier#>' -Value $UpdateKeyIdentifier.Name -FilePath $moduleFilePath
+        $updateKeyIdentifier = ($updateDefaultParameterSet.Parameters | Where-Object -FilterScript { $_.IsMandatory }).Name
+        if ($null -ne $updateKeyIdentifier -and $updateKeyIdentifier.getType().Name -like "*[[\]]")
+        {
+            $updateKeyIdentifier = $updateKeyIdentifier[0]
+        }
+        Write-TokenReplacement -Token '<#UpdateKeyIdentifier#>' -Value $UpdateKeyIdentifier -FilePath $moduleFilePath
         #Intune Assignments
 
         if ($addIntuneAssignments -and -not [String]::IsNullOrEmpty($repository))
@@ -501,7 +509,6 @@ function New-M365DSCResource
         # Remove comments
         Write-TokenReplacement -Token '<#ResourceGenerator' -Value '' -FilePath $moduleFilePath
         Write-TokenReplacement -Token 'ResourceGenerator#>' -Value '' -FilePath $moduleFilePath
-        Write-TokenReplacement -Token '<#APIVersion#>' -Value $ApiVersion -FilePath $moduleFilePath
 
         $schemaFilePath = New-M365DSCSchemaFile -ResourceName $ResourceName -Path $Path
         $schemaProperties = New-M365SchemaPropertySet -Properties $parameterInformation `
@@ -2243,7 +2250,7 @@ function New-M365DSCModuleFile
         $Workload = "MicrosoftGraph"
     )
     $filePath = "$Path\MSFT_$ResourceName\MSFT_$($ResourceName).psm1"
-    if ($workload -eq 'Microsoft.Graph')
+    if ($workload -eq 'MicrosoftGraph')
     {
         Copy-Item -Path .\Module.Template.psm1 -Destination $filePath -Force
     }
@@ -2450,28 +2457,28 @@ function New-M365HashTableMapping
 
 
 
-                $convertToString += "        if (`$Results.$parameterName)`r`n"
-                $convertToString += "        {`r`n"
-                $convertToString += "            `$complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject `$Results.$parameterName -CIMInstanceName $CimInstanceName`r`n"
-                $convertToString += "            if (`$complexTypeStringResult)`r`n"
+                $convertToString += "            if (`$Results.$parameterName)`r`n"
                 $convertToString += "            {`r`n"
-                $convertToString += "                `$Results.$parameterName = `$complexTypeStringResult`r`n"
+                $convertToString += "                `$complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject `$Results.$parameterName -CIMInstanceName $CimInstanceName`r`n"
+                $convertToString += "                if (`$complexTypeStringResult)`r`n"
+                $convertToString += "                {`r`n"
+                $convertToString += "                    `$Results.$parameterName = `$complexTypeStringResult`r`n"
+                $convertToString += "                }`r`n"
+                $convertToString += "                else`r`n"
+                $convertToString += "                {`r`n"
+                $convertToString += "                    `$Results.Remove('$parameterName') | Out-Null`r`n"
+                $convertToString += "                }`r`n"
                 $convertToString += "            }`r`n"
-                $convertToString += "            else`r`n"
-                $convertToString += "            {`r`n"
-                $convertToString += "                `$Results.Remove('$parameterName') | Out-Null`r`n"
-                $convertToString += "            }`r`n"
-                $convertToString += "        }`r`n"
 
-                $convertToVariable += "        if (`$Results.$parameterName)`r`n"
-                $convertToVariable += "        {`r`n"
-                $convertToVariable += "            `$isCIMArray=`$false`r`n"
-                $convertToVariable += "            if(`$Results.$parameterName.getType().Fullname -like `"*[[\]]`")`r`n"
+                $convertToVariable += "            if (`$Results.$parameterName)`r`n"
                 $convertToVariable += "            {`r`n"
-                $convertToVariable += "                `$isCIMArray=`$true`r`n"
+                $convertToVariable += "                `$isCIMArray=`$false`r`n"
+                $convertToVariable += "                if(`$Results.$parameterName.getType().Fullname -like `"*[[\]]`")`r`n"
+                $convertToVariable += "                {`r`n"
+                $convertToVariable += "                    `$isCIMArray=`$true`r`n"
+                $convertToVariable += "                }`r`n"
+                $convertToVariable += "                `$currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock `$currentDSCBlock -ParameterName `"$parameterName`" -isCIMArray:`$isCIMArray`r`n"
                 $convertToVariable += "            }`r`n"
-                $convertToVariable += "            `$currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock `$currentDSCBlock -ParameterName `"$parameterName`" -isCIMArray:`$isCIMArray`r`n"
-                $convertToVariable += "        }`r`n"
 
 
             }
