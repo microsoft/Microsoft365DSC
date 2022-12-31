@@ -4,6 +4,9 @@
 
  * DRG
   * Various fixes for Graph and Intune resources automation
+  * Migrated to new schema including description
+  * Added support to generate parameter descriptions automatically from schema
+    FIXES [#2720](https://github.com/microsoft/Microsoft365DSC/issues/2720)
 
 # 1.22.1221.1
 
