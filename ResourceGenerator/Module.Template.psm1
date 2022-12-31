@@ -62,42 +62,31 @@ function Get-TargetResource
 
         $getValue = $null <#ResourceGenerator
         #region resource generator code
-        $getValue = <GetCmdLetName> -<getKeyIdentifier> $<PrimaryKey> -ErrorAction SilentlyContinue
+        $getValue = <GetCmdLetName> <getKeyIdentifier> -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
             Write-Verbose -Message "Could not find an <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>}"
 
-            if(-Not [string]::IsNullOrEmpty($<FilterScript>))
+            if(-Not [string]::IsNullOrEmpty($<FilterKey>))
             {
                 $getValue = <GetCmdLetName> `
-                    -ErrorAction Stop | Where-Object `
-                    -FilterScript { `
-                        $_.<FilterScript> -eq "$($<FilterScript>)" `
-                    }
+<AlternativeFilter>
             }
         }
         #endregion ResourceGenerator#>
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an <ResourceDescription> with <FilterScript> {$<FilterScript>}"
+            Write-Verbose -Message "Could not find an <ResourceDescription> with <FilterKey> {$<FilterKey>}"
             return $nullResult
         }
-        <PrimaryKey> = $getValue.<PrimaryKey>
-        Write-Verbose -Message "An <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterScript> {$<FilterScript>} was found."
+        $<PrimaryKey> = $getValue.<PrimaryKey>
+        Write-Verbose -Message "An <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>} was found."
         $results = @{<#ResourceGenerator
             #region resource generator code
 <HashTableMapping>            #endregion ResourceGenerator#>
-            Ensure                = 'Present'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            ApplicationSecret     = $ApplicationSecret
-            CertificateThumbprint = $CertificateThumbprint
-            Managedidentity       = $ManagedIdentity.IsPresent
         }
-<#ComplexTypeContent#>
-<#AssignmentsGet#>
+<#ComplexTypeContent#><#AssignmentsGet#>
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -174,7 +163,7 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating an <ResourceDescription> with <FilterScript> {$DisplayName}"
+        Write-Verbose -Message "Creating an <ResourceDescription> with <FilterKey> {$DisplayName}"
 <#AssignmentsRemove#>
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
@@ -189,7 +178,7 @@ function Set-TargetResource
             }
         }<#ResourceGenerator
         #region resource generator code
-        $policy=<NewCmdLetName> -BodyParameter $CreateParameters
+        $policy=<NewCmdLetName> <#NewKeyIdentifier#>
 <#AssignmentsNew#>        #endregion ResourceGenerator#>
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -210,15 +199,14 @@ function Set-TargetResource
             }
         }<#ResourceGenerator
         #region resource generator code
-        <UpdateCmdLetName> -BodyParameter $UpdateParameters `
-            -<#UpdateKeyIdentifier#> $currentInstance.Id
+<oDataType>        <UpdateCmdLetName> <#UpdateKeyIdentifier#>
 <#AssignmentsUpdate#>        #endregion ResourceGenerator#>
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}" <#ResourceGenerator
         #region resource generator code
-        <RemoveCmdLetName> -<#UpdateKeyIdentifier#> $currentInstance.Id
+        <RemoveCmdLetName> <#removeKeyIdentifier#>
         #endregion ResourceGenerator#>
     }
 }
@@ -274,7 +262,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterScript> {$<FilterScript>}"
+    Write-Verbose -Message "Testing configuration of the <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
@@ -403,7 +391,7 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                <PrimaryKey> = $config.<PrimaryKey>
+                <PrimaryKey>                    = $config.<PrimaryKey>
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -605,6 +593,31 @@ function Get-M365DSCDRGComplexTypeToHashtable
     return [hashtable]$results
 }
 
+<#
+    Use ComplexTypeMapping to overwrite the type of nested CIM
+    Example
+    $complexMapping=@(
+                    @{
+                        Name="ApprovalStages"
+                        CimInstanceName="MSFT_MicrosoftGraphapprovalstage1"
+                        IsRequired=$false
+                    }
+                    @{
+                        Name="PrimaryApprovers"
+                        CimInstanceName="MicrosoftGraphuserset"
+                        IsRequired=$false
+                    }
+                    @{
+                        Name="EscalationApprovers"
+                        CimInstanceName="MicrosoftGraphuserset"
+                        IsRequired=$false
+                    }
+                )
+    With
+    Name: the name of the parameter to be overwritten
+    CimInstanceName: The type of the CIM instance (can include or not the prefix MSFT_)
+    IsRequired: If isRequired equals true, an empty hashtable or array will be returned. Some of the Graph parameters are required even though they are empty
+#>
 function Get-M365DSCDRGComplexTypeToString
 {
     [CmdletBinding()]
