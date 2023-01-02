@@ -28,8 +28,8 @@ jobs:
           git pull
           git commit -m "Updated Resources and Cmdlet documentation pages"
           git push
-          FOR /F "delims=" %i IN ('git rev-parse HEAD') DO set SHA=%i
-          echo "::set-output name=commitid::%SHA%"
+          $SHA = git rev-parse HEAD
+          echo "::set-output name=commitid::$SHA"
 
   deploy:
     needs: GenerateResource
