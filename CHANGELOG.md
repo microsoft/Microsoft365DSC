@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* MISC
+  * Updated website generation code to checkout correct commit
+
 # 1.22.1221.1
 
 * AADGroup
