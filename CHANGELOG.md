@@ -2,7 +2,9 @@
 
 # UNRELEASED
 
- * DRG
+* TeamsMeetingPolicy
+  * Deprecating RecordingStorageMode parameter, which is no longer available.
+* DRG
   * Various fixes for Graph and Intune resources automation
   * Migrated to new schema including description
   * Added support to generate parameter descriptions automatically from schema
