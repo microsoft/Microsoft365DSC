@@ -2,8 +2,17 @@
 
 # UNRELEASED
 
+* TeamsIPPhonePolicy
+  * Added descriptions to the resource parameters
+  * Limited possible parameter values where required
 * TeamsMeetingPolicy
   * Deprecating RecordingStorageMode parameter, which is no longer available.
+* TeamsShiftsPolicy
+  * Added descriptions to the resource parameters
+  * Limited possible parameter values where required
+* TeamsFilesPolicy
+  * Added descriptions to the resource parameters
+  * Limited possible parameter values where required
 * DRG
   * Various fixes for Graph and Intune resources automation
   * Migrated to new schema including description
