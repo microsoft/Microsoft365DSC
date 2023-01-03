@@ -5,6 +5,13 @@
 * IntuneASRRulesPolicyWindows10
   * Corrects possible values for parameter OfficeCommunicationAppsLaunchChildProcess
     FIXES [#2730](https://github.com/microsoft/Microsoft365DSC/issues/2730)
+* IntuneDeviceConfigurationPolicyMacOS
+  * Fixes issue where parameter UpdateDelayPolicy wasn't handled as an array
+    FIXES [#2731](https://github.com/microsoft/Microsoft365DSC/issues/2731)
+* IntuneDeviceConfigurationPolicyWindows10
+  * Fixed incorrect type of EdgeEnterpriseModeSiteListLocation parameter in the
+    resource schema definition
+    FIXES [#2732](https://github.com/microsoft/Microsoft365DSC/issues/2732)
 * SCRetentionCompliancePolicy
   * Forces changes to existing policies to be applied.
     FIXES [#2719](https://github.com/microsoft/Microsoft365DSC/issues/2719)
