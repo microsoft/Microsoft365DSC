@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* EXODistributionGroup
+  * Changed the logic retrieving the group Type in the Get-TargetResource.
+    FIXES [#2709](https://github.com/microsoft/Microsoft365DSC/issues/2709)
 * EXOManagementRoleAssignment
   * Modified logic to handle the RecipientOrganizationUnitScope parameter by display name.
     FIXES [#2708](https://github.com/microsoft/Microsoft365DSC/issues/2708)
