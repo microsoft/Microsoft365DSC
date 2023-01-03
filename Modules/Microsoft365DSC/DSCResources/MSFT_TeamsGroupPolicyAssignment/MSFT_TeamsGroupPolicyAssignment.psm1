@@ -183,11 +183,11 @@ function Set-TargetResource
 
     #check policyname
     $command = 'get-cs' + $PolicyType
-    $Policys = Invoke-Expression -Command $command -ErrorAction SilentlyContinue
+    $policies = Invoke-Expression -Command $command -ErrorAction SilentlyContinue
     $policymatch = $false
-    if ($null -ne $Policys)
+    if ($null -ne $policies)
     {
-        Foreach ($policy in $Policys.Identity)
+        Foreach ($policy in $policies.Identity)
         {
             $match = '^Tag:' + $PolicyName + '$'
             if ($policy -match $match)
@@ -196,7 +196,7 @@ function Set-TargetResource
             }
         }
     }
-    if ($null -eq $Policys -or $policymatch -eq $false)
+    if ($null -eq $policies -or $policymatch -eq $false)
     {
         Write-Verbose -Message "No PolicyType found for $PolicyType"
         return
@@ -242,8 +242,11 @@ function Set-TargetResource
     }
     catch
     {
-        Write-Verbose -Message "Error while setting GroupPolicyAssignment for $GroupDisplayname"
-        throw $_
+        New-M365DSCLogEntry -Message "Error while setting GroupPolicyAssignment for $GroupDisplayname" `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
     }
 }
 
