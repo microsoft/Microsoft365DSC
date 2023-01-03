@@ -2,7 +2,25 @@
 
 # UNRELEASED
 
- * DRG
+* IntuneASRRulesPolicyWindows10
+  * Corrects possible values for parameter OfficeCommunicationAppsLaunchChildProcess
+    FIXES [#2730](https://github.com/microsoft/Microsoft365DSC/issues/2730)
+* TeamsIPPhonePolicy
+  * Added descriptions to the resource parameters
+  * Limited possible parameter values where required
+    FIXES [#2722](https://github.com/microsoft/Microsoft365DSC/issues/2722)
+* TeamsMeetingPolicy
+  * Deprecating RecordingStorageMode parameter, which is no longer available.
+    FIXES [#2723](https://github.com/microsoft/Microsoft365DSC/issues/2723)
+* TeamsShiftsPolicy
+  * Added descriptions to the resource parameters
+  * Limited possible parameter values where required
+    FIXES [#2722](https://github.com/microsoft/Microsoft365DSC/issues/2722)
+* TeamsFilesPolicy
+  * Added descriptions to the resource parameters
+  * Limited possible parameter values where required
+    FIXES [#2722](https://github.com/microsoft/Microsoft365DSC/issues/2722)
+* DRG
   * Various fixes for Graph and Intune resources automation
   * Migrated to new schema including description
   * Added support to generate parameter descriptions automatically from schema
