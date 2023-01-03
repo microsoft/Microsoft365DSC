@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* TeamsGroupPolicyAssignment
+  * Initial Release
 * IntuneASRRulesPolicyWindows10
   * Corrects possible values for parameter OfficeCommunicationAppsLaunchChildProcess
     FIXES [#2730](https://github.com/microsoft/Microsoft365DSC/issues/2730)
