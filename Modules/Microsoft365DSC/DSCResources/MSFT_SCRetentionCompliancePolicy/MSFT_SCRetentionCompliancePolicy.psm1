@@ -768,7 +768,7 @@ function Set-TargetResource
         }
 
         Write-Verbose "Updating Policy with values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
-        Set-RetentionCompliancePolicy @CreationParams
+        Set-RetentionCompliancePolicy @CreationParams -Force
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {

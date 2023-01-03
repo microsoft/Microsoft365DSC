@@ -12,6 +12,9 @@
   * Fixed incorrect type of EdgeEnterpriseModeSiteListLocation parameter in the
     resource schema definition
     FIXES [#2732](https://github.com/microsoft/Microsoft365DSC/issues/2732)
+* SCRetentionCompliancePolicy
+  * Forces changes to existing policies to be applied.
+    FIXES [#2719](https://github.com/microsoft/Microsoft365DSC/issues/2719)
 * TeamsIPPhonePolicy
   * Added descriptions to the resource parameters
   * Limited possible parameter values where required
