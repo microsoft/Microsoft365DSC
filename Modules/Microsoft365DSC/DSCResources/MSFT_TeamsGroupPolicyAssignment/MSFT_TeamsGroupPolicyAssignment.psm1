@@ -17,6 +17,7 @@ function Get-TargetResource
         $GroupId,
 
         [Parameter()]
+        [ValidateSet('CallingLineIdentity', 'TeamsAppSetupPolicy', 'TeamsAudioConferencingPolicy', 'TeamsCallingPolicy', 'TeamsCallParkPolicy', 'TeamsChannelsPolicy', 'TeamsComplianceRecordingPolicy', 'TenantDialPlan', 'TeamsMeetingBroadcastPolicy', 'TeamsMeetingPolicy', 'TeamsMessagingPolicy', 'TeamsShiftsPolicy', 'TeamsUpdateManagementPolicy', 'TeamsVerticalPackagePolicy')]
         [System.String]
         $PolicyType,
 
@@ -71,29 +72,29 @@ function Get-TargetResource
     {
         Write-Verbose -Message "get GroupPolicyAssignment for $GroupDisplayname"
         $Group = Find-CsGroup -SearchQuery $GroupDisplayname
-        if($group.Length -gt 1)
+        if ($group.Length -gt 1)
         {
             Write-Verbose -Message "Found $($group.Length) groups with the name $GroupDisplayname"
             $Group = $Group | Where-Object { $_.DisplayName -eq $GroupDisplayname }
         }
-        if($null -eq $Group)
+        if ($null -eq $Group)
         {
             Write-Verbose -Message "Group not found for $GroupDisplayname"
             return $nullReturn
         }
-        $GroupPolicyAssignemnt = Get-csGroupPolicyAssignment -GroupId $Group.Id -PolicyType $PolicyType -ErrorAction SilentlyContinue
-        if($null -eq $GroupPolicyAssignemnt)
+        $GroupPolicyAssignment = Get-CsGroupPolicyAssignment -GroupId $Group.Id -PolicyType $PolicyType -ErrorAction SilentlyContinue
+        if ($null -eq $GroupPolicyAssignment)
         {
             Write-Verbose -Message "GroupPolicyAssignment not found for $GroupDisplayname"
             return $nullReturn
         }
-        Write-Verbose -Message "Found GroupPolicyAssignment $($Group.Displayname) with PolicyType:$($GroupPolicyAssignemnt.PolicyType) and Policy Name:$($GroupPolicyAssignemnt.PolicyName)"
+        Write-Verbose -Message "Found GroupPolicyAssignment $($Group.Displayname) with PolicyType:$($GroupPolicyAssignment.PolicyType) and Policy Name:$($GroupPolicyAssignment.PolicyName)"
         return @{
             GroupId               = $Group.Id
             GroupDisplayname      = $Group.Displayname
-            PolicyType            = $GroupPolicyAssignemnt.PolicyType
-            PolicyName            = $GroupPolicyAssignemnt.PolicyName
-            Priority              = $GroupPolicyAssignemnt.Priority
+            PolicyType            = $GroupPolicyAssignment.PolicyType
+            PolicyName            = $GroupPolicyAssignment.PolicyName
+            Priority              = $GroupPolicyAssignment.Priority
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -121,6 +122,7 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $GroupDisplayname,
@@ -130,6 +132,7 @@ function Set-TargetResource
         $GroupId,
 
         [Parameter()]
+        [ValidateSet('CallingLineIdentity', 'TeamsAppSetupPolicy', 'TeamsAudioConferencingPolicy', 'TeamsCallingPolicy', 'TeamsCallParkPolicy', 'TeamsChannelsPolicy', 'TeamsComplianceRecordingPolicy', 'TenantDialPlan', 'TeamsMeetingBroadcastPolicy', 'TeamsMeetingPolicy', 'TeamsMessagingPolicy', 'TeamsShiftsPolicy', 'TeamsUpdateManagementPolicy', 'TeamsVerticalPackagePolicy')]
         [System.String]
         $PolicyType,
 
@@ -179,32 +182,36 @@ function Set-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     #check policyname
-    $command = "get-cs" + $PolicyType
+    $command = 'get-cs' + $PolicyType
     $Policys = Invoke-Expression -Command $command -ErrorAction SilentlyContinue
     $policymatch = $false
-    if($null -ne $Policys){
-        Foreach($policy in $Policys.Identity){
-            $match = "^Tag:" + $PolicyName + "$"
-            if($policy -match $match){
+    if ($null -ne $Policys)
+    {
+        Foreach ($policy in $Policys.Identity)
+        {
+            $match = '^Tag:' + $PolicyName + '$'
+            if ($policy -match $match)
+            {
                 $policymatch = $true
             }
         }
     }
-    if($null -eq $Policys -or $policymatch -eq $false){
+    if ($null -eq $Policys -or $policymatch -eq $false)
+    {
         Write-Verbose -Message "No PolicyType found for $PolicyType"
         return
     }
 
     #get groupid
-    if($GroupId.Length -eq 0)
+    if ($GroupId.Length -eq 0)
     {
         $Group = Find-CsGroup -SearchQuery $GroupDisplayname
-        if($group.Length -gt 1)
+        if ($group.Length -gt 1)
         {
             Write-Verbose -Message "Found $($group.Length) groups with the name $GroupDisplayname"
             $Group = $Group | Where-Object { $_.DisplayName -eq $GroupDisplayname }
         }
-        if($null -eq $Group)
+        if ($null -eq $Group)
         {
             Write-Verbose -Message "Group not found for $GroupDisplayname"
             return
@@ -212,27 +219,29 @@ function Set-TargetResource
         $GroupId = $Group.Id
     }
     Write-Verbose -Message "Retrieve GroupId for: $($GroupDisplayname)"
-    try{
-        if($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
+    try
+    {
+        if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
         {
             Write-Verbose -Message "Adding GroupPolicyAssignment for $GroupDisplayname"
-            new-csGroupPolicyAssignment -GroupId $GroupId -PolicyType $PolicyType -PolicyName $PolicyName -Rank $Priority
+            New-CsGroupPolicyAssignment -GroupId $GroupId -PolicyType $PolicyType -PolicyName $PolicyName -Rank $Priority
         }
-        elseif($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
+        elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
         {
             #Set-CsGroupPolicyAssignment not implemented jet / use remove-add as described in docs
             Write-Verbose -Message "Remove GroupPolicyAssignment for $GroupDisplayname"
             Remove-CsGroupPolicyAssignment -GroupId $CurrentValues.GroupId -PolicyType $CurrentValues.PolicyType
             Write-Verbose -Message "Adding GroupPolicyAssignment for $GroupDisplayname"
-            new-csGroupPolicyAssignment -GroupId $GroupId -PolicyType $PolicyType -PolicyName $PolicyName -Rank $Priority
+            New-CsGroupPolicyAssignment -GroupId $GroupId -PolicyType $PolicyType -PolicyName $PolicyName -Rank $Priority
         }
-        elseif($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
+        elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
         {
             Write-Verbose -Message "Remove GroupPolicyAssignment for $GroupDisplayname"
             Remove-CsGroupPolicyAssignment -GroupId $CurrentValues.GroupId -PolicyType $CurrentValues.PolicyType
         }
     }
-    catch{
+    catch
+    {
         Write-Verbose -Message "Error while setting GroupPolicyAssignment for $GroupDisplayname"
         throw $_
     }
@@ -257,6 +266,7 @@ function Test-TargetResource
         $GroupId,
 
         [Parameter()]
+        [ValidateSet('CallingLineIdentity', 'TeamsAppSetupPolicy', 'TeamsAudioConferencingPolicy', 'TeamsCallingPolicy', 'TeamsCallParkPolicy', 'TeamsChannelsPolicy', 'TeamsComplianceRecordingPolicy', 'TenantDialPlan', 'TeamsMeetingBroadcastPolicy', 'TeamsMeetingPolicy', 'TeamsMessagingPolicy', 'TeamsShiftsPolicy', 'TeamsUpdateManagementPolicy', 'TeamsVerticalPackagePolicy')]
         [System.String]
         $PolicyType,
 
@@ -370,48 +380,41 @@ function Export-TargetResource
         }
         $dscContent = [System.Text.StringBuilder]::new()
         $j = 1
+        $totalCount = $instances.Length
         foreach ($item in $instances)
         {
-            try
+            $Group = Find-CsGroup -SearchQuery $item.GroupId
+            if ($null -eq $totalCount)
             {
-                $Group = Find-CsGroup -SearchQuery $item.GroupId
-                $totalCount = $instances.Length
-                if ($null -eq $totalCount)
-                {
-                    $totalCount = 1
-                }
-                Write-Host "    > [$j/$totalCount] GroupPolicyAssignment {$($Group.DisplayName)}" -NoNewline
-                    $results = @{
-                        GroupDisplayname      = $Group.DisplayName
-                        GroupId               = $Group.Id
-                        PolicyType            = $item.PolicyType
-                        PolicyName            = $item.PolicyName
-                        Priority              = $item.Priority
-                        Ensure                = 'Present'
-                        Id                    = $j
-                        Credential            = $Credential
-                        ApplicationId         = $ApplicationId
-                        TenantId              = $TenantId
-                        CertificateThumbprint = $CertificateThumbprint
-                    }
-                    #$results = Get-TargetResource @getParams
-                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                        -Results $Results
-                    $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                        -ConnectionMode $ConnectionMode `
-                        -ModulePath $PSScriptRoot `
-                        -Results $Results `
-                        -Credential $Credential
-                    $dscContent.Append($currentDSCBlock) | Out-Null
-                    Save-M365DSCPartialExport -Content $currentDSCBlock `
-                        -FileName $Global:PartialExportFileName
-                    Write-Host $Global:M365DSCEmojiGreenCheckMark
+                $totalCount = 1
             }
-            catch
-            {
-                Write-Verbose -Message $_
-                Write-Verbose -Message "The current User doesn't have the required permissions to extract Users for Team {$($team.DisplayName)}."
+            Write-Host "    > [$j/$totalCount] GroupPolicyAssignment {$($Group.DisplayName)}" -NoNewline
+            $results = @{
+                GroupDisplayname      = $Group.DisplayName
+                GroupId               = $Group.Id
+                PolicyType            = $item.PolicyType
+                PolicyName            = $item.PolicyName
+                Priority              = $item.Priority
+                Ensure                = 'Present'
+                Id                    = $j
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
             }
+            #$results = Get-TargetResource @getParams
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
+            $dscContent.Append($currentDSCBlock) | Out-Null
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+
             $j++
         }
         return $dscContent.ToString()
@@ -420,7 +423,7 @@ function Export-TargetResource
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
