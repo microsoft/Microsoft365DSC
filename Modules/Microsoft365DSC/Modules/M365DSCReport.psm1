@@ -921,7 +921,8 @@ function New-M365DSCDeltaReport
         }
         Else
         {
-            $Delta = Compare-M365DSCConfigurations `-Source $Source `
+            $Delta = Compare-M365DSCConfigurations `
+                -Source $Source `
                 -Destination $Destination `
                 -CaptureTelemetry $false `
                 -ExcludedProperties $ExcludedProperties

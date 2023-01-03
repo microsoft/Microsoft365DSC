@@ -4,22 +4,46 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **DisplayName** | Key | String | Current channel name ||
-| **TeamName** | Key | String | Name of the team the Channel belongs to ||
-| **GroupID** | Write | String | Team group ID, only used to target a Team when duplicated display names occurs. ||
-| **NewDisplayName** | Write | String | Used to update current channel name ||
-| **Description** | Write | String | Channel description ||
-| **Ensure** | Write | String | Present ensures the Team channel exists, absent ensures it is removed |Present, Absent|
-| **Credential** | Write | PSCredential | Credentials of the Teams Admin ||
-| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
-| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
-| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
+| **DisplayName** | Key | String | Current channel name | |
+| **TeamName** | Key | String | Name of the team the Channel belongs to | |
+| **GroupID** | Write | String | Team group ID, only used to target a Team when duplicated display names occurs. | |
+| **NewDisplayName** | Write | String | Used to update current channel name | |
+| **Description** | Write | String | Channel description | |
+| **Ensure** | Write | String | Present ensures the Team channel exists, absent ensures it is removed | `Present`, `Absent` |
+| **Credential** | Write | PSCredential | Credentials of the Teams Admin | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 
-# TeamsChannel
-
-### Description
+## Description
 
 This resource is used to add and update channels in existing Teams.
+
+## Permissions
+
+### Microsoft Graph
+
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
+
+#### Delegated permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
+
+#### Application permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
 
 ## Examples
 

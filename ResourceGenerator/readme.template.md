@@ -3,4 +3,4 @@
 
 ## Description
 
-This resource configures an <ResourceDescription>.
+<ResourceDescription>
