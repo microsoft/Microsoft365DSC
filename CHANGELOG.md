@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* EXOManagementRoleAssignment
+  * Modified logic to handle the RecipientOrganizationUnitScope parameter by display name.
+    FIXES [#2708](https://github.com/microsoft/Microsoft365DSC/issues/2708)
 * IntuneASRRulesPolicyWindows10
   * Corrects possible values for parameter OfficeCommunicationAppsLaunchChildProcess
     FIXES [#2730](https://github.com/microsoft/Microsoft365DSC/issues/2730)
