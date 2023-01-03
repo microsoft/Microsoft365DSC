@@ -5,6 +5,9 @@
 * IntuneASRRulesPolicyWindows10
   * Corrects possible values for parameter OfficeCommunicationAppsLaunchChildProcess
     FIXES [#2730](https://github.com/microsoft/Microsoft365DSC/issues/2730)
+* IntuneDeviceConfigurationPolicyMacOS
+  * Fixes issue where parameter UpdateDelayPolicy wasn't handled as an array
+    FIXES [#2731](https://github.com/microsoft/Microsoft365DSC/issues/2731)
 * TeamsIPPhonePolicy
   * Added descriptions to the resource parameters
   * Limited possible parameter values where required
