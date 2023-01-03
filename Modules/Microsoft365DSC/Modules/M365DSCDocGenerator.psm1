@@ -830,20 +830,16 @@ output the Markdown files to the specified directory. These help files include
 details on the property types for each resource, as well as a text description
 and examples where they exist.
 
-.Parameter OutputPath
-Where should the files be saved to.
-
 .Parameter SourcePath
 The path to the root of the DSC resource module (where the PSD1 file is found,
-not the folder for and individual DSC resource).
+not the folder for an individual DSC resource).
 
 .Parameter Force
 Overwrites any existing file when outputting the generated content.
 
 .Example
 Update-M365DSCResourceDocumentationPage `
-    -SourcePath C:\repos\MyResource\source `
-    -OutputPath C:\repos\MyResource\output\WikiContent
+    -SourcePath C:\repos\MyResource\source
 
 This example shows how to generate wiki documentation for a specific module.
 
@@ -858,10 +854,6 @@ function Update-M365DSCResourceDocumentationPage
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $OutputPath,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
         $SourcePath,
 
         [Parameter()]
@@ -869,8 +861,15 @@ function Update-M365DSCResourceDocumentationPage
         $Force
     )
 
+    $tempPath = Join-Path -Path $env:TEMP -ChildPath 'ResourceMarkdown'
+
+    if ((Test-Path -Path $tempPath) -eq $false)
+    {
+        $null = New-Item -Path $tempPath -ItemType 'Directory'
+    }
+
     $newDscMofResourceWikiPageParameters = @{
-        OutputPath = $OutputPath
+        OutputPath = $tempPath
         SourcePath = $SourcePath
         Force      = $Force
     }
@@ -879,7 +878,7 @@ function Update-M365DSCResourceDocumentationPage
 
     $resourceDocsRoot = Join-Path -Path $PSScriptRoot -ChildPath '..\..\..\docs\docs\resources'
 
-    $files = Get-ChildItem -Path $OutputPath
+    $files = Get-ChildItem -Path $tempPath
     foreach ($file in $files)
     {
         switch -Wildcard ($file.BaseName)
@@ -918,6 +917,8 @@ function Update-M365DSCResourceDocumentationPage
         $destinationFolder = Join-Path -Path $resourceDocsRoot -ChildPath $targetFolder
         Move-Item -Path $file.FullName -Destination $destinationFolder -Force
     }
+
+    Remove-Item -Path $tempPath -Force -Confirm:$false
 }
 
 Export-ModuleMember -Function @(

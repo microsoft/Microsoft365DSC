@@ -35520,6 +35520,136 @@ function New-LabelPolicy
         $AsJob
     )
 }
+
+function New-ProtectionAlert
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $NotificationEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUserThrottleWindow,
+
+        [Parameter()]
+        [System.Object]
+        $Threshold,
+
+        [Parameter()]
+        [System.Object]
+        $Disabled,
+
+        [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Object]
+        $Operation,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUser,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUserThrottleThreshold,
+
+        [Parameter()]
+        [System.Object]
+        $PrivacyManagementScopedSensitiveInformationTypesForCounting,
+
+        [Parameter()]
+        [System.Object]
+        $AggregationType,
+
+        [Parameter()]
+        [System.Object]
+        $UseCreatedDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $Severity,
+
+        [Parameter()]
+        [System.Object]
+        $AlertBy,
+
+        [Parameter()]
+        [System.Object]
+        $VolumeThreshold,
+
+        [Parameter()]
+        [System.Object]
+        $TimeWindow,
+
+        [Parameter()]
+        [System.Object]
+        $PrivacyManagementScopedSensitiveInformationTypes,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $Category,
+
+        [Parameter()]
+        [System.Object]
+        $AlertFor,
+
+        [Parameter()]
+        [System.Object]
+        $CorrelationPolicyId,
+
+        [Parameter()]
+        [System.Object]
+        $LogicalOperationName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $NotifyUserSuppressionExpiryDate,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $CustomProperties,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUserOnFilterMatch,
+
+        [Parameter()]
+        [System.Object]
+        $ThreatType,
+
+        [Parameter()]
+        [System.Object]
+        $NotificationCulture,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $PrivacyManagementScopedSensitiveInformationTypesThreshold,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function New-RetentionCompliancePolicy
 {
     [CmdletBinding()]
@@ -36262,6 +36392,28 @@ function Remove-LabelPolicy
         [Parameter()]
         [System.Object]
         $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+
+function Remove-ProtectionAlert
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceDeletion,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -38316,6 +38468,120 @@ function Set-LabelPolicy
         $AsJob
     )
 }
+
+function Set-ProtectionAlert
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $NotificationEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUserThrottleWindow,
+
+        [Parameter()]
+        [System.Object]
+        $Threshold,
+
+        [Parameter()]
+        [System.Object]
+        $Disabled,
+
+        [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Object]
+        $Operation,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUser,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUserThrottleThreshold,
+
+        [Parameter()]
+        [System.Object]
+        $PrivacyManagementScopedSensitiveInformationTypesForCounting,
+
+        [Parameter()]
+        [System.Object]
+        $AggregationType,
+
+        [Parameter()]
+        [System.Object]
+        $UseCreatedDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $Severity,
+
+        [Parameter()]
+        [System.Object]
+        $AlertBy,
+
+        [Parameter()]
+        [System.Object]
+        $VolumeThreshold,
+
+        [Parameter()]
+        [System.Object]
+        $TimeWindow,
+
+        [Parameter()]
+        [System.Object]
+        $PrivacyManagementScopedSensitiveInformationTypes,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $Category,
+
+        [Parameter()]
+        [System.Object]
+        $AlertFor,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $NotifyUserSuppressionExpiryDate,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUserOnFilterMatch,
+
+        [Parameter()]
+        [System.Object]
+        $NotificationCulture,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $PrivacyManagementScopedSensitiveInformationTypesThreshold,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Set-RetentionCompliancePolicy
 {
     [CmdletBinding()]
@@ -38884,6 +39150,16 @@ function Add-PnPTenantTheme
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PipeBinds.ThemePalettePipeBind]
         $Palette
+    )
+}
+
+function Get-ProtectionAlert
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
     )
 }
 function Get-PnPApp
