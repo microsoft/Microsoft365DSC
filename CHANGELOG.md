@@ -21,6 +21,11 @@
 * SCRetentionCompliancePolicy
   * Forces changes to existing policies to be applied.
     FIXES [#2719](https://github.com/microsoft/Microsoft365DSC/issues/2719)
+  * Handles wait when the associated policy has pending changes.
+    FIXES [#2728](https://github.com/microsoft/Microsoft365DSC/issues/2728)
+* SCRetentionComplianceRule
+  * Handles wait when the associated policy has pending changes.
+    FIXES [#2728](https://github.com/microsoft/Microsoft365DSC/issues/2728)
 * TeamsEmergencyCallingPolicy
   * Fixes issue where CertificateThumbprint wasn't working because Credential was set to mandatory by the Test-TargetResource function.
     FIXES [#2710](https://github.com/microsoft/Microsoft365DSC/issues/2710)
