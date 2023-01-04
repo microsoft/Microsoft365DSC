@@ -168,6 +168,12 @@ function Get-TargetResource
                 $descriptionValue = $distributionGroup.Description[0].Replace("`r", '').Replace("`n", '')
             }
 
+            $groupTypeValue = 'Distribution'
+            if (([Array]$distributionGroup.GroupType.Replace(' ', '').Split(',')).Contains('SecurityEnabled'))
+            {
+                $groupTypeValue = 'Security'
+            }
+
             $result = @{
                 Alias                              = $distributionGroup.Alias
                 BccBlocked                         = $distributionGroup.BccBlocked
@@ -188,7 +194,7 @@ function Get-TargetResource
                 RequireSenderAuthenticationEnabled = $distributionGroup.RequireSenderAuthenticationEnabled
                 RoomList                           = $distributionGroup.RoomList
                 SendModerationNotifications        = $distributionGroup.SendModerationNotifications
-                Type                               = $distributionGroup.Type
+                Type                               = $groupTypeValue
                 Ensure                             = 'Present'
                 Credential                         = $Credential
                 ApplicationId                      = $ApplicationId
@@ -399,6 +405,7 @@ function Set-TargetResource
             Write-Warning -Message 'Desired and current OrganizationalUnit values differ. This property cannot be updated once the distribution group has been created. Delete and recreate the distribution group to update the value.'
         }
         $currentParameters.Remove('OrganizationalUnit') | Out-Null
+        $currentParameters.Remove('Type') | Out-Null
         Set-DistributionGroup @currentParameters -Identity $Name
     }
 }
