@@ -303,7 +303,30 @@ function Set-TargetResource
         }
 
         Write-Verbose -Message "Updating RetentionComplianceRule with values:`r`n$(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
-        Set-RetentionComplianceRule @CreationParams
+
+        $success = $false
+        $retries = 1
+        while (!$success -and $retries -le 10)
+        {
+            try
+            {
+                Set-RetentionComplianceRule @CreationParams -ErrorAction Stop
+                $success = $true
+            }
+            catch
+            {
+                if ($_.Exception.Message -like "*are being deployed. Once deployed, additional actions can be performed*")
+                {
+                    Write-Verbose -Message "The associated policy has pending changes being deployed. Waiting 30 seconds for a maximum of 300 seconds (5 minutes). Total time waited so far {$($retries * 30) seconds}"
+                    Start-Sleep -Seconds 30
+                }
+                else
+                {
+                    $success = $true
+                }
+            }
+            $retries++
+        }
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
