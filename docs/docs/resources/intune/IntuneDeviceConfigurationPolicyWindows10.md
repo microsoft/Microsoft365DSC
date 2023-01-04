@@ -160,7 +160,7 @@
 | **EdgeBlockSendingIntranetTrafficToInternetExplorer** | Write | Boolean | Indicates whether or not to switch the intranet traffic from Edge to Internet Explorer. Note: the name of this property is misleading; the property is obsolete, use EdgeSendIntranetTrafficToInternetExplorer instead. | |
 | **EdgeSendIntranetTrafficToInternetExplorer** | Write | Boolean | Indicates whether or not to switch the intranet traffic from Edge to Internet Explorer. | |
 | **EdgeRequireSmartScreen** | Write | Boolean | Indicates whether or not to Require the user to use the smart screen filter. | |
-| **EdgeEnterpriseModeSiteListLocation** | Write | Boolean | Indicates the enterprise mode site list location. Could be a local file, local network or http location. | |
+| **EdgeEnterpriseModeSiteListLocation** | Write | String | Indicates the enterprise mode site list location. Could be a local file, local network or http location. | |
 | **EdgeFirstRunUrl** | Write | String | The first run URL for when Edge browser is opened for the first time. | |
 | **EdgeSearchEngine** | Write | String | Allows IT admins to set a default search engine for MDM-Controlled devices. Users can override this and change their default search engine provided the AllowSearchEngineCustomization policy is not set. | |
 | **EdgeHomepageUrls** | Write | StringArray[] | The list of URLs for homepages shodwn on MDM-enrolled devices on Edge browser. | |

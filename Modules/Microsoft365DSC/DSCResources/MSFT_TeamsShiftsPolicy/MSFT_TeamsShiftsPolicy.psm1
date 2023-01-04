@@ -13,6 +13,7 @@ function Get-TargetResource
         $AccessGracePeriodMinutes,
 
         [Parameter()]
+        [ValidateSet('UnrestrictedAccess_TeamsApp')]
         [System.String]
         $AccessType,
 
@@ -25,6 +26,7 @@ function Get-TargetResource
         $EnableShiftPresence,
 
         [Parameter()]
+        [ValidateSet('Always', 'ShowOnceOnChange', 'Never')]
         [System.String]
         $ShiftNoticeFrequency,
 
@@ -33,6 +35,7 @@ function Get-TargetResource
         $ShiftNoticeMessageCustom,
 
         [Parameter()]
+        [ValidateSet('DefaultMessage', 'Message1', 'Message2', 'Message3', 'Message4', 'Message5', 'Message6', 'Message7', 'CustomMessage')]
         [System.String]
         $ShiftNoticeMessageType,
 
@@ -127,6 +130,7 @@ function Set-TargetResource
         $AccessGracePeriodMinutes,
 
         [Parameter()]
+        [ValidateSet('UnrestrictedAccess_TeamsApp')]
         [System.String]
         $AccessType,
 
@@ -139,6 +143,7 @@ function Set-TargetResource
         $EnableShiftPresence,
 
         [Parameter()]
+        [ValidateSet('Always', 'ShowOnceOnChange', 'Never')]
         [System.String]
         $ShiftNoticeFrequency,
 
@@ -147,6 +152,7 @@ function Set-TargetResource
         $ShiftNoticeMessageCustom,
 
         [Parameter()]
+        [ValidateSet('DefaultMessage', 'Message1', 'Message2', 'Message3', 'Message4', 'Message5', 'Message6', 'Message7', 'CustomMessage')]
         [System.String]
         $ShiftNoticeMessageType,
 
@@ -258,6 +264,7 @@ function Test-TargetResource
         $AccessGracePeriodMinutes,
 
         [Parameter()]
+        [ValidateSet('UnrestrictedAccess_TeamsApp')]
         [System.String]
         $AccessType,
 
@@ -270,6 +277,7 @@ function Test-TargetResource
         $EnableShiftPresence,
 
         [Parameter()]
+        [ValidateSet('Always', 'ShowOnceOnChange', 'Never')]
         [System.String]
         $ShiftNoticeFrequency,
 
@@ -278,6 +286,7 @@ function Test-TargetResource
         $ShiftNoticeMessageCustom,
 
         [Parameter()]
+        [ValidateSet('DefaultMessage', 'Message1', 'Message2', 'Message3', 'Message4', 'Message5', 'Message6', 'Message7', 'CustomMessage')]
         [System.String]
         $ShiftNoticeMessageType,
 
@@ -381,7 +390,7 @@ function Export-TargetResource
         $ManagedIdentity
     )
 
-   $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -419,11 +428,11 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Identity = $config.Identity
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
+                Identity              = $config.Identity
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
 
             }
