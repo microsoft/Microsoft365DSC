@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.104.1
 
 * EXODistributionGroup
   * Changed the logic retrieving the group Type in the Get-TargetResource.
