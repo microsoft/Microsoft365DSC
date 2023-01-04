@@ -48,6 +48,8 @@
   * Added support to generate parameter descriptions automatically from schema
     FIXES [#2720](https://github.com/microsoft/Microsoft365DSC/issues/2720)
 * MISC
+  * Fixes an issue where OrderedDictionary values weren't properly expanded in a delta report
+    FIXES [#2715](https://github.com/microsoft/Microsoft365DSC/issues/2715)
   * Updated website generation code to checkout correct commit
 
 # 1.22.1221.1
