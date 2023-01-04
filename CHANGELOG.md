@@ -4,6 +4,53 @@
 
 * AADEntitlementManagementConnectedOrganization
   * Initial release
+* EXODistributionGroup
+  * Changed the logic retrieving the group Type in the Get-TargetResource.
+    FIXES [#2709](https://github.com/microsoft/Microsoft365DSC/issues/2709)
+* EXOManagementRoleAssignment
+  * Modified logic to handle the RecipientOrganizationUnitScope parameter by display name.
+    FIXES [#2708](https://github.com/microsoft/Microsoft365DSC/issues/2708)
+* IntuneASRRulesPolicyWindows10
+  * Corrects possible values for parameter OfficeCommunicationAppsLaunchChildProcess
+    FIXES [#2730](https://github.com/microsoft/Microsoft365DSC/issues/2730)
+* IntuneDeviceConfigurationPolicyMacOS
+  * Fixes issue where parameter UpdateDelayPolicy wasn't handled as an array
+    FIXES [#2731](https://github.com/microsoft/Microsoft365DSC/issues/2731)
+* IntuneDeviceConfigurationPolicyWindows10
+  * Fixed incorrect type of EdgeEnterpriseModeSiteListLocation parameter in the
+    resource schema definition
+    FIXES [#2732](https://github.com/microsoft/Microsoft365DSC/issues/2732)
+* SCRetentionCompliancePolicy
+  * Forces changes to existing policies to be applied.
+    FIXES [#2719](https://github.com/microsoft/Microsoft365DSC/issues/2719)
+* TeamsEmergencyCallingPolicy
+  * Fixes issue where CertificateThumbprint wasn't working because Credential was set to mandatory by the Test-TargetResource function.
+    FIXES [#2710](https://github.com/microsoft/Microsoft365DSC/issues/2710)
+* TeamsEmergencyCallingRoutingPolicy
+  * Fixes issue where CertificateThumbprint wasn't working because Credential was set to mandatory by the Test-TargetResource function.
+    FIXES [#2710](https://github.com/microsoft/Microsoft365DSC/issues/2710)
+* TeamsIPPhonePolicy
+  * Added descriptions to the resource parameters
+  * Limited possible parameter values where required
+    FIXES [#2722](https://github.com/microsoft/Microsoft365DSC/issues/2722)
+* TeamsMeetingPolicy
+  * Deprecating RecordingStorageMode parameter, which is no longer available.
+    FIXES [#2723](https://github.com/microsoft/Microsoft365DSC/issues/2723)
+* TeamsShiftsPolicy
+  * Added descriptions to the resource parameters
+  * Limited possible parameter values where required
+    FIXES [#2722](https://github.com/microsoft/Microsoft365DSC/issues/2722)
+* TeamsFilesPolicy
+  * Added descriptions to the resource parameters
+  * Limited possible parameter values where required
+    FIXES [#2722](https://github.com/microsoft/Microsoft365DSC/issues/2722)
+* DRG
+  * Various fixes for Graph and Intune resources automation
+  * Migrated to new schema including description
+  * Added support to generate parameter descriptions automatically from schema
+    FIXES [#2720](https://github.com/microsoft/Microsoft365DSC/issues/2720)
+* MISC
+  * Updated website generation code to checkout correct commit
 
 # 1.22.1221.1
 

@@ -249,7 +249,7 @@ function Get-TargetResource
 
         [Parameter()]
         [ValidateSet('none', 'delayOSUpdateVisibility', 'delayAppUpdateVisibility', 'unknownFutureValue', 'delayMajorOsUpdateVisibility')]
-        [System.String]
+        [System.String[]]
         $UpdateDelayPolicy,
 
         [Parameter()]
@@ -418,10 +418,8 @@ function Get-TargetResource
             SoftwareUpdatesEnforcedDelayInDays              = $getValue.AdditionalProperties.softwareUpdatesEnforcedDelayInDays
             SpotlightBlockInternetResults                   = $getValue.AdditionalProperties.spotlightBlockInternetResults
             TouchIdTimeoutInHours                           = $getValue.AdditionalProperties.touchIdTimeoutInHours
-            UpdateDelayPolicy                               = $getValue.AdditionalProperties.updateDelayPolicy
+            UpdateDelayPolicy                               = $getValue.AdditionalProperties.updateDelayPolicy -split '-'
             WallpaperModificationBlocked                    = $getValue.AdditionalProperties.wallpaperModificationBlocked
-
-
             Ensure                                          = 'Present'
             Credential                                      = $Credential
             ApplicationId                                   = $ApplicationId
@@ -462,7 +460,6 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-
         #region resource generator code
         [Parameter()]
         [System.String]
@@ -708,18 +705,16 @@ function Set-TargetResource
 
         [Parameter()]
         [ValidateSet('none', 'delayOSUpdateVisibility', 'delayAppUpdateVisibility', 'unknownFutureValue', 'delayMajorOsUpdateVisibility')]
-        [System.String]
+        [System.String[]]
         $UpdateDelayPolicy,
 
         [Parameter()]
         [System.Boolean]
         $WallpaperModificationBlocked,
 
-
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
-
         #endregion
 
         [Parameter(Mandatory = $true)]
@@ -827,7 +822,6 @@ function Set-TargetResource
             $CreateParameters.add('AdditionalProperties', $AdditionalProperties)
         }
 
-
         #region resource generator code
         $policy = New-MgDeviceManagementDeviceConfiguration @CreateParameters
         $assignmentsHash = @()
@@ -843,7 +837,6 @@ function Set-TargetResource
                 -Repository deviceConfigurations
         }
         #endregion
-
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -891,7 +884,6 @@ function Set-TargetResource
         Update-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $currentInstance.id `
             -Targets $assignmentsHash `
             -Repository deviceConfigurations
-
         #endregion
 
     }
@@ -899,16 +891,9 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing {$DisplayName}"
 
-
-        #region resource generator code
-        #endregion
-
-
-
         #region resource generator code
         Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
-
     }
 }
 
@@ -918,7 +903,6 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-
         #region resource generator code
         [Parameter()]
         [System.String]
@@ -1164,18 +1148,16 @@ function Test-TargetResource
 
         [Parameter()]
         [ValidateSet('none', 'delayOSUpdateVisibility', 'delayAppUpdateVisibility', 'unknownFutureValue', 'delayMajorOsUpdateVisibility')]
-        [System.String]
+        [System.String[]]
         $UpdateDelayPolicy,
 
         [Parameter()]
         [System.Boolean]
         $WallpaperModificationBlocked,
 
-
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
-
         #endregion
 
         [Parameter(Mandatory = $true)]
@@ -1276,8 +1258,8 @@ function Test-TargetResource
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
-    #Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    #Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
     #Convert any DateTime to String
     foreach ($key in $ValuesToCheck.Keys)
@@ -1336,6 +1318,7 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ProfileName 'v1.0'
+
     $context = Get-MgContext
     if ($null -eq $context)
     {
@@ -1358,7 +1341,6 @@ function Export-TargetResource
 
     try
     {
-
         #region resource generator code
         [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
             -ErrorAction Stop | Where-Object `
@@ -1366,7 +1348,6 @@ function Export-TargetResource
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSGeneralDeviceConfiguration'  `
         }
         #endregion
-
 
         $i = 1
         $dscContent = ''
@@ -1491,7 +1472,6 @@ function Export-TargetResource
     }
 }
 
-
 function Get-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
@@ -1539,6 +1519,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
     {
         return $null
     }
+
     return $results
 }
 
@@ -1600,6 +1581,7 @@ function Get-M365DSCDRGComplexTypeToString
     {
         $currentProperty += "`r`n"
     }
+
     $currentProperty += "$whitespace`MSFT_$CIMInstanceName{`r`n"
     $keyNotNull = 0
     foreach ($key in $ComplexObject.Keys)
@@ -1679,6 +1661,7 @@ function Test-M365DSCComplexObjectHasValues
             }
         }
     }
+
     return $hasValue
 }
 
@@ -1763,6 +1746,7 @@ function Get-M365DSCDRGSimpleObjectTypeToString
             $returnValue = $Space + $Key + ' = ' + $Value + "`r`n"
         }
     }
+
     return $returnValue
 }
 
@@ -1808,8 +1792,10 @@ function Rename-M365DSCCimInstanceODataParameter
             }
         }
     }
+
     return $Properties
 }
+
 function Get-M365DSCAdditionalProperties
 {
     [CmdletBinding()]
@@ -1881,8 +1867,12 @@ function Get-M365DSCAdditionalProperties
         'TouchIdTimeoutInHours'
         'UpdateDelayPolicy'
         'WallpaperModificationBlocked'
-
     )
+
+    $stringProperties = @(
+        'UpdateDelayPolicy'
+    )
+
     $results = @{'@odata.type' = '#microsoft.graph.macOSGeneralDeviceConfiguration' }
     $cloneProperties = $Properties.clone()
     foreach ($property in $cloneProperties.Keys)
@@ -1906,22 +1896,28 @@ function Get-M365DSCAdditionalProperties
                 {
                     $propertyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $properties.$property
                 }
-
             }
             else
             {
-                $propertyValue = $properties.$property
+                if ($propertyName -in $stringProperties)
+                {
+                    $propertyValue = $properties.$property -join ','
+                }
+                else
+                {
+                    $propertyValue = $properties.$property
+                }
             }
 
-
             $results.Add($propertyName, $propertyValue)
-
         }
     }
+
     if ($results.Count -eq 1)
     {
         return $null
     }
+
     return $results
 }
 
@@ -1972,6 +1968,7 @@ function Compare-M365DSCComplexObject
                 }
             }
         }
+
         $sourceValue = $Source[$key]
         $targetValue = $Target[$key]
         #One of the item is null
@@ -1989,6 +1986,7 @@ function Compare-M365DSCComplexObject
             Write-Verbose -Message "Configuration drift - key: $key Source{$sourceValue} Target{$targetValue}"
             return $false
         }
+
         #Both source and target aren't null or empty
         if (($null -ne $Source[$skey]) -and ($null -ne $Target[$key]))
         {
@@ -2020,7 +2018,6 @@ function Compare-M365DSCComplexObject
                     Write-Verbose -Message "Configuration drift - key: $key Source{$sourceValue} Target{$targetValue}"
                     return $false
                 }
-
             }
         }
     }
@@ -2054,6 +2051,7 @@ function Convert-M365DSCDRGComplexTypeToHashtable
         }
         return $Results
     }
+
     $hashComplexObject = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject
     if ($hashComplexObject)
     {
@@ -2069,9 +2067,9 @@ function Convert-M365DSCDRGComplexTypeToHashtable
             {
                 $results.remove($key) | Out-Null
             }
-
         }
     }
+
     return $results
 }
 
@@ -2094,6 +2092,7 @@ function Get-MgDeviceManagementPolicyAssignments
         [System.String]
         $APIVersion = 'beta'
     )
+
     try
     {
         $deviceManagementPolicyAssignments = @()
@@ -2126,6 +2125,7 @@ function Get-MgDeviceManagementPolicyAssignments
                 }
             }
         }
+
         return $deviceManagementPolicyAssignments
     }
     catch
@@ -2192,10 +2192,10 @@ function Update-MgDeviceManagementPolicyAssignments
             }
             $deviceManagementPolicyAssignments += @{'target' = $formattedTarget }
         }
+
         $body = @{'assignments' = $deviceManagementPolicyAssignments } | ConvertTo-Json -Depth 20
         #write-verbose -Message $body
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
-
     }
     catch
     {

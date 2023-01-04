@@ -225,7 +225,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.UInt32]
-        [ValidateRange(-1,99999)]
+        [ValidateRange(-1, 99999)]
         $NewMeetingRecordingExpirationDays,
 
         [Parameter()]
@@ -237,6 +237,7 @@ function Get-TargetResource
         [System.String]
         $QnAEngagementMode,
 
+        #DEPRECATED
         [Parameter()]
         [System.String]
         [ValidateSet('Stream', 'OneDriveForBusiness')]
@@ -320,6 +321,11 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    # Warning for deprecated parameters
+    if ($PSBoundParameters.ContainsKey('RecordingStorageMode'))
+    {
+        Write-Warning 'RecordingStorageMode is deprecated. Please remove this parameter from your configuration.'
+    }
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = 'Absent'
@@ -390,7 +396,8 @@ function Get-TargetResource
             NewMeetingRecordingExpirationDays          = $policy.NewMeetingRecordingExpirationDays
             PreferredMeetingProviderForIslandsMode     = $policy.PreferredMeetingProviderForIslandsMode
             QnAEngagementMode                          = $policy.QnAEngagementMode
-            RecordingStorageMode                       = $policy.RecordingStorageMode
+            #DEPRECATED
+            #RecordingStorageMode                       = $policy.RecordingStorageMode
             RoomPeopleNameUserOverride                 = $policy.RoomPeopleNameUserOverride
             ScreenSharingMode                          = $policy.ScreenSharingMode
             SpeakerAttributionMode                     = $policy.SpeakerAttributionMode
@@ -643,7 +650,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.UInt32]
-        [ValidateRange(-1,99999)]
+        [ValidateRange(-1, 99999)]
         $NewMeetingRecordingExpirationDays,
 
         [Parameter()]
@@ -655,6 +662,7 @@ function Set-TargetResource
         [System.String]
         $QnAEngagementMode,
 
+        #DEPRECATED
         [Parameter()]
         [System.String]
         [ValidateSet('Stream', 'OneDriveForBusiness')]
@@ -738,6 +746,12 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
+    # Warning for deprecated parameters
+    if ($PSBoundParameters.ContainsKey('RecordingStorageMode'))
+    {
+        Write-Warning 'RecordingStorageMode is deprecated. Please remove this parameter from your configuration.'
+    }
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     $SetParameters = $PSBoundParameters
@@ -747,6 +761,10 @@ function Set-TargetResource
     $SetParameters.Remove('TenantId') | Out-Null
     $SetParameters.Remove('CertificateThumbprint') | Out-Null
     $SetParameters.Remove('Verbose') | Out-Null # Needs to be implicitly removed for the cmdlet to work
+
+    # Remove deprecated parameters
+    #DEPRECATED
+    $SetParameters.Remove('RecordingStorageMode') | Out-Null
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
@@ -778,7 +796,6 @@ function Set-TargetResource
         }
         if ($SetParameters.AllowCloudRecording -eq $false )
         {
-            $SetParameters.Remove('RecordingStorageMode')
             $SetParameters.Remove('AllowRecordingStorageOutsideRegion')
         }
         Set-CsTeamsMeetingPolicy @SetParameters
@@ -1017,7 +1034,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.UInt32]
-        [ValidateRange(-1,99999)]
+        [ValidateRange(-1, 99999)]
         $NewMeetingRecordingExpirationDays,
 
         [Parameter()]
@@ -1029,6 +1046,7 @@ function Test-TargetResource
         [System.String]
         $QnAEngagementMode,
 
+        #DEPRECATED
         [Parameter()]
         [System.String]
         [ValidateSet('Stream', 'OneDriveForBusiness')]
@@ -1106,6 +1124,12 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    # Warning for deprecated parameters
+    if ($PSBoundParameters.ContainsKey('RecordingStorageMode'))
+    {
+        Write-Warning 'RecordingStorageMode is deprecated. Please remove this parameter from your configuration.'
+    }
+
     Write-Verbose -Message "Testing configuration of Team Meeting Policy {$Identity}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -1122,6 +1146,9 @@ function Test-TargetResource
     # The AllowIPVideo is temporarly not working, therefore we won't check the value.
     $ValuesToCheck.Remove('AllowIPVideo') | Out-Null
 
+    # Remove deprecated parameters
+    #DEPRECATED
+    $ValuesToCheck.Remove('RecordingStorageMode') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
