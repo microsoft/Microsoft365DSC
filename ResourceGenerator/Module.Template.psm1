@@ -81,7 +81,8 @@ function Get-TargetResource
             return $nullResult
         }
         $<PrimaryKey> = $getValue.<PrimaryKey>
-        Write-Verbose -Message "An <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>} was found."
+        Write-Verbose -Message "An <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>} was found."<#ResourceGenerator
+<ComplexTypeConstructor>ResourceGenerator#>
         $results = @{<#ResourceGenerator
             #region resource generator code
 <HashTableMapping>            #endregion ResourceGenerator#>
@@ -823,6 +824,13 @@ function Get-M365DSCDRGComplexTypeToString
         }
         $currentProperty += $indent
     }
+
+    $emptyCIM=$currentProperty.replace(" ","").replace("`r`n","")
+    if($emptyCIM -eq "MSFT_$CIMInstanceName{}")
+    {
+        $currentProperty=$null
+    }
+
     return $currentProperty
 }
 
