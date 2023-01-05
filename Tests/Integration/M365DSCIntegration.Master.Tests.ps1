@@ -33,6 +33,14 @@ Configuration Master
     Node Localhost
     {
         #region AAD
+        AADAdministrativeUnit AADAdministrativeUnit
+        {
+            Credential           = $Credscredential;
+            DisplayName          = "M365DSC Integration";
+            Ensure               = "Present";
+            Visibility           = 'HiddenMembership'
+        }
+
         AADApplication 'DSCApp1'
         {
             DisplayName               = "App1"

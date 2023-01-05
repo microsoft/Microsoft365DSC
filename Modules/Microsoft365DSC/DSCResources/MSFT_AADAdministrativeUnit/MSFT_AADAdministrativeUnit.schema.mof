@@ -22,18 +22,16 @@ class MSFT_MicrosoftGraphOpenExtension
 [ClassVersion("1.0.0.0"), FriendlyName("AADAdministrativeUnit")]
 class MSFT_AADAdministrativeUnit : OMI_BaseResource
 {
+    [Key, Description("DisplayName of the Administrative Unit")] String DisplayName;
     [Write, Description("Object-Id of the Administrative Unit")] String Id;
     [Write, Description("Description of the Administrative Unit")] String Description;
-    [Write, Description("DisplayName of the Administrative Unit")] String DisplayName;
     [Write, Description("Visibility of the Administrative Unit. Specify HiddenMembership if members of the AU are hidden")] String Visibility;
     [Write, Description("Specify membership type. Possible values are Assigned and Dynamic if the AU-preview has been activated. Otherwise do not use")] String MembershipType;
     [Write, Description("Specify membership rule. Requires that MembershipType is set to Dynamic AND the AU-preview has been activated. Otherwise, do not use")] String MembershipRule;
     [Write, Description("Specify dynamic membership-rule processing-state. Valid values are 'On' and 'Paused'. Requires that MembershipType is set to Dynamic AND the AU-preview has been activated. Otherwise, do not use")] String MembershipRuleProcessingState;
     [Write, Description("Specify members. Only specify if MembershipType is set to Static"), EmbeddedInstance("MSFT_MicrosoftGraphIdentity")] String Members[];
     [Write, Description(""), EmbeddedInstance("MSFT_MicrosoftGraphScopedRoleMembership")] String ScopedRoleMembers[];
-//   [Write, Description("Extensions. See https://docs.microsoft.com/en-us/graph/extensibility-overview#open-extensions"), EmbeddedInstance("MSFT_MicrosoftGraphOpenExtension")] String Extensions[];
-
-
+//  [Write, Description("Extensions. See https://docs.microsoft.com/en-us/graph/extensibility-overview#open-extensions"), EmbeddedInstance("MSFT_MicrosoftGraphOpenExtension")] String Extensions[];
     [Write, Description("Present ensures the Administrative Unit exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
     [Write, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
