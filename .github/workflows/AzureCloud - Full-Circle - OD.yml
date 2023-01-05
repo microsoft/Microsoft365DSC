@@ -21,7 +21,8 @@ jobs:
           $source = "./Modules/Microsoft365DSC/"
           $destination = "C:\Program Files\WindowsPowerShell\Modules"
           Copy-Item -Path $source -Recurse -Destination $destination -Container -Force
-          Update-M365DSCDependencies
+          Update-M365DSCModule
+          Import-Module 'PnP.PowerShell' -Force
       - name: Run ReverseDSC
         shell: powershell
         env:
