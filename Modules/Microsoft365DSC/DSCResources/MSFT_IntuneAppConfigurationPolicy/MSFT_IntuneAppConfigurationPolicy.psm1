@@ -51,7 +51,8 @@ function Get-TargetResource
     )
     Write-Verbose -Message "Checking for the Intune App Configuration Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -92,7 +93,6 @@ function Get-TargetResource
             Managedidentity       = $ManagedIdentity.IsPresent
         }
         $returnAssignments = @()
-        Select-MgProfile -Name beta
         $returnAssignments += Get-MgDeviceAppManagementTargetedManagedAppConfigurationAssignment -TargetedManagedAppConfigurationId $configPolicy.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $returnAssignments)
