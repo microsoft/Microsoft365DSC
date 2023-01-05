@@ -151,12 +151,12 @@ function Get-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             ManagedIdentity       = $ManagedIdentity.IsPresent
         }
-        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.MembershipType))
+        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.membershipType))
         {
             # only include details about membership if values are present
-            $results.Add('MembershipType', $getValue.AdditionalProperties.MembershipType)
-            $results.Add('MembershipRule', $getValue.AdditionalProperties.MembershipRule)
-            $results.Add('MembershipRuleProcessingState', $getValue.AdditionalProperties.MembershipRuleProcessingState)
+            $results.Add('MembershipType', $getValue.AdditionalProperties.membershipType)
+            $results.Add('MembershipRule', $getValue.AdditionalProperties.membershipRule)
+            $results.Add('MembershipRuleProcessingState', $getValue.AdditionalProperties.membershipRuleProcessingState)
         }
 
         $memberSpec = $null
