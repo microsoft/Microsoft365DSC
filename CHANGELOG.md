@@ -5,6 +5,9 @@
 * AADAdministrativeUnit
   * Marks DisplayName as a mandatory key and removed the visibility parameter from being evaluated since it is always returned as null.
   FIXES [#2704](https://github.com/microsoft/Microsoft365DSC/issues/2704)
+* AADConditionalAccessPolicy
+  * Removed the extra Microsoft Graph profile switching call which was causing performance issue.
+    FIXEX [#2688](https://github.com/microsoft/Microsoft365DSC/issues/2688)
 
 # 1.23.104.1
 
