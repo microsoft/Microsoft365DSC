@@ -554,7 +554,7 @@ Configuration Master
             SCCaseHoldPolicy DemoCaseHoldPolicy
             {
                 Case                 = "Integration Case"
-                ExchangeLocation     = @("John.Smith@$Domain","AllPublicFolderUnderRoot")
+                ExchangeLocation     = @("John.Smith@$Domain")
                 Name                 = "Integration Hold"
                 PublicFolderLocation = "All"
                 Comment              = "This is a test for integration"
