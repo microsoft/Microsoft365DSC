@@ -59,10 +59,11 @@ and be released to [PowerShell Gallery](https://www.powershellgallery.com/).
 
 To acquire the latest
 bits of the module from a machine that has internet connectivity,
-run the following PowerShell line:
+run the following PowerShell lines:
 
 ```PowerShell
 Install-Module -Name Microsoft365DSC -Force
+Update-M365DSCModule
 ```
 
 ## Telemetry Disclaimer
