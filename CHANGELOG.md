@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADAdministrativeUnit
+  * Marks DisplayName as a mandatory key and removed the visibility parameter from being evaluated since it is always returned as null.
+  FIXES [#2704](https://github.com/microsoft/Microsoft365DSC/issues/2704)
+
 # 1.23.104.1
 
 * EXODistributionGroup
