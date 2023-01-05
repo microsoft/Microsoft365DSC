@@ -18,8 +18,8 @@ jobs:
         shell: powershell
         run: |
           winrm quickconfig -force
-          $source = "./Modules/Microsoft365DSC/"
-          $destination = "C:\Program Files\WindowsPowerShell\Modules"
+          $source = './Modules/Microsoft365DSC/'
+          $destination = 'C:\Program Files\WindowsPowerShell\Modules'
           Copy-Item -Path $source -Recurse -Destination $destination -Container -Force
           Update-M365DSCDependencies
       - name: Run ReverseDSC
@@ -28,13 +28,10 @@ jobs:
           PUBLIC_USERNAME: ${{ secrets.PUBLIC_USERNAME }}
           PUBLIC_PASSWORD: ${{ secrets.PUBLIC_PASSWORD }}
         run: |
-          $VerbosePReference = 'Continue'
           Set-ExecutionPolicy Unrestricted -Force
-          Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
+          Get-ChildItem 'C:\Program Files\WindowsPowerShell\Modules' -Recurse | Unblock-File
           $CredPassword = ConvertTo-SecureString $env:PUBLIC_PASSWORD -AsPlainText -Force
           $Credential = New-Object System.Management.Automation.PSCredential ($env:PUBLIC_USERNAME, $CredPassword)
+          $Credential.Password.MakeReadOnly()
           Set-M365DSCTelemetryOption -Enabled $false
-          Write-Verbose -Message "Trying to connect to SC"
-          Connect-M365Tenant -Workload SecurityComplianceCenter -Credential $Credential
-          Write-Verbose -Message "Connected to SC"
-          Export-M365DSCConfiguration -Credential $Credential -Path "." -FileName 'ExtractedSPO.ps1' -Workload 'SC' -Verbose
+          Export-M365DSCConfiguration -Credential $Credential -Path '.' -FileName 'ExtractedSC.ps1' -Workload 'SC' -Verbose
