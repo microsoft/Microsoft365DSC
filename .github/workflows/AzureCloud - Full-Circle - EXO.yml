@@ -34,4 +34,4 @@ jobs:
           $Credential = New-Object System.Management.Automation.PSCredential ($env:PUBLIC_USERNAME, $CredPassword)
           $Credential.Password.MakeReadOnly()
           Set-M365DSCTelemetryOption -Enabled $false
-          Export-M365DSCConfiguration -Credential $Credential -Path "." -FileName 'ExtractedSPO.ps1' -Workload 'EXO' -Verbose
+          Export-M365DSCConfiguration -Credential $Credential -Path "." -FileName 'ExtractedEXO.ps1' -Workload 'EXO' -Verbose
