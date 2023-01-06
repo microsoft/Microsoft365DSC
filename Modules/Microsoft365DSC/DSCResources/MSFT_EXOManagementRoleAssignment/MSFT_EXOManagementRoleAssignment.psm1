@@ -126,12 +126,27 @@ function Get-TargetResource
         }
         else
         {
+            $RecipientAdministrativeUnitScopeValue = $null
+            if ($roleAssignment.RecipientWriteScope -eq 'AdministrativeUnit')
+            {
+                $adminUnit = Get-AdministrativeUnit -Identity $roleAssignment.CustomRecipientWriteScope
+
+                if ($RecipientAdministrativeUnitScope -eq $adminUnit.Name)
+                {
+                    $RecipientAdministrativeUnitScopeValue = $RecipientAdministrativeUnitScope
+                }
+                else
+                {
+                    $RecipientAdministrativeUnitScopeValue = $adminUnit.DisplayName
+                }
+            }
+
             $result = @{
                 Name                             = $roleAssignment.Name
                 CustomRecipientWriteScope        = $roleAssignment.CustomRecipientWriteScope
                 CustomResourceScope              = $roleAssignment.CustomResourceScope
                 ExclusiveRecipientWriteScope     = $roleAssignment.ExclusiveRecipientWriteScope
-                RecipientAdministrativeUnitScope = $roleAssignment.RecipientAdministrativeUnitScope
+                RecipientAdministrativeUnitScope = $RecipientAdministrativeUnitScopeValue
                 RecipientOrganizationalUnitScope = $roleAssignment.RecipientOrganizationalUnitScope
                 RecipientRelativeWriteScope      = $roleAssignment.RecipientRelativeWriteScope
                 Role                             = $roleAssignment.Role
@@ -294,6 +309,18 @@ function Set-TargetResource
     $NewManagementRoleParams.Remove('CertificatePath') | Out-Null
     $NewManagementRoleParams.Remove('CertificatePassword') | Out-Null
     $NewManagementRoleParams.Remove('ManagedIdentity') | Out-Null
+
+    # If the RecipientAdministrativeUnitScope parameter is provided, then retrieve its ID by Name
+    if (-not [System.String]::IsNullOrEmpty($RecipientAdministrativeUnitScope))
+    {
+        $NewManagementRoleParams.Remove("CustomRecipientWriteScope") | Out-Null
+        $adminUnit = Get-AdministrativeUnit -Identity $RecipientAdministrativeUnitScope -ErrorAction SilentlyContinue
+        if ($null -eq $adminUnit)
+        {
+            $adminUnit = Get-AdministrativeUnit | Where-Object -FilterScript {$_.DisplayName -eq $RecipientAdministrativeUnitScope}
+        }
+        $NewManagementRoleParams.RecipientAdministrativeUnitScope = $adminUnit.Name
+    }
 
     # CASE: Management Role doesn't exist but should;
     if ($Ensure -eq 'Present' -and $currentManagementRoleConfig.Ensure -eq 'Absent')

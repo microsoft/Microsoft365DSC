@@ -24,7 +24,7 @@
 | **AllowCloudRecording** | Write | Boolean | Determines whether cloud recording is allowed in a user's meetings. Set this to TRUE to allow the user to be able to record meetings. Set this to FALSE to prohibit the user from recording meetings. | |
 | **AllowRecordingStorageOutsideRegion** | Write | Boolean | Determines whether cloud recording can be stored out of region for go-local tenants where recording is not yet enabled. | |
 | **DesignatedPresenterRoleMode** | Write | String | Determines if users can change the default value of the Who can present? setting in Meeting options in the Teams client. This policy setting affects all meetings, including Meet Now meetings. | `OrganizerOnlyUserOverride`, `EveryoneInCompanyUserOverride`, `EveryoneUserOverride` |
-| **RecordingStorageMode** | Write | String | Determines whether recordings will be stored in Stream or OneDrive for Business. | `Stream`, `OneDriveForBusiness` |
+| **RecordingStorageMode** | Write | String | DEPRECATED | `Stream`, `OneDriveForBusiness` |
 | **AllowOutlookAddIn** | Write | Boolean | Determines whether a user can schedule Teams Meetings in Outlook desktop client. Set this to TRUE to allow the user to be able to schedule Teams meetings in Outlook client. Set this to FALSE to prohibit a user from scheduling Teams meeting in Outlook client. | |
 | **AllowPowerPointSharing** | Write | Boolean | Determines whether Powerpoint sharing is allowed in a user's meetings. Set this to TRUE to allow. Set this to FALSE to prohibit. | |
 | **AllowParticipantGiveRequestControl** | Write | Boolean | Determines whether participants can request or give control of screen sharing during meetings scheduled by this user. Set this to TRUE to allow the user to be able to give or request control. Set this to FALSE to prohibit the user from giving, requesting control in a meeting. | |
@@ -58,11 +58,11 @@
 | **AllowDocumentCollaboration** | Write | String | N/A | |
 | **AllowedStreamingMediaInput** | Write | String | N/A | |
 | **BlockedAnonymousJoinClientTypes** | Write | String | A user can join a Teams meeting anonymously using a Teams client or using a custom application built using Azure Communication Services. When anonymous meeting join is enabled, both types of clients may be used by default. This optional parameter can be used to block one of the client types that can be used. The allowed values are ACS (to block the use of Azure Communication Services clients) or Teams (to block the use of Teams clients). Both can also be specified, separated by a comma, but this is equivalent to disabling anonymous join completely. | |
-| **ChannelRecordingDownload** | Write | String | N/A | |
+| **ChannelRecordingDownload** | Write | String | Determines how channel meeting recordings are saved, permissioned, and who can download them. | |
 | **ExplicitRecordingConsent** | Write | String | N/A | |
 | **ForceStreamingAttendeeMode** | Write | String | N/A | |
 | **InfoShownInReportMode** | Write | String | N/A | |
-| **LiveInterpretationEnabledType** | Write | String | N/A | |
+| **LiveInterpretationEnabledType** | Write | String | Determines how meeting organizers can configure a meeting for language interpretation, select attendees of the meeting to become interpreters that other attendees can select and listen to the real-time translation they provide. | |
 | **LiveStreamingMode** | Write | String | Determines whether you provide support for your users to stream their Teams meetings to large audiences through Real-Time Messaging Protocol (RTMP). | `Disabled`, `Enabled` |
 | **MeetingInviteLanguages** | Write | String | Controls how the join information in meeting invitations is displayed by enforcing a common language or enabling up to two languages to be displayed. Note: All Teams supported languages can be specified using language codes. | |
 | **QnAEngagementMode** | Write | String | N/A | |
