@@ -4,10 +4,6 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter()]
-        [System.String]
-        $Id,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $GroupDisplayName,
@@ -128,10 +124,6 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter()]
-        [System.String]
-        $Id,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $GroupDisplayName,
@@ -267,10 +259,6 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Id,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
         $GroupDisplayName,
 
         [Parameter()]
@@ -325,7 +313,6 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
-    $ValuesToCheck.Remove('Id') | Out-Null
     $ValuesToCheck.Remove('GroupId') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"

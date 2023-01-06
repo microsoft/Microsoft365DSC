@@ -1,7 +1,6 @@
 [ClassVersion("1.0.0.0"), FriendlyName("TeamsGroupPolicyAssignment")]
 class MSFT_TeamsGroupPolicyAssignment : OMI_BaseResource
 {
-    [Key, Description("Unique Id, used to identify the policy (DSC specific)")] string Id;
     [Write, Description("Group Displayname of the group the policys are assigned to")] string GroupDisplayName;
     [Write, Description("GroupId, alternatively to Group Displayname")] String GroupId;
     [Write, Description("Teams PolicyType. The type of the policy to be assigned. Possible values:"), ValueMap{"CallingLineIdentity","TeamsAppSetupPolicy","TeamsAudioConferencingPolicy","TeamsCallingPolicy","TeamsCallParkPolicy","TeamsChannelsPolicy","TeamsComplianceRecordingPolicy","TenantDialPlan","TeamsMeetingBroadcastPolicy","TeamsMeetingPolicy","TeamsMessagingPolicy","TeamsShiftsPolicy","TeamsUpdateManagementPolicy","TeamsVerticalPackagePolicy"}, Values{"CallingLineIdentity","TeamsAppSetupPolicy","TeamsAudioConferencingPolicy","TeamsCallingPolicy","TeamsCallParkPolicy","TeamsChannelsPolicy","TeamsComplianceRecordingPolicy","TenantDialPlan","TeamsMeetingBroadcastPolicy","TeamsMeetingPolicy","TeamsMessagingPolicy","TeamsShiftsPolicy","TeamsUpdateManagementPolicy","TeamsVerticalPackagePolicy"}] String PolicyType;
