@@ -4,13 +4,13 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupDisplayname,
+        $GroupDisplayName,
 
         [Parameter()]
         [System.String]
@@ -70,28 +70,37 @@ function Get-TargetResource
 
     try
     {
-        Write-Verbose -Message "get GroupPolicyAssignment for $GroupDisplayname"
-        $Group = Find-CsGroup -SearchQuery $GroupDisplayname
-        if ($group.Length -gt 1)
+        Write-Verbose -Message "get GroupPOlicyAssignment for $GroupId"
+        $group = Find-CsGroup -SearchQuery $GroupId
+        if($group.Length -gt 1)
         {
-            Write-Verbose -Message "Found $($group.Length) groups with the name $GroupDisplayname"
-            $Group = $Group | Where-Object { $_.DisplayName -eq $GroupDisplayname }
+            Write-Verbose -Message "Found $($group.Length) groups with the id $GroupId"
+            $Group = $Group | Where-Object { $_.DisplayName -eq $GroupDisplayName }
+        }
+        else{
+            Write-Verbose -Message "get GroupPolicyAssignment for $GroupDisplayName"
+            $Group = Find-CsGroup -SearchQuery $GroupDisplayName
+            if ($group.Length -gt 1)
+            {
+                Write-Verbose -Message "Found $($group.Length) groups with the name $GroupDisplayName"
+                $Group = $Group | Where-Object { $_.DisplayName -eq $GroupDisplayName }
+            }
         }
         if ($null -eq $Group)
         {
-            Write-Verbose -Message "Group not found for $GroupDisplayname"
+            Write-Verbose -Message "Group not found for $GroupDisplayName"
             return $nullReturn
         }
         $GroupPolicyAssignment = Get-CsGroupPolicyAssignment -GroupId $Group.Id -PolicyType $PolicyType -ErrorAction SilentlyContinue
         if ($null -eq $GroupPolicyAssignment)
         {
-            Write-Verbose -Message "GroupPolicyAssignment not found for $GroupDisplayname"
+            Write-Verbose -Message "GroupPolicyAssignment not found for $GroupDisplayName"
             return $nullReturn
         }
         Write-Verbose -Message "Found GroupPolicyAssignment $($Group.Displayname) with PolicyType:$($GroupPolicyAssignment.PolicyType) and Policy Name:$($GroupPolicyAssignment.PolicyName)"
         return @{
             GroupId               = $Group.Id
-            GroupDisplayname      = $Group.Displayname
+            GroupDisplayName      = $Group.Displayname
             PolicyType            = $GroupPolicyAssignment.PolicyType
             PolicyName            = $GroupPolicyAssignment.PolicyName
             Priority              = $GroupPolicyAssignment.Priority
@@ -119,13 +128,13 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupDisplayname,
+        $GroupDisplayName,
 
         [Parameter()]
         [System.String]
@@ -205,44 +214,44 @@ function Set-TargetResource
     #get groupid
     if ($GroupId.Length -eq 0)
     {
-        $Group = Find-CsGroup -SearchQuery $GroupDisplayname
+        $Group = Find-CsGroup -SearchQuery $GroupDisplayName
         if ($group.Length -gt 1)
         {
-            Write-Verbose -Message "Found $($group.Length) groups with the name $GroupDisplayname"
-            $Group = $Group | Where-Object { $_.DisplayName -eq $GroupDisplayname }
+            Write-Verbose -Message "Found $($group.Length) groups with the name $GroupDisplayName"
+            $Group = $Group | Where-Object { $_.DisplayName -eq $GroupDisplayName }
         }
         if ($null -eq $Group)
         {
-            Write-Verbose -Message "Group not found for $GroupDisplayname"
+            Write-Verbose -Message "Group not found for $GroupDisplayName"
             return
         }
         $GroupId = $Group.Id
     }
-    Write-Verbose -Message "Retrieve GroupId for: $($GroupDisplayname)"
+    Write-Verbose -Message "Retrieve GroupId for: $($GroupDisplayName)"
     try
     {
         if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
         {
-            Write-Verbose -Message "Adding GroupPolicyAssignment for $GroupDisplayname"
+            Write-Verbose -Message "Adding GroupPolicyAssignment for $GroupDisplayName"
             New-CsGroupPolicyAssignment -GroupId $GroupId -PolicyType $PolicyType -PolicyName $PolicyName -Rank $Priority
         }
         elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
         {
             #Set-CsGroupPolicyAssignment not implemented jet / use remove-add as described in docs
-            Write-Verbose -Message "Remove GroupPolicyAssignment for $GroupDisplayname"
+            Write-Verbose -Message "Remove GroupPolicyAssignment for $GroupDisplayName"
             Remove-CsGroupPolicyAssignment -GroupId $CurrentValues.GroupId -PolicyType $CurrentValues.PolicyType
-            Write-Verbose -Message "Adding GroupPolicyAssignment for $GroupDisplayname"
+            Write-Verbose -Message "Adding GroupPolicyAssignment for $GroupDisplayName"
             New-CsGroupPolicyAssignment -GroupId $GroupId -PolicyType $PolicyType -PolicyName $PolicyName -Rank $Priority
         }
         elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
         {
-            Write-Verbose -Message "Remove GroupPolicyAssignment for $GroupDisplayname"
+            Write-Verbose -Message "Remove GroupPolicyAssignment for $GroupDisplayName"
             Remove-CsGroupPolicyAssignment -GroupId $CurrentValues.GroupId -PolicyType $CurrentValues.PolicyType
         }
     }
     catch
     {
-        New-M365DSCLogEntry -Message "Error while setting GroupPolicyAssignment for $GroupDisplayname" `
+        New-M365DSCLogEntry -Message "Error while setting GroupPolicyAssignment for $GroupDisplayName" `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
@@ -262,7 +271,7 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupDisplayname,
+        $GroupDisplayName,
 
         [Parameter()]
         [System.String]
@@ -315,6 +324,9 @@ function Test-TargetResource
     #endregion
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+    $ValuesToCheck.Remove('Id') | Out-Null
+    $ValuesToCheck.Remove('GroupId') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
@@ -322,11 +334,7 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @('Ensure', `
-            'GroupDisplayname', `
-            'PolicyType', `
-            'PolicyName', `
-            'Priority')
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -391,15 +399,14 @@ function Export-TargetResource
             {
                 $totalCount = 1
             }
-            Write-Host "    > [$j/$totalCount] GroupPolicyAssignment {$($Group.DisplayName)}" -NoNewline
+            Write-Host "    |---[$j/$totalCount] GroupPolicyAssignment {$($Group.DisplayName)}" -NoNewline
             $results = @{
-                GroupDisplayname      = $Group.DisplayName
+                GroupDisplayName      = $Group.DisplayName
                 GroupId               = $Group.Id
                 PolicyType            = $item.PolicyType
                 PolicyName            = $item.PolicyName
                 Priority              = $item.Priority
                 Ensure                = 'Present'
-                Id                    = $j
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

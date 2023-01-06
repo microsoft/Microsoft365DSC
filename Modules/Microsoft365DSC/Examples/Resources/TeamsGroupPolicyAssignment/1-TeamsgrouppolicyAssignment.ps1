@@ -15,14 +15,14 @@ Configuration Example
     {
         TeamsGroupPolicyAssignment "TeamsGroupPolicyAssignment"
         {
-            Id					  = "1"
-			Ensure                = "Present";
-            GroupDisplayname      = "SecGroup";
-            GroupId               = "";
-            PolicyName            = "AllowCalling";
-            PolicyType            = "TeamsCallingPolicy";
-            Priority              = 1;
-            Credential            = $credsGlobalAdmin
+            Id                 = "1"
+			Ensure             = "Present";
+            GroupDisplayname   = "SecGroup";
+            GroupId            = "";
+            PolicyName         = "AllowCalling";
+            PolicyType         = "TeamsCallingPolicy";
+            Priority           = 1;
+            Credential         = $credsGlobalAdmin
         }
     }
 }

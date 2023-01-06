@@ -2,4 +2,4 @@
 
 ## Description
 
-This resource is used to add Teams policy to a group
+This resource is used to assign Teams policy to a specified group
