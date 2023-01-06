@@ -73,10 +73,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts
-        Context -Name "When Meeting Policy doesn't exist but should" -Fixture {
+        Context -Name "When Policy assignment doesn't exist but should" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Id                    = '1'
                     GroupId               = '00000000-0000-0000-0000-000000000000'
                     GroupDisplayname      = 'TestGroup'
                     PolicyType            = "TeamsCallingPolicy"
@@ -105,10 +104,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'Policy exists but is not in the Desired State' -Fixture {
+        Context -Name 'Policy assignemnt exists but is not in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Id                    = '1'
                     GroupId               = '00000000-0000-0000-0000-000000000000'
                     GroupDisplayname      = 'TestGroup'
                     PolicyType            = "TeamsCallingPolicy"
@@ -145,10 +143,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'Policy exists and is already in the Desired State' -Fixture {
+        Context -Name 'Policy assignment exists and is already in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Id                    = '1'
                     GroupId               = '00000000-0000-0000-0000-000000000000'
                     GroupDisplayname      = 'TestGroup'
                     PolicyType            = "TeamsCallingPolicy"
@@ -179,10 +176,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'Policy exists but it should not' -Fixture {
+        Context -Name 'Policy assignment exists but it should not' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Id                    = '1'
                     GroupId               = '00000000-0000-0000-0000-000000000000'
                     GroupDisplayname      = 'TestGroup'
                     PolicyType            = "TeamsCallingPolicy"
