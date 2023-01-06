@@ -153,10 +153,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Checking for the Intune Android Work Profile Device Compliance Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters -ProfileName 'beta'
-
-    #Enforcing beta profile as New-M365DSCConnection returns v1.0 unexpectedly: M365DSC module version 1.22.921.1
-    Select-MgProfile -Name beta
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
