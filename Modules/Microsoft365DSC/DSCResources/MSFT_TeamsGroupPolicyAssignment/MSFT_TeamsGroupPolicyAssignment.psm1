@@ -4,7 +4,7 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $GroupDisplayName,
 
@@ -21,7 +21,7 @@ function Get-TargetResource
         [System.String]
         $PolicyName,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Priority,
 
@@ -124,7 +124,7 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $GroupDisplayName,
 
@@ -141,7 +141,7 @@ function Set-TargetResource
         [System.String]
         $PolicyName,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Priority,
 
@@ -257,7 +257,7 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $GroupDisplayName,
 
@@ -274,7 +274,7 @@ function Test-TargetResource
         [System.String]
         $PolicyName,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Priority,
 
