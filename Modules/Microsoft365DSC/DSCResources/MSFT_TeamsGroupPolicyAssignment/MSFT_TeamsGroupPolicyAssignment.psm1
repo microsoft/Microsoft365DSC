@@ -66,15 +66,15 @@ function Get-TargetResource
 
     try
     {
-        Write-Verbose -Message "get GroupPOlicyAssignment for $GroupId"
+        Write-Verbose -Message "Getting GroupPOlicyAssignment for {$GroupId}"
         $group = Find-CsGroup -SearchQuery $GroupId
         if($group.Length -gt 1)
         {
-            Write-Verbose -Message "Found $($group.Length) groups with the id $GroupId"
+            Write-Verbose -Message "Found $($group.Length) groups with the id {$GroupId}"
             $Group = $Group | Where-Object { $_.DisplayName -eq $GroupDisplayName }
         }
         else{
-            Write-Verbose -Message "get GroupPolicyAssignment for $GroupDisplayName"
+            Write-Verbose -Message "Getting GroupPolicyAssignment for {$GroupDisplayName}"
             $Group = Find-CsGroup -SearchQuery $GroupDisplayName
             if ($group.Length -gt 1)
             {
@@ -225,7 +225,11 @@ function Set-TargetResource
         if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
         {
             Write-Verbose -Message "Adding GroupPolicyAssignment for $GroupDisplayName"
-            New-CsGroupPolicyAssignment -GroupId $GroupId -PolicyType $PolicyType -PolicyName $PolicyName -Rank $Priority
+            New-CsGroupPolicyAssignment -GroupId $GroupId `
+                -PolicyType $PolicyType `
+                -PolicyName $PolicyName `
+                -Rank $Priority `
+                -ErrorAction Stop
         }
         elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
         {
@@ -233,7 +237,11 @@ function Set-TargetResource
             Write-Verbose -Message "Remove GroupPolicyAssignment for $GroupDisplayName"
             Remove-CsGroupPolicyAssignment -GroupId $CurrentValues.GroupId -PolicyType $CurrentValues.PolicyType
             Write-Verbose -Message "Adding GroupPolicyAssignment for $GroupDisplayName"
-            New-CsGroupPolicyAssignment -GroupId $GroupId -PolicyType $PolicyType -PolicyName $PolicyName -Rank $Priority
+            New-CsGroupPolicyAssignment -GroupId $GroupId `
+                -PolicyType $PolicyType `
+                -PolicyName $PolicyName `
+                -Rank $Priority `
+                -ErrorAction Stop
         }
         elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
         {
@@ -243,11 +251,13 @@ function Set-TargetResource
     }
     catch
     {
+        Write-Verbose -Message "Error: $($_.Exception.Message)"
         New-M365DSCLogEntry -Message "Error while setting GroupPolicyAssignment for $GroupDisplayName" `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
+        throw $_
     }
 }
 
