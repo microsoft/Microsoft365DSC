@@ -37,6 +37,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+
+            Mock -CommandName Get-MgUser -MockWith {
+                return @{
+                    UserPrincipalName = 'john.smith@contoso.com'
+                }
+            }
         }
 
         # Test contexts
@@ -48,6 +54,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Priority        = 5
                     PercentComplete = 75
                     StartDateTime   = '2020-06-09'
+                    DueDateTime     = '2020-06-10'
+                    AssignedUsers   = @('john.smith@contoso.com')
                     Ensure          = 'Present'
                     Credential      = $Credential
                 }
@@ -72,15 +80,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 set{}
                             }
                             public string ETag {get;set;}
-                            public string[] Assignments {get;set;}
+                            public string[] Assignments {
+                                get{return new string[1]{"john.smith@contoso.com"};}
+                                set{}
+                            }
                             public System.Collections.Hashtable[] Attachments {get;set;}
                             public System.Collections.Hashtable[] Checklist {get;set;}
                             public string StartDateTime {
                                 get{ return "2020-06-09"; }
                                 set{}
                             }
-                            public string DueDateTime {get;set;}
-                            public string[] Categories {get;set;}
+                            public string DueDateTime {
+                                get{ return "2020-06-10"; }
+                                set{}
+                            }
+                            public string[] Categories {
+                                get{return new string[1]{"Pink"};}
+                                set{}
+                            }
                             public string CompletedDateTime {get;set;}
                             public int PercentComplete {
                                 get{ return 75; }
@@ -128,8 +145,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     TaskId          = '12345'
                     Title           = 'Contoso Task'
                     Priority        = 4
+                    AssignedUsers   = @('john.smith@contoso.com')
                     PercentComplete = 75
+                    Categories      = @('Pink')
                     StartDateTime   = '2020-06-09'
+                    DueDateTime     = '2020-06-10'
                     Ensure          = 'Present'
                     Credential      = $Credential
                 }
@@ -166,8 +186,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Title           = 'Contoso Task'
                     TaskId          = '12345'
                     Priority        = 5
+                    AssignedUsers   = @('john.smith@contoso.com')
                     PercentComplete = 75
+                    Categories      = @('Pink')
                     StartDateTime   = '2020-06-09'
+                    DueDateTime     = '2020-06-10'
                     Bucket          = 'Bucket12345'
                     Ensure          = 'Present'
                     Credential      = $Credential
@@ -182,6 +205,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PercentComplete = 75
                         StartDateTime   = '2020-06-09'
                         BucketId        = 'Bucket12345'
+                        Assignments     = @('john.smith@contoso.com')
                     }
                 }
             }
@@ -202,8 +226,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Title           = 'Contoso Task'
                     TaskId          = '12345'
                     Priority        = 5
+                    AssignedUsers   = @('john.smith@contoso.com')
                     PercentComplete = 75
+                    Categories      = @('Pink')
                     StartDateTime   = '2020-06-09'
+                    DueDateTime     = '2020-06-10'
                     Ensure          = 'Absent'
                     Credential      = $Credential
                 }
@@ -237,8 +264,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Title           = 'Contoso Task'
                     Bucket          = 'Bucket12345'
                     Priority        = 5
+                    AssignedUsers   = @('john.smith@contoso.com')
                     PercentComplete = 75
+                    Categories      = @('Pink')
                     StartDateTime   = '2020-06-09'
+                    DueDateTime     = '2020-06-10'
                     Ensure          = 'Present'
                     Credential      = $Credential
                 }
@@ -281,8 +311,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Title           = 'Contoso Task'
                     Bucket          = 'TestBucket'
                     Priority        = 5
+                    AssignedUsers   = @('john.smith@contoso.com')
                     PercentComplete = 75
+                    Categories      = @('Pink')
                     StartDateTime   = '2020-06-09'
+                    DueDateTime     = '2020-06-10'
                     Ensure          = 'Present'
                     Credential      = $Credential
                 }
@@ -315,8 +348,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     TaskId          = '12345'
                     Title           = 'Contoso Task'
                     Priority        = 5
+                    AssignedUsers   = @('john.smith@contoso.com')
                     PercentComplete = 75
+                    Categories      = @('Pink')
                     StartDateTime   = '2020-06-09'
+                    DueDateTime     = '2020-06-10'
                     Ensure          = 'Present'
                     Credential      = $Credential
                 }
