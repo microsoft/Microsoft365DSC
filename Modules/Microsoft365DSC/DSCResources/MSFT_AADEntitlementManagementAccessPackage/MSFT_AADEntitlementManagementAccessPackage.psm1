@@ -168,8 +168,6 @@ function Get-TargetResource
         }
 
         $results = @{
-
-            #region resource generator code
             Id                              = $getValue.Id
             CatalogId                       = $getValue.CatalogId
             Description                     = $getValue.Description
@@ -188,7 +186,6 @@ function Get-TargetResource
             CertificateThumbprint           = $CertificateThumbprint
             Managedidentity                 = $ManagedIdentity.IsPresent
         }
-
 
         return [System.Collections.Hashtable] $results
     }
