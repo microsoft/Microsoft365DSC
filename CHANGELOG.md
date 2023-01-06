@@ -8,6 +8,8 @@
 * AADConditionalAccessPolicy
   * Removed the extra Microsoft Graph profile switching call which was causing performance issue.
     FIXEX [#2688](https://github.com/microsoft/Microsoft365DSC/issues/2688)
+* TeamsFeedbackPolicy
+  * Initial Release
 * TeamsGroupPolicyAssignment
   * Initial Release
 * MISC
