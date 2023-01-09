@@ -24,7 +24,23 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret
     )
 
     Write-Verbose -Message "Getting configuration for PowerApps Environment {$DisplayName}"
@@ -58,11 +74,15 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found PowerApps Environment {$DisplayName}"
         return @{
-            DisplayName    = $DisplayName
-            Location       = $environment.Location
-            EnvironmentSKU = $environment.EnvironmentType
-            Ensure         = 'Present'
-            Credential     = $Credential
+            DisplayName           = $DisplayName
+            Location              = $environment.Location
+            EnvironmentSKU        = $environment.EnvironmentType
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            ApplicationSecret     = $ApplicationSecret
         }
     }
     catch
@@ -102,7 +122,23 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret
     )
 
     Write-Verbose -Message "Setting configuration for PowerApps Environment {$DisplayName}"
@@ -124,8 +160,12 @@ function Set-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove('Credential')
-    $CurrentParameters.Remove('Ensure')
+    $CurrentParameters.Remove('Credential') | Out-Null
+    $CurrentParameters.Remove('ApplicationId') | Out-Null
+    $CurrentParameters.Remove('TenantId') | Out-Null
+    $CurrentParameters.Remove('ApplicationSecret') | Out-Null
+    $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
+    $CurrentParameters.Remove('Ensure') | Out-Null
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
@@ -177,7 +217,23 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -217,7 +273,23 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatforms' `
         -InboundParameters $PSBoundParameters
@@ -254,10 +326,13 @@ function Export-TargetResource
             if ($environment.EnvironmentType -ne 'Default' -and $environment.EnvironmentType -ne 'NotSpecified' -and $environment.EnvironmentType -ne 'Developer')
             {
                 $Params = @{
-                    DisplayName    = $environment.DisplayName
-                    Location       = $environment.Location
-                    EnvironmentSku = $environment.EnvironmentType
-                    Credential     = $Credential
+                    DisplayName           = $environment.DisplayName
+                    Location              = $environment.Location
+                    EnvironmentSku        = $environment.EnvironmentType
+                    Credential            = $Credential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 $Results = Get-TargetResource @Params
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
