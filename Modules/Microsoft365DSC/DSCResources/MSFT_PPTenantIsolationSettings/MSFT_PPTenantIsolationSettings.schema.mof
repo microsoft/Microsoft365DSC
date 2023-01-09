@@ -14,4 +14,8 @@ class MSFT_PPTenantIsolationSettings : OMI_BaseResource
     [Write, Description("A list of tenant rules that has to be added."),EmbeddedInstance("MSFT_PPTenantRule")] String RulesToInclude[];
     [Write, Description("A list of tenant rules that is now allowed to be added."),EmbeddedInstance("MSFT_PPTenantRule")] String RulesToExclude[];
     [Write, Description("Credentials of the Power Platform Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
 };

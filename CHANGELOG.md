@@ -13,9 +13,11 @@
 * TeamsGroupPolicyAssignment
   * Initial Release
 * MISC
+  * Adds Service Principal (Thumbprint and Secret) support to the Power Apps workload.
   * Refactored the way we are switching Microsoft Graph Profiles across all resources.
 * DEPENDENCIES
-  * Updated ExchangeOnlineManagement to version 3.1.0;
+  * Updated ExchangeOnlineManagement to version 3.1.0
+  * Updated MSCloudLoginAssistant to version 1.0.103
 
 # 1.23.104.1
 
