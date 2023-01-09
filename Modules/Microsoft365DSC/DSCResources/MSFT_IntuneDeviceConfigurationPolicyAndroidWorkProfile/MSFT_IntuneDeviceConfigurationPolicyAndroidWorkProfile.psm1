@@ -240,8 +240,6 @@ function Get-TargetResource
         ProfileName       = 'Beta'
     }
     $ConnectionMode = New-M365DSCConnection @M365DSCConnectionSplat
-    $MaximumFunctionCount = 32000
-    Select-MgProfile -Name 'Beta' | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -597,8 +595,6 @@ function Set-TargetResource
         ProfileName       = 'Beta'
     }
     $ConnectionMode = New-M365DSCConnection @M365DSCConnectionSplat
-    $MaximumFunctionCount = 32000
-    Select-MgProfile -Name 'Beta' | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -1058,8 +1054,6 @@ function Export-TargetResource
         ProfileName       = 'Beta'
     }
     $ConnectionMode = New-M365DSCConnection @M365DSCConnectionSplat
-    $MaximumFunctionCount = 32000
-    Select-MgProfile -Name 'Beta' | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

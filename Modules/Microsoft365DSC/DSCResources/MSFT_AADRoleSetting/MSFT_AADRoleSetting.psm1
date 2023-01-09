@@ -199,9 +199,6 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
 
-    Select-MgProfile -Name 'beta'
-    $MaximumFunctionCount = 32000
-
     Write-Verbose -Message 'Getting configuration of Role'
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -1340,9 +1337,6 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
-
-    Select-MgProfile -Name 'beta'
-    $MaximumFunctionCount = 32000
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

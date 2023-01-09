@@ -32,6 +32,7 @@ jobs:
           Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
           $GlobalAdminPassword = ConvertTo-SecureString $env:PUBLIC_PASSWORD -AsPlainText -Force
           Set-M365DSCTelemetryOption -Enabled $false
+          Set-Item -Path WSMan:\localhost\MaxEnvelopeSizekb -Value 99999
           $VerbosePreference = 'Continue'
           Write-Verbose -Message "Username: $($env:PUBLIC_USERNAME)"
           & ./Tests/Integration/M365DSCIntegration.Master.Tests.ps1 `

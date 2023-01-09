@@ -69,7 +69,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return $null
                 }
                 Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
-                    return @()
+                    return $null
                 }
             }
 
@@ -92,6 +92,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName = 'Test App Configuration Policy'
                     Description = 'Test Definition'
+                    Assignments = (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                        groupId  = '123456789'
+                        dataType = '#microsoft.graph.groupAssignmentTarget'
+                        deviceAndAppManagementAssignmentFilterType = 'include'
+                        deviceAndAppManagementAssignmentFilterId = '123456789'
+                    } -ClientOnly)
                     Ensure      = 'Present'
                     Credential  = $Credential
                 }
@@ -114,7 +120,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
                 Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
-                    return @()
+                    return @(
+                        @{
+                            Target = @{
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.groupAssignmentTarget'
+                                    groupId       = '123456789'
+                                }
+                                DeviceAndAppManagementAssignmentFilterType = 'include'
+                                DeviceAndAppManagementAssignmentFilterId   = '123456789'
+                            }
+                        }
+                    )
                 }
             }
 
@@ -137,6 +154,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName = 'Test App Configuration Policy'
                     Description = 'Test Definition'
+                    Assignments = (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                        groupId  = '123456789'
+                        dataType = '#microsoft.graph.groupAssignmentTarget'
+                        deviceAndAppManagementAssignmentFilterType = 'include'
+                        deviceAndAppManagementAssignmentFilterId = '123456789'
+                    } -ClientOnly)
                     Ensure      = 'Present'
                     Credential  = $Credential
                 }
@@ -160,7 +183,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
                 Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
-                    return @()
+                    return @(
+                        @{
+                            Target = @{
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.groupAssignmentTarget'
+                                    groupId       = '123456789'
+                                }
+                                DeviceAndAppManagementAssignmentFilterType = 'include'
+                                DeviceAndAppManagementAssignmentFilterId   = '123456789'
+                            }
+                        }
+                    )
                 }
             }
 
@@ -174,6 +208,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName = 'Test App Configuration Policy'
                     Description = 'Test Definition'
+                    Assignments = (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                        groupId  = '123456789'
+                        dataType = '#microsoft.graph.groupAssignmentTarget'
+                        deviceAndAppManagementAssignmentFilterType = 'include'
+                        deviceAndAppManagementAssignmentFilterId = '123456789'
+                    } -ClientOnly)
                     Ensure      = 'Absent'
                     Credential  = $Credential
                 }
@@ -197,7 +237,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
                 Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
-                    return @()
+                    return @(
+                        @{
+                            Target = @{
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.groupAssignmentTarget'
+                                    groupId       = '123456789'
+                                }
+                                DeviceAndAppManagementAssignmentFilterType = 'include'
+                                DeviceAndAppManagementAssignmentFilterId   = '123456789'
+                            }
+                        }
+                    )
                 }
             }
 
@@ -241,7 +292,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
                 Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
-                    return @()
+                    return @(
+                        @{
+                            Target = @{
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.groupAssignmentTarget'
+                                    groupId       = '123456789'
+                                }
+                                DeviceAndAppManagementAssignmentFilterType = 'include'
+                                DeviceAndAppManagementAssignmentFilterId   = '123456789'
+                            }
+                        }
+                    )
                 }
             }
 
