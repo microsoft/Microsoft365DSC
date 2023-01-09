@@ -116,12 +116,12 @@ function Get-TargetResource
         #region resource generator code
         if (-Not [string]::IsNullOrEmpty($Id))
         {
-            $getValue = Get-MgAdministrativeUnit -AdministrativeUnitId $Id -ErrorAction Stop
+            $getValue = Get-MgDirectoryAdministrativeUnit -AdministrativeUnitId $Id -ErrorAction Stop
         }
 
         if (-not $getValue -and -Not [string]::IsNullOrEmpty($DisplayName))
         {
-            $getValue = Get-MgAdministrativeUnit -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+            $getValue = Get-MgDirectoryAdministrativeUnit -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
         }
         #endregion
 
@@ -565,7 +565,7 @@ function Set-TargetResource
         }
 
         #region resource generator code
-        $policy = New-MgAdministrativeUnit @CreateParameters
+        $policy = New-MgDirectoryAdministrativeUnit @CreateParameters
 
         #endregion
 
@@ -622,7 +622,7 @@ function Set-TargetResource
         # The AU MembershipType may have changed from Dynamic to Static and that change has to be implemented before explicitly adding members
 
         #region resource generator code
-        Update-MgAdministrativeUnit @UpdateParameters `
+        Update-MgDirectoryAdministrativeUnit @UpdateParameters `
             -AdministrativeUnitId $currentInstance.Id
 
         #endregion
