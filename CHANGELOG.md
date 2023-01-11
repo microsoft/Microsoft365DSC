@@ -1,5 +1,26 @@
 # Change log for Microsoft365DSC
 
+# 1.23.111.1
+
+* AADAdministrativeUnit
+  * Marks DisplayName as a mandatory key and removed the visibility parameter from being evaluated since it is always returned as null.
+  FIXES [#2704](https://github.com/microsoft/Microsoft365DSC/issues/2704)
+* AADConditionalAccessPolicy
+  * Removed the extra Microsoft Graph profile switching call which was causing performance issue.
+    FIXES [#2688](https://github.com/microsoft/Microsoft365DSC/issues/2688)
+* TeamsFederationConfiguration
+  * Add parameters: TreatDiscoveredPartnersAsUnverified, SharedSipAddressSpace, RestrictTeamsConsumerToExternalUserProfiles.
+* TeamsFeedbackPolicy
+  * Initial Release
+* TeamsGroupPolicyAssignment
+  * Initial Release
+* MISC
+  * Adds Service Principal (Thumbprint and Secret) support to the Power Apps workload.
+  * Refactored the way we are switching Microsoft Graph Profiles across all resources.
+* DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 3.1.0
+  * Updated MSCloudLoginAssistant to version 1.0.102
+
 # 1.23.104.1
 
 * EXODistributionGroup

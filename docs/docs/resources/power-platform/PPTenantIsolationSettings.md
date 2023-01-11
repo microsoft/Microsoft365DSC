@@ -10,6 +10,10 @@
 | **RulesToInclude** | Write | MSFT_PPTenantRule[] | A list of tenant rules that has to be added. | |
 | **RulesToExclude** | Write | MSFT_PPTenantRule[] | A list of tenant rules that is now allowed to be added. | |
 | **Credential** | Write | PSCredential | Credentials of the Power Platform Admin | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
+| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 
 ### MSFT_PPTenantRule
 

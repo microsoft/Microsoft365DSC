@@ -71,7 +71,23 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret
     )
 
     Write-Verbose -Message 'Checking the Power Platform Tenant Settings Configuration'
@@ -114,6 +130,10 @@ function Get-TargetResource
             EnableGuestsToMake                             = $PPTenantSettings.powerPlatform.powerApps.enableGuestsToMake
             ShareWithColleaguesUserLimit                   = $PPTenantSettings.powerPlatform.teamsIntegration.shareWithColleaguesUserLimit
             Credential                                     = $Credential
+            ApplicationId                                  = $ApplicationId
+            TenantId                                       = $TenantId
+            CertificateThumbprint                          = $CertificateThumbprint
+            ApplicationSecret                              = $ApplicationSecret
         }
     }
     catch
@@ -200,7 +220,23 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret
     )
 
     Write-Verbose -Message 'Setting Power Platform Tenant Settings configuration'
@@ -298,7 +334,23 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -338,7 +390,23 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatforms' `
         -InboundParameters $PSBoundParameters

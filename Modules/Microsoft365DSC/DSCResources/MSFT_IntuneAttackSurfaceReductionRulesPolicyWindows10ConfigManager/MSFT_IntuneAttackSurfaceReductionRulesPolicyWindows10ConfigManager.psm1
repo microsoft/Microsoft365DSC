@@ -158,14 +158,6 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta' -ErrorAction Stop
 
-    $context = Get-MgContext
-    if ($null -eq $context)
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters -ErrorAction Stop
-    }
-
-    Select-MgProfile -Name 'beta'
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -427,7 +419,6 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
 
-    Select-MgProfile -Name 'beta'
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
