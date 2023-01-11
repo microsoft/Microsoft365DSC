@@ -11,6 +11,9 @@
 | **AllowPublicUsers** | Write | Boolean | When set to True users will be potentially allowed to communicate with users who have accounts on public IM and presence providers. | |
 | **AllowTeamsConsumer** | Write | Boolean | Allows federation with people using Teams with an account that's not managed by an organization. | |
 | **AllowTeamsConsumerInbound** | Write | Boolean | Allows people using Teams with an account that's not managed by an organization, to discover and start communication with users in your organization. | |
+| **TreatDiscoveredPartnersAsUnverified** | Write | Boolean | When set to True, messages sent from discovered partners are considered unverified. That means that those messages will be delivered only if they were sent from a person who is on the recipient's Contacts list. | |
+| **SharedSipAddressSpace** | Write | Boolean | When set to True, indicates that the users homed on Skype for Business Online use the same SIP domain as users homed on the on-premises version of Skype for Business Server. | |
+| **RestrictTeamsConsumerToExternalUserProfiles** | Write | Boolean | When set to True, Teamsconsumer have access only to external user profiles | |
 | **Credential** | Write | PSCredential | Credentials of the Teams Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com | |
@@ -69,12 +72,17 @@ Configuration Example
     {
         TeamsFederationConfiguration 'FederationConfiguration'
         {
-            Identity                  = "Global"
-            AllowFederatedUsers       = $True
-            AllowPublicUsers          = $True
-            AllowTeamsConsumer        = $False
-            AllowTeamsConsumerInbound = $False
-            Credential                = $credsGlobalAdmin
+            Identity                                    = "Global";
+            AllowedDomains                              = @();
+            BlockedDomains                              = @();
+            AllowFederatedUsers                         = $True;
+            AllowPublicUsers                            = $True;
+            AllowTeamsConsumer                          = $True;
+            AllowTeamsConsumerInbound                   = $True;
+            RestrictTeamsConsumerToExternalUserProfiles = $False;
+            SharedSipAddressSpace                       = $False;
+            TreatDiscoveredPartnersAsUnverified         = $False;
+            Credential                                  = $credsGlobalAdmin
         }
     }
 }
