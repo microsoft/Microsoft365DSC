@@ -4,7 +4,10 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
         [Parameter()]
         [System.String]
         $Id,
@@ -12,10 +15,6 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [validateset('Public', 'HiddenMembership')]
@@ -93,10 +92,8 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message 'Reloading1'
+        Write-Verbose -Message ($_)
     }
-
-
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -152,12 +149,12 @@ function Get-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             ManagedIdentity       = $ManagedIdentity.IsPresent
         }
-        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.MembershipType))
+        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.membershipType))
         {
             # only include details about membership if values are present
-            $results.Add('MembershipType', $getValue.AdditionalProperties.MembershipType)
-            $results.Add('MembershipRule', $getValue.AdditionalProperties.MembershipRule)
-            $results.Add('MembershipRuleProcessingState', $getValue.AdditionalProperties.MembershipRuleProcessingState)
+            $results.Add('MembershipType', $getValue.AdditionalProperties.membershipType)
+            $results.Add('MembershipRule', $getValue.AdditionalProperties.membershipRule)
+            $results.Add('MembershipRuleProcessingState', $getValue.AdditionalProperties.membershipRuleProcessingState)
         }
 
         $memberSpec = $null
@@ -284,8 +281,10 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
-        #region resource generator code
         [Parameter()]
         [System.String]
         $Id,
@@ -293,10 +292,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [validateset('Public', 'HiddenMembership')]
@@ -374,7 +369,7 @@ function Set-TargetResource
     }
     catch
     {
-        Write-Verbose -Message 'Reloading2'
+        Write-Verbose -Message $_
     }
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -601,6 +596,7 @@ function Set-TargetResource
         #$UpdateParameters.Remove('Extensions') | Out-Null
         $UpdateParameters.Remove('Members') | Out-Null
         $UpdateParameters.Remove('ScopedRoleMembers') | Out-Null
+        $UpdateParameters.Remove('Visibility') | Out-Null
 
         if ($UpdateParameters.Containskey('MembershipType') -or $UpdateParameters.Containskey('MembershipRule') -or $UpdateParameters.Containskey('MembershipRuleProcessingState'))
         {
@@ -858,8 +854,10 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
-        #region resource generator code
         [Parameter()]
         [System.String]
         $Id,
@@ -867,10 +865,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [validateset('Public', 'HiddenMembership')]
@@ -901,9 +895,6 @@ function Test-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Extensions,
         #>
-
-
-        #endregion
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -1007,8 +998,11 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
-    #Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    #Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+    # Removing the visibility parameter from the check since this is always being returned as null currently by the Microsoft Graph.
+    $ValuesToCheck.Remove('Visibility') | Out-Null
+
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
     #Convert any DateTime to String
     foreach ($key in $ValuesToCheck.Keys)
@@ -1106,9 +1100,9 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
-            Write-Host "    |---[$i/$($getValue.Count)] $($config.id)" -NoNewline
+            Write-Host "    |---[$i/$($getValue.Count)] $($config.DisplayName)" -NoNewline
             $params = @{
-                id                    = $config.id
+                DisplayName           = $config.DisplayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId

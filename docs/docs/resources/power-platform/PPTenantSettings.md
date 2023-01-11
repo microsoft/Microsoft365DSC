@@ -21,6 +21,10 @@
 | **EnableGuestsToMake** | Write | Boolean | When set to true this will enable the ability for guests in your tenant to create Power Platform resources. | |
 | **ShareWithColleaguesUserLimit** | Write | UInt32 | The amount of people an app can be shared with in Dataverse for Teams (maximum is 10,000). | |
 | **Credential** | Write | PSCredential | Credentials of the Power Platform Admin | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
+| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 
 ## Description
 
