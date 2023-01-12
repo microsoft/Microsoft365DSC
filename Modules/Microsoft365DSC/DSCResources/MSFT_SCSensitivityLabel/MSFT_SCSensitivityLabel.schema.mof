@@ -59,5 +59,10 @@ class MSFT_SCSensitivityLabel : OMI_BaseResource
     [Write, Description("The SiteAndGroupProtectionBlockAccess parameter blocks access.")] Boolean SiteAndGroupProtectionBlockAccess;
     [Write, Description("The SiteAndGroupProtectionEnabled parameter enables or disables the Site and Group Protection action for the labels.")] Boolean SiteAndGroupProtectionEnabled;
     [Write, Description("The SiteAndGroupProtectionPrivacy parameter specifies the privacy level for the label."), ValueMap{"Public","Private"}, Values{"Public","Private"}] String SiteAndGroupProtectionPrivacy;
-    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
 };
