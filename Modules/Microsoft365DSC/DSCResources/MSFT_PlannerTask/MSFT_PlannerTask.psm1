@@ -582,6 +582,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -622,7 +626,7 @@ function Export-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
 
-        [array]$groups = Get-MgGroup -All:$true
+        [array]$groups = Get-MgGroup -All:$true -ErrorAction Stop -Filter $filter
 
         $i = 1
         $dscContent = ''
