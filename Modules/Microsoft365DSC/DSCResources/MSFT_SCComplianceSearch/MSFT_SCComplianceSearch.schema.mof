@@ -15,5 +15,10 @@ class MSFT_SCComplianceSearch : OMI_BaseResource
     [Write, Description("The SharePointLocation parameter specifies the SharePoint Online sites to include. You identify the site by its URL value, or you can use the value All to include all sites.")] String SharePointLocation[];
     [Write, Description("This parameter specifies the SharePoint Online sites to exclude when you use the value All for the SharePointLocation parameter. You identify the site by its URL value.")] String SharePointLocationExclusion[];
     [Write, Description("Specify if this search should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Required, Description("Credentials of the Global Admin Account"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Credentials of the Global Admin Account"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
 };

@@ -9,5 +9,10 @@ class MSFT_SCCaseHoldPolicy : OMI_BaseResource
     [Write, Description("The PublicFolderLocation parameter specifies that you want to include all public folders in the case hold policy. You use the value All for this parameter.")] String PublicFolderLocation[];
     [Write, Description("The SharePointLocation parameter specifies the SharePoint Online and OneDrive for Business sites to include. You identify a site by its URL value.")] String SharePointLocation[];
     [Write, Description("Specify if this policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Required, Description("Credentials of the Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
 };
