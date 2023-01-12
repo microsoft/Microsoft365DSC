@@ -11,5 +11,10 @@ class MSFT_SCComplianceSearchAction : OMI_BaseResource
     [Write, Description("The RetryOnError switch specifies whether to retry the action on any items that failed without re-running the entire action all over again.")] Boolean RetryOnError;
     [Write, Description("The ActionScope parameter specifies the items to include when the action is Export."), ValueMap{"IndexedItemsOnly", "UnindexedItemsOnly", "BothIndexedAndUnindexedItems"}, Values{"IndexedItemsOnly", "UnindexedItemsOnly", "BothIndexedAndUnindexedItems"}] String ActionScope;
     [Write, Description("Specify if this action should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
 };
