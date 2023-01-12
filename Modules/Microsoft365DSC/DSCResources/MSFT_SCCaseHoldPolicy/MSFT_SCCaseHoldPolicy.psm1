@@ -37,9 +37,29 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Getting configuration of SCCaseHoldPolicy for $Name"
@@ -148,9 +168,29 @@ function Set-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting configuration of SCCaseHoldPolicy for $Name"
@@ -305,9 +345,29 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -345,9 +405,29 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters `
@@ -388,12 +468,11 @@ function Export-TargetResource
             foreach ($policy in $policies)
             {
                 Write-Host "        |---[$j/$($policies.Count)] $($policy.Name)" -NoNewline
-                $Params = @{
-                    Name       = $policy.Name
-                    Case       = $case.Name
-                    Credential = $Credential
-                }
-                $Results = Get-TargetResource @Params
+
+                $Results = Get-TargetResource @PSBoundParameters `
+                    -Name $policy.Name `
+                    -Case $case.Name
+
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `

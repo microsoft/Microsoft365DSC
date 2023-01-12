@@ -27,5 +27,10 @@ class MSFT_SCLabelPolicy : OMI_BaseResource
     [Write, Description("The RemoveModernGroupLocation parameter specifies the Microsoft 365 Groups to remove from the policy.")] String RemoveModernGroupLocation[];
     [Write, Description("The RemoveModernGroupLocationException parameter specifies the Microsoft 365 Groups to remove from excluded values when you're using the value All for the ModernGroupLocation parameter.")] String RemoveModernGroupLocationException[];
     [Write, Description("The RemoveLabels parameter specifies the sensitivity labels that are removed from the policy. You can use any value that uniquely identifies the label.")] String RemoveLabels[];
-    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
 };
