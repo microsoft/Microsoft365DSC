@@ -15,7 +15,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       - name: Run Test Harness
-        shell: powershell
+        shell: pwsh
         run: |
           $Dependencies = @(
             @{
@@ -85,11 +85,11 @@ jobs:
 
           foreach ($module in $Dependencies)
           {
-            Install-Module $module.ModuleName -Force
+            Install-Module $module.ModuleName -Force -Scope AllUsers
             Import-Module $module.ModuleName -Force
           }
 
-          Install-Module Pester -Force -SkipPublisherCheck -RequiredVersion 5.0.4
+          Install-Module Pester -Force -SkipPublisherCheck -RequiredVersion 5.0.4 -Scope AllUsers
           [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);
           Import-Module './Tests/TestHarness.psm1' -Force;
           $MaximumFunctionCount = 9999
