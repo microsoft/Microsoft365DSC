@@ -31,4 +31,12 @@ The PnP.PowerShell module, which is currently being used by the SharePoint Onlin
 Install-Module PnP.PowerShell -Force -Scope AllUsers
 ```
 
-The reason why this module needs to be loaded using WindowsPowerShell is because it tries to load its own version of the System.IdentityModel.Tokens assembly, which conflicts with the one used by the Microsoft.Graph.Authentication module. Microsoft365DSC often requires both modules to be loaded at the same time, which causes a conflict. By using the -UseWindowsPowerShell switch, we load the PnP.PowerShell module into its own separate runspace, which avoids the assembly conflicts.
+The reason why this module needs to be loaded using WindowsPowerShell is because it tries to load its own version of the System.IdentityModel.Tokens assembly, which conflicts with the one used by the Microsoft.Graph.Authentication module. Microsoft365DSC often requires both modules to be loaded at the same time, which causes a conflict. By using the -UseWindowsPowerShell switch, we load the PnP.PowerShell module into its own separate runspace, which avoids the assembly conflicts. Having the PnP module installed under any path other than the Windows PowerShell one can result in oe of the issues listed below:
+
+```
+Exception: Powershell 7+ was detected. We need to load the PnP.PowerShell module using the -UseWindowsPowerShell switch which
+requires the module to be installed under C:\Program Files\WindowsPowerShell\Modules. You can either move the module to
+that location or use PowerShell 5.1 to install the modules using 'Install-Module Pnp.PowerShell -Force -Scope AllUsers'.
+
+Connect-PnPOnline: Could not load file or assembly 'System.IdentityModel.Tokens.Jwt, Version=6.12.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'. Could not find or load a specific file. (0x80131621)
+```
