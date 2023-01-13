@@ -1,6 +1,6 @@
 While Microsoft365DSC supports running PowerShell 7+, there are a few things that need to be put in place before being able to fully leverage it.
 
-## Module needs to be installed in the Windows PowerShell Repository
+# Module needs to be installed in the Windows PowerShell Repository
 
 Microsoft365DSC currently requires dependencies to be installed under the C:\Program Files\WindowsPowerShell\Modules folders. Having the dependencies installed anywhere else can cause issues loading modules. The recommendation here is to use PowerShell 5.1 to install the Module using:
 
@@ -11,7 +11,7 @@ Update-M365DSCModule
 
 Then flip to PowerShell 7+ once the prerequesite modules are properly installed under C:\Program Files\WindowsPowerShell\Modules.
 
-### Common Issues When the Modules are Not in the Right Folder
+## Common Issues When the Modules are Not in the Right Folder
 
 **Export is Throwing Multiple Warnings**
 
@@ -39,4 +39,12 @@ requires the module to be installed under C:\Program Files\WindowsPowerShell\Mod
 that location or use PowerShell 5.1 to install the modules using 'Install-Module Pnp.PowerShell -Force -Scope AllUsers'.
 
 Connect-PnPOnline: Could not load file or assembly 'System.IdentityModel.Tokens.Jwt, Version=6.12.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'. Could not find or load a specific file. (0x80131621)
+```
+
+# PSDesiredStateConfiguration Needs to be Installed Separately
+
+Starting with PowerShell 7.2, the core Desired State Configuration module (PSdesiredStateConfiguration) has been decoupled from the core PowerShell build and now need to be installed separately. In a PowerShell 7+ console, you can install the module by running the command:
+
+```
+Install-Module PSDesiredStateConfiguration -Force
 ```
