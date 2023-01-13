@@ -207,10 +207,6 @@ function New-M365DSCStubFiles
                             {
                                 $ParamType = 'PSObject'
                             }
-                            elseif ($ParamType.StartsWith("System.Management.Automation.SwitchParameter"))
-                            {
-                                $ParamType = 'System.Boolean'
-                            }
                             $StubContent += "        [$ParamType]`r`n"
                             $StubContent += "        `$$($param.Name),`r`n`r`n"
                         }
