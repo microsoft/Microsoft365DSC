@@ -79,16 +79,11 @@ function Get-TargetResource
         $ManagedIdentity
     )
 
-    # Note: Graph v1.0 names basic cmdlets xxx-MgDirectoryAdministrativeUnit(xxx)
-    # but the beta profile names latest cmdlets xxx-MgAdministrativeUnit(xxx)
-    # only the beta cmdlets support the preview enabling MembershipType and MembershipRuleProcessingState
-    # NB: Usage of these params require that the corresponding AAD preview feature is enabled
-
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -ProfileName 'v1.0'
     }
     catch
     {
@@ -365,7 +360,7 @@ function Set-TargetResource
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -ProfileName 'v1.0'
     }
     catch
     {
@@ -410,6 +405,7 @@ function Set-TargetResource
     {
         $CreateParameters = $currentParameters.Clone()
 
+        <# When using -BodyParameter it is not necessary to use AdditionalProperties for Dynamic AU params
         if ($CreateParameters.Containskey('MembershipType') -or $CreateParameters.Containskey('MembershipRule') -or $CreateParameters.Containskey('MembershipRuleProcessingState'))
         {
             $CreateParameters.Remove('MembershipType') | Out-Null
@@ -429,6 +425,7 @@ function Set-TargetResource
                 $CreateParameters.AdditionalProperties.Add('MembershipRuleProcessingState', $MembershipRuleProcessingState)
             }
         }
+        #>
 
         foreach ($key in ($CreateParameters.clone()).Keys)
         {
@@ -449,7 +446,7 @@ function Set-TargetResource
                     $memberIdentity = Get-MgUser -Filter "UserPrincipalName eq '$($Member.Identity)'" -ErrorAction Stop
                     if ($memberIdentity)
                     {
-                        $memberSpecification += @{Id = $memberIdentity.Id }
+                        $memberSpecification += @{Type="$($Member.Type)s";Id = $memberIdentity.Id }
                     }
                     else
                     {
@@ -461,7 +458,7 @@ function Set-TargetResource
                     $memberIdentity = Get-MgGroup -Filter "DisplayName eq '$($Member.Identity)'" -ErrorAction Stop
                     if ($memberIdentity)
                     {
-                        $memberSpecification += @{Id = $memberIdentity.Id }
+                        $memberSpecification += @{Type="$($Member.Type)s";Id = $memberIdentity.Id }
                     }
                     else
                     {
@@ -473,7 +470,7 @@ function Set-TargetResource
                     $memberIdentity = Get-MgDevice -Filter "DisplayName eq '$($Member.Identity)'" -ErrorAction Stop
                     if ($memberIdentity)
                     {
-                        $memberSpecification += @{Id = $memberIdentity.Id }
+                        $memberSpecification += @{Type="$($Member.Type)s";Id = $memberIdentity.Id }
                     }
                     else
                     {
@@ -485,7 +482,8 @@ function Set-TargetResource
                     throw "AU {$($DisplayName)}: Member {$($Member.Identity)} has invalid type {$($Member.Type)}"
                 }
             }
-            $CreateParameters.Members = $memberSpecification
+            # Members are added to the AU *after* it has been created
+            $CreateParameters.Remove('Members') | Out-Null
         }
         else
         {
@@ -565,9 +563,17 @@ function Set-TargetResource
         }
 
         #region resource generator code
-        $policy = New-MgDirectoryAdministrativeUnit @CreateParameters
+        $policy = New-MgDirectoryAdministrativeUnit -BodyParameter $CreateParameters
 
         #endregion
+        foreach ($member in $memberSpecificationpecification)
+        {
+            $memberBodyParam = @{
+                '@odata.id' = "https://graph.microsoft.com/v1.0/$($member.Type)/{$($member.Id)}"
+            }
+
+            New-MgDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId $policy.Id -BodyParameter $memberBodyParam
+        }
 
         foreach ($scopedRoleMember in $scopedRoleMemberSpecification)
         {
@@ -596,8 +602,9 @@ function Set-TargetResource
         #$UpdateParameters.Remove('Extensions') | Out-Null
         $UpdateParameters.Remove('Members') | Out-Null
         $UpdateParameters.Remove('ScopedRoleMembers') | Out-Null
-        $UpdateParameters.Remove('Visibility') | Out-Null
+        #$UpdateParameters.Remove('Visibility') | Out-Null
 
+        <# When using -BodyParameter it is not necessary to use AdditionalProperties for Dynamic AU params
         if ($UpdateParameters.Containskey('MembershipType') -or $UpdateParameters.Containskey('MembershipRule') -or $UpdateParameters.Containskey('MembershipRuleProcessingState'))
         {
             $UpdateParameters.Remove('MembershipType') | Out-Null
@@ -617,12 +624,13 @@ function Set-TargetResource
                 $UpdateParameters.AdditionalProperties.Add('MembershipRuleProcessingState', $MembershipRuleProcessingState)
             }
         }
+        #>
 
         # when updating the resource, update the AU first and its members (if any) afterwards.
         # The AU MembershipType may have changed from Dynamic to Static and that change has to be implemented before explicitly adding members
 
         #region resource generator code
-        Update-MgDirectoryAdministrativeUnit @UpdateParameters `
+        Update-MgDirectoryAdministrativeUnit -BodyParameter $UpdateParameters `
             -AdministrativeUnitId $currentInstance.Id
 
         #endregion
@@ -660,6 +668,9 @@ function Set-TargetResource
                 {
                     $memberObject = Get-MgDevice -Filter "DisplayName eq '$($diff.Identity)'"
                     $membertype = 'devices'
+                } else {
+                    # throw if a *new* member has been specified with invalid type
+                    throw "AU {$($DisplayName)}: Member {$($diff.Identity)} has invalid type {$($diff.Type)}"
                 }
                 if ($null -eq $memberObject)
                 {
@@ -667,15 +678,14 @@ function Set-TargetResource
                 }
                 if ($memberObject.Count -gt 1)
                 {
-                    throw "AU member {$($diff.Identity)} is not a unique $($diff.Type) (Count=$($memberObject.Count))"
+                    throw "AU member {$($diff.Identity)} is not a unique $($diff.Type.ToLower()) (Count=$($memberObject.Count))"
                 }
                 if ($diff.SideIndicator -eq '=>')
                 {
                     Write-Verbose -Message "Adding new member {$($diff.Identity)}, type {$($diff.Type)} to Administrative Unit {$($currentInstance.DisplayName)}"
 
                     $memberBodyParam = @{
-                        '@odata.id' = "https://graph.microsoft.com/v1.0b038744  Objectivism2o2!
-                        b/$memberType/{$($memberObject.Id)}"
+                        '@odata.id' = "https://graph.microsoft.com/v1.0/$memberType/{$($memberObject.Id)}"
                     }
                     New-MgDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId ($currentInstance.Id) -BodyParameter $memberBodyParam | Out-Null
                 }
@@ -948,6 +958,7 @@ function Test-TargetResource
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
     }
+
     $testResult = $true
 
     foreach ($key in $PSBoundParameters.Keys)
@@ -1000,6 +1011,12 @@ function Test-TargetResource
 
     # Removing the visibility parameter from the check since this is always being returned as null currently by the Microsoft Graph.
     $ValuesToCheck.Remove('Visibility') | Out-Null
+
+    if ($MembershipType -ne 'Dynamic' -and $CurrentValues.MembershipType -ne 'Dynamic')
+    {
+        # Removing the MembershipType parameter from the check if it isn't Dynamic. If so, it can be aither Assigned or null
+        $ValuesToCheck.Remove('MembershipType') | Out-Null
+    }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
