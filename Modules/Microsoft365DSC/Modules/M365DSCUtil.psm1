@@ -1283,7 +1283,10 @@ Public
 function Import-M365DSCDependencies
 {
     [CmdletBinding()]
-    param()
+    param(
+        [parameter()]
+        [switch]$Global
+    )
 
     $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
     $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
@@ -1291,7 +1294,7 @@ function Import-M365DSCDependencies
 
     foreach ($dependency in $dependencies)
     {
-        Import-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force
+        Import-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -Global:$Global
     }
 }
 
