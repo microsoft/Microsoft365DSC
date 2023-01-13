@@ -1,5 +1,13 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* PlannerTask
+  * Refactored to leverage the official cmdlets instead of using the legacy GraphHandlers.
+    FIXES [#2767](https://github.com/microsoft/Microsoft365DSC/issues/2767)
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.20.0;
+
 # 1.23.111.1
 
 * AADAdministrativeUnit
