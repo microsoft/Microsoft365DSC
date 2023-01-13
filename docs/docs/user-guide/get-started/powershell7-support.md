@@ -13,7 +13,7 @@ Then flip to PowerShell 7+ once the prerequesite modules are properly installed 
 
 ### Common Issues When the Modules are Not in the Right Folder
 
-** Export is Throwing Multiple Warnings **
+**Export is Throwing Multiple Warnings**
 
 The module that is ensuring the proper encoding of the exported DSC content relies on the Get-DscResource cmdlet to cache information about the resources' properties and is a way to improve performance. If the Microsoft365DSC module is not located under the Windows PowerShell folder, every instance extracted by the Export process will throw the following error:
 
@@ -23,7 +23,7 @@ WARNING: There are no modules present in the system with the given module specif
 
 To solve this, make sure the Microsoft365DSC is properly installed under C:\Program Files\WindowsPowerShell\Modules and that you do not have multiple versions of it installed in different locations.
 
-** Issues loading the PnP.PowerShell Module **
+**Issues loading the PnP.PowerShell Module**
 
 The PnP.PowerShell module, which is currently being used by the SharePoint Online and OndeDrive for Business workloads needs to be loaded using Windows PowerShell. In PowerShell 7+, this is done by running the **Import-Module** cmdlet using the **-UseWindowsPowerShell** switch, and requires the modules to be located under C:\Program Files\WindowsPowerShell. In order for Microsoft365DSC to work for SharePoint Online and OneDrive for Business with PowerShell 7, you need to make sure that the PnP.PowerShell module is located under C:\Program Files\WindowsPowerShell\Modules\PnP.PowerShell. This can be achieve =d by either manually moving the module to that location, or by using PowerShell 5.1 to install it using the following line:
 
