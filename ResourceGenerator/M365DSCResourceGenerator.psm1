@@ -53,6 +53,10 @@ function New-M365DSCResource
         [System.String]
         $AdditionalPropertiesType,
 
+        [Parameter()]
+        [System.String]
+        $DateFormat="o",
+
         # Use this switch with caution.
         # Navigation Properties could cause the DRG to enter an infinite loop
         # Navigation Properties are the properties refered as Relationships in the Graph REST API documentation.
@@ -221,24 +225,31 @@ function New-M365DSCResource
 
         $script:DiscoveredComplexTypes = @()
 
-        $CimInstances = $parameterInformation | Where-Object -FilterScript { $_.IsComplexType }
+        [Array]$CimInstances = $parameterInformation | Where-Object -FilterScript { $_.IsComplexType }
 
         $script:DiscoveredComplexTypes = $null
 
         $Global:AlreadyFoundInstances = @()
 
         $CimInstancesSchemaContent = ''
-        if ($CimInstances)
+        if ($null -ne $CimInstances)
         {
-            $CimInstancesSchemaContent = Get-M365DSCDRGCimInstancesSchemaStringContent -CIMInstances $CimInstances `
-                -Workload $Workload
+            foreach($CimInstance in $CimInstances)
+            {
+                $CimInstancesSchemaContent += Get-M365DSCDRGCimInstancesSchemaStringContent `
+                    -CIMInstance $CimInstance `
+                    -Workload $Workload
+            }
         }
+
+        $Global:AlreadyFoundInstances = $null
 
         $parameterString = Get-ParameterBlockStringForModule -ParameterBlockInformation $parameterInformation
         $hashtableResults = New-M365HashTableMapping -Properties $parameterInformation `
             -DefaultParameterSetProperties $defaultParameterSetProperties `
             -GraphNoun $CmdLetNoun `
-            -Workload $Workload
+            -Workload $Workload `
+            -DateFormat $DateFormat
         $hashTableMapping = $hashtableResults.StringContent
 
         #region UnitTests
@@ -352,10 +363,19 @@ function New-M365DSCResource
         if(-Not [String]::IsNullOrEmpty($hashtableResults.ComplexTypeConstructor))
         {
             $complexTypeConstructor = $hashtableResults.ComplexTypeConstructor
-            $complexTypeConstructor = "        #region resource generator code`r`n" + $complexTypeConstructor
+            $complexTypeConstructor = "`r`n        #region resource generator code`r`n" + $complexTypeConstructor
             $complexTypeConstructor = $complexTypeConstructor + "        #endregion`r`n"
         }
         Write-TokenReplacement -Token '<ComplexTypeConstructor>' -Value $complexTypeConstructor -FilePath $moduleFilePath
+
+        $dateTypeConstructor=""
+        if(-Not [String]::IsNullOrEmpty($hashtableResults.DateTypeConstructor))
+        {
+            $dateTypeConstructor = $hashtableResults.DateTypeConstructor
+            $dateTypeConstructor = "`r`n        #region resource generator code`r`n" + $dateTypeConstructor
+            $dateTypeConstructor = $dateTypeConstructor + "        #endregion`r`n"
+        }
+        Write-TokenReplacement -Token '<DateTypeConstructor>' -Value $dateTypeConstructor -FilePath $moduleFilePath
 
 
         $newCmdlet = Get-Command -Name "New-$($CmdLetNoun)"
@@ -369,7 +389,7 @@ function New-M365DSCResource
             {
                 if($newKeyIdentifier.Count -gt 1)
                 {
-                    $newParameterString.append("```r`n") |out-null
+                    $newParameterString.append(" ```r`n") |out-null
                     $newParameterString.append("            ") |out-null
                 }
                 $keyValue = $key
@@ -377,7 +397,7 @@ function New-M365DSCResource
                 {
                     $keyValue = 'CreateParameters'
                 }
-                $newParameterString.append("-$key `$$keyValue ") |out-null
+                $newParameterString.append("-$key `$$keyValue") |out-null
             }
             [String]$newKeyIdentifier = $newParameterString.ToString()
         }
@@ -407,11 +427,21 @@ function New-M365DSCResource
             $exportGetCommand.AppendLine("            -ErrorAction Stop")|out-null
         }
 
+        $trailingCharRemoval=""
+        if($cimInstances.count -gt 0)
+        {
+            $trailingCharRemoval=@'
+            #removing trailing commas and semi colons between items of an array of cim instances added by Convert-DSCStringParamToVariable
+            $currentDSCBlock=$currentDSCBlock.replace( "    ,`r`n" , "    `r`n" )
+            $currentDSCBlock=$currentDSCBlock.replace( "`r`n;`r`n" , "`r`n" )
+'@
+        }
         Write-TokenReplacement -Token '<exportGetCommand>' -Value $exportGetCommand.ToString() -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<HashTableMapping>' -Value $hashTableMapping -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<#ComplexTypeContent#>' -Value $hashtableResults.ComplexTypeContent -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<#ConvertComplexToString#>' -Value $hashtableResults.ConvertToString -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<#ConvertComplexToVariable#>' -Value $hashtableResults.ConvertToVariable -FilePath $moduleFilePath
+        Write-TokenReplacement -Token '<#TrailingCharRemoval#>' -Value $trailingCharRemoval -FilePath $moduleFilePath
 
         $updateVerb='Update'
         $updateCmdlet=Find-MgGraphCommand -Command "$updateVerb-$CmdLetNoun" -ApiVersion $ApiVersion -errorAction SilentlyContinue
@@ -430,7 +460,7 @@ function New-M365DSCResource
             {
                 if($updateKeyIdentifier.Count -gt 1)
                 {
-                    $updateParameterString.append("```r`n") |out-null
+                    $updateParameterString.append(" ```r`n") |out-null
                     $updateParameterString.append("            ") |out-null
                 }
                 $keyValue = $key
@@ -442,12 +472,12 @@ function New-M365DSCResource
                 {
                     $keyValue = 'currentInstance.'+$primaryKey
                 }
-                $updateParameterString.append("-$key `$$keyValue ") |out-null
+                $updateParameterString.append("-$key `$$keyValue") |out-null
             }
             [String]$updateKeyIdentifier = $updateParameterString.ToString()
         }
         $odataType=$null
-        if($isAdditionalProperty)
+        if($true)#$isAdditionalProperty)
         {
             $odataType="        `$UpdateParameters.Add(`"@odata.type`", `"#microsoft.graph.$SelectedODataType`")`r`n"
         }
@@ -466,7 +496,7 @@ function New-M365DSCResource
             {
                 if($removeKeyIdentifier.Count -gt 1)
                 {
-                    $removeParameterString.append("```r`n") |out-null
+                    $removeParameterString.append(" ```r`n") |out-null
                     $removeParameterString.append("            ") |out-null
                 }
                 $keyValue = $key
@@ -474,7 +504,7 @@ function New-M365DSCResource
                 {
                     $keyValue='currentInstance.'+$primaryKey
                 }
-                $removeParameterString.append("-$key `$$keyValue ") |out-null
+                $removeParameterString.append("-$key `$$keyValue") |out-null
             }
             [String]$removeKeyIdentifier = $removeParameterString.ToString()
         }
@@ -1104,7 +1134,7 @@ function Get-CmdletDefinition
         $Uri='https://raw.githubusercontent.com/microsoftgraph/msgraph-metadata/master/clean_beta_metadata/cleanMetadataWithDescriptionsbeta.xml'
     }
 
-    $metadata=(Invoke-RestMethod  -Uri $Uri).edmx.DataServices.schema
+    $metadata=([XML](Invoke-RestMethod  -Uri $Uri)).Edmx.DataServices.schema
     return $metadata
 }
 
@@ -1182,16 +1212,10 @@ function Get-TypeProperties
                 $rawProperties=$subType.Property
                 foreach($property in $rawProperties)
                 {
-
                     $IsRootProperty=$false
                     if($entityType.BaseType -eq "graph.Entity" -or $entityType.Name -eq "entity" )
                     {
                         $IsRootProperty=$true
-                    }
-
-                                        if($property.name -eq 'isBackup')
-                    {
-                        write-host -ForegroundColor Yellow ($IsRootProperty)
                     }
 
                     if($property.Name -notin ($properties.Name))
@@ -1298,7 +1322,7 @@ function Get-TypeProperties
 
                 if($complexName -notin $global:ComplexList)
                 {
-                    $global:ComplexList+= $complexName
+                    #$global:ComplexList+= $complexName
 
                     $nestedProperties = Get-TypeProperties -CmdletDefinition $CmdletDefinition -Entity $derivedType
                     $property.Add('Properties', $nestedProperties)
@@ -1352,7 +1376,7 @@ function Get-StringFirstCharacterToLower
 function Get-ComplexTypeConstructorToString
 {
     [CmdletBinding()]
-    [OutputType([System.String[]])]
+    [OutputType([System.String])]
     param (
         [Parameter(Mandatory = $true)]
         [ValidateScript({$_.IsComplexType})]
@@ -1363,8 +1387,20 @@ function Get-ComplexTypeConstructorToString
         $ParentPropertyName,
 
         [Parameter()]
+        [System.String]
+        $ParentPropertyValuePath,
+
+        [Parameter()]
+        [System.String]
+        $IsParentFromAdditionalProperties=$False,
+
+        [Parameter()]
         [System.Int32]
         $IndentCount=0,
+
+        [Parameter()]
+        [System.String]
+        $DateFormat,
 
         [Parameter()]
         [System.Boolean]
@@ -1374,32 +1410,53 @@ function Get-ComplexTypeConstructorToString
     $complexString = [System.Text.StringBuilder]::New()
     $indent="    "
     $spacing = $indent * $IndentCount
-
-    $valuePrefix = "`$getValue."
-    if($Property.IsRootProperty -eq $false)
-    {
-        $valuePrefix += "AdditionalProperties."
-    }
     $propertyName = Get-StringFirstCharacterToUpper -Value $Property.Name
     $returnPropertyName= "complex"+ $propertyName
     $tempPropertyName=$returnPropertyName
 
+    $valuePrefix = "getValue."
+    if($isNested)
+    {
+        $valuePrefix = "`$current$propertyName."
+    }
+
+    $loopPropertyName= $Property.Name
+    if($isParentfromAdditionalProperties)
+    {
+        $loopPropertyName=Get-StringFirstCharacterToLower -Value $loopPropertyName
+    }
+    if($Property.IsRootProperty -eq $false)
+    {
+        $loopPropertyName=Get-StringFirstCharacterToLower -Value $Property.Name
+        $valuePrefix += "AdditionalProperties."
+    }
+
+
     if($property.IsArray)
     {
         $tempPropertyName="my$propertyName"
+        if($isNested)
+        {
+            $valuePrefix=$ParentPropertyValuePath
+            if($null -eq $valuePrefix)
+            {
+                $propRoot=$ParentPropertyName.replace("my","")
+                $valuePrefix="current$propRoot."
+                if($property.IsRootProperty -eq $false)
+                {
+                    $valuePrefix += "AdditionalProperties."
+                }
+            }
+        }
+        $iterationPropertyName="current$propertyName"
         $complexString.appendLine( $spacing + "`$$returnPropertyName" + " = @()") | Out-Null
-        $complexString.appendLine( $spacing + "foreach(`$current$propertyName in $valuePrefix" + $Property.Name + ")" ) | Out-Null
+        $complexString.appendLine( $spacing + "foreach(`$$iterationPropertyName in `$$valuePrefix" + $loopPropertyName + ")" ) | Out-Null
         $complexString.appendLine( $spacing + "{" ) | Out-Null
         $IndentCount ++
         $spacing = $indent * $IndentCount
     }
-    else
-    {
-        if(-not $IsNested)
-        {
-            $complexString.appendLine( $spacing + "`$$tempPropertyName" + " = @{}") | Out-Null
-        }
-    }
+
+    $complexString.appendLine( $spacing + "`$$tempPropertyName" + " = @{}") | Out-Null
 
     foreach($nestedProperty in $property.Properties)
     {
@@ -1408,41 +1465,106 @@ function Get-ComplexTypeConstructorToString
         {
             $nestedPropertyName = 'odataType'
         }
+        $valuePrefix = "getValue."
+        if($Property.IsArray)
+        {
+            $valuePrefix = "$iterationPropertyName."
+        }
+        if($isNested -and -not $Property.IsArray)
+        {
+            $propRoot=$ParentPropertyName.replace("my","")
+            $valuePrefix = "current$propRoot."
 
+            $recallProperty=$propertyName
+            if($isParentfromAdditionalProperties)
+            {
+                $recallProperty=Get-StringFirstCharacterToLower -Value $recallProperty
+            }
+            $valuePrefix += "$recallProperty."
+
+        }
+        $AssignedPropertyName = $nestedProperty.Name
+        if($nestedProperty.IsRootProperty -eq $false)
+        {
+            $valuePrefix += "AdditionalProperties."
+        }
+
+        if($nestedProperty.IsRootProperty -eq $false -or $IsParentFromAdditionalProperties)
+        {
+            $AssignedPropertyName = Get-StringFirstCharacterToLower -Value $nestedProperty.Name
+        }
+
+        if( $AssignedPropertyName.contains("@"))
+        {
+            $AssignedPropertyName="'$AssignedPropertyName'"
+        }
+        if((-not $isNested) -and (-not $Property.IsArray))
+        {
+            $valuePrefix += "$propertyName."
+        }
         if($nestedProperty.IsComplexType)
         {
-            $complexName=$property.Name+"-"+$property.Type
+            $complexName=$Property.Name+"-"+$nestedProperty.Type
 
-            if($complexName -notin $global:ComplexList)
-            {
+            #if($complexName -notin $global:ComplexList)
+            #{
+
                 $global:ComplexList+= $complexName
+                $nestedString = ''
                 $nestedString = Get-ComplexTypeConstructorToString `
                     -Property $nestedProperty `
                     -IndentCount $IndentCount `
                     -IsNested $true `
-                    -ParentPropertyName $tempPropertyName
+                    -ParentPropertyName $tempPropertyName `
+                    -ParentPropertyValuePath $valuePrefix `
+                    -IsParentFromAdditionalProperties (-not $Property.IsRootProperty)
 
                 $complexString.append( $nestedString ) | Out-Null
-                #$complexString.appendLine( $spacing + "}" ) | Out-Null
-            }
+
+            #}
         }
         else
         {
-            $valuePrefix = "getValue."
-            if($isNested)
+
+            if($nestedProperty.Type -like "*.Date*")
             {
-                $valuePrefix = "current$propertyName."
+                $nestedPropertyType=$nestedProperty.Type.split(".")|select-object -last 1
+                $complexString.appendLine( $spacing + "if(`$null -ne `$$valuePrefix$AssignedPropertyName)" ) | Out-Null
+                $complexString.appendLine( $spacing + "{" ) | Out-Null
+                $IndentCount ++
+                $spacing = $indent * $IndentCount
+                $AssignedPropertyName += ").ToString('$DateFormat')"
+                $complexString.appendLine( $spacing + "`$$tempPropertyName.Add('" +  $nestedPropertyName + "', ([$nestedPropertyType]`$$valuePrefix$AssignedPropertyName)" ) | Out-Null
+                $IndentCount --
+                $spacing = $indent * $IndentCount
+                $complexString.appendLine( $spacing + "}" ) | Out-Null
+
             }
-            if($nestedProperty.IsRootProperty -eq $false)
+            else
             {
-                $valuePrefix += "AdditionalProperties."
+
+                if($nestedProperty.IsEnumType)
+                {
+                    $complexString.appendLine( $spacing + "if (`$null -ne `$$valuePrefix$AssignedPropertyName)" ) | Out-Null
+                    $complexString.appendLine( $spacing + "{" ) | Out-Null
+                    $IndentCount ++
+                    $spacing = $indent * $IndentCount
+                    $complexString.append( $spacing + "`$$tempPropertyName.Add('" +  $nestedPropertyName + "', `$$valuePrefix$AssignedPropertyName.toString()" ) | Out-Null
+                    #if($nestedPropertyName -eq 'odataType')
+                    #{
+                    #    $complexString.append( ".replace(`"#microsoft.graph.`",`"`")" ) | Out-Null
+                    #}
+                    $complexString.append( ")`r`n" ) | Out-Null
+                    $IndentCount --
+                    $spacing = $indent * $IndentCount
+                    $complexString.appendLine( $spacing + "}" ) | Out-Null
+                }
+                else
+                {
+                    $complexString.appendLine( $spacing + "`$$tempPropertyName.Add('" +  $nestedPropertyName + "', `$$valuePrefix$AssignedPropertyName)" ) | Out-Null
+                }
+
             }
-            $AssignedPropertyName = $nestedProperty.Name
-            if( $AssignedPropertyName.contains("@"))
-            {
-                $AssignedPropertyName="'$AssignedPropertyName'"
-            }
-            $complexString.appendLine( $spacing + "`$$tempPropertyName.Add('" +  $nestedPropertyName + "', `$$valuePrefix" + $AssignedPropertyName + ")" ) | Out-Null
         }
     }
 
@@ -1474,12 +1596,135 @@ function Get-ComplexTypeConstructorToString
         $IndentCount --
         $spacing = $indent * $IndentCount
         $complexString.appendLine( $spacing + "}" ) | Out-Null
+        if($IsNested)
+        {
+            $complexString.appendLine( $spacing + "`$$ParentPropertyName" +".Add('$propertyName',`$$returnPropertyName" +")" ) | Out-Null
+        }
     }
 
-    return $complexString.ToString()
+    return [String]($complexString.toString())
+}
+
+function Get-DateTypeConstructorToString
+{
+    [CmdletBinding()]
+    [OutputType([System.String[]])]
+    param (
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({$_.Type -like "System.Date*"})]
+        $Property,
+
+        [Parameter()]
+        [System.String]
+        $ParentPropertyName,
+
+        [Parameter()]
+        [System.Int32]
+        $IndentCount=0,
+
+        [Parameter()]
+        [System.String]
+        $DateFormat,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsNested=$false
+    )
+
+    $dateString = [System.Text.StringBuilder]::New()
+    $indent="    "
+    $spacing = $indent * $IndentCount
+
+    $valuePrefix = "getValue."
+    $propertyName = Get-StringFirstCharacterToUpper -Value $Property.Name
+    $returnPropertyName= "date"+ $propertyName
+    $propertyType=$Property.Type.split(".")|select-object -last 1
+
+
+    if($Property.IsRootProperty -eq $false)
+    {
+        $propertyName = Get-StringFirstCharacterToLower -Value $Property.Name
+        $valuePrefix += "AdditionalProperties."
+    }
+
+    if($property.IsArray)
+    {
+        $dateString.appendLine( $spacing + "`$$returnPropertyName" + " = @()") | Out-Null
+        $dateString.appendLine( $spacing + "foreach(`$current$propertyName in `$$valuePrefix$PropertyName)" ) | Out-Null
+        $dateString.appendLine( $spacing + "{" ) | Out-Null
+        $IndentCount ++
+        $spacing = $indent * $IndentCount
+        $dateString.appendLine( $spacing + "`$$returnPropertyName += ([$propertyType]`$current$propertyName).ToString('$DateFormat')") | Out-Null
+        $IndentCount --
+        $spacing = $indent * $IndentCount
+        $dateString.appendLine( $spacing + "}" ) | Out-Null
+    }
+    else
+    {
+        $dateString.appendLine( $spacing + "`$$returnPropertyName" + " = `$null") | Out-Null
+        $dateString.appendLine( $spacing + "if (`$null -ne `$$valuePrefix$PropertyName)" ) | Out-Null
+        $dateString.appendLine( $spacing + "{" ) | Out-Null
+        $IndentCount ++
+        $spacing = $indent * $IndentCount
+        $dateString.appendLine( $spacing + "`$$returnPropertyName = ([$propertyType]`$$valuePrefix$PropertyName).ToString('$DateFormat')") | Out-Null
+        $IndentCount --
+        $spacing = $indent * $IndentCount
+        $dateString.appendLine( $spacing + "}" ) | Out-Null
+    }
+
+    return $dateString.ToString()
 
 }
 
+function Get-EnumTypeConstructorToString
+{
+    [CmdletBinding()]
+    [OutputType([System.String[]])]
+    param (
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({$_.IsEnumType})]
+        $Property,
+
+        [Parameter()]
+        [System.String]
+        $ParentPropertyName,
+
+        [Parameter()]
+        [System.Int32]
+        $IndentCount=0,
+
+        [Parameter()]
+        [System.String]
+        $DateFormat
+    )
+
+    $enumString = [System.Text.StringBuilder]::New()
+    $indent="    "
+    $spacing = $indent * $IndentCount
+
+    $valuePrefix = "getValue."
+    $propertyName = Get-StringFirstCharacterToUpper -Value $Property.Name
+    $returnPropertyName= "enum"+ $propertyName
+
+    if($Property.IsRootProperty -eq $false)
+    {
+        $propertyName = Get-StringFirstCharacterToLower -Value $Property.Name
+        $valuePrefix += "AdditionalProperties."
+    }
+
+    $enumString.appendLine( $spacing + "`$$returnPropertyName" + " = `$null") | Out-Null
+    $enumString.appendLine( $spacing + "if (`$null -ne `$$valuePrefix$PropertyName)" ) | Out-Null
+    $enumString.appendLine( $spacing + "{" ) | Out-Null
+    $IndentCount ++
+    $spacing = $indent * $IndentCount
+    $enumString.appendLine( $spacing + "`$$returnPropertyName = `$$valuePrefix$PropertyName.ToString()") | Out-Null
+    $IndentCount --
+    $spacing = $indent * $IndentCount
+    $enumString.appendLine( $spacing + "}" ) | Out-Null
+
+    return $enumString.ToString()
+
+}
 function Get-ParameterBlockInformation
 {
     [OutputType([Hashtable[]])]
@@ -1536,7 +1781,10 @@ function Get-ParameterBlockInformation
         }
         if ($property.IsComplexType)
         {
-            $myParam.add('Properties', $property.Properties)
+            #$myParam.add('Properties', $property.Properties)Get-ParameterBlockInformation
+            $myParam.add('Properties', (Get-ParameterBlockInformation `
+                    -Properties $property.Properties `
+                    -DefaultParameterSetProperties $DefaultParameterSetProperties))
         }
 
         $parameterBlock+=$myParam
@@ -1625,25 +1873,25 @@ function Get-M365DSCDRGParameterTypeForSchema
         $Type
     )
     $parameterType = ''
-    switch ($Type.ToLower())
+    switch  -Wildcard  ($Type.ToLower())
     {
-        'system.string'
+        '*.string'
         {
             $parameterType = 'String'
         }
-        'system.datetime'
+        '*.datetime'
         {
             $parameterType = 'String'
         }
-        'system.boolean'
+        '*.boolean'
         {
             $parameterType = 'Boolean'
         }
-        'system.int32'
+        '*.int32'
         {
             $parameterType = 'UInt32'
         }
-        'system.int64'
+        '*.int64'
         {
             $parameterType = 'UInt64'
         }
@@ -2091,8 +2339,9 @@ function Get-M365DSCDRGCimInstancesSchemaStringContent
 {
     param (
         [Parameter(Mandatory = $true)]
-        [System.Object[]]
-        $CIMInstances,
+        #[System.Object[]]
+        [Hashtable]
+        $CIMInstance,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -2100,12 +2349,12 @@ function Get-M365DSCDRGCimInstancesSchemaStringContent
     )
 
     $stringResult = ''
-    foreach ($cimInstance in $CIMInstances)
-    {
+    #foreach ($cimInstance in $CIMInstances)
+    #{
+
         $cimInstanceType = Get-StringFirstCharacterToUpper -Value $cimInstance.Type
-        if (-not $Global:CIMInstancesAlreadyFound.Contains($cimInstanceType))
+        if ( $cimInstanceType -notin $Global:AlreadyFoundInstances)
         {
-            $Global:CIMInstancesAlreadyFound += $cimInstanceType
             $stringResult += "[ClassVersion(`"1.0.0`")]`r`n"
             $stringResult += 'class MSFT_' + $Workload + $cimInstanceType + "`r`n"
             $stringResult += "{`r`n"
@@ -2114,46 +2363,62 @@ function Get-M365DSCDRGCimInstancesSchemaStringContent
             foreach ($property in $cimInstance.Properties)
             {
                 $newNestedCimToBeAdded = $false
-                <#if ($property.Type.ToString().ToLower().StartsWith('microsoft.graph.powershell.models.') -and `
-                        -not $Global:AlreadyFoundInstances.Contains($property.Type))
+                $propertyType = Get-StringFirstCharacterToUpper -Value $property.Type
+
+                if ($property.IsComplexType)
                 {
-                    $newNestedCimToBeAdded = $true
-                    $Global:AlreadyFoundInstances += $property.Type
+                    if ( $propertyType -notin $Global:AlreadyFoundInstances)
+                    {
+                        $Global:AlreadyFoundInstances += $cimInstanceType
 
-                    if ($property.NestedCIM)
-                    {
-                        $nestedResult = Get-M365DSCDRGCimInstancesSchemaStringContent -CIMInstances $property.NestedCIM `
-                            -Workload $Workload
-                    }
-                    else
-                    {
-                        $nestedResult = ''
-                    }
+                        $newNestedCimToBeAdded = $true
+                        #$Global:AlreadyFoundInstances += $propertyType
 
-                    $propertySet = ''
-                    if ($property.IsEnumType)
-                    {
-                        $mySet = ''
-                        foreach ($member in $property.Members)
+                        $nestedResult = Get-M365DSCDRGCimInstancesSchemaStringContent `
+                        -CIMInstance $property `
+                        -Workload $Workload
+                    }
+                    <#[Array]$NestedCimInstances = $property.Properties | Where-Object -FilterScript { $_.IsComplexType}
+                        #write-host ($NestedCimInstances|out-string)
+                        if ($null -ne $NestedCimInstances -and $NestedCimInstances.count -gt 0 )
                         {
-                            $mySet += "`"" + $member + "`","
+                            write-host -ForegroundColor Cyan ($property.Name+": $propertyType")
+
+                            foreach($NestedCimInstance in $NestedCimInstances)
+                            {
+                                $nestedResult += Get-M365DSCDRGCimInstancesSchemaStringContent `
+                                -CIMInstance $NestedCimInstance `
+                                -Workload $Workload
+                            }
+
                         }
-                        $mySet = $mySet.Substring(0, $mySet.Length - 1)
-                        $propertySet = ", ValueMap{$mySet}, Values{$mySet}"
-                    }
-                    $propertyType = $property.Type -replace 'microsoft.graph.powershell.models.', ''
-                    $propertyType = $propertyType -replace 'imicrosoftgraph', ''
-                    $propertyType = $propertyType -replace '[[\]]', ''
-                    $propertyType = $workload + $propertyType
-                    $stringResult += "    [Write, Description(`"$($property.Description)`"), EmbeddedInstance(`"MSFT_$Workload$($cimInstance.Name)`")] String $($property.Name)"
-                    if ($property.IsArray)
-                    {
-                        $stringResult += '[]'
-                    }
-                    $stringResult += ";`r`n"
+                        else
+                        {
+                            #$nestedResult = ''
+                        }
+#>
+                        <#$propertySet = ''
+                        if ($property.IsEnumType)
+                        {
+                            $mySet = ''
+                            foreach ($member in $property.Members)
+                            {
+                                $mySet += "`"" + $member + "`","
+                            }
+                            $mySet = $mySet.Substring(0, $mySet.Length - 1)
+                            $propertySet = ", ValueMap{$mySet}, Values{$mySet}"
+                        }#>
+                        $stringResult += "    [Write, Description(`"$($property.Description)`"), EmbeddedInstance(`"MSFT_$Workload$($propertyType)`")] String $($property.Name)"
+                        if ($property.IsArray)
+                        {
+                            $stringResult += '[]'
+                        }
+                        $stringResult += ";`r`n"
+                        #$Global:AlreadyFoundInstances += $cimInstanceType
+
                 }
                 else
-                {#>
+                {
 
                     $propertyType = Get-M365DSCDRGParameterTypeForSchema -Type $property.Type
                     $propertySet = ''
@@ -2162,6 +2427,10 @@ function Get-M365DSCDRGCimInstancesSchemaStringContent
                         $mySet = ''
                         foreach ($member in $property.Members)
                         {
+                            if($property.Name -eq "@odata.type")
+                            {
+                                $member="#microsoft.graph."+$member
+                            }
                             $mySet += "`"" + $member + "`","
                         }
                         $mySet = $mySet.Substring(0, $mySet.Length - 1)
@@ -2172,20 +2441,20 @@ function Get-M365DSCDRGCimInstancesSchemaStringContent
                     {
                         $propertyName="odataType"
                     }
-                    if($property.IsComplexType)
+                    <#if($property.IsComplexType)
                     {
-                        $stringResult += "    [Write, Description(`"$($property.Description)`"), EmbeddedInstance(`"MSFT_$Workload$($cimInstance.Name)`")] String $($propertyName)"
+                        #$stringResult += "    [Write, Description(`"$($property.Description)`"), EmbeddedInstance(`"MSFT_$Workload$($propertyType)`")] String $($propertyName)"
                     }
                     else
-                    {
-                        $stringResult += "    [Write, Description(`"$($property.Description)`")$propertySet] $($propertyType) $($propertyName)"
-                    }
+                    {#>
+                    $stringResult += "    [Write, Description(`"$($property.Description)`")$propertySet] $($propertyType) $($propertyName)"
+                    #}
                     if ($property.IsArray)
                     {
                         $stringResult += '[]'
                     }
                     $stringResult += ";`r`n"
-                #}
+                }
                 if ($newNestedCimToBeAdded)
                 {
                     $nestedResults += $nestedResult
@@ -2193,8 +2462,12 @@ function Get-M365DSCDRGCimInstancesSchemaStringContent
             }
             $stringResult += "};`r`n"
             $stringResult += $nestedResults
+            if ( $cimInstanceType -notin $Global:AlreadyFoundInstances)
+            {
+                $Global:AlreadyFoundInstances += $cimInstanceType
+            }
         }
-    }
+    #}
 
     return $stringResult
 }
@@ -2220,7 +2493,7 @@ function New-M365SchemaPropertySet
                 $propertyType = $Workload + $propertyType
                 $propertyType = $propertyType -replace '[[\]]', ''
                 $schemaProperties += "    [Write, Description(`"$($_.Description)`"), EmbeddedInstance(`"MSFT_$propertyType`")] String $($_.Name)"
-                if ($_.Type.EndsWith('[]'))
+                if ($_.IsArray)
                 {
                     $schemaProperties += '[]'
                 }
@@ -2241,7 +2514,7 @@ function New-M365SchemaPropertySet
                     $propertySet = ", ValueMap{$mySet}, Values{$mySet}"
                 }
                 $schemaProperties += "    [Write, Description(`"$($_.Description)`")$propertySet] $($propertyType) $($_.Name)"
-                if ($_.Type.EndsWith('[]'))
+                if ($_.IsArray)
                 {
                     $schemaProperties += '[]'
                 }
@@ -2451,6 +2724,42 @@ function New-M365DSCReadmeFile
     return $filePath
 }
 
+function Get-ComplexTypeMapping
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param (
+        [Parameter()]
+        $Property,
+
+        [Parameter()]
+        [System.String]
+        $Workload
+    )
+        $complexMapping = @()
+        $propertyType = Get-StringFirstCharacterToUpper -Value $Property.Type
+        $isRequired=$false
+        if($property.Description -like "* Required.*")
+        {
+            $isRequired=$true
+        }
+        $map=@{
+            Name = $Property.Name
+            CimInstanceName = $Workload+ $PropertyType
+            IsRequired = $isRequired
+        }
+        $complexMapping += $map
+        foreach($nestedProperty in $property.Properties)
+        {
+
+            if($nestedProperty.IsComplexType)
+            {
+                $complexMapping += Get-ComplexTypeMapping -Property $nestedProperty -Workload $Workload
+            }
+        }
+        return $complexMapping
+}
+
 function New-M365HashTableMapping
 {
     [CmdletBinding()]
@@ -2468,6 +2777,10 @@ function New-M365HashTableMapping
         [System.String]
         $Workload,
 
+        [Parameter()]
+        [System.String]
+        $DateFormat,
+
         # Parameter help description
         [Parameter()]
         [System.Object]
@@ -2483,6 +2796,7 @@ function New-M365HashTableMapping
     $convertToVariable = ''
     $addtionalProperties = ''
     $complexTypeConstructor = [System.Text.StringBuilder]::New()
+    $dateTypeConstructor = [System.Text.StringBuilder]::New()
 
     $biggestParamaterLength = 'CertificateThumbprint'.length
     foreach ($property in $properties.Name)
@@ -2510,8 +2824,24 @@ function New-M365HashTableMapping
                 $CimInstanceName = $paramType -replace 'Microsoft.Graph.PowerShell.Models.IMicrosoftGraph', ''
                 $CimInstanceName = $CimInstanceName -replace '[[\]]', ''
                 $CimInstanceName = $Workload + $CimInstanceName
-
-                $complexTypeConstructor.appendLine((Get-ComplexTypeConstructorToString -Property $property -IndentCount 2))
+                $global:ComplexList = @()
+                $complexTypeConstructor.appendLine((Get-ComplexTypeConstructorToString -Property $property -IndentCount 2 -DateFormat $DateFormat))
+                $global:ComplexList = $null
+                [Array]$complexMapping = Get-ComplexTypeMapping -Property $property -Workload $Workload
+                $complexMappingString = [System.Text.StringBuilder]::New()
+                if($complexMapping.count -gt 1)
+                {
+                    $complexMappingString.appendLine("                `$complexMapping = @(") | out-null
+                    foreach($map in $complexMapping)
+                    {
+                        $complexMappingString.appendLine("                    @{")| out-null
+                        $complexMappingString.appendLine("                        Name = '" + $map.Name + "'")| out-null
+                        $complexMappingString.appendLine("                        CimInstanceName = '" + $map.CimInstanceName + "'")| out-null
+                        $complexMappingString.appendLine("                        IsRequired = `$" + $map.IsRequired.ToString())| out-null
+                        $complexMappingString.appendLine("                    }")| out-null
+                    }
+                    $complexMappingString.appendLine("                )")| out-null
+                }
                 <#if ($UseAddtionalProperties)
                 {
                     $propertyName = $property.Name
@@ -2535,10 +2865,22 @@ function New-M365HashTableMapping
 
 
 
-                $convertToString += "            if (`$Results.$parameterName)`r`n"
+                $convertToString += "            if ( `$null -ne `$Results.$parameterName)`r`n"
                 $convertToString += "            {`r`n"
-                $convertToString += "                `$complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject `$Results.$parameterName -CIMInstanceName $CimInstanceName`r`n"
-                $convertToString += "                if (`$complexTypeStringResult)`r`n"
+                if(-Not ([String]::IsNullOrEmpty($complexMappingString.toString())))
+                {
+                    $convertToString += $complexMappingString.toString()
+                }
+                $convertToString += "                `$complexTypeStringResult = Get-M365DSCDRGComplexTypeToString ```r`n"
+                $convertToString += "                    -ComplexObject `$Results.$parameterName ```r`n"
+                $convertToString += "                    -CIMInstanceName '$CimInstanceName'"
+                if(-Not ([String]::IsNullOrEmpty($complexMappingString.toString())))
+                {
+                    $convertToString += " ```r`n"
+                    $convertToString += "                    -ComplexTypeMapping `$complexMapping`r`n"
+                }
+                $convertToString += "`r`n"
+                $convertToString += "                if(-Not [String]::IsNullOrWhiteSpace(`$complexTypeStringResult))`r`n"
                 $convertToString += "                {`r`n"
                 $convertToString += "                    `$Results.$parameterName = `$complexTypeStringResult`r`n"
                 $convertToString += "                }`r`n"
@@ -2555,34 +2897,40 @@ function New-M365HashTableMapping
 
 
             }
+            if($property.Type -like "System.Date*")
+            {
+                $dateTypeConstructor.appendLine((Get-DateTypeConstructorToString -Property $property -IndentCount 2 -DateFormat $DateFormat))
+            }
             #else
             #{
-                $SkipAdditionalPropertiesParameters =@(
-                    'Description'
-                    'displayName'
-                    'Id'
-                    'RoleScopeTagIds'
-                    'Version'
-                )
 
                 $spacing = $biggestParamaterLength - $property.Name.length
                 $propertyName = Get-StringFirstCharacterToUpper -Value $property.Name
                 $hashtable += "            $($parameterName + (' ' * $spacing) ) = "
                 if ($property.IsComplexType)
                 {
-                    $hashtable += "`$complex$propertyName `r`n"
+                    $hashtable += "`$complex$propertyName`r`n"
+                }
+                elseif($property.Type -like "System.Date*")
+                {
+                    $hashtable += "`$date$propertyName`r`n"
                 }
                 else
                 {
-                    $hashtable += "`$getValue."
+                    $propertyPrefix="`$getValue."
+                    #$hashtable += "`$getValue."
                     if ($property.IsRootProperty -eq $false)
                     {
                         $propertyName = Get-StringFirstCharacterToLower -Value $property.Name
-                        $hashtable += "AdditionalProperties."
+                        $propertyPrefix += "AdditionalProperties."
                     }
 
-                    $hashtable += "$($propertyName) `r`n"
-
+                    if($property.IsEnumType)
+                    {
+                        $propertyName+=".toString()"
+                    }
+                    $hashtable += "$propertyPrefix$propertyName"
+                    $hashtable += "`r`n"
                 }
             #}
         }
@@ -2610,10 +2958,11 @@ function New-M365HashTableMapping
         }
 
         $spacing = $biggestParamaterLength - $key.length
-        $hashtable += "            $($key + ' ' * $spacing) = $keyValue  `r`n"
+        $hashtable += "            $($key + ' ' * $spacing) = $keyValue`r`n"
     }
     $results.Add('ConvertToVariable', $convertToVariable)
     $results.Add('ComplexTypeConstructor', $complexTypeConstructor.ToString())
+    $results.Add('DateTypeConstructor', $dateTypeConstructor.ToString())
     $results.Add('addtionalProperties', $addtionalProperties)
     $results.Add('ConvertToString', $convertToString)
     $results.Add('StringContent', $hashtable)
@@ -2654,6 +3003,10 @@ function Get-ParameterBlockStringForModule
             elseif ($propertyType.ToLower() -eq 'system.management.automation.switchparameter')
             {
                 $parameterBlockOutput += '        [System.Boolean'
+            }
+            elseif ($propertyType.ToLower() -like 'system.date*')
+            {
+                $parameterBlockOutput += '        [System.String'
             }
             else
             {
