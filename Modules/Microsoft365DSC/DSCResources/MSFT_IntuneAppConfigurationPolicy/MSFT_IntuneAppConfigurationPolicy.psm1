@@ -49,7 +49,8 @@ function Get-TargetResource
         [Switch]
         $ManagedIdentity
     )
-    Write-Verbose -Message "Checking for the Intune App Configuration Policy {$DisplayName}"
+
+    Write-Verbose -Message "Getting configuration of Intune App Configuration Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
@@ -175,7 +176,7 @@ function Set-TargetResource
         $ManagedIdentity
     )
 
-    Write-Verbose -Message "Intune App Configuration Policy {$DisplayName}"
+    Write-Verbose -Message "Setting configuration of Intune App Configuration Policy {$DisplayName}"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
