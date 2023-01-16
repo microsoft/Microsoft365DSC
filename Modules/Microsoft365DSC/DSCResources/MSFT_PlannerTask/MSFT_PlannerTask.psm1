@@ -781,53 +781,26 @@ function Export-TargetResource
                             $result.Notes = $result.Notes.Replace('&', "``&")
                         }
 
-                        $currentDSCBlock += '        PlannerTask ' + (New-Guid).ToString() + "`r`n"
-                        $currentDSCBlock += "        {`r`n"
-                        $content = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-
-                        # Ensure quotes are removed around auth variables
-                        if ($Credential)
-                        {
-                            $content = Convert-DSCStringParamToVariable -DSCBlock $content `
-                                -ParameterName 'Credential'
-                        }
-                        if ($ApplicationId)
-                        {
-                            $content = Convert-DSCStringParamToVariable -DSCBlock $content `
-                                -ParameterName 'ApplicationId'
-                        }
-                        if ($ApplicationSecret)
-                        {
-                            $content = Convert-DSCStringParamToVariable -DSCBlock $content `
-                                -ParameterName 'ApplicationSecret'
-                        }
-                        if ($TenantId)
-                        {
-                            $content = Convert-DSCStringParamToVariable -DSCBlock $content `
-                                -ParameterName 'TenantId'
-                        }
-                        if ($CertificateThumbprint)
-                        {
-                            $content = Convert-DSCStringParamToVariable -DSCBlock $content `
-                                -ParameterName 'CertificateThumbprint'
-                        }
+                        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                            -ConnectionMode $ConnectionMode `
+                            -ModulePath $PSScriptRoot `
+                            -Results $result `
+                            -Credential $Credential
 
                         if ($result.Attachments.Length -gt 0)
                         {
-                            $content = Convert-DSCStringParamToVariable -DSCBlock $content `
+                            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
                                 -ParameterName 'Attachments' `
                                 -IsCIMArray $true
                         }
                         if ($result.Checklist.Length -gt 0)
                         {
-                            $content = Convert-DSCStringParamToVariable -DSCBlock $content `
+                            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
                                 -ParameterName 'Checklist' `
                                 -IsCIMArray $true
                         }
-                        $currentDSCBlock += $content
-                        $currentDSCBlock += "        }`r`n"
-                        $dscContent += $currentDSCBlock
 
+                        $dscContent += $currentDSCBlock
                         Save-M365DSCPartialExport -Content $currentDSCBlock `
                             -FileName $Global:PartialExportFileName
                         $k++
