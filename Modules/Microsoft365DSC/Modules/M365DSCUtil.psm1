@@ -813,7 +813,10 @@ function Test-M365DSCParameterState
                                         {
                                             $EventValue = "<CurrentValue>[$($item.PropertyName)]$($item.CurrentValue)</CurrentValue>"
                                             $EventValue += "<DesiredValue>[$($item.PropertyName)]$($item.DesiredValue)</DesiredValue>"
-                                            $DriftedParameters.Add($fieldName, $EventValue)
+                                            if (-not $DriftedParameters.ContainsKey($fieldName))
+                                            {
+                                                $DriftedParameters.Add($fieldName, $EventValue)
+                                            }
                                         }
                                         $returnValue = $false
                                     }
