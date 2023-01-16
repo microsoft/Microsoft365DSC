@@ -2,12 +2,29 @@
 
 # UNRELEASED
 
+* IntuneAppConfigurationPolicy
+  * Fixes issue where the Test method fails when the policy does not exist yet
+    and the Assignments parameter is used.
+    FIXES [#2768](https://github.com/microsoft/Microsoft365DSC/issues/2768)
+* IntuneDeviceAndAppManagementAssignmentFilter
+  * Fixes issue where the code did not check for the DisplayName when the ID could not
+    be found.
+    FIXES [#2788](https://github.com/microsoft/Microsoft365DSC/issues/2788)
+* IntuneDeviceConfigurationPolicyMacOS
+  * Corrected copy/paste issue while implementing previous fix.
+    FIXES [#2731](https://github.com/microsoft/Microsoft365DSC/issues/2731)
+* IntuneRoleDefinition
+  * Fixes issue where the code did not check for the DisplayName when the ID could not
+    be found.
+    FIXES [#2771](https://github.com/microsoft/Microsoft365DSC/issues/2771)
+  * Updated logging logic to include more details and add Current/Target values in the
+    Test method.
 * PlannerTask
   * Refactored to leverage the official cmdlets instead of using the legacy GraphHandlers.
     FIXES [#2767](https://github.com/microsoft/Microsoft365DSC/issues/2767)
-  * Changed PlannerTask/Export-TargetResource to call Get-M365DSCExportContentForResource
-    to simplify/conform + variables for authentation are added correctly
-    FIXES [#2784](https://github.com/microsoft/Microsoft365DSC/issues/2784)
+* SCRetentionCompliancePolicy
+  * Fixes an issue where the SkypeLocation was trying to be converted to a string when it was an array.
+    FIXES [#2789](https://github.com/microsoft/Microsoft365DSC/issues/2789)
 * DEPENDENCIES
   * Updated Microsoft.Graph.* to version 1.20.0
   * Updated MSCloudLoginAssistant to version 1.0.103
