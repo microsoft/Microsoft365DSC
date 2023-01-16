@@ -2,6 +2,10 @@
 
 # UNRELEASED
 
+* IntuneAppConfigurationPolicy
+  * Fixes issue where the Test method fails when the policy does not exist yet
+    and the Assignments parameter is used.
+    FIXES [#2768](https://github.com/microsoft/Microsoft365DSC/issues/2768)
 * IntuneDeviceConfigurationPolicyMacOS
   * Corrected copy/paste issue while implementing previous fix.
     FIXES [#2731](https://github.com/microsoft/Microsoft365DSC/issues/2731)

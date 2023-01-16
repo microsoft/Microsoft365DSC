@@ -66,19 +66,21 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullResult = $PSBoundParameters
+    $nullResult = @{
+        DisplayName = $DisplayName
+    }
     $nullResult.Ensure = 'Absent'
     try
     {
         $configPolicy = Get-MgDeviceAppManagementTargetedManagedAppConfiguration -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
 
-
         if ($null -eq $configPolicy)
         {
             Write-Verbose -Message "No App Configuration Policy with displayName {$DisplayName} was found"
             return $nullResult
         }
+
         Write-Verbose -Message "Found App Configuration Policy with displayName {$DisplayName}"
         $returnHashtable = @{
             DisplayName           = $configPolicy.DisplayName
@@ -92,6 +94,7 @@ function Get-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             Managedidentity       = $ManagedIdentity.IsPresent
         }
+
         $returnAssignments = @()
         $returnAssignments += Get-MgDeviceAppManagementTargetedManagedAppConfigurationAssignment -TargetedManagedAppConfigurationId $configPolicy.Id
         $assignmentResult = @()
