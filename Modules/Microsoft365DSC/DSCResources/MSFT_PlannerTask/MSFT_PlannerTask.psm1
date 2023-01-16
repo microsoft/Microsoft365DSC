@@ -784,8 +784,34 @@ function Export-TargetResource
                         $currentDSCBlock += '        PlannerTask ' + (New-Guid).ToString() + "`r`n"
                         $currentDSCBlock += "        {`r`n"
                         $content = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-                        $content = Convert-DSCStringParamToVariable -DSCBlock $content `
-                            -ParameterName 'Credential'
+
+                        # Ensure quotes are removed around auth variables
+                        if ($Credential)
+                        {
+                            $content = Convert-DSCStringParamToVariable -DSCBlock $content `
+                                -ParameterName 'Credential'
+                        }
+                        if ($ApplicationId)
+                        {
+                            $content = Convert-DSCStringParamToVariable -DSCBlock $content `
+                                -ParameterName 'ApplicationId'
+                        }
+                        if ($ApplicationSecret)
+                        {
+                            $content = Convert-DSCStringParamToVariable -DSCBlock $content `
+                                -ParameterName 'ApplicationSecret'
+                        }
+                        if ($TenantId)
+                        {
+                            $content = Convert-DSCStringParamToVariable -DSCBlock $content `
+                                -ParameterName 'TenantId'
+                        }
+                        if ($CertificateThumbprint)
+                        {
+                            $content = Convert-DSCStringParamToVariable -DSCBlock $content `
+                                -ParameterName 'CertificateThumbprint'
+                        }
+
                         if ($result.Attachments.Length -gt 0)
                         {
                             $content = Convert-DSCStringParamToVariable -DSCBlock $content `
