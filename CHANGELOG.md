@@ -22,6 +22,9 @@
 * PlannerTask
   * Refactored to leverage the official cmdlets instead of using the legacy GraphHandlers.
     FIXES [#2767](https://github.com/microsoft/Microsoft365DSC/issues/2767)
+* SCRetentionCompliancePolicy
+  * Fixes an issue where the SkypeLocation was trying to be converted to a string when it was an array.
+    FIXES [#2789](https://github.com/microsoft/Microsoft365DSC/issues/2789)
 * DEPENDENCIES
   * Updated Microsoft.Graph.* to version 1.20.0
   * Updated MSCloudLoginAssistant to version 1.0.103

@@ -398,7 +398,7 @@ function Set-TargetResource
         throw 'You need to specify at least one Location for this Policy.'
     }
 
-    if ($null -ne $SkypeLocation -and $SkypeLocation.ToLower() -eq 'all')
+    if ($null -ne $SkypeLocation -and $SkypeLocation -eq 'all')
     {
         throw 'Skype Location must be a any value that uniquely identifies the user.Ex Name, email address, GUID'
     }
