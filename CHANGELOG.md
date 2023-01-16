@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* IntuneDeviceConfigurationPolicyMacOS
+  * Corrected copy/paste issue while implementing previous fix.
+    FIXES [#2731](https://github.com/microsoft/Microsoft365DSC/issues/2731)
 * PlannerTask
   * Refactored to leverage the official cmdlets instead of using the legacy GraphHandlers.
     FIXES [#2767](https://github.com/microsoft/Microsoft365DSC/issues/2767)
