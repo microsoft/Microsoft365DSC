@@ -89,13 +89,15 @@ function Get-TargetResource
     {
         if (-not [System.String]::IsNullOrEmpty($Identity))
         {
-            $assignmentFilter = Get-MgDeviceManagementAssignmentFilter -DeviceAndAppManagementAssignmentFilterId $Identity -ErrorAction Stop
+            Write-Verbose -Message "Checking if filter exists with identity {$Identity}."
+            $assignmentFilter = Get-MgDeviceManagementAssignmentFilter -DeviceAndAppManagementAssignmentFilterId $Identity -ErrorAction 'SilentlyContinue'
         }
 
         if ($null -eq $assignmentFilter)
         {
             Write-Verbose -Message "No assignment filter with Identity {$Identity} was found."
 
+            Write-Verbose -Message "Checking if filter exists with DisplayName {$DisplayName}."
             [array]$assignmentFilter = Get-MgDeviceManagementAssignmentFilter -All | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
             if ($assignmentFilter.Length -gt 2)
             {
@@ -325,6 +327,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('Identity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
