@@ -6,6 +6,10 @@
   * Fixes issue where the Test method fails when the policy does not exist yet
     and the Assignments parameter is used.
     FIXES [#2768](https://github.com/microsoft/Microsoft365DSC/issues/2768)
+* IntuneDeviceAndAppManagementAssignmentFilter
+  * Fixes issue where the code did not check for the DisplayName when the ID could not
+    be found.
+    FIXES [#2788](https://github.com/microsoft/Microsoft365DSC/issues/2788)
 * IntuneDeviceConfigurationPolicyMacOS
   * Corrected copy/paste issue while implementing previous fix.
     FIXES [#2731](https://github.com/microsoft/Microsoft365DSC/issues/2731)

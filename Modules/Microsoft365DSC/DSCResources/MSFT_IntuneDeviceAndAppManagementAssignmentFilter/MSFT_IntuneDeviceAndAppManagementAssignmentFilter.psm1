@@ -55,7 +55,7 @@ function Get-TargetResource
         $ManagedIdentity
     )
 
-    Write-Verbose -Message "Checking for the assignment filter {$DisplayName}"
+    Write-Verbose -Message "Getting the Intune Device and App Management Assignment Filter {$DisplayName}"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
@@ -80,8 +80,10 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
+    $nullResult = @{
+        DisplayName = $DisplayName
+        Ensure      = 'Absent'
+    }
 
     try
     {
@@ -89,7 +91,8 @@ function Get-TargetResource
         {
             $assignmentFilter = Get-MgDeviceManagementAssignmentFilter -DeviceAndAppManagementAssignmentFilterId $Identity -ErrorAction Stop
         }
-        elseif ($null -eq $assignmentFilter)
+
+        if ($null -eq $assignmentFilter)
         {
             Write-Verbose -Message "No assignment filter with Identity {$Identity} was found."
 
@@ -106,6 +109,7 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Found assignment filter {$($assignmentFilter.displayName)}"
+
         $returnHashtable = @{}
         $returnHashtable.Add('Identity', $assignmentFilter.Id)
         $returnHashtable.Add('DisplayName', $assignmentFilter.displayName)
@@ -189,6 +193,8 @@ function Set-TargetResource
         [Switch]
         $ManagedIdentity
     )
+
+    Write-Verbose -Message "Setting the Intune Device and App Management Assignment Filter {$DisplayName}"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
@@ -294,6 +300,8 @@ function Test-TargetResource
         $ManagedIdentity
     )
 
+    Write-Verbose -Message "Testing the Intune Device and App Management Assignment Filter {$DisplayName}"
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -394,6 +402,7 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
+
         foreach ($assignmentFilter in $assignmentFilters)
         {
             Write-Host "    |---[$i/$($assignmentFilters.Count)] $($assignmentFilter.displayName)" -NoNewline
