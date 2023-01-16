@@ -49,7 +49,8 @@ function Get-TargetResource
         [Switch]
         $ManagedIdentity
     )
-    Write-Verbose -Message "Checking for the Intune App Configuration Policy {$DisplayName}"
+
+    Write-Verbose -Message "Getting configuration of Intune App Configuration Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
@@ -66,19 +67,21 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullResult = $PSBoundParameters
+    $nullResult = @{
+        DisplayName = $DisplayName
+    }
     $nullResult.Ensure = 'Absent'
     try
     {
         $configPolicy = Get-MgDeviceAppManagementTargetedManagedAppConfiguration -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
 
-
         if ($null -eq $configPolicy)
         {
             Write-Verbose -Message "No App Configuration Policy with displayName {$DisplayName} was found"
             return $nullResult
         }
+
         Write-Verbose -Message "Found App Configuration Policy with displayName {$DisplayName}"
         $returnHashtable = @{
             DisplayName           = $configPolicy.DisplayName
@@ -92,6 +95,7 @@ function Get-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             Managedidentity       = $ManagedIdentity.IsPresent
         }
+
         $returnAssignments = @()
         $returnAssignments += Get-MgDeviceAppManagementTargetedManagedAppConfigurationAssignment -TargetedManagedAppConfigurationId $configPolicy.Id
         $assignmentResult = @()
@@ -172,7 +176,7 @@ function Set-TargetResource
         $ManagedIdentity
     )
 
-    Write-Verbose -Message "Intune App Configuration Policy {$DisplayName}"
+    Write-Verbose -Message "Setting configuration of Intune App Configuration Policy {$DisplayName}"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
