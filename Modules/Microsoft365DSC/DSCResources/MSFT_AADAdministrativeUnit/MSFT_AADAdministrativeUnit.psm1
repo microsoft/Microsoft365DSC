@@ -1259,7 +1259,8 @@ function Export-TargetResource
 
             if ($Results.Members)
             {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Members -CIMInstanceName MicrosoftGraphMember
+                $hashResults = Get-M365DSCDRGObjectArrayToHashtable -ArrayObject $Results.Members
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $hashResults -CIMInstanceName MicrosoftGraphMember
                 if ($complexTypeStringResult)
                 {
                     $Results.Members = $complexTypeStringResult
@@ -1271,7 +1272,8 @@ function Export-TargetResource
             }
             if ($Results.ScopedRoleMembers)
             {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.ScopedRoleMembers -CIMInstanceName MicrosoftGraphScopedRoleMembership
+                $hashResults = Get-M365DSCDRGObjectArrayToHashtable -ArrayObject $Results.ScopedRoleMembers
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $hashResults -CIMInstanceName MicrosoftGraphScopedRoleMembership
                 if ($complexTypeStringResult)
                 {
                     $Results.ScopedRoleMembers = $complexTypeStringResult
@@ -1300,6 +1302,7 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential
 
+            <#
             if ($Results.Members)
             {
                 $isCIMArray = $false
@@ -1319,6 +1322,8 @@ function Export-TargetResource
                 }
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ScopedRoleMembers'   -IsCIMArray:$isCIMArray
             }
+            #>
+            <#
             if ($Results.Extensions)
             {
                 $isCIMArray = $false
@@ -1328,6 +1333,7 @@ function Export-TargetResource
                 }
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Extensions' -IsCIMArray:$isCIMArray
             }
+            #>
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -1402,6 +1408,27 @@ function Get-M365DSCDRGComplexTypeToHashtable
     return $results
 }
 
+function Get-M365DSCDRGObjectArrayToHashtable
+{
+    [cmdletbinding()]
+    [outputtype([system.object[]])]
+    param(
+        [Parameter()]
+        [system.object[]]
+        $ArrayObject
+    )
+    $returnValue = @()
+    foreach ($element in $ArrayObject)
+    {
+        $hashTable = @{}
+        foreach ($property in $element.PSObject.Properties.Name)
+        {
+            $hashtable.Add($property, $element.$property) | Out-Null
+        }
+        $returnValue += $hashTable
+    }
+    return $returnValue
+}
 function Get-M365DSCDRGComplexTypeToString
 {
     [CmdletBinding()]
@@ -1465,14 +1492,14 @@ function Get-M365DSCDRGComplexTypeToString
     foreach ($key in $ComplexObject.Keys)
     {
         write-verbose ""
-        if ($ComplexObject[$key])
+        if ($ComplexObject.$key)
         {
             $keyNotNull++
 
-            if ($ComplexObject[$key].GetType().FullName -like 'Microsoft.Graph.PowerShell.Models.*')
+            if ($ComplexObject.$key.GetType().FullName -like 'Microsoft.Graph.PowerShell.Models.*')
             {
-                $hashPropertyType = $ComplexObject[$key].GetType().Name.tolower()
-                $hashProperty = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key]
+                $hashPropertyType = $ComplexObject[$key].GetType().Name
+                $hashProperty = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$key
 
                 if (Test-M365DSCComplexObjectHasValues -ComplexObject $hashProperty)
                 {
@@ -1493,7 +1520,7 @@ function Get-M365DSCDRGComplexTypeToString
                 {
                     $Whitespace = '            '
                 }
-                $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $ComplexObject[$key] -Space ($Whitespace + '    ')
+                $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $ComplexObject.$key -Space ($Whitespace + '    ')
             }
         }
     }
@@ -1512,16 +1539,16 @@ function Test-M365DSCComplexObjectHasValues
     [OutputType([System.Boolean])]
     param(
         [Parameter(Mandatory = $true)]
-        [System.Collections.Hashtable]
+        [system.object]
         $ComplexObject
     )
-    $keys = $ComplexObject.keys
+    $keys = $ComplexObject.psobject.properties.name
     $hasValue = $false
     foreach ($key in $keys)
     {
-        if ($ComplexObject[$key])
+        if ($ComplexObject.$key)
         {
-            if ($ComplexObject[$key].GetType().FullName -like 'Microsoft.Graph.PowerShell.Models.*')
+            if ($ComplexObject.$key.GetType().FullName -like 'Microsoft.Graph.PowerShell.Models.*')
             {
                 $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key]
                 if (-Not $hash)
@@ -1533,7 +1560,7 @@ function Test-M365DSCComplexObjectHasValues
             else
             {
                 $hasValue = $true
-                return $hasValue
+                break
             }
         }
     }
