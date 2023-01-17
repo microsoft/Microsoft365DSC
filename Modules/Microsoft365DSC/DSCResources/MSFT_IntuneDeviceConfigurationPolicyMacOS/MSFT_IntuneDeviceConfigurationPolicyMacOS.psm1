@@ -411,7 +411,7 @@ function Get-TargetResource
             SoftwareUpdatesEnforcedDelayInDays              = $getValue.AdditionalProperties.softwareUpdatesEnforcedDelayInDays
             SpotlightBlockInternetResults                   = $getValue.AdditionalProperties.spotlightBlockInternetResults
             TouchIdTimeoutInHours                           = $getValue.AdditionalProperties.touchIdTimeoutInHours
-            UpdateDelayPolicy                               = $getValue.AdditionalProperties.updateDelayPolicy -split '-'
+            UpdateDelayPolicy                               = $getValue.AdditionalProperties.updateDelayPolicy -split ','
             WallpaperModificationBlocked                    = $getValue.AdditionalProperties.wallpaperModificationBlocked
             Ensure                                          = 'Present'
             Credential                                      = $Credential
