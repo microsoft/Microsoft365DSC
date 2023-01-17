@@ -82,10 +82,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description = 'FakeStringValue1'
                     DisplayName = 'FakeStringValue1'
                     Id          = 'FakeStringValue1'
-                    Members     = (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
-                            Type     = 'User'
+                    Members     = @(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
+                            Type = 'User'
                             Identity = 'john.smith@contoso.com'
                         } -ClientOnly)
+                    )
                     Visibility  = 'Public'
                     Ensure      = 'Present'
                     Credential  = $Credential
@@ -119,10 +121,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description = 'FakeStringValue2'
                     DisplayName = 'FakeStringValue2'
                     Id          = 'FakeStringValue2'
-                    Members     = (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
-                            Type     = 'User'
+                    Members     = @(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
+                            Type = 'User'
                             Identity = 'john.smith@contoso.com'
                         } -ClientOnly)
+                    )
                     Ensure      = 'Absent'
                     Credential  = $Credential
                 }
@@ -162,7 +166,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName       = 'DSCAU'
                     Id                = 'DSCAU'
                     Members           = @(
-                                    (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
+                                    (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
                             Identity = 'John.Doe@mytenant.com'
                             Type     = 'User'
                         } -ClientOnly)
@@ -170,10 +174,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ScopedRoleMembers             = @(
                                 (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
                             RoleName       = 'User Administrator'
-                            RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
-                                    Identity = 'John.Doe@mytenant.com'
-                                    Type     = 'User'
-                                } -ClientOnly)
+                            #RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
+                            Identity = 'John.Doe@mytenant.com'
+                            Type     = 'User'
+                            #    } -ClientOnly)
                         } -ClientOnly)
                     )
                     <#
@@ -194,6 +198,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                        = 'Present'
                     Credential                    = $Credential
                 }
+
+                # Note: It is in fact possible to update the AU MembershipRule with any invalid value, but in the AAD-portal, updates are not possible unless the rule is valid.
 
                 Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
                     return [pscustomobject]@{
@@ -277,7 +283,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     #>
                     Id                = 'DSCAU2'
                     Members           = @(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
                             Identity = 'John.Doe@mytenant.com'
                             Type     = 'User'
                         } -ClientOnly)
@@ -285,10 +291,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ScopedRoleMembers = @(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
                             RoleName       = 'User Administrator'
-                            RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
-                                    Identity = 'John.Doe@mytenant.com'
-                                    Type     = 'User'
-                                } -ClientOnly)
+                            #RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
+                            Identity = 'John.Doe@mytenant.com'
+                            Type     = 'User'
+                            #    } -ClientOnly)
                         } -ClientOnly)
                     )
                     Visibility        = 'Public'
@@ -384,7 +390,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                     #>
                     Members           = @(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
                             Identity = 'John.Doe@mytenant.com'
                             Type     = 'User'
                         } -ClientOnly)
@@ -392,10 +398,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ScopedRoleMembers = @(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
                             RoleName       = 'User Administrator'
-                            RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
-                                    Identity = 'John.Doe@mytenant.com'
-                                    Type     = 'User'
-                                } -ClientOnly)
+                            #RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
+                            Identity = 'John.Doe@mytenant.com'
+                            Type     = 'User'
+                            #    } -ClientOnly)
                         } -ClientOnly)
                     )
                     Visibility        = 'Public'
@@ -420,15 +426,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Invoke-MgGraphRequest -MockWith {
-                    return [pscustomobject]@{
-                        '@odata.type'     = '#microsoft.graph.user'
-                        DisplayName       = 'John Doe'
-                        UserPrincipalName = 'John.Doe@mytenant.com'
-                        Id                = '1234567890'
-                    }
-                }
-
                 Mock -CommandName Get-MgDirectoryAdministrativeUnitMember -MockWith {
                     return [pscustomobject]@{
                         Id = '1234567890'
@@ -445,7 +442,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDirectoryAdministrativeUnitScopedRoleMember -MockWith {
                 }
-
 
                 Mock -CommandName Invoke-MgGraphRequest -MockWith {
                     return [pscustomobject]@{
