@@ -22,6 +22,9 @@
 * PlannerTask
   * Refactored to leverage the official cmdlets instead of using the legacy GraphHandlers.
     FIXES [#2767](https://github.com/microsoft/Microsoft365DSC/issues/2767)
+  * Changed Export-TargetResource to call Get-M365DSCExportContentForResource
+    to simplify/conform + variables for authentation are added correctly
+    FIXES [#2784](https://github.com/microsoft/Microsoft365DSC/issues/2784)
 * SCRetentionCompliancePolicy
   * Fixes an issue where the SkypeLocation was trying to be converted to a string when it was an array.
     FIXES [#2789](https://github.com/microsoft/Microsoft365DSC/issues/2789)
