@@ -159,37 +159,37 @@ function Get-TargetResource
             if ($auMembers)
             {
                 $memberSpec = @()
-            }
-            foreach ($getMember in $auMembers)
-            {
-                # get object regardless of type
-                $memberObject = Invoke-MgGraphRequest -Method Get -Uri "https://graph.microsoft.com/v1.0/directoryObjects/$($getMember.Id)"
-                switch -regex ([regex]::Escape($memberObject.'@odata.type'))
+                foreach ($getMember in $auMembers)
                 {
-                    'group'
+                    # get object regardless of type
+                    $memberObject = Invoke-MgGraphRequest -Method Get -Uri "https://graph.microsoft.com/v1.0/directoryObjects/$($getMember.Id)"
+                    switch -regex ([regex]::Escape($memberObject.'@odata.type'))
                     {
-                        $memberSpec += @{
-                            Identity = $memberObject.DisplayName;
-                            Type     = 'Group'
+                        'group'
+                        {
+                            $memberSpec += [pscustomobject]@{
+                                Identity = $memberObject.DisplayName;
+                                Type     = 'Group'
+                            }
                         }
-                    }
-                    'user'
-                    {
-                        $memberSpec += @{
-                            Identity = $memberObject.UserPrincipalName;
-                            Type     = 'User'
+                        'user'
+                        {
+                            $memberSpec += [pscustomobject]@{
+                                Identity = $memberObject.UserPrincipalName;
+                                Type     = 'User'
+                            }
                         }
-                    }
-                    'device'
-                    {
-                        $memberSpec += @{
-                            Identity = $memberObject.DisplayName;
-                            Type     = 'Device'
+                        'device'
+                        {
+                            $memberSpec += [pscustomobject]@{
+                                Identity = $memberObject.DisplayName;
+                                Type     = 'Device'
+                            }
                         }
                     }
                 }
+                $results.Add('Members', $memberSpec)
             }
-            $results.Add('Members', $memberSpec)
         }
 
         $scopedRoleMemberSpec = $null
@@ -219,17 +219,17 @@ function Get-TargetResource
                     }
                     $memberIdentity = $roleMemberObject.DisplayName
                 }
-                $scopedRoleMemberInfo = @{
+                $scopedRoleMemberInfo = [pscustomobject]@{
                     RoleName       = $roleObject.DisplayName;
-                    RoleMemberInfo = @{
-                        Identity = $memberIdentity
-                        Type     = $memberType
-                    }
+                    #RoleMemberInfo = @{  # avoid nested hashtable, can't handle it in Export
+                    Identity = $memberIdentity
+                    Type     = $memberType
+                    #}
                 }
                 $scopedRoleMemberSpec += $scopedRoleMemberInfo
             }
+            $results.Add('ScopedRoleMembers', $scopedRoleMemberSpec)
         }
-        $results.Add('ScopedRoleMembers', $scopedRoleMemberSpec)
 
         <#
         # Extensions are still too unwieldy
@@ -356,16 +356,9 @@ function Set-TargetResource
     # ONLY the beta cmdlets support the preview enabling MembershipType and MembershipRuleProcessingState
     # NB: Usage of these params require that the corresponding AAD preview feature is enabled
 
-    try
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
             -ProfileName 'v1.0'
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-    }
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -427,6 +420,7 @@ function Set-TargetResource
         }
         #>
 
+        <# skipped - no use for hashtables
         foreach ($key in ($CreateParameters.clone()).Keys)
         {
             if ($CreateParameters[$key].getType().Fullname -like '*CimInstance*')
@@ -434,19 +428,20 @@ function Set-TargetResource
                 $CreateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
             }
         }
+        #>
 
-        # Resolve Members Type/Identity to user or group id
-        if ($currentParameters.Members)
+        $memberSpecification = @()
+        if ($MembershipType -ne 'Dynamic')
         {
-            $memberSpecification = @()
-            foreach ($Member in $Members)
+            # Resolve Members Type/Identity to user or group id
+            foreach ($Member in $currentParameters.Members)
             {
                 if ($Member.Type -eq 'User')
                 {
                     $memberIdentity = Get-MgUser -Filter "UserPrincipalName eq '$($Member.Identity)'" -ErrorAction Stop
                     if ($memberIdentity)
                     {
-                        $memberSpecification += @{Type="$($Member.Type)s";Id = $memberIdentity.Id }
+                        $memberSpecification += [pscustomobject]@{Type="$($Member.Type)s";Id = $memberIdentity.Id }
                     }
                     else
                     {
@@ -458,7 +453,7 @@ function Set-TargetResource
                     $memberIdentity = Get-MgGroup -Filter "DisplayName eq '$($Member.Identity)'" -ErrorAction Stop
                     if ($memberIdentity)
                     {
-                        $memberSpecification += @{Type="$($Member.Type)s";Id = $memberIdentity.Id }
+                        $memberSpecification += [pscustomobject]@{Type="$($Member.Type)s";Id = $memberIdentity.Id }
                     }
                     else
                     {
@@ -470,7 +465,7 @@ function Set-TargetResource
                     $memberIdentity = Get-MgDevice -Filter "DisplayName eq '$($Member.Identity)'" -ErrorAction Stop
                     if ($memberIdentity)
                     {
-                        $memberSpecification += @{Type="$($Member.Type)s";Id = $memberIdentity.Id }
+                        $memberSpecification += [pscustomobject]@{Type="$($Member.Type)s";Id = $memberIdentity.Id }
                     }
                     else
                     {
@@ -483,51 +478,82 @@ function Set-TargetResource
                 }
             }
             # Members are added to the AU *after* it has been created
-            $CreateParameters.Remove('Members') | Out-Null
         }
-        else
-        {
-            $CreateParameters.Remove('Members') | Out-Null
-        }
+        $CreateParameters.Remove('Members') | Out-Null
 
         # Resolve ScopedRoleMembers Type/Identity to user, group or service principal
         if ($currentParameters.ScopedRoleMembers)
         {
-            $scopedRoleMemberSpecification = @()
-            foreach ($roleMember in $ScopedRoleMembers)
+            #write-verbose "AU {$DisplayName}: Set-TargetResource, Convert ScopedRoleMembers to Hashtable(s)"
+            $testScopedRoleMembers = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $ScopedRoleMembers <#@()
+            foreach ($scopedRoleMember in $testScopedRoleMembers)
             {
+                $testScopedRoleMember = @{}
+                foreach ($key in $scopedRoleMember.clone().Keys)
+                {
+                    if ($scopedRoleMember[$key].GetType().FullName -like "*CimInstance*")
+                    {
+                        $testScopedRoleMember.Add($key, (Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $scopedRoleMember.$key))
+                    }
+                    else
+                    {
+                        $testScopedRoleMember.Add($key, $scopedRoleMember.$key)
+                    }
+                }
+                $testScopedRoleMembers += $testScopedRoleMember
+            }
+            #>
+            $scopedRoleMemberSpecification = @()
+            foreach ($roleMember in $testScopedRoleMembers)
+            {
+                if ($roleMember.Contains('RoleMemberInfo'))
+                {
+                    # flatten object if old schema-def with nested hashtable was used as input
+                    if (string]::IsNullOrEmpty($roleMember.Identity) -and $roleMember.RoleMemberInfo.Identity)
+                    {
+                        $roleMember.Add('Identity', $roleMember.RoleMemberInfo.Identity)
+                    }
+                    if (string]::IsNullOrEmpty($roleMember.Type) -and $roleMember.RoleMemberInfo.Type)
+                    {
+                        $roleMember.Add('Type', $roleMember.RoleMemberInfo.Type)
+                    }
+                }
                 $roleObject = Get-MgDirectoryRole -Filter "DisplayName eq '$($roleMember.RoleName)'" -ErrorAction stop
                 if ($null -eq $roleObject)
                 {
                     throw "AU {$($DisplayName)}: RoleName {$($roleMember.RoleName)} does not exist or is not enabled"
                 }
-                if ($roleMember.RoleMemberInfo.Type -eq 'User')
+                if ($roleMember.Type -eq 'User')
                 {
-                    $roleMemberIdentity = Get-MgUser -Filter "UserPrincipalName eq '$($roleMember.RoleMemberInfo.Identity)'" -ErrorAction Stop
+                    $roleMemberIdentity = Get-MgUser -Filter "UserPrincipalName eq '$($roleMember.Identity)'" -ErrorAction Stop
                     if ($null -eq $roleMemberIdentity)
                     {
-                        throw "AU {$($DisplayName)}:  Scoped Role User {$($roleMember.RoleMemberInfo.Identity)} does not exist"
+                        throw "AU {$($DisplayName)}:  Scoped Role User {$($roleMember.Identity)} does not exist"
                     }
                 }
-                elseif ($roleMember.RoleMemberInfo.Type -eq 'Group')
+                elseif ($roleMember.Type -eq 'Group')
                 {
-                    $roleMemberIdentity = Get-MgGroup -Filter "displayName eq '$($roleMember.RoleMemberInfo.Identity)'" -ErrorAction Stop
+                    $roleMemberIdentity = Get-MgGroup -Filter "displayName eq '$($roleMember.Identity)'" -ErrorAction Stop
                     if ($null -eq $roleMemberIdentity)
                     {
-                        throw "AU {$($DisplayName)}: Scoped Role Group {$($roleMember.RoleMemberInfo.Identity)} does not exist"
+                        throw "AU {$($DisplayName)}: Scoped Role Group {$($roleMember.Identity)} does not exist"
                     }
                 }
-                elseif ($roleMember.RoleMemberInfo.Type -eq 'ServicePrincipal')
+                elseif ($roleMember.Type -eq 'ServicePrincipal')
                 {
-                    $roleMemberIdentity = Get-MgServicePrincipal -Filter "displayName eq '$($roleMember.RoleMemberInfo.Identity)'" -ErrorAction Stop
+                    $roleMemberIdentity = Get-MgServicePrincipal -Filter "displayName eq '$($roleMember.Identity)'" -ErrorAction Stop
                     if ($null -eq $roleMemberIdentity)
                     {
-                        throw "AU {$($DisplayName)}: Scoped Role ServicePrincipal {$($roleMember.RoleMemberInfo.Identity)} does not exist"
+                        throw "AU {$($DisplayName)}: Scoped Role ServicePrincipal {$($roleMember.Identity)} does not exist"
                     }
                 }
                 else
                 {
-                    throw "AU {$($DisplayName)}: Invalid ScopedRoleMember.RoleMemberInfo.Type {$($roleMember.RolememberInfo.Type)}"
+                    throw "AU {$($DisplayName)}: Invalid ScopedRoleMember.Type {$($roleMember.Type)}"
+                }
+                if ($roleMemberIdentity.Count -gt 1)
+                {
+                    throw "AU {$($DisplayName)}: ScopedRoleMember {$($roleMember.RoleName)}, Identity {$($roleMember.Identity)} of type {$($roleMember.Type)} is not unique"
                 }
                 $scopedRoleMemberSpecification += @{
                     RoleId         = $roleObject.Id
@@ -536,24 +562,21 @@ function Set-TargetResource
                     }
                 }
             }
-            #$CreateParameters.ScopedRoleMembers = $scopedRoleMemberSpecification
             # ScopedRoleMember-info is added after the AU is created
         }
-        else
-        {
-            $CreateParameters.Remove('ScopedRoleMembers') | Out-Null
-        }
+        $CreateParameters.Remove('ScopedRoleMembers') | Out-Null
     }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating AU {$DisplayName}"
 
-        $CreateParameters = Rename-M365DSCCimInstanceODataParameter -Properties $CreateParameters
+        #$CreateParameters = Rename-M365DSCCimInstanceODataParameter -Properties $CreateParameters
 
         $CreateParameters.Remove('Id') | Out-Null
         $CreateParameters.Remove('Verbose') | Out-Null
 
+        <#
         foreach ($key in ($CreateParameters.clone()).Keys)
         {
             if ($CreateParameters[$key].getType().Fullname -like '*CimInstance*')
@@ -561,15 +584,16 @@ function Set-TargetResource
                 $CreateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
             }
         }
+        #>
 
         #region resource generator code
         $policy = New-MgDirectoryAdministrativeUnit -BodyParameter $CreateParameters
 
         #endregion
-        foreach ($member in $memberSpecificationpecification)
+        foreach ($member in $memberSpecification)
         {
             $memberBodyParam = @{
-                '@odata.id' = "https://graph.microsoft.com/v1.0/$($member.Type)/{$($member.Id)}"
+                '@odata.id' = "https://graph.microsoft.com/v1.0/$($member.Type)/$($member.Id)"
             }
 
             New-MgDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId $policy.Id -BodyParameter $memberBodyParam
@@ -586,11 +610,12 @@ function Set-TargetResource
         Write-Verbose -Message "Updating AU {$DisplayName}"
 
         $UpdateParameters = $currentParameters.Clone()
-        $UpdateParameters = Rename-M365DSCCimInstanceODataParameter -Properties $UpdateParameters
+        #$UpdateParameters = Rename-M365DSCCimInstanceODataParameter -Properties $UpdateParameters
 
         $UpdateParameters.Remove('Id') | Out-Null
         $UpdateParameters.Remove('Verbose') | Out-Null
 
+        <#
         foreach ($key in ($UpdateParameters.clone()).Keys)
         {
             if ($UpdateParameters[$key].getType().Fullname -like '*CimInstance*')
@@ -598,6 +623,7 @@ function Set-TargetResource
                 $UpdateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters[$key]
             }
         }
+        #>
 
         #$UpdateParameters.Remove('Extensions') | Out-Null
         $UpdateParameters.Remove('Members') | Out-Null
@@ -638,7 +664,7 @@ function Set-TargetResource
         if ($MembershipType -ne 'Dynamic' -and ($Members -or $backCurrentMembers))
         {
             $currentMembersValue = @()
-            if ($currentInstance.Members.Length -ne 0)
+            if ($backCurrentMembers.Length -ne 0)
             {
                 $currentMembersValue = $backCurrentMembers
             }
@@ -651,7 +677,10 @@ function Set-TargetResource
             {
                 $desiredMembersValue = @()
             }
-            $membersDiff = Compare-Object -ReferenceObject $currentMembersValue -DifferenceObject $desiredMembersValue -Property Identity, Type
+            write-verbose "AU {$DisplayName} Update Members: Current members: $($currentMembersValue.Identity -join ', ')"
+            write-verbose "                                  Desired members: $($desiredMembersValue.Identity -join ', ')"
+            $membersDiff = Compare-Object -ReferenceObject $currentMembersValue -DifferenceObject $desiredMembersValue -Property Identity, Type -IncludeEqual
+            write-verbose "                                  # compare results : $($membersDiff.Count -gt 0)"
             foreach ($diff in $membersDiff)
             {
                 if ($diff.Type -eq 'User')
@@ -668,9 +697,19 @@ function Set-TargetResource
                 {
                     $memberObject = Get-MgDevice -Filter "DisplayName eq '$($diff.Identity)'"
                     $membertype = 'devices'
-                } else {
-                    # throw if a *new* member has been specified with invalid type
-                    throw "AU {$($DisplayName)}: Member {$($diff.Identity)} has invalid type {$($diff.Type)}"
+                }
+                else
+                {
+                    if ($diff.Identity)
+                    {
+                        # throw if a *new* member has been specified with invalid type
+                        throw "AU {$($DisplayName)}: Member {$($diff.Identity)} has invalid type {$($diff.Type)}"
+                    }
+                    else
+                    {
+                        write-verbose "Compare Members - skip processing blank Identity"
+                        continue # don't process, continue to next diff if any
+                    }
                 }
                 if ($null -eq $memberObject)
                 {
@@ -682,17 +721,21 @@ function Set-TargetResource
                 }
                 if ($diff.SideIndicator -eq '=>')
                 {
-                    Write-Verbose -Message "Adding new member {$($diff.Identity)}, type {$($diff.Type)} to Administrative Unit {$($currentInstance.DisplayName)}"
+                    Write-Verbose -Message "Adding new member {$($diff.Identity)}, type {$($diff.Type)} to Administrative Unit {$DisplayName}"
 
                     $memberBodyParam = @{
-                        '@odata.id' = "https://graph.microsoft.com/v1.0/$memberType/{$($memberObject.Id)}"
+                        '@odata.id' = "https://graph.microsoft.com/v1.0/$memberType/$($memberObject.Id)"
                     }
                     New-MgDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId ($currentInstance.Id) -BodyParameter $memberBodyParam | Out-Null
                 }
                 elseif ($diff.SideIndicator -eq '<=')
                 {
-                    Write-Verbose -Message "Removing member {$($diff.Identity)}, type {$($diff.Type)} from Administrative UNit {$($currentInstance.DisplayName)}"
+                    Write-Verbose -Message "Removing member {$($diff.Identity)}, type {$($diff.Type)} from Administrative Unit {$DisplayName}"
                     Remove-MgDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId ($currentInstance.Id) -DirectoryObjectId ($memberObject.Id) | Out-Null
+                }
+                else
+                {
+                    Write-Verbose -Message "Unchanged member {$($diff.Identity)}, type {$($diff.Type)} of Administrative Unit {$DisplayName}"
                 }
             }
         }
@@ -756,8 +799,7 @@ function Set-TargetResource
 
         if ($ScopedRoleMembers -or $backCurrentScopedRoleMembers)
         {
-            $currentScopedRoleMembersValue = @()
-            if ($currentInstance.ScopedRoleMembers.Length -ne 0)
+            if ($backCurrentScopedRoleMembers.Length -ne 0)
             {
                 $currentScopedRoleMembersValue = $backCurrentScopedRoleMembers
             }
@@ -770,7 +812,8 @@ function Set-TargetResource
             {
                 $desiredScopedRoleMembersValue = @()
             }
-            # flatten objects to compare:
+
+            <# # not necessary to flatten objects to compare when nested CimInstances are avoided in Schema/Get-TargetResource:
             $compareCurrentScopedRoleMembersValue = @()
             foreach ($roleMember in $currentScopedRoleMembersValue)
             {
@@ -790,29 +833,52 @@ function Set-TargetResource
                 }
             }
             $scopedRoleMembersDiff = Compare-Object -ReferenceObject $compareCurrentScopedRoleMembersValue -DifferenceObject $compareDesiredScopedRoleMembersValue -Property RoleName, Identity, Type
+            #>
+            write-verbose "AU {$DisplayName} Update ScopedRoleMembers: Current members: $($currentScopedRoleMembersValue.Identity -join ', ')"
+            write-verbose "                                            Desired members: $($desiredScopedRoleMembersValue.Identity -join ', ')"
+            $scopedRoleMembersDiff = Compare-Object -ReferenceObject $CurrentScopedRoleMembersValue -DifferenceObject $DesiredScopedRoleMembersValue -Property RoleName, Identity, Type -IncludeEqual
+            write-verbose "                                            # compare results : $($scopedRoleMembersDiff.Count -gt 0)"
+
             foreach ($diff in $scopedRoleMembersDiff)
             {
                 if ($diff.Type -eq 'User')
                 {
                     $memberObject = Get-MgUser -Filter "UserPrincipalName eq '$($diff.Identity)'"
-                    $memberType = 'users'
+                    #$memberType = 'users'
+                }
+                elseif ($diff.Type -eq 'Group')
+                {
+                    $memberObject = Get-MgGroup -Filter "DisplayName eq '$($diff.Identity)'"
+                    #$membertype = 'groups'
+                }
+                elseif ($diff.Type -eq 'ServicePrincipal')
+                {
+                    $memberObject = Get-MgServicePrincipal -Filter "DisplayName eq '$($diff.Identity)'"
+                    #$memberType = "servicePrincipals"
                 }
                 else
                 {
-                    $memberObject = Get-MgGroup -Filter "DisplayName eq '$($diff.Identity)'"
-                    $membertype = 'groups'
+                    if ($diff.RoleName)
+                    {
+                        throw "AU {$DisplayName} scoped role {$($diff.RoleName)} member {$($diff.Identity)} has invalid type $($diff.Type)"
+                    }
+                    else
+                    {
+                        write-verbose "Compare ScopedRoleMembers - skip processing blank RoleName"
+                        continue   # don't process,
+                    }
                 }
-                if ($null -eq $memberobject)
+                if ($null -eq $memberObject)
                 {
-                    throw "AU scoped role member {$($diff.Identity)} does not exist as a $(diff.Type)"
+                    throw "AU scoped role member {$($diff.Identity)} does not exist as a $($diff.Type)"
                 }
-                if ($memberobject.Count -gt 1)
+                if ($memberObject.Count -gt 1)
                 {
-                    throw "AU scoped role member {$($diff.Identity)} is not a unique $($diff.Type)"
+                    throw "AU scoped role member {$($diff.Identity)} is not a unique $($diff.Type) (Count=$($memberObject.Count))"
                 }
                 if ($diff.SideIndicator -ne '==')
                 {
-                    $roleObject = Get-MgDirectoryRole -Filter "DisplayName -eq '$($diff.RoleName)"
+                    $roleObject = Get-MgDirectoryRole -Filter "DisplayName eq '$($diff.RoleName)'"
                     if ($null -eq $roleObject)
                     {
                         throw "AU Scoped Role {$($diff.RoleName)} does not exist as an Azure AD role"
@@ -820,7 +886,7 @@ function Set-TargetResource
                 }
                 if ($diff.SideIndicator -eq '=>')
                 {
-                    Write-Verbose -Message "Adding new scoped role {$($diff.RoleName)} member {$($diff.Identity)}, type {$($diff.Type)} to Administrative Unit {$($currentInstance.DisplayName)}"
+                    Write-Verbose -Message "Adding new scoped role {$($diff.RoleName)} member {$($diff.Identity)}, type {$($diff.Type)} to Administrative Unit {$DisplayName}"
 
                     $scopedRoleMemberParam = @{
                         RoleId         = $roleObject.Id
@@ -833,9 +899,16 @@ function Set-TargetResource
                 }
                 elseif ($diff.SideIndicator -eq '<=')
                 {
-                    Write-Verbose -Message "Removing scoped role {$($diff.RoleName)} member {$($diff.Identity)}, type {$($diff.Type)} from Administrative Unit {$($currentInstance.DisplayName)}"
-                    $scopedRoleMemberObject = Get-MgDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId ($currentInstance.Id) -All | Where-Object -FilterScript { $_.RoleId -eq $roleObject.Id -and $_.RoleMemberInfo.Id -eq $memberObject.Id }
-                    Remove-MgDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId ($currentInstance.Id) -ScopedRoleMembershipId $scopedRoleMemberObject.Id | Out-Null
+                    if (-not [string]::IsNullOrEmpty($diff.Rolename))
+                    {
+                        Write-Verbose -Message "Removing scoped role {$($diff.RoleName)} member {$($diff.Identity)}, type {$($diff.Type)} from Administrative Unit {$DisplayName}"
+                        $scopedRoleMemberObject = Get-MgDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId ($currentInstance.Id) -All | Where-Object -FilterScript { $_.RoleId -eq $roleObject.Id -and $_.RoleMemberInfo.Id -eq $memberObject.Id }
+                        Remove-MgDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId ($currentInstance.Id) -ScopedRoleMembershipId $scopedRoleMemberObject.Id | Out-Null
+                    }
+                }
+                else
+                {
+                    Write-Verbose -Message "Unchanged scoped role {$($diff.RoleName)} member {$($diff.Identity)}, type {$($diff.Type)} in Administrative Unit {$DisplayName}"
                 }
             }
         }
@@ -953,7 +1026,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -eq 'Absent')
+    if ($CurrentValues.Ensure -eq 'Absent' -and $Ensure -eq 'Present')
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
@@ -961,13 +1034,61 @@ function Test-TargetResource
 
     $testResult = $true
 
+    if ($Members.Count -gt 0 -or $currentValues.Members.Count -gt 0)
+    {
+        if ($Members.Count -ne $currentValues.Members.Count)
+        {
+            $testresult = $false
+        }
+        $testMembers = $Members
+        if ($null -eq $testMembers)
+        {
+            $testMembers = @()
+        }
+        $testCurrentValuesMembers = $currentValues.Members
+        if ($null -eq $testCurrentValuesMembers)
+        {
+            $testCurrentValuesMembers = @()
+        }
+        if ((Compare-Object -ReferenceObject $testMembers -DifferenceObject $testCurrentValuesMembers -Property Identity, Type).Count -gt 0)
+        {
+            $testresult = $false
+        }
+        $ValuesToCheck.Remove('Members') | Out-Null
+    }
+    if ($true -eq $testResult -and ($ScopedRoleMembers.Count -gt 0 -or $currentValues.ScopedRoleMembers.Count -gt 0))
+    {
+        if ($ScopedRoleMembers.Count -ne $currentValues.ScopedRoleMembers.Count)
+        {
+            $testresult = $false
+        }
+        $testScopedRoleMembers = $ScopedRoleMembers
+        if ($null -eq $testScopedRoleMembers)
+        {
+            $testScopedRoleMembers = @()
+        }
+        $testCurrentValuesScopedRoleMembers = $currentValues.ScopedRoleMembers
+        if ($null -eq $testCurrentValuesScopedRoleMembers)
+        {
+            $testCurrentValuesScopedRoleMembers = @()
+        }
+        if ((Compare-Object -ReferenceObject $testScopedRoleMembers -DifferenceObject $testCurrentValuesScopedRoleMembers -Property RoleName, Identity, Type).Count -gt 0)
+        {
+            $testresult = $false
+        }
+        $ValuesToCheck.Remove('ScopedRoleMembers') | Out-Null
+    }
+    <#
     foreach ($key in $PSBoundParameters.Keys)
     {
         if ($PSBoundParameters[$key].getType().Name -like '*CimInstance*')
         {
             $CIMArraySource = @()
             $CIMArrayTarget = @()
-            $CIMArraySource += $PSBoundParameters[$key]
+            if ($PSBoundParameters[$key])
+            {
+                $CIMArraySource += $PSBoundParameters[$key]
+            }
             if ($CurrentValues.$key)
             {
                 $CIMArrayTarget += $CurrentValues.$key
@@ -1001,6 +1122,9 @@ function Test-TargetResource
             $ValuesToCheck.Remove($key) | Out-Null
         }
     }
+    #>
+
+    Write-Verbose -Message "Test-TargetResource - testresult after comparing CimInstance(s): $testResult"
 
     $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
@@ -1014,7 +1138,7 @@ function Test-TargetResource
 
     if ($MembershipType -ne 'Dynamic' -and $CurrentValues.MembershipType -ne 'Dynamic')
     {
-        # Removing the MembershipType parameter from the check if it isn't Dynamic. If so, it can be aither Assigned or null
+        # Removing the MembershipType parameter from the check if it isn't Dynamic. If it isn't, it can be Assigned or null
         $ValuesToCheck.Remove('MembershipType') | Out-Null
     }
 
@@ -1135,7 +1259,7 @@ function Export-TargetResource
 
             if ($Results.Members)
             {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Members -CIMInstanceName MicrosoftGraphIdentity
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Members -CIMInstanceName MicrosoftGraphMember
                 if ($complexTypeStringResult)
                 {
                     $Results.Members = $complexTypeStringResult
@@ -1147,7 +1271,7 @@ function Export-TargetResource
             }
             if ($Results.ScopedRoleMembers)
             {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.ScopedRoleMembers -CIMInstanceName MicrosoftGraphscopedrolemembership
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.ScopedRoleMembers -CIMInstanceName MicrosoftGraphScopedRoleMembership
                 if ($complexTypeStringResult)
                 {
                     $Results.ScopedRoleMembers = $complexTypeStringResult
@@ -1306,9 +1430,11 @@ function Get-M365DSCDRGComplexTypeToString
     #If ComplexObject  is an Array
     if ($ComplexObject.GetType().FullName -like '*[[\]]')
     {
+        write-verbose "object is an array"
         $currentProperty = @()
         foreach ($item in $ComplexObject)
         {
+            write-verbose "Item=$($item -join '|')"
             $currentProperty += Get-M365DSCDRGComplexTypeToString `
                 -ComplexObject $item `
                 -isArray:$true `
@@ -1338,6 +1464,7 @@ function Get-M365DSCDRGComplexTypeToString
     $keyNotNull = 0
     foreach ($key in $ComplexObject.Keys)
     {
+        write-verbose ""
         if ($ComplexObject[$key])
         {
             $keyNotNull++
@@ -1606,6 +1733,7 @@ function Compare-M365DSCComplexObject
             if ($Source[$skey].getType().FullName -like '*CimInstance*' -or $Target[$skey].getType().FullName -like '*CimInstance*')
             {
                 #Recursive call for complex object
+                write-verbose "Compare values for $key"
                 if ($Source[$skey].getType().FullName -like '*CimInstance*')
                 {
                     $complexSourceValue = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Source[$skey]
@@ -1621,6 +1749,22 @@ function Compare-M365DSCComplexObject
                 else
                 {
                     $complexTargetValue = $Target[$key]
+                }
+                if ($complexSourceValue.GetType().FullName -ne 'System.Collections.Hashtable')
+                {
+                    $tempSourceValue = @{}
+                    $complexSourceValue.psobject.properties | Foreach-Object {
+                        $tempSourceValue[$_.Name] = $_.Value
+                    }
+                    $complexSourceValue = $tempSourceValue
+                }
+                if ($complexTargetValue.GetType().FullName -ne 'System.Collections.Hashtable')
+                {
+                    $tempTargetValue = @{}
+                    $complexTargetValue.psobject.properties | Foreach-Object {
+                        $tempTargetValue[$_.Name] = $_.Value
+                    }
+                    $complexTargetValue = $tempTargetValue
                 }
                 $compareResult = Compare-M365DSCComplexObject `
                     -Source $complexSourceValue `
