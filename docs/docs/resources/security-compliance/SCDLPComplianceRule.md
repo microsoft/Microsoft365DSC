@@ -24,7 +24,12 @@
 | **ReportSeverityLevel** | Write | String | The ReportSeverityLevel parameter specifies the severity level of the incident report for content detections based on the rule. | `Low`, `Medium`, `High`, `None` |
 | **RuleErrorAction** | Write | String | The RuleErrorAction parameter specifies what to do if an error is encountered during the evaluation of the rule. | `Ignore`, `RetryThenBlock` |
 | **Ensure** | Write | String | Specify if this rule should exist or not. | `Present`, `Absent` |
-| **Credential** | Required | PSCredential | Credentials of the Exchange Global Admin | |
+| **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
+| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
+| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **AnyOfRecipientAddressContainsWords** | Write | StringArray[] | The AnyOfRecipientAddressContainsWords parameter specifies a condition for the DLP rule that looks for words or phrases in recipient email addresses. | |
 | **AnyOfRecipientAddressMatchesPatterns** | Write | StringArray[] | The AnyOfRecipientAddressMatchesPatterns parameter specifies a condition for the DLP rule that looks for text patterns in recipient email addresses by using regular expressions.. | |
 | **RemoveRMSTemplate** | Write | Boolean | The RemoveRMSTemplate parameter specifies an action for the DLP rule that removes Office 365 Message Encryption from messages and their attachments. | |
