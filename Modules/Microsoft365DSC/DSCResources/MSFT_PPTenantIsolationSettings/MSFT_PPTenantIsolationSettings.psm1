@@ -650,6 +650,10 @@ function Export-TargetResource
         $Params = @{
             IsSingleInstance      = 'Yes'
             Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            ApplicationSecret     = $ApplicationSecret
         }
 
         $Results = Get-TargetResource @Params

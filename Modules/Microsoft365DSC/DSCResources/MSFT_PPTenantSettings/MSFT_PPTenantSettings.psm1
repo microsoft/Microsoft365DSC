@@ -429,8 +429,12 @@ function Export-TargetResource
         $dscContent = ''
 
         $Params = @{
-            IsSingleInstance = 'Yes'
-            Credential       = $Credential
+            IsSingleInstance      = 'Yes'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            ApplicationSecret     = $ApplicationSecret
         }
         $Results = Get-TargetResource @Params
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
