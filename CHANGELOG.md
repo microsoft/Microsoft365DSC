@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.118.1
 
 * IntuneAppConfigurationPolicy
   * Fixes issue where the Test method fails when the policy does not exist yet
