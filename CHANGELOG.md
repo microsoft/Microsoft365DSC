@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* TeamsAudioConferencingPolicy
+  * Initial Release.
+
 # 1.23.118.1
 
 * IntuneAppConfigurationPolicy
