@@ -16,9 +16,6 @@ Configuration Example
     {
         TeamsCortanaPolicy 'Example'
         {
-            AllowCortanaAmbientListening     = $True;
-            AllowCortanaInContextSuggestions = $True;
-            AllowCortanaVoiceInvocation      = $True;
             CortanaVoiceInvocationMode       = "WakeWordPushToTalkUserOverride";
             Credential                       = $Credscredential;
             Ensure                           = "Present";

@@ -50,10 +50,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The TeamsCortanaPolicy should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    AllowCortanaVoiceInvocation      = $True
                     Description                      = "FakeStringValue"
-                    AllowCortanaInContextSuggestions = $True
-                    AllowCortanaAmbientListening     = $True
                     Identity                         = "FakeStringValue"
                     CortanaVoiceInvocationMode       = "FakeStringValue"
                     Ensure                        = "Present"
@@ -79,10 +76,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The TeamsCortanaPolicy exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    AllowCortanaVoiceInvocation      = $True
                     Description                      = "FakeStringValue"
-                    AllowCortanaInContextSuggestions = $True
-                    AllowCortanaAmbientListening     = $True
                     Identity                         = "FakeStringValue"
                     CortanaVoiceInvocationMode       = "FakeStringValue"
                     Ensure                        = "Absent"
@@ -118,10 +112,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The TeamsCortanaPolicy Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    AllowCortanaVoiceInvocation      = $True
                     Description                      = "FakeStringValue"
-                    AllowCortanaInContextSuggestions = $True
-                    AllowCortanaAmbientListening     = $True
                     Identity                         = "FakeStringValue"
                     CortanaVoiceInvocationMode       = "FakeStringValue"
                     Ensure                        = "Present"
@@ -150,10 +141,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The TeamsCortanaPolicy exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    AllowCortanaVoiceInvocation      = $True
                     Description                      = "FakeStringValue"
-                    AllowCortanaInContextSuggestions = $True
-                    AllowCortanaAmbientListening     = $True
                     Identity                         = "FakeStringValue"
                     CortanaVoiceInvocationMode       = "FakeStringValue"
                     Ensure                = "Present"

@@ -9,19 +9,8 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowCortanaAmbientListening,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCortanaInContextSuggestions,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCortanaVoiceInvocation,
-
-        [Parameter()]
         [System.String]
+        [ValidateSet("Disabled","PushToTalkUserOverride","WakeWordPushToTalkUserOverride")]
         $CortanaVoiceInvocationMode,
 
         [Parameter()]
@@ -78,9 +67,6 @@ function Get-TargetResource
         Write-Verbose -Message "Found an instance with Identity {$Identity}"
         $results = @{
             Identity                         = $instance.Identity
-            AllowCortanaAmbientListening     = $instance.AllowCortanaAmbientListening
-            AllowCortanaInContextSuggestions = $instance.AllowCortanaInContextSuggestions
-            AllowCortanaVoiceInvocation      = $instance.AllowCortanaVoiceInvocation
             CortanaVoiceInvocationMode       = $instance.CortanaVoiceInvocationMode
             Description                      = $instance.Description
             Ensure                           = 'Present'
@@ -113,19 +99,8 @@ function Set-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowCortanaAmbientListening,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCortanaInContextSuggestions,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCortanaVoiceInvocation,
-
-        [Parameter()]
         [System.String]
+        [ValidateSet("Disabled","PushToTalkUserOverride","WakeWordPushToTalkUserOverride")]
         $CortanaVoiceInvocationMode,
 
         [Parameter()]
@@ -236,19 +211,8 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowCortanaAmbientListening,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCortanaInContextSuggestions,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCortanaVoiceInvocation,
-
-        [Parameter()]
         [System.String]
+        [ValidateSet("Disabled","PushToTalkUserOverride","WakeWordPushToTalkUserOverride")]
         $CortanaVoiceInvocationMode,
 
         [Parameter()]
