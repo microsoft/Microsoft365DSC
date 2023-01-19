@@ -52,7 +52,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AllowIPVideo          = $True
                     Description           = "FakeStringValue"
-                    MediaBitRateKb        = "FakeStringValue"
+                    MediaBitRateKb        = 5000
                     Identity              = "FakeStringValue"
                     Ensure                        = "Present"
                     Credential                    = $Credential;
@@ -79,7 +79,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AllowIPVideo          = $True
                     Description           = "FakeStringValue"
-                    MediaBitRateKb        = "FakeStringValue"
+                    MediaBitRateKb        = 5000
                     Identity              = "FakeStringValue"
                     Ensure                        = "Absent"
                     Credential                    = $Credential;
@@ -89,7 +89,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                     AllowIPVideo          = $True
                     Description           = "FakeStringValue"
-                    MediaBitRateKb        = "FakeStringValue"
+                    MediaBitRateKb        = 5000
                     Identity              = "FakeStringValue"
 
                     }
@@ -114,7 +114,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AllowIPVideo          = $True
                     Description           = "FakeStringValue"
-                    MediaBitRateKb        = "FakeStringValue"
+                    MediaBitRateKb        = 5000
                     Identity              = "FakeStringValue"
                     Ensure                        = "Present"
                     Credential                    = $Credential;
@@ -124,7 +124,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                     AllowIPVideo          = $True
                     Description           = "FakeStringValue"
-                    MediaBitRateKb        = "FakeStringValue"
+                    MediaBitRateKb        = 5000
                     Identity              = "FakeStringValue"
 
                     }
@@ -142,7 +142,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AllowIPVideo          = $True
                     Description           = "FakeStringValue"
-                    MediaBitRateKb        = "FakeStringValue"
+                    MediaBitRateKb        = 5000
                     Identity              = "FakeStringValue"
                     Ensure                = "Present"
                     Credential            = $Credential;
@@ -152,7 +152,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                     AllowIPVideo          = $False
                     Description           = "FakeStringValueDrift #Drift"
-                    MediaBitRateKb        = "FakeStringValueDrift #Drift"
+                    MediaBitRateKb        = 5000
                     Identity              = "FakeStringValue"
                     }
                 }
@@ -183,7 +183,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                     AllowIPVideo          = $True
                     Description           = "FakeStringValue"
-                    MediaBitRateKb        = "FakeStringValue"
+                    MediaBitRateKb        = 5000
                     Identity              = "FakeStringValue"
 
                     }
