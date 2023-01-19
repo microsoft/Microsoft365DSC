@@ -52,7 +52,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Description                      = "FakeStringValue"
                     Identity                         = "FakeStringValue"
-                    CortanaVoiceInvocationMode       = "FakeStringValue"
+                    CortanaVoiceInvocationMode       = "WakeWordPushToTalkUserOverride"
                     Ensure                        = "Present"
                     Credential                    = $Credential;
                 }
@@ -78,7 +78,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Description                      = "FakeStringValue"
                     Identity                         = "FakeStringValue"
-                    CortanaVoiceInvocationMode       = "FakeStringValue"
+                    CortanaVoiceInvocationMode       = "WakeWordPushToTalkUserOverride"
                     Ensure                        = "Absent"
                     Credential                    = $Credential;
                 }
@@ -90,7 +90,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowCortanaInContextSuggestions = $True
                     AllowCortanaAmbientListening     = $True
                     Identity                         = "FakeStringValue"
-                    CortanaVoiceInvocationMode       = "FakeStringValue"
+                    CortanaVoiceInvocationMode       = "WakeWordPushToTalkUserOverride"
 
                     }
                 }
@@ -114,7 +114,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Description                      = "FakeStringValue"
                     Identity                         = "FakeStringValue"
-                    CortanaVoiceInvocationMode       = "FakeStringValue"
+                    CortanaVoiceInvocationMode       = "WakeWordPushToTalkUserOverride"
                     Ensure                        = "Present"
                     Credential                    = $Credential;
                 }
@@ -126,7 +126,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowCortanaInContextSuggestions = $True
                     AllowCortanaAmbientListening     = $True
                     Identity                         = "FakeStringValue"
-                    CortanaVoiceInvocationMode       = "FakeStringValue"
+                    CortanaVoiceInvocationMode       = "WakeWordPushToTalkUserOverride"
 
                     }
                 }
@@ -143,7 +143,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Description                      = "FakeStringValue"
                     Identity                         = "FakeStringValue"
-                    CortanaVoiceInvocationMode       = "FakeStringValue"
+                    CortanaVoiceInvocationMode       = "WakeWordPushToTalkUserOverride"
                     Ensure                = "Present"
                     Credential            = $Credential;
                 }
@@ -155,7 +155,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowCortanaInContextSuggestions = $False
                     AllowCortanaAmbientListening     = $False
                     Identity                         = "FakeStringValue"
-                    CortanaVoiceInvocationMode       = "FakeStringValueDrift #Drift"
+                    CortanaVoiceInvocationMode       = "PushToTalkUserOverride"
                     }
                 }
             }
@@ -188,7 +188,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowCortanaInContextSuggestions = $True
                     AllowCortanaAmbientListening     = $True
                     Identity                         = "FakeStringValue"
-                    CortanaVoiceInvocationMode       = "FakeStringValue"
+                    CortanaVoiceInvocationMode       = "WakeWordPushToTalkUserOverride"
 
                     }
                 }
