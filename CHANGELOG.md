@@ -4,6 +4,12 @@
 
 * TeamsAudioConferencingPolicy
   * Initial Release.
+* TeamsCallHoldPolicy
+  * Initial Release.
+* TeamsCallParkPolicy
+  * Initial Release.
+* TeamsComplianceRecordingPolicy
+  * Initial Release.
 
 # 1.23.118.1
 
