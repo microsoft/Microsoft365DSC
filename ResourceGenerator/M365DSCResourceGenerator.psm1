@@ -705,6 +705,11 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
                     $propertyTypeMOF = 'Boolean'
                     $propertyType = 'System.Boolean'
                 }
+                'Object'
+                {
+                    $propertyTypeMof = 'String'
+                    $propertyType = 'System.String'
+                }
             }
             if ($property.IsMandatory)
             {
@@ -877,11 +882,14 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
         {
             $spacingRequired = ' '
             $spacesToAdd = $longuestParameterName - ($key.Length)
-            for ($i = 0; $i -lt $spacesToAdd; $i++)
+            try
             {
-                $spacingRequired += ' '
+                for ($i = 0; $i -lt $spacesToAdd; $i++)
+                {
+                    $spacingRequired += ' '
+                }
             }
-
+            catch{}
             switch ($fakeValues.$key.GetType().Name)
             {
                 'String'
