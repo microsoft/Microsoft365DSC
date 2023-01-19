@@ -867,6 +867,12 @@ function Test-TargetResource
     # Visibility is currently not returned by Get-TargetResource
     $ValuesToCheck.Remove('Visibility') | Out-Null
 
+    if ($MembershipType -ne 'Dynamic' -and $CurrentValues.MembershipType -ne 'Dynamic')
+    {
+        # MembershipType may be returned as null or Assigned with same effect. Only compare if Dynamic is specified or returned
+        $ValuesToCheck.Remove('MembershipType') | Out-Null
+    }
+
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
