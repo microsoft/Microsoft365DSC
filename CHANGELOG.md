@@ -12,6 +12,8 @@
   * Initial Release.
 * TeamsCortanaPolicy
   * Initial Release.
+* TeamsEnhancedEncryptionPolicy
+  * Initial Release.
 
 # 1.23.118.1
 
