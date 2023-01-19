@@ -51,10 +51,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Description           = "FakeStringValue"
-                    PickupRangeStart      = "FakeStringValue"
+                    PickupRangeStart      = 3000
                     AllowCallPark         = $True
-                    ParkTimeoutSeconds    = $True
-                    PickupRangeEnd        = $True
+                    ParkTimeoutSeconds    = 3000
+                    PickupRangeEnd        = 3000
                     Identity              = "FakeStringValue"
                     Ensure                        = "Present"
                     Credential                    = $Credential;
@@ -80,10 +80,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Description           = "FakeStringValue"
-                    PickupRangeStart      = "FakeStringValue"
+                    PickupRangeStart      = 3000
                     AllowCallPark         = $True
-                    ParkTimeoutSeconds    = $True
-                    PickupRangeEnd        = $True
+                    ParkTimeoutSeconds    = 3000
+                    PickupRangeEnd        = 3000
                     Identity              = "FakeStringValue"
                     Ensure                        = "Absent"
                     Credential                    = $Credential;
@@ -92,10 +92,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-CsTeamsCallParkPolicy -MockWith {
                     return @{
                     Description           = "FakeStringValue"
-                    PickupRangeStart      = "FakeStringValue"
+                    PickupRangeStart      = 3000
                     AllowCallPark         = $True
-                    ParkTimeoutSeconds    = $True
-                    PickupRangeEnd        = $True
+                    ParkTimeoutSeconds    = 3000
+                    PickupRangeEnd        = 3000
                     Identity              = "FakeStringValue"
 
                     }
@@ -119,10 +119,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Description           = "FakeStringValue"
-                    PickupRangeStart      = "FakeStringValue"
+                    PickupRangeStart      = 3000
                     AllowCallPark         = $True
-                    ParkTimeoutSeconds    = $True
-                    PickupRangeEnd        = $True
+                    ParkTimeoutSeconds    = 3000
+                    PickupRangeEnd        = 3000
                     Identity              = "FakeStringValue"
                     Ensure                        = "Present"
                     Credential                    = $Credential;
@@ -131,10 +131,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-CsTeamsCallParkPolicy -MockWith {
                     return @{
                     Description           = "FakeStringValue"
-                    PickupRangeStart      = "FakeStringValue"
+                    PickupRangeStart      = 3000
                     AllowCallPark         = $True
-                    ParkTimeoutSeconds    = $True
-                    PickupRangeEnd        = $True
+                    ParkTimeoutSeconds    = 3000
+                    PickupRangeEnd        = 3000
                     Identity              = "FakeStringValue"
 
                     }
@@ -151,10 +151,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Description           = "FakeStringValue"
-                    PickupRangeStart      = "FakeStringValue"
+                    PickupRangeStart      = 3000
                     AllowCallPark         = $True
-                    ParkTimeoutSeconds    = $True
-                    PickupRangeEnd        = $True
+                    ParkTimeoutSeconds    = 3000
+                    PickupRangeEnd        = 3000
                     Identity              = "FakeStringValue"
                     Ensure                = "Present"
                     Credential            = $Credential;
@@ -163,10 +163,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-CsTeamsCallParkPolicy -MockWith {
                     return @{
                     Description           = "FakeStringValueDrift #Drift"
-                    PickupRangeStart      = "FakeStringValueDrift #Drift"
+                    PickupRangeStart      = 3000
                     AllowCallPark         = $False
-                    ParkTimeoutSeconds    = $False
-                    PickupRangeEnd        = $False
+                    ParkTimeoutSeconds    = 3000
+                    PickupRangeEnd        = 3000
                     Identity              = "FakeStringValue"
                     }
                 }
@@ -196,10 +196,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-CsTeamsCallParkPolicy -MockWith {
                     return @{
                     Description           = "FakeStringValue"
-                    PickupRangeStart      = "FakeStringValue"
+                    PickupRangeStart      = 3000
                     AllowCallPark         = $True
-                    ParkTimeoutSeconds    = $True
-                    PickupRangeEnd        = $True
+                    ParkTimeoutSeconds    = 3000
+                    PickupRangeEnd        = 3000
                     Identity              = "FakeStringValue"
 
                     }
