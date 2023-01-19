@@ -14,6 +14,8 @@
   * Initial Release.
 * TeamsEnhancedEncryptionPolicy
   * Initial Release.
+* TeamsMobilityPolicy
+  * Initial Release.
 
 # 1.23.118.1
 
