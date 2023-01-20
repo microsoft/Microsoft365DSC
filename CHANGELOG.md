@@ -18,6 +18,8 @@
   * Initial Release.
 * TeamsNetworkRoamingPolicy
   * Initial Release.
+* TeamsTranslationRule
+  * Initial Release.
 
 # 1.23.118.1
 
