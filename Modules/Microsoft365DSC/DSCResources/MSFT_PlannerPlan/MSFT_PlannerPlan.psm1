@@ -325,6 +325,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -360,13 +364,12 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = 'Credentials'
-    $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     try
     {
-        [array]$groups = Get-MgGroup -All:$true -ErrorAction Stop
+        [array]$groups = Get-MgGroup -All:$true -ErrorAction Stop -Filter $filter
 
         $i = 1
         $dscContent = ''
@@ -378,7 +381,6 @@ function Export-TargetResource
             {
                 [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.Id `
                     -All:$true `
-                    -Filter $Filter `
                     -ErrorAction 'SilentlyContinue'
 
                 $j = 1

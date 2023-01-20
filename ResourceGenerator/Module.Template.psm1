@@ -43,8 +43,6 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters `
             -ProfileName '<#APIVersion#>'
 
-        Select-MgProfile '<#APIVersion#>'
-
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
 
@@ -354,7 +352,6 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload '<#Workload#>' `
         -InboundParameters $PSBoundParameters `
         -ProfileName '<#APIVersion#>'
-    Select-MgProfile '<#APIVersion#>' -ErrorAction Stop
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

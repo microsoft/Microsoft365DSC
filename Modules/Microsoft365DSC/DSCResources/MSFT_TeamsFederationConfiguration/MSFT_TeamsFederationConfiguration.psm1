@@ -34,6 +34,18 @@ function Get-TargetResource
         $AllowTeamsConsumerInbound,
 
         [Parameter()]
+        [System.Boolean]
+        $TreatDiscoveredPartnersAsUnverified,
+
+        [Parameter()]
+        [System.Boolean]
+        $SharedSipAddressSpace,
+
+        [Parameter()]
+        [System.Boolean]
+        $RestrictTeamsConsumerToExternalUserProfiles,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -94,17 +106,20 @@ function Get-TargetResource
         }
 
         return @{
-            Identity                  = $Identity
-            AllowedDomains            = $AllowedDomainsValues
-            BlockedDomains            = $BlockedDomainsValues
-            AllowFederatedUsers       = $config.AllowFederatedUsers
-            AllowPublicUsers          = $config.AllowPublicUsers
-            AllowTeamsConsumer        = $config.AllowTeamsConsumer
-            AllowTeamsConsumerInbound = $config.AllowTeamsConsumerInbound
-            Credential                = $Credential
-            ApplicationId             = $ApplicationId
-            TenantId                  = $TenantId
-            CertificateThumbprint     = $CertificateThumbprint
+            Identity                                    = $Identity
+            AllowedDomains                              = $AllowedDomainsValues
+            BlockedDomains                              = $BlockedDomainsValues
+            AllowFederatedUsers                         = $config.AllowFederatedUsers
+            AllowPublicUsers                            = $config.AllowPublicUsers
+            AllowTeamsConsumer                          = $config.AllowTeamsConsumer
+            AllowTeamsConsumerInbound                   = $config.AllowTeamsConsumerInbound
+            TreatDiscoveredPartnersAsUnverified         = $config.TreatDiscoveredPartnersAsUnverified
+            SharedSipAddressSpace                       = $config.SharedSipAddressSpace
+            RestrictTeamsConsumerToExternalUserProfiles = $config.RestrictTeamsConsumerToExternalUserProfiles
+            Credential                                  = $Credential
+            ApplicationId                               = $ApplicationId
+            TenantId                                    = $TenantId
+            CertificateThumbprint                       = $CertificateThumbprint
         }
     }
     catch
@@ -154,6 +169,18 @@ function Set-TargetResource
         $AllowTeamsConsumerInbound,
 
         [Parameter()]
+        [System.Boolean]
+        $TreatDiscoveredPartnersAsUnverified,
+
+        [Parameter()]
+        [System.Boolean]
+        $SharedSipAddressSpace,
+
+        [Parameter()]
+        [System.Boolean]
+        $RestrictTeamsConsumerToExternalUserProfiles,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -192,9 +219,15 @@ function Set-TargetResource
     $SetParams.Remove('ApplicationId') | Out-Null
     $SetParams.Remove('TenantId') | Out-Null
     $SetParams.Remove('CertificateThumbprint') | Out-Null
-
     $SetParams.Remove('AllowedDomains') | Out-Null
-    $SetParams.Add('AllowedDomainsAsAList', $AllowedDomains)
+    if($allowedDomains.Length -gt 0)
+    {
+        $SetParams.Add('AllowedDomainsAsAList', $AllowedDomains)
+    }
+    else{
+        $AllowAllKnownDomains = New-CsEdgeAllowAllKnownDomains
+        $SetParams.Add('AllowedDomains', $AllowAllKnownDomains)
+    }
 
     Write-Verbose -Message "SetParams: $(Convert-M365DscHashtableToString -Hashtable $SetParams)"
     Set-CsTenantFederationConfiguration @SetParams
@@ -234,6 +267,18 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowTeamsConsumerInbound,
+
+        [Parameter()]
+        [System.Boolean]
+        $TreatDiscoveredPartnersAsUnverified,
+
+        [Parameter()]
+        [System.Boolean]
+        $SharedSipAddressSpace,
+
+        [Parameter()]
+        [System.Boolean]
+        $RestrictTeamsConsumerToExternalUserProfiles,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]

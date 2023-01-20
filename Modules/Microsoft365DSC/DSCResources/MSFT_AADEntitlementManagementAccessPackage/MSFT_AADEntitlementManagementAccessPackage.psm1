@@ -82,8 +82,6 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
             -ProfileName 'beta'
-
-        Select-MgProfile 'beta'
     }
     catch
     {
@@ -168,8 +166,6 @@ function Get-TargetResource
         }
 
         $results = @{
-
-            #region resource generator code
             Id                              = $getValue.Id
             CatalogId                       = $getValue.CatalogId
             Description                     = $getValue.Description
@@ -188,7 +184,6 @@ function Get-TargetResource
             CertificateThumbprint           = $CertificateThumbprint
             Managedidentity                 = $ManagedIdentity.IsPresent
         }
-
 
         return [System.Collections.Hashtable] $results
     }
@@ -301,8 +296,6 @@ function Set-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
             -ProfileName 'beta'
-
-        Select-MgProfile 'beta' -ErrorAction Stop
     }
     catch
     {
@@ -885,7 +878,6 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
-    Select-MgProfile 'beta' -ErrorAction Stop
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

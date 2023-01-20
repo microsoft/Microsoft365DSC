@@ -9,7 +9,12 @@
 | **Condition** | Write | String | The Condition parameter specifies the conditions and exceptions for the rule. | |
 | **SamplingRate** | Write | UInt32 | The SamplingRate parameter specifies the percentage of communications for review. If you want reviewers to review all detected items, use the value 100. | |
 | **Ensure** | Write | String | Specify if this rule should exist or not. | `Present`, `Absent` |
-| **Credential** | Required | PSCredential | Credentials of the Exchange Global Admin | |
+| **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
+| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
+| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 
 ## Description
 

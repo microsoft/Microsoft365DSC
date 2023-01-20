@@ -16,7 +16,12 @@
 | **RetentionDuration** | Write | String | The RetentionDuration parameter specifies the hold duration for the retention rule. Valid values are: An integer - The hold duration in days, Unlimited - The content is held indefinitely. | |
 | **RetentionAction** | Write | String | The RetentionAction parameter specifies the action for the label. Valid values are: Delete, Keep or KeepAndDelete. | `Delete`, `Keep`, `KeepAndDelete` |
 | **RetentionType** | Write | String | The RetentionType parameter specifies whether the retention duration is calculated from the content creation date, tagged date, or last modification date. Valid values are: CreationAgeInDays, EventAgeInDays,ModificationAgeInDays, or TaggedAgeInDays. | `CreationAgeInDays`, `EventAgeInDays`, `ModificationAgeInDays`, `TaggedAgeInDays` |
-| **Credential** | Required | PSCredential | Credentials of the Exchange Global Admin | |
+| **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
+| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
+| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 
 ### MSFT_SCFilePlanProperty
 

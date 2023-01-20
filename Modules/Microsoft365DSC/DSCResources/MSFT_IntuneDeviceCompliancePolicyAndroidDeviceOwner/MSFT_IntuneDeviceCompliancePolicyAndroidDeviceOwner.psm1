@@ -115,8 +115,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Checking for the Intune Android Work Profile Device Compliance Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters -ProfileName 'Beta'
-    Select-MgProfile -Name 'Beta' | Out-Null
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'Beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -322,8 +322,8 @@ function Set-TargetResource
     Write-Verbose -Message "Intune Android Device Owner Device Compliance Policy {$DisplayName}"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters -ProfileName 'Beta'
-    Select-MgProfile -Name 'Beta' | Out-Null
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'Beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -680,8 +680,8 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters -ProfileName 'Beta'
-    Select-MgProfile -Name 'Beta' | Out-Null
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'Beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

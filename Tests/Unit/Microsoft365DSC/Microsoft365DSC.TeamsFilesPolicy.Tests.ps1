@@ -2,27 +2,27 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath '..\..\Unit' `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath '\Stubs\Microsoft365.psm1' `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath '\Stubs\Generic.psm1' `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\UnitTestHelper.psm1" `
+        -ChildPath '\UnitTestHelper.psm1' `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "TeamsFilesPolicy" -GenericStubModule $GenericStubPath
+    -DscResource 'TeamsFilesPolicy' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
 
-            $secpasswd = ConvertTo-SecureString "f@kepassword1" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin@mydomain.com", $secpasswd)
+            $secpasswd = ConvertTo-SecureString 'f@kepassword1' -AsPlainText -Force
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
@@ -43,25 +43,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credential"
+                return 'Credential'
             }
         }
         # Test contexts
-        Context -Name "The TeamsFilesPolicy should exist but it DOES NOT" -Fixture {
+        Context -Name 'The TeamsFilesPolicy should exist but it DOES NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    NativeFileEntryPoints = "FakeStringValue"
-                    SPChannelFilesTab     = "FakeStringValue"
-                    Identity              = "FakeStringValue"
-                    Ensure                        = "Present"
-                    Credential                    = $Credential;
+                    NativeFileEntryPoints = 'Enabled'
+                    SPChannelFilesTab     = 'Enabled'
+                    Identity              = 'FakeStringValue'
+                    Ensure                = 'Present'
+                    Credential            = $Credential;
                 }
 
                 Mock -CommandName Get-CsTeamsFilesPolicy -MockWith {
                     return $null
                 }
             }
-            It "Should return Values from the Get method" {
+            It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
             It 'Should return false from the Test method' {
@@ -73,27 +73,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "The TeamsFilesPolicy exists but it SHOULD NOT" -Fixture {
+        Context -Name 'The TeamsFilesPolicy exists but it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    NativeFileEntryPoints = "FakeStringValue"
-                    SPChannelFilesTab     = "FakeStringValue"
-                    Identity              = "FakeStringValue"
-                    Ensure                        = "Absent"
-                    Credential                    = $Credential;
+                    NativeFileEntryPoints = 'Enabled'
+                    SPChannelFilesTab     = 'Enabled'
+                    Identity              = 'FakeStringValue'
+                    Ensure                = 'Absent'
+                    Credential            = $Credential;
                 }
 
                 Mock -CommandName Get-CsTeamsFilesPolicy -MockWith {
                     return @{
-                    NativeFileEntryPoints = "FakeStringValue"
-                    SPChannelFilesTab     = "FakeStringValue"
-                    Identity              = "FakeStringValue"
+                        NativeFileEntryPoints = 'Enabled'
+                        SPChannelFilesTab     = 'Enabled'
+                        Identity              = 'FakeStringValue'
 
                     }
                 }
             }
 
-            It "Should return Values from the Get method" {
+            It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
@@ -106,21 +106,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Should -Invoke -CommandName Remove-CsTeamsFilesPolicy -Exactly 1
             }
         }
-        Context -Name "The TeamsFilesPolicy Exists and Values are already in the desired state" -Fixture {
+        Context -Name 'The TeamsFilesPolicy Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    NativeFileEntryPoints = "FakeStringValue"
-                    SPChannelFilesTab     = "FakeStringValue"
-                    Identity              = "FakeStringValue"
-                    Ensure                        = "Present"
-                    Credential                    = $Credential;
+                    NativeFileEntryPoints = 'Enabled'
+                    SPChannelFilesTab     = 'Enabled'
+                    Identity              = 'FakeStringValue'
+                    Ensure                = 'Present'
+                    Credential            = $Credential;
                 }
 
                 Mock -CommandName Get-CsTeamsFilesPolicy -MockWith {
                     return @{
-                    NativeFileEntryPoints = "FakeStringValue"
-                    SPChannelFilesTab     = "FakeStringValue"
-                    Identity              = "FakeStringValue"
+                        NativeFileEntryPoints = 'Enabled'
+                        SPChannelFilesTab     = 'Enabled'
+                        Identity              = 'FakeStringValue'
 
                     }
                 }
@@ -132,26 +132,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "The TeamsFilesPolicy exists and values are NOT in the desired state" -Fixture {
+        Context -Name 'The TeamsFilesPolicy exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    NativeFileEntryPoints = "FakeStringValue"
-                    SPChannelFilesTab     = "FakeStringValue"
-                    Identity              = "FakeStringValue"
-                    Ensure                = "Present"
+                    NativeFileEntryPoints = 'Enabled'
+                    SPChannelFilesTab     = 'Enabled'
+                    Identity              = 'FakeStringValue'
+                    Ensure                = 'Present'
                     Credential            = $Credential;
                 }
 
                 Mock -CommandName Get-CsTeamsFilesPolicy -MockWith {
                     return @{
-                    NativeFileEntryPoints = "FakeStringValueDrift #Drift"
-                    SPChannelFilesTab     = "FakeStringValueDrift #Drift"
-                    Identity              = "FakeStringValue"
+                        NativeFileEntryPoints = 'Disabled'
+                        SPChannelFilesTab     = 'Disabled'
+                        Identity              = 'FakeStringValue'
                     }
                 }
             }
 
-            It "Should return Values from the Get method" {
+            It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
@@ -159,13 +159,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Should call the Set method" {
+            It 'Should call the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Set-CsTeamsFilesPolicy -Exactly 1
             }
         }
 
-        Context -Name "ReverseDSC Tests" -Fixture {
+        Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $testParams = @{
@@ -174,14 +174,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-CsTeamsFilesPolicy -MockWith {
                     return @{
-                    NativeFileEntryPoints = "FakeStringValue"
-                    SPChannelFilesTab     = "FakeStringValue"
-                    Identity              = "FakeStringValue"
+                        NativeFileEntryPoints = 'Enabled'
+                        SPChannelFilesTab     = 'Enabled'
+                        Identity              = 'FakeStringValue'
 
                     }
                 }
             }
-            It "Should Reverse Engineer resource from the Export method" {
+            It 'Should Reverse Engineer resource from the Export method' {
                 Export-TargetResource @testParams
             }
         }

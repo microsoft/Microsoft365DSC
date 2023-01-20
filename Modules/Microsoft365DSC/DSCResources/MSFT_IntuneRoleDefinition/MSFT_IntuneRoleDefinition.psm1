@@ -63,18 +63,11 @@ function Get-TargetResource
 
     )
 
-    try
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+    Write-Verbose -Message "Checking for the Intune Role Definition {$DisplayName}"
 
-        Select-MgProfile 'beta'
-    }
-    catch
-    {
-        Write-Verbose -Message ($_)
-    }
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -88,28 +81,35 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullResult = $PSBoundParameters
+    $nullResult = @{
+        DisplayName = $DisplayName
+    }
+
     $nullResult.Ensure = 'Absent'
     try
     {
         $getValue = $null
 
-        if($Id -match '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$')
+        if ($Id -match '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$')
         {
             $getValue = Get-MgDeviceManagementRoleDefinition -RoleDefinitionId $id -ErrorAction SilentlyContinue
-            if($null -ne $getValue){
+            if ($null -ne $getValue)
+            {
                 Write-Verbose -Message "Found something with id {$id}"
             }
         }
-        else
+
+        if ($null -eq $getValue)
         {
             Write-Verbose -Message "Nothing with id {$id} was found"
             $Filter = "displayName eq '$DisplayName'"
             $getValue = Get-MgDeviceManagementRoleDefinition -Filter $Filter -ErrorAction SilentlyContinue
-            if($null -ne $getValue){
+            if ($null -ne $getValue)
+            {
                 Write-Verbose -Message "Found something with displayname {$DisplayName}"
             }
-            else{
+            else
+            {
                 Write-Verbose -Message "Nothing with displayname {$DisplayName} was found"
                 return $nullResult
             }
@@ -131,34 +131,20 @@ function Get-TargetResource
         }
         if ($getValue.RolePermissions)
         {
-            $results.Add("allowedResourceActions", $getValue.RolePermissions.ResourceActions.AllowedResourceActions)
-            $results.Add("notallowedResourceActions", $getValue.RolePermissions.ResourceActions.notAllowedResourceActions)
+            $results.Add('allowedResourceActions', $getValue.RolePermissions.ResourceActions.AllowedResourceActions)
+            $results.Add('notallowedResourceActions', $getValue.RolePermissions.ResourceActions.notAllowedResourceActions)
         }
 
         return [System.Collections.Hashtable] $results
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullResult
     }
 }
@@ -226,18 +212,11 @@ function Set-TargetResource
         $ManagedIdentity
     )
 
-    try
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+    Write-Verbose -Message "Setting the Intune Role Definition {$DisplayName}"
 
-        Select-MgProfile 'beta' -ErrorAction Stop
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-    }
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -263,65 +242,71 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating {$DisplayName}"
-        if($null -ne $roleScopeTagIds){
+        Write-Verbose -Message "Creating Role Definition {$DisplayName}"
+        if ($null -ne $roleScopeTagIds)
+        {
             $ScopeRoleTags = @()
-            foreach($roleScopeTagId in $roleScopeTagIds){
+            foreach ($roleScopeTagId in $roleScopeTagIds)
+            {
                 $Tag = Get-MgDeviceManagementRoleScopeTag -RoleScopeTagId $roleScopeTagId -ErrorAction SilentlyContinue
-                if($null -ne $Tag){
+                if ($null -ne $Tag)
+                {
                     $ScopeRoleTags += $Tag.Id
                 }
             }
         }
         $resourceActions = @{
-			'@odata.type'               = "microsoft.graph.resourceAction"
-			notAllowedResourceActions   = $notAllowedResourceActions
-			allowedResourceActions      = $allowedResourceActions
-		}
-        $rolepermission = @{
-			'@odata.type'               = "microsoft.graph.rolePermission"
-			resourceActions             = @($resourceActions)
+            '@odata.type'             = 'microsoft.graph.resourceAction'
+            notAllowedResourceActions = $notAllowedResourceActions
+            allowedResourceActions    = $allowedResourceActions
         }
-        $ScopeTagIds                    = $ScopeRoleTags
+        $rolepermission = @{
+            '@odata.type'   = 'microsoft.graph.rolePermission'
+            resourceActions = @($resourceActions)
+        }
+        $ScopeTagIds = $ScopeRoleTags
         $CreateParameters = @{
-            '@odata.type' 		        = "#microsoft.graph.roleDefinition"
-            displayName 		        = $DisplayName
-            description 		        = $Description
-            rolePermissions             = @($rolepermission)
-            roleScopeTagIds		         = $ScopeTagIds
+            '@odata.type'   = '#microsoft.graph.roleDefinition'
+            displayName     = $DisplayName
+            description     = $Description
+            rolePermissions = @($rolepermission)
+            roleScopeTagIds = $ScopeTagIds
         }
 
-        $policy=New-MgDeviceManagementRoleDefinition -BodyParameter $CreateParameters
+        $policy = New-MgDeviceManagementRoleDefinition -BodyParameter $CreateParameters
 
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating {$DisplayName}"
-        if($null -ne $roleScopeTagIds){
+        Write-Verbose -Message "Updating Role Definition {$DisplayName}"
+        if ($null -ne $roleScopeTagIds)
+        {
             $ScopeRoleTags = @()
-            foreach($roleScopeTagId in $roleScopeTagIds){
+            foreach ($roleScopeTagId in $roleScopeTagIds)
+            {
                 $Tag = Get-MgDeviceManagementRoleScopeTag -RoleScopeTagId $roleScopeTagId -ErrorAction SilentlyContinue
-                if($null -ne $Tag){
+                if ($null -ne $Tag)
+                {
                     $ScopeRoleTags += $Tag.Id
                 }
             }
         }
         $resourceActions = @{
-			'@odata.type'               = "microsoft.graph.resourceAction"
-			notAllowedResourceActions   = $notAllowedResourceActions
-			allowedResourceActions      = $allowedResourceActions
-		}
+            '@odata.type'             = 'microsoft.graph.resourceAction'
+            notAllowedResourceActions = $notAllowedResourceActions
+            allowedResourceActions    = $allowedResourceActions
+        }
         $rolepermission = @{
-			'@odata.type'               = "microsoft.graph.rolePermission"
-			resourceActions             = @($resourceActions)
+            '@odata.type'   = 'microsoft.graph.rolePermission'
+            resourceActions = @($resourceActions)
         }
         $ScopeTagIds = $ScopeRoleTags
         $UpdateParameters = @{
-            '@odata.type' 		        = "#microsoft.graph.roleDefinition"
-            displayName 		        = $DisplayName
-            description 		        = $Description
-            rolePermissions             = @($rolepermission)
-            roleScopeTagIds		        = $ScopeTagIds
+            '@odata.type'   = '#microsoft.graph.roleDefinition'
+            displayName     = $DisplayName
+            description     = $Description
+            rolePermissions = @($rolepermission)
+            roleScopeTagIds = $ScopeTagIds
         }
 
         Update-MgDeviceManagementRoleDefinition -BodyParameter $UpdateParameters `
@@ -330,7 +315,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing {$DisplayName}"
+        Write-Verbose -Message "Removing Role Definition {$DisplayName}"
         Remove-MgDeviceManagementRoleDefinition -RoleDefinitionId $currentInstance.Id
     }
 }
@@ -399,6 +384,8 @@ function Test-TargetResource
         $ManagedIdentity
     )
 
+    Write-Verbose -Message "Testing the Intune Role Definition {$DisplayName}"
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -411,17 +398,19 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of {$id}"
-
     $CurrentValues = Get-TargetResource @PSBoundParameters
+
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if($CurrentValues.Ensure -eq "Absent")
+    if ($CurrentValues.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
     }
-    $testResult=$true
+    $testResult = $true
 
     $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
@@ -486,7 +475,6 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
-    Select-MgProfile 'beta' -ErrorAction Stop
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -506,12 +494,12 @@ function Export-TargetResource
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceAndAppManagementRoleDefinition'  `
-            }
+        }
 
         if (-not $getValue)
         {
             [array]$getValue = Get-MgDeviceManagementRoleDefinition
-                -ErrorAction Stop
+            -ErrorAction Stop
         }
         $i = 1
         $dscContent = ''
@@ -525,10 +513,10 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
-            $displayedKey=$config.id
-            if(-not [String]::IsNullOrEmpty($config.displayName))
+            $displayedKey = $config.id
+            if (-not [String]::IsNullOrEmpty($config.displayName))
             {
-                $displayedKey=$config.displayName
+                $displayedKey = $config.displayName
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
@@ -564,27 +552,14 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }
