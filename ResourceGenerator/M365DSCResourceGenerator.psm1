@@ -254,14 +254,6 @@ function New-M365DSCResource
         Write-TokenReplacement -Token '<FakeValues>' -value $fakeValuesString -FilePath $unitTestPath
         Write-TokenReplacement -Token '<TargetResourceFakeValues>' -value $targetResourceFakeValuesString -FilePath $unitTestPath
         $fakeValues2 = $fakeValues
-        if ($isAdditionalProperty)
-        {
-            $fakeValues2 = Get-M365DSCFakeValues -ParametersInformation $parameterInformation `
-                -IntroduceDrift $false `
-                -isCmdletCall $true `
-                -AdditionalPropertiesType $AdditionalPropertiesType `
-                -Workload $Workload
-        }
         $fakeValuesString2 = Get-M365DSCHashAsString -Values $fakeValues2 -isCmdletCall $true
         Write-TokenReplacement -Token '<FakeValues2>' -value $fakeValuesString2 -FilePath $unitTestPath
 
@@ -284,8 +276,13 @@ function New-M365DSCResource
         Write-TokenReplacement -Token '<SetCmdletName>' -value "$updateVerb-$($CmdLetNoun)" -FilePath $unitTestPath
         Write-TokenReplacement -Token '<RemoveCmdletName>' -value "Remove-$($CmdLetNoun)" -FilePath $unitTestPath
         Write-TokenReplacement -Token '<NewCmdletName>' -value "New-$($CmdLetNoun)" -FilePath $unitTestPath
+        Update-Microsoft365StubFile -CmdletNoun $CmdLetNoun
+        if($addIntuneAssignments)
+        {
+            Update-Microsoft365StubFile -CmdletNoun $assignmentCmdletNoun
+        }
         #endregion
-
+        #region Module
         $platforms = @{
             'Windows10' = 'for Windows10'
             'Android' = 'for Android'
@@ -676,7 +673,8 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
         # Remove comments
         Write-TokenReplacement -Token '<#ResourceGenerator' -Value '' -FilePath $moduleFilePath
         Write-TokenReplacement -Token 'ResourceGenerator#>' -Value '' -FilePath $moduleFilePath
-
+        #endregion
+        #region Schema
         $schemaFilePath = New-M365DSCSchemaFile -ResourceName $ResourceName -Path $Path
         $schemaProperties = New-M365SchemaPropertySet -Properties $parameterInformation `
             -Workload $Workload
@@ -687,7 +685,8 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
         Write-TokenReplacement -Token '<FriendlyName>' -Value $ResourceName -FilePath $schemaFilePath
         Write-TokenReplacement -Token '<ResourceName>' -Value $ResourceName -FilePath $schemaFilePath
         Write-TokenReplacement -Token '<Properties>' -Value $schemaProperties -FilePath $schemaFilePath
-
+        #endregion
+        #region Settings
         $resourcePermissions = (get-M365DSCResourcePermission `
             -Workload $Workload `
             -CmdLetNoun $CmdLetNoun `
@@ -697,10 +696,12 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
         Write-TokenReplacement -Token '<ResourceFriendlyName>' -Value $ResourceName -FilePath $settingsFilePath
         Write-TokenReplacement -Token '<ResourceDescription>' -Value $resourceDescription -FilePath $settingsFilePath
         Write-TokenReplacement -Token '<ResourcePermissions>' -Value $ResourcePermissions -FilePath $settingsFilePath
-
+        #endregion
+        #region ReadMe
         Write-TokenReplacement -Token '<ResourceFriendlyName>' -Value $ResourceName -FilePath $readmeFilePath
         Write-TokenReplacement -Token '<ResourceDescription>' -Value $resourceDescription -FilePath $readmeFilePath
-        #region Generate Examples
+        #endregion
+        #region Examples
         if ($null -ne $Credential -and $generateExample)
         {
             Import-Module Microsoft365DSC -Force
@@ -2023,49 +2024,24 @@ function Get-M365DSCFakeValues
     $parameters = $parametersInformation
     $additionalProperties = @{}
 
-    <#if ($isCmdletCall -and -not $isRecursive)
-    {
-        $excludedFromAdditionalProperties = @(
-            'Description'
-            'DisplayName'
-            'Id'
-        )
-
-        $additionalProperties = @{
-            '@odata.type' = '#microsoft.graph.' + $AdditionalPropertiesType
-        }
-        write-host ($parameters|convertTo-Json -depth 20)
-       $parameters = $parameters | Where-Object -FilterScript {-not $_.IsRootProperty }
-    }#>
-
-
     foreach ($parameter in $parameters)
     {
         $hashValue = $null
         if($parameter.IsComplexType)
         {
             $hashValue = @{}
-            <#if (-not $isCmdletCall)
-            {
-                $propertyType = $workload + $parameter.Type
-                $propertyType = "MSFT_$propertyType"
-                $hashValue.add('CIMType', $propertyType)
-            }#>
             $propertyType = $workload + $parameter.Type
             $propertyType = "MSFT_$propertyType"
             $hashValue.add('CIMType', $propertyType)
             $hashValue.add('isArray', $parameter.IsArray)
-
-            #if ($Null -ne $parameter.Properties)
-            #{
             $nestedProperties = Get-M365DSCFakeValues -ParametersInformation $parameter.Properties `
                 -Workload $Workload `
                 -isCmdletCall $isCmdletCall `
-                -isRecursive $true
+                -isRecursive $true `
+                -IntroduceDrift $IntroduceDrift
 
             $hashValue.add('Properties', $nestedProperties)
             $hashValue.add('Name', $parameter.Name)
-            #}
         }
         else
         {
@@ -2129,11 +2105,9 @@ function Get-M365DSCFakeValues
 
         if ($hashValue)
         {
-            #if ($isCmdletCall -and -not $isRecursive)
             if (-Not $parameter.IsRootProperty -and -not $IsGetTargetResource)
             {
                 $parameterName = Get-StringFirstCharacterToLower -Value $parameter.Name
-                #$parameterName = $parameter.Name
                 $additionalProperties.Add($parameterName, $hashValue)
             }
             else
@@ -2151,17 +2125,6 @@ function Get-M365DSCFakeValues
     {
         $result.Add('AdditionalProperties', $additionalProperties)
     }
-
-    <#if ($isCmdletCall)
-    {
-        if (-not $isRecursive)
-        {
-            $result.Add('Id', 'FakeStringValue')
-            $result.Add('DisplayName', 'FakeStringValue')
-            $result.Add('Description', 'FakeStringValue')
-            $result.Add('AdditionalProperties', $additionalProperties)
-        }
-    }#>
 
     return $result
 }
@@ -2960,5 +2923,100 @@ function Get-ParameterBlockStringForModule
     }
     return $parameterBlockOutput
 }
+function Get-ResourceStub
+{
+    param (
+        [Parameter()]
+        [System.String]
+        $CmdletNoun
+    )
 
+    $parametersToSkip=@(
+        'InformationVariable'
+        'WhatIf'
+        'WarningVariable'
+        'OutVariable'
+        'ErrorVariable'
+        'WarningAction'
+        'ErrorAction'
+        'Debug'
+        'Verbose'
+        'IfMatch'
+        'OutBuffer'
+        'InformationAction'
+        'PipelineVariable'
+    )
+    $stub=[System.Text.StringBuilder]::New()
+    $version= (get-Command -Noun $cmdletNoun | select-object -Unique Version | Sort-Object -Descending | Select-Object -First 1).Version.toString()
+    $commands = get-Command -Noun $cmdletNoun |where-object { $_.Version -eq $version }
+    foreach($command in $commands)
+    {
+        $command= get-Command -Name $command.Name |where-object { $_.Version -eq $version }
+        $stub.AppendLine("function $($command.Name)")|out-null
+        $stub.AppendLine("{")|out-null
+        $stub.AppendLine("    [CmdletBinding()]")|out-null
+        $stub.AppendLine("    param")|out-null
+        $stub.AppendLine("    (")|out-null
+        $parameters = $command.Parameters
+        $i=0
+        $keys= ($parameters.keys)  | where-object { $_ -notin $parametersToSkip }
+        $keyCount = $keys.count
+        foreach($key in $keys)
+        {
+            $stub.AppendLine("        [Parameter()]")|out-null
+
+            $name = ($parameters.$key).Name
+            $type = ($parameters.$key).ParameterType.toString()
+            $isArray = $false
+            if( $type -like "*[[\]]")
+            {
+                $isArray = $true
+            }
+
+            if( $type -notlike "System.*")
+            {
+                $type = "PSObject"
+                if($isArray)
+                {
+                    $type += "[]"
+                }
+            }
+            $stub.AppendLine("        [$type]")|out-null
+            $stub.Append("        `$$name")|out-null
+            if( $i -lt $keyCount -1 )
+            {
+                $stub.Append(",`r`n")|out-null
+            }
+            $stub.Append("`r`n")|out-null
+            $i++
+        }
+        $stub.AppendLine("    )")|out-null
+        $stub.AppendLine("}`r`n")|out-null
+    }
+
+    $stub.toString()
+}
+
+function Update-Microsoft365StubFile
+{
+    param (
+        [Parameter()]
+        [System.String]
+        $CmdletNoun
+    )
+
+    $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
+                        -ChildPath "..\Tests\Unit" `
+                        -Resolve
+    $filePath=(Join-Path -Path $M365DSCTestFolder `
+    -ChildPath "\Stubs\Microsoft365.psm1" `
+    -Resolve)
+
+    $content = Get-Content -Path $FilePath
+    if( ($content|select-string -pattern "function Get-$CmdletNoun$").count -eq 0)
+    {
+        $content += "#region $CmdletNoun`r`n" + (Get-ResourceStub -CmdletNoun $CmdletNoun) + "#endregion`r`n"
+        Set-Content -Path $FilePath -Value $content
+    }
+}
 Export-ModuleMember -Function Get-MgGraphModuleCmdLetDifference, New-M365DSCResourceForGraphCmdLet, New-M365DSCResource, *
