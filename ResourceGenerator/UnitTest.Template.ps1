@@ -44,7 +44,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
-            }
+            }<AssignmentMock>
         }
         # Test contexts
         Context -Name "The <ResourceName> should exist but it DOES NOT" -Fixture {

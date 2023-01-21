@@ -240,9 +240,17 @@ function New-M365DSCResource
             -IntroduceDrift $false `
             -Workload $Workload `
             -IsGetTargetResource $true
-        #write-host ($fakeValues|convertTo-Json -depth 20)
+
         $fakeValuesString = Get-M365DSCHashAsString -Values $fakeValues
         $targetResourceFakeValuesString = Get-M365DSCHashAsString -Values $targetResourceFakeValues -Space '                    '
+        $assignmentMock = ''
+        if($addIntuneAssignments)
+        {
+            $assignmentMock = "`r`n`r`n            Mock -CommandName Get-$assignmentCmdletNoun -MockWith {`r`n"
+            $assignmentMock += "            }`r`n"
+        }
+
+        Write-TokenReplacement -Token '<AssignmentMock>' -value $assignmentMock -FilePath $unitTestPath
         Write-TokenReplacement -Token '<FakeValues>' -value $fakeValuesString -FilePath $unitTestPath
         Write-TokenReplacement -Token '<TargetResourceFakeValues>' -value $targetResourceFakeValuesString -FilePath $unitTestPath
         $fakeValues2 = $fakeValues
