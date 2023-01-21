@@ -180,51 +180,20 @@ function New-M365DSCResource
             -Properties $typeProperties `
             -DefaultParameterSetProperties $defaultParameterSetProperties
 
+        #retrieve assignment details
         if ($Workload -in @('Intune', 'MicrosoftGraph'))
         {
-
-            switch ($actualType)
+            $repository=($commandDetails|where-Object -filterScript {$_.variants -eq 'List'}).URI
+            $repository=$repository.Substring(1,($repository.Length - 1))
+            $assignmentCmdlet=Get-Command ($cmdletFound.Name+'Assignment') -Module $GraphModule
+            $assignmentCmdletNoun = $assignmentCmdlet.Noun
+            $assignmentKey = (($assignmentCmdlet.ParameterSets|where-Object -filterScript {$_.Name -eq 'List'}).Parameters | where-Object -filterScript {$_.IsMandatory}).Name
+            if( -not [String]::IsNullOrWhiteSpace($repository) `
+                -and -not [String]::IsNullOrWhiteSpace($assignmentCmdletNoun) `
+                -and -not [String]::IsNullOrWhiteSpace($assignmentKey))
             {
-                'DeviceConfiguration'
-                {
-                    $repository = 'deviceManagement/deviceConfigurations'
-                    $addIntuneAssignments = $true
-                    $ParametersToSkip += 'Assignments'
-                    $assignmentCmdletNoun = 'MgDeviceManagementDeviceConfigurationAssignment'
-                    $assignmentKey ='DeviceConfigurationId'
-                }
-                'DeviceCompliancePolicy'
-                {
-                    $repository = 'deviceCompliancePolicies'
-                    $addIntuneAssignments = $true
-                    $ParametersToSkip += 'Assignments'
-                    $assignmentCmdletNoun = 'MgDeviceManagementCompliancePolicyAssignment'
-                    $assignmentKey ='DeviceManagementCompliancePolicyId'
-                }
-                'DeviceManagementConfigurationPolicy'
-                {
-                    $repository = 'deviceManagement/configurationPolicies'
-                    $addIntuneAssignments = $true
-                    $ParametersToSkip += 'Assignments'
-                    $assignmentCmdletNoun = 'MgDeviceManagementConfigurationPolicyAssignment'
-                    $assignmentKey ='DeviceManagementConfigurationPolicyId'
-                }
-                'DeviceManagementIntent'
-                {
-                    $repository = 'deviceManagement/intents'
-                    $addIntuneAssignments = $true
-                    $ParametersToSkip += 'Assignments'
-                    $assignmentCmdletNoun = 'MgDeviceManagementIntentAssignment'
-                    $assignmentKey ='DeviceManagementIntentId'
-                }
-                'WindowsAutopilotDeploymentProfile'
-                {
-                    $repository = 'deviceManagement/windowsAutopilotDeploymentProfiles'
-                    $addIntuneAssignments = $true
-                    $ParametersToSkip += 'Assignments'
-                    $assignmentCmdletNoun = 'MgDeviceManagementWindowAutopilotDeploymentProfileAssignment'
-                    $assignmentKey ='WindowsAutopilotDeploymentProfileId'
-                }
+                $addIntuneAssignments = $true
+                $ParametersToSkip += 'Assignments'
             }
         }
         $parameterInformation = $parameterInformation | Where-Object -FilterScript {$_.Name -notin $ParametersToSkip}
