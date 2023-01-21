@@ -368,6 +368,15 @@ function New-M365DSCResource
         }
         Write-TokenReplacement -Token '<ComplexTypeConstructor>' -Value $complexTypeConstructor -FilePath $moduleFilePath
 
+        $enumTypeConstructor=""
+        if(-Not [String]::IsNullOrEmpty($hashtableResults.EnumTypeConstructor))
+        {
+            $enumTypeConstructor = $hashtableResults.EnumTypeConstructor
+            $enumTypeConstructor = "`r`n        #region resource generator code`r`n" + $enumTypeConstructor
+            $enumTypeConstructor = $enumTypeConstructor + "        #endregion`r`n"
+        }
+        Write-TokenReplacement -Token '<EnumTypeConstructor>' -Value $enumTypeConstructor -FilePath $moduleFilePath
+
         $dateTypeConstructor=""
         if(-Not [String]::IsNullOrEmpty($hashtableResults.DateTypeConstructor))
         {
@@ -2723,6 +2732,7 @@ function New-M365HashTableMapping
     $convertToVariable = ''
     $addtionalProperties = ''
     $complexTypeConstructor = [System.Text.StringBuilder]::New()
+    $enumTypeConstructor = [System.Text.StringBuilder]::New()
     $dateTypeConstructor = [System.Text.StringBuilder]::New()
 
     $biggestParamaterLength = 'CertificateThumbprint'.length
@@ -2802,6 +2812,10 @@ function New-M365HashTableMapping
 
 
             }
+            if($property.IsEnumType)
+            {
+                $enumTypeConstructor.appendLine((Get-EnumTypeConstructorToString -Property $property -IndentCount 2 -DateFormat $DateFormat))
+            }
             if($property.Type -like "System.Date*")
             {
                 $dateTypeConstructor.appendLine((Get-DateTypeConstructorToString -Property $property -IndentCount 2 -DateFormat $DateFormat))
@@ -2818,6 +2832,10 @@ function New-M365HashTableMapping
             {
                 $hashtable += "`$date$propertyName`r`n"
             }
+            elseif($property.IsEnumType)
+            {
+                $hashtable += "`$enum$propertyName`r`n"
+            }
             else
             {
                 $propertyPrefix="`$getValue."
@@ -2827,10 +2845,6 @@ function New-M365HashTableMapping
                     $propertyPrefix += "AdditionalProperties."
                 }
 
-                if($property.IsEnumType)
-                {
-                    $propertyName+=".toString()"
-                }
                 $hashtable += "$propertyPrefix$propertyName"
                 $hashtable += "`r`n"
             }
@@ -2863,6 +2877,7 @@ function New-M365HashTableMapping
     }
     $results.Add('ConvertToVariable', $convertToVariable)
     $results.Add('ComplexTypeConstructor', $complexTypeConstructor.ToString())
+    $results.Add('EnumTypeConstructor', $enumTypeConstructor.ToString())
     $results.Add('DateTypeConstructor', $dateTypeConstructor.ToString())
     $results.Add('addtionalProperties', $addtionalProperties)
     $results.Add('ConvertToString', $convertToString)

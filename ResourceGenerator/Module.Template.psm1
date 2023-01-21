@@ -82,7 +82,7 @@ function Get-TargetResource
         }
         $<PrimaryKey> = $getValue.<PrimaryKey>
         Write-Verbose -Message "An <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>} was found."<#ResourceGenerator
-<ComplexTypeConstructor><DateTypeConstructor>ResourceGenerator#>
+<ComplexTypeConstructor><EnumTypeConstructor><DateTypeConstructor>ResourceGenerator#>
         $results = @{<#ResourceGenerator
             #region resource generator code
 <HashTableMapping>            #endregionResourceGenerator#>
