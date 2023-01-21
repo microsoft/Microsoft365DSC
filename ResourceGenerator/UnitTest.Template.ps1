@@ -43,15 +43,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credential"
+                return "Credentials"
             }
         }
         # Test contexts
         Context -Name "The <ResourceName> should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-<FakeValues>                    Ensure                        = "Present"
-                    Credential                    = $Credential;
+<TargetResourceFakeValues>                    Ensure = "Present"
+                    Credential = $Credential;
                 }
 
                 Mock -CommandName <GetCmdletName> -MockWith {
@@ -73,8 +73,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The <ResourceName> exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-<FakeValues>                    Ensure                        = "Absent"
-                    Credential                    = $Credential;
+<TargetResourceFakeValues>                    Ensure = "Absent"
+                    Credential = $Credential;
                 }
 
                 Mock -CommandName <GetCmdletName> -MockWith {
@@ -100,8 +100,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The <ResourceName> Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<FakeValues>                    Ensure                        = "Present"
-                    Credential                    = $Credential;
+<TargetResourceFakeValues>                    Ensure = "Present"
+                    Credential = $Credential;
                 }
 
                 Mock -CommandName <GetCmdletName> -MockWith {
@@ -120,8 +120,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The <ResourceName> exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<FakeValues>                    Ensure                = "Present"
-                    Credential            = $Credential;
+<TargetResourceFakeValues>                    Ensure = "Present"
+                    Credential = $Credential;
                 }
 
                 Mock -CommandName <GetCmdletName> -MockWith {

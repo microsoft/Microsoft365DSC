@@ -190,32 +190,40 @@ function New-M365DSCResource
                     $repository = 'deviceManagement/deviceConfigurations'
                     $addIntuneAssignments = $true
                     $ParametersToSkip += 'Assignments'
-                    $assignmentCmdletNoun= 'MgDeviceManagementDeviceConfigurationAssignment'
-                    $assignmentKey='DeviceConfigurationId'
+                    $assignmentCmdletNoun = 'MgDeviceManagementDeviceConfigurationAssignment'
+                    $assignmentKey ='DeviceConfigurationId'
                 }
                 'DeviceCompliancePolicy'
                 {
                     $repository = 'deviceCompliancePolicies'
                     $addIntuneAssignments = $true
                     $ParametersToSkip += 'Assignments'
-                    $assignmentCmdletNoun= 'MgDeviceManagementCompliancePolicyAssignment'
-                    $assignmentKey='DeviceManagementCompliancePolicyId'
+                    $assignmentCmdletNoun = 'MgDeviceManagementCompliancePolicyAssignment'
+                    $assignmentKey ='DeviceManagementCompliancePolicyId'
                 }
                 'DeviceManagementConfigurationPolicy'
                 {
                     $repository = 'deviceManagement/configurationPolicies'
                     $addIntuneAssignments = $true
                     $ParametersToSkip += 'Assignments'
-                    $assignmentCmdletNoun= 'MgDeviceManagementConfigurationPolicyAssignment'
-                    $assignmentKey='DeviceManagementConfigurationPolicyId'
+                    $assignmentCmdletNoun = 'MgDeviceManagementConfigurationPolicyAssignment'
+                    $assignmentKey ='DeviceManagementConfigurationPolicyId'
                 }
                 'DeviceManagementIntent'
                 {
                     $repository = 'deviceManagement/intents'
                     $addIntuneAssignments = $true
                     $ParametersToSkip += 'Assignments'
-                    $assignmentCmdletNoun= 'MgDeviceManagementIntentAssignment'
-                    $assignmentKey='DeviceManagementIntentId'
+                    $assignmentCmdletNoun = 'MgDeviceManagementIntentAssignment'
+                    $assignmentKey ='DeviceManagementIntentId'
+                }
+                'WindowsAutopilotDeploymentProfile'
+                {
+                    $repository = 'deviceManagement/windowsAutopilotDeploymentProfiles'
+                    $addIntuneAssignments = $true
+                    $ParametersToSkip += 'Assignments'
+                    $assignmentCmdletNoun = 'MgDeviceManagementWindowAutopilotDeploymentProfileAssignment'
+                    $assignmentKey ='WindowsAutopilotDeploymentProfileId'
                 }
             }
         }
@@ -253,9 +261,21 @@ function New-M365DSCResource
         $hashTableMapping = $hashtableResults.StringContent
 
         #region UnitTests
-        $fakeValues = Get-M365DSCFakeValues -ParametersInformation $parameterInformation -IntroduceDrift $false -Workload $Workload
+        $fakeValues = Get-M365DSCFakeValues `
+            -ParametersInformation $parameterInformation `
+            -IntroduceDrift $false `
+            -Workload $Workload `
+            -AdditionalPropertiesType $selectedODataType
+        $targetResourceFakeValues = Get-M365DSCFakeValues `
+            -ParametersInformation $parameterInformation `
+            -IntroduceDrift $false `
+            -Workload $Workload `
+            -IsGetTargetResource $true
+        #write-host ($fakeValues|convertTo-Json -depth 20)
         $fakeValuesString = Get-M365DSCHashAsString -Values $fakeValues
+        $targetResourceFakeValuesString = Get-M365DSCHashAsString -Values $targetResourceFakeValues -Space '                    '
         Write-TokenReplacement -Token '<FakeValues>' -value $fakeValuesString -FilePath $unitTestPath
+        Write-TokenReplacement -Token '<TargetResourceFakeValues>' -value $targetResourceFakeValuesString -FilePath $unitTestPath
         $fakeValues2 = $fakeValues
         if ($isAdditionalProperty)
         {
@@ -278,7 +298,13 @@ function New-M365DSCResource
         Write-TokenReplacement -Token '<ResourceName>' -value $ResourceName -FilePath $unitTestPath
 
         Write-TokenReplacement -Token '<GetCmdletName>' -value $GetcmdletName -FilePath $unitTestPath
-        Write-TokenReplacement -Token '<SetCmdletName>' -value "Set-$($CmdLetNoun)" -FilePath $unitTestPath
+        $updateVerb='Update'
+        $updateCmdlet=Find-MgGraphCommand -Command "$updateVerb-$CmdLetNoun" -ApiVersion $ApiVersion -errorAction SilentlyContinue
+        if($null -eq $updateCmdlet)
+        {
+            $updateVerb='Set'
+        }
+        Write-TokenReplacement -Token '<SetCmdletName>' -value "$updateVerb-$($CmdLetNoun)" -FilePath $unitTestPath
         Write-TokenReplacement -Token '<RemoveCmdletName>' -value "Remove-$($CmdLetNoun)" -FilePath $unitTestPath
         Write-TokenReplacement -Token '<NewCmdletName>' -value "New-$($CmdLetNoun)" -FilePath $unitTestPath
         #endregion
@@ -518,7 +544,7 @@ function New-M365DSCResource
             $AssignmentsParam += "        [Microsoft.Management.Infrastructure.CimInstance[]]`r`n"
             $AssignmentsParam += "        `$Assignments,`r`n"
 
-            $AssignmentsGet += "        `$assignmentsValues=Get-$($assignmentCmdLetNoun) -$($assignmentKey) `$$primaryKey `r`n"
+            $AssignmentsGet += "        `$assignmentsValues = Get-$($assignmentCmdLetNoun) -$($assignmentKey) `$$primaryKey`r`n"
             $AssignmentsGet += "        `$assignmentResult = @()`r`n"
             $AssignmentsGet += "        foreach (`$assignmentEntry in `$AssignmentsValues)`r`n"
             $AssignmentsGet += "        {`r`n"
@@ -571,7 +597,6 @@ function New-M365DSCResource
             `$Targets,
 
             [Parameter()]
-            [ValidateSet('deviceCompliancePolicies','deviceManagement/intents','deviceManagement/configurationPolicies','deviceManagement/deviceConfigurations')]
             [System.String]
             `$Repository='deviceManagement/configurationPolicies',
 
@@ -657,13 +682,9 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
             $AssignmentsConvertComplexToVariable = @"
             if (`$Results.Assignments)
             {
-                `$isCIMArray=`$false
-                if(`$Results.Assignments.getType().Fullname -like "*[[\]]")
-                {
-                    `$isCIMArray=`$true
-                }
-                `$currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock `$currentDSCBlock -ParameterName "Assignments" -isCIMArray:`$isCIMArray
+                `$currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock `$currentDSCBlock -ParameterName "Assignments" -isCIMArray:`$true
             }
+
 "@
         }
         Write-TokenReplacement -Token '<AssignmentsParam>' -Value $AssignmentsParam -FilePath $moduleFilePath
@@ -2001,6 +2022,10 @@ function Get-M365DSCFakeValues
 
         [Parameter()]
         [System.Boolean]
+        $IsGetTargetResource = $false,
+
+        [Parameter()]
+        [System.Boolean]
         $isCmdletCall = $false,
 
         [Parameter()]
@@ -2021,7 +2046,7 @@ function Get-M365DSCFakeValues
     $parameters = $parametersInformation
     $additionalProperties = @{}
 
-    if ($isCmdletCall -and -not $isRecursive)
+    <#if ($isCmdletCall -and -not $isRecursive)
     {
         $excludedFromAdditionalProperties = @(
             'Description'
@@ -2032,106 +2057,107 @@ function Get-M365DSCFakeValues
         $additionalProperties = @{
             '@odata.type' = '#microsoft.graph.' + $AdditionalPropertiesType
         }
-        $parameters = $parameters | Where-Object -FilterScript { $_.Name -notin $excludedFromAdditionalProperties }
-    }
+        write-host ($parameters|convertTo-Json -depth 20)
+       $parameters = $parameters | Where-Object -FilterScript {-not $_.IsRootProperty }
+    }#>
 
 
     foreach ($parameter in $parameters)
     {
         $hashValue = $null
-        switch -Wildcard ($parameter.Type)
+        if($parameter.IsComplexType)
         {
-            '*.String'
+            $hashValue = @{}
+            <#if (-not $isCmdletCall)
             {
-                $fakeValue = 'FakeStringValue'
-                if ($parameter.Members)
-                {
-                    $fakeValue = $parameter.Members[0]
-                }
-                $hashValue = $fakeValue
-                break
-            }
-            '*.String[[\]]'
-            {
-                $fakeValue1 = 'FakeStringArrayValue1'
-                $fakeValue2 = 'FakeStringArrayValue2'
-                if ($parameter.Members)
-                {
-                    $fakeValue1 = $parameter.Members[0]
-                    $fakeValue2 = $parameter.Members[1]
-                }
-                if ($IntroduceDrift)
-                {
-                    $hashValue = @($fakeValue1)
-                }
-                else
-                {
-                    $hashValue = @($fakeValue1, $fakeValue2)
-                }
-                break
-            }
-            '*.Int32'
-            {
-                if ($IntroduceDrift)
-                {
-                    $hashValue = 7
-                }
-                else
-                {
-                    $hashValue = 25
-                }
-                break
-            }
-            '*.Boolean'
-            {
-                if ($IntroduceDrift)
-                {
-                    $hashValue = $false
-                }
-                else
-                {
-                    $hashValue = $true
-                }
-                break
-            }
-            'microsoft.graph.powershell.models.imicrosoftgraph*'
-            {
-                $isArray = $false
-                if ($parameter.Type -like '*[[\]]')
-                {
-                    $isArray = $true
-                }
+                $propertyType = $workload + $parameter.Type
+                $propertyType = "MSFT_$propertyType"
+                $hashValue.add('CIMType', $propertyType)
+            }#>
+            $propertyType = $workload + $parameter.Type
+            $propertyType = "MSFT_$propertyType"
+            $hashValue.add('CIMType', $propertyType)
+            $hashValue.add('isArray', $parameter.IsArray)
 
-                $hashValue = @{}
-                if (-not $isCmdletCall)
+            #if ($Null -ne $parameter.Properties)
+            #{
+            $nestedProperties = Get-M365DSCFakeValues -ParametersInformation $parameter.Properties `
+                -Workload $Workload `
+                -isCmdletCall $isCmdletCall `
+                -isRecursive $true
+
+            $hashValue.add('Properties', $nestedProperties)
+            $hashValue.add('Name', $parameter.Name)
+            #}
+        }
+        else
+        {
+            switch -Wildcard ($parameter.Type)
+            {
+                '*.String'
                 {
-                    $propertyType = $parameter.Type -replace 'microsoft.graph.powershell.models.', ''
-                    $propertyType = $propertyType -replace 'imicrosoftgraph', ''
-                    $propertyType = $propertyType -replace '[[\]]', ''
-                    $propertyType = $workload + $propertyType
-                    $propertyType = "MSFT_$propertyType"
-                    $hashValue.add('CIMType', $propertyType)
+                    $fakeValue = 'FakeStringValue'
+                    if ($parameter.Members)
+                    {
+                        $fakeValue = $parameter.Members[0]
+                    }
+                    $hashValue = $fakeValue
+                    break
                 }
-                $hashValue.add('isArray', $isArray)
-
-                if ($Null -ne $parameter.Properties)
+                '*.String[[\]]'
                 {
-                    $nestedProperties = Get-M365DSCFakeValues -ParametersInformation $parameter.Properties `
-                        -Workload $Workload `
-                        -isCmdletCall $isCmdletCall `
-                        -isRecursive $true
-
-                    $hashValue.add('Properties', $nestedProperties)
-                    $hashValue.add('Name', $parameter.Name)
+                    $fakeValue1 = 'FakeStringArrayValue1'
+                    $fakeValue2 = 'FakeStringArrayValue2'
+                    if ($parameter.Members)
+                    {
+                        $fakeValue1 = $parameter.Members[0]
+                        $fakeValue2 = $parameter.Members[1]
+                    }
+                    if ($IntroduceDrift)
+                    {
+                        $hashValue = @($fakeValue1)
+                    }
+                    else
+                    {
+                        $hashValue = @($fakeValue1, $fakeValue2)
+                    }
+                    break
+                }
+                '*.Int32'
+                {
+                    if ($IntroduceDrift)
+                    {
+                        $hashValue = 7
+                    }
+                    else
+                    {
+                        $hashValue = 25
+                    }
+                    break
+                }
+                '*.Boolean'
+                {
+                    if ($IntroduceDrift)
+                    {
+                        $hashValue = $false
+                    }
+                    else
+                    {
+                        $hashValue = $true
+                    }
+                    break
                 }
             }
         }
 
         if ($hashValue)
         {
-            if ($isCmdletCall -and -not $isRecursive)
+            #if ($isCmdletCall -and -not $isRecursive)
+            if (-Not $parameter.IsRootProperty -and -not $IsGetTargetResource)
             {
-                $additionalProperties.Add($parameter.Name, $hashValue)
+                $parameterName = Get-StringFirstCharacterToLower -Value $parameter.Name
+                #$parameterName = $parameter.Name
+                $additionalProperties.Add($parameterName, $hashValue)
             }
             else
             {
@@ -2139,8 +2165,17 @@ function Get-M365DSCFakeValues
             }
         }
     }
+    if(-not [String]::isNullorEmpty($AdditionalPropertiesType))
+    {
+        $additionalProperties.Add('@odata.type', '#microsoft.graph.' + $AdditionalPropertiesType)
+    }
 
-    if ($isCmdletCall)
+    if($additionalProperties.count -gt 0)
+    {
+        $result.Add('AdditionalProperties', $additionalProperties)
+    }
+
+    <#if ($isCmdletCall)
     {
         if (-not $isRecursive)
         {
@@ -2149,7 +2184,7 @@ function Get-M365DSCFakeValues
             $result.Add('Description', 'FakeStringValue')
             $result.Add('AdditionalProperties', $additionalProperties)
         }
-    }
+    }#>
 
     return $result
 }
@@ -2236,12 +2271,12 @@ function Get-M365DSCHashAsString
                         $l = (Get-M365DSCHashAsString -Values $prop -Space "$Space$extraSpace    " -isCmdletCall $isCmdletCall)
                         $propLine += $l
                     }
-                    $sb.AppendLine($propLine) | Out-Null
+                    $sb.Append($propLine) | Out-Null
 
                 }
                 else
                 {
-                    $sb.AppendLine((Get-M365DSCHashAsString -Values $Values.$key -Space "$Space    " -isCmdletCall $isCmdletCall)) | Out-Null
+                    $sb.Append((Get-M365DSCHashAsString -Values $Values.$key -Space "$Space    " -isCmdletCall $isCmdletCall)) | Out-Null
                 }
                 $endLine = "$Space$extraSpace}"
                 if ($Values.$Key.CIMType )
