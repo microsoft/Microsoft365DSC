@@ -26,6 +26,7 @@
   * Improved datetime and dateoffset management
   * Fixed UnitTest
   * Generate Stubs if required
+  * Fixes #2819
 
 # 1.23.118.1
 

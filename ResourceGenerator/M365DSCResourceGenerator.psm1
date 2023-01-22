@@ -234,12 +234,14 @@ function New-M365DSCResource
             -ParametersInformation $parameterInformation `
             -IntroduceDrift $false `
             -Workload $Workload `
-            -AdditionalPropertiesType $selectedODataType
+            -AdditionalPropertiesType $selectedODataType `
+            -DateFormat $DateFormat
         $targetResourceFakeValues = Get-M365DSCFakeValues `
             -ParametersInformation $parameterInformation `
             -IntroduceDrift $false `
             -Workload $Workload `
-            -IsGetTargetResource $true
+            -IsGetTargetResource $true `
+            -DateFormat $DateFormat
 
         $fakeValuesString = Get-M365DSCHashAsString -Values $fakeValues
         $targetResourceFakeValuesString = Get-M365DSCHashAsString -Values $targetResourceFakeValues -Space '                    '
@@ -261,7 +263,8 @@ function New-M365DSCResource
             -IntroduceDrift $true `
             -isCmdletCall $true `
             -AdditionalPropertiesType $AdditionalPropertiesType `
-            -Workload $Workload
+            -Workload $Workload `
+            -DateFormat $DateFormat
         $fakeDriftValuesString = Get-M365DSCHashAsString -Values $fakeDriftValues -isCmdletCall $true
         Write-TokenReplacement -Token '<DriftValues>' -value $fakeDriftValuesString -FilePath $unitTestPath
         Write-TokenReplacement -Token '<ResourceName>' -value $ResourceName -FilePath $unitTestPath
@@ -385,6 +388,15 @@ function New-M365DSCResource
             $dateTypeConstructor = $dateTypeConstructor + "        #endregion`r`n"
         }
         Write-TokenReplacement -Token '<DateTypeConstructor>' -Value $dateTypeConstructor -FilePath $moduleFilePath
+
+        $timeTypeConstructor=""
+        if(-Not [String]::IsNullOrEmpty($hashtableResults.TimeTypeConstructor))
+        {
+            $timeTypeConstructor = $hashtableResults.TimeTypeConstructor
+            $timeTypeConstructor = "`r`n        #region resource generator code`r`n" + $timeTypeConstructor
+            $timeTypeConstructor = $timeTypeConstructor + "        #endregion`r`n"
+        }
+        Write-TokenReplacement -Token '<TimeTypeConstructor>' -Value $timeTypeConstructor -FilePath $moduleFilePath
 
 
         $newCmdlet = Get-Command -Name "New-$($CmdLetNoun)"
@@ -1205,7 +1217,7 @@ function Get-TypeProperties
                 $myProperty.Add('Type',$property.Type)
                 $myProperty.Add('IsRootProperty',$IsRootProperty)
                 $myProperty.Add('ParentType',$entityType.Name)
-                $myProperty.Add('Description', $property.Annotation.String)
+                $myProperty.Add('Description', $property.Annotation.String.replace('"',"'"))
 
 
                 $properties+=$myProperty
@@ -1233,7 +1245,7 @@ function Get-TypeProperties
                         $myProperty.Add('Type',$property.Type)
                         $myProperty.Add('IsRootProperty',$false)
                         $myProperty.Add('ParentType',$entityType.Name)
-                        $myProperty.Add('Description', $property.Annotation.String)
+                        $myProperty.Add('Description', $property.Annotation.String.replace('"',"'"))
 
                         $properties+=$myProperty
                     }
@@ -1271,7 +1283,7 @@ function Get-TypeProperties
                 $myProperty.Add('IsNavigationProperty', $true)
                 $myProperty.Add('IsRootProperty',$IsRootProperty)
                 $myProperty.Add('ParentType',$entityType.Name)
-                $myProperty.Add('Description', $property.Annotation.String)
+                $myProperty.Add('Description', $property.Annotation.String.replace('"',"'"))
 
                 $properties+=$myProperty
             }
@@ -1340,6 +1352,14 @@ function Get-TypeProperties
         if($derivedType -like ('Edm.*'))
         {
             $derivedType=$derivedType.Replace('Edm','System')
+            if($derivedType -like ('*.TimeOfDay'))
+            {
+                $derivedType='System.TimeSpan'
+            }
+            if($derivedType -like ('*.Date'))
+            {
+                $derivedType='System.DateTime'
+            }
         }
 
         if($isEnum)
@@ -1436,6 +1456,7 @@ function Get-ComplexTypeConstructorToString
     if($Property.IsRootProperty -eq $false)
     {
         $loopPropertyName=Get-StringFirstCharacterToLower -Value $Property.Name
+        $propertyName = Get-StringFirstCharacterToLower -Value $Property.Name
         $valuePrefix += "AdditionalProperties."
     }
 
@@ -1542,6 +1563,20 @@ function Get-ComplexTypeConstructorToString
                 $IndentCount ++
                 $spacing = $indent * $IndentCount
                 $AssignedPropertyName += ").ToString('$DateFormat')"
+                $complexString.appendLine( $spacing + "`$$tempPropertyName.Add('" +  $nestedPropertyName + "', ([$nestedPropertyType]`$$valuePrefix$AssignedPropertyName)" ) | Out-Null
+                $IndentCount --
+                $spacing = $indent * $IndentCount
+                $complexString.appendLine( $spacing + "}" ) | Out-Null
+
+            }
+            elseif($nestedProperty.Type -like "*.Time*")
+            {
+                $nestedPropertyType=$nestedProperty.Type.split(".")|select-object -last 1
+                $complexString.appendLine( $spacing + "if(`$null -ne `$$valuePrefix$AssignedPropertyName)" ) | Out-Null
+                $complexString.appendLine( $spacing + "{" ) | Out-Null
+                $IndentCount ++
+                $spacing = $indent * $IndentCount
+                $AssignedPropertyName += ").ToString()"
                 $complexString.appendLine( $spacing + "`$$tempPropertyName.Add('" +  $nestedPropertyName + "', ([$nestedPropertyType]`$$valuePrefix$AssignedPropertyName)" ) | Out-Null
                 $IndentCount --
                 $spacing = $indent * $IndentCount
@@ -1679,7 +1714,76 @@ function Get-DateTypeConstructorToString
     return $dateString.ToString()
 
 }
+function Get-TimeTypeConstructorToString
+{
+    [CmdletBinding()]
+    [OutputType([System.String[]])]
+    param (
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({$_.Type -like "System.Time*"})]
+        $Property,
 
+        [Parameter()]
+        [System.String]
+        $ParentPropertyName,
+
+        [Parameter()]
+        [System.Int32]
+        $IndentCount=0,
+
+        [Parameter()]
+        [System.String]
+        $DateFormat,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsNested=$false
+    )
+
+    $dateString = [System.Text.StringBuilder]::New()
+    $indent="    "
+    $spacing = $indent * $IndentCount
+
+    $valuePrefix = "getValue."
+    $propertyName = Get-StringFirstCharacterToUpper -Value $Property.Name
+    $returnPropertyName= "time"+ $propertyName
+    $propertyType=$Property.Type.split(".")|select-object -last 1
+
+
+    if($Property.IsRootProperty -eq $false)
+    {
+        $propertyName = Get-StringFirstCharacterToLower -Value $Property.Name
+        $valuePrefix += "AdditionalProperties."
+    }
+
+    if($property.IsArray)
+    {
+        $timeString.appendLine( $spacing + "`$$returnPropertyName" + " = @()") | Out-Null
+        $timeString.appendLine( $spacing + "foreach(`$current$propertyName in `$$valuePrefix$PropertyName)" ) | Out-Null
+        $timeString.appendLine( $spacing + "{" ) | Out-Null
+        $IndentCount ++
+        $spacing = $indent * $IndentCount
+        $timeString.appendLine( $spacing + "`$$returnPropertyName += ([$propertyType]`$current$propertyName).ToString()") | Out-Null
+        $IndentCount --
+        $spacing = $indent * $IndentCount
+        $timeString.appendLine( $spacing + "}" ) | Out-Null
+    }
+    else
+    {
+        $timeString.appendLine( $spacing + "`$$returnPropertyName" + " = `$null") | Out-Null
+        $timeString.appendLine( $spacing + "if (`$null -ne `$$valuePrefix$PropertyName)" ) | Out-Null
+        $timeString.appendLine( $spacing + "{" ) | Out-Null
+        $IndentCount ++
+        $spacing = $indent * $IndentCount
+        $timeString.appendLine( $spacing + "`$$returnPropertyName = ([$propertyType]`$$valuePrefix$PropertyName).ToString()") | Out-Null
+        $IndentCount --
+        $spacing = $indent * $IndentCount
+        $timeString.appendLine( $spacing + "}" ) | Out-Null
+    }
+
+    return $timeString.ToString()
+
+}
 function Get-EnumTypeConstructorToString
 {
     [CmdletBinding()]
@@ -2013,6 +2117,10 @@ function Get-M365DSCFakeValues
 
         [Parameter()]
         [System.Boolean]
+        $IsParentFromAdditionalProperties = $false,
+
+        [Parameter()]
+        [System.Boolean]
         $isCmdletCall = $false,
 
         [Parameter()]
@@ -2025,8 +2133,11 @@ function Get-M365DSCFakeValues
 
         [Parameter()]
         [System.String]
-        $Workload
+        $Workload,
 
+        [Parameter()]
+        [System.String]
+        $DateFormat="o"
     )
 
     $result = @{}
@@ -2036,21 +2147,36 @@ function Get-M365DSCFakeValues
     foreach ($parameter in $parameters)
     {
         $hashValue = $null
+        $parameterName = $parameter.Name
+        if($parameter.Name -eq "@odata.type" -and $IsGetTargetResource)
+        {
+            $parameterName = 'odataType'
+        }
         if($parameter.IsComplexType)
         {
             $hashValue = @{}
             $propertyType = $workload + $parameter.Type
-            $propertyType = "MSFT_$propertyType"
-            $hashValue.add('CIMType', $propertyType)
+            if($IsGetTargetResource)
+            {
+                $propertyType = "MSFT_$propertyType"
+                $hashValue.add('CIMType', $propertyType)
+            }
+            $IsParentFromAdditionalProperties=$false
+            if(-not $parameter.IsRootProperty)
+            {
+                $IsParentFromAdditionalProperties=$true
+            }
             $hashValue.add('isArray', $parameter.IsArray)
             $nestedProperties = Get-M365DSCFakeValues -ParametersInformation $parameter.Properties `
                 -Workload $Workload `
                 -isCmdletCall $isCmdletCall `
                 -isRecursive $true `
-                -IntroduceDrift $IntroduceDrift
+                -IntroduceDrift $IntroduceDrift `
+                -IsGetTargetResource $IsGetTargetResource `
+                -IsParentFromAdditionalProperties $IsParentFromAdditionalProperties
 
             $hashValue.add('Properties', $nestedProperties)
-            $hashValue.add('Name', $parameter.Name)
+            $hashValue.add('Name', $parameterName)
         }
         else
         {
@@ -2062,6 +2188,10 @@ function Get-M365DSCFakeValues
                     if ($parameter.Members)
                     {
                         $fakeValue = $parameter.Members[0]
+                        if($parameter.Name -eq "@odata.type")
+                        {
+                            $fakeValue = "#microsoft.graph." + $parameter.Members[0]
+                        }
                     }
                     $hashValue = $fakeValue
                     break
@@ -2109,19 +2239,43 @@ function Get-M365DSCFakeValues
                     }
                     break
                 }
+                '*.DateTime'
+                {
+                    $fakeValue = ([DateTime]"2023-01-01T00:00:00").toString("$DateFormat")
+                    $hashValue = $fakeValue
+                    break
+                }
+                '*.DateTimeOffset'
+                {
+                    $fakeValue = ([DateTimeOffset]"2023-01-01T00:00:00").toString("$DateFormat")
+                    $hashValue = $fakeValue
+                    break
+                }
+                '*.Time*'
+                {
+                    $fakeValue = [Datetime]::Parse("00:00:00").TimeOfDay.toString()
+                    $hashValue = $fakeValue
+                    break
+                }
             }
         }
 
         if ($hashValue)
         {
-            if (-Not $parameter.IsRootProperty -and -not $IsGetTargetResource)
+            if ((-Not $parameter.IsRootProperty -and -not $isRecursive ) -and -not $IsGetTargetResource)
             {
-                $parameterName = Get-StringFirstCharacterToLower -Value $parameter.Name
+                if($parameter.Name -eq 'scheduledInstallTime'){ write-host ($parameter | out-string)}
+
+                $parameterName = Get-StringFirstCharacterToLower -Value $parameterName
                 $additionalProperties.Add($parameterName, $hashValue)
             }
             else
             {
-                $result.Add($parameter.Name, $hashValue)
+                if($IsParentFromAdditionalProperties)
+                {
+                    $parameterName = Get-StringFirstCharacterToLower -Value $parameterName
+                }
+                $result.Add($parameterName, $hashValue)
             }
         }
     }
@@ -2195,7 +2349,7 @@ function Get-M365DSCHashAsString
             'Hashtable'
             {
                 $extraSpace = ''
-                $line = "$Space$extraSpace$key ="
+                $line = "$Space$extraSpace$key = "
                 if ($Values.$Key.isArray)
                 {
                     $line += "@(`r$space    "
@@ -2734,6 +2888,7 @@ function New-M365HashTableMapping
     $complexTypeConstructor = [System.Text.StringBuilder]::New()
     $enumTypeConstructor = [System.Text.StringBuilder]::New()
     $dateTypeConstructor = [System.Text.StringBuilder]::New()
+    $timeTypeConstructor = [System.Text.StringBuilder]::New()
 
     $biggestParamaterLength = 'CertificateThumbprint'.length
     foreach ($property in $properties.Name)
@@ -2820,6 +2975,10 @@ function New-M365HashTableMapping
             {
                 $dateTypeConstructor.appendLine((Get-DateTypeConstructorToString -Property $property -IndentCount 2 -DateFormat $DateFormat))
             }
+            if($property.Type -like "System.Time*")
+            {
+                $timeTypeConstructor.appendLine((Get-TimeTypeConstructorToString -Property $property -IndentCount 2 -DateFormat $DateFormat))
+            }
 
             $spacing = $biggestParamaterLength - $property.Name.length
             $propertyName = Get-StringFirstCharacterToUpper -Value $property.Name
@@ -2831,6 +2990,10 @@ function New-M365HashTableMapping
             elseif($property.Type -like "System.Date*")
             {
                 $hashtable += "`$date$propertyName`r`n"
+            }
+            elseif($property.Type -like "System.Time*")
+            {
+                $hashtable += "`$time$propertyName`r`n"
             }
             elseif($property.IsEnumType)
             {
@@ -2879,6 +3042,7 @@ function New-M365HashTableMapping
     $results.Add('ComplexTypeConstructor', $complexTypeConstructor.ToString())
     $results.Add('EnumTypeConstructor', $enumTypeConstructor.ToString())
     $results.Add('DateTypeConstructor', $dateTypeConstructor.ToString())
+    $results.Add('TimeTypeConstructor', $timeTypeConstructor.ToString())
     $results.Add('addtionalProperties', $addtionalProperties)
     $results.Add('ConvertToString', $convertToString)
     $results.Add('StringContent', $hashtable)
