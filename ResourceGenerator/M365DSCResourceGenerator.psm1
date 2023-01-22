@@ -185,7 +185,7 @@ function New-M365DSCResource
         {
             $repository=($commandDetails|where-Object -filterScript {$_.variants -eq 'List'}).URI
             $repository=$repository.Substring(1,($repository.Length - 1))
-            $assignmentCmdlet=Get-Command ($cmdletFound.Name+'Assignment') -Module $GraphModule
+            $assignmentCmdlet=Get-Command ($cmdletFound.Name+'Assignment') -Module $GraphModule -ErrorAction SilentlyContinue
             $assignmentCmdletNoun = $assignmentCmdlet.Noun
             $assignmentKey = (($assignmentCmdlet.ParameterSets|where-Object -filterScript {$_.Name -eq 'List'}).Parameters | where-Object -filterScript {$_.IsMandatory}).Name
             if( -not [String]::IsNullOrWhiteSpace($repository) `
@@ -1188,6 +1188,10 @@ function Get-TypeProperties
         $isComplex=$false
         $entityType=$namespace.EntityType|Where-Object -FilterScript{$_.Name -eq $baseType}
         $isAbstract=$false
+        if($entityType.Abstract -eq 'True')
+        {
+            $isAbstract=$true
+        }
         if($null -eq $entityType)
         {
             $isComplex=$true
