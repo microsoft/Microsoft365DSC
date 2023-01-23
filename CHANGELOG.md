@@ -20,6 +20,10 @@
   * Initial Release.
 * TeamsTranslationRule
   * Initial Release.
+* TeamsUnassignedNumberTreatment
+  * Initial Release.
+* TeamsVDIPolicy
+  * Initial Release.
 * DRG
   * Added CIM constructor in Get-TargetResource
   * Improved management of AdditionalProperties

@@ -22,7 +22,7 @@ Exchange permissions: https://docs.microsoft.com/en-us/exchange/permissions-exo/
 Note:
 If you want to configure App-Only permission for Exchange, as described here:
 https://docs.microsoft.com/en-us/powershell/exchange/app-only-auth-powershell-v2?view=exchange-ps#step-2-assign-api-permissions-to-the-application
-Using the following permission will achieve exactly that: @{Api='Exchange';PermissionName='Exchange.ManageAsApp'}
+Using the following permission will achieve exactly that: @{Api='Exchange';PermissionsName='Exchange.ManageAsApp'}
 
 ## Output
 
@@ -55,6 +55,6 @@ This function does not generate any output.
 
 -------------------------- EXAMPLE 3 --------------------------
 
-`Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions @(@{Api='SharePoint';PermissionName='Sites.FullControl.All'},@{Api='Graph';PermissionName='Group.ReadWrite.All'},@{Api='Exchange';PermissionName='Exchange.ManageAsApp'}) -AdminConsent -Type Certificate -CertificatePath c:\Temp\M365DSC.cer`
+`Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions @(@{Api='SharePoint';PermissionName='Sites.FullControl.All'},@{Api='Graph';PermissionName='Group.ReadWrite.All'},@{Api='Exchange';PermissionsName='Exchange.ManageAsApp'}) -AdminConsent -Type Certificate -CertificatePath c:\Temp\M365DSC.cer`
 
 
