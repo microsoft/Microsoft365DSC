@@ -20,6 +20,13 @@
   * Initial Release.
 * TeamsTranslationRule
   * Initial Release.
+* DRG
+  * Added CIM constructor in Get-TargetResource
+  * Improved management of AdditionalProperties
+  * Improved datetime and dateoffset management
+  * Fixed UnitTest
+  * Generate Stubs if required
+  * Fixes #2819
 
 # 1.23.118.1
 
