@@ -565,7 +565,6 @@ function Export-TargetResource
 
             if ($Results.Assignments)
             {
-                write-host ($Results.Assignments)
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
             }
 
