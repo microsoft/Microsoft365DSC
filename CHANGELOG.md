@@ -31,6 +31,9 @@
   * Fixed UnitTest
   * Generate Stubs if required
   * Fixes #2819
+* IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled
+  * Initial Release
+  * Fixes #2604
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.155.
 

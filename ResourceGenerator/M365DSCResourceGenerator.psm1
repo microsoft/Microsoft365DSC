@@ -723,7 +723,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
         Write-TokenReplacement -Token '<ResourceDescription>' -Value $resourceDescription -FilePath $readmeFilePath
         #endregion
         #region Examples
-        if ($null -ne $Credential -and $generateExample)
+        if ($null -ne $Credential)
         {
             Import-Module Microsoft365DSC -Force
             New-M365DSCExampleFile -ResourceName $ResourceName `
@@ -2198,6 +2198,10 @@ function Get-M365DSCFakeValues
                         }
                     }
                     $hashValue = $fakeValue
+                    if($parameter.IsArray)
+                    {
+                        [string[]]$hashValue = @($fakeValue)
+                    }
                     break
                 }
                 '*.String[[\]]'
@@ -2266,10 +2270,9 @@ function Get-M365DSCFakeValues
 
         if ($hashValue)
         {
-            if ((-Not $parameter.IsRootProperty -and -not $isRecursive ) -and -not $IsGetTargetResource)
+            #if ((-Not $parameter.IsRootProperty -and -not $isRecursive ) -and -not $IsGetTargetResource)
+            if ((-Not $parameter.IsRootProperty ) -and -not $IsGetTargetResource)
             {
-                if($parameter.Name -eq 'scheduledInstallTime'){ write-host ($parameter | out-string)}
-
                 $parameterName = Get-StringFirstCharacterToLower -Value $parameterName
                 $additionalProperties.Add($parameterName, $hashValue)
             }
@@ -2709,34 +2712,28 @@ function New-M365DSCExampleFile
         [System.String]
         $Path
     )
+
+    $exportPath = Join-Path -Path $env:temp -ChildPath $ResourceName
     Export-M365DSCConfiguration -Credential $Credential `
-        -Components $ResourceName -Path (Join-Path -Path $Path -ChildPath $ResourceName) `
+        -Components $ResourceName -Path $exportPath `
         -FileName "$ResourceName.ps1" `
-        -ConfigurationName 'Example'
-    Remove-Item (Join-Path -Path (Join-Path -Path $Path -ChildPath $ResourceName) -ChildPath 'ConfigurationData.psd1')
-    Remove-Item (Join-Path -Path (Join-Path -Path $Path -ChildPath $ResourceName) -ChildPath '*.cer')
+        -ConfigurationName 'Example' | Out-Null
 
-    # Cleanup
-    $unitTestFilePath = Join-Path -Path $Path -ChildPath "$ResourceName/$ResourceName.ps1"
-    $sr = [System.IO.StreamReader]::New($unitTestFilePath)
-    $sb = [System.Text.StringBuilder]::New()
+    $exportedFilePath = Join-Path -Path $exportPath -ChildPath "$ResourceName.ps1"
+    $exportContent = Get-Content $exportedFilePath -Raw
+    $start = $exportContent.IndexOf("`r`n        $ResourceName ")
+    $end = $exportContent.IndexOf("`r`n        }", $start)
+    $start = $exportContent.IndexOf("{", $start) + 1
+    $exampleContent = $exportContent.Substring($start, $end-$start)
 
-    while ($line = $sr.ReadLine())
-    {
-        if (-not $line.StartsWith('#'))
-        {
-            if ($line.Contains('Import-DscResource '))
-            {
-                $sb.AppendLine("    Import-DscResource -ModuleName 'Microsoft365DSC'") | Out-Null
-            }
-            else
-            {
-                $sb.AppendLine($line) | Out-Null
-            }
-        }
-    }
-    $sr.Close()
-    $sb.ToString() | Out-File $unitTestFilePath
+    $exampleFileFullPath = "$ExampleFilePath\$ResourceName\1-$ResourceName-Example.psm1"
+    $folderPath = "$ExampleFilePath\$ResourceName"
+    New-Item $folderPath -ItemType Directory -Force | Out-Null
+    $templatePath = '.\Example.Template.ps1'
+    Copy-Item -Path $templatePath -Destination $exampleFileFullPath -Force
+
+    Write-TokenReplacement -Token '<FakeValues>' -Value $exampleContent -FilePath $exampleFileFullPath
+    Write-TokenReplacement -Token '<ResourceName>' -Value $ResourceName -FilePath $exampleFileFullPath
 }
 function New-M365DSCUnitTest
 {
