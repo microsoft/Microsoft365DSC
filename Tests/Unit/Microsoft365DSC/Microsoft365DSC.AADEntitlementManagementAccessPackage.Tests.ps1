@@ -61,7 +61,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id                  = 'FakeStringValue'
                     IsHidden            = $True
                     IsRoleScopesVisible = $True
-
+                    AccessPackageResourceRoleScopes = (New-CimInstance -ClassName MSFT_AccessPackageResourceRoleScope -Property @{
+                        Id = 'FakeStringValue'
+                        AccessPackageResourceOriginId = '123456789'
+                        AccessPackageResourceRoleDisplayName = 'TestRole'
+                    } -ClientOnly)
                     Ensure              = 'Present'
                     Credential          = $Credential
                 }
@@ -90,8 +94,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName         = 'FakeStringValue'
                     Id                  = 'FakeStringValue'
                     IsHidden            = $True
-                    IsRoleScopesVisible = $True
-
+                    IsRoleScopesVisible = $True                    
+                    AccessPackageResourceRoleScopes = (New-CimInstance -ClassName MSFT_AccessPackageResourceRoleScope -Property @{
+                        Id = 'FakeStringValue'
+                        AccessPackageResourceOriginId = '123456789'
+                        AccessPackageResourceRoleDisplayName = 'TestRole'
+                    } -ClientOnly)
                     Ensure              = 'Absent'
                     Credential          = $Credential
                 }
@@ -104,6 +112,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Id                  = 'FakeStringValue'
                         IsHidden            = $True
                         IsRoleScopesVisible = $True
+                        AccessPackageResourceRoleScopes = @{
+                            AccessPackageResourceScope = @{
+                                OriginId = '123456789'
+                            }
+                            AccessPackageResourceRole = @{
+                                DisplayName = 'TestRole'
+                            }
+                        }
 
                     }
                 }
@@ -142,7 +158,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsRoleScopesVisible        = $True
                     IncompatibleAccessPackages = @('packageId1', 'packageId2')
                     IncompatibleGroups         = @('groupId1', 'groupId2')
-
+                    AccessPackageResourceRoleScopes = (New-CimInstance -ClassName MSFT_AccessPackageResourceRoleScope -Property @{
+                        Id = 'FakeStringValue'
+                        AccessPackageResourceOriginId = '123456789'
+                        AccessPackageResourceRoleDisplayName = 'TestRole'
+                    } -ClientOnly)
                     Ensure                     = 'Present'
                     Credential                 = $Credential
                 }
@@ -155,7 +175,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Id                  = 'FakeStringValue'
                         IsHidden            = $True
                         IsRoleScopesVisible = $True
-
+                        AccessPackageResourceRoleScopes = @{
+                            AccessPackageResourceScope = @{
+                                OriginId = '123456789'
+                            }
+                            AccessPackageResourceRole = @{
+                                DisplayName = 'TestRole'
+                            }
+                        }
                     }
                 }
                 Mock -CommandName Get-MgEntitlementManagementAccessPackageIncompatibleAccessPackage -MockWith {
@@ -198,7 +225,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id                  = 'FakeStringValue'
                     IsHidden            = $True
                     IsRoleScopesVisible = $True
-
+                    AccessPackageResourceRoleScopes = (New-CimInstance -ClassName MSFT_AccessPackageResourceRoleScope -Property @{
+                        Id = 'FakeStringValue'
+                        AccessPackageResourceOriginId = '123456789'
+                        AccessPackageResourceRoleDisplayName = 'TestRole'
+                    } -ClientOnly)
                     Ensure              = 'Present'
                     Credential          = $Credential
                 }
@@ -211,6 +242,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Id                  = 'FakeStringValue'
                         IsHidden            = $False #Drift
                         IsRoleScopesVisible = $True
+                        AccessPackageResourceRoleScopes = @{
+                            AccessPackageResourceScope = @{
+                                OriginId = '123456789'
+                            }
+                            AccessPackageResourceRole = @{
+                                DisplayName = 'TestRole'
+                            }
+                        }
 
                     }
                 }
@@ -254,6 +293,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Id                  = 'FakeStringValue'
                         IsHidden            = $True
                         IsRoleScopesVisible = $True
+                        AccessPackageResourceRoleScopes = @{
+                            AccessPackageResourceScope = @{
+                                OriginId = '123456789'
+                            }
+                            AccessPackageResourceRole = @{
+                                DisplayName = 'TestRole'
+                            }
+                        }
 
                     }
                 }

@@ -92,10 +92,8 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message 'Reloading1'
+        Write-Verbose -Message ($_)
     }
-
-
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -1003,8 +1001,8 @@ function Test-TargetResource
     # Removing the visibility parameter from the check since this is always being returned as null currently by the Microsoft Graph.
     $ValuesToCheck.Remove('Visibility') | Out-Null
 
-    #Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    #Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
     #Convert any DateTime to String
     foreach ($key in $ValuesToCheck.Keys)

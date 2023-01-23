@@ -35,7 +35,7 @@ Configuration Master
         #region AAD
         AADAdministrativeUnit AADAdministrativeUnit
         {
-            Credential           = $Credscredential;
+            Credential           = $GlobalAdmin;
             DisplayName          = "M365DSC Integration";
             Ensure               = "Present";
             Visibility           = 'HiddenMembership'

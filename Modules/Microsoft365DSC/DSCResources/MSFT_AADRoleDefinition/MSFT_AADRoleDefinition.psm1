@@ -70,8 +70,6 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
-    $MaximumFunctionCount = 32000
-    Select-MgProfile -Name 'Beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -408,8 +406,6 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ProfileName 'Beta'
-    $MaximumFunctionCount = 32000
-    Select-MgProfile -Name 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

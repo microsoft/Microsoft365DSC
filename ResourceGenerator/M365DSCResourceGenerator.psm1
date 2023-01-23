@@ -661,7 +661,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     }
     else
     {
-        $ParametersToFilterOut = @('Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable', 'WhatIf', 'Confirm')
+        $ParametersToFilterOut = @('Force', 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable', 'WhatIf', 'Confirm')
         $cmdlet = Get-Command ($cmdletVerb + '-' + $cmdletNoun)
 
         $defaultParameterSetProperties = $cmdlet.ParameterSets | Where-Object -FilterScript { $_.IsDefault }
@@ -687,7 +687,9 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
         $fakeValues = @{}
         foreach ($property in $properties)
         {
-            $propertyTypeMOF = $property.ParameterType.Name
+            $propertyTypeMOF = $property.ParameterType.Name            
+            $propertyType = $property.ParameterType.FullName
+
             switch ($property.ParameterType.Name)
             {
                 'Int64'
@@ -697,6 +699,16 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
                 'Int32'
                 {
                     $propertyTypeMOF = 'UInt32'
+                }
+                'Nullable`1'
+                {
+                    $propertyTypeMOF = 'Boolean'
+                    $propertyType = 'System.Boolean'
+                }
+                'Object'
+                {
+                    $propertyTypeMof = 'String'
+                    $propertyType = 'System.String'
                 }
             }
             if ($property.IsMandatory)
@@ -714,7 +726,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
                 $mofSchemaContent.AppendLine("    [Write, Description(`"$($property.Description)`")] $propertyTypeMOF $($property.Name);") | Out-Null
             }
 
-            $fakeValues.Add($property.Name, (Get-M365DSCDRGFakeValueForParameter -ParameterType $property.ParameterType.Name))
+            $fakeValues.Add($property.Name, (Get-M365DSCDRGFakeValueForParameter -ParameterType $propertyTypeMOF))
 
             $spacingRequired = ' '
             for ($i = 0; $i -lt ($longuestParameterName - $property.Name.Length); $i++)
@@ -723,8 +735,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
             }
 
             $returnContent.AppendLine("            $($property.Name)$spacingRequired= `$instance.$($property.Name)") | Out-Null
-
-            $paramContent.AppendLine("        [$($property.ParameterType.FullName)]") | Out-Null
+            $paramContent.AppendLine("        [$propertyType]") | Out-Null
             $paramContent.AppendLine("        `$$($property.Name),`r`n") | Out-Null
         }
 
@@ -870,14 +881,15 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
         foreach ($key in $fakeValues.Keys)
         {
             $spacingRequired = ' '
-
-            for ($i = 0; $i -lt ($longuestParameterName - $key.Length); $i++)
+            $spacesToAdd = $longuestParameterName - ($key.Length)
+            try
             {
-                $spacingRequired += ' '
+                for ($i = 0; $i -lt $spacesToAdd; $i++)
+                {
+                    $spacingRequired += ' '
+                }
             }
-
-            $propertyValue = $null
-            $propertyDriftValue = $null
+            catch{}
             switch ($fakeValues.$key.GetType().Name)
             {
                 'String'
