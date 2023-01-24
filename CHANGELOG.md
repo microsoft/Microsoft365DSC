@@ -20,6 +20,10 @@
   * Initial Release.
 * TeamsTranslationRule
   * Initial Release.
+* TeamsUnassignedNumberTreatment
+  * Initial Release.
+* TeamsVDIPolicy
+  * Initial Release.
 * DRG
   * Added CIM constructor in Get-TargetResource
   * Improved management of AdditionalProperties
@@ -27,6 +31,8 @@
   * Fixed UnitTest
   * Generate Stubs if required
   * Fixes #2819
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.155.
 
 # 1.23.118.1
 

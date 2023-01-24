@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **DisplayName** | Key | String | Description of the device configuration policy for Windows 10. | |
-| **Description** | Write | String | Display name of the device configuration policy for Windows 10. | |
+| **DisplayName** | Key | String | Display name of the device configuration policy for Windows 10. | |
+| **Description** | Write | String | Description of the device configuration policy for Windows 10. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **EnterpriseCloudPrintDiscoveryEndPoint** | Write | String | Endpoint for discovering cloud printers. | |
 | **EnterpriseCloudPrintOAuthAuthority** | Write | String | Authentication endpoint for acquiring OAuth tokens. | |
