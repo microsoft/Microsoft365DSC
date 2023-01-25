@@ -171,7 +171,7 @@ function New-M365DSCResource
         $AssignmentsConvertComplexToVariable = ''
 
         $global:ComplexList=@()
-        $cimClasses = Get-Microsoft365DSCModuleCimClass
+        $cimClasses = Get-Microsoft365DSCModuleCimClass -ResourceName $ResourceName
         $typeProperties = Get-TypeProperties `
             -CmdletDefinition $cmdletDefinition `
             -Entity $selectedODataType `
@@ -1403,11 +1403,16 @@ function Get-Microsoft365DSCModuleCimClass
 {
     [CmdletBinding()]
     [OutputType([System.String])]
-    param ()
+    param (
+        [Parameter()]
+        [System.String]
+        $ResourceName
+    )
 
     $modulePath = Split-Path -Path (get-module microsoft365dsc).Path
     $resourcesPath = "$modulePath\DSCResources\*\*.mof"
     $resources = (Get-ChildItem $resourcesPath).FullName
+    $resources = $resources | Where-Object -FilterScript {$_ -notlike "*MSFT_$ResourceName.schema.mof"}
     $cimClasses = @()
     foreach($resource in $resources)
     {
