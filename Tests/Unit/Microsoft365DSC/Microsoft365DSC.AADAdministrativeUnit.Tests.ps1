@@ -499,7 +499,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
             It 'Should Reverse Engineer resource from the Export method' {
-                $result = Export-TargetResource @testParams -verbose
+                $result = Export-TargetResource @testParams
                 $result | Should -Not -BeNullOrEmpty
             }
         }
