@@ -31,11 +31,11 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Group.Read.All, Tasks.Read
+    - Group.Read.All, Tasks.Read.All
 
 - **Update**
 
-    - Group.Read.All, Tasks.Read, Tasks.ReadWrite
+    - Group.Read.All, Tasks.Read.All, Tasks.ReadWrite.All
 
 #### Application permissions
 

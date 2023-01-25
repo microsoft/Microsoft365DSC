@@ -1508,7 +1508,7 @@ function Update-M365DSCAzureAdApplication
                     $_ -is [Microsoft.Azure.PowerShell.Cmdlets.Resources.MSGraph.Models.ApiV10.MicrosoftGraphKeyCredential]
                 }
 
-                if ($PSBoundParameters.ContainsKey('CertificatePath'))
+                if (($PSBoundParameters.ContainsKey('CertificatePath') -and (-not $CreateSelfSignedCertificate)))
                 {
                     $cerCert = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Certificate2 -ArgumentList $CertificatePath
                 }

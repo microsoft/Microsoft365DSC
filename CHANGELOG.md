@@ -35,6 +35,9 @@
   * Fixes #2819
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.155.
+* Planner
+  * Fixed api-permissions on PlannerBucket and PlannerPlan.
+    FIXES [#2843](https://github.com/microsoft/Microsoft365DSC/issues/2843)
 
 # 1.23.118.1
 
