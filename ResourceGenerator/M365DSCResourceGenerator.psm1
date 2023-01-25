@@ -171,10 +171,13 @@ function New-M365DSCResource
         $AssignmentsConvertComplexToVariable = ''
 
         $global:ComplexList=@()
+        $cimClasses = Get-Microsoft365DSCModuleCimClass
         $typeProperties = Get-TypeProperties `
             -CmdletDefinition $cmdletDefinition `
             -Entity $selectedODataType `
-            -IncludeNavigationProperties $IncludeNavigationProperties
+            -IncludeNavigationProperties $IncludeNavigationProperties `
+            -CimClasses $cimClasses `
+            -Workload $Workload
         $global:ComplexList=$null
         [Hashtable[]]$parameterInformation = Get-ParameterBlockInformation `
             -Properties $typeProperties `
@@ -1172,7 +1175,15 @@ function Get-TypeProperties
 
         [Parameter()]
         [System.Boolean]
-        $IncludeNavigationProperties=$true
+        $IncludeNavigationProperties=$true,
+
+        [Parameter()]
+        [System.String[]]
+        $CimClasses,
+
+        [Parameter()]
+        [System.String]
+        $Workload
     )
 
     $namespace=$CmdletDefinition|Where-Object -FilterScript {$_.EntityType.Name -contains $Entity}
@@ -1348,7 +1359,11 @@ function Get-TypeProperties
                 {
                     #$global:ComplexList+= $complexName
 
-                    $nestedProperties = Get-TypeProperties -CmdletDefinition $CmdletDefinition -Entity $derivedType
+                    $nestedProperties = Get-TypeProperties `
+                        -CmdletDefinition $CmdletDefinition `
+                        -Entity $derivedType `
+                        -CimClasses $CimClasses `
+                        -Workload $Workload
                     $property.Add('Properties', $nestedProperties)
                 }
             }
@@ -1366,6 +1381,12 @@ function Get-TypeProperties
             }
         }
 
+        if($cimClasses -contains "MSFT_$Workload$derivedType")
+        {
+            $cimCounter = ([Array]($CimClasses | where-object {$_ -like "MSFT_$Workload$derivedType*"})).count
+            $derivedType += $cimCounter.ToString()
+        }
+
         if($isEnum)
         {
             $derivedType='System.String'
@@ -1377,6 +1398,38 @@ function Get-TypeProperties
         $result+=$property
     }
     return $result
+}
+function Get-Microsoft365DSCModuleCimClass
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param ()
+
+    $modulePath = Split-Path -Path (get-module microsoft365dsc).Path
+    $resourcesPath = "$modulePath\DSCResources\*\*.mof"
+    $resources = (Get-ChildItem $resourcesPath).FullName
+    $cimClasses = @()
+    foreach($resource in $resources)
+    {
+        $text = Get-Content $resource
+
+        foreach($line in $text)
+        {
+            if($line -like "class MSFT_*")
+            {
+                $class = $line.replace("class ","").replace("Class ","")
+                if($line -like "*:*")
+                {
+                    $class = $class.split(":")[0].trim()
+                }
+                if($class -notin $cimClasses)
+                {
+                    $cimClasses += $class
+                }
+            }
+        }
+    }
+    return $cimClasses
 }
 
 function Get-StringFirstCharacterToUpper
