@@ -24,6 +24,8 @@
   * Initial Release.
 * TeamsVDIPolicy
   * Initial Release.
+* TeamsWorkloadPolicy
+  * Initial Release.
 * DRG
   * Added CIM constructor in Get-TargetResource
   * Improved management of AdditionalProperties

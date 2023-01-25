@@ -1,0 +1,6 @@
+{
+    "resourceName": "TeamsWorkloadPolicy",
+    "description": "This resources implements a Teams workload policy.",
+    "permissions":[]
+
+}
