@@ -662,7 +662,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
 };
 
 '@
-            $AssignmentsProperty = "    [Write, Description(`"Represents the assignment to the Intune policy.`"), EmbeddedInstance(`"MSFT_DeviceManagementConfigurationPolicyAssignments`")] String Assignments[];"
+            $AssignmentsProperty = "    [Write, Description(`"Represents the assignment to the Intune policy.`"), EmbeddedInstance(`"MSFT_DeviceManagementConfigurationPolicyAssignments`")] String Assignments[];`r`n"
             $AssignmentsConvertComplexToString = @"
             if(`$Results.Assignments)
             {
