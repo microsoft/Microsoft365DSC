@@ -1,5 +1,44 @@
 # Change log for Microsoft365DSC
 
+# 1.23.125.1
+
+* TeamsAudioConferencingPolicy
+  * Initial Release.
+* TeamsCallHoldPolicy
+  * Initial Release.
+* TeamsCallParkPolicy
+  * Initial Release.
+* TeamsComplianceRecordingPolicy
+  * Initial Release.
+* TeamsCortanaPolicy
+  * Initial Release.
+* TeamsEnhancedEncryptionPolicy
+  * Initial Release.
+* TeamsMobilityPolicy
+  * Initial Release.
+* TeamsNetworkRoamingPolicy
+  * Initial Release.
+* TeamsTranslationRule
+  * Initial Release.
+* TeamsUnassignedNumberTreatment
+  * Initial Release.
+* TeamsVDIPolicy
+  * Initial Release.
+* TeamsWorkloadPolicy
+  * Initial Release.
+* DRG
+  * Added CIM constructor in Get-TargetResource
+  * Improved management of AdditionalProperties
+  * Improved datetime and dateoffset management
+  * Fixed UnitTest
+  * Generate Stubs if required
+  * Fixes #2819
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.155.
+* Planner
+  * Fixed api-permissions on PlannerBucket and PlannerPlan.
+    FIXES [#2843](https://github.com/microsoft/Microsoft365DSC/issues/2843)
+
 # 1.23.118.1
 
 * IntuneAppConfigurationPolicy

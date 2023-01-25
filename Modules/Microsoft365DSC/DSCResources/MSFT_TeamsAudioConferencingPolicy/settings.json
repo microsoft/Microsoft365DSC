@@ -1,0 +1,6 @@
+{
+    "resourceName": "TeamsAudioConferencingPolicy",
+    "description": "This resource configures a Teams Audio Conferencing Policy.",
+    "permissions":[]
+
+}
