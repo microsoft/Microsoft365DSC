@@ -3,7 +3,8 @@
 # UNRELEASED
 
 * SCProtectionAlert
-  * Support for certificate based auth and fix removal
+  * Support for certificate based auth
+  * Fix removal of alert
 
 # 1.23.125.1
 
