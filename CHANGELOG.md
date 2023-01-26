@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* PlannerTask
+  * Fixed issue where Attachments Uri weren't properly exiting single quotes.
+    FIXES [#2822](https://github.com/microsoft/Microsoft365DSC/issues/2822)
 * SCProtectionAlert
   * Support for certificate based auth
   * Fix removal of alert
