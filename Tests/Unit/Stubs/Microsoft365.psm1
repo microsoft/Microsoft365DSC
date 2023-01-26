@@ -46786,3 +46786,486 @@ function Set-CsUserCallingSettings
     )
 }
 #endregion
+#region MgDeviceAppMgtMdmWindowInformationProtectionPolicy
+function Get-MgDeviceAppMgtMdmWindowInformationProtectionPolicy
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $MdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable
+    )
+}
+
+function New-MgDeviceAppMgtMdmWindowInformationProtectionPolicy
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [PSObject[]]
+        $Assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AzureRightsManagementServicesAllowed,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $DataRecoveryCertificate,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [PSObject]
+        $EnforcementLevel,
+
+        [Parameter()]
+        [System.String]
+        $EnterpriseDomain,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseIPRanges,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $EnterpriseIPRangesAreAuthoritative,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseInternalProxyServers,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseProtectedDomainNames,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseProxiedDomains,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseProxyServers,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $EnterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [PSObject[]]
+        $ExemptAppLockerFiles,
+
+        [Parameter()]
+        [PSObject[]]
+        $ExemptApps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IconsVisible,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IndexingEncryptedStoresOrItemsBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsAssigned,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [PSObject[]]
+        $NeutralDomainResources,
+
+        [Parameter()]
+        [PSObject[]]
+        $ProtectedAppLockerFiles,
+
+        [Parameter()]
+        [PSObject[]]
+        $ProtectedApps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProtectionUnderLockConfigRequired,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RevokeOnUnenrollDisabled,
+
+        [Parameter()]
+        [System.String]
+        $RightsManagementServicesTemplateId,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [PSObject[]]
+        $SmbAutoEncryptedFileExtensions,
+
+        [Parameter()]
+        [System.String]
+        $Version,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+
+function Remove-MgDeviceAppMgtMdmWindowInformationProtectionPolicy
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $MdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+
+function Update-MgDeviceAppMgtMdmWindowInformationProtectionPolicy
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $MdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [PSObject[]]
+        $Assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AzureRightsManagementServicesAllowed,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $DataRecoveryCertificate,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [PSObject]
+        $EnforcementLevel,
+
+        [Parameter()]
+        [System.String]
+        $EnterpriseDomain,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseIPRanges,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $EnterpriseIPRangesAreAuthoritative,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseInternalProxyServers,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseProtectedDomainNames,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseProxiedDomains,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseProxyServers,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $EnterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [PSObject[]]
+        $ExemptAppLockerFiles,
+
+        [Parameter()]
+        [PSObject[]]
+        $ExemptApps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IconsVisible,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IndexingEncryptedStoresOrItemsBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsAssigned,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [PSObject[]]
+        $NeutralDomainResources,
+
+        [Parameter()]
+        [PSObject[]]
+        $ProtectedAppLockerFiles,
+
+        [Parameter()]
+        [PSObject[]]
+        $ProtectedApps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProtectionUnderLockConfigRequired,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RevokeOnUnenrollDisabled,
+
+        [Parameter()]
+        [System.String]
+        $RightsManagementServicesTemplateId,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [PSObject[]]
+        $SmbAutoEncryptedFileExtensions,
+
+        [Parameter()]
+        [System.String]
+        $Version,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+
+#endregion
+
