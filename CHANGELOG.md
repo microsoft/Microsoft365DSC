@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* SCProtectionAlert
+  * Support for certificate based auth
+  * Fix removal of alert
+
 # 1.23.125.1
 
 * TeamsAudioConferencingPolicy
