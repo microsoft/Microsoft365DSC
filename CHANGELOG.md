@@ -5,6 +5,8 @@
 * SCProtectionAlert
   * Support for certificate based auth
   * Fix removal of alert
+  * Added additional supported values for ThreatType, Severity & AggregationType
+    FIXES [#2793](https://github.com/microsoft/Microsoft365DSC/issues/2793)
 
 # 1.23.125.1
 

@@ -13,7 +13,7 @@ function Get-TargetResource
         $AlertFor,
 
         [Parameter()]
-        [ValidateSet('None', 'SimpleAggregation', 'AnomalousAggregation')]
+        [ValidateSet('None', 'SimpleAggregation', 'AnomalousAggregation', 'CustomAggregation')]
         [System.String]
         $AggregationType,
 
@@ -87,12 +87,12 @@ function Get-TargetResource
         $PrivacyManagementScopedSensitiveInformationTypesThreshold,
 
         [Parameter()]
-        [ValidateSet('Low', 'Medium', 'High')]
+        [ValidateSet('Low', 'Medium', 'High', 'Informational')]
         [System.String]
         $Severity = 'Low',
 
         [Parameter()]
-        [ValidateSet('Activity', 'Malware', 'Phish', 'Malicious','MaliciousUrlClick')]
+        [ValidateSet('Activity', 'Malware', 'Phish', 'Malicious','MaliciousUrlClick', 'MailFlow')]
         [System.String]
         $ThreatType,
 
@@ -234,7 +234,7 @@ function Set-TargetResource
         $AlertFor,
 
         [Parameter()]
-        [ValidateSet('None', 'SimpleAggregation', 'AnomalousAggregation')]
+        [ValidateSet('None', 'SimpleAggregation', 'AnomalousAggregation', 'CustomAggregation')]
         [System.String]
         $AggregationType,
 
@@ -308,12 +308,12 @@ function Set-TargetResource
         $PrivacyManagementScopedSensitiveInformationTypesThreshold,
 
         [Parameter()]
-        [ValidateSet('Low', 'Medium', 'High')]
+        [ValidateSet('Low', 'Medium', 'High', 'Informational')]
         [System.String]
         $Severity = 'Low',
 
         [Parameter()]
-        [ValidateSet('Activity', 'Malware', 'Phish', 'Malicious','MaliciousUrlClick')]
+        [ValidateSet('Activity', 'Malware', 'Phish', 'Malicious','MaliciousUrlClick', 'MailFlow')]
         [System.String]
         $ThreatType,
 
@@ -424,7 +424,7 @@ function Test-TargetResource
         $AlertFor,
 
         [Parameter()]
-        [ValidateSet('None', 'SimpleAggregation', 'AnomalousAggregation')]
+        [ValidateSet('None', 'SimpleAggregation', 'AnomalousAggregation', 'CustomAggregation')]
         [System.String]
         $AggregationType,
 
@@ -498,12 +498,12 @@ function Test-TargetResource
         $PrivacyManagementScopedSensitiveInformationTypesThreshold,
 
         [Parameter()]
-        [ValidateSet('Low', 'Medium', 'High')]
+        [ValidateSet('Low', 'Medium', 'High', 'Informational')]
         [System.String]
         $Severity = 'Low',
 
         [Parameter()]
-        [ValidateSet('Activity', 'Malware', 'Phish', 'Malicious','MaliciousUrlClick')]
+        [ValidateSet('Activity', 'Malware', 'Phish', 'Malicious','MaliciousUrlClick', 'MailFlow')]
         [System.String]
         $ThreatType,
 
