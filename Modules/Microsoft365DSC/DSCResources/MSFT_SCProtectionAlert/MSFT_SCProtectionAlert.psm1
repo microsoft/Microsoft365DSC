@@ -13,7 +13,7 @@ function Get-TargetResource
         $AlertFor,
 
         [Parameter()]
-        [ValidateSet('None', 'SimpleAggregation', 'AnomalousAggregation')]
+        [ValidateSet('None', 'SimpleAggregation', 'AnomalousAggregation', 'CustomAggregation')]
         [System.String]
         $AggregationType,
 
@@ -24,10 +24,6 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $Comment,
-
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $Credential,
 
         [Parameter()]
         [System.Boolean]
@@ -91,12 +87,12 @@ function Get-TargetResource
         $PrivacyManagementScopedSensitiveInformationTypesThreshold,
 
         [Parameter()]
-        [ValidateSet('Low', 'Medium', 'High')]
+        [ValidateSet('Low', 'Medium', 'High', 'Informational')]
         [System.String]
         $Severity = 'Low',
 
         [Parameter()]
-        [ValidateSet('Activity', 'Malware', 'Phish', 'Malicious','MaliciousUrlClick')]
+        [ValidateSet('Activity', 'Malware', 'Phish', 'Malicious','MaliciousUrlClick', 'MailFlow')]
         [System.String]
         $ThreatType,
 
@@ -112,7 +108,31 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Int32]
-        $VolumeThreshold
+        $VolumeThreshold,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
 
@@ -214,7 +234,7 @@ function Set-TargetResource
         $AlertFor,
 
         [Parameter()]
-        [ValidateSet('None', 'SimpleAggregation', 'AnomalousAggregation')]
+        [ValidateSet('None', 'SimpleAggregation', 'AnomalousAggregation', 'CustomAggregation')]
         [System.String]
         $AggregationType,
 
@@ -225,10 +245,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Comment,
-
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $Credential,
 
         [Parameter()]
         [System.Boolean]
@@ -292,12 +308,12 @@ function Set-TargetResource
         $PrivacyManagementScopedSensitiveInformationTypesThreshold,
 
         [Parameter()]
-        [ValidateSet('Low', 'Medium', 'High')]
+        [ValidateSet('Low', 'Medium', 'High', 'Informational')]
         [System.String]
         $Severity = 'Low',
 
         [Parameter()]
-        [ValidateSet('Activity', 'Malware', 'Phish', 'Malicious','MaliciousUrlClick')]
+        [ValidateSet('Activity', 'Malware', 'Phish', 'Malicious','MaliciousUrlClick', 'MailFlow')]
         [System.String]
         $ThreatType,
 
@@ -313,7 +329,31 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Int32]
-        $VolumeThreshold
+        $VolumeThreshold,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
 
@@ -336,21 +376,23 @@ function Set-TargetResource
 
     $CurrentAlert = Get-TargetResource @PSBoundParameters
 
+    $CreationParams = $PSBoundParameters
+    $CreationParams.Remove('Ensure') | Out-Null
+    $CreationParams.Remove('Credential') | Out-Null
+    $CreationParams.Remove('ApplicationId') | Out-Null
+    $CreationParams.Remove('TenantId') | Out-Null
+    $CreationParams.Remove('CertificateThumbprint') | Out-Null
+    $CreationParams.Remove('CertificatePath') | Out-Null
+    $CreationParams.Remove('CertificatePassword') | Out-Null
+
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentAlert.Ensure))
     {
-        $CreationParams = $PSBoundParameters
-        $CreationParams.Remove('Credential')
-        $CreationParams.Remove('Ensure')
-
         New-ProtectionAlert @CreationParams
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentAlert.Ensure))
     {
-        $CreationParams = $PSBoundParameters
-        $CreationParams.Remove('Credential')
-        $CreationParams.Remove('Ensure')
-        $CreationParams.Remove('Name')
-        $CreationParams.Remove('ThreatType')
+        $CreationParams.Remove('Name') | Out-Null
+        $CreationParams.Remove('ThreatType') | Out-Null
 
         $Alert = Get-ProtectionAlert -Identity $Name
         $CreationParams.Add('Identity', $Alert.Name)
@@ -362,7 +404,8 @@ function Set-TargetResource
     {
         # If the Alert exists and it shouldn't, simply remove it;
         $Alert = Get-ProtectionAlert -Identity $Name
-        Remove-ProtectionAlert -Identity $Alert.Identity
+        Write-Verbose "Removing Protection alert $Name"
+        Remove-ProtectionAlert -Identity $Alert.Identity -ForceDeletion
     }
 }
 
@@ -381,7 +424,7 @@ function Test-TargetResource
         $AlertFor,
 
         [Parameter()]
-        [ValidateSet('None', 'SimpleAggregation', 'AnomalousAggregation')]
+        [ValidateSet('None', 'SimpleAggregation', 'AnomalousAggregation', 'CustomAggregation')]
         [System.String]
         $AggregationType,
 
@@ -392,10 +435,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Comment,
-
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $Credential,
 
         [Parameter()]
         [System.Boolean]
@@ -459,12 +498,12 @@ function Test-TargetResource
         $PrivacyManagementScopedSensitiveInformationTypesThreshold,
 
         [Parameter()]
-        [ValidateSet('Low', 'Medium', 'High')]
+        [ValidateSet('Low', 'Medium', 'High', 'Informational')]
         [System.String]
         $Severity = 'Low',
 
         [Parameter()]
-        [ValidateSet('Activity', 'Malware', 'Phish', 'Malicious','MaliciousUrlClick')]
+        [ValidateSet('Activity', 'Malware', 'Phish', 'Malicious','MaliciousUrlClick', 'MailFlow')]
         [System.String]
         $ThreatType,
 
@@ -480,7 +519,31 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Int32]
-        $VolumeThreshold
+        $VolumeThreshold,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -501,6 +564,11 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('Credential') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -518,9 +586,29 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters `
@@ -559,11 +647,7 @@ function Export-TargetResource
         foreach ($alert in $Alerts)
         {
             Write-Host "    |---[$i/$($totalAlerts)] $($alert.Name)" -NoNewline
-            $Params = @{
-                Name       = $Alert.Name
-                Credential = $Credential
-            }
-            $Results = Get-TargetResource @Params
+            $Results = Get-TargetResource @PSBoundParameters -Name $Alert.Name
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `

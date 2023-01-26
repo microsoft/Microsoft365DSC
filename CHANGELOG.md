@@ -1,5 +1,13 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* SCProtectionAlert
+  * Support for certificate based auth
+  * Fix removal of alert
+  * Added additional supported values for ThreatType, Severity & AggregationType
+    FIXES [#2793](https://github.com/microsoft/Microsoft365DSC/issues/2793)
+
 # 1.23.125.1
 
 * TeamsAudioConferencingPolicy
@@ -33,6 +41,9 @@
   * Fixed UnitTest
   * Generate Stubs if required
   * Fixes #2819
+* IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled
+  * Initial Release
+  * Fixes #2604
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.155.
 * Planner
