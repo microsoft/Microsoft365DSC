@@ -198,7 +198,7 @@ function Get-TargetResource
                 write-verbose "AU {$DisplayName} verify RoleId {$($auScopedRoleMember.RoleId)}"
                 $roleObject = Get-MgDirectoryRole -DirectoryRoleId $auScopedRoleMember.RoleId -ErrorAction Stop
                 write-verbose "Found DirectoryRole '$($roleObject.DisplayName)' with id $($roleObject.Id)"
-                $scopedRoleMember = @{
+                $scopedRoleMember = [ordered]@{
                                         RoleName = $roleObject.DisplayName
                                         RoleMemberInfo = @{
                                             Type     = $null
