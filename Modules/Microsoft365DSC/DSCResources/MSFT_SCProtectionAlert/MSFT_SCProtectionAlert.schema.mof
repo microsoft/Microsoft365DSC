@@ -3,7 +3,7 @@ class MSFT_SCProtectionAlert : OMI_BaseResource
 {
     [Write, Description("Specifies the scope for aggregated alert policies")] String AlertBy[];
     [Write, Description("This parameter is reserved for internal Microsoft use")] String AlertFor[];
-    [Write, Description("Specifies how the alert policy triggers alerts for multiple occurrences of monitored activity"), ValueMap{"None", "SimpleAggregation", "AnomalousAggregation"}, Values{"None", "SimpleAggregation", "AnomalousAggregation"}] String AggregationType;
+    [Write, Description("Specifies how the alert policy triggers alerts for multiple occurrences of monitored activity"), ValueMap{"None", "SimpleAggregation", "AnomalousAggregation", "CustomAggregation"}, Values{"None", "SimpleAggregation", "AnomalousAggregation", "CustomAggregation"}] String AggregationType;
     [Write, Description("Specifies a category for the alert policy")] String Category;
     [Write, Description("Specifies an optional comment")] String Comment;
     [Write, Description("Enables or disables the alert policy")] Boolean Disabled;
@@ -21,8 +21,8 @@ class MSFT_SCProtectionAlert : OMI_BaseResource
     [Write, Description("PrivacyManagementScopedSensitiveInformationTypes")] String PrivacyManagementScopedSensitiveInformationTypes[];
     [Write, Description("PrivacyManagementScopedSensitiveInformationTypesForCounting")] String PrivacyManagementScopedSensitiveInformationTypesForCounting[];
     [Write, Description("PrivacyManagementScopedSensitiveInformationTypesThreshold")] UInt64 PrivacyManagementScopedSensitiveInformationTypesThreshold;
-    [Write, Description("specifies the severity of the detection"), ValueMap{"Low", "Medium", "High"}, Values{"Low", "Medium", "High"}] String Severity;
-    [Write, Description("Specifies the type of activities that are monitored by the alert policy"), ValueMap{"Activity", "Malware", "Phish", "Malicious","MaliciousUrlClick"}, Values{"Activity", "Malware", "Phish", "Malicious","MaliciousUrlClick"}] String ThreatType;
+    [Write, Description("specifies the severity of the detection"), ValueMap{"Low", "Medium", "High", "Informational"}, Values{"Low", "Medium", "High", "Informational"}] String Severity;
+    [Write, Description("Specifies the type of activities that are monitored by the alert policy"), ValueMap{"Activity", "Malware", "Phish", "Malicious","MaliciousUrlClick", "MailFlow"}, Values{"Activity", "Malware", "Phish", "Malicious","MaliciousUrlClick", "MailFlow"}] String ThreatType;
     [Write, Description("Specifies the number of detections that trigger the alert policy within the time period specified by the TimeWindow parameter. A valid value is an integer that's greater than or equal to 3.")] UInt32 Threshold;
     [Write, Description("Specifies the time interval in minutes for number of detections specified by the Threshold parameter. A valid value is an integer that's greater than 60 (one hour).")] UInt32 TimeWindow;
     [Write, Description("Volume Threshold")] UInt32 VolumeThreshold;
