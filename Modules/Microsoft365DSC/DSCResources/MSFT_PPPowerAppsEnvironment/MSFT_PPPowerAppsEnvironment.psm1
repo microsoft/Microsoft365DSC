@@ -14,7 +14,7 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production', 'Standard', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams')]
+        [ValidateSet('Production', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams', 'Developer')]
         $EnvironmentSKU,
 
         [Parameter()]
@@ -73,10 +73,15 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Found PowerApps Environment {$DisplayName}"
+        $environmentType = $environment.EnvironmentType
+        if ($environmentType -eq 'Notspecified')
+        {
+            $environmentType = 'Teams'
+        }
         return @{
             DisplayName           = $DisplayName
             Location              = $environment.Location
-            EnvironmentSKU        = $environment.EnvironmentType
+            EnvironmentSKU        = $environmentType
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -112,7 +117,7 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production', 'Standard', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams')]
+        [ValidateSet('Production', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams', 'Developer')]
         $EnvironmentSKU,
 
         [Parameter()]
@@ -207,7 +212,7 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production', 'Standard', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams')]
+        [ValidateSet('Production', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams', 'Developer')]
         $EnvironmentSKU,
 
         [Parameter()]
@@ -322,13 +327,18 @@ function Export-TargetResource
         }
         foreach ($environment in $environments)
         {
-            Write-Host "    |---[$i/$($environments.Count)] $($environment.DisplayName)" -NoNewline
-            if ($environment.EnvironmentType -ne 'Default' -and $environment.EnvironmentType -ne 'NotSpecified' -and $environment.EnvironmentType -ne 'Developer')
+            if ($environment.EnvironmentType -ne 'Default')
             {
+                Write-Host "    |---[$i/$($environments.Count)] $($environment.DisplayName)" -NoNewline
+                $environmentType = $environment.EnvironmentType
+                if ($environmentType -eq 'Notspecified')
+                {
+                    $environmentType = 'Teams'
+                }
                 $Params = @{
                     DisplayName           = $environment.DisplayName
                     Location              = $environment.Location
-                    EnvironmentSku        = $environment.EnvironmentType
+                    EnvironmentSku        = $environmentType
                     Credential            = $Credential
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
@@ -351,8 +361,8 @@ function Export-TargetResource
             }
             else
             {
-                Write-Host "`r`n    |---Skipping $($environment.DisplayName) because of environment sku $($environment.EnvironmentType) " -NoNewline
-                Write-Host $Global:M365DSCEmojiRedX
+                Write-Host "    |---[$i/$($environments.Count)] Skipping Default Environment $($environment.DisplayName)" -NoNewline
+                Write-Host $Global:M365DSCEmojiInformation
             }
             $i++
         }
