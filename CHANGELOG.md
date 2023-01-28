@@ -17,6 +17,8 @@
   * Initial Release.
 * TeamsTenantNetworkSite
   * Initial Release.
+* TeamsTenantNetworkSubnet
+  * Initial Release.
 
 # 1.23.125.1
 
