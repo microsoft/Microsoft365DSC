@@ -15,6 +15,10 @@
     FIXES [#2793](https://github.com/microsoft/Microsoft365DSC/issues/2793)
 * TeamsTenantNetworkRegion
   * Initial Release.
+* TeamsTenantNetworkSite
+  * Initial Release.
+* TeamsTenantNetworkSubnet
+  * Initial Release.
 
 # 1.23.125.1
 
