@@ -19,6 +19,8 @@
   * Initial Release.
 * TeamsTenantNetworkSubnet
   * Initial Release.
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.21.0
 
 # 1.23.125.1
 
