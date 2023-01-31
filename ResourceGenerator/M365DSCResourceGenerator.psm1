@@ -777,7 +777,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
             }
             if ($property.IsMandatory)
             {
-                if ([System.String]::IsNullOrEmpty($primaryKey))
+                if ([System.String]::IsNullOrEmpty($primaryKey) -or $property.Name -eq 'Identity')
                 {
                     $primaryKey = $property.Name
                 }
