@@ -6,7 +6,7 @@
 | --- | --- | --- | --- | --- |
 | **AlertBy** | Write | StringArray[] | Specifies the scope for aggregated alert policies | |
 | **AlertFor** | Write | StringArray[] | This parameter is reserved for internal Microsoft use | |
-| **AggregationType** | Write | String | Specifies how the alert policy triggers alerts for multiple occurrences of monitored activity | `None`, `SimpleAggregation`, `AnomalousAggregation` |
+| **AggregationType** | Write | String | Specifies how the alert policy triggers alerts for multiple occurrences of monitored activity | `None`, `SimpleAggregation`, `AnomalousAggregation`, `CustomAggregation` |
 | **Category** | Write | String | Specifies a category for the alert policy | |
 | **Comment** | Write | String | Specifies an optional comment | |
 | **Disabled** | Write | Boolean | Enables or disables the alert policy | |
@@ -24,12 +24,17 @@
 | **PrivacyManagementScopedSensitiveInformationTypes** | Write | StringArray[] | PrivacyManagementScopedSensitiveInformationTypes | |
 | **PrivacyManagementScopedSensitiveInformationTypesForCounting** | Write | StringArray[] | PrivacyManagementScopedSensitiveInformationTypesForCounting | |
 | **PrivacyManagementScopedSensitiveInformationTypesThreshold** | Write | UInt64 | PrivacyManagementScopedSensitiveInformationTypesThreshold | |
-| **Severity** | Write | String | specifies the severity of the detection | `Low`, `Medium`, `High` |
-| **ThreatType** | Write | String | Specifies the type of activities that are monitored by the alert policy | `Activity`, `Malware`, `Phish`, `Malicious`, `MaliciousUrlClick` |
+| **Severity** | Write | String | specifies the severity of the detection | `Low`, `Medium`, `High`, `Informational` |
+| **ThreatType** | Write | String | Specifies the type of activities that are monitored by the alert policy | `Activity`, `Malware`, `Phish`, `Malicious`, `MaliciousUrlClick`, `MailFlow` |
 | **Threshold** | Write | UInt32 | Specifies the number of detections that trigger the alert policy within the time period specified by the TimeWindow parameter. A valid value is an integer that's greater than or equal to 3. | |
 | **TimeWindow** | Write | UInt32 | Specifies the time interval in minutes for number of detections specified by the Threshold parameter. A valid value is an integer that's greater than 60 (one hour). | |
 | **VolumeThreshold** | Write | UInt32 | Volume Threshold | |
-| **Credential** | Required | PSCredential | Credentials of the Global Admin | |
+| **Credential** | Write | PSCredential | Credentials of the Global Admin | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
+| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
+| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 
 ## Description
 

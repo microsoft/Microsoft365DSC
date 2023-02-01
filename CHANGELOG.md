@@ -1,5 +1,28 @@
 # Change log for Microsoft365DSC
 
+# 1.23.201.1
+
+* PlannerTask
+  * Fixed issue where Attachments Uri weren't properly exiting single quotes.
+    FIXES [#2822](https://github.com/microsoft/Microsoft365DSC/issues/2822)
+* PPPowerAppsEnvironment
+  * Adds support for Developr SKU and fix for Teams SKU
+    FIXES [#2821](https://github.com/microsoft/Microsoft365DSC/issues/2821)
+* SCProtectionAlert
+  * Support for certificate based auth
+  * Fix removal of alert
+  * Added additional supported values for ThreatType, Severity & AggregationType
+    FIXES [#2793](https://github.com/microsoft/Microsoft365DSC/issues/2793)
+* TeamsTenantNetworkRegion
+  * Initial Release.
+* TeamsTenantNetworkSite
+  * Initial Release.
+* TeamsTenantNetworkSubnet
+  * Initial Release.
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.21.0
+  * Updated MicrosoftTeams to version 4.9.3
+
 # 1.23.125.1
 
 * TeamsAudioConferencingPolicy
@@ -33,6 +56,9 @@
   * Fixed UnitTest
   * Generate Stubs if required
   * Fixes #2819
+* IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled
+  * Initial Release
+  * Fixes #2604
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.155.
 * Planner

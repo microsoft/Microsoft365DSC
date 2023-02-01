@@ -6,7 +6,7 @@
 | --- | --- | --- | --- | --- |
 | **DisplayName** | Key | String | Display name for the PowerApps environment | |
 | **Location** | Required | String | Location of the PowerApps environment. | `canada`, `unitedstates`, `europe`, `asia`, `australia`, `india`, `japan`, `unitedkingdom`, `unitedstatesfirstrelease`, `southamerica`, `france`, `usgov` |
-| **EnvironmentSKU** | Required | String | Environment type. | `Production`, `Standard`, `Trial`, `Sandbox`, `SubscriptionBasedTrial`, `Teams` |
+| **EnvironmentSKU** | Required | String | Environment type. | `Production`, `Standard`, `Trial`, `Sandbox`, `SubscriptionBasedTrial`, `Teams`, `Developer` |
 | **Ensure** | Write | String | Only accepted value is 'Present'. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Power Platform Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
