@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.201.1
 
 * PlannerTask
   * Fixed issue where Attachments Uri weren't properly exiting single quotes.
@@ -21,6 +21,7 @@
   * Initial Release.
 * DEPENDENCIES
   * Updated Microsoft.Graph.* to version 1.21.0
+  * Updated MicrosoftTeams to version 4.9.3
 
 # 1.23.125.1
 
