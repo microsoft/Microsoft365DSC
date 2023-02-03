@@ -1,5 +1,13 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneWindowUpdateForBusinessRingUpdateProfileWindows10
+  * Initial release.
+    FIXES [#2657](https://github.com/microsoft/Microsoft365DSC/issues/2657)
+* DRG
+  * Various fixes
+
 # 1.23.201.1
 
 * PlannerTask
