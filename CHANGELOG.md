@@ -2,6 +2,10 @@
 
 # UNRELEASED
 
+* IntuneDeviceCompliancePolicyWindows10
+  * Updated example
+* IntuneDeviceConfigurationPolicyWindows10
+  * Updated example
 * PlannerTask
   * Fixed issue where Attachments Uri weren't properly exiting single quotes.
     FIXES [#2822](https://github.com/microsoft/Microsoft365DSC/issues/2822)
@@ -19,6 +23,9 @@
   * Initial Release.
 * TeamsTenantNetworkSubnet
   * Initial Release.
+* MISC
+  * Updated documentation to reflect new authentication possibilities
+    FIXES [#2863](https://github.com/microsoft/Microsoft365DSC/issues/2863)
 
 # 1.23.125.1
 
