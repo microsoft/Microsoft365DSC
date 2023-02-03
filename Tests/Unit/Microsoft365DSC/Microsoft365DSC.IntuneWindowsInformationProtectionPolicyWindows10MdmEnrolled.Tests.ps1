@@ -69,7 +69,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnterpriseIPRanges = @(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphwindowsInformationProtectionIPRangeCollection -Property @{
                             DisplayName = "FakeStringValue"
-                            Ranges = (New-CimInstance -ClassName MSFT_MicrosoftGraphipRange -Property @{
+                            Ranges = [CIMInstance[]]@(New-CimInstance -ClassName MSFT_MicrosoftGraphipRange -Property @{
                                     CidrAddress = "FakeStringValue"
                                     UpperAddress = "FakeStringValue"
                                     LowerAddress = "FakeStringValue"
