@@ -425,7 +425,12 @@ function New-M365DSCResource
             }
             [String]$newKeyIdentifier = $newParameterString.ToString()
         }
-
+        $odataType=$null
+        if($true)#$isAdditionalProperty)
+        {
+            $odataType="        `$CreateParameters.Add(`"@odata.type`", `"#microsoft.graph.$SelectedODataType`")`r`n"
+        }
+        Write-TokenReplacement -Token '<NewDataType>' -Value "$odataType" -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<#NewKeyIdentifier#>' -Value $newKeyIdentifier -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<NewCmdLetName>' -Value "New-$($CmdLetNoun)" -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<SetCmdLetName>' -Value "Set-$($CmdLetNoun)" -FilePath $moduleFilePath
@@ -505,7 +510,7 @@ function New-M365DSCResource
         {
             $odataType="        `$UpdateParameters.Add(`"@odata.type`", `"#microsoft.graph.$SelectedODataType`")`r`n"
         }
-        Write-TokenReplacement -Token '<oDataType>' -Value "$odataType" -FilePath $moduleFilePath
+        Write-TokenReplacement -Token '<UpdateDataType>' -Value "$odataType" -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<UpdateCmdLetName>' -Value "$updateVerb-$CmdLetNoun" -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<#UpdateKeyIdentifier#>' -Value $updateKeyIdentifier -FilePath $moduleFilePath
 
@@ -548,7 +553,8 @@ function New-M365DSCResource
             $AssignmentsGet += "        {`r`n"
             $AssignmentsGet += "            `$assignmentValue = @{`r`n"
             $AssignmentsGet += "                dataType = `$assignmentEntry.Target.AdditionalProperties.'@odata.type'`r`n"
-            $AssignmentsGet += "                deviceAndAppManagementAssignmentFilterType = `$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()`r`n"
+            $AssignmentsGet += "                deviceAndAppManagementAssignmentFilterType = `$(if(`$null -ne `$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)`r`n"
+            $AssignmentsGet += "                    {`$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()})`r`n"
             $AssignmentsGet += "                deviceAndAppManagementAssignmentFilterId = `$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId`r`n"
             $AssignmentsGet += "                groupId = `$assignmentEntry.Target.AdditionalProperties.groupId`r`n"
             $AssignmentsGet += "            }`r`n"
@@ -2328,7 +2334,6 @@ function Get-M365DSCFakeValues
 
         if ($hashValue)
         {
-            #if ((-Not $parameter.IsRootProperty -and -not $isRecursive ) -and -not $IsGetTargetResource)
             if ((-Not $parameter.IsRootProperty ) -and -not $IsGetTargetResource)
             {
                 $parameterName = Get-StringFirstCharacterToLower -Value $parameterName
