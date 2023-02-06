@@ -58,7 +58,7 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
         $nullResult.Ensure = 'Absent'
 
-        $getValue = $null <#ResourceGenerator
+        $getValue = $null<#ResourceGenerator
         #region resource generator code
         $getValue = <GetCmdLetName> <getKeyIdentifier> -ErrorAction SilentlyContinue
 
@@ -72,17 +72,18 @@ function Get-TargetResource
 <AlternativeFilter>
             }
         }
-        #endregion ResourceGenerator#>
+        #endregionResourceGenerator#>
         if ($null -eq $getValue)
         {
             Write-Verbose -Message "Could not find an <ResourceDescription> with <FilterKey> {$<FilterKey>}"
             return $nullResult
         }
         $<PrimaryKey> = $getValue.<PrimaryKey>
-        Write-Verbose -Message "An <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>} was found."
+        Write-Verbose -Message "An <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>} was found."<#ResourceGenerator
+<ComplexTypeConstructor><EnumTypeConstructor><DateTypeConstructor><TimeTypeConstructor>ResourceGenerator#>
         $results = @{<#ResourceGenerator
             #region resource generator code
-<HashTableMapping>            #endregion ResourceGenerator#>
+<HashTableMapping>            #endregionResourceGenerator#>
         }
 <#ComplexTypeContent#><#AssignmentsGet#>
         return [System.Collections.Hashtable] $results
@@ -177,7 +178,7 @@ function Set-TargetResource
         }<#ResourceGenerator
         #region resource generator code
         $policy=<NewCmdLetName> <#NewKeyIdentifier#>
-<#AssignmentsNew#>        #endregion ResourceGenerator#>
+<#AssignmentsNew#>        #endregionResourceGenerator#>
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -198,14 +199,14 @@ function Set-TargetResource
         }<#ResourceGenerator
         #region resource generator code
 <oDataType>        <UpdateCmdLetName> <#UpdateKeyIdentifier#>
-<#AssignmentsUpdate#>        #endregion ResourceGenerator#>
+<#AssignmentsUpdate#>        #endregionResourceGenerator#>
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}" <#ResourceGenerator
         #region resource generator code
         <RemoveCmdLetName> <#removeKeyIdentifier#>
-        #endregion ResourceGenerator#>
+        #endregionResourceGenerator#>
     }
 }
 
@@ -367,7 +368,7 @@ function Export-TargetResource
     try
     {<#ResourceGenerator
         #region resource generator code
-<exportGetCommand>        #endregion ResourceGenerator#>
+<exportGetCommand>        #endregionResourceGenerator#>
 
         $i = 1
         $dscContent = ''
@@ -407,7 +408,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-<#ConvertComplexToVariable#><#AssignmentsConvertComplexToVariable#>
+<#ConvertComplexToVariable#><#AssignmentsConvertComplexToVariable#><#TrailingCharRemoval#>
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -718,7 +719,7 @@ function Get-M365DSCDRGComplexTypeToString
                 #overwrite type if object defined in mapping complextypemapping
                 if($key -in $ComplexTypeMapping.Name)
                 {
-                    $hashPropertyType=($ComplexTypeMapping|Where-Object -FilterScript {$_.Name -eq $key}).CimInstanceName
+                    $hashPropertyType=([Array]($ComplexTypeMapping|Where-Object -FilterScript {$_.Name -eq $key}).CimInstanceName)[0]
                     $hashProperty=$ComplexObject[$key]
                 }
                 else
@@ -749,22 +750,32 @@ function Get-M365DSCDRGComplexTypeToString
                         {
                             $item=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
                         }
-                        $currentProperty += Get-M365DSCDRGComplexTypeToString `
-                            -ComplexObject $item `
-                            -CIMInstanceName $hashPropertyType `
-                            -IndentLevel $IndentLevel `
-                            -ComplexTypeMapping $ComplexTypeMapping `
-                            -IsArray:$true
+                        $nestedPropertyString = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $item `
+                        -CIMInstanceName $hashPropertyType `
+                        -IndentLevel $IndentLevel `
+                        -ComplexTypeMapping $ComplexTypeMapping `
+                        -IsArray:$true
+                        if([string]::IsNullOrWhiteSpace($nestedPropertyString))
+                        {
+                            $nestedPropertyString = "@()`r`n"
+                        }
+                        $currentProperty += $nestedPropertyString
                     }
                     $IndentLevel--
                 }
                 else
                 {
-                    $currentProperty += Get-M365DSCDRGComplexTypeToString `
+                    $nestedPropertyString = Get-M365DSCDRGComplexTypeToString `
                                     -ComplexObject $hashProperty `
                                     -CIMInstanceName $hashPropertyType `
                                     -IndentLevel $IndentLevel `
                                     -ComplexTypeMapping $ComplexTypeMapping
+                    if([string]::IsNullOrWhiteSpace($nestedPropertyString))
+                    {
+                        $nestedPropertyString = "`$null`r`n"
+                    }
+                    $currentProperty += $nestedPropertyString
                 }
                 if($isArray)
                 {
@@ -820,6 +831,13 @@ function Get-M365DSCDRGComplexTypeToString
         }
         $currentProperty += $indent
     }
+
+    $emptyCIM=$currentProperty.replace(" ","").replace("`r`n","")
+    if($emptyCIM -eq "MSFT_$CIMInstanceName{}")
+    {
+        $currentProperty=$null
+    }
+
     return $currentProperty
 }
 
@@ -871,7 +889,7 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
                 $whitespace=$Space+"    "
                 $newline="`r`n"
             }
-            foreach ($item in $Value)
+            foreach ($item in ($Value | Where-Object -FilterScript {$null -ne $_ }))
             {
                 switch -Wildcard ($item.GetType().Fullname )
                 {

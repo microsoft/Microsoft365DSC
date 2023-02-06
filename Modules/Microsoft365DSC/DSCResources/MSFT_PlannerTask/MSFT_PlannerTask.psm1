@@ -756,8 +756,7 @@ function Export-TargetResource
                             -Results $Result
                         if ($result.Attachments.Length -gt 0)
                         {
-                            $result.Attachments = [Array](Convert-M365DSCPlannerTaskAssignmentToCIMArray `
-                                    -Attachments $result.Attachments)
+                            $result.Attachments = Convert-M365DSCPlannerTaskAssignmentToCIMArray -Attachments $result.Attachments
                         }
                         else
                         {
@@ -766,8 +765,7 @@ function Export-TargetResource
 
                         if ($result.Checklist.Length -gt 0)
                         {
-                            $result.Checklist = [Array](Convert-M365DSCPlannerTaskChecklistToCIMArray `
-                                    -Checklist $result.Checklist)
+                            $result.Checklist = Convert-M365DSCPlannerTaskChecklistToCIMArray -Checklist $result.Checklist
                         }
                         else
                         {
@@ -790,14 +788,12 @@ function Export-TargetResource
                         if ($result.Attachments.Length -gt 0)
                         {
                             $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                                -ParameterName 'Attachments' `
-                                -IsCIMArray $true
+                                -ParameterName 'Attachments'
                         }
                         if ($result.Checklist.Length -gt 0)
                         {
                             $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                                -ParameterName 'Checklist' `
-                                -IsCIMArray $true
+                                -ParameterName 'Checklist'
                         }
 
                         $dscContent += $currentDSCBlock
@@ -887,17 +883,18 @@ function Convert-M365DSCPlannerTaskAssignmentToCIMArray
         $Attachments
     )
 
-    $result = @()
+    $stringContent = "@(`r`n"
     foreach ($attachment in $Attachments)
     {
-        $stringContent = "MSFT_PlannerTaskAttachment`r`n            {`r`n"
-        $stringContent += "                Uri = '$($attachment.Uri)'`r`n"
-        $stringContent += "                Alias = '$($attachment.Alias.Replace("'", "''"))'`r`n"
-        $stringContent += "                Type = '$($attachment.Type)'`r`n"
-        $StringContent += "            }`r`n"
-        $result += $stringContent
+        $stringContent += "                MSFT_PlannerTaskAttachment`r`n"
+        $stringContent += "                {`r`n"
+        $stringContent += "                    Uri = '$($attachment.Uri.Replace("'", "''"))'`r`n"
+        $stringContent += "                    Alias = '$($attachment.Alias.Replace("'", "''"))'`r`n"
+        $stringContent += "                    Type = '$($attachment.Type)'`r`n"
+        $StringContent += "                }`r`n"
     }
-    return $result
+    $StringContent += '            )'
+    return $StringContent
 }
 
 function Convert-M365DSCPlannerTaskChecklistToCIMArray
@@ -910,16 +907,17 @@ function Convert-M365DSCPlannerTaskChecklistToCIMArray
         $Checklist
     )
 
-    $result = @()
+    $stringContent = "@(`r`n"
     foreach ($checklistItem in $Checklist)
     {
-        $stringContent = "MSFT_PlannerTaskChecklistItem`r`n            {`r`n"
-        $stringContent += "                Title = '$($checklistItem.Title.Replace("'", "''"))'`r`n"
-        $stringContent += "                Completed = `$$($checklistItem.Completed.ToString())`r`n"
-        $StringContent += "            }`r`n"
-        $result += $stringContent
+        $stringContent += "                MSFT_PlannerTaskChecklistItem`r`n"
+        $stringCOntent += "                {`r`n"
+        $stringContent += "                   Title = '$($checklistItem.Title.Replace("'", "''"))'`r`n"
+        $stringContent += "                   Completed = `$$($checklistItem.Completed.ToString())`r`n"
+        $StringContent += "                }`r`n"
     }
-    return $result
+    $StringContent += '            )'
+    return $StringContent
 }
 
 function Get-M365DSCPlannerPlansFromGroup

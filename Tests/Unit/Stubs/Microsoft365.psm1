@@ -46786,15 +46786,15 @@ function Set-CsUserCallingSettings
     )
 }
 #endregion
-#region MgDeviceManagementGroupPolicyConfiguration
-function Get-MgDeviceManagementGroupPolicyConfiguration
+#region MgDeviceAppMgtMdmWindowInformationProtectionPolicy
+function Get-MgDeviceAppMgtMdmWindowInformationProtectionPolicy
 {
     [CmdletBinding()]
     param
     (
         [Parameter()]
         [System.String]
-        $GroupPolicyConfigurationId,
+        $MdmWindowsInformationProtectionPolicyId,
 
         [Parameter()]
         [PSObject]
@@ -46866,13 +46866,13 @@ function Get-MgDeviceManagementGroupPolicyConfiguration
     )
 }
 
-function New-MgDeviceManagementGroupPolicyConfiguration
+function New-MgDeviceAppMgtMdmWindowInformationProtectionPolicy
 {
     [CmdletBinding()]
     param
     (
         [Parameter()]
-        [PSObject]
+        [System.Collections.Hashtable]
         $BodyParameter,
 
         [Parameter()]
@@ -46884,12 +46884,16 @@ function New-MgDeviceManagementGroupPolicyConfiguration
         $Assignments,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AzureRightsManagementServicesAllowed,
+
+        [Parameter()]
         [System.DateTime]
         $CreatedDateTime,
 
         [Parameter()]
-        [PSObject[]]
-        $DefinitionValues,
+        [PSObject]
+        $DataRecoveryCertificate,
 
         [Parameter()]
         [System.String]
@@ -46900,20 +46904,108 @@ function New-MgDeviceManagementGroupPolicyConfiguration
         $DisplayName,
 
         [Parameter()]
+        [PSObject]
+        $EnforcementLevel,
+
+        [Parameter()]
+        [System.String]
+        $EnterpriseDomain,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseIPRanges,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $EnterpriseIPRangesAreAuthoritative,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseInternalProxyServers,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseProtectedDomainNames,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseProxiedDomains,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseProxyServers,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $EnterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [PSObject[]]
+        $ExemptAppLockerFiles,
+
+        [Parameter()]
+        [PSObject[]]
+        $ExemptApps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IconsVisible,
+
+        [Parameter()]
         [System.String]
         $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IndexingEncryptedStoresOrItemsBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsAssigned,
 
         [Parameter()]
         [System.DateTime]
         $LastModifiedDateTime,
 
         [Parameter()]
-        [PSObject]
-        $PolicyConfigurationIngestionType,
+        [PSObject[]]
+        $NeutralDomainResources,
+
+        [Parameter()]
+        [PSObject[]]
+        $ProtectedAppLockerFiles,
+
+        [Parameter()]
+        [PSObject[]]
+        $ProtectedApps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProtectionUnderLockConfigRequired,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RevokeOnUnenrollDisabled,
+
+        [Parameter()]
+        [System.String]
+        $RightsManagementServicesTemplateId,
 
         [Parameter()]
         [System.String[]]
         $RoleScopeTagIds,
+
+        [Parameter()]
+        [PSObject[]]
+        $SmbAutoEncryptedFileExtensions,
+
+        [Parameter()]
+        [System.String]
+        $Version,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -46945,14 +47037,14 @@ function New-MgDeviceManagementGroupPolicyConfiguration
     )
 }
 
-function Remove-MgDeviceManagementGroupPolicyConfiguration
+function Remove-MgDeviceAppMgtMdmWindowInformationProtectionPolicy
 {
     [CmdletBinding()]
     param
     (
         [Parameter()]
         [System.String]
-        $GroupPolicyConfigurationId,
+        $MdmWindowsInformationProtectionPolicyId,
 
         [Parameter()]
         [PSObject]
@@ -46992,21 +47084,21 @@ function Remove-MgDeviceManagementGroupPolicyConfiguration
     )
 }
 
-function Update-MgDeviceManagementGroupPolicyConfiguration
+function Update-MgDeviceAppMgtMdmWindowInformationProtectionPolicy
 {
     [CmdletBinding()]
     param
     (
         [Parameter()]
         [System.String]
-        $GroupPolicyConfigurationId,
+        $MdmWindowsInformationProtectionPolicyId,
 
         [Parameter()]
         [PSObject]
         $InputObject,
 
         [Parameter()]
-        [PSObject]
+        [System.Collections.Hashtable]
         $BodyParameter,
 
         [Parameter()]
@@ -47018,12 +47110,16 @@ function Update-MgDeviceManagementGroupPolicyConfiguration
         $Assignments,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AzureRightsManagementServicesAllowed,
+
+        [Parameter()]
         [System.DateTime]
         $CreatedDateTime,
 
         [Parameter()]
-        [PSObject[]]
-        $DefinitionValues,
+        [PSObject]
+        $DataRecoveryCertificate,
 
         [Parameter()]
         [System.String]
@@ -47034,220 +47130,108 @@ function Update-MgDeviceManagementGroupPolicyConfiguration
         $DisplayName,
 
         [Parameter()]
+        [PSObject]
+        $EnforcementLevel,
+
+        [Parameter()]
+        [System.String]
+        $EnterpriseDomain,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseIPRanges,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $EnterpriseIPRangesAreAuthoritative,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseInternalProxyServers,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseProtectedDomainNames,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseProxiedDomains,
+
+        [Parameter()]
+        [PSObject[]]
+        $EnterpriseProxyServers,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $EnterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [PSObject[]]
+        $ExemptAppLockerFiles,
+
+        [Parameter()]
+        [PSObject[]]
+        $ExemptApps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IconsVisible,
+
+        [Parameter()]
         [System.String]
         $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IndexingEncryptedStoresOrItemsBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsAssigned,
 
         [Parameter()]
         [System.DateTime]
         $LastModifiedDateTime,
 
         [Parameter()]
-        [PSObject]
-        $PolicyConfigurationIngestionType,
+        [PSObject[]]
+        $NeutralDomainResources,
+
+        [Parameter()]
+        [PSObject[]]
+        $ProtectedAppLockerFiles,
+
+        [Parameter()]
+        [PSObject[]]
+        $ProtectedApps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProtectionUnderLockConfigRequired,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RevokeOnUnenrollDisabled,
+
+        [Parameter()]
+        [System.String]
+        $RightsManagementServicesTemplateId,
 
         [Parameter()]
         [System.String[]]
         $RoleScopeTagIds,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
         [PSObject[]]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm
-    )
-}
-
-#endregion
-
-#region MgDeviceManagementGroupPolicyConfigurationAssignment
-function Get-MgDeviceManagementGroupPolicyConfigurationAssignment
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter()]
-        [System.String]
-        $GroupPolicyConfigurationAssignmentId,
+        $SmbAutoEncryptedFileExtensions,
 
         [Parameter()]
         [System.String]
-        $GroupPolicyConfigurationId,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [System.String[]]
-        $Property,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.String]
-        $Search,
-
-        [Parameter()]
-        [System.Int32]
-        $Skip,
-
-        [Parameter()]
-        [System.String[]]
-        $Sort,
-
-        [Parameter()]
-        [System.Int32]
-        $Top,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Int32]
-        $PageSize,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $All,
-
-        [Parameter()]
-        [System.String]
-        $CountVariable
-    )
-}
-
-function New-MgDeviceManagementGroupPolicyConfigurationAssignment
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter()]
-        [System.String]
-        $GroupPolicyConfigurationId,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.DateTime]
-        $LastModifiedDateTime,
-
-        [Parameter()]
-        [PSObject]
-        $Target,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm
-    )
-}
-
-function Remove-MgDeviceManagementGroupPolicyConfigurationAssignment
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter()]
-        [System.String]
-        $GroupPolicyConfigurationAssignmentId,
-
-        [Parameter()]
-        [System.String]
-        $GroupPolicyConfigurationId,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
+        $Version,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -47280,434 +47264,6 @@ function Remove-MgDeviceManagementGroupPolicyConfigurationAssignment
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm
-    )
-}
-
-function Update-MgDeviceManagementGroupPolicyConfigurationAssignment
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter()]
-        [System.String]
-        $GroupPolicyConfigurationAssignmentId,
-
-        [Parameter()]
-        [System.String]
-        $GroupPolicyConfigurationId,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.DateTime]
-        $LastModifiedDateTime,
-
-        [Parameter()]
-        [PSObject]
-        $Target,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm
-    )
-}
-
-#endregion
-
-#region MgDeviceManagementGroupPolicyConfigurationDefinitionValue
-function Get-MgDeviceManagementGroupPolicyConfigurationDefinitionValue
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter()]
-        [System.String]
-        $GroupPolicyConfigurationId,
-
-        [Parameter()]
-        [System.String]
-        $GroupPolicyDefinitionValueId,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [System.String[]]
-        $Property,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.String]
-        $Search,
-
-        [Parameter()]
-        [System.Int32]
-        $Skip,
-
-        [Parameter()]
-        [System.String[]]
-        $Sort,
-
-        [Parameter()]
-        [System.Int32]
-        $Top,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Int32]
-        $PageSize,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $All,
-
-        [Parameter()]
-        [System.String]
-        $CountVariable
-    )
-}
-
-function New-MgDeviceManagementGroupPolicyConfigurationDefinitionValue
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter()]
-        [System.String]
-        $GroupPolicyConfigurationId,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [PSObject]
-        $ConfigurationType,
-
-        [Parameter()]
-        [System.DateTime]
-        $CreatedDateTime,
-
-        [Parameter()]
-        [PSObject]
-        $Definition,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Enabled,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.DateTime]
-        $LastModifiedDateTime,
-
-        [Parameter()]
-        [PSObject[]]
-        $PresentationValues,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm
-    )
-}
-
-function Remove-MgDeviceManagementGroupPolicyConfigurationDefinitionValue
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter()]
-        [System.String]
-        $GroupPolicyConfigurationId,
-
-        [Parameter()]
-        [System.String]
-        $GroupPolicyDefinitionValueId,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm
-    )
-}
-
-function Update-MgDeviceManagementGroupPolicyConfigurationDefinitionValue
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter()]
-        [System.String]
-        $GroupPolicyConfigurationId,
-
-        [Parameter()]
-        [System.String]
-        $GroupPolicyDefinitionValueId,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [PSObject]
-        $ConfigurationType,
-
-        [Parameter()]
-        [System.DateTime]
-        $CreatedDateTime,
-
-        [Parameter()]
-        [PSObject]
-        $Definition,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Enabled,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.DateTime]
-        $LastModifiedDateTime,
-
-        [Parameter()]
-        [PSObject[]]
-        $PresentationValues,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm
-    )
-}
-
-#endregion
-
-#region MgDeviceManagementGroupPolicyConfigurationDefinitionValueDefinition
-function Get-MgDeviceManagementGroupPolicyConfigurationDefinitionValueDefinition
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter()]
-        [System.String]
-        $GroupPolicyConfigurationId,
-
-        [Parameter()]
-        [System.String]
-        $GroupPolicyDefinitionValueId,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [System.String[]]
-        $Property,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials
     )
 }
 
