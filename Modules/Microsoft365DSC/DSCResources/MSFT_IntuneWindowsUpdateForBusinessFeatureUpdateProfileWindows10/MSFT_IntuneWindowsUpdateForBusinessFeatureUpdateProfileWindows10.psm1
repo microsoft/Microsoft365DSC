@@ -21,7 +21,7 @@ function Get-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance]
         $RolloutSettings,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -121,7 +121,6 @@ function Get-TargetResource
         {
             $complexRolloutSettings = $null
         }
-
         #endregion
 
         $results = @{
@@ -191,7 +190,7 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance]
         $RolloutSettings,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -199,6 +198,7 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
         #endregion
+
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -352,7 +352,7 @@ function Test-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance]
         $RolloutSettings,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -435,7 +435,6 @@ function Test-TargetResource
             }
 
             $ValuesToCheck.Remove($key) | Out-Null
-
         }
     }
 
@@ -610,73 +609,75 @@ function Export-TargetResource
         return ''
     }
 }
-    function Update-DeviceConfigurationPolicyAssignment
+function Update-DeviceConfigurationPolicyAssignment
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceConfigurationPolicyId,
+
+        [Parameter()]
+        [Array]
+        $Targets,
+
+        [Parameter()]
+        [System.String]
+        $Repository='deviceManagement/configurationPolicies',
+
+        [Parameter()]
+        [ValidateSet('v1.0','beta')]
+        [System.String]
+        $APIVersion='beta'
+    )
+    try
     {
-        [CmdletBinding()]
-        [OutputType([System.Collections.Hashtable])]
-        param (
-            [Parameter(Mandatory = 'true')]
-            [System.String]
-            $DeviceConfigurationPolicyId,
+        $deviceManagementPolicyAssignments=@()
 
-            [Parameter()]
-            [Array]
-            $Targets,
+        $Uri="https://graph.microsoft.com/$APIVersion/$Repository/$DeviceConfigurationPolicyId/assign"
 
-            [Parameter()]
-            [System.String]
-            $Repository='deviceManagement/configurationPolicies',
-
-            [Parameter()]
-            [ValidateSet('v1.0','beta')]
-            [System.String]
-            $APIVersion='beta'
-        )
-        try
+        foreach($target in $targets)
         {
-            $deviceManagementPolicyAssignments=@()
-
-            $Uri="https://graph.microsoft.com/$APIVersion/$Repository/$DeviceConfigurationPolicyId/assign"
-
-            foreach($target in $targets)
+            $formattedTarget=@{"@odata.type"=$target.dataType}
+            if($target.groupId)
             {
-                $formattedTarget=@{"@odata.type"=$target.dataType}
-                if($target.groupId)
-                {
-                    $formattedTarget.Add('groupId',$target.groupId)
-                }
-                if($target.collectionId)
-                {
-                    $formattedTarget.Add('collectionId',$target.collectionId)
-                }
-                if($target.deviceAndAppManagementAssignmentFilterType)
-                {
-                    $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',$target.deviceAndAppManagementAssignmentFilterType)
-                }
-                if($target.deviceAndAppManagementAssignmentFilterId)
-                {
-                    $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',$target.deviceAndAppManagementAssignmentFilterId)
-                }
-                $deviceManagementPolicyAssignments+=@{'target'= $formattedTarget}
+                $formattedTarget.Add('groupId',$target.groupId)
             }
-            $body=@{'assignments'=$deviceManagementPolicyAssignments}|ConvertTo-Json -Depth 20
-            #write-verbose -Message $body
-            Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
-
+            if($target.collectionId)
+            {
+                $formattedTarget.Add('collectionId',$target.collectionId)
+            }
+            if($target.deviceAndAppManagementAssignmentFilterType)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',$target.deviceAndAppManagementAssignmentFilterType)
+            }
+            if($target.deviceAndAppManagementAssignmentFilterId)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',$target.deviceAndAppManagementAssignmentFilterId)
+            }
+            $deviceManagementPolicyAssignments+=@{'target'= $formattedTarget}
         }
-        catch
-        {
-            New-M365DSCLogEntry -Message 'Error updating data:'
-                -Exception $_
-                -Source $($MyInvocation.MyCommand.Source)
-                -TenantId $TenantId
-                -Credential $Credential
+        $body=@{'assignments'=$deviceManagementPolicyAssignments}|ConvertTo-Json -Depth 20
+        #write-verbose -Message $body
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
 
-            return $null
-        }
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating data:'
+            -Exception $_
+            -Source $($MyInvocation.MyCommand.Source)
+            -TenantId $TenantId
+            -Credential $Credential
+
+        return $null
+    }
 
 
-    }function Rename-M365DSCCimInstanceParameter
+}
+
+function Rename-M365DSCCimInstanceParameter
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable],[System.Collections.Hashtable[]])]
