@@ -1238,7 +1238,12 @@ function Get-TypeProperties
                 $myProperty.Add('Type',$property.Type)
                 $myProperty.Add('IsRootProperty',$IsRootProperty)
                 $myProperty.Add('ParentType',$entityType.Name)
-                $myProperty.Add('Description', $property.Annotation.String.replace('"',"'"))
+                $description = ''
+                if(-not [String]::IsNullOrWhiteSpace($property.Annotation.String))
+                {
+                    $description =$property.Annotation.String.replace('"',"'")
+                }
+                $myProperty.Add('Description', $description)
 
 
                 $properties+=$myProperty

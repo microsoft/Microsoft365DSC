@@ -43,6 +43,7 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters `
             -ProfileName '<#APIVersion#>'
 
+        Select-MgProfile -Name '<#APIVersion#>'
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
 
