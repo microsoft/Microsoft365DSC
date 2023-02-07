@@ -2,6 +2,10 @@
 
 # 1.23.201.1
 
+* IntuneDeviceCompliancePolicyWindows10
+  * Updated example
+* IntuneDeviceConfigurationPolicyWindows10
+  * Updated example
 * PlannerTask
   * Fixed issue where Attachments Uri weren't properly exiting single quotes.
     FIXES [#2822](https://github.com/microsoft/Microsoft365DSC/issues/2822)
@@ -22,6 +26,12 @@
 * DEPENDENCIES
   * Updated Microsoft.Graph.* to version 1.21.0
   * Updated MicrosoftTeams to version 4.9.3
+* MISC
+  * Corrected Ensure parameter logic for many resources.
+    Removed requirement for Ensure=Present only.
+    FIXES [#2718](https://github.com/microsoft/Microsoft365DSC/issues/2718)
+  * Updated documentation to reflect new authentication possibilities
+    FIXES [#2863](https://github.com/microsoft/Microsoft365DSC/issues/2863)
 
 # 1.23.125.1
 

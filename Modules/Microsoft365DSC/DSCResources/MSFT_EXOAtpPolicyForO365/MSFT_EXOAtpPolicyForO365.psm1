@@ -85,8 +85,10 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
+    $nullReturn = @{
+        IsSingleInstance = 'Yes'
+    }
+
     try
     {
         $AtpPolicies = Get-AtpPolicyForO365 -ErrorAction Stop
@@ -105,7 +107,6 @@ function Get-TargetResource
                 AllowSafeDocsOpen       = $AtpPolicyForO365.AllowSafeDocsOpen
                 EnableATPForSPOTeamsODB = $AtpPolicyForO365.EnableATPForSPOTeamsODB
                 EnableSafeDocs          = $AtpPolicyForO365.EnableSafeDocs
-                Ensure                  = 'Present'
                 ApplicationId           = $ApplicationId
                 CertificateThumbprint   = $CertificateThumbprint
                 CertificatePath         = $CertificatePath
@@ -362,6 +363,7 @@ function Export-TargetResource
         [Switch]
         $ManagedIdentity
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
@@ -396,6 +398,8 @@ function Export-TargetResource
             $i = 1
             foreach ($atpPolicy in $ATPPolicies)
             {
+                Write-Host "    |---[$i/$($ATPPolicies.Length)] $($atpPolicy.Identity)" -NoNewline
+
                 $Params = @{
                     IsSingleInstance      = 'Yes'
                     Identity              = $atpPolicy.Identity
@@ -407,9 +411,9 @@ function Export-TargetResource
                     Managedidentity       = $ManagedIdentity.IsPresent
                     CertificatePath       = $CertificatePath
                 }
-                Write-Host "    |---[$i/$($ATPPolicies.Length)] $($atpPolicy.Identity)" -NoNewline
                 $Results = Get-TargetResource @Params
-                if ($Results.Ensure -eq 'Present')
+
+                if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
                 {
                     $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                         -Results $Results
@@ -420,11 +424,16 @@ function Export-TargetResource
                         -Credential $Credential
                     $dscContent += $currentDSCBlock
 
-
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
+
+                    Write-Host $Global:M365DSCEmojiGreenCheckMark
                 }
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                else
+                {
+                    Write-Host $Global:M365DSCEmojiRedX
+                }
+
                 $i++
             }
         }
@@ -432,6 +441,7 @@ function Export-TargetResource
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for ATP Policies"
         }
+
         return $dscContent
     }
     catch
