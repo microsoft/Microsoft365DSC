@@ -754,7 +754,7 @@ function Update-M365DSCResourcesSettingsJSON
                 }
             }
             $json = ConvertTo-Json -InputObject $settings -Depth 10
-            #Set-Content -Path $settingsFile -Value $json -Encoding UTF8
+            Set-Content -Path $settingsFile -Value $json -Encoding UTF8
         }
         else
         {
