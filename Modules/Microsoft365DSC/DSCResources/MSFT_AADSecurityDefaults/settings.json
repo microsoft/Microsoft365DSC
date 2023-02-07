@@ -11,10 +11,7 @@
                 ],
                 "update": [
                     {
-                        "name": "Policy.ReadWrite.ConditionalAccess"
-                    },
-                    {
-                        "name": "Policy.Read.All"
+                        "name": "Policy.ReadWrite.All"
                     }
                 ]
             },
@@ -26,10 +23,7 @@
                 ],
                 "update": [
                     {
-                        "name": "Policy.ReadWrite.ConditionalAccess"
-                    },
-                    {
-                        "name": "Policy.Read.All"
+                        "name": "Policy.ReadWrite.All"
                     }
                 ]
             }

@@ -7,6 +7,9 @@
                 "read": [
                     {
                         "name": "ChannelSettings.Read.All"
+                    },
+                    {
+                        "name": "Group.Read.All"
                     }
                 ],
                 "update": [
@@ -17,7 +20,10 @@
                         "name": "ChannelSettings.Read.All"
                     },
                     {
-                        "name": "TeamsTab.Read.All"
+                        "name": "TeamsTab.Create"
+                    },
+                    {
+                        "name": "TeamsTab.ReadWrite.All"
                     }
                 ]
             },
@@ -25,6 +31,9 @@
                 "read": [
                     {
                         "name": "ChannelSettings.Read.All"
+                    },
+                    {
+                        "name": "Group.Read.All"
                     }
                 ],
                 "update": [
@@ -33,6 +42,9 @@
                     },
                     {
                         "name": "ChannelSettings.Read.All"
+                    },
+                    {
+                        "name": "TeamsTab.Create"
                     },
                     {
                         "name": "TeamsTab.ReadWrite.All"
