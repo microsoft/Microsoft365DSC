@@ -57,8 +57,9 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
             -InboundParameters $PSBoundParameters
 
-        $nullResult = $PSBoundParameters
-        $nullResult.Ensure = 'Absent'
+        $nullResult = @{
+            CdnType = $CdnType
+        }
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
@@ -78,7 +79,6 @@ function Get-TargetResource
         $result = @{
             CdnType               = $CdnType
             Enable                = $cdnEnabled.Value
-            Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -123,7 +123,7 @@ function Set-TargetResource
         $Enable,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -206,7 +206,7 @@ function Test-TargetResource
         $Enable,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -344,6 +344,7 @@ function Export-TargetResource
         Write-Host "`r`n" -NoNewline
         foreach ($cType in $cdnTypes)
         {
+            Write-Host "    |---[$i/2] $cType" -NoNewline
             $Params = @{
                 Credential            = $Credential
                 CdnType               = $cType
@@ -357,19 +358,28 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-            Write-Host "    |---[$i/2] $cType" -NoNewline
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -Credential $Credential
-            $dscContent += $currentDSCBlock
-            Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
+
+            if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
+            {
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -Credential $Credential
+                $dscContent += $currentDSCBlock
+                Save-M365DSCPartialExport -Content $currentDSCBlock `
+                    -FileName $Global:PartialExportFileName
+
+                Write-Host $Global:M365DSCEmojiGreenCheckmark
+            }
+            else
+            {
+                Write-Host $Global:M365DSCEmojiRedX
+            }
+
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckmark
         }
 
         return $dscContent
@@ -385,11 +395,11 @@ function Export-TargetResource
         {
             Write-Host $Global:M365DSCEmojiRedX
 
-            New-M365DSCLogEntry -Message "Error during Export:" `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
+            New-M365DSCLogEntry -Message 'Error during Export:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
         }
         return ''
     }
