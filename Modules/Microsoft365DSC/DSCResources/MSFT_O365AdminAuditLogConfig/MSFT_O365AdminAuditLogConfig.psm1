@@ -60,8 +60,10 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
+    $nullReturn = @{
+        IsSingleInstance = $IsSingleInstance
+    }
+
     try
     {
         $GetResults = Get-AdminAuditLogConfig -ErrorAction Stop
@@ -84,7 +86,6 @@ function Get-TargetResource
 
             $Result = @{
                 IsSingleInstance                = $IsSingleInstance
-                Ensure                          = 'Present'
                 Credential                      = $Credential
                 UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabledReturnValue
             }
@@ -340,7 +341,7 @@ function Export-TargetResource
         }
         $Results = Get-TargetResource @Params
 
-        if ($Results.Ensure -eq 'Present')
+        if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
         {
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
@@ -353,8 +354,14 @@ function Export-TargetResource
 
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
+
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        else
+        {
+            Write-Host $Global:M365DSCEmojiRedX
+        }
+
         return $dscContent
     }
     catch
