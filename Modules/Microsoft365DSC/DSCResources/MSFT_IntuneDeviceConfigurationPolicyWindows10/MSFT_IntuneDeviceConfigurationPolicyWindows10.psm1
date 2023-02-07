@@ -3071,7 +3071,7 @@ function Test-TargetResource
                 {
                     Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
                     $testResult = $false
-                    break;
+                    break
                 }
                 $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
                 $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
@@ -3084,7 +3084,7 @@ function Test-TargetResource
                 {
                     Write-Verbose -Message "Configuration drift: {$($assignment.dataType)} not found"
                     $testResult = $false
-                    break;
+                    break
                 }
                 $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
                 $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
@@ -3093,7 +3093,7 @@ function Test-TargetResource
             if (-not $testResult)
             {
                 $testResult = $false
-                break;
+                break
             }
         }
     }
@@ -3290,10 +3290,10 @@ function Get-M365DSCIntuneDeviceConfigurationPolicyWindowsAdditionalProperties
             if ($propertyName -eq 'defenderDetectedMalwareActions')
             {
                 $propertyValue = @{
-                    LowSeverity      = $properties.$property.lowSeverity
-                    ModerateSeverity = $properties.$property.moderateSeverity
-                    HighSeverity     = $properties.$property.highSeverity
-                    SevereSeverity   = $properties.$property.severeSeverity
+                    lowSeverity      = $properties.$property.lowSeverity
+                    moderateSeverity = $properties.$property.moderateSeverity
+                    highSeverity     = $properties.$property.highSeverity
+                    severeSeverity   = $properties.$property.severeSeverity
                 }
             }
             else

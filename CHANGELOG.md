@@ -2,6 +2,44 @@
 
 # UNRELEASED
 
+* AADEntitlementManagementAccessPackageAssignmentPolicy
+  * Initial release
+
+# 1.23.201.1
+
+* IntuneDeviceCompliancePolicyWindows10
+  * Updated example
+* IntuneDeviceConfigurationPolicyWindows10
+  * Updated example
+* PlannerTask
+  * Fixed issue where Attachments Uri weren't properly exiting single quotes.
+    FIXES [#2822](https://github.com/microsoft/Microsoft365DSC/issues/2822)
+* PPPowerAppsEnvironment
+  * Adds support for Developr SKU and fix for Teams SKU
+    FIXES [#2821](https://github.com/microsoft/Microsoft365DSC/issues/2821)
+* SCProtectionAlert
+  * Support for certificate based auth
+  * Fix removal of alert
+  * Added additional supported values for ThreatType, Severity & AggregationType
+    FIXES [#2793](https://github.com/microsoft/Microsoft365DSC/issues/2793)
+* TeamsTenantNetworkRegion
+  * Initial Release.
+* TeamsTenantNetworkSite
+  * Initial Release.
+* TeamsTenantNetworkSubnet
+  * Initial Release.
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.21.0
+  * Updated MicrosoftTeams to version 4.9.3
+* MISC
+  * Corrected Ensure parameter logic for many resources.
+    Removed requirement for Ensure=Present only.
+    FIXES [#2718](https://github.com/microsoft/Microsoft365DSC/issues/2718)
+  * Updated documentation to reflect new authentication possibilities
+    FIXES [#2863](https://github.com/microsoft/Microsoft365DSC/issues/2863)
+
+# 1.23.125.1
+
 * TeamsAudioConferencingPolicy
   * Initial Release.
 * TeamsCallHoldPolicy
@@ -20,9 +58,28 @@
   * Initial Release.
 * TeamsTranslationRule
   * Initial Release.
-* AADEntitlementManagementAccessPackageAssignmentPolicy
-  * Initial release
-  
+* TeamsUnassignedNumberTreatment
+  * Initial Release.
+* TeamsVDIPolicy
+  * Initial Release.
+* TeamsWorkloadPolicy
+  * Initial Release.
+* DRG
+  * Added CIM constructor in Get-TargetResource
+  * Improved management of AdditionalProperties
+  * Improved datetime and dateoffset management
+  * Fixed UnitTest
+  * Generate Stubs if required
+  * Fixes #2819
+* IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled
+  * Initial Release
+  * Fixes #2604
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.155.
+* Planner
+  * Fixed api-permissions on PlannerBucket and PlannerPlan.
+    FIXES [#2843](https://github.com/microsoft/Microsoft365DSC/issues/2843)
+
 # 1.23.118.1
 
 * IntuneAppConfigurationPolicy

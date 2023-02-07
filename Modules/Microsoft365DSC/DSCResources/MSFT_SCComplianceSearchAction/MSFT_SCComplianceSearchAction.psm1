@@ -523,9 +523,10 @@ function Export-TargetResource
         foreach ($action in $actions)
         {
             Write-Host "        |---[$i/$($actions.Length)] $($action.Name)" -NoNewline
-            $Params = $PSBoundParameters.Clone()
-            $Params.Action = $action.Action
-            $Params.SearchName = $action.SearchName
+            $Params = @{
+                Action = $action.Action
+                SearchName = $action.SearchName
+            }
 
             $Scenario = Get-ResultProperty -ResultString $action.Results -PropertyName 'Scenario'
 
@@ -533,7 +534,7 @@ function Export-TargetResource
             {
                 $Params.Action = 'Retention'
             }
-            $Results = Get-TargetResource @Params
+            $Results = Get-TargetResource @PSBoundParameters @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -565,7 +566,6 @@ function Export-TargetResource
                 $Params = @{
                     Action     = $action.Action
                     SearchName = $action.SearchName
-                    Credential = $Credential
                 }
 
                 $Scenario = Get-ResultProperty -ResultString $action.Results -PropertyName 'Scenario'
@@ -574,7 +574,7 @@ function Export-TargetResource
                 {
                     $Params.Action = 'Retention'
                 }
-                $Results = Get-TargetResource @Params
+                $Results = Get-TargetResource @PSBoundParameters @Params
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
                 $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `

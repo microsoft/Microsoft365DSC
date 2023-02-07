@@ -86,8 +86,11 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
+    $nullReturn = @{
+        DisplayName = $DisplayName
+        TeamName    = $TeamName
+        ChannelName = $ChannelName
+    }
 
     try
     {
@@ -160,10 +163,9 @@ function Get-TargetResource
 
         if ($null -eq $tabInstance)
         {
+            $nullReturn.Ensure = 'Absent'
             $nullReturn.TeamId = $teamInstance.Id
-            $nullResult = $PSBoundParameters
-            $nullResult.Ensure = 'Absent'
-            return $nullResult
+            return $nullReturn
         }
 
         return @{
@@ -192,7 +194,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return @{}
+        return $nullReturn
     }
 }
 
@@ -301,19 +303,19 @@ function Set-TargetResource
 
     if (-not [System.String]::IsNullOrEmpty($ContentUrl))
     {
-        $configuration.Add("ContentUrl", $ContentUrl)
+        $configuration.Add('ContentUrl', $ContentUrl)
     }
     if (-not [System.String]::IsNullOrEmpty($EntityId))
     {
-        $configuration.Add("EntityId", $EntityId)
+        $configuration.Add('EntityId', $EntityId)
     }
     if (-not [System.String]::IsNullOrEmpty($RemoveUrl))
     {
-        $configuration.Add("RemoveUrl", $RemoveUrl)
+        $configuration.Add('RemoveUrl', $RemoveUrl)
     }
     if (-not [System.String]::IsNullOrEmpty($WebSiteUrl))
     {
-        $configuration.Add("WebSiteUrl", $WebSiteUrl)
+        $configuration.Add('WebSiteUrl', $WebSiteUrl)
     }
     $CurrentParameters.Add('Configuration', $configuration)
     $CurrentParameters.Remove('ContentUrl') | Out-Null
@@ -333,7 +335,7 @@ function Set-TargetResource
         $CurrentParameters.Add('ChannelId', $ChannelInstance.Id)
         $CurrentParameters.Remove('TeamName') | Out-Null
         $CurrentParameters.Remove('ChannelName') | Out-Null
-        $CurrentParameters.Add("TeamsTabId", $tabInstance.Id)
+        $CurrentParameters.Add('TeamsTabId', $tabInstance.Id)
         Write-Verbose -Message "Params: $($CurrentParameters | Out-String)"
         Update-MgTeamChannelTab  @CurrentParameters | Out-Null
     }
@@ -347,7 +349,7 @@ function Set-TargetResource
         Write-Verbose -Message "Params: $($CurrentParameters | Out-String)"
 
         $additionalProperties = @{
-            "teamsApp@odata.bind" = "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/$TeamsApp"
+            'teamsApp@odata.bind' = "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/$TeamsApp"
         }
         $CurrentParameters.Add('AdditionalProperties', $additionalProperties)
 
@@ -515,7 +517,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$teams = get-mggroup -Filter "resourceProvisioningOptions/Any(x:x eq 'Team')" -All
+        [array]$teams = Get-MgGroup -Filter "resourceProvisioningOptions/Any(x:x eq 'Team')" -All
         $i = 1
         $dscContent = ''
         Write-Host "`r`n" -NoNewline
@@ -573,7 +575,7 @@ function Export-TargetResource
                     }
                     $Results = Get-TargetResource @params
 
-                    if ($null -ne $Results)
+                    if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 3)
                     {
                         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                             -Results $Results
@@ -586,8 +588,13 @@ function Export-TargetResource
                         $dscContent += $currentDSCBlock
                         Save-M365DSCPartialExport -Content $currentDSCBlock `
                             -FileName $Global:PartialExportFileName
+
+                        Write-Host $Global:M365DSCEmojiGreenCheckmark
                     }
-                    Write-Host $Global:M365DSCEmojiGreenCheckmark
+                    else
+                    {
+                        Write-Host $Global:M365DSCEmojiRedX
+                    }
                     $k++
                 }
                 $j++

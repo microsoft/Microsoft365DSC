@@ -57,8 +57,9 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
+    $nullReturn = @{
+        UserName = $UserName
+    }
 
     try
     {
@@ -81,7 +82,6 @@ function Get-TargetResource
             UserName              = $UserName
             Properties            = $propertiesValue
             Credential            = $Credential
-            Ensure                = 'Present'
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
@@ -303,7 +303,7 @@ function Export-TargetResource
         #endregion
 
         # Get all instances;
-        $instances = Get-PnPUser | Where-Object -FilterScript {$_.PrincipalType -eq 'User' -and '' -ne $_.Email}
+        $instances = Get-PnPUser | Where-Object -FilterScript { $_.PrincipalType -eq 'User' -and '' -ne $_.Email }
         $dscContent = ''
         Write-Host "`r`n" -NoNewline
         $i = 1
@@ -321,25 +321,35 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-            $Results.Properties = ConvertTo-M365DSCSPOUserProfilePropertyInstanceString -Properties $Results.Properties
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                            -Results $Results
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                                -ConnectionMode $ConnectionMode `
-                                -ModulePath $PSScriptRoot `
-                                -Results $Results `
-                                -Credential $Credential
-            if ($null -ne $Results.Properties)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Properties'
-            }
-            $dscContent += $currentDSCBlock
-            Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
 
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
+            {
+                $Results.Properties = ConvertTo-M365DSCSPOUserProfilePropertyInstanceString -Properties $Results.Properties
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -Credential $Credential
+                if ($null -ne $Results.Properties)
+                {
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Properties'
+                }
+                $dscContent += $currentDSCBlock
+                Save-M365DSCPartialExport -Content $currentDSCBlock `
+                    -FileName $Global:PartialExportFileName
+
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
+            }
+            else
+            {
+                Write-Host $Global:M365DSCEmojiRedX
+            }
+
             $i++
         }
+
         $organization = ''
         $principal = '' # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
         $organization = Get-M365DSCOrganization -Credential $Credential -TenantId $Tenantid
@@ -353,6 +363,7 @@ function Export-TargetResource
             $dscContent = $dscContent -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
             $dscContent = $dscContent -ireplace [regex]::Escape('@' + $organization), "@`$(`$OrganizationName)"
         }
+
         return $dscContent
     }
     catch
@@ -396,7 +407,7 @@ function ConvertTo-M365DSCSPOUserProfilePropertyInstanceString
         $content += "                Value = '$($property.Value)'`r`n"
         $content += "            }`r`n"
     }
-    $content += "            )"
+    $content += '            )'
     return $content
 }
 

@@ -204,8 +204,9 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
+    $nullReturn = @{
+        Identity = $Identity
+    }
 
     try
     {
@@ -258,7 +259,6 @@ function Get-TargetResource
         ShowGalAsDefaultView                    = $mailboxCasSettings.ShowGalAsDefaultView
         SmtpClientAuthenticationDisabled        = $mailboxCasSettings.SmtpClientAuthenticationDisabled
         UniversalOutlookEnabled                 = $mailboxCasSettings.UniversalOutlookEnabled
-        Ensure                                  = 'Present'
         Credential                              = $Credential
         ApplicationId                           = $ApplicationId
         CertificateThumbprint                   = $CertificateThumbprint
@@ -267,6 +267,7 @@ function Get-TargetResource
         Managedidentity                         = $ManagedIdentity.IsPresent
         TenantId                                = $TenantId
     }
+
     Write-Verbose -Message "Found an existing instance of Mailbox '$($Identity)'"
     return $result
 }
@@ -756,54 +757,76 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    [array]$mailboxes = Get-Mailbox -ResultSize 'Unlimited'
+    try
+    {
+        [array]$mailboxes = Get-Mailbox -ResultSize 'Unlimited'
 
-    $i = 1
-    if ($mailboxes.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-    }
-    else
-    {
-        Write-Host "`r`n"-NoNewline
-    }
-    $dscContent = ''
-    foreach ($mailbox in $mailboxes)
-    {
-        Write-Host "    |---[$i/$($mailboxes.Length)] $($mailbox.Name)" -NoNewline
-        $mailboxName = $mailbox.UserPrincipalName
-        if (![System.String]::IsNullOrEmpty($mailboxName))
+        $i = 1
+        if ($mailboxes.Length -eq 0)
         {
-            $Params = @{
-                Credential            = $Credential
-                Identity              = $mailboxName
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
-                CertificatePath       = $CertificatePath
-            }
-            $Results = Get-TargetResource @Params
-
-            if ($Results.Ensure -eq 'Present')
-            {
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
-                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                    -ConnectionMode $ConnectionMode `
-                    -ModulePath $PSScriptRoot `
-                    -Results $Results `
-                    -Credential $Credential
-                $dscContent += $currentDSCBlock
-                Save-M365DSCPartialExport -Content $currentDSCBlock `
-                    -FileName $Global:PartialExportFileName
-            }
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        else
+        {
+            Write-Host "`r`n"-NoNewline
+        }
+        $dscContent = ''
+        foreach ($mailbox in $mailboxes)
+        {
+            Write-Host "    |---[$i/$($mailboxes.Length)] $($mailbox.Name)" -NoNewline
+            $mailboxName = $mailbox.UserPrincipalName
+            if (![System.String]::IsNullOrEmpty($mailboxName))
+            {
+                $Params = @{
+                    Credential            = $Credential
+                    Identity              = $mailboxName
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    CertificatePassword   = $CertificatePassword
+                    Managedidentity       = $ManagedIdentity.IsPresent
+                    CertificatePath       = $CertificatePath
+                }
+                $Results = Get-TargetResource @Params
+
+                if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
+                {
+                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                        -Results $Results
+                    $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                        -ConnectionMode $ConnectionMode `
+                        -ModulePath $PSScriptRoot `
+                        -Results $Results `
+                        -Credential $Credential
+                    $dscContent += $currentDSCBlock
+                    Save-M365DSCPartialExport -Content $currentDSCBlock `
+                        -FileName $Global:PartialExportFileName
+
+                    Write-Host $Global:M365DSCEmojiGreenCheckMark
+                }
+                else
+                {
+                    Write-Host $Global:M365DSCEmojiRedX
+                }
+            }
+
+            $i++
+        }
+
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

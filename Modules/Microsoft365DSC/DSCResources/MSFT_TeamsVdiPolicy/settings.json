@@ -1,0 +1,6 @@
+{
+    "resourceName": "TeamsVdiPolicy",
+    "description": "This resource implements Teams VDI Policies.",
+    "permissions":[]
+
+}
