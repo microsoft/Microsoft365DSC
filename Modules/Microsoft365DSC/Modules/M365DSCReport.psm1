@@ -787,6 +787,20 @@ function Get-M365DSCResourceKey
     {
         return @('OrgWideAccount')
     }
+    elseif ($mandatoryParameters.count -eq 1)
+    {
+        # returning the only mandatory parameter name
+        return @($mandatoryParameters[0].Name)
+    }
+    elseif ($mandatoryParameters.count -eq 0)
+    {
+        throw "No mandatory parameters found for $($Resource.ResourceName)"
+    }
+    else
+    {
+        # the function failed to find any key params
+        throw "Multiple mandatory parameters found for $($Resource.ResourceName) but none of them are returned by the function"
+    }
 }
 
 <#
@@ -1110,7 +1124,7 @@ function New-M365DSCDeltaReport
                                 $sourceValue += "<tr><td width='100%' style='border:1px solid black; text-align:right;'>$key = $currentValue</td></tr>"
                                 $sourceValue += "</table><br/>"
                             }
-                            $sourceValue = $sourceValue.Substring(0, $sourceValue.Length -5)                            
+                            $sourceValue = $sourceValue.Substring(0, $sourceValue.Length -5)
                             $cellStyle = "vertical-align:top;"
                         }
 

@@ -4,35 +4,22 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.String]
-        $CatalogStatus,
-
-        [Parameter()]
-        [ValidateSet('UserManaged', 'ServiceDefault')]
-        [System.String]
-        $CatalogType,
+        $Identity,
 
         [Parameter()]
         [System.String]
         $Description,
 
         [Parameter()]
-        [System.String]
-        $DisplayName,
+        [System.Int32]
+        $MaskBits,
 
         [Parameter()]
-        [System.Boolean]
-        $IsExternallyVisible,
-
-        [Parameter(Mandatory = $true)]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -47,90 +34,52 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
-
-        [Parameter()]
         [System.String]
-        $CertificateThumbprint,
-
-        [Parameter()]
-        [Switch]
-        $ManagedIdentity
+        $CertificateThumbprint
     )
+Write-Verbose -Message "Entering Get"
+    New-M365DSCConnection -Workload 'MicrosoftTeams' `
+        -InboundParameters $PSBoundParameters | Out-Null
 
-    try
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
-    }
-    catch
-    {
-        Write-Verbose -Message ($_)
-    }
-
+        Write-Verbose -Message "Flag2"
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
+    Write-Verbose -Message "Flag3"
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
+        Write-Verbose -Message "Flag4"
     Add-M365DSCTelemetryEvent -Data $data
+    Write-Verbose -Message "Flag5"
     #endregion
 
     $nullResult = $PSBoundParameters
     $nullResult.Ensure = 'Absent'
-
     try
     {
-        $getValue = $null
-
-        #region resource generator code
-        $getValue = Get-MgEntitlementManagementAccessPackageCatalog -AccessPackageCatalogId $id -ErrorAction SilentlyContinue
-
-        if ($null -eq $getValue)
+        Write-Verbose -Message "Getting instance {$Identity}"
+        $instance = Get-CsTenantTrustedIPAddress -Identity $Identity -ErrorAction SilentlyContinue
+        if ($null -eq $instance)
         {
-            Write-Verbose -Message "Nothing with id {$id} was found"
-
-            if (-Not [string]::IsNullOrEmpty($DisplayName))
-            {
-                $getValue = Get-MgEntitlementManagementAccessPackageCatalog `
-                    -ErrorAction Stop | Where-Object `
-                    -FilterScript { `
-                        $_.DisplayName -eq "$($DisplayName)" `
-                }
-            }
-        }
-        #endregion
-
-        if ($null -eq $getValue)
-        {
-            Write-Verbose -Message "Nothing with DisplayName {$DisplayName} was found"
+            Write-Verbose -Message "No instances found"
             return $nullResult
         }
 
-        Write-Verbose -Message "Found something with id {$id}"
-        $results = [ordered]@{
-            #region resource generator code
-            Id                    = $getValue.Id
-            CatalogStatus         = $getValue.CatalogStatus
-            CatalogType           = $getValue.CatalogType
-            Description           = $getValue.Description
-            DisplayName           = $getValue.DisplayName
-            IsExternallyVisible   = $getValue.IsExternallyVisible
+        Write-Verbose -Message "Found an instance with Identity {$Identity}"
+        $results = @{
+            Identity              = $instance.Identity
+            Description           = $instance.Description
+            MaskBits              = $instance.MaskBits
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
-            ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
-            Managedidentity       = $ManagedIdentity.IsPresent
         }
-
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -150,36 +99,22 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.String]
-        $CatalogStatus,
-
-        [Parameter()]
-        [ValidateSet('UserManaged', 'ServiceDefault')]
-        [System.String]
-        $CatalogType,
+        $Identity,
 
         [Parameter()]
         [System.String]
         $Description,
 
         [Parameter()]
-        [System.String]
-        $DisplayName,
+        [System.Int32]
+        $MaskBits,
 
         [Parameter()]
-        [System.Boolean]
-        $IsExternallyVisible,
-
-        [Parameter(Mandatory = $true)]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -194,28 +129,12 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
-
-        [Parameter()]
         [System.String]
-        $CertificateThumbprint,
-
-        [Parameter()]
-        [Switch]
-        $ManagedIdentity
+        $CertificateThumbprint
     )
 
-    try
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-    }
+    New-M365DSCConnection -Workload 'MicrosoftTeams' `
+        -InboundParameters $PSBoundParameters | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -241,45 +160,47 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating {$DisplayName}"
+        $CreateParameters = ([Hashtable]$PSBoundParameters).Clone()
 
-        $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
-        $CreateParameters.Remove('Id') | Out-Null
         $CreateParameters.Remove('Verbose') | Out-Null
 
-        $CreateParameters.add('@odata.type', '#microsoft.graph.accessPackageCatalog')
-
-        #region resource generator code
-        $policy = New-MgEntitlementManagementAccessPackageCatalog -BodyParameter $CreateParameters
-
-        #endregion
-
+        $keys = $CreateParameters.Keys
+        foreach ($key in $keys)
+        {
+            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
+            {
+                $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
+                $CreateParameters.Remove($key) | Out-Null
+                $CreateParameters.Add($keyName, $keyValue)
+            }
+        }
+        Write-Verbose -Message "Creating {$Identity} with Parameters:`r`n$(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
+        New-CsTenantTrustedIPAddress @CreateParameters | Out-Null
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating {$DisplayName}"
+        Write-Verbose -Message "Updating {$Identity}"
 
-        $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
-
-        $UpdateParameters.Remove('Id') | Out-Null
+        $UpdateParameters = ([Hashtable]$PSBoundParameters).Clone()
         $UpdateParameters.Remove('Verbose') | Out-Null
 
-        $UpdateParameters.add('@odata.type', '#microsoft.graph.accessPackageCatalog')
+        $keys = $UpdateParameters.Keys
+        foreach ($key in $keys)
+        {
+            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
+            {
+                $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
+                $UpdateParameters.Remove($key) | Out-Null
+                $UpdateParameters.Add($keyName, $keyValue)
+            }
+        }
 
-        #region resource generator code
-        Update-MgEntitlementManagementAccessPackageCatalog -BodyParameter $UpdateParameters `
-            -AccessPackageCatalogId $currentInstance.Id
-
-        #endregion
-
+        Set-CsTenantTrustedIPAddress @UpdateParameters | Out-Null
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing {$DisplayName}"
-
-        Remove-MgEntitlementManagementAccessPackageCatalog -AccessPackageCatalogId $currentInstance.Id
-        #endregion
-
+        Write-Verbose -Message "Removing {$Identity}"
+        Remove-CsTenantTrustedIPAddress -Identity $currentInstance.Identity
     }
 }
 
@@ -289,36 +210,22 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.String]
-        $CatalogStatus,
-
-        [Parameter()]
-        [ValidateSet('UserManaged', 'ServiceDefault')]
-        [System.String]
-        $CatalogType,
+        $Identity,
 
         [Parameter()]
         [System.String]
         $Description,
 
         [Parameter()]
-        [System.String]
-        $DisplayName,
+        [System.Int32]
+        $MaskBits,
 
         [Parameter()]
-        [System.Boolean]
-        $IsExternallyVisible,
-
-        [Parameter(Mandatory = $true)]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -333,16 +240,8 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
-
-        [Parameter()]
         [System.String]
-        $CertificateThumbprint,
-
-        [Parameter()]
-        [Switch]
-        $ManagedIdentity
+        $CertificateThumbprint
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -357,33 +256,35 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of {$id}"
+    Write-Verbose -Message "Testing configuration of {$Identity}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+    $ValuesToCheck.Remove('Identity') | Out-Null
 
     if ($CurrentValues.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
     }
-    $testResult = $true
 
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
-    #Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    #Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
-
-    if ($testResult)
+    #Convert any DateTime to String
+    foreach ($key in $ValuesToCheck.Keys)
     {
-        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
+        if (($null -ne $CurrentValues[$key]) `
+                -and ($CurrentValues[$key].GetType().Name -eq 'DateTime'))
+        {
+            $CurrentValues[$key] = $CurrentValues[$key].toString()
+        }
     }
+
+    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $testResult"
 
@@ -421,9 +322,8 @@ function Export-TargetResource
         $ManagedIdentity
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+   $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -439,9 +339,7 @@ function Export-TargetResource
 
     try
     {
-        #region resource generator code
-        [array]$getValue = Get-MgEntitlementManagementAccessPackageCatalog -All -ErrorAction Stop
-        #endregion
+        [array]$getValue = Get-CsTenantTrustedIPAddress -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
@@ -453,25 +351,22 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
-
         foreach ($config in $getValue)
         {
-            $displayedKey = $config.id
+            $displayedKey = $config.Identity
             if (-not [String]::IsNullOrEmpty($config.displayName))
             {
                 $displayedKey = $config.displayName
             }
-
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                id                    = $config.id
-                Ensure                = 'Present'
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                ApplicationSecret     = $ApplicationSecret
+                Identity = $config.Identity
+                Ensure = 'Present'
+                Credential = $Credential
+                ApplicationId = $ApplicationId
+                TenantId = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+
             }
 
             $Results = Get-TargetResource @Params
@@ -483,15 +378,12 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
-
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-
         return $dscContent
     }
     catch

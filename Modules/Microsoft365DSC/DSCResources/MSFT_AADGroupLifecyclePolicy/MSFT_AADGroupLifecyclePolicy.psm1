@@ -72,6 +72,7 @@ function Get-TargetResource
     {
         $nullReturn = $PSBoundParameters
         $nullReturn.Ensure = 'Absent'
+
         try
         {
             $Policy = Get-MgGroupLifecyclePolicy -ErrorAction SilentlyContinue
