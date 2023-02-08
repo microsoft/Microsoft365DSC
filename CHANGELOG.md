@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# 1.23.208.1
+
+* TeamsTenantTrustedIPAddress
+  * Initial Release.
+
 # 1.23.201.1
 
 * IntuneDeviceCompliancePolicyWindows10
