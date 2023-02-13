@@ -1196,7 +1196,7 @@ Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions
 Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions @(@{Api='Graph';PermissionName='Domain.Read.All'}) -AdminConsent -Type Certificate -CreateSelfSignedCertificate -CertificatePath c:\Temp\M365DSC.cer
 
 .Example
-Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions @(@{Api='SharePoint';PermissionName='Sites.FullControl.All'},@{Api='Graph';PermissionName='Group.ReadWrite.All'},@{Api='Exchange';PermissionsName='Exchange.ManageAsApp'}) -AdminConsent -Type Certificate -CertificatePath c:\Temp\M365DSC.cer
+Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions @(@{Api='SharePoint';PermissionName='Sites.FullControl.All'},@{Api='Graph';PermissionName='Group.ReadWrite.All'},@{Api='Exchange';PermissionName='Exchange.ManageAsApp'}) -AdminConsent -Type Certificate -CertificatePath c:\Temp\M365DSC.cer
 
 .Functionality
 Public
