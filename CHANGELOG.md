@@ -2,8 +2,17 @@
 
 # UNRELEASED
 
+* EXOIRMConfiguration
+  * Fixed issue where the export did not the correct type for RMSOnlineKeySharingLocation
+    FIXES [#2890](https://github.com/microsoft/Microsoft365DSC/issues/2890)
+* IntuneRoleAssignment
+  * Fixed issue where the export did not the correct type for ScopeType
+    FIXES [#2889](https://github.com/microsoft/Microsoft365DSC/issues/2889)
 * O365OrgSettings
   * Initial Release.
+* MISC
+  * Updated required permissions of several resources
+    FIXES [#2866](https://github.com/microsoft/Microsoft365DSC/issues/2866)
 
 # 1.23.208.1
 

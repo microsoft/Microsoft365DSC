@@ -18,12 +18,12 @@
             "application": {
                 "read": [
                     {
-                        "name": "NotSupported"
+                        "name": "Tasks.Read.All"
                     }
                 ],
                 "update": [
                     {
-                        "name": "NotSupported"
+                        "name": "Tasks.ReadWrite.All"
                     }
                 ]
             }
