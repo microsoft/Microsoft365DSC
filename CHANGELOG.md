@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# 1.23.208.1
+# UNRELEASED
 
 * EXOIRMConfiguration
   * Fixed issue where the export did not the correct type for RMSOnlineKeySharingLocation
@@ -8,11 +8,14 @@
 * IntuneRoleAssignment
   * Fixed issue where the export did not the correct type for ScopeType
     FIXES [#2889](https://github.com/microsoft/Microsoft365DSC/issues/2889)
-* TeamsTenantTrustedIPAddress
-  * Initial Release.
 * MISC
   * Updated required permissions of several resources
     FIXES [#2866](https://github.com/microsoft/Microsoft365DSC/issues/2866)
+
+# 1.23.208.1
+
+* TeamsTenantTrustedIPAddress
+  * Initial Release.
 
 # 1.23.201.1
 
