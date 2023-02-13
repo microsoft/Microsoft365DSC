@@ -47,20 +47,6 @@ function New-MgGroupOwnerByRef
         $BodyParameter
     )
 }
-
-function Get-MgServicePrincipal
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $ServicePrincipalId,
-
-        [Parameter()]
-        [System.String]
-        $Filter
-    )
-}
 function Confirm-M365DSCDependencies
 {
     [CmdletBinding()]
