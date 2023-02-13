@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* O365OrgSettings
+  * Initial Release.
+
 # 1.23.208.1
 
 * TeamsTenantTrustedIPAddress
