@@ -22,4 +22,28 @@ The TeamsMobilityPolicy allows Admins to control Teams mobile usage for users.
 
 ## Permissions
 
+### Microsoft Graph
+
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
+
+#### Delegated permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
+
+#### Application permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
+
 
