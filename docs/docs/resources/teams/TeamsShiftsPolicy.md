@@ -25,4 +25,28 @@ This resource allows you to create a new TeamsShiftPolicy instance and set it's 
 
 ## Permissions
 
+### Microsoft Graph
+
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
+
+#### Delegated permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
+
+#### Application permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
+
 

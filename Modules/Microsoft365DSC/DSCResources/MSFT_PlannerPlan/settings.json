@@ -27,12 +27,21 @@
             "application": {
                 "read": [
                     {
-                        "name": "NotSupported"
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "Tasks.Read.All"
                     }
                 ],
                 "update": [
                     {
-                        "name": "NotSupported"
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "Tasks.Read.All"
+                    },
+                    {
+                        "name": "Tasks.ReadWrite.All"
                     }
                 ]
             }

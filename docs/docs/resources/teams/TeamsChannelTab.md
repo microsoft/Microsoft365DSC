@@ -34,21 +34,21 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - ChannelSettings.Read.All
+    - ChannelSettings.Read.All, Group.Read.All
 
 - **Update**
 
-    - Channel.Delete.All, ChannelSettings.Read.All, TeamsTab.Read.All
+    - Channel.Delete.All, ChannelSettings.Read.All, TeamsTab.Create, TeamsTab.ReadWrite.All
 
 #### Application permissions
 
 - **Read**
 
-    - ChannelSettings.Read.All
+    - ChannelSettings.Read.All, Group.Read.All
 
 - **Update**
 
-    - Channel.Delete.All, ChannelSettings.Read.All, TeamsTab.ReadWrite.All
+    - Channel.Delete.All, ChannelSettings.Read.All, TeamsTab.Create, TeamsTab.ReadWrite.All
 
 ## Examples
 

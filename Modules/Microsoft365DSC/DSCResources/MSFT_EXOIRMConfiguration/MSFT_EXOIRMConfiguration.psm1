@@ -146,7 +146,7 @@ function Get-TargetResource
             JournalReportDecryptionEnabled             = $IRMConfiguration.JournalReportDecryptionEnabled
             LicensingLocation                          = $IRMConfiguration.LicensingLocation
             RejectIfRecipientHasNoRights               = $IRMConfiguration.RejectIfRecipientHasNoRights
-            RMSOnlineKeySharingLocation                = $IRMConfiguration.RMSOnlineKeySharingLocation
+            RMSOnlineKeySharingLocation                = $IRMConfiguration.RMSOnlineKeySharingLocation.ToString()
             SearchEnabled                              = $IRMConfiguration.SearchEnabled
             SimplifiedClientAccessDoNotForwardDisabled = $IRMConfiguration.SimplifiedClientAccessDoNotForwardDisabled
             SimplifiedClientAccessEnabled              = $IRMConfiguration.SimplifiedClientAccessEnabled
