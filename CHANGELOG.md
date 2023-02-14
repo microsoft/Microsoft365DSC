@@ -9,6 +9,9 @@
     FIXES [#2658](https://github.com/microsoft/Microsoft365DSC/issues/2658)
 * PPPowerAppsEnvironment
   * Added all the latest location return from Get-AdminPowerAppEnvironmentLocations
+* TeamsChannelTab
+  * Updated key parameters to prevent detected duplicates
+    FIXES [#2897](https://github.com/microsoft/Microsoft365DSC/issues/2897)
 * MISC
   * Updated Tasks.Read and Tasks.ReadWrite Permissions for Planner Plans and Planner Buckets
     FIXES [#2866](https://github.com/microsoft/Microsoft365DSC/issues/2866)
