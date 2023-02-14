@@ -159,6 +159,27 @@ Use the "<a href="https://pnp.github.io/powershell/cmdlets/Register-PnPManagemen
 
 As an alternative, you can use the "<a href="https://pnp.github.io/powershell/cmdlets/Register-PnPAzureADApp.html" target="_blank">Register-PnPAzureADApp</a>" cmdlet to have PnP PowerShell create the app registration for you and grant the correct permissions.
 
+### Using Application Secret
+
+SharePoint Online uses the legacy ACS model to authenticate using an Application Secret. In order to get started with it, you will need to register your Azure AD App against your tenant.
+
+1. Navigate to https://<yourtenant>-admin.sharepoint.com/_layouts/15/appinv.aspx.
+2. In the App Id box, type in the application id of your Azure AD App you wish to authenticate with and click on the **Lookup** button.
+3. In the App domain box, type in www.<yourtenant>.com.
+4. Leave the **Redirect URL** box empty.
+5. In the **Permission request XML** box, put in the following XML:
+```
+  <AppPermissionRequests AllowAppOnlyPolicy="true">
+    <AppPermissionRequest Scope="http://sharepoint/content/tenant" Right="FullControl" />
+  </AppPermissionRequests>
+```
+6. Click on the **Create** button.
+<a href="/Images/Step1-SPOACS.png"><img src="/Images/Step1-SPOACS.png" alt="Register a new app for SharePoint Online." /></a>
+7. On the next screen, click on the ** Trust It** button to complete the registration process.
+<a href="/Images/Step2-SPOACS.png"><img src="/Images/Step2-SPOACS.png" alt="Register a new app for SharePoint Online." /></a>
+
+You should now be able to connect to SharePoint Online using an Application Secret.
+
 ## Exchange Permissions
 
 For the Exchange Online resources, the service account needs certain permissions in order to be able to connect and manage the settings in Exchange Online. You can request the required permissions/roles and the corresponding rolegroups using the <a href="../../cmdlets/Get-M365DSCCompiledPermissionList/" target="_blank">Get-M365DSCCompiledPermissionList</a> cmdlet.
