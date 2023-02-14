@@ -6,12 +6,24 @@
             "delegated": {
                 "read": [
                     {
+                        "name": "RoleManagement.Read.Directory"
+                    },
+                    {
                         "name": "User.Read.All"
                     }
                 ],
                 "update": [
                     {
                         "name": "Organization.Read.All"
+                    },
+                    {
+                        "name": "RoleManagement.Read.Directory"
+                    },
+                    {
+                        "name": "RoleManagement.ReadWrite.Directory"
+                    },
+                    {
+                        "name": "User.Read.All"
                     },
                     {
                         "name": "User.ReadWrite.All"
@@ -21,12 +33,24 @@
             "application": {
                 "read": [
                     {
+                        "name": "RoleManagement.Read.Directory"
+                    },
+                    {
                         "name": "User.Read.All"
                     }
                 ],
                 "update": [
                     {
                         "name": "Organization.Read.All"
+                    },
+                    {
+                        "name": "RoleManagement.Read.Directory"
+                    },
+                    {
+                        "name": "RoleManagement.ReadWrite.Directory"
+                    },
+                    {
+                        "name": "User.Read.All"
                     },
                     {
                         "name": "User.ReadWrite.All"
