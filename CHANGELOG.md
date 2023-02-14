@@ -13,6 +13,8 @@
 * MISC
   * Updated required permissions of several resources
     FIXES [#2866](https://github.com/microsoft/Microsoft365DSC/issues/2866)
+  * Added filter to Update-M365DSCAzureAdApplication to be more specific.
+    FIXES [2565](https://github.com/microsoft/Microsoft365DSC/issues/2565)
 
 # 1.23.208.1
 
@@ -29,7 +31,7 @@
   * Fixed issue where Attachments Uri weren't properly exiting single quotes.
     FIXES [#2822](https://github.com/microsoft/Microsoft365DSC/issues/2822)
 * PPPowerAppsEnvironment
-  * Adds support for Developr SKU and fix for Teams SKU
+  * Adds support for Developer SKU and fix for Teams SKU
     FIXES [#2821](https://github.com/microsoft/Microsoft365DSC/issues/2821)
 * SCProtectionAlert
   * Support for certificate based auth
@@ -117,7 +119,7 @@
   * Refactored to leverage the official cmdlets instead of using the legacy GraphHandlers.
     FIXES [#2767](https://github.com/microsoft/Microsoft365DSC/issues/2767)
   * Changed Export-TargetResource to call Get-M365DSCExportContentForResource
-    to simplify/conform + variables for authentation are added correctly
+    to simplify/conform + variables for authentication are added correctly
     FIXES [#2784](https://github.com/microsoft/Microsoft365DSC/issues/2784)
 * SCRetentionCompliancePolicy
   * Fixes an issue where the SkypeLocation was trying to be converted to a string when it was an array.
