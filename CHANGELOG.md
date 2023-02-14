@@ -8,6 +8,9 @@
 * IntuneRoleAssignment
   * Fixed issue where the export did not the correct type for ScopeType
     FIXES [#2889](https://github.com/microsoft/Microsoft365DSC/issues/2889)
+* TeamsChannelTab
+  * Updated key parameters to prevent detected duplicates
+    FIXES [#2897](https://github.com/microsoft/Microsoft365DSC/issues/2897)
 * MISC
   * Updated required permissions of several resources
     FIXES [#2866](https://github.com/microsoft/Microsoft365DSC/issues/2866)
