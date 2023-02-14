@@ -15,6 +15,8 @@
     FIXES [#2866](https://github.com/microsoft/Microsoft365DSC/issues/2866)
   * Added filter to Update-M365DSCAzureAdApplication to be more specific.
     FIXES [2565](https://github.com/microsoft/Microsoft365DSC/issues/2565)
+  * Fixed the JSON conversion depth for the New-M365DSCConfigurationToJSON cmdlet.
+    FIXES [#2891](https://github.com/microsoft/Microsoft365DSC/issues/2891)
 
 # 1.23.208.1
 
