@@ -17,6 +17,8 @@
     FIXES [2565](https://github.com/microsoft/Microsoft365DSC/issues/2565)
   * Fixed the JSON conversion depth for the New-M365DSCConfigurationToJSON cmdlet.
     FIXES [#2891](https://github.com/microsoft/Microsoft365DSC/issues/2891)
+  * Added new ParameterSet for Export-M365DSConfiguration
+    FIXES [[#2802](https://github.com/microsoft/Microsoft365DSC/issues/2802)]
 
 # 1.23.208.1
 
