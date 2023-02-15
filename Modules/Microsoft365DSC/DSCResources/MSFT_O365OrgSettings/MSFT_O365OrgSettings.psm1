@@ -10,6 +10,10 @@ function Get-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
+        [System.Boolean]
+        $M365WebEnableUsersToOpenFilesFrom3PStorage,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -27,25 +31,26 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        [Switch]
+        $ManagedIdentity
     )
 
     if ($PSBoundParameters.ContainsKey('Ensure') -and $Ensure -eq 'Absent')
     {
-        throw 'This resource is not able to remove the Customization settings and therefore only accepts Ensure=Present.'
+        throw 'This resource is not able to remove Org Settings settings and therefore only accepts Ensure=Present.'
     }
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'v1.0'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -66,27 +71,20 @@ function Get-TargetResource
 
     try
     {
-        $orgConfig = Get-OrganizationConfig -ErrorAction Stop
+        $OfficeOnlineId = 'c1f33bc0-bdb4-4248-ba9b-096807ddb43e'
+        $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Get-MgServicePrincipal -Filter "appId eq '$OfficeOnlineId'" -Property 'AccountEnabled'
 
-        if ($null -eq $orgConfig)
-        {
-            Write-Verbose -Message "Can't find the information about the Organization Configuration."
-            return $nullReturn
+        return @{
+            IsSingleInstance                           = 'Yes'
+            M365WebEnableUsersToOpenFilesFrom3PStorage = $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled
+            Ensure                                     = 'Present'
+            Credential                                 = $Credential
+            ApplicationId                              = $ApplicationId
+            TenantId                                   = $TenantId
+            ApplicationSecret                          = $ApplicationSecret
+            CertificateThumbprint                      = $CertificateThumbprint
+            Managedidentity                            = $ManagedIdentity.IsPresent
         }
-
-        if ($orgConfig.IsDehydrated -eq $false)
-        {
-            return @{
-                IsSingleInstance      = 'Yes'
-                Ensure                = 'Present'
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-            }
-        }
-
-        return $nullReturn
     }
     catch
     {
@@ -111,6 +109,10 @@ function Set-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
+        [System.Boolean]
+        $M365WebEnableUsersToOpenFilesFrom3PStorage,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -128,21 +130,21 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        [Switch]
+        $ManagedIdentity
     )
 
     if ($PSBoundParameters.ContainsKey('Ensure') -and $Ensure -eq 'Absent')
     {
-        throw 'This resource is not able to remove the Customization settings and therefore only accepts Ensure=Present.'
+        throw 'This resource is not able to remove the Org settings and therefore only accepts Ensure=Present.'
     }
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -157,11 +159,19 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+    Write-Verbose -Message "Setting configuration of Office 365 Settings"
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'v1.0'
 
-    Write-Verbose -Message 'Configuration changes can take up to 24 hours to be applied.'
-    Enable-OrganizationCustomization | Out-Null
+    $OfficeOnlineId = 'c1f33bc0-bdb4-4248-ba9b-096807ddb43e'
+    $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Get-MgServicePrincipal -Filter "appId eq '$OfficeOnlineId'" -Property 'AccountEnabled, Id'
+    if ($M365WebEnableUsersToOpenFilesFrom3PStorage -ne $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled)
+    {
+        Write-Verbose -Message "Setting the Microsoft 365 On the Web setting to {$M365WebEnableUsersToOpenFilesFrom3PStorage}"
+        Update-MgservicePrincipal -ServicePrincipalId $($M365WebEnableUsersToOpenFilesFrom3PStorageValue.Id) `
+            -AccountEnabled:$M365WebEnableUsersToOpenFilesFrom3PStorage
+    }
 }
 
 function Test-TargetResource
@@ -174,6 +184,10 @@ function Test-TargetResource
         [ValidateSet('Yes')]
         [String]
         $IsSingleInstance,
+
+        [Parameter()]
+        [System.Boolean]
+        $M365WebEnableUsersToOpenFilesFrom3PStorage,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -193,16 +207,16 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -216,9 +230,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message 'Testing configuration for Organization Customization.'
+    Write-Verbose -Message 'Testing configuration for Org Settings.'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
@@ -226,7 +241,7 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @('Ensure')
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -252,19 +267,20 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        [Switch]
+        $ManagedIdentity
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'v1.0'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -285,7 +301,9 @@ function Export-TargetResource
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
 
         $Results = Get-TargetResource @Params

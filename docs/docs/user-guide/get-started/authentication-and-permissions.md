@@ -88,7 +88,7 @@ Check out the links in the "More information" section below to learn more about 
 
 ### Determine Required Permissions
 
-In order to be able to interact with these components, you need to grant your application or the Microsoft Graph PowerShell one the proper permissions against the Microsoft Graph scope. To determine what permission what permissions are required by a given component that uses Microsoft Graph, you can use the <a href="../../cmdlets/Get-M365DSCCompiledPermissionList/" target="_blank">Get-M365DSCCompiledPermissionList</a> cmdlet and pass in the list of parameters for which you wish to grant permissions for.
+In order to be able to interact with these components, you need to grant your application or the Microsoft Graph PowerShell one the proper permissions against the Microsoft Graph scope. To determine what permissions are required by a given component that uses Microsoft Graph, you can use the <a href="../../cmdlets/Get-M365DSCCompiledPermissionList/" target="_blank">Get-M365DSCCompiledPermissionList</a> cmdlet and pass in the list of parameters for which you wish to grant permissions for.
 
 <figure markdown>
   ![Example of how to check for the required permissions](../../Images/GetRequiredGraphPermissions.png)
@@ -158,6 +158,27 @@ Use the "<a href="https://pnp.github.io/powershell/cmdlets/Register-PnPManagemen
 <a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app" target="_blank">Create a new app registration</a> in Azure AD yourself and grant the correct permissions to this app. The documentation on this website for each of the SharePoint Online resources list the permissions needed for the resource.
 
 As an alternative, you can use the "<a href="https://pnp.github.io/powershell/cmdlets/Register-PnPAzureADApp.html" target="_blank">Register-PnPAzureADApp</a>" cmdlet to have PnP PowerShell create the app registration for you and grant the correct permissions.
+
+### Using Application Secret
+
+SharePoint Online uses the legacy ACS model to authenticate using an Application Secret. In order to get started with it, you will need to register your Azure AD App against your tenant.
+
+1. Navigate to https://<yourtenant>-admin.sharepoint.com/_layouts/15/appinv.aspx.
+2. In the App Id box, type in the application id of your Azure AD App you wish to authenticate with and click on the **Lookup** button.
+3. In the App domain box, type in www.<yourtenant>.com.
+4. Leave the **Redirect URL** box empty.
+5. In the **Permission request XML** box, put in the following XML:
+```
+  <AppPermissionRequests AllowAppOnlyPolicy="true">
+    <AppPermissionRequest Scope="http://sharepoint/content/tenant" Right="FullControl" />
+  </AppPermissionRequests>
+```
+6. Click on the **Create** button.
+<a href="/Images/Step1-SPOACS.png"><img src="/Images/Step1-SPOACS.png" alt="Register a new app for SharePoint Online." /></a>
+7. On the next screen, click on the ** Trust It** button to complete the registration process.
+<a href="/Images/Step2-SPOACS.png"><img src="/Images/Step2-SPOACS.png" alt="Register a new app for SharePoint Online." /></a>
+
+You should now be able to connect to SharePoint Online using an Application Secret.
 
 ## Exchange Permissions
 

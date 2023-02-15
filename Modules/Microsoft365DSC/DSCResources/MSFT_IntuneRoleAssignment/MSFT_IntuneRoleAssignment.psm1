@@ -102,10 +102,11 @@ function Get-TargetResource
     try
     {
         $getValue = $null
-        if($Id -match '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$')
+        if ($Id -match '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$')
         {
             $getValue = Get-MgDeviceManagementRoleAssignment -DeviceAndAppManagementRoleAssignmentId $id -ErrorAction SilentlyContinue
-            if($null -ne $getValue){
+            if ($null -ne $getValue)
+            {
                 Write-Verbose -Message "Found something with id {$id}"
             }
         }
@@ -114,10 +115,12 @@ function Get-TargetResource
             Write-Verbose -Message "Nothing with id {$id} was found"
             $Filter = "displayName eq '$DisplayName'"
             $getValue = Get-MgDeviceManagementRoleAssignment -Filter $Filter -ErrorAction SilentlyContinue
-            if($null -ne $getValue){
+            if ($null -ne $getValue)
+            {
                 Write-Verbose -Message "Found something with displayname {$DisplayName}"
             }
-            else{
+            else
+            {
                 Write-Verbose -Message "Nothing with displayname {$DisplayName} was found"
                 return $nullResult
             }
@@ -125,10 +128,10 @@ function Get-TargetResource
 
         #Get Roledefinition first, loop through all roledefinitions and find the assignment match the id
         $tempRoleDefinitions = Get-MgDeviceManagementRoleDefinition
-        foreach($tempRoleDefinition in $tempRoleDefinitions)
+        foreach ($tempRoleDefinition in $tempRoleDefinitions)
         {
-            $item = Get-MgDeviceManagementRoleDefinitionRoleAssignment -RoleDefinitionId $tempRoleDefinition.Id | Where-Object {$_.Id -eq $getValue.Id}
-            if($null -ne $item)
+            $item = Get-MgDeviceManagementRoleDefinitionRoleAssignment -RoleDefinitionId $tempRoleDefinition.Id | Where-Object { $_.Id -eq $getValue.Id }
+            if ($null -ne $item)
             {
                 $RoleDefinition = $tempRoleDefinition.Id
                 $RoleDefinitionDisplayName = $tempRoleDefinition.DisplayName
@@ -139,13 +142,13 @@ function Get-TargetResource
         #$RoleDefinitionid = Get-MgDeviceManagementRoleAssignment -DeviceAndAppManagementRoleAssignmentId $getvalue.Id -ExpandProperty *
 
         $ResourceScopesDisplayNames = @()
-        foreach($ResourceScope in $getValue.ResourceScopes)
+        foreach ($ResourceScope in $getValue.ResourceScopes)
         {
             $ResourceScopesDisplayNames += (Get-MgGroup -GroupId $ResourceScope).DisplayName
         }
 
         $MembersDisplayNames = @()
-        foreach($tempMember in $getValue.Members)
+        foreach ($tempMember in $getValue.Members)
         {
             $MembersDisplayNames += (Get-MgGroup -GroupId $tempMember).DisplayName
         }
@@ -153,23 +156,23 @@ function Get-TargetResource
         Write-Verbose -Message "Found something with id {$id}"
 
         $results = @{
-            Id = $getValue.Id
-            Description                 = $getValue.Description
-            DisplayName                 = $getValue.DisplayName
-            ResourceScopes              = $getValue.ResourceScopes
-            ResourceScopesDisplayNames  = $ResourceScopesDisplayNames
-            ScopeType                   = $getValue.ScopeType
-            Members                     = $getValue.Members
-            MembersDisplayNames         = $MembersDisplayNames
-            RoleDefinition              = $RoleDefinition
-            RoleDefinitionDisplayName   = $RoleDefinitionDisplayName
-            Ensure                      = 'Present'
-            Credential                  = $Credential
-            ApplicationId               = $ApplicationId
-            TenantId                    = $TenantId
-            ApplicationSecret           = $ApplicationSecret
-            CertificateThumbprint       = $CertificateThumbprint
-            ManagedIdentity             = $ManagedIdentity.IsPresent
+            Id                         = $getValue.Id
+            Description                = $getValue.Description
+            DisplayName                = $getValue.DisplayName
+            ResourceScopes             = $getValue.ResourceScopes
+            ResourceScopesDisplayNames = $ResourceScopesDisplayNames
+            ScopeType                  = $getValue.ScopeType.ToString()
+            Members                    = $getValue.Members
+            MembersDisplayNames        = $MembersDisplayNames
+            RoleDefinition             = $RoleDefinition
+            RoleDefinitionDisplayName  = $RoleDefinitionDisplayName
+            Ensure                     = 'Present'
+            Credential                 = $Credential
+            ApplicationId              = $ApplicationId
+            TenantId                   = $TenantId
+            ApplicationSecret          = $ApplicationSecret
+            CertificateThumbprint      = $CertificateThumbprint
+            ManagedIdentity            = $ManagedIdentity.IsPresent
         }
 
         return [System.Collections.Hashtable] $results
@@ -308,50 +311,63 @@ function Set-TargetResource
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
 
-    if(!($RoleDefinition -match "^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$")){
+    if (!($RoleDefinition -match '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'))
+    {
         [string]$roleDefinition = $null
         $Filter = "displayName eq '$RoleDefinitionDisplayName'"
         $RoleDefinitionId = Get-MgDeviceManagementRoleDefinition -Filter $Filter -ErrorAction SilentlyContinue
-        if($null -ne $RoleDefinitionId){
+        if ($null -ne $RoleDefinitionId)
+        {
             $roleDefinition = $RoleDefinitionId.Id
         }
-        else{
+        else
+        {
             Write-Verbose -Message "Nothing with displayname {$RoleDefinitionDisplayName} was found"
         }
     }
 
     [array]$members = @()
-    foreach($MembersDisplayName in $membersDisplayNames){
+    foreach ($MembersDisplayName in $membersDisplayNames)
+    {
         $Filter = "displayName eq '$MembersDisplayName'"
         $MemberId = Get-MgGroup -Filter $Filter -ErrorAction SilentlyContinue
-        if($null -ne $MemberId){
-            if($Members -notcontains $MemberId.Id){
+        if ($null -ne $MemberId)
+        {
+            if ($Members -notcontains $MemberId.Id)
+            {
                 $Members += $MemberId.Id
             }
         }
-        else{
+        else
+        {
             Write-Verbose -Message "Nothing with displayname {$MembersDisplayName} was found"
         }
     }
 
     [array]$resourceScopes = @()
-    foreach($ResourceScopesDisplayName in $ResourceScopesDisplayNames){
+    foreach ($ResourceScopesDisplayName in $ResourceScopesDisplayNames)
+    {
         $Filter = "displayName eq '$ResourceScopesDisplayName'"
         $ResourceScopeId = Get-MgGroup -Filter $Filter -ErrorAction SilentlyContinue
-        if($null -ne $ResourceScopeId){
-            if($ResourceScopes -notcontains $ResourceScopeId.Id){
+        if ($null -ne $ResourceScopeId)
+        {
+            if ($ResourceScopes -notcontains $ResourceScopeId.Id)
+            {
                 $ResourceScopes += $ResourceScopeId.Id
             }
         }
-        else{
+        else
+        {
             Write-Verbose -Message "Nothing with displayname {$ResourceScopesDisplayName} was found"
         }
     }
-    if($ScopeType -match "AllDevices|AllLicensedUsers|AllDevicesAndLicensedUsers"){
+    if ($ScopeType -match 'AllDevices|AllLicensedUsers|AllDevicesAndLicensedUsers')
+    {
         $ResourceScopes = $null
     }
-    else{
-        $ScopeType = "resourceScope"
+    else
+    {
+        $ScopeType = 'resourceScope'
         $ResourceScopes = $ResourceScopes
     }
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
@@ -359,15 +375,15 @@ function Set-TargetResource
         Write-Verbose -Message "Creating {$DisplayName}"
 
         $CreateParameters = @{
-            description = $Description
-            displayName = $DisplayName
-            resourceScopes = $ResourceScopes
-            scopeType = $ScopeType
-            members = $Members
-            '@odata.type' = '#microsoft.graph.deviceAndAppManagementRoleAssignment'
+            description                 = $Description
+            displayName                 = $DisplayName
+            resourceScopes              = $ResourceScopes
+            scopeType                   = $ScopeType
+            members                     = $Members
+            '@odata.type'               = '#microsoft.graph.deviceAndAppManagementRoleAssignment'
             'roleDefinition@odata.bind' = "https://graph.microsoft.com/beta/deviceManagement/roleDefinitions('$roleDefinition')"
         }
-        $policy=New-MgDeviceManagementRoleAssignment -BodyParameter $CreateParameters
+        $policy = New-MgDeviceManagementRoleAssignment -BodyParameter $CreateParameters
 
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -375,12 +391,12 @@ function Set-TargetResource
         Write-Verbose -Message "Updating {$DisplayName}"
 
         $UpdateParameters = @{
-            description = $Description
-            displayName = $DisplayName
-            resourceScopes = $ResourceScopes
-            scopeType = $ScopeType
-            members = $Members
-            '@odata.type' = '#microsoft.graph.deviceAndAppManagementRoleAssignment'
+            description                 = $Description
+            displayName                 = $DisplayName
+            resourceScopes              = $ResourceScopes
+            scopeType                   = $ScopeType
+            members                     = $Members
+            '@odata.type'               = '#microsoft.graph.deviceAndAppManagementRoleAssignment'
             'roleDefinition@odata.bind' = "https://graph.microsoft.com/beta/deviceManagement/roleDefinitions('$roleDefinition')"
         }
 
@@ -488,53 +504,64 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if(!($RoleDefinition -match '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$')){
+    if (!($RoleDefinition -match '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'))
+    {
         [string]$roleDefinition = $null
         $Filter = "displayName eq '$RoleDefinitionDisplayName'"
         $RoleDefinitionId = Get-MgDeviceManagementRoleDefinition -Filter $Filter -ErrorAction SilentlyContinue
-        if($null -ne $RoleDefinitionId){
+        if ($null -ne $RoleDefinitionId)
+        {
             $roleDefinition = $RoleDefinitionId.Id
-            $PSBoundParameters.Set_Item('RoleDefinition',$roleDefinition)
+            $PSBoundParameters.Set_Item('RoleDefinition', $roleDefinition)
         }
-        else{
+        else
+        {
             Write-Verbose -Message "Nothing with displayname {$RoleDefinitionDisplayName} was found"
         }
     }
 
-    foreach($MembersDisplayName in $membersDisplayNames){
+    foreach ($MembersDisplayName in $membersDisplayNames)
+    {
         $Filter = "displayName eq '$MembersDisplayName'"
         $newMemeber = Get-MgGroup -Filter $Filter -ErrorAction SilentlyContinue
-        if($null -ne $newMemeber){
-            if($Members -notcontains $newMemeber.Id){
+        if ($null -ne $newMemeber)
+        {
+            if ($Members -notcontains $newMemeber.Id)
+            {
                 $Members += $newMemeber.Id
             }
         }
-        else{
+        else
+        {
             Write-Verbose -Message "Nothing with displayname {$RoleDefinitionDisplayName} was found"
         }
     }
-    $PSBoundParameters.Set_Item('Members',$Members)
+    $PSBoundParameters.Set_Item('Members', $Members)
 
-    foreach($ResourceScopesDisplayName in $resourceScopesDisplayNames){
+    foreach ($ResourceScopesDisplayName in $resourceScopesDisplayNames)
+    {
         $Filter = "displayName eq '$ResourceScopesDisplayName'"
         $newResourceScope = Get-MgGroup -Filter $Filter -ErrorAction SilentlyContinue
-        if($null -ne $newResourceScope){
-            if($ResourceScopes -notcontains $newResourceScope.Id){
+        if ($null -ne $newResourceScope)
+        {
+            if ($ResourceScopes -notcontains $newResourceScope.Id)
+            {
                 $ResourceScopes += $newResourceScope.Id
             }
         }
-        else{
+        else
+        {
             Write-Verbose -Message "Nothing with displayname {$RoleDefinitionDisplayName} was found"
         }
     }
-    $PSBoundParameters.Set_Item('ResourceScopes',$ResourceScopes)
+    $PSBoundParameters.Set_Item('ResourceScopes', $ResourceScopes)
 
-    if($CurrentValues.Ensure -eq "Absent")
+    if ($CurrentValues.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
     }
-    $testResult=$true
+    $testResult = $true
 
     $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
@@ -619,7 +646,7 @@ function Export-TargetResource
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceAndAppManagementRoleAssignment'  `
-            }
+        }
 
         if (-not $getValue)
         {
@@ -639,10 +666,10 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
-            $displayedKey=$config.id
-            if(-not [String]::IsNullOrEmpty($config.displayName))
+            $displayedKey = $config.id
+            if (-not [String]::IsNullOrEmpty($config.displayName))
             {
-                $displayedKey=$config.displayName
+                $displayedKey = $config.displayName
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
@@ -677,27 +704,14 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }
