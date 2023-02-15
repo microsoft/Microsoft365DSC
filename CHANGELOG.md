@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.215.1
 
 * EXOIRMConfiguration
   * Fixed issue where the export did not the correct type for RMSOnlineKeySharingLocation
