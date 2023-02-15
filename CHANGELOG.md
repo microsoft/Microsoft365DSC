@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# 1.23.215.2
+
+* MISC
+  * Updated Tasks.Read and Tasks.ReadWrite Permissions for Planner Plans and Planner Buckets
+    FIXES [#2866](https://github.com/microsoft/Microsoft365DSC/issues/2866)
+
 # 1.23.215.1
 
 * EXOIRMConfiguration
