@@ -59,14 +59,7 @@ function Get-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta' -ErrorAction Stop
-
-    $context = Get-MgContext
-    if ($null -eq $context)
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters -ErrorAction Stop -ProfileName 'beta'
-    }
+        -ErrorAction Stop
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -90,7 +83,7 @@ function Get-TargetResource
         if (-not [System.String]::IsNullOrEmpty($Identity))
         {
             Write-Verbose -Message "Checking if filter exists with identity {$Identity}."
-            $assignmentFilter = Get-MgDeviceManagementAssignmentFilter -DeviceAndAppManagementAssignmentFilterId $Identity -ErrorAction 'SilentlyContinue'
+            $assignmentFilter = Get-MgBetaDeviceManagementAssignmentFilter -DeviceAndAppManagementAssignmentFilterId $Identity -ErrorAction 'SilentlyContinue'
         }
 
         if ($null -eq $assignmentFilter)
@@ -98,7 +91,7 @@ function Get-TargetResource
             Write-Verbose -Message "No assignment filter with Identity {$Identity} was found."
 
             Write-Verbose -Message "Checking if filter exists with DisplayName {$DisplayName}."
-            [array]$assignmentFilter = Get-MgDeviceManagementAssignmentFilter -All | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
+            [array]$assignmentFilter = Get-MgBetaDeviceManagementAssignmentFilter -All | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
             if ($assignmentFilter.Length -gt 2)
             {
                 Write-Error -Message "More than one Assignment Filter found with name {$DisplayName}"
@@ -199,8 +192,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting the Intune Device and App Management Assignment Filter {$DisplayName}"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -220,7 +212,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating new assignment filter {$DisplayName}"
 
-        New-MgDeviceManagementAssignmentFilter `
+        New-MgBetaDeviceManagementAssignmentFilter `
             -DisplayName $DisplayName `
             -Description $Description `
             -Platform $Platform `
@@ -231,7 +223,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating existing assignment filter {$DisplayName}"
 
-        Update-MgDeviceManagementAssignmentFilter `
+        Update-MgBetaDeviceManagementAssignmentFilter `
             -DeviceAndAppManagementAssignmentFilterId $currentPolicy.Identity `
             -DisplayName $DisplayName `
             -Description $Description `
@@ -241,7 +233,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing assignment filter {$DisplayName}"
-        Remove-MgDeviceManagementAssignmentFilter -DeviceAndAppManagementAssignmentFilterId $currentPolicy.Identity | Out-Null
+        Remove-MgBetaDeviceManagementAssignmentFilter -DeviceAndAppManagementAssignmentFilterId $currentPolicy.Identity | Out-Null
     }
 }
 
@@ -375,8 +367,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -395,7 +386,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$assignmentFilters = Get-MgDeviceManagementAssignmentFilter -All:$true -Filter $Filter -ErrorAction Stop
+        [array]$assignmentFilters = Get-MgBetaDeviceManagementAssignmentFilter -All:$true -Filter $Filter -ErrorAction Stop
 
         if ($policies.Length -eq 0)
         {

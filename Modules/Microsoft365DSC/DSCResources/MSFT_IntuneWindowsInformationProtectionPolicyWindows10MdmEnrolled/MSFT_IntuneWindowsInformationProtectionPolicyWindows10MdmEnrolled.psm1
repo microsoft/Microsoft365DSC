@@ -137,8 +137,7 @@ function Get-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
@@ -157,7 +156,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgDeviceAppMgtMdmWindowInformationProtectionPolicy -MdmWindowsInformationProtectionPolicyId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy -MdmWindowsInformationProtectionPolicyId $Id  -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -165,7 +164,7 @@ function Get-TargetResource
 
             if(-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgDeviceAppMgtMdmWindowInformationProtectionPolicy `
+                $getValue = Get-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy `
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue
             }
@@ -595,7 +594,7 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $policy=New-MgDeviceAppMgtMdmWindowInformationProtectionPolicy -BodyParameter $CreateParameters
+        $policy = New-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy -BodyParameter $CreateParameters
         #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -617,16 +616,16 @@ function Set-TargetResource
         }
         #region resource generator code
         $UpdateParameters.Add("@odata.type", "#microsoft.graph.MdmWindowsInformationProtectionPolicy")
-        Update-MgDeviceAppMgtMdmWindowInformationProtectionPolicy  `
+        Update-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy  `
             -MdmWindowsInformationProtectionPolicyId $currentInstance.Id `
             -BodyParameter $UpdateParameters
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Intune Windows Information Protection Policy for Windows10 Mdm Enrolled with Id {$($currentInstance.Id)}" 
+        Write-Verbose -Message "Removing the Intune Windows Information Protection Policy for Windows10 Mdm Enrolled with Id {$($currentInstance.Id)}"
         #region resource generator code
-        Remove-MgDeviceAppMgtMdmWindowInformationProtectionPolicy -MdmWindowsInformationProtectionPolicyId $currentInstance.Id
+        Remove-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy -MdmWindowsInformationProtectionPolicyId $currentInstance.Id
         #endregion
     }
 }
@@ -868,8 +867,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -886,7 +884,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgDeviceAppMgtMdmWindowInformationProtectionPolicy `
+        [array]$getValue = Get-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy `
             -All `
             -ErrorAction Stop
         #endregion

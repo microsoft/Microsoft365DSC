@@ -40,8 +40,7 @@ function Get-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload '<#Workload#>' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName '<#APIVersion#>'
+            -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
@@ -350,8 +349,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload '<#Workload#>' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName '<#APIVersion#>'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

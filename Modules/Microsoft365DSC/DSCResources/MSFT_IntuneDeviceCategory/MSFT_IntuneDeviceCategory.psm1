@@ -63,7 +63,7 @@ function Get-TargetResource
 
     try
     {
-        $category = Get-MgDeviceManagementDeviceCategory -Filter "displayName eq '$DisplayName'"
+        $category = Get-MgBetaDeviceManagementDeviceCategory -Filter "displayName eq '$DisplayName'"
 
         if ($null -eq $category)
         {
@@ -161,21 +161,21 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Device Category {$DisplayName}"
-        New-MgDeviceManagementDeviceCategory -DisplayName $DisplayName `
+        New-MgBetaDeviceManagementDeviceCategory -DisplayName $DisplayName `
             -Description $Description
     }
     elseif ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Device Category {$DisplayName}"
-        $category = Get-MgDeviceManagementDeviceCategory -Filter "displayName eq '$DisplayName'"
-        Update-MgDeviceManagementDeviceCategory -DeviceCategoryId $category.id `
+        $category = Get-MgBetaDeviceManagementDeviceCategory -Filter "displayName eq '$DisplayName'"
+        Update-MgBetaDeviceManagementDeviceCategory -DeviceCategoryId $category.id `
             -DisplayName $DisplayName -Description $Description
     }
     elseif ($Ensure -eq 'Absent' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Device Category {$DisplayName}"
-        $category = Get-MgDeviceManagementDeviceCategory -Filter "displayName eq '$DisplayName'"
-        Remove-MgDeviceManagementDeviceCategory -DeviceCategoryId $category.id
+        $category = Get-MgBetaDeviceManagementDeviceCategory -Filter "displayName eq '$DisplayName'"
+        Remove-MgBetaDeviceManagementDeviceCategory -DeviceCategoryId $category.id
     }
 }
 
@@ -307,7 +307,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$categories = Get-MgDeviceManagementDeviceCategory -All:$true -Filter $Filter -ErrorAction Stop
+        [array]$categories = Get-MgBetaDeviceManagementDeviceCategory -All:$true -Filter $Filter -ErrorAction Stop
         $i = 1
         $dscContent = ''
         if ($categories.Length -eq 0)

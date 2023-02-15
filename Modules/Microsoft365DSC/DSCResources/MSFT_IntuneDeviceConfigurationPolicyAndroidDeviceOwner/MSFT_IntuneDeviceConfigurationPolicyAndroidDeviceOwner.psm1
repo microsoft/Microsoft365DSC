@@ -616,8 +616,7 @@ function Get-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
     }
     catch
     {
@@ -645,7 +644,7 @@ function Get-TargetResource
         $getValue=$null
 
         #region resource generator code
-        $getValue = Get-MgDeviceManagementDeviceConfiguration `
+        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
             -All:$true `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
@@ -654,7 +653,7 @@ function Get-TargetResource
 
         if (-not $getValue)
         {
-            $getValue = Get-MgDeviceManagementDeviceConfiguration `
+            $getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
                 -All:$true `
                 -ErrorAction Stop | Where-Object `
                 -FilterScript { `
@@ -835,7 +834,7 @@ function Get-TargetResource
         }
 
         $myAssignments=@()
-        $myAssignments+=Get-MgDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId  $getValue.Id
+        $myAssignments+=Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId  $getValue.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $myAssignments)
         {
@@ -1481,8 +1480,7 @@ function Set-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
     }
     catch
     {
@@ -1526,7 +1524,7 @@ function Set-TargetResource
         {
             if($CreateParameters[$key].getType().Fullname -like "*CimInstance*")
             {
-                $CreateParameters[$key]=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
+                $CreateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
             }
 
             if($key -ne '@odata.type')
@@ -1540,7 +1538,7 @@ function Set-TargetResource
         $CreateParameters.add("@odata.type","#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration")
 
         #region resource generator code
-        $policy=New-MgDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
+        $policy=New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash=@()
         foreach($assignment in $Assignments)
         {
@@ -1584,7 +1582,7 @@ function Set-TargetResource
         }
         $UpdateParameters.add("@odata.type","#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration")
 
-        Update-MgDeviceManagementDeviceConfiguration -BodyParameter $UpdateParameters `
+        Update-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $UpdateParameters `
             -DeviceConfigurationId $currentInstance.Id
         $assignmentsHash=@()
         foreach($assignment in $Assignments)
@@ -1602,7 +1600,7 @@ function Set-TargetResource
         Write-Verbose -Message "Removing {$DisplayName}"
 
         #region resource generator code
-        Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
+        Remove-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
 
     }
@@ -2337,8 +2335,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -2356,7 +2353,7 @@ function Export-TargetResource
     {
 
         #region resource generator code
-        [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
             -ErrorAction Stop -All:$true -Filter $Filter | Where-Object `
             -FilterScript {
             $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration'

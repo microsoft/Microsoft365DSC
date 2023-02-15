@@ -259,8 +259,7 @@ function Get-TargetResource
     )
     Write-Verbose -Message "Checking for the Intune iOS App Protection Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -279,12 +278,12 @@ function Get-TargetResource
 
     try
     {
-        $policy = Get-MgDeviceAppManagementiOSManagedAppProtection -IosManagedAppProtectionId $Identity -ErrorAction SilentlyContinue
+        $policy = Get-MgBetaDeviceAppManagementiOSManagedAppProtection -IosManagedAppProtectionId $Identity -ErrorAction SilentlyContinue
 
         if ($null -eq $policy)
         {
             Write-Verbose -Message "No iOS App Protection Policy {$Identity} was found"
-            $policy = Get-MgDeviceAppManagementiOSManagedAppProtection -Filter "displayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+            $policy = Get-MgBetaDeviceAppManagementiOSManagedAppProtection -Filter "displayName eq '$DisplayName'" -ErrorAction SilentlyContinue
         }
 
         if ($null -eq $policy)
@@ -295,7 +294,7 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found iOS App Protection Policy {$DisplayName}"
 
-        $policyApps = Get-MgDeviceAppManagementiOSManagedAppProtectionApp -IosManagedAppProtectionId $policy.id
+        $policyApps = Get-MgBetaDeviceAppManagementiOSManagedAppProtectionApp -IosManagedAppProtectionId $policy.id
 
         $appsArray = @()
         foreach ($app in $policyApps)
@@ -750,7 +749,7 @@ function Set-TargetResource
         $createParameters.ExemptedAppProtocols = $myExemptedAppProtocols
 
 
-        $policy = New-MgDeviceAppManagementiOSManagedAppProtection -BodyParameter $createParameters
+        $policy = New-MgBetaDeviceAppManagementiOSManagedAppProtection -BodyParameter $createParameters
 
         Update-IntuneAppProtectionPolicyiOSApp -IosManagedAppProtectionId $policy.id -Apps $myApps
 
@@ -792,7 +791,7 @@ function Set-TargetResource
         $updateParameters.ExemptedAppProtocols = $myExemptedAppProtocols
 
 
-        Update-MgDeviceAppManagementiOSManagedAppProtection -IosManagedAppProtectionId $Identity -BodyParameter $updateParameters
+        Update-MgBetaDeviceAppManagementiOSManagedAppProtection -IosManagedAppProtectionId $Identity -BodyParameter $updateParameters
 
         Update-IntuneAppProtectionPolicyiOSApp -IosManagedAppProtectionId $Identity -Apps $myApps
 
@@ -802,7 +801,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing iOS App Protection Policy {$DisplayName}"
-        Remove-MgDeviceAppManagementiOSManagedAppProtection -IosManagedAppProtectionId $Identity
+        Remove-MgBetaDeviceAppManagementiOSManagedAppProtection -IosManagedAppProtectionId $Identity
     }
 }
 
@@ -1147,7 +1146,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$policies = Get-MgDeviceAppManagementiOSManagedAppProtection -All:$true -Filter $Filter -ErrorAction Stop
+        [array]$policies = Get-MgBetaDeviceAppManagementiOSManagedAppProtection -All:$true -Filter $Filter -ErrorAction Stop
         $i = 1
         $dscContent = ''
         if ($policies.Length -eq 0)

@@ -78,8 +78,7 @@ function Get-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
     }
     catch
     {
@@ -107,7 +106,7 @@ function Get-TargetResource
         #region resource generator code
         if (-Not [string]::IsNullOrEmpty($DisplayName))
         {
-            $getValue = Get-MgDeviceManagementDeviceConfiguration `
+            $getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
                 -ErrorAction Stop | Where-Object `
                 -FilterScript { `
                     $_.DisplayName -eq "$($DisplayName)" `
@@ -116,14 +115,13 @@ function Get-TargetResource
 
         if (-not $getValue)
         {
-            [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
+            [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
                 -ErrorAction Stop | Where-Object `
                 -FilterScript { `
                     $_.id -eq $id `
             }
         }
         #endregion
-
 
         if ($null -eq $getValue)
         {
@@ -155,7 +153,7 @@ function Get-TargetResource
         }
 
         $myAssignments = @()
-        $myAssignments += Get-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $getValue.Id -repository 'deviceConfigurations'
+        $myAssignments += Get-MgBetaDeviceManagementPolicyAssignments -DeviceManagementPolicyId $getValue.Id -repository 'deviceConfigurations'
         $results.Add('Assignments', $myAssignments)
 
         return [System.Collections.Hashtable] $results
@@ -252,8 +250,7 @@ function Set-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
     }
     catch
     {
@@ -319,7 +316,7 @@ function Set-TargetResource
 
 
         #region resource generator code
-        $policy = New-MgDeviceManagementDeviceConfiguration @CreateParameters
+        $policy = New-MgBetaDeviceManagementDeviceConfiguration @CreateParameters
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
@@ -328,7 +325,7 @@ function Set-TargetResource
 
         if ($policy.id)
         {
-            Update-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $policy.id `
+            Update-MgBetaDeviceManagementPolicyAssignments -DeviceManagementPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository deviceConfigurations
         }
@@ -372,14 +369,14 @@ function Set-TargetResource
 
 
         #region resource generator code
-        Update-MgDeviceManagementDeviceConfiguration @UpdateParameters `
+        Update-MgBetaDeviceManagementDeviceConfiguration @UpdateParameters `
             -DeviceConfigurationId $currentInstance.Id
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
             $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
-        Update-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $currentInstance.id `
+        Update-MgBetaDeviceManagementPolicyAssignments -DeviceManagementPolicyId $currentInstance.id `
             -Targets $assignmentsHash `
             -Repository deviceConfigurations
 
@@ -389,15 +386,8 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing {$DisplayName}"
-
-
         #region resource generator code
-        #endregion
-
-
-
-        #region resource generator code
-        Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
+        Remove-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
 
     }
@@ -607,8 +597,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -626,15 +615,12 @@ function Export-TargetResource
     {
 
         #region resource generator code
-        [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidForWorkWiFiConfiguration'  `
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileWiFiConfiguration'  `
         }
-
-
         #endregion
-
 
         $i = 1
         $dscContent = ''
@@ -648,7 +634,7 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
-            Write-Host "    |---[$i/$($getValue.Count)] $($config.id)" -NoNewline
+            Write-Host "    |---[$i/$($getValue.Count)] $($config.DisplayName)" -NoNewline
             $params = @{
                 id                    = $config.id
                 Ensure                = 'Present'
@@ -1053,7 +1039,7 @@ function Get-M365DSCAdditionalProperties
         'WiFiSecurityType'
     )
 
-    $results = @{'@odata.type' = '#microsoft.graph.androidForWorkWiFiConfiguration' }
+    $results = @{'@odata.type' = '#microsoft.graph.androidWorkProfileWiFiConfiguration' }
     $cloneProperties = $Properties.clone()
     foreach ($property in $cloneProperties.Keys)
     {
@@ -1241,7 +1227,7 @@ function Convert-M365DSCDRGComplexTypeToHashtable
     return $results
 }
 
-function Get-MgDeviceManagementPolicyAssignments
+function Get-MgBetaDeviceManagementPolicyAssignments
 {
     [CmdletBinding()]
     param
@@ -1307,7 +1293,7 @@ function Get-MgDeviceManagementPolicyAssignments
     }
 }
 
-function Update-MgDeviceManagementPolicyAssignments
+function Update-MgBetaDeviceManagementPolicyAssignments
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]

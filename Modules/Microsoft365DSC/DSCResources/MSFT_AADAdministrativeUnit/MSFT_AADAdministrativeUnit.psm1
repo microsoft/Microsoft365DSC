@@ -40,15 +40,6 @@ function Get-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $ScopedRoleMembers,
 
-        <#
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $Extensions,
-        #>
-
-
-        #endregion
-
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -78,17 +69,10 @@ function Get-TargetResource
         [Switch]
         $ManagedIdentity
     )
-
-    # Note: Graph v1.0 names basic cmdlets xxx-MgDirectoryAdministrativeUnit(xxx)
-    # but the beta profile names latest cmdlets xxx-MgAdministrativeUnit(xxx)
-    # only the beta cmdlets support the preview enabling MembershipType and MembershipRuleProcessingState
-    # NB: Usage of these params require that the corresponding AAD preview feature is enabled
-
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
     }
     catch
     {
@@ -116,12 +100,12 @@ function Get-TargetResource
         #region resource generator code
         if (-Not [string]::IsNullOrEmpty($Id))
         {
-            $getValue = Get-MgAdministrativeUnit -AdministrativeUnitId $Id -ErrorAction Stop
+            $getValue = Get-MgDirectoryAdministrativeUnit -AdministrativeUnitId $Id -ErrorAction Stop
         }
 
         if (-not $getValue -and -Not [string]::IsNullOrEmpty($DisplayName))
         {
-            $getValue = Get-MgAdministrativeUnit -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+            $getValue = Get-MgDirectoryAdministrativeUnit -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
         }
         #endregion
 
@@ -236,32 +220,6 @@ function Get-TargetResource
         }
         $results.Add('ScopedRoleMembers', $scopedRoleMemberSpec)
 
-        <#
-        # Extensions are still too unwieldy
-        $auExtensions = Get-MgDirectoryAdministrativeUnitExtension -AdministrativeUnitId $getValue.Id -All
-        $extensionsSpec = $null
-        if ($auExtensions)
-        {
-            $extensionsSpec = @()
-            $extensionDef = @{Id = $auExtensions.Id}
-            foreach ($auExtension in $auExtensions)
-            {
-                if ($auExtension.Properties -and $auExtension.Properties.Count % 2 -ne 0)
-                {
-                    throw "AU {$($getValue.DisplayName)] has extension {$($auExtension.Id)} with properties without values"
-                }
-                # address MSFT_KeyValuePair as an array containing key1,value1,key2,value2 etc
-                # see https://forums.powershell.org/t/hashtable-as-resource-parameter/2962/3
-                # and https://learn.microsoft.com/en-us/answers/questions/440415/passing-a-key-value-pair-list-to-a-powershell-scri.html
-                for ($p = 0; $p -lt $auExtension.Properties.Count; $p = $p + 2)
-                {
-                    $extensionDef.Add($auExtension.Properties[$p], $auExtension.Properties[$p+1])
-                }
-            }
-            $extensionsSpec += $extensionDef
-        }
-        $results.Add("Extensions", $extensionsSpec)
-        #>
         return [System.Collections.Hashtable]$results
     }
     catch
@@ -317,15 +275,6 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $ScopedRoleMembers,
 
-        <#
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $Extensions,
-        #>
-
-
-        #endregion
-
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -355,17 +304,10 @@ function Set-TargetResource
         [Switch]
         $ManagedIdentity
     )
-
-    # Note: Graph names basic cmdlets xxx-MgDirectoryAdministrativeUnit(xxx)
-    # but the beta profile names latest cmdlets xxx-MgDirectoryAdministrativeUnit(xxx)
-    # ONLY the beta cmdlets support the preview enabling MembershipType and MembershipRuleProcessingState
-    # NB: Usage of these params require that the corresponding AAD preview feature is enabled
-
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
     }
     catch
     {
@@ -991,13 +933,6 @@ function Test-TargetResource
         }
     }
 
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
-
     # Removing the visibility parameter from the check since this is always being returned as null currently by the Microsoft Graph.
     $ValuesToCheck.Remove('Visibility') | Out-Null
 
@@ -1059,14 +994,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
-    $context = Get-MgContext
-    if ($null -eq $context)
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters -ProfileName 'beta'
-    }
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

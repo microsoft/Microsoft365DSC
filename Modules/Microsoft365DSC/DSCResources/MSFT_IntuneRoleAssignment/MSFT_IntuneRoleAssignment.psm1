@@ -77,8 +77,7 @@ function Get-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
     }
     catch
     {
@@ -155,13 +154,18 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found something with id {$id}"
 
+        $scopeTypeValue = $null
+        if (-not ([System.String]::IsNullOrEmpty($getValue.ScopeType)))
+        {
+            $scopeTypeValue = $getValue.ScopeType.ToString()
+        }
         $results = @{
             Id                         = $getValue.Id
             Description                = $getValue.Description
             DisplayName                = $getValue.DisplayName
             ResourceScopes             = $getValue.ResourceScopes
             ResourceScopesDisplayNames = $ResourceScopesDisplayNames
-            ScopeType                  = $getValue.ScopeType.ToString()
+            ScopeType                  = $scopeTypeValue
             Members                    = $getValue.Members
             MembersDisplayNames        = $MembersDisplayNames
             RoleDefinition             = $RoleDefinition
@@ -281,8 +285,7 @@ function Set-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
     }
     catch
     {
@@ -625,8 +628,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

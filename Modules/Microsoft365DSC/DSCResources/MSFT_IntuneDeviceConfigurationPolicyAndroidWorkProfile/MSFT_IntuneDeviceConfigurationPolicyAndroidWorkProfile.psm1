@@ -237,7 +237,6 @@ function Get-TargetResource
     $M365DSCConnectionSplat = @{
         Workload          = 'MicrosoftGraph'
         InboundParameters = $PSBoundParameters
-        ProfileName       = 'Beta'
     }
     $ConnectionMode = New-M365DSCConnection @M365DSCConnectionSplat
 
@@ -260,7 +259,7 @@ function Get-TargetResource
 
     try
     {
-        $policy = Get-MgDeviceManagementDeviceConfiguration -Filter "displayName eq '$DisplayName'" `
+        $policy = Get-MgBetaDeviceManagementDeviceConfiguration -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' }
 
         if ($null -eq $policy)
@@ -328,7 +327,7 @@ function Get-TargetResource
         }
 
         $returnAssignments = @()
-        $returnAssignments += Get-MgDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId   $policy.Id
+        $returnAssignments += Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId   $policy.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $returnAssignments)
         {
@@ -592,7 +591,6 @@ function Set-TargetResource
     $M365DSCConnectionSplat = @{
         Workload          = 'MicrosoftGraph'
         InboundParameters = $PSBoundParameters
-        ProfileName       = 'Beta'
     }
     $ConnectionMode = New-M365DSCConnection @M365DSCConnectionSplat
 
@@ -624,7 +622,7 @@ function Set-TargetResource
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationPolicyAndroidWorkProfileAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        $policy = New-MgDeviceManagementDeviceConfiguration -DisplayName $DisplayName `
+        $policy = NewBetaDeviceManagementDeviceConfiguration -DisplayName $DisplayName `
             -Description $Description `
             -AdditionalProperties $AdditionalProperties
 
@@ -644,7 +642,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing Device Configuration Policy {$DisplayName}"
-        $configDevicePolicy = Get-MgDeviceManagementDeviceConfiguration `
+        $configDevicePolicy = Get-MgBetaDeviceManagementDeviceConfiguration `
             -ErrorAction Stop | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' -and `
                 $_.displayName -eq $($DisplayName) }
@@ -654,7 +652,7 @@ function Set-TargetResource
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationPolicyAndroidWorkProfileAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        Update-MgDeviceManagementDeviceConfiguration -AdditionalProperties $AdditionalProperties `
+        Update-MgBetaDeviceManagementDeviceConfiguration -AdditionalProperties $AdditionalProperties `
             -Description $Description `
             -DeviceConfigurationId $configDevicePolicy.Id
 
@@ -671,12 +669,12 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Device Configuration Policy {$DisplayName}"
-        $configDevicePolicy = Get-MgDeviceManagementDeviceConfiguration `
+        $configDevicePolicy = Get-MgBetaDeviceManagementDeviceConfiguration `
             -ErrorAction Stop | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' -and `
                 $_.displayName -eq $($DisplayName) }
 
-        Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $configDevicePolicy.Id
+        Remove-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $configDevicePolicy.Id
     }
 }
 
@@ -1051,7 +1049,6 @@ function Export-TargetResource
     $M365DSCConnectionSplat = @{
         Workload          = 'MicrosoftGraph'
         InboundParameters = $PSBoundParameters
-        ProfileName       = 'Beta'
     }
     $ConnectionMode = New-M365DSCConnection @M365DSCConnectionSplat
 
@@ -1071,7 +1068,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$policies = Get-MgDeviceManagementDeviceConfiguration `
+        [array]$policies = Get-MgBetaDeviceManagementDeviceConfiguration `
             -ErrorAction Stop -All:$true -Filter $Filter | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' }
         $i = 1
