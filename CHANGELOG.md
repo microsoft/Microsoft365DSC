@@ -2,7 +2,7 @@
 
 # Unreleased Changes
 
-Added all the latest location to PPPowerAppsEnvrionment return from Get-AdminPowerAppEnvironmentLocations
+Added all the latest location to PPPowerAppsEnvironment return from Get-AdminPowerAppEnvironmentLocations
 
 # 1.23.215.1
 
