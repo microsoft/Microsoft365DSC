@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# 1.23.215.2
+# UNRELEASED
 
 * MISC
   * Updated Tasks.Read and Tasks.ReadWrite Permissions for Planner Plans and Planner Buckets
