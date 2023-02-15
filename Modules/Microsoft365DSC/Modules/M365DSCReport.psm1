@@ -162,7 +162,7 @@ function New-M365DSCConfigurationToJSON
         $OutputPath
     )
 
-    $jsonContent = $ParsedContent | ConvertTo-Json
+    $jsonContent = $ParsedContent | ConvertTo-Json -Depth 25
     $jsonContent | Out-File -FilePath $OutputPath
 }
 
