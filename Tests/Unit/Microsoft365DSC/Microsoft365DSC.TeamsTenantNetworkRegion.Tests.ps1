@@ -44,13 +44,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
-            }<AssignmentMock>
+            }
         }
         # Test contexts
         Context -Name "The TeamsTenantNetworkRegion should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Present"
+                    CentralSite = "FakeStringValue";
+                    Identity    = "FakeStringValue"
+                    Ensure = "Present"
                     Credential = $Credential;
                 }
 
@@ -73,8 +75,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The TeamsTenantNetworkRegion exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Absent"
-                    Credential = $Credential;
+                    CentralSite = "FakeStringValue";
+                    Identity    = "FakeStringValue"
+                    Ensure      = "Absent"
+                    Credential  = $Credential;
                 }
 
                 Mock -CommandName Get-CsTenantNetworkRegion -MockWith {
@@ -104,7 +108,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The TeamsTenantNetworkRegion Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Present"
+                    CentralSite = "FakeStringValue";
+                    Identity    = "FakeStringValue"
+                    Ensure = "Present"
                     Credential = $Credential;
                 }
 
@@ -128,7 +134,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The TeamsTenantNetworkRegion exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Present"
+                    CentralSite = "FakeStringValue";
+                    Identity    = "FakeStringValue"
+                    Ensure = "Present"
                     Credential = $Credential;
                 }
 

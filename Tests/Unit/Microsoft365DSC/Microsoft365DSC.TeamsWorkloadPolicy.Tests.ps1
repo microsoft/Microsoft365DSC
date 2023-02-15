@@ -44,13 +44,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
-            }<AssignmentMock>
+            }
         }
         # Test contexts
         Context -Name "The TeamsWorkloadPolicy should exist but it DOES NOT" -Fixture {
             BeforeAll {
-                $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Present"
+                $testParams = @{AllowCalling         = $True;
+                    AllowCallingPinned   = $True;
+                    AllowMeeting         = $True;
+                    AllowMeetingPinned   = $True;
+                    AllowMessaging       = $True;
+                    AllowMessagingPinned = $True;
+                    Identity = "test"
+                    Ensure = "Present"
                     Credential = $Credential;
                 }
 
@@ -73,7 +79,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The TeamsWorkloadPolicy exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Absent"
+                    AllowCalling         = $True;
+                    AllowCallingPinned   = $True;
+                    AllowMeeting         = $True;
+                    AllowMeetingPinned   = $True;
+                    AllowMessaging       = $True;
+                    AllowMessagingPinned = $True;
+                    Identity = "FakeStringValue"
+                    Ensure = "Absent"
                     Credential = $Credential;
                 }
 
@@ -108,7 +121,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The TeamsWorkloadPolicy Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Present"
+                    AllowCalling         = $True;
+                    AllowCallingPinned   = $True;
+                    AllowMeeting         = $True;
+                    AllowMeetingPinned   = $True;
+                    AllowMessaging       = $True;
+                    AllowMessagingPinned = $True;
+                    Identity = "FakeStringValue"
+                    Ensure = "Present"
                     Credential = $Credential;
                 }
 
@@ -136,7 +156,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The TeamsWorkloadPolicy exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Present"
+                    AllowCalling         = $True;
+                    AllowCallingPinned   = $True;
+                    AllowMeeting         = $True;
+                    AllowMeetingPinned   = $True;
+                    AllowMessaging       = $True;
+                    AllowMessagingPinned = $True;
+                    Identity = "FakeStringValue"
+                    Ensure = "Present"
                     Credential = $Credential;
                 }
 
