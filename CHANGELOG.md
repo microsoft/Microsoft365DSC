@@ -1,5 +1,9 @@
 # Change log for Microsoft365DSC
 
+# Unreleased Changes
+
+Added all the latest location to PPPowerAppsEnvrionment return from Get-AdminPowerAppEnvironmentLocations
+
 # 1.23.215.1
 
 * EXOIRMConfiguration
