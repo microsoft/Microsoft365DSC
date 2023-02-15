@@ -110,8 +110,8 @@ Update-MgGroupLifecyclePolicy,Directory.ReadWrite.All,Directory.ReadWrite.All
 Update-MgIdentityConditionalAccessPolicy,Policy.Read.All/Policy.ReadWrite.ConditionalAccess,Policy.Read.All/Policy.ReadWrite.ConditionalAccess
 Update-MgOrganization,Organization.ReadWrite.All,Organization.ReadWrite.All
 Update-MgPlannerPlan,Tasks.ReadWrite,Tasks.ReadWrite
-Update-MgPolicyAuthorizationPolicy,Policy.ReadWrite.All,Policy.ReadWrite.All
-Update-MgPolicyIdentitySecurityDefaultEnforcementPolicy,Policy.ReadWrite.All,Policy.ReadWrite.All
+Update-MgPolicyAuthorizationPolicy,Policy.ReadWrite.Authorization,Policy.ReadWrite.Authorization
+Update-MgPolicyIdentitySecurityDefaultEnforcementPolicy,Policy.ReadWrite.ConditionalAccess,Policy.ReadWrite.ConditionalAccess
 Update-MgPolicyRoleManagementPolicyRule,RoleManagementPolicy.Read.Directory,RoleManagementPolicy.Read.Directory
 Update-MgPolicyTokenLifetimePolicy,Policy.ReadWrite.ApplicationConfiguration,Policy.ReadWrite.ApplicationConfiguration
 Update-MgRoleManagementDirectoryRoleDefinition,RoleManagement.ReadWrite.Directory,RoleManagement.ReadWrite.Directory
