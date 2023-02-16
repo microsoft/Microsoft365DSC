@@ -64,8 +64,6 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
             -ProfileName 'beta'
-
-        Select-MgProfile 'beta'
     }
     catch
     {
@@ -86,6 +84,7 @@ function Get-TargetResource
 
     $nullResult = $PSBoundParameters
     $nullResult.Ensure = 'Absent'
+
     try
     {
         $getValue = $null
@@ -116,7 +115,6 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found something with id {$id}"
         $results = [ordered]@{
-
             #region resource generator code
             Id                    = $getValue.Id
             CatalogStatus         = $getValue.CatalogStatus
@@ -213,8 +211,6 @@ function Set-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
             -ProfileName 'beta'
-
-        Select-MgProfile 'beta' -ErrorAction Stop
     }
     catch
     {
@@ -428,7 +424,6 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
-    Select-MgProfile 'beta' -ErrorAction Stop
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -444,11 +439,9 @@ function Export-TargetResource
 
     try
     {
-
         #region resource generator code
         [array]$getValue = Get-MgEntitlementManagementAccessPackageCatalog -All -ErrorAction Stop
         #endregion
-
 
         $i = 1
         $dscContent = ''
@@ -460,6 +453,7 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
+
         foreach ($config in $getValue)
         {
             $displayedKey = $config.id
@@ -467,6 +461,7 @@ function Export-TargetResource
             {
                 $displayedKey = $config.displayName
             }
+
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
                 id                    = $config.id
@@ -489,22 +484,21 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential
 
-
-
-
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
-            $i++
+
             Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
         }
+
         return $dscContent
     }
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `

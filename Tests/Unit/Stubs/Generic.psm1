@@ -47,20 +47,6 @@ function New-MgGroupOwnerByRef
         $BodyParameter
     )
 }
-
-function Get-MgServicePrincipal
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $ServicePrincipalId,
-
-        [Parameter()]
-        [System.String]
-        $Filter
-    )
-}
 function Confirm-M365DSCDependencies
 {
     [CmdletBinding()]
@@ -1217,91 +1203,6 @@ function Update-MGPlannerPlan
     )
 }
 
-function Get-MGPlannerTask
-{
-    [CmdletBinding()]
-    Param(
-        [Parameter()]
-        [System.String]
-        $PlannerTaskId
-    )
-}
-
-function New-MGPlannerTask
-{
-    [CmdletBinding()]
-    Param(
-        [Parameter()]
-        [System.String]
-        $PlanId,
-
-        [Parameter()]
-        [System.String]
-        $Title,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $StartDateTime,
-
-        [Parameter()]
-        [System.String]
-        $CompletedDateTime,
-
-        [Parameter()]
-        [ValidateRange(0, 100)]
-        [System.Uint32]
-        $PercentComplete,
-
-        [Parameter()]
-        [ValidateRange(0, 10)]
-        [System.UInt32]
-        $Priority
-    )
-}
-
-function Update-MGPlannerTask
-{
-    [CmdletBinding()]
-    Param(
-        [Parameter()]
-        [System.String]
-        $PlanId,
-
-        [Parameter()]
-        [System.String]
-        $Title,
-
-        [Parameter()]
-        [System.String]
-        $TaskId,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $StartDateTime,
-
-        [Parameter()]
-        [System.String]
-        $CompletedDateTime,
-
-        [Parameter()]
-        [ValidateRange(0, 100)]
-        [System.Uint32]
-        $PercentComplete,
-
-        [Parameter()]
-        [ValidateRange(0, 10)]
-        [System.UInt32]
-        $Priority
-    )
-}
 
 function Get-MgPlannerPlanBucket
 {

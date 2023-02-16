@@ -12,9 +12,6 @@
                 "update": [
                     {
                         "name": "Policy.ReadWrite.ConditionalAccess"
-                    },
-                    {
-                        "name": "Policy.Read.All"
                     }
                 ]
             },
@@ -27,9 +24,6 @@
                 "update": [
                     {
                         "name": "Policy.ReadWrite.ConditionalAccess"
-                    },
-                    {
-                        "name": "Policy.Read.All"
                     }
                 ]
             }

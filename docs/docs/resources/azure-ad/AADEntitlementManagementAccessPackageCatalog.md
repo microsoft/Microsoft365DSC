@@ -33,7 +33,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - None
+    - EntitlementManagement.Read.All
 
 - **Update**
 
@@ -43,7 +43,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - None
+    - EntitlementManagement.Read.All
 
 - **Update**
 

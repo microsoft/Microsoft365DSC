@@ -9,12 +9,12 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('canada', 'unitedstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov')]
+        [ValidateSet('canada', 'unitedstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov','unitedarabemirates','germany','switzerland','norway','korea','southafrica')]
         $Location,
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production', 'Standard', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams')]
+        [ValidateSet('Production', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams', 'Developer')]
         $EnvironmentSKU,
 
         [Parameter()]
@@ -24,7 +24,23 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret
     )
 
     Write-Verbose -Message "Getting configuration for PowerApps Environment {$DisplayName}"
@@ -57,12 +73,21 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Found PowerApps Environment {$DisplayName}"
+        $environmentType = $environment.EnvironmentType
+        if ($environmentType -eq 'Notspecified')
+        {
+            $environmentType = 'Teams'
+        }
         return @{
-            DisplayName    = $DisplayName
-            Location       = $environment.Location
-            EnvironmentSKU = $environment.EnvironmentType
-            Ensure         = 'Present'
-            Credential     = $Credential
+            DisplayName           = $DisplayName
+            Location              = $environment.Location
+            EnvironmentSKU        = $environmentType
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            ApplicationSecret     = $ApplicationSecret
         }
     }
     catch
@@ -87,12 +112,12 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('canada', 'unitedstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov')]
+        [ValidateSet('canada', 'unitedstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov','unitedarabemirates','germany','switzerland','norway','korea','southafrica')]
         $Location,
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production', 'Standard', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams')]
+        [ValidateSet('Production', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams', 'Developer')]
         $EnvironmentSKU,
 
         [Parameter()]
@@ -102,7 +127,23 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret
     )
 
     Write-Verbose -Message "Setting configuration for PowerApps Environment {$DisplayName}"
@@ -124,8 +165,12 @@ function Set-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove('Credential')
-    $CurrentParameters.Remove('Ensure')
+    $CurrentParameters.Remove('Credential') | Out-Null
+    $CurrentParameters.Remove('ApplicationId') | Out-Null
+    $CurrentParameters.Remove('TenantId') | Out-Null
+    $CurrentParameters.Remove('ApplicationSecret') | Out-Null
+    $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
+    $CurrentParameters.Remove('Ensure') | Out-Null
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
@@ -162,12 +207,12 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('canada', 'unitedstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov')]
+        [ValidateSet('canada', 'unitedstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov','unitedarabemirates','germany','switzerland','norway','korea','southafrica')]
         $Location,
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production', 'Standard', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams')]
+        [ValidateSet('Production', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams', 'Developer')]
         $EnvironmentSKU,
 
         [Parameter()]
@@ -177,7 +222,23 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -217,7 +278,23 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatforms' `
         -InboundParameters $PSBoundParameters
@@ -250,14 +327,23 @@ function Export-TargetResource
         }
         foreach ($environment in $environments)
         {
-            Write-Host "    |---[$i/$($environments.Count)] $($environment.DisplayName)" -NoNewline
-            if ($environment.EnvironmentType -ne 'Default' -and $environment.EnvironmentType -ne 'NotSpecified' -and $environment.EnvironmentType -ne 'Developer')
+            if ($environment.EnvironmentType -ne 'Default')
             {
+                Write-Host "    |---[$i/$($environments.Count)] $($environment.DisplayName)" -NoNewline
+                $environmentType = $environment.EnvironmentType
+                if ($environmentType -eq 'Notspecified')
+                {
+                    $environmentType = 'Teams'
+                }
                 $Params = @{
-                    DisplayName    = $environment.DisplayName
-                    Location       = $environment.Location
-                    EnvironmentSku = $environment.EnvironmentType
-                    Credential     = $Credential
+                    DisplayName           = $environment.DisplayName
+                    Location              = $environment.Location
+                    EnvironmentSku        = $environmentType
+                    Credential            = $Credential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    ApplicationSecret     = $ApplicationSecret
                 }
                 $Results = Get-TargetResource @Params
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -275,8 +361,8 @@ function Export-TargetResource
             }
             else
             {
-                Write-Host "`r`n    |---Skipping $($environment.DisplayName) because of environment sku $($environment.EnvironmentType) " -NoNewline
-                Write-Host $Global:M365DSCEmojiRedX
+                Write-Host "    |---[$i/$($environments.Count)] Skipping Default Environment $($environment.DisplayName)" -NoNewline
+                Write-Host $Global:M365DSCEmojiInformation
             }
             $i++
         }

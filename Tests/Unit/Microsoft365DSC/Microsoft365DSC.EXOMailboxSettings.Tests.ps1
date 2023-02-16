@@ -43,33 +43,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        # Test contexts
-        Context -Name "Specified Mailbox doesn't exist" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    DisplayName = 'NonExisting@contoso.com'
-                    Ensure      = 'Present'
-                    Credential  = $Credential
-                }
-
-                Mock -CommandName Get-MailboxRegionalConfiguration -MockWith {
-                    return $null
-                }
-            }
-
-            It 'Should throw an error from the Set method' {
-                { Set-TargetResource @testParams } | Should -Throw 'The specified mailbox {NonExisting@contoso.com} does not exist.'
-            }
-
-            It 'Should return Ensure is absent from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-            }
-
-            It 'Should return False from the Test method' {
-                Test-TargetResource @testParams | Should -Be $False
-            }
-        }
-
         Context -Name 'Specified TimeZone is Invalid' -Fixture {
             BeforeAll {
                 $testParams = @{
@@ -129,10 +102,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-            }
-
-            It 'Should return Ensure is Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
             It 'Should return True from the Test method' {

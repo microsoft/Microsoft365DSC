@@ -50,7 +50,12 @@
 | **SiteAndGroupProtectionBlockAccess** | Write | Boolean | The SiteAndGroupProtectionBlockAccess parameter blocks access. | |
 | **SiteAndGroupProtectionEnabled** | Write | Boolean | The SiteAndGroupProtectionEnabled parameter enables or disables the Site and Group Protection action for the labels. | |
 | **SiteAndGroupProtectionPrivacy** | Write | String | The SiteAndGroupProtectionPrivacy parameter specifies the privacy level for the label. | `Public`, `Private` |
-| **Credential** | Required | PSCredential | Credentials of the Exchange Global Admin | |
+| **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
+| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
+| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 
 ### MSFT_SCLabelSetting
 

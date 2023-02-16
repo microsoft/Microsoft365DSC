@@ -1,9 +1,172 @@
 # Change log for Microsoft365DSC
 
+
 # UNRELEASED
 
 * AADEntitlementManagementConnectedOrganization
   * Initial release
+* PPPowerAppsEnvironment
+  * Added all the latest location return from Get-AdminPowerAppEnvironmentLocations
+* MISC
+  * Updated Tasks.Read and Tasks.ReadWrite Permissions for Planner Plans and Planner Buckets
+    FIXES [#2866](https://github.com/microsoft/Microsoft365DSC/issues/2866)
+  * Fixed Permissions Scopes for AADAuthorizationPolicy and AADSecurityDefaults
+
+# 1.23.215.1
+
+* EXOIRMConfiguration
+  * Fixed issue where the export did not the correct type for RMSOnlineKeySharingLocation
+    FIXES [#2890](https://github.com/microsoft/Microsoft365DSC/issues/2890)
+* IntuneRoleAssignment
+  * Fixed issue where the export did not the correct type for ScopeType
+    FIXES [#2889](https://github.com/microsoft/Microsoft365DSC/issues/2889)
+* O365OrgSettings
+  * Initial Release.
+* MISC
+  * Updated required permissions of several resources
+    FIXES [#2866](https://github.com/microsoft/Microsoft365DSC/issues/2866)
+  * Added filter to Update-M365DSCAzureAdApplication to be more specific.
+    FIXES [2565](https://github.com/microsoft/Microsoft365DSC/issues/2565)
+  * Fixed the JSON conversion depth for the New-M365DSCConfigurationToJSON cmdlet.
+    FIXES [#2891](https://github.com/microsoft/Microsoft365DSC/issues/2891)
+  * Added new ParameterSet for Export-M365DSConfiguration
+    FIXES [[#2802](https://github.com/microsoft/Microsoft365DSC/issues/2802)]
+
+# 1.23.208.1
+
+* TeamsTenantTrustedIPAddress
+  * Initial Release.
+
+# 1.23.201.1
+
+* IntuneDeviceCompliancePolicyWindows10
+  * Updated example
+* IntuneDeviceConfigurationPolicyWindows10
+  * Updated example
+* PlannerTask
+  * Fixed issue where Attachments Uri weren't properly exiting single quotes.
+    FIXES [#2822](https://github.com/microsoft/Microsoft365DSC/issues/2822)
+* PPPowerAppsEnvironment
+  * Adds support for Developer SKU and fix for Teams SKU
+    FIXES [#2821](https://github.com/microsoft/Microsoft365DSC/issues/2821)
+* SCProtectionAlert
+  * Support for certificate based auth
+  * Fix removal of alert
+  * Added additional supported values for ThreatType, Severity & AggregationType
+    FIXES [#2793](https://github.com/microsoft/Microsoft365DSC/issues/2793)
+* TeamsTenantNetworkRegion
+  * Initial Release.
+* TeamsTenantNetworkSite
+  * Initial Release.
+* TeamsTenantNetworkSubnet
+  * Initial Release.
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.21.0
+  * Updated MicrosoftTeams to version 4.9.3
+* MISC
+  * Corrected Ensure parameter logic for many resources.
+    Removed requirement for Ensure=Present only.
+    FIXES [#2718](https://github.com/microsoft/Microsoft365DSC/issues/2718)
+  * Updated documentation to reflect new authentication possibilities
+    FIXES [#2863](https://github.com/microsoft/Microsoft365DSC/issues/2863)
+
+# 1.23.125.1
+
+* TeamsAudioConferencingPolicy
+  * Initial Release.
+* TeamsCallHoldPolicy
+  * Initial Release.
+* TeamsCallParkPolicy
+  * Initial Release.
+* TeamsComplianceRecordingPolicy
+  * Initial Release.
+* TeamsCortanaPolicy
+  * Initial Release.
+* TeamsEnhancedEncryptionPolicy
+  * Initial Release.
+* TeamsMobilityPolicy
+  * Initial Release.
+* TeamsNetworkRoamingPolicy
+  * Initial Release.
+* TeamsTranslationRule
+  * Initial Release.
+* TeamsUnassignedNumberTreatment
+  * Initial Release.
+* TeamsVDIPolicy
+  * Initial Release.
+* TeamsWorkloadPolicy
+  * Initial Release.
+* DRG
+  * Added CIM constructor in Get-TargetResource
+  * Improved management of AdditionalProperties
+  * Improved datetime and dateoffset management
+  * Fixed UnitTest
+  * Generate Stubs if required
+  * Fixes #2819
+* IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled
+  * Initial Release
+  * Fixes #2604
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.155.
+* Planner
+  * Fixed api-permissions on PlannerBucket and PlannerPlan.
+    FIXES [#2843](https://github.com/microsoft/Microsoft365DSC/issues/2843)
+
+# 1.23.118.1
+
+* IntuneAppConfigurationPolicy
+  * Fixes issue where the Test method fails when the policy does not exist yet
+    and the Assignments parameter is used.
+    FIXES [#2768](https://github.com/microsoft/Microsoft365DSC/issues/2768)
+* IntuneDeviceAndAppManagementAssignmentFilter
+  * Fixes issue where the code did not check for the DisplayName when the ID could not
+    be found.
+    FIXES [#2788](https://github.com/microsoft/Microsoft365DSC/issues/2788)
+* IntuneDeviceConfigurationPolicyMacOS
+  * Corrected copy/paste issue while implementing previous fix.
+    FIXES [#2731](https://github.com/microsoft/Microsoft365DSC/issues/2731)
+* IntuneRoleDefinition
+  * Fixes issue where the code did not check for the DisplayName when the ID could not
+    be found.
+    FIXES [#2771](https://github.com/microsoft/Microsoft365DSC/issues/2771)
+  * Updated logging logic to include more details and add Current/Target values in the
+    Test method.
+* PlannerTask
+  * Refactored to leverage the official cmdlets instead of using the legacy GraphHandlers.
+    FIXES [#2767](https://github.com/microsoft/Microsoft365DSC/issues/2767)
+  * Changed Export-TargetResource to call Get-M365DSCExportContentForResource
+    to simplify/conform + variables for authentication are added correctly
+    FIXES [#2784](https://github.com/microsoft/Microsoft365DSC/issues/2784)
+* SCRetentionCompliancePolicy
+  * Fixes an issue where the SkypeLocation was trying to be converted to a string when it was an array.
+    FIXES [#2789](https://github.com/microsoft/Microsoft365DSC/issues/2789)
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.20.0
+  * Updated MSCloudLoginAssistant to version 1.0.103
+
+# 1.23.111.1
+
+* AADAdministrativeUnit
+  * Marks DisplayName as a mandatory key and removed the visibility parameter from being evaluated since it is always returned as null.
+  FIXES [#2704](https://github.com/microsoft/Microsoft365DSC/issues/2704)
+* AADConditionalAccessPolicy
+  * Removed the extra Microsoft Graph profile switching call which was causing performance issue.
+    FIXES [#2688](https://github.com/microsoft/Microsoft365DSC/issues/2688)
+* TeamsFederationConfiguration
+  * Add parameters: TreatDiscoveredPartnersAsUnverified, SharedSipAddressSpace, RestrictTeamsConsumerToExternalUserProfiles.
+* TeamsFeedbackPolicy
+  * Initial Release
+* TeamsGroupPolicyAssignment
+  * Initial Release
+* MISC
+  * Adds Service Principal (Thumbprint and Secret) support to the Power Apps workload.
+  * Refactored the way we are switching Microsoft Graph Profiles across all resources.
+* DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 3.1.0
+  * Updated MSCloudLoginAssistant to version 1.0.102
+
+# 1.23.104.1
+
 * EXODistributionGroup
   * Changed the logic retrieving the group Type in the Get-TargetResource.
     FIXES [#2709](https://github.com/microsoft/Microsoft365DSC/issues/2709)
@@ -23,6 +186,11 @@
 * SCRetentionCompliancePolicy
   * Forces changes to existing policies to be applied.
     FIXES [#2719](https://github.com/microsoft/Microsoft365DSC/issues/2719)
+  * Handles wait when the associated policy has pending changes.
+    FIXES [#2728](https://github.com/microsoft/Microsoft365DSC/issues/2728)
+* SCRetentionComplianceRule
+  * Handles wait when the associated policy has pending changes.
+    FIXES [#2728](https://github.com/microsoft/Microsoft365DSC/issues/2728)
 * TeamsEmergencyCallingPolicy
   * Fixes issue where CertificateThumbprint wasn't working because Credential was set to mandatory by the Test-TargetResource function.
     FIXES [#2710](https://github.com/microsoft/Microsoft365DSC/issues/2710)
@@ -50,6 +218,8 @@
   * Added support to generate parameter descriptions automatically from schema
     FIXES [#2720](https://github.com/microsoft/Microsoft365DSC/issues/2720)
 * MISC
+  * Fixes an issue where OrderedDictionary values weren't properly expanded in a delta report
+    FIXES [#2715](https://github.com/microsoft/Microsoft365DSC/issues/2715)
   * Updated website generation code to checkout correct commit
 
 # 1.22.1221.1

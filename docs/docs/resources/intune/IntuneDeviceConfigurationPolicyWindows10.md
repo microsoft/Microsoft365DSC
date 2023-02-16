@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **DisplayName** | Key | String | Description of the device configuration policy for Windows 10. | |
-| **Description** | Write | String | Display name of the device configuration policy for Windows 10. | |
+| **DisplayName** | Key | String | Display name of the device configuration policy for Windows 10. | |
+| **Description** | Write | String | Description of the device configuration policy for Windows 10. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **EnterpriseCloudPrintDiscoveryEndPoint** | Write | String | Endpoint for discovering cloud printers. | |
 | **EnterpriseCloudPrintOAuthAuthority** | Write | String | Authentication endpoint for acquiring OAuth tokens. | |
@@ -274,7 +274,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 ### Example 1
 
-This example creates a new General Device Configuration Policy for Windows .
+This example creates a new General Device Configuration Policy for Windows.
 
 ```powershell
 Configuration Example
@@ -290,8 +290,8 @@ Configuration Example
     {
         IntuneDeviceConfigurationPolicyWindows10 'ConfigureDeviceConfigurationPolicyWindows10'
         {
-            displayName                                           = "CONTOSO | W10 | Device Restriction"
-            description                                           = "Default device restriction settings"
+            displayName                                           = 'CONTOSO | W10 | Device Restriction'
+            description                                           = 'Default device restriction settings'
             defenderBlockEndUserAccess                            = $true
             defenderRequireRealTimeMonitoring                     = $true
             defenderRequireBehaviorMonitoring                     = $true
@@ -314,7 +314,13 @@ Configuration Example
             defenderScanType                                      = 'quick'   #quick,full,userDefined
             defenderSystemScanSchedule                            = 'monday'  #days of week
             defenderScheduledScanTime                             = '11:00:00.0000000'
-            defenderDetectedMalwareActions                        = @("lowSeverity=clean", "moderateSeverity=quarantine", "highSeverity=remove", "severeSeverity=block")
+            defenderDetectedMalwareActions                        = MSFT_IntuneDefenderDetectedMalwareActions
+            {
+                lowSeverity      = 'clean'
+                moderateSeverity = 'quarantine'
+                highSeverity     = 'remove'
+                severeSeverity   = 'block'
+            }
             defenderFileExtensionsToExclude                       = "[`"csv,jpg,docx`"]"
             defenderFilesAndFoldersToExclude                      = "[`"c:\\2,C:\\1`"]"
             defenderProcessesToExclude                            = "[`"notepad.exe,c:\\Windows\\myprocess.exe`"]"
@@ -331,13 +337,13 @@ Configuration Example
             passwordPreviousPasswordBlockCount                    = 2
             passwordRequired                                      = $true
             passwordRequireWhenResumeFromIdleState                = $true
-            passwordRequiredType                                  = "alphanumeric"
+            passwordRequiredType                                  = 'alphanumeric'
             passwordSignInFailureCountBeforeFactoryReset          = 12
-            privacyAdvertisingId                                  = "blocked"
+            privacyAdvertisingId                                  = 'blocked'
             privacyAutoAcceptPairingAndConsentPrompts             = $true
             privacyBlockInputPersonalization                      = $true
             startBlockUnpinningAppsFromTaskbar                    = $true
-            startMenuAppListVisibility                            = "collapse"
+            startMenuAppListVisibility                            = 'collapse'
             startMenuHideChangeAccountSettings                    = $true
             startMenuHideFrequentlyUsedApps                       = $true
             startMenuHideHibernate                                = $true
@@ -351,18 +357,18 @@ Configuration Example
             startMenuHideSleep                                    = $true
             startMenuHideSwitchAccount                            = $true
             startMenuHideUserTile                                 = $true
-            startMenuLayoutXml                                    = "+DQogICAGlmaWNhdGlvblRlbXBsYXRlPg=="
-            startMenuMode                                         = "fullScreen"
-            startMenuPinnedFolderDocuments                        = "hide"
-            startMenuPinnedFolderDownloads                        = "hide"
-            startMenuPinnedFolderFileExplorer                     = "hide"
-            startMenuPinnedFolderHomeGroup                        = "hide"
-            startMenuPinnedFolderMusic                            = "hide"
-            startMenuPinnedFolderNetwork                          = "hide"
-            startMenuPinnedFolderPersonalFolder                   = "hide"
-            startMenuPinnedFolderPictures                         = "hide"
-            startMenuPinnedFolderSettings                         = "hide"
-            startMenuPinnedFolderVideos                           = "hide"
+            startMenuLayoutXml                                    = '+DQogICAGlmaWNhdGlvblRlbXBsYXRlPg=='
+            startMenuMode                                         = 'fullScreen'
+            startMenuPinnedFolderDocuments                        = 'hide'
+            startMenuPinnedFolderDownloads                        = 'hide'
+            startMenuPinnedFolderFileExplorer                     = 'hide'
+            startMenuPinnedFolderHomeGroup                        = 'hide'
+            startMenuPinnedFolderMusic                            = 'hide'
+            startMenuPinnedFolderNetwork                          = 'hide'
+            startMenuPinnedFolderPersonalFolder                   = 'hide'
+            startMenuPinnedFolderPictures                         = 'hide'
+            startMenuPinnedFolderSettings                         = 'hide'
+            startMenuPinnedFolderVideos                           = 'hide'
             settingsBlockSettingsApp                              = $true
             settingsBlockSystemPage                               = $true
             settingsBlockDevicesPage                              = $true
@@ -382,10 +388,10 @@ Configuration Example
             windowsSpotlightBlockThirdPartyNotifications          = $true
             windowsSpotlightBlockWelcomeExperience                = $true
             windowsSpotlightBlockWindowsTips                      = $true
-            windowsSpotlightConfigureOnLockScreen                 = "disabled"
+            windowsSpotlightConfigureOnLockScreen                 = 'disabled'
             networkProxyApplySettingsDeviceWide                   = $true
             networkProxyDisableAutoDetect                         = $true
-            networkProxyAutomaticConfigurationUrl                 = "https://example.com/networkProxyAutomaticConfigurationUrl/"
+            networkProxyAutomaticConfigurationUrl                 = 'https://example.com/networkProxyAutomaticConfigurationUrl/'
             accountsBlockAddingNonMicrosoftAccountEmail           = $true
             antiTheftModeBlocked                                  = $true
             bluetoothBlocked                                      = $true
@@ -400,13 +406,13 @@ Configuration Example
             cortanaBlocked                                        = $true
             deviceManagementBlockFactoryResetOnMobile             = $true
             deviceManagementBlockManualUnenroll                   = $true
-            safeSearchFilter                                      = "strict"
+            safeSearchFilter                                      = 'strict'
             edgeBlockPopups                                       = $true
             edgeBlockSearchSuggestions                            = $true
             edgeBlockSendingIntranetTrafficToInternetExplorer     = $true
             edgeSendIntranetTrafficToInternetExplorer             = $true
             edgeRequireSmartScreen                                = $true
-            edgeFirstRunUrl                                       = "https://contoso.com/"
+            edgeFirstRunUrl                                       = 'https://contoso.com/'
             edgeBlockAccessToAboutFlags                           = $true
             edgeHomepageUrls                                      = "[`"https://microsoft.com`"]"
             smartScreenBlockPromptOverride                        = $true
@@ -438,29 +444,29 @@ Configuration Example
             wirelessDisplayBlockUserInputFromReceiver             = $true
             wirelessDisplayRequirePinForPairing                   = $true
             windowsStoreBlocked                                   = $true
-            appsAllowTrustedAppsSideloading                       = "blocked"
+            appsAllowTrustedAppsSideloading                       = 'blocked'
             windowsStoreBlockAutoUpdate                           = $true
-            developerUnlockSetting                                = "blocked"
+            developerUnlockSetting                                = 'blocked'
             sharedUserAppDataAllowed                              = $true
             appsBlockWindowsStoreOriginatedApps                   = $true
             windowsStoreEnablePrivateStoreOnly                    = $true
             storageRestrictAppDataToSystemVolume                  = $true
             storageRestrictAppInstallToSystemVolume               = $true
             gameDvrBlocked                                        = $true
-            edgeSearchEngine                                      = "bing"
+            edgeSearchEngine                                      = 'bing'
             #edgeSearchEngine                                     = "https://go.microsoft.com/fwlink/?linkid=842596"  #'Google'
             experienceBlockDeviceDiscovery                        = $true
             experienceBlockErrorDialogWhenNoSIM                   = $true
             experienceBlockTaskSwitcher                           = $true
             logonBlockFastUserSwitching                           = $true
             tenantLockdownRequireNetworkDuringOutOfBoxExperience  = $true
-            enterpriseCloudPrintDiscoveryEndPoint                 = "https://cloudprinterdiscovery.contoso.com"
+            enterpriseCloudPrintDiscoveryEndPoint                 = 'https://cloudprinterdiscovery.contoso.com'
             enterpriseCloudPrintDiscoveryMaxLimit                 = 4
-            enterpriseCloudPrintMopriaDiscoveryResourceIdentifier = "http://mopriadiscoveryservice/cloudprint"
-            enterpriseCloudPrintOAuthClientIdentifier             = "30fbf7e8-321c-40ce-8b9f-160b6b049257"
-            enterpriseCloudPrintOAuthAuthority                    = "https:/tenant.contoso.com/adfs"
-            enterpriseCloudPrintResourceIdentifier                = "http://cloudenterpriseprint/cloudPrint"
-            networkProxyServer                                    = @("address=proxy.contoso.com:8080", "exceptions=*.contoso.com`r`n*.internal.local", "useForLocalAddresses=false")
+            enterpriseCloudPrintMopriaDiscoveryResourceIdentifier = 'http://mopriadiscoveryservice/cloudprint'
+            enterpriseCloudPrintOAuthClientIdentifier             = '30fbf7e8-321c-40ce-8b9f-160b6b049257'
+            enterpriseCloudPrintOAuthAuthority                    = 'https:/tenant.contoso.com/adfs'
+            enterpriseCloudPrintResourceIdentifier                = 'http://cloudenterpriseprint/cloudPrint'
+            networkProxyServer                                    = @('address=proxy.contoso.com:8080', "exceptions=*.contoso.com`r`n*.internal.local", 'useForLocalAddresses=false')
             Ensure                                                = 'Present'
             Credential                                            = $credsGlobalAdmin
         }

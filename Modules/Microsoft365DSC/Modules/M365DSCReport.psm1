@@ -162,7 +162,7 @@ function New-M365DSCConfigurationToJSON
         $OutputPath
     )
 
-    $jsonContent = $ParsedContent | ConvertTo-Json
+    $jsonContent = $ParsedContent | ConvertTo-Json -Depth 25
     $jsonContent | Out-File -FilePath $OutputPath
 }
 
@@ -787,6 +787,20 @@ function Get-M365DSCResourceKey
     {
         return @('OrgWideAccount')
     }
+    elseif ($mandatoryParameters.count -eq 1)
+    {
+        # returning the only mandatory parameter name
+        return @($mandatoryParameters[0].Name)
+    }
+    elseif ($mandatoryParameters.count -eq 0)
+    {
+        throw "No mandatory parameters found for $($Resource.ResourceName)"
+    }
+    else
+    {
+        # the function failed to find any key params
+        throw "Multiple mandatory parameters found for $($Resource.ResourceName) but none of them are returned by the function"
+    }
 }
 
 <#
@@ -1093,13 +1107,52 @@ function New-M365DSCDeltaReport
                             $emoticon = '&#x1F7E6;'
                         }
 
+                        $sourceValue = $drift.ValueInSource
+                        $destinationValue = $drift.ValueInDestination
+                        $CIMType = $drift.ValueInSource[0].CimInstance
+
+                        if ($sourceValue.GetType().Name -eq 'Object[]' -and -not [System.String]::IsNullOrEmpty($CIMType))
+                        {
+                            $sourceValue = ""
+                            $orderedKeys = $drift.ValueInSource.Key | Sort-Object
+
+                            foreach ($key in $orderedKeys)
+                            {
+                                $currentValue = ($drift.ValueInSource | Where-Object -FilterScript {$_.Key -eq $key}).Value
+                                $sourceValue += "<table width='100%'>"
+                                $sourceValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;'>$CIMType</th></tr>"
+                                $sourceValue += "<tr><td width='100%' style='border:1px solid black; text-align:right;'>$key = $currentValue</td></tr>"
+                                $sourceValue += "</table><br/>"
+                            }
+                            $sourceValue = $sourceValue.Substring(0, $sourceValue.Length -5)
+                            $cellStyle = "vertical-align:top;"
+                        }
+
+                        if ($destinationValue.GetType().Name -eq 'Object[]' -and -not [System.String]::IsNullOrEmpty($CIMType))
+                        {
+                            $destinationValue = ""
+                            $orderedKeys = $drift.ValueInDestination.Key | Sort-Object
+                            $CIMType = $drift.ValueInDestination[0].CimInstance
+
+                            foreach ($key in $orderedKeys)
+                            {
+                                $currentValue = ($drift.ValueInDestination | Where-Object -FilterScript {$_.Key -eq $key}).Value
+                                $destinationValue += "<table width='100%'>"
+                                $destinationValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;'>$CIMType</th></tr>"
+                                $destinationValue += "<tr><td width='100%' style='border:1px solid black; text-align:right;'>$key = $currentValue</td></tr>"
+                                $destinationValue += "</table><br/>"
+                            }
+                            $destinationValue = $destinationValue.Substring(0, $destinationValue.Length -5)
+                            $cellDestinationStyle = "vertical-align:top;"
+                        }
+
                         [void]$reportSB.AppendLine('<tr>')
                         [void]$reportSB.AppendLine("<td style='border:1px solid black;text-align:right;' width='45%'>")
                         [void]$reportSB.AppendLine("$($drift.ParameterName)</td>")
                         [void]$reportSB.AppendLine("<td style='border:1px solid black;$cellStyle' width='15%'>")
-                        [void]$reportSB.AppendLine("$($drift.ValueInSource)</td>")
-                        [void]$reportSB.AppendLine("<td style='border:1px solid black;' width='15%'>")
-                        [void]$reportSB.AppendLine("$($drift.ValueInDestination)</td>")
+                        [void]$reportSB.AppendLine("$($sourceValue)</td>")
+                        [void]$reportSB.AppendLine("<td style='border:1px solid black;$cellDestinationStyle' width='15%'>")
+                        [void]$reportSB.AppendLine("$($destinationValue)</td>")
                         [void]$reportSB.AppendLine('</tr>')
 
                         if ($null -ne $drift._Metadata_Level)
