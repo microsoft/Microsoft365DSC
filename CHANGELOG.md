@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Fixed general issues caused by improper handling of nested CIMInstances
+    Fixes #2775, #2776, #2786
 * MISC
   * Updated Tasks.Read and Tasks.ReadWrite Permissions for Planner Plans and Planner Buckets
     FIXES [#2866](https://github.com/microsoft/Microsoft365DSC/issues/2866)
