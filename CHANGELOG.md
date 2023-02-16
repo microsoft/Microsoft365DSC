@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* AADAdministrativeUnit
+  * Fixed general issues caused by improper handling of nested CIMInstances
+    Fixes #2775, #2776, #2786
+
 # 1.23.301.1
 
 * IntuneDeviceEnrollmentConfigurationWindows10
