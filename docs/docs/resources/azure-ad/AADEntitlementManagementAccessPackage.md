@@ -47,20 +47,20 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - EntitlementManagement.Read.All, EntitlementManagement.ReadWrite.All
+    - EntitlementManagement.Read.All
 
 - **Update**
 
-    - EntitlementManagement.ReadWrite.All
+    - EntitlementManagement.Read.All, EntitlementManagement.ReadWrite.All
 
 #### Application permissions
 
 - **Read**
 
-    - EntitlementManagement.Read.All, EntitlementManagement.ReadWrite.All
+    - EntitlementManagement.Read.All
 
 - **Update**
 
-    - EntitlementManagement.ReadWrite.All
+    - EntitlementManagement.Read.All, EntitlementManagement.ReadWrite.All
 
 

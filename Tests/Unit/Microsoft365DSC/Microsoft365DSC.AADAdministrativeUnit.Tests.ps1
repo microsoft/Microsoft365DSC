@@ -81,10 +81,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description = 'FakeStringValue1'
                     DisplayName = 'FakeStringValue1'
                     Id          = 'FakeStringValue1'
+                    Members     = (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
+                        Type = 'User'
+                        Identity = 'john.smith@contoso.com'
+                    } -ClientOnly)
                     Visibility  = 'Public'
-
                     Ensure      = 'Present'
                     Credential  = $Credential
+                }
+
+                Mock -CommandName Get-MgUser -MockWith {
+                    return @{
+                        Id = "123456"
+                    }
                 }
 
                 Mock -CommandName Get-MgAdministrativeUnit -MockWith {
@@ -109,7 +118,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description = 'FakeStringValue2'
                     DisplayName = 'FakeStringValue2'
                     Id          = 'FakeStringValue2'
-
+                    Members     = (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
+                        Type = 'User'
+                        Identity = 'john.smith@contoso.com'
+                    } -ClientOnly)
                     Ensure      = 'Absent'
                     Credential  = $Credential
                 }
@@ -174,7 +186,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             )
                         #>
                     Visibility        = 'Public'
-
+                    MembershipType    = 'Assigned'
+                    MembershipRule = 'Canada'
+                    MembershipRuleProcessingState = 'On'
                     Ensure            = 'Present'
                     Credential        = $Credential
                 }
@@ -207,6 +221,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             }
                         )
                         Visibility        = 'Public'
+                        AdditionalProperties = @{
+                            membershipType = 'Assigned'
+                            membershipRule = 'Canada'
+                            membershipRuleProcessingState = 'On'
+                        }
                     }
                 }
 

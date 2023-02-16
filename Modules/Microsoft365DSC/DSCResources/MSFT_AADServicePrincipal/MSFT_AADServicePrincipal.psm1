@@ -96,7 +96,8 @@ function Get-TargetResource
 
     Write-Verbose -Message 'Getting configuration of Azure AD ServicePrincipal'
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters -ProfileName 'Beta'
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'Beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -488,8 +489,9 @@ function Export-TargetResource
         [Switch]
         $ManagedIdentity
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
-    Select-MgProfile Beta | Out-Null
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

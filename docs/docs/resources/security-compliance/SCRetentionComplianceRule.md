@@ -14,7 +14,12 @@
 | **RetentionComplianceAction** | Write | String | The RetentionComplianceAction parameter specifies the retention action for the rule. Valid values are: Delete, Keep and KeepAndDelete. | `Delete`, `Keep`, `KeepAndDelete` |
 | **RetentionDuration** | Write | String | The RetentionDuration parameter specifies the hold duration for the retention rule. Valid values are: An integer - The hold duration in days, Unlimited - The content is held indefinitely. | |
 | **RetentionDurationDisplayHint** | Write | String | The RetentionDurationDisplayHint parameter specifies the units that are used to display the retention duration in the Security and Compliance Center. Valid values are: Days, Months or Years. | `Days`, `Months`, `Years` |
-| **Credential** | Required | PSCredential | Credentials of the Exchange Global Admin | |
+| **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
+| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
+| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 
 ## Description
 

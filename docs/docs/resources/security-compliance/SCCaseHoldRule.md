@@ -10,7 +10,12 @@
 | **ContentMatchQuery** | Write | String | The ContentMatchQuery parameter specifies a content search filter. Use this parameter to create a query-based hold so only the content that matches the specified search query is placed on hold. This parameter uses a text search string or a query that's formatted by using the Keyword Query Language (KQL). | |
 | **Disabled** | Write | Boolean | The Disabled parameter specifies whether the case hold rule is enabled or disabled. | |
 | **Ensure** | Write | String | Present ensures the rule exists, absent ensures it is removed | `Present`, `Absent` |
-| **Credential** | Required | PSCredential | Credentials of the Global Admin Account | |
+| **Credential** | Write | PSCredential | Credentials of the Global Admin Account | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
+| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
+| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 
 ## Description
 

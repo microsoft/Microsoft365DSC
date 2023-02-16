@@ -23,7 +23,12 @@
 | **RemoveModernGroupLocation** | Write | StringArray[] | The RemoveModernGroupLocation parameter specifies the Microsoft 365 Groups to remove from the policy. | |
 | **RemoveModernGroupLocationException** | Write | StringArray[] | The RemoveModernGroupLocationException parameter specifies the Microsoft 365 Groups to remove from excluded values when you're using the value All for the ModernGroupLocation parameter. | |
 | **RemoveLabels** | Write | StringArray[] | The RemoveLabels parameter specifies the sensitivity labels that are removed from the policy. You can use any value that uniquely identifies the label. | |
-| **Credential** | Required | PSCredential | Credentials of the Exchange Global Admin | |
+| **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
+| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
+| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 
 ### MSFT_SCLabelSetting
 

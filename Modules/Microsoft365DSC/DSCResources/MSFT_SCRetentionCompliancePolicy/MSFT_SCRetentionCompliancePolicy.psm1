@@ -89,9 +89,29 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Getting configuration of RetentionCompliancePolicy for $Name"
@@ -346,9 +366,29 @@ function Set-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     if ($null -eq $SharePointLocation -and $null -eq $ExchangeLocation -and $null -eq $OneDriveLocation -and `
@@ -358,7 +398,7 @@ function Set-TargetResource
         throw 'You need to specify at least one Location for this Policy.'
     }
 
-    if ($null -ne $SkypeLocation -and $SkypeLocation.ToLower() -eq 'all')
+    if ($null -ne $SkypeLocation -and $SkypeLocation -eq 'all')
     {
         throw 'Skype Location must be a any value that uniquely identifies the user.Ex Name, email address, GUID'
     }
@@ -768,7 +808,29 @@ function Set-TargetResource
         }
 
         Write-Verbose "Updating Policy with values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
-        Set-RetentionCompliancePolicy @CreationParams -Force
+        $success = $false
+        $retries = 1
+        while (!$success -and $retries -le 10)
+        {
+            try
+            {
+                Set-RetentionCompliancePolicy @CreationParams -Force -ErrorAction Stop
+                $success = $true
+            }
+            catch
+            {
+                if ($_.Exception.Message -like "*are being deployed. Once deployed, additional actions can be performed*")
+                {
+                    Write-Verbose -Message "The policy has pending changes being deployed. Waiting 30 seconds for a maximum of 300 seconds (5 minutes). Total time waited so far {$($retries * 30) seconds}"
+                    Start-Sleep -Seconds 30
+                }
+                else
+                {
+                    $success = $true
+                }
+            }
+            $retries++
+        }
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
@@ -868,9 +930,29 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -910,9 +992,29 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters `
@@ -947,11 +1049,8 @@ function Export-TargetResource
         foreach ($policy in $policies)
         {
             Write-Host "    |---[$i/$($policies.Length)] $($policy.Name)" -NoNewline
-            $Params = @{
-                Credential = $Credential
-                Name       = $policy.Name
-            }
-            $Results = Get-TargetResource @Params
+
+            $Results = Get-TargetResource @PSBoundParameters -Name $policy.Name
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `

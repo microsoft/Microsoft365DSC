@@ -139,6 +139,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PrimarySmtpAddress                 = 'demodg@contoso.com'
                         RequireSenderAuthenticationEnabled = $True
                         SendModerationNotifications        = 'Always'
+                        GroupType                          = @('Universal')
                     }
                 }
             }
@@ -196,6 +197,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PrimarySmtpAddress                 = 'demodg@contoso.com'
                         RequireSenderAuthenticationEnabled = $True
                         SendModerationNotifications        = 'Always'
+                        GroupType                          = @('Universal')
                     }
                 }
             }
@@ -248,6 +250,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PrimarySmtpAddress                 = 'demodg@contoso.com'
                         RequireSenderAuthenticationEnabled = $True
                         SendModerationNotifications        = 'Always'
+                        GroupType                          = @('Universal')
                     }
                 }
             }
@@ -290,6 +293,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PrimarySmtpAddress                 = 'demodg@contoso.com'
                         RequireSenderAuthenticationEnabled = $True
                         SendModerationNotifications        = 'Always'
+                        GroupType                          = @('Universal')
                     }
                 }
             }

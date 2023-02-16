@@ -90,8 +90,6 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
             -ProfileName 'beta'
-
-        Select-MgProfile 'beta'
     }
     catch
     {
@@ -283,8 +281,6 @@ function Set-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
             -ProfileName 'beta'
-
-        Select-MgProfile 'beta' -ErrorAction Stop
     }
     catch
     {
@@ -639,8 +635,6 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
 
-    Select-MgProfile -Name 'beta' -ErrorAction Stop
-
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -655,11 +649,9 @@ function Export-TargetResource
 
     try
     {
-
         #region resource generator code
         $catalogs = @()
         $catalogs += Get-MgEntitlementManagementAccessPackageCatalog -All -ErrorAction Stop
-
         #endregion
 
         $i = 1
@@ -672,6 +664,7 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
+
         foreach ($catalog in $catalogs)
         {
             $displayedKey = $catalog.id
@@ -696,6 +689,7 @@ function Export-TargetResource
             {
                 Write-Host "`r`n" -NoNewline
             }
+
             foreach ($resource in $resources)
             {
                 Write-Host "        |---[$j/$($resources.Count)] $($resource.DisplayName)" -NoNewline
@@ -772,16 +766,14 @@ function Export-TargetResource
                     $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Attributes' -IsCIMArray:$true
                 }
                 $dscContent += $currentDSCBlock
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
-
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
 
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
                 $j++
             }
 
             $i++
-            #Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
 
         #Removing coma between items in cim instance array
@@ -865,7 +857,8 @@ function Get-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
     [OutputType([hashtable], [hashtable[]])]
-    param(
+    param
+    (
         [Parameter()]
         $ComplexObject
     )
@@ -875,7 +868,6 @@ function Get-M365DSCDRGComplexTypeToHashtable
         return $null
     }
 
-
     if ($ComplexObject.getType().Fullname -like '*hashtable')
     {
         return $ComplexObject
@@ -884,7 +876,6 @@ function Get-M365DSCDRGComplexTypeToHashtable
     {
         return , [hashtable[]]$ComplexObject
     }
-
 
     if ($ComplexObject.gettype().fullname -like '*[[\]]')
     {
@@ -913,7 +904,6 @@ function Get-M365DSCDRGComplexTypeToHashtable
         $keys = $ComplexObject.Keys
         foreach ($key in $keys)
         {
-
             if ($null -ne $ComplexObject.$key)
             {
                 $keyName = $key#.Name[0].ToString().ToLower() + $key.Name.Substring(1, $key.Name.Length - 1)
@@ -931,11 +921,11 @@ function Get-M365DSCDRGComplexTypeToHashtable
                 }
             }
         }
+
         return [hashtable]$results
     }
 
     $keys = $ComplexObject | Get-Member | Where-Object -FilterScript { $_.MemberType -eq 'Property' -and $_.Name -ne 'AdditionalProperties' }
-
     foreach ($key in $keys)
     {
 
@@ -963,7 +953,8 @@ function Get-M365DSCDRGComplexTypeToString
 {
     [CmdletBinding()]
     #[OutputType([System.String])]
-    param(
+    param
+    (
         [Parameter()]
         $ComplexObject,
 
@@ -998,6 +989,7 @@ function Get-M365DSCDRGComplexTypeToString
     {
         $indent += '    '
     }
+
     #If ComplexObject  is an Array
     if ($ComplexObject.GetType().FullName -like '*[[\]]')
     {
@@ -1016,7 +1008,6 @@ function Get-M365DSCDRGComplexTypeToString
             }
 
             $currentProperty += Get-M365DSCDRGComplexTypeToString -isArray:$true @splat
-
         }
 
         # PowerShell returns all non-captured stream output, not just the argument of the return statement.
@@ -1039,6 +1030,7 @@ function Get-M365DSCDRGComplexTypeToString
     {
         $indent += '    '
     }
+
     $keyNotNull = 0
     foreach ($key in $ComplexObject.Keys)
     {
@@ -1079,7 +1071,6 @@ function Get-M365DSCDRGComplexTypeToString
                     $currentProperty += $indent
                     $currentProperty += ')'
                     $currentProperty += "`r`n"
-
                 }
             }
             else
@@ -1104,6 +1095,7 @@ function Get-M365DSCDRGComplexTypeToString
             }
         }
     }
+
     $indent = ''
     for ($i = 0; $i -lt $IndentLevel - 1 ; $i++)
     {
@@ -1120,7 +1112,6 @@ function Get-M365DSCDRGComplexTypeToString
             $indent += '    '
         }
         $currentProperty += $indent
-
     }
     return $currentProperty
 }
@@ -1129,7 +1120,8 @@ function Get-M365DSCDRGSimpleObjectTypeToString
 {
     [CmdletBinding()]
     [OutputType([System.String])]
-    param(
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.String]
         $Key,
@@ -1140,7 +1132,6 @@ function Get-M365DSCDRGSimpleObjectTypeToString
         [Parameter()]
         [System.String]
         $Space = '                '
-
     )
 
     $returnValue = ''
@@ -1206,6 +1197,7 @@ function Get-M365DSCDRGSimpleObjectTypeToString
             $returnValue = $Space + $Key + ' = ' + $Value + "`r`n"
         }
     }
+
     return $returnValue
 }
 
@@ -1213,9 +1205,11 @@ function Compare-M365DSCComplexObject
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-    param(
+    param
+    (
         [Parameter()]
         $Source,
+
         [Parameter()]
         $Target
     )
@@ -1258,7 +1252,6 @@ function Compare-M365DSCComplexObject
         $i = 0
         foreach ($item in $Source)
         {
-
             $compareResult = Compare-M365DSCComplexObject `
                 -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Source[$i]) `
                 -Target $Target[$i]
@@ -1276,7 +1269,6 @@ function Compare-M365DSCComplexObject
     $keys = $Source.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
     foreach ($key in $keys)
     {
-        #write-verbose -message "Comparing key: {$key}"
         #Matching possible key names between Source and Target
         $skey = $key
         $tkey = $key
@@ -1325,7 +1317,6 @@ function Compare-M365DSCComplexObject
 
                 if (-not $compareResult)
                 {
-
                     Write-Verbose -Message "Configuration drift - complex object key: $key Source {$sourceValue} Target {$targetValue}"
                     return $false
                 }
@@ -1345,9 +1336,7 @@ function Compare-M365DSCComplexObject
                     Write-Verbose -Message "Configuration drift - simple object key: $key Source {$sourceValue} Target {$targetValue}"
                     return $false
                 }
-
             }
-
         }
     }
 
@@ -1358,11 +1347,11 @@ function Convert-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
     [OutputType([hashtable], [hashtable[]])]
-    param(
+    param
+    (
         [Parameter(Mandatory = 'true')]
         $ComplexObject
     )
-
 
     if ($ComplexObject.getType().Fullname -like '*[[\]]')
     {
@@ -1383,7 +1372,6 @@ function Convert-M365DSCDRGComplexTypeToHashtable
 
     if ($null -ne $hashComplexObject)
     {
-
         $results = $hashComplexObject.clone()
         $keys = $hashComplexObject.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
         foreach ($key in $keys)

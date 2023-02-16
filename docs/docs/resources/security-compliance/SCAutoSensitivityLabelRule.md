@@ -48,7 +48,12 @@
 | **SubjectMatchesPatterns** | Write | String | The SubjectMatchesPatterns parameter specifies a condition for the auto-labeling policy rule that looks for text patterns in the Subject field of messages by using regular expressions. | |
 | **Workload** | Key | String | Workload the rule is associated with. Value can be: Exchange, SharePoint, OneDriveForBusiness | `Exchange`, `SharePoint`, `OneDriveForBusiness` |
 | **Ensure** | Write | String | Specify if this rule should exist or not. | `Present`, `Absent` |
-| **Credential** | Required | PSCredential | Credentials of the Exchange Global Admin | |
+| **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
+| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
+| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 
 ### MSFT_SCDLPSensitiveInformation
 

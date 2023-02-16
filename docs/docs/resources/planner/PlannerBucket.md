@@ -42,11 +42,11 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - NotSupported
+    - Tasks.Read
 
 - **Update**
 
-    - NotSupported
+    - Tasks.ReadWrite
 
 ## Examples
 

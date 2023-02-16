@@ -23,6 +23,7 @@ nav:
           - 'Integrating with Azure DevOps': 'user-guide/get-started/integrating-with-azure-devops.md'
           - 'Support': 'user-guide/get-started/support.md'
           - 'Telemetry': 'user-guide/get-started/telemetry.md'
+          - 'PowerShell 7+ Support': 'user-guide/get-started/powershell7-support.md'
           - 'Troubleshooting': 'user-guide/get-started/troubleshooting.md'
       - Advanced:
           - 'Blueprints': 'user-guide/advanced/create-blueprint.md'

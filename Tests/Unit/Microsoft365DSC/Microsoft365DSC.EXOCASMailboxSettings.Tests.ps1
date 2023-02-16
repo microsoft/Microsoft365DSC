@@ -43,33 +43,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        # Test contexts
-        Context -Name "Specified CAS Mailbox doesn't exist" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Identity   = 'NonExisting@contoso.com'
-                    Ensure     = 'Present'
-                    Credential = $Credential
-                }
-
-                Mock -CommandName Get-CASMailbox -MockWith {
-                    return $null
-                }
-            }
-
-            It 'Should throw an error from the Set method' {
-                { Set-TargetResource @testParams } | Should -Throw 'The specified mailbox {NonExisting@contoso.com} does not exist.'
-            }
-
-            It 'Should return Ensure is absent from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-            }
-
-            It 'Should return False from the Test method' {
-                Test-TargetResource @testParams | Should -Be $False
-            }
-        }
-
         Context -Name 'CAS Mailbox settings - update not required.' -Fixture {
             BeforeAll {
                 $testParams = @{

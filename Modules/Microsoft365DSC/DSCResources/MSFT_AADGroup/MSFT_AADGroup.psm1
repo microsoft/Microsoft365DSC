@@ -210,7 +210,6 @@ function Get-TargetResource
                 }
             }
 
-
             # Licenses
             $assignedLicensesValues = $null
             $assignedLicensesRequest = Invoke-MgGraphRequest -Method 'GET' `
@@ -649,7 +648,7 @@ function Set-TargetResource
                 }
             }
         }
-        elseif ($MembershipRuleProcessingState -ne 'On')
+        elseif ($MembershipRuleProcessingState -eq 'On')
         {
             Write-Verbose -Message 'Ignoring membership since this is a dynamic group.'
         }
@@ -676,7 +675,7 @@ function Set-TargetResource
             {
                 try
                 {
-                    $memberOfGroup = Get-MgGroup -Filter "DisplayName -eq '$($diff.InputObject)'" -ErrorAction Stop
+                    $memberOfGroup = Get-MgGroup -Filter "DisplayName eq '$($diff.InputObject)'" -ErrorAction Stop
                 }
                 catch
                 {
@@ -703,7 +702,6 @@ function Set-TargetResource
                         {
                             Throw "Cannot add AAD group {$($currentGroup.DisplayName)} to {$($memberOfGroup.DisplayName)} as it is not a security-group"
                         }
-
                     }
                     elseif ($diff.SideIndicator -eq '<=')
                     {
@@ -743,7 +741,12 @@ function Set-TargetResource
             {
                 try
                 {
-                    $role = Get-MgDirectoryRole -Filter "DisplayName -eq '$($diff.InputObject)'" -ErrorAction Stop
+                    $role = Get-MgDirectoryRole -Filter "DisplayName eq '$($diff.InputObject)'"
+                    # If the role hasn't been activated, we need to get the role template ID to first activate the role
+                    if ($null -eq $role) {
+                        $adminRoleTemplate = Get-MgDirectoryRoleTemplate | Where-Object {$_.DisplayName -eq $diff.InputObject}
+                        $role = New-MgDirectoryRole -RoleTemplateId $adminRoleTemplate.Id
+                    }
                 }
                 catch
                 {
@@ -751,7 +754,7 @@ function Set-TargetResource
                 }
                 if ($null -eq $role)
                 {
-                    throw "Directory Role '$($diff.InputObject)' does not exist or is not enabled"
+                    throw "Directory Role '$($diff.InputObject)' does not exist"
                 }
                 else
                 {
@@ -762,7 +765,6 @@ function Set-TargetResource
                             '@odata.id' = "https://graph.microsoft.com/v1.0/directoryObjects/$($currentGroup.Id)"
                         }
                         New-MgDirectoryRoleMemberByRef -DirectoryRoleId ($role.Id) -BodyParameter $DirObject | Out-Null
-
                     }
                     elseif ($diff.SideIndicator -eq '<=')
                     {
@@ -909,6 +911,7 @@ function Test-TargetResource
                     "They should contain {$($AssignedLicenses.SkuId)} but instead contained {$($CurrentValues.AssignedLicenses.SkuId)}"
                 Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
                     -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+
                 return $false
             }
             else
@@ -934,6 +937,7 @@ function Test-TargetResource
                     "They should contain {$($AssignedLicenses.DisabledPlans)} but instead contained {$($CurrentValues.AssignedLicenses.DisabledPlans)}"
                 Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
                     -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+
                 return $false
             }
             else
@@ -1018,6 +1022,7 @@ function Export-TargetResource
         [array] $groups = Get-MgGroup -Filter $Filter -All:$true -ErrorAction Stop
         $groups = $groups | Where-Object -FilterScript {-not ($_.MailEnabled -and ($null -eq $_.GroupTypes -or $_.GroupTypes.Length -eq 0)) -and
                                                         -not ($_.MailEnabled -and $_.SecurityEnabled)}
+
         $i = 1
         $dscContent = ''
         Write-Host "`r`n" -NoNewline

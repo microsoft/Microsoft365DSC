@@ -125,8 +125,12 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
+    $nullReturn = @{
+        Name     = $Name
+        Protocol = $Protocol
+        Ensure   = "Absent"
+    }
+
     try
     {
         if ($null -eq $Script:RecentExtract)
@@ -162,7 +166,6 @@ function Get-TargetResource
             QueryTransform        = [string] $source.QueryTransform._QueryTemplate
             SourceURL             = [string] $source.ConnectionUrlTemplate
             UseAutoDiscover       = $SourceHasAutoDiscover
-            Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -171,6 +174,7 @@ function Get-TargetResource
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
             Managedidentity       = $ManagedIdentity.IsPresent
+            Ensure                = "Present"
         }
 
         if ($null -ne $allowPartial)
@@ -285,6 +289,13 @@ function Set-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
+
+    if ($Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message "Removing SPOSearchResultSource {$Name}"
+        Remove-PnPSearchConfiguration -Configuration $Name -Scope Subscription
+        return
+    }
 
     Write-Verbose -Message 'Reading SearchConfigurationSettings XML file'
     $SearchConfigTemplatePath = Join-Path -Path $PSScriptRoot `
@@ -617,18 +628,28 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
             }
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -Credential $Credential
-            $dscContent += $currentDSCBlock
-            Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
+
+            if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 2)
+            {
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -Credential $Credential
+                $dscContent += $currentDSCBlock
+                Save-M365DSCPartialExport -Content $currentDSCBlock `
+                    -FileName $Global:PartialExportFileName
+
+                Write-Host $Global:M365DSCEmojiGreenCheckmark
+            }
+            else
+            {
+                Write-Host $Global:M365DSCEmojiRedX
+            }
+
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckmark
         }
         return $dscContent
     }
@@ -636,7 +657,7 @@ function Export-TargetResource
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `

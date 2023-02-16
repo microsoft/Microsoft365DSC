@@ -340,7 +340,6 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta' -ErrorAction Stop
 
-    Select-MgProfile -Name 'beta'
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -809,7 +808,6 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
 
-    Select-MgProfile -Name 'beta'
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
