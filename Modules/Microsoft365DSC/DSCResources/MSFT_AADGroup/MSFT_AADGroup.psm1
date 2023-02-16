@@ -648,7 +648,7 @@ function Set-TargetResource
                 }
             }
         }
-        elseif ($MembershipRuleProcessingState -ne 'On')
+        elseif ($MembershipRuleProcessingState -eq 'On')
         {
             Write-Verbose -Message 'Ignoring membership since this is a dynamic group.'
         }
@@ -675,7 +675,7 @@ function Set-TargetResource
             {
                 try
                 {
-                    $memberOfGroup = Get-MgGroup -Filter "DisplayName -eq '$($diff.InputObject)'" -ErrorAction Stop
+                    $memberOfGroup = Get-MgGroup -Filter "DisplayName eq '$($diff.InputObject)'" -ErrorAction Stop
                 }
                 catch
                 {
@@ -741,7 +741,12 @@ function Set-TargetResource
             {
                 try
                 {
-                    $role = Get-MgDirectoryRole -Filter "DisplayName -eq '$($diff.InputObject)'" -ErrorAction Stop
+                    $role = Get-MgDirectoryRole -Filter "DisplayName eq '$($diff.InputObject)'"
+                    # If the role hasn't been activated, we need to get the role template ID to first activate the role
+                    if ($null -eq $role) {
+                        $adminRoleTemplate = Get-MgDirectoryRoleTemplate | Where-Object {$_.DisplayName -eq $diff.InputObject}
+                        $role = New-MgDirectoryRole -RoleTemplateId $adminRoleTemplate.Id
+                    }
                 }
                 catch
                 {
@@ -749,7 +754,7 @@ function Set-TargetResource
                 }
                 if ($null -eq $role)
                 {
-                    throw "Directory Role '$($diff.InputObject)' does not exist or is not enabled"
+                    throw "Directory Role '$($diff.InputObject)' does not exist"
                 }
                 else
                 {

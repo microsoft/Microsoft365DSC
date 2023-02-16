@@ -44,13 +44,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
-            }<AssignmentMock>
+            }
         }
         # Test contexts
         Context -Name "The TeamsTenantNetworkSite should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Present"
+                    Identity                   = 'FakeStringValue'
+                    EnableLocationBasedRouting = $False;
+                    Ensure = "Present"
                     Credential = $Credential;
                 }
 
@@ -73,7 +75,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The TeamsTenantNetworkSite exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Absent"
+                    Identity                   = 'FakeStringValue'
+                    EnableLocationBasedRouting = $False;
+                    Ensure = "Absent"
                     Credential = $Credential;
                 }
 
@@ -109,7 +113,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The TeamsTenantNetworkSite Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Present"
+                    Identity                   = 'FakeStringValue'
+                    EnableLocationBasedRouting = $True;
+                    Ensure = "Present"
                     Credential = $Credential;
                 }
 
@@ -138,7 +144,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The TeamsTenantNetworkSite exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Present"
+                    Identity                   = 'FakeStringValue'
+                    EnableLocationBasedRouting = $False;
+                    Ensure = "Present"
                     Credential = $Credential;
                 }
 
@@ -149,7 +157,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description                = "FakeStringValueDrift #Drift"
                     SiteAddress                = "FakeStringValueDrift #Drift"
                     NetworkRegionID            = "FakeStringValueDrift #Drift"
-                    EnableLocationBasedRouting = $False
+                    EnableLocationBasedRouting = $True
                     Identity                   = "FakeStringValue"
                     NetworkRoamingPolicy       = "FakeStringValueDrift #Drift"
                     EmergencyCallingPolicy     = "FakeStringValueDrift #Drift"

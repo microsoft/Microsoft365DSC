@@ -44,13 +44,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
-            }<AssignmentMock>
+            }
         }
         # Test contexts
         Context -Name "The TeamsVdiPolicy should exist but it DOES NOT" -Fixture {
             BeforeAll {
-                $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Present"
+                $testParams = @{DisableAudioVideoInCallsAndMeetings = $False;
+                    DisableCallsAndMeetings             = $False;
+                    Ensure                              = "Present";
+                    Identity                            = "Global";
                     Credential = $Credential;
                 }
 
@@ -73,7 +75,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The TeamsVdiPolicy exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Absent"
+                    DisableAudioVideoInCallsAndMeetings = $False;
+                    DisableCallsAndMeetings             = $False;
+                    Ensure                              = "Absent";
+                    Identity                            = "FakeStringValue";
                     Credential = $Credential;
                 }
 
@@ -103,14 +108,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The TeamsVdiPolicy Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Present"
+                    DisableAudioVideoInCallsAndMeetings = $False;
+                    DisableCallsAndMeetings             = $False;
+                    Ensure                              = "Present";
+                    Identity                            = "FakeStringValue";
                     Credential = $Credential;
                 }
 
                 Mock -CommandName Get-CsTeamsVdiPolicy -MockWith {
                     return @{
-                    DisableCallsAndMeetings             = $True
-                    DisableAudioVideoInCallsAndMeetings = $True
+                    DisableCallsAndMeetings             = $False
+                    DisableAudioVideoInCallsAndMeetings = $False
                     Identity                            = "FakeStringValue"
 
                     }
@@ -126,14 +134,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The TeamsVdiPolicy exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Present"
+                    DisableAudioVideoInCallsAndMeetings = $False;
+                    DisableCallsAndMeetings             = $False;
+                    Identity                            = "FakeStringValue";
+                    Ensure = "Present"
                     Credential = $Credential;
                 }
 
                 Mock -CommandName Get-CsTeamsVdiPolicy -MockWith {
                     return @{
-                    DisableCallsAndMeetings             = $False
-                    DisableAudioVideoInCallsAndMeetings = $False
+                    DisableCallsAndMeetings             = $True
+                    DisableAudioVideoInCallsAndMeetings = $True
                     Identity                            = "FakeStringValue"
                     }
                 }
