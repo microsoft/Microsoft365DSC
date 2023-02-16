@@ -62,6 +62,10 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $nullReturn = @{
+        IsSingleInstance = 'Yes'
+    }
+
     try
     {
         $auditSettings = Get-PnPAuditing -ErrorAction Stop
@@ -96,7 +100,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $null
+        return $nullReturn
     }
 }
 
@@ -348,7 +352,7 @@ function Export-TargetResource
 
                 $Results = Get-TargetResource @params
 
-                if ($null -ne $Results)
+                if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
                 {
                     if ([System.String]::IsNullOrEmpty($Results.AuditFlags))
                     {

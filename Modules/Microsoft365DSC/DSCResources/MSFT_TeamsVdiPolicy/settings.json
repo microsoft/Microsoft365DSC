@@ -1,6 +1,16 @@
-{
+﻿{
     "resourceName": "TeamsVdiPolicy",
     "description": "This resource implements Teams VDI Policies.",
-    "permissions":[]
-
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        }
+    }
 }

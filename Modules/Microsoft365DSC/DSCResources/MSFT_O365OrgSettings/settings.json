@@ -1,0 +1,22 @@
+﻿{
+    "resourceName": "O365OrgCustomizationSetting",
+    "description": "",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        },
+        "exchange": {
+            "requiredroles": [
+                "Organization Configuration"
+            ],
+            "requiredrolegroups": []
+        }
+    }
+}

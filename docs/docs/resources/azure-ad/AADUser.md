@@ -50,21 +50,21 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - User.Read.All
+    - RoleManagement.Read.Directory, User.Read.All
 
 - **Update**
 
-    - Organization.Read.All, User.ReadWrite.All
+    - Organization.Read.All, RoleManagement.Read.Directory, RoleManagement.ReadWrite.Directory, User.Read.All, User.ReadWrite.All
 
 #### Application permissions
 
 - **Read**
 
-    - User.Read.All
+    - RoleManagement.Read.Directory, User.Read.All
 
 - **Update**
 
-    - Organization.Read.All, User.ReadWrite.All
+    - Organization.Read.All, RoleManagement.Read.Directory, RoleManagement.ReadWrite.Directory, User.Read.All, User.ReadWrite.All
 
 ## Examples
 

@@ -4,36 +4,56 @@
     "permissions": {
         "graph": {
             "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
                 "read": [
-                    {
-                        "name": "User.Read.All"
-                    },
                     {
                         "name": "Group.Read.All"
                     },
                     {
-                        "name": "Directory.Read.All"
+                        "name": "RoleManagement.Read.Directory"
                     },
                     {
-                        "name": "RoleManagement.Read.Directory"
+                        "name": "RoleManagementPolicy.Read.Directory"
+                    },
+                    {
+                        "name": "User.Read.All"
                     }
                 ],
                 "update": [
                     {
-                        "name": "User.ReadWrite.All"
+                        "name": "Group.Read.All"
                     },
                     {
-                        "name": "Group.ReadWrite.All"
+                        "name": "RoleManagementPolicy.Read.Directory"
                     },
                     {
-                        "name": "Directory.ReadWrite.All"
+                        "name": "User.Read.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Group.Read.All"
                     },
                     {
-                        "name": "RoleManagement.ReadWrite.Directory"
+                        "name": "RoleManagement.Read.Directory"
+                    },
+                    {
+                        "name": "RoleManagementPolicy.Read.Directory"
+                    },
+                    {
+                        "name": "User.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "RoleManagementPolicy.Read.Directory"
+                    },
+                    {
+                        "name": "User.Read.All"
                     }
                 ]
             }
