@@ -59,6 +59,7 @@ function Get-TargetResource
 
     $nullReturn = @{
         UserName = $UserName
+        Ensure   = "Absent"
     }
 
     try
@@ -87,6 +88,7 @@ function Get-TargetResource
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
             Managedidentity       = $ManagedIdentity.IsPresent
+            Ensure                = "Present"
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
