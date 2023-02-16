@@ -18,7 +18,7 @@ function Get-TargetResource
         [System.String]
         $PolicyConfigurationIngestionType,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -157,11 +157,59 @@ function Get-TargetResource
                     #MinUserCspVersion     = $definition.MinUserCspVersion
                     PolicyType            = $enumPolicyType
                     SupportedOn           = $definition.SupportedOn
-                    #Id                    = $definition.Id
+                    Id                    = $definition.Id
                 }
 
                 $definitionValue.Add('Definition',$complexDefinition)
+
+                $presentationValues = get-MgDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue `
+                    -GroupPolicyConfigurationId $Id `
+                    -GroupPolicyDefinitionValueId $setting.Id
+
+                $complexPresentationValues = @()
+                foreach($presentationValue in $presentationValues)
+                {
+                    $complexPresentationValue = @{}
+                    $complexPresentationValue.Add("odataType",$presentationValue.AdditionalProperties.'@odata.type')
+                    $complexPresentationValue.Add("Id",$presentationValue.Id)
+                    switch -Wildcard ($presentationValue.AdditionalProperties.'@odata.type')
+                    {
+                        "*.groupPolicyPresentationValueBoolean"
+                        {
+                            $complexPresentationValue.Add("BooleanValue",$presentationValue.AdditionalProperties.value)
+                        }
+                        "*.groupPolicyPresentationValue*Decimal"
+                        {
+                            $complexPresentationValue.Add("DecimalValue",$presentationValue.AdditionalProperties.value)
+                        }
+                        "*.groupPolicyPresentationValueList"
+                        {
+                            $complexKeyValuePairValues = @()
+                            foreach($value in $presentationValue.AdditionalProperties.values)
+                            {
+                                $complexKeyValuePairValues += @{
+                                    Name = $(if($null -ne $value.name){$value.name.replace('"','')})
+                                    Value = $(if($null -ne $value.value){$value.value.replace('"','')})
+                                }
+                            }
+                            $complexPresentationValue.Add("KeyValuePairValues",$complexKeyValuePairValues)
+                        }
+                        "*.groupPolicyPresentationValueMultiText"
+                        {
+                            $complexPresentationValue.Add("StringValue",$presentationValue.AdditionalProperties.values)
+                        }
+                        "*.groupPolicyPresentationValueText"
+                        {
+                            $complexPresentationValue.Add("StringValue",$presentationValue.AdditionalProperties.value)
+                        }
+                    }
+                    $complexPresentationValues += $complexPresentationValue
+                }
+
+                $definitionValue.Add('PresentationValues',$complexPresentationValues)
                 $complexDefinitionValues += $definitionValue
+
+
             }
         #endregion
 
@@ -228,7 +276,7 @@ function Set-TargetResource
         [System.String]
         $PolicyConfigurationIngestionType,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -333,6 +381,44 @@ function Set-TargetResource
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/groupPolicyConfigurations'
         }
+
+        #Create DefinitionValues
+        [Array]$targetDefinitionValues = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $DefinitionValues
+        #write-verbose ($targetDefinitionValues |convertto-json -depth 20)
+
+        <#if($null -ne $targetDefinitionValues -and $targetDefinitionValues.count -gt 0)
+        {
+            #Removing Key Definition because it is Read-Only
+            foreach($definitionValue in $targetDefinitionValues)
+            {
+                $definitionValue.remove('Definition')
+            }
+        }#>
+
+        foreach($definitionValue in $targetDefinitionValues)
+        {
+            $definitionValue = Rename-M365DSCCimInstanceParameter -Properties $definitionValue
+            $enumConfigurationType = $null
+            if($null -ne $definitionValue.ConfigurationType)
+            {
+                $enumConfigurationType = $definitionValue.ConfigurationType.toString()
+            }
+            $complexPresentationValues = @()
+            if($null -ne $definitionValue.PresentationValues)
+            {
+                $complexPresentationValues = [Hashtable[]]$definitionValue.PresentationValues
+            }
+            $complexDefinitionValue = @{
+                Definition         = @{Id = $definitionValue.Definition.Id}
+                Enabled            = $definitionValue.Enabled
+                ConfigurationType  = $enumConfigurationType
+                PresentationValues = $complexPresentationValues
+            }
+
+            New-MgDeviceManagementGroupPolicyConfigurationDefinitionValue `
+                -GroupPolicyConfigurationId $currentInstance.Id `
+                -BodyParameter $complexDefinitionValue
+        }
         #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -371,47 +457,42 @@ function Set-TargetResource
             -Targets $assignmentsHash `
             -Repository 'deviceManagement/groupPolicyConfigurations'
         #endregion
+
         #Update DefinitionValues
         [Array]$targetDefinitionValues = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $DefinitionValues
-        if($null -ne $targetDefinitionValues -and $targetDefinitionValues.count -gt 0)
-        {
-            #Removing Key Definition because it is Read-Only
-            foreach($definitionValue in $targetDefinitionValues)
-            {
-                $definitionValue.remove('Definition')
-            }
-        }
-        $currentDefinitionValues=$currentInstance.DefinitionValues
-        if($null -ne $currentDefinitionValues -and $currentDefinitionValues.count -gt 0)
-        {
-            #Removing Key Definition because it is Read-Only
-            foreach($definitionValue in $currentDefinitionValues)
-            {
-                $definitionValue.remove('Definition')
-            }
-        }
+        #write-verbose ($targetDefinitionValues |convertto-json -depth 20)
+        write-verbose ("currentDefinitionValues: $($currentDefinitionValues.Id.count) - targetDefinitionValues: $($targetDefinitionValues.Id.count)")
+
         $comparedDefinitionValues = Compare-Object `
-            -ReferenceObject $currentDefinitionValues.Id `
-            -DifferenceObject $targetDefinitionValues.Id `
+            -ReferenceObject ($currentDefinitionValues.Id) `
+            -DifferenceObject ($targetDefinitionValues.Id) `
             -IncludeEqual
 
         $definitionValuesToAdd = ($comparedDefinitionValues | Where-Object -FilterScript {$_.SideIndicator -eq '=>'}).InputObject
         $definitionValuesToRemove = ($comparedDefinitionValues | Where-Object -FilterScript {$_.SideIndicator -eq '<='}).InputObject
-        $definitionValuesToCheck = ($comparedDefinitionValues | Where-Object -FilterScript {$_.SideIndicator -eq '='}).InputObject
-
+        $definitionValuesToCheck = ($comparedDefinitionValues | Where-Object -FilterScript {$_.SideIndicator -eq '=='}).InputObject
+        write-verbose ("Add: $($definitionValuesToAdd.count) - Remove: $($definitionValuesToRemove.count) - Check: $($definitionValuesToCheck.count)")
         foreach($definitionValueId in $definitionValuesToAdd)
         {
-            $definitionValue = $targetDefinitionValues | Where-Object - FilterScript {$_.Id -eq $definitionValueId}
+            $definitionValue = $targetDefinitionValues | Where-Object -FilterScript {$_.Id -eq $definitionValueId}
+            $definitionValue = Rename-M365DSCCimInstanceParameter -Properties $definitionValue
             $enumConfigurationType = $null
             if($null -ne $definitionValue.ConfigurationType)
             {
                 $enumConfigurationType = $definitionValue.ConfigurationType.toString()
             }
-            $complexDefinitionValue = @{
-                Id                = $definitionValue.Id
-                Enabled           = $definitionValue.Enabled
-                ConfigurationType = $enumConfigurationType
+            $complexPresentationValues = @()
+            if($null -ne $definitionValue.PresentationValues)
+            {
+                $complexPresentationValues = [Hashtable[]]$definitionValue.PresentationValues
             }
+            $complexDefinitionValue = @{
+                Definition         = @{Id = $definitionValue.Definition.Id}
+                Enabled            = $definitionValue.Enabled
+                ConfigurationType  = $enumConfigurationType
+                PresentationValues = $complexPresentationValues
+            }
+            write-verbose( $complexDefinitionValue|convertto-json)
             New-MgDeviceManagementGroupPolicyConfigurationDefinitionValue `
                 -GroupPolicyConfigurationId $currentInstance.Id `
                 -BodyParameter $complexDefinitionValue
@@ -426,30 +507,53 @@ function Set-TargetResource
 
         foreach($definitionValueId in $definitionValuesToCheck)
         {
-            $definitionValue = $targetDefinitionValues | Where-Object - FilterScript {$_.Id -eq $definitionValueId}
-            $currentDefinitionValue = $currentDefinitionValues | Where-Object - FilterScript {$_.Id -eq $definitionValueId}
+            $currentDefinitionValue = $currentDefinitionValues | Where-Object -FilterScript {$_.Id -eq $definitionValueId}
+            $currentDefinitionValue.remove('Definition')
+            $currentDefinitionValue = Rename-M365DSCCimInstanceParameter -Properties $currentDefinitionValue
+            $definitionValue = $targetDefinitionValues | Where-Object -FilterScript {$_.Id -eq $definitionValueId}
+            $definitionValue.remove('Definition')
+            $definitionValue = Rename-M365DSCCimInstanceParameter -Properties $definitionValue
             $enumConfigurationType = $null
             if($null -ne $definitionValue.ConfigurationType)
             {
                 $enumConfigurationType = $definitionValue.ConfigurationType.toString()
             }
+            $complexPresentationValues = @()
+            if($null -ne $definitionValue.PresentationValues)
+            {
+                $complexPresentationValues = [Hashtable[]]$definitionValue.PresentationValues
+            }
             $complexDefinitionValue = @{
-                Id                = $definitionValue.Id
-                Enabled           = $definitionValue.Enabled
-                ConfigurationType = $enumConfigurationType
+                Id                 = $definitionValue.Id
+                Enabled            = $definitionValue.Enabled
+                ConfigurationType  = $enumConfigurationType
+                PresentationValues = $complexPresentationValues
             }
 
             $toUpdate = Compare-M365DSCComplexObject `
-                -Source $currentDefinitionValue `
-                -Target $complexDefinitionValue
+                -Source $complexDefinitionValue `
+                -Target $currentDefinitionValue
 
             If(-not $toUpdate)
             {
                 $complexDefinitionValue.Remove('Id')
+                $complexDefinitionValue.Remove('PresentationValues')
                 Update-MgDeviceManagementGroupPolicyConfigurationDefinitionValue `
                     -GroupPolicyConfigurationId $currentInstance.Id `
                     -GroupPolicyDefinitionValueId $definitionValueId `
                     -BodyParameter $complexDefinitionValue
+
+                foreach($presentationValue in $complexPresentationValues)
+                {
+                    $presentationValueId = $presentationValue.Id
+                    $presentationValue.remove('Id')
+
+                    Update-MgDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue `
+                        -GroupPolicyConfigurationId $currentInstance.Id `
+                        -GroupPolicyDefinitionValueId $definitionValueId `
+                        -GroupPolicyPresentationValueId  $presentationValueId `
+                        -BodyParameter $presentationValue
+                }
             }
         }
     }
@@ -482,7 +586,7 @@ function Test-TargetResource
         [System.String]
         $PolicyConfigurationIngestionType,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -524,7 +628,6 @@ function Test-TargetResource
         [Switch]
         $ManagedIdentity
     )
-
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -540,6 +643,7 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of the Intune Device Configuration Administrative Template Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
     if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
@@ -581,7 +685,6 @@ function Test-TargetResource
             }
 
             $ValuesToCheck.Remove($key) | Out-Null
-
         }
     }
 
@@ -700,7 +803,17 @@ function Export-TargetResource
                 $complexMapping=@(
                     @{
                         Name="Definition"
-                        CimInstanceName="MSFT_IntuneGroupPolicyDefinition"
+                        CimInstanceName="MSFT_IntuneGroupPolicyDefinitionValueDefinition"
+                        IsRequired=$false
+                    }
+                    @{
+                        Name="PresentationValues"
+                        CimInstanceName="MSFT_IntuneGroupPolicyDefinitionValuePresentationValue"
+                        IsRequired=$false
+                    }
+                    @{
+                        Name="KeyValuePairValues"
+                        CimInstanceName="MSFT_IntuneGroupPolicyDefinitionValuePresentationValueKeyValuePair"
                         IsRequired=$false
                     }
                 )
@@ -742,10 +855,22 @@ function Export-TargetResource
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "DefinitionValues" -isCIMArray:$true
             }
-            if ($Results.Definition)
+            if ($Results.DefinitionValues.Definition)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Definition"
             }
+            if ($Results.DefinitionValues.PresentationValues)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "PresentationValues"
+            }
+            if ($Results.DefinitionValues.PresentationValues.KeyValuePairValues)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "KeyValuePairValues"
+            }
+
+            #removing trailing commas and semi colons between items of an array of cim instances added by Convert-DSCStringParamToVariable
+            $currentDSCBlock=$currentDSCBlock.replace( "    ,`r`n" , "    `r`n" )
+            $currentDSCBlock=$currentDSCBlock.replace( "`r`n;`r`n" , "`r`n" )
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -768,73 +893,74 @@ function Export-TargetResource
         return ''
     }
 }
-    function Update-DeviceConfigurationPolicyAssignment
+function Update-DeviceConfigurationPolicyAssignment
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceConfigurationPolicyId,
+
+        [Parameter()]
+        [Array]
+        $Targets,
+
+        [Parameter()]
+        [System.String]
+        $Repository='deviceManagement/configurationPolicies',
+
+        [Parameter()]
+        [ValidateSet('v1.0','beta')]
+        [System.String]
+        $APIVersion='beta'
+    )
+    try
     {
-        [CmdletBinding()]
-        [OutputType([System.Collections.Hashtable])]
-        param (
-            [Parameter(Mandatory = 'true')]
-            [System.String]
-            $DeviceConfigurationPolicyId,
+        $deviceManagementPolicyAssignments=@()
 
-            [Parameter()]
-            [Array]
-            $Targets,
+        $Uri="https://graph.microsoft.com/$APIVersion/$Repository/$DeviceConfigurationPolicyId/assign"
 
-            [Parameter()]
-            [System.String]
-            $Repository='deviceManagement/configurationPolicies',
-
-            [Parameter()]
-            [ValidateSet('v1.0','beta')]
-            [System.String]
-            $APIVersion='beta'
-        )
-        try
+        foreach($target in $targets)
         {
-            $deviceManagementPolicyAssignments=@()
-
-            $Uri="https://graph.microsoft.com/$APIVersion/$Repository/$DeviceConfigurationPolicyId/assign"
-
-            foreach($target in $targets)
+            $formattedTarget=@{"@odata.type"=$target.dataType}
+            if($target.groupId)
             {
-                $formattedTarget=@{"@odata.type"=$target.dataType}
-                if($target.groupId)
-                {
-                    $formattedTarget.Add('groupId',$target.groupId)
-                }
-                if($target.collectionId)
-                {
-                    $formattedTarget.Add('collectionId',$target.collectionId)
-                }
-                if($target.deviceAndAppManagementAssignmentFilterType)
-                {
-                    $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',$target.deviceAndAppManagementAssignmentFilterType)
-                }
-                if($target.deviceAndAppManagementAssignmentFilterId)
-                {
-                    $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',$target.deviceAndAppManagementAssignmentFilterId)
-                }
-                $deviceManagementPolicyAssignments+=@{'target'= $formattedTarget}
+                $formattedTarget.Add('groupId',$target.groupId)
             }
-            $body=@{'assignments'=$deviceManagementPolicyAssignments}|ConvertTo-Json -Depth 20
-            #write-verbose -Message $body
-            Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
-
+            if($target.collectionId)
+            {
+                $formattedTarget.Add('collectionId',$target.collectionId)
+            }
+            if($target.deviceAndAppManagementAssignmentFilterType)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',$target.deviceAndAppManagementAssignmentFilterType)
+            }
+            if($target.deviceAndAppManagementAssignmentFilterId)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',$target.deviceAndAppManagementAssignmentFilterId)
+            }
+            $deviceManagementPolicyAssignments+=@{'target'= $formattedTarget}
         }
-        catch
-        {
-            New-M365DSCLogEntry -Message 'Error updating data:'
-                -Exception $_
-                -Source $($MyInvocation.MyCommand.Source)
-                -TenantId $TenantId
-                -Credential $Credential
+        $body=@{'assignments'=$deviceManagementPolicyAssignments}|ConvertTo-Json -Depth 20
+        #write-verbose -Message $body
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
 
-            return $null
-        }
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating data:'
+            -Exception $_
+            -Source $($MyInvocation.MyCommand.Source)
+            -TenantId $TenantId
+            -Credential $Credential
+
+        return $null
+    }
 
 
-    }function Rename-M365DSCCimInstanceParameter
+}
+function Rename-M365DSCCimInstanceParameter
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable],[System.Collections.Hashtable[]])]
@@ -845,6 +971,11 @@ function Export-TargetResource
 
     $keyToRename=@{
         "odataType"="@odata.type"
+        "BooleanValue"="value"
+        "StringValue"="value"
+        "DecimalValue"="value"
+        "KeyValuePairValues"="values"
+        "StringValues"="values"
     }
 
     $result=$Properties
@@ -1359,7 +1490,7 @@ function Compare-M365DSCComplexObject
         {
             $targetValue="Target is null"
         }
-        Write-Verbose -Message "Configuration drift - Complex object: {$sourceValue$targetValue}"
+        #Write-Verbose -Message "Configuration drift - Complex object: {$sourceValue$targetValue}"
         return $false
     }
 
@@ -1367,7 +1498,7 @@ function Compare-M365DSCComplexObject
     {
         if($source.count -ne $target.count)
         {
-            Write-Verbose -Message "Configuration drift - The complex array have different number of items: Source {$($source.count)} Target {$($target.count)}"
+            #Write-Verbose -Message "Configuration drift - The complex array have different number of items: Source {$($source.count)} Target {$($target.count)}"
             return $false
         }
         if($source.count -eq 0)
@@ -1470,7 +1601,7 @@ function Compare-M365DSCComplexObject
 
                 if ($null -ne $compareResult)
                 {
-                    #Write-Verbose -Message "Configuration drift - simple object key: $key Source {$sourceValue} Target {$targetValue}"
+                    Write-Verbose -Message "Configuration drift - simple object key: $key Source {$sourceValue} Target {$targetValue}"
                     return $false
                 }
             }

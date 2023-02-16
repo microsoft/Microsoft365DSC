@@ -8,7 +8,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
 };
 [ClassVersion("1.0.0.0")]
-class MSFT_IntuneGroupPolicyDefinition
+class MSFT_IntuneGroupPolicyDefinitionValueDefinition
 {
     [Write, Description("The localized full category path for the policy.")] String CategoryPath;
     [Write, Description("Identifies the type of groups the policy can be applied to. Possible values are: user, machine."), ValueMap{"user","machine"}, Values{"user","machine"}] String ClassType;
@@ -21,7 +21,7 @@ class MSFT_IntuneGroupPolicyDefinition
     [Write, Description("Specifies the type of group policy. Possible values are: admxBacked, admxIngested."), ValueMap{"admxBacked","admxIngested"}, Values{"admxBacked","admxIngested"}] String PolicyType;
     [Write, Description("Localized string used to specify what operating system or application version is affected by the policy.")] String SupportedOn;
     [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
-}
+};
 
 [ClassVersion("1.0.0.0")]
 class MSFT_IntuneGroupPolicyDefinitionValue
@@ -29,8 +29,27 @@ class MSFT_IntuneGroupPolicyDefinitionValue
     [Write, Description("Specifies how the value should be configured. This can be either as a Policy or as a Preference. Possible values are: policy, preference."), ValueMap{"policy","preference"}, Values{"policy","preference"}] String ConfigurationType;
     [Write, Description("Enables or disables the associated group policy definition.")] Boolean Enabled;
     [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
-    [Write, Description("The associated group policy definition with the value. Read-Only."), EmbeddedInstance("MSFT_IntuneGroupPolicyDefinition")] String Definition;
-}
+    [Write, Description("The associated group policy definition with the value. Read-Only."), EmbeddedInstance("MSFT_IntuneGroupPolicyDefinitionValueDefinition")] String Definition;
+    [Write, Description("The associated group policy presentation values with the definition value."), EmbeddedInstance("MSFT_IntuneGroupPolicyDefinitionValuePresentationValue")] String PresentationValues[];
+};
+
+[ClassVersion("1.0.0.0")]
+class MSFT_IntuneGroupPolicyDefinitionValuePresentationValue
+{
+    [Write, Description("A value for the associated presentation.")] Boolean BooleanValue;
+    [Write, Description("A value for the associated presentation.")] Uint64 DecimalValue;
+    [Write, Description("A value for the associated presentation.")] String StringValue;
+    [Write, Description("A list of pairs for the associated presentation."), EmbeddedInstance("MSFT_IntuneGroupPolicyDefinitionValuePresentationValueKeyValuePair")] String KeyValuePairValues[];
+    [Write, Description("A list of pairs for the associated presentation.")] String StringValues[];
+    [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
+    [Write, Description("A value for the associated presentation."), ValueMap{"#microsoft.graph.groupPolicyPresentationValueBoolean","#microsoft.graph.groupPolicyPresentationValueDecimal","#microsoft.graph.groupPolicyPresentationValueList","#microsoft.graph.groupPolicyPresentationValueLongDecimal","#microsoft.graph.groupPolicyPresentationValueMultiText","#microsoft.graph.groupPolicyPresentationValueText"}, Values{"#microsoft.graph.groupPolicyPresentationValueBoolean","#microsoft.graph.groupPolicyPresentationValueDecimal","#microsoft.graph.groupPolicyPresentationValueList","#microsoft.graph.groupPolicyPresentationValueLongDecimal","#microsoft.graph.groupPolicyPresentationValueMultiText","#microsoft.graph.groupPolicyPresentationValueText"}] String odataType;
+};
+[ClassVersion("1.0.0.0")]
+class MSFT_IntuneGroupPolicyDefinitionValuePresentationValueKeyValuePair
+{
+    [Write, Description("Value for this key-value pair.")] String Value;
+    [Write, Description("Name for this key-value pair.")] String Name;
+};
 
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10")]
 class MSFT_IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10 : OMI_BaseResource
@@ -38,7 +57,7 @@ class MSFT_IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10 : OMI_
     [Write, Description("User provided description for the resource object.")] String Description;
     [Write, Description("User provided name for the resource object.")] String DisplayName;
     [Write, Description("Type of definitions configured for this policy. Possible values are: unknown, custom, builtIn, mixed, unknownFutureValue."), ValueMap{"unknown","custom","builtIn","mixed","unknownFutureValue"}, Values{"unknown","custom","builtIn","mixed","unknownFutureValue"}] String PolicyConfigurationIngestionType;
-    [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
+    [Key, Description("The unique identifier for an entity. Read-only.")] String Id;
     [Write, Description("The list of enabled or disabled group policy definition values for the configuration."), EmbeddedInstance("MSFT_IntuneGroupPolicyDefinitionValue")] String DefinitionValues[];
     [Write, Description("Represents the assignment to the Intune policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
