@@ -2,6 +2,13 @@
 
 # UNRELEASED
 
+* MISC
+  * Updated Tasks.Read and Tasks.ReadWrite Permissions for Planner Plans and Planner Buckets
+    FIXES [#2866](https://github.com/microsoft/Microsoft365DSC/issues/2866)
+  * Fixed Permissions Scopes for AADAuthorizationPolicy and AADSecurityDefaults
+
+# 1.23.215.1
+
 * EXOIRMConfiguration
   * Fixed issue where the export did not the correct type for RMSOnlineKeySharingLocation
     FIXES [#2890](https://github.com/microsoft/Microsoft365DSC/issues/2890)
