@@ -507,7 +507,7 @@ function Set-TargetResource
         }
 
         #region resource generator code
-        $policy = New-MgAdministrativeUnit @CreateParameters
+        $policy = New-MgDirectoryAdministrativeUnit @CreateParameters
 
         #endregion
 
@@ -564,7 +564,7 @@ function Set-TargetResource
         # The AU MembershipType may have changed from Dynamic to Static and that change has to be implemented before explicitly adding members
 
         #region resource generator code
-        Update-MgAdministrativeUnit @UpdateParameters `
+        Update-MgDirectoryAdministrativeUnit @UpdateParameters `
             -AdministrativeUnitId $currentInstance.Id
 
         #endregion
@@ -628,63 +628,6 @@ function Set-TargetResource
                 }
             }
         }
-
-        <#
-        if ($Extensions -or $backCurrentExtensions)
-        {
-            $currentExtensionsValue = @()
-            if ($currentInstance.Extensions.Length -ne 0)
-            {
-                $currentExtensionsValue = $backCurrentExtensions
-            }
-            if ($null -eq $currentExtensionsValue)
-            {
-                $currentExtensionsValue = @()
-            }
-            $desiredExtensionsValue = $Extensions
-            if ($null -eq $desiredExtensionsValue)
-            {
-                $desiredExtensionsValue = @()
-            }
-            $membersDiff = Compare-Object -ReferenceObject $currentExtensionsValue -DifferenceObject $desiredExtensionsValue -Property Id
-            foreach ($diff in $membersDiff)
-            {
-                if ($diff.SideIndicator -eq '=>')
-                {
-                    Write-Verbose -Message "Adding new extension {$($diff.InputObject.Id)} to Administrative Unit {$($currentInstance.DisplayName)}"
-                    $additionalPropertiesArg = @{}
-                    if ($diff.InputObject.Properties.Count -gt 0)
-                    {
-                        $additionalPropertiesArg.AdditionalProperties = @{}
-                        for ($p = 0; $p -lt $diff.InputObject.Properties.Count; $p = $p + 1)
-                        {
-                            $additionalPropertiesArg.AdditionalProperties.Add($diff.InputObject.Properties[$p], $diff.InputObject.Properties[$p+1])
-                        }
-                    }
-                    New-MgDirectoryAdministrativeUnitExtension -AdministrativeUnitId ($currentInstance.Id) @additionalPropertiesArg -BodyParameter @{ExtensionId = $diff.InputObject.Id} | Out-Null
-                }
-                elseif ($diff.SideIndicator -eq '<=')
-                {
-                    Write-Verbose -Message "Removing extension {$($diff.InputObject.Id)} from Administrative Unit {$($currentInstance.DisplayName)}"
-                    Remove-MgDirectoryAdministrativeUnitExtension -AdministrativeUnitId ($currentInstance.Id) -ExtensionId ($diff.InputObject.Id) | Out-Null
-                }
-                else
-                {
-                    #update AU Extension to use specified Properties only
-                    $additionalPropertiesArg = @{}
-                    if ($diff.InputObject.Properties.Count -gt 0)
-                    {
-                        $additionalPropertiesArg.AdditionalProperties = @{}
-                        for ($p = 0; $p -lt $diff.InputObject.Properties.Count; $p = $p + 1)
-                        {
-                            $additionalPropertiesArg.AdditionalProperties.Add($diff.InputObject.Properties[$p], $diff.InputObject.Properties[$p+1])
-                        }
-                    }
-                    Update-MgDirectoryAdministrativeUnitExtension -AdministrativeUnitId ($currentInstance.Id) -ExtensionId $diff.InputObject.Id @additionalPropertiesArg
-                }
-            }
-        }
-        #>
 
         if ($ScopedRoleMembers -or $backCurrentScopedRoleMembers)
         {
@@ -776,17 +719,9 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing AU {$DisplayName}"
-
-
-        #region resource generator code
-        #endregion
-
-
-
         #region resource generator code
         Remove-MgDirectoryAdministrativeUnit -AdministrativeUnitId $currentInstance.Id
         #endregion
-
     }
 }
 

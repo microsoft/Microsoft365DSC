@@ -42,13 +42,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
-            Mock -CommandName Update-MgAdministrativeUnit -MockWith {
+            Mock -CommandName Update-MgDirectoryAdministrativeUnit -MockWith {
             }
 
             Mock -CommandName Remove-MgDirectoryAdministrativeUnit -MockWith {
             }
 
-            Mock -CommandName New-MgAdministrativeUnit -MockWith {
+            Mock -CommandName New-MgDirectoryAdministrativeUnit -MockWith {
             }
 
             Mock -CommandName New-MgDirectoryAdministrativeUnitMemberByRef -MockWith {
@@ -96,7 +96,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgAdministrativeUnit -MockWith {
+                Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
                     return $null
                 }
             }
@@ -126,7 +126,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential
                 }
 
-                Mock -CommandName Get-MgAdministrativeUnit -MockWith {
+                Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
                     return [pscustomobject]@{
                         Description = 'FakeStringValue2'
                         DisplayName = 'FakeStringValue2'
@@ -193,7 +193,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential        = $Credential
                 }
 
-                Mock -CommandName Get-MgAdministrativeUnit -MockWith {
+                Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
                     return [pscustomobject]@{
                         Description       = 'DSCAU'
                         DisplayName       = 'DSCAU'
@@ -309,7 +309,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential        = $Credential
                 }
 
-                Mock -CommandName Get-MgAdministrativeUnit -MockWith {
+                Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
                     return [pscustomobject]@{
                         Description       = 'DSCAU2'
                         DisplayName       = 'DSCAU2'
@@ -429,7 +429,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential        = $Credential
                 }
 
-                Mock -CommandName Get-MgAdministrativeUnit -MockWith {
+                Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
                     return [pscustomobject]@{
                         Description       = 'DSCAU'
                         DisplayName       = 'DSCAU'
@@ -514,7 +514,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgAdministrativeUnit -MockWith {
+                Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
                     return [pscustomobject]@{
                         Description       = 'ExportDSCAU'
                         DisplayName       = 'ExportDSCAU'
