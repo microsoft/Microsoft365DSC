@@ -966,7 +966,7 @@ Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAcces
 Export-M365DSCConfiguration -Mode 'Default' -ApplicationId '2560bb7c-bc85-415f-a799-841e10ec4f9a' -TenantId 'contoso.sharepoint.com' -ApplicationSecret 'abcdefghijkl'
 
 .Example
-Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential -Path 'C:\DSC\Config.ps1'
+Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential -Path 'C:\DSC' -FileName 'MyConfig.ps1'
 
 .Example
 Export-M365DSCConfiguration -Credential $Credential -Filters @{AADApplication = "DisplayName eq 'MyApp'"}
@@ -976,79 +976,79 @@ Public
 #>
 function Export-M365DSCConfiguration
 {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Export')]
     param(
-        [Parameter()]
+        [Parameter(ParameterSetName = 'WebUI')]
         [Switch]
         $LaunchWebUI,
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'Export')]
         [System.String]
         $Path,
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'Export')]
         [System.String]
         $FileName,
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'Export')]
         [System.String]
         $ConfigurationName,
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'Export')]
         [System.String[]]
         $Components,
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'Export')]
         [ValidateSet('AAD', 'SPO', 'EXO', 'INTUNE', 'SC', 'OD', 'O365', 'PLANNER', 'PP', 'TEAMS')]
         [System.String[]]
         $Workloads,
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'Export')]
         [ValidateSet('Lite', 'Default', 'Full')]
         [System.String]
         $Mode = 'Default',
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'Export')]
         [ValidateRange(1, 100)]
         $MaxProcesses,
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'Export')]
         [System.Boolean]
         $GenerateInfo = $false,
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'Export')]
         [System.Collections.Hashtable]
         $Filters,
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'Export')]
         [System.String]
         $ApplicationId,
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'Export')]
         [System.String]
         $TenantId,
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'Export')]
         [System.String]
         $ApplicationSecret,
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'Export')]
         [System.String]
         $CertificateThumbprint,
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'Export')]
         [System.Management.Automation.PSCredential]
         $Credential,
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'Export')]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'Export')]
         [System.String]
         $CertificatePath,
 
-        [Parameter()]
+        [Parameter(ParameterSetName = 'Export')]
         [Switch]
         $ManagedIdentity
     )

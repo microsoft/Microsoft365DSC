@@ -2,6 +2,13 @@
 
 # UNRELEASED
 
+* MISC
+  * Updated Tasks.Read and Tasks.ReadWrite Permissions for Planner Plans and Planner Buckets
+    FIXES [#2866](https://github.com/microsoft/Microsoft365DSC/issues/2866)
+  * Fixed Permissions Scopes for AADAuthorizationPolicy and AADSecurityDefaults
+
+# 1.23.215.1
+
 * EXOIRMConfiguration
   * Fixed issue where the export did not the correct type for RMSOnlineKeySharingLocation
     FIXES [#2890](https://github.com/microsoft/Microsoft365DSC/issues/2890)
@@ -17,6 +24,8 @@
     FIXES [2565](https://github.com/microsoft/Microsoft365DSC/issues/2565)
   * Fixed the JSON conversion depth for the New-M365DSCConfigurationToJSON cmdlet.
     FIXES [#2891](https://github.com/microsoft/Microsoft365DSC/issues/2891)
+  * Added new ParameterSet for Export-M365DSConfiguration
+    FIXES [[#2802](https://github.com/microsoft/Microsoft365DSC/issues/2802)]
 
 # 1.23.208.1
 
