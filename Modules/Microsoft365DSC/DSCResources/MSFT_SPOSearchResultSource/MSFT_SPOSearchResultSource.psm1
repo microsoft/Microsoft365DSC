@@ -128,6 +128,7 @@ function Get-TargetResource
     $nullReturn = @{
         Name     = $Name
         Protocol = $Protocol
+        Ensure   = "Absent"
     }
 
     try
@@ -173,6 +174,7 @@ function Get-TargetResource
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
             Managedidentity       = $ManagedIdentity.IsPresent
+            Ensure                = "Present"
         }
 
         if ($null -ne $allowPartial)
@@ -287,6 +289,13 @@ function Set-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
+
+    if ($Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message "Removing SPOSearchResultSource {$Name}"
+        Remove-PnPSearchConfiguration -Configuration $Name -Scope Subscription
+        return
+    }
 
     Write-Verbose -Message 'Reading SearchConfigurationSettings XML file'
     $SearchConfigTemplatePath = Join-Path -Path $PSScriptRoot `
