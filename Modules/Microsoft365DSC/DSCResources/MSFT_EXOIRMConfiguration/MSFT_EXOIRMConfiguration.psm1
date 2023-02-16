@@ -134,7 +134,12 @@ function Get-TargetResource
     try
     {
         $IRMConfiguration = Get-IRMConfiguration -ErrorAction Stop
-
+        
+        $RMSOnlineKeySharingLocationValue = $null
+        if ($IRMConfiguration.RMSOnlineKeySharingLocation)
+        {
+            $RMSOnlineKeySharingLocationValue = $IRMConfiguration.RMSOnlineKeySharingLocation.ToString()
+        }
         $result = @{
             Identity                                   = $IRMConfiguration.Identity
             AutomaticServiceUpdateEnabled              = $IRMConfiguration.AutomaticServiceUpdateEnabled
@@ -146,7 +151,7 @@ function Get-TargetResource
             JournalReportDecryptionEnabled             = $IRMConfiguration.JournalReportDecryptionEnabled
             LicensingLocation                          = $IRMConfiguration.LicensingLocation
             RejectIfRecipientHasNoRights               = $IRMConfiguration.RejectIfRecipientHasNoRights
-            RMSOnlineKeySharingLocation                = $IRMConfiguration.RMSOnlineKeySharingLocation.ToString()
+            RMSOnlineKeySharingLocation                = $RMSOnlineKeySharingLocationValue
             SearchEnabled                              = $IRMConfiguration.SearchEnabled
             SimplifiedClientAccessDoNotForwardDisabled = $IRMConfiguration.SimplifiedClientAccessDoNotForwardDisabled
             SimplifiedClientAccessEnabled              = $IRMConfiguration.SimplifiedClientAccessEnabled
@@ -442,13 +447,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('CertificatePath') | Out-Null
-    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('Ensure') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
