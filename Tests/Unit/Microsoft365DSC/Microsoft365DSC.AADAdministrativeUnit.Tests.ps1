@@ -66,7 +66,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgDirectoryAdministrativeUnitScopedRoleMember -MockWith {
             }
             Mock -CommandName New-M365DSCConnection -MockWith {
-                Select-MgProfile beta
                 return 'Credential'
             }
 

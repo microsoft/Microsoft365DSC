@@ -195,7 +195,7 @@ function New-M365DSCStubFiles
                             {
                                 $ParamType = 'System.Object[]'
                             }
-                            elseif ($ParamType.StartsWith('Microsoft.Graph.PowerShell.'))
+                            elseif ($ParamType.StartsWith('Microsoft.Graph.PowerShell.') -or $ParamType.StartsWith('Microsoft.Graph.Beta.PowerShell.'))
                             {
                                 $ParamType = 'PSObject'
                             }

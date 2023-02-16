@@ -13154,7 +13154,7 @@ function Get-MgBetaDeviceManagement
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -13178,7 +13178,7 @@ function Get-MgBetaDeviceManagement
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -13195,7 +13195,7 @@ function Get-MgBetaDeviceManagementAssignmentFilter
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -13207,7 +13207,7 @@ function Get-MgBetaDeviceManagementAssignmentFilter
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -13259,7 +13259,7 @@ function Get-MgBetaDeviceManagementAssignmentFilter
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -13272,7 +13272,7 @@ function Get-MgBetaDeviceManagementConfigurationPolicy
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -13284,7 +13284,7 @@ function Get-MgBetaDeviceManagementConfigurationPolicy
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -13336,7 +13336,7 @@ function Get-MgBetaDeviceManagementConfigurationPolicy
         $DeviceManagementConfigurationPolicyId,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -13349,7 +13349,7 @@ function Get-MgBetaDeviceManagementConfigurationPolicyAssignment
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -13365,7 +13365,7 @@ function Get-MgBetaDeviceManagementConfigurationPolicyAssignment
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -13417,7 +13417,7 @@ function Get-MgBetaDeviceManagementConfigurationPolicyAssignment
         $DeviceManagementConfigurationPolicyAssignmentId,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -13430,7 +13430,7 @@ function Get-MgBetaDeviceManagementConfigurationPolicySetting
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -13446,7 +13446,7 @@ function Get-MgBetaDeviceManagementConfigurationPolicySetting
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -13498,7 +13498,7 @@ function Get-MgBetaDeviceManagementConfigurationPolicySetting
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -13511,7 +13511,7 @@ function Get-MgBetaDeviceManagementConfigurationPolicyTemplate
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -13523,7 +13523,7 @@ function Get-MgBetaDeviceManagementConfigurationPolicyTemplate
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -13575,7 +13575,7 @@ function Get-MgBetaDeviceManagementConfigurationPolicyTemplate
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -13592,7 +13592,7 @@ function Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -13604,7 +13604,7 @@ function Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -13656,7 +13656,7 @@ function Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -13669,7 +13669,7 @@ function Get-MgBetaDeviceManagementConfigurationSetting
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -13681,7 +13681,7 @@ function Get-MgBetaDeviceManagementConfigurationSetting
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -13733,7 +13733,7 @@ function Get-MgBetaDeviceManagementConfigurationSetting
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -13750,7 +13750,7 @@ function Get-MgBetaDeviceManagementDeviceCategory
         $DeviceCategoryId,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -13762,7 +13762,7 @@ function Get-MgBetaDeviceManagementDeviceCategory
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -13810,7 +13810,7 @@ function Get-MgBetaDeviceManagementDeviceCategory
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -13823,7 +13823,7 @@ function Get-MgBetaDeviceManagementDeviceCompliancePolicy
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -13835,7 +13835,7 @@ function Get-MgBetaDeviceManagementDeviceCompliancePolicy
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -13883,7 +13883,7 @@ function Get-MgBetaDeviceManagementDeviceCompliancePolicy
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -13900,7 +13900,7 @@ function Get-MgBetaDeviceManagementDeviceCompliancePolicyAssignment
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -13912,7 +13912,7 @@ function Get-MgBetaDeviceManagementDeviceCompliancePolicyAssignment
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -13964,7 +13964,7 @@ function Get-MgBetaDeviceManagementDeviceCompliancePolicyAssignment
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -13981,7 +13981,7 @@ function Get-MgBetaDeviceManagementDeviceConfiguration
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -13993,7 +13993,7 @@ function Get-MgBetaDeviceManagementDeviceConfiguration
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -14045,7 +14045,7 @@ function Get-MgBetaDeviceManagementDeviceConfiguration
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -14058,7 +14058,7 @@ function Get-MgBetaDeviceManagementDeviceConfigurationAssignment
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -14070,7 +14070,7 @@ function Get-MgBetaDeviceManagementDeviceConfigurationAssignment
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -14126,7 +14126,7 @@ function Get-MgBetaDeviceManagementDeviceConfigurationAssignment
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -14139,7 +14139,7 @@ function Get-MgBetaDeviceManagementIntent
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -14151,7 +14151,7 @@ function Get-MgBetaDeviceManagementIntent
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -14203,7 +14203,7 @@ function Get-MgBetaDeviceManagementIntent
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -14216,7 +14216,7 @@ function Get-MgBetaDeviceManagementIntentAssignment
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -14228,7 +14228,7 @@ function Get-MgBetaDeviceManagementIntentAssignment
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -14284,7 +14284,7 @@ function Get-MgBetaDeviceManagementIntentAssignment
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -14301,7 +14301,7 @@ function Get-MgBetaDeviceManagementIntentSetting
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -14313,7 +14313,7 @@ function Get-MgBetaDeviceManagementIntentSetting
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -14365,7 +14365,7 @@ function Get-MgBetaDeviceManagementIntentSetting
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -14378,7 +14378,7 @@ function Get-MgBetaDeviceManagementTemplate
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -14394,7 +14394,7 @@ function Get-MgBetaDeviceManagementTemplate
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -14442,7 +14442,7 @@ function Get-MgBetaDeviceManagementTemplate
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -14455,7 +14455,7 @@ function Get-MgBetaDeviceManagementTemplateCategory
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -14475,7 +14475,7 @@ function Get-MgBetaDeviceManagementTemplateCategory
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -14523,7 +14523,7 @@ function Get-MgBetaDeviceManagementTemplateCategory
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -14540,7 +14540,7 @@ function Get-MgBetaDeviceManagementTemplateCategoryRecommendedSetting
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -14556,7 +14556,7 @@ function Get-MgBetaDeviceManagementTemplateCategoryRecommendedSetting
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -14608,7 +14608,7 @@ function Get-MgBetaDeviceManagementTemplateCategoryRecommendedSetting
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -14621,7 +14621,7 @@ function New-MgBetaDeviceManagementAssignmentFilter
         $Description,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphPayloadByFilter[]]
+        [PSObject]
         $Payloads,
 
         [Parameter()]
@@ -14653,11 +14653,11 @@ function New-MgBetaDeviceManagementAssignmentFilter
         $Rule,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.DevicePlatformType]
+        [PSObject]
         $Platform,
 
         [Parameter()]
@@ -14665,7 +14665,7 @@ function New-MgBetaDeviceManagementAssignmentFilter
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceAndAppManagementAssignmentFilter]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -14685,7 +14685,7 @@ function New-MgBetaDeviceManagementAssignmentFilter
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -14718,11 +14718,11 @@ function New-MgBetaDeviceManagementConfigurationPolicy
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementConfigurationPolicyTemplateReference]
+        [PSObject]
         $TemplateReference,
 
         [Parameter()]
@@ -14734,11 +14734,11 @@ function New-MgBetaDeviceManagementConfigurationPolicy
         $RoleScopeTagIds,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.DeviceManagementConfigurationPlatforms]
+        [PSObject]
         $Platforms,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.DeviceManagementConfigurationTechnologies]
+        [PSObject]
         $Technologies,
 
         [Parameter()]
@@ -14746,7 +14746,7 @@ function New-MgBetaDeviceManagementConfigurationPolicy
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementConfigurationPolicy]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -14754,7 +14754,7 @@ function New-MgBetaDeviceManagementConfigurationPolicy
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementPriorityMetaData]
+        [PSObject]
         $PriorityMetaData,
 
         [Parameter()]
@@ -14774,7 +14774,7 @@ function New-MgBetaDeviceManagementConfigurationPolicy
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -14787,7 +14787,7 @@ function New-MgBetaDeviceManagementDeviceCategory
         $Description,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -14811,7 +14811,7 @@ function New-MgBetaDeviceManagementDeviceCategory
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -14831,7 +14831,7 @@ function New-MgBetaDeviceManagementDeviceCategory
         $AdditionalProperties,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceCategory]
+        [PSObject]
         $BodyParameter
     )
 }
@@ -14856,11 +14856,11 @@ function New-MgBetaDeviceManagementDeviceCompliancePolicy
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceComplianceDeviceOverview]
+        [PSObject]
         $DeviceStatusOverview,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceComplianceUserOverview]
+        [PSObject]
         $UserStatusOverview,
 
         [Parameter()]
@@ -14872,7 +14872,7 @@ function New-MgBetaDeviceManagementDeviceCompliancePolicy
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -14888,7 +14888,7 @@ function New-MgBetaDeviceManagementDeviceCompliancePolicy
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceCompliancePolicy]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -14908,7 +14908,7 @@ function New-MgBetaDeviceManagementDeviceCompliancePolicy
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -14933,11 +14933,11 @@ function New-MgBetaDeviceManagementDeviceConfiguration
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceConfigurationDeviceOverview]
+        [PSObject]
         $DeviceStatusOverview,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceConfigurationUserOverview]
+        [PSObject]
         $UserStatusOverview,
 
         [Parameter()]
@@ -14949,11 +14949,11 @@ function New-MgBetaDeviceManagementDeviceConfiguration
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementApplicabilityRuleOSVersion]
+        [PSObject]
         $DeviceManagementApplicabilityRuleOSVersion,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -14961,11 +14961,11 @@ function New-MgBetaDeviceManagementDeviceConfiguration
         $Version,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementApplicabilityRuleDeviceMode]
+        [PSObject]
         $DeviceManagementApplicabilityRuleDeviceMode,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementApplicabilityRuleOSEdition]
+        [PSObject]
         $DeviceManagementApplicabilityRuleOSEdition,
 
         [Parameter()]
@@ -14973,7 +14973,7 @@ function New-MgBetaDeviceManagementDeviceConfiguration
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceConfiguration]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -14997,7 +14997,7 @@ function New-MgBetaDeviceManagementDeviceConfiguration
         $CreatedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15026,7 +15026,7 @@ function New-MgBetaDeviceManagementIntent
         $IsAssigned,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -15042,7 +15042,7 @@ function New-MgBetaDeviceManagementIntent
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementIntent]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -15058,7 +15058,7 @@ function New-MgBetaDeviceManagementIntent
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementIntentUserStateSummary]
+        [PSObject]
         $UserStateSummary,
 
         [Parameter()]
@@ -15066,7 +15066,7 @@ function New-MgBetaDeviceManagementIntent
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementIntentDeviceStateSummary]
+        [PSObject]
         $DeviceStateSummary,
 
         [Parameter()]
@@ -15074,7 +15074,7 @@ function New-MgBetaDeviceManagementIntent
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15083,7 +15083,7 @@ function Remove-MgBetaDeviceManagementAssignmentFilter
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -15103,7 +15103,7 @@ function Remove-MgBetaDeviceManagementAssignmentFilter
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -15123,7 +15123,7 @@ function Remove-MgBetaDeviceManagementAssignmentFilter
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15132,7 +15132,7 @@ function Remove-MgBetaDeviceManagementConfigurationPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -15156,7 +15156,7 @@ function Remove-MgBetaDeviceManagementConfigurationPolicy
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -15172,7 +15172,7 @@ function Remove-MgBetaDeviceManagementConfigurationPolicy
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15185,7 +15185,7 @@ function Remove-MgBetaDeviceManagementDeviceCategory
         $DeviceCategoryId,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -15205,7 +15205,7 @@ function Remove-MgBetaDeviceManagementDeviceCategory
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -15213,7 +15213,7 @@ function Remove-MgBetaDeviceManagementDeviceCategory
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -15230,7 +15230,7 @@ function Remove-MgBetaDeviceManagementDeviceCompliancePolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -15254,7 +15254,7 @@ function Remove-MgBetaDeviceManagementDeviceCompliancePolicy
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -15270,7 +15270,7 @@ function Remove-MgBetaDeviceManagementDeviceCompliancePolicy
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15279,7 +15279,7 @@ function Remove-MgBetaDeviceManagementDeviceConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -15299,7 +15299,7 @@ function Remove-MgBetaDeviceManagementDeviceConfiguration
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -15319,7 +15319,7 @@ function Remove-MgBetaDeviceManagementDeviceConfiguration
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15328,7 +15328,7 @@ function Remove-MgBetaDeviceManagementIntent
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -15348,7 +15348,7 @@ function Remove-MgBetaDeviceManagementIntent
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -15368,7 +15368,7 @@ function Remove-MgBetaDeviceManagementIntent
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15377,15 +15377,15 @@ function Update-MgBetaDeviceManagement
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceProtectionOverview]
+        [PSObject]
         $DeviceProtectionOverview,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphApplePushNotificationCertificate]
+        [PSObject]
         $ApplePushNotificationCertificate,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphAndroidForWorkSettings]
+        [PSObject]
         $AndroidForWorkSettings,
 
         [Parameter()]
@@ -15393,27 +15393,27 @@ function Update-MgBetaDeviceManagement
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphZebraFotaConnector]
+        [PSObject]
         $ZebraFotaConnector,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphAdvancedThreatProtectionOnboardingStateSummary]
+        [PSObject]
         $AdvancedThreatProtectionOnboardingStateSummary,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceConfigurationUserStateSummary]
+        [PSObject]
         $DeviceConfigurationUserStateSummaries,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsAnomalySeverityOverview]
+        [PSObject]
         $UserExperienceAnalyticsAnomalySeverityOverview,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsAutopilotSettings]
+        [PSObject]
         $WindowsAutopilotSettings,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementSettings]
+        [PSObject]
         $Settings,
 
         [Parameter()]
@@ -15421,43 +15421,43 @@ function Update-MgBetaDeviceManagement
         $AdditionalProperties,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsCategory]
+        [PSObject]
         $UserExperienceAnalyticsAppHealthOverview,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.DeviceManagementSubscriptionState]
+        [PSObject]
         $SubscriptionState,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsBatteryHealthRuntimeDetails]
+        [PSObject]
         $UserExperienceAnalyticsBatteryHealthRuntimeDetails,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceCompliancePolicyDeviceStateSummary]
+        [PSObject]
         $DeviceCompliancePolicyDeviceStateSummary,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphManagedDeviceCleanupSettings]
+        [PSObject]
         $ManagedDeviceCleanupSettings,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphIntuneBrand]
+        [PSObject]
         $IntuneBrand,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsBatteryHealthCapacityDetails]
+        [PSObject]
         $UserExperienceAnalyticsBatteryHealthCapacityDetails,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceConfigurationDeviceStateSummary]
+        [PSObject]
         $DeviceConfigurationDeviceStateSummaries,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphRemoteAssistanceSettings]
+        [PSObject]
         $RemoteAssistanceSettings,
 
         [Parameter()]
@@ -15469,31 +15469,31 @@ function Update-MgBetaDeviceManagement
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphManagedDeviceOverview]
+        [PSObject]
         $ManagedDeviceOverview,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphSoftwareUpdateStatusSummary]
+        [PSObject]
         $SoftwareUpdateStatusSummary,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphOnPremisesConditionalAccessSettings]
+        [PSObject]
         $ConditionalAccessSettings,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementReports]
+        [PSObject]
         $Reports,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsWorkFromAnywhereHardwareReadinessMetric]
+        [PSObject]
         $UserExperienceAnalyticsWorkFromAnywhereHardwareReadinessMetric,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsMalwareOverview]
+        [PSObject]
         $WindowsMalwareOverview,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.DeviceManagementSubscriptions]
+        [PSObject]
         $Subscriptions,
 
         [Parameter()]
@@ -15513,23 +15513,23 @@ function Update-MgBetaDeviceManagement
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsDeviceScope]
+        [PSObject]
         $UserExperienceAnalyticsDeviceScope,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphConnectorStatusDetails[]]
+        [PSObject]
         $ConnectorStatus,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagement]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementExchangeOnPremisesPolicy]
+        [PSObject]
         $ExchangeOnPremisesPolicy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementMonitoring]
+        [PSObject]
         $Monitoring,
 
         [Parameter()]
@@ -15537,15 +15537,15 @@ function Update-MgBetaDeviceManagement
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphVirtualEndpoint]
+        [PSObject]
         $VirtualEndpoint,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphAndroidManagedStoreAccountEnterpriseSettings]
+        [PSObject]
         $AndroidManagedStoreAccountEnterpriseSettings,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDataProcessorServiceForWindowsFeaturesOnboarding]
+        [PSObject]
         $DataProcessorServiceForWindowsFeaturesOnboarding,
 
         [Parameter()]
@@ -15553,7 +15553,7 @@ function Update-MgBetaDeviceManagement
         $MaximumDepTokens,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsOverview]
+        [PSObject]
         $UserExperienceAnalyticsOverview,
 
         [Parameter()]
@@ -15561,15 +15561,15 @@ function Update-MgBetaDeviceManagement
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphAdminConsent]
+        [PSObject]
         $AdminConsent,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphUserExperienceAnalyticsSettings]
+        [PSObject]
         $UserExperienceAnalyticsSettings,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15582,7 +15582,7 @@ function Update-MgBetaDeviceManagementAssignmentFilter
         $Description,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphPayloadByFilter[]]
+        [PSObject]
         $Payloads,
 
         [Parameter()]
@@ -15598,7 +15598,7 @@ function Update-MgBetaDeviceManagementAssignmentFilter
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -15618,11 +15618,11 @@ function Update-MgBetaDeviceManagementAssignmentFilter
         $Rule,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.DevicePlatformType]
+        [PSObject]
         $Platform,
 
         [Parameter()]
@@ -15630,7 +15630,7 @@ function Update-MgBetaDeviceManagementAssignmentFilter
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceAndAppManagementAssignmentFilter]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -15654,7 +15654,7 @@ function Update-MgBetaDeviceManagementAssignmentFilter
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15679,7 +15679,7 @@ function Update-MgBetaDeviceManagementConfigurationPolicy
         $Name,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -15691,11 +15691,11 @@ function Update-MgBetaDeviceManagementConfigurationPolicy
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementConfigurationPolicyTemplateReference]
+        [PSObject]
         $TemplateReference,
 
         [Parameter()]
@@ -15707,7 +15707,7 @@ function Update-MgBetaDeviceManagementConfigurationPolicy
         $RoleScopeTagIds,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.DeviceManagementConfigurationTechnologies]
+        [PSObject]
         $Technologies,
 
         [Parameter()]
@@ -15715,11 +15715,11 @@ function Update-MgBetaDeviceManagementConfigurationPolicy
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementConfigurationPolicy]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.DeviceManagementConfigurationPlatforms]
+        [PSObject]
         $Platforms,
 
         [Parameter()]
@@ -15727,7 +15727,7 @@ function Update-MgBetaDeviceManagementConfigurationPolicy
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementPriorityMetaData]
+        [PSObject]
         $PriorityMetaData,
 
         [Parameter()]
@@ -15751,7 +15751,7 @@ function Update-MgBetaDeviceManagementConfigurationPolicy
         $DeviceManagementConfigurationPolicyId,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15760,7 +15760,7 @@ function Update-MgBetaDeviceManagementConfigurationPolicyAssignment
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceAndAppManagementAssignmentTarget]
+        [PSObject]
         $Target,
 
         [Parameter()]
@@ -15776,15 +15776,15 @@ function Update-MgBetaDeviceManagementConfigurationPolicyAssignment
         $SourceId,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.DeviceAndAppManagementAssignmentSource]
+        [PSObject]
         $Source,
 
         [Parameter()]
@@ -15792,7 +15792,7 @@ function Update-MgBetaDeviceManagementConfigurationPolicyAssignment
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementConfigurationPolicyAssignment]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -15820,7 +15820,7 @@ function Update-MgBetaDeviceManagementConfigurationPolicyAssignment
         $DeviceManagementConfigurationPolicyId,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15849,7 +15849,7 @@ function Update-MgBetaDeviceManagementDeviceCategory
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -15857,7 +15857,7 @@ function Update-MgBetaDeviceManagementDeviceCategory
         $RoleScopeTagIds,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -15865,7 +15865,7 @@ function Update-MgBetaDeviceManagementDeviceCategory
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceCategory]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -15885,7 +15885,7 @@ function Update-MgBetaDeviceManagementDeviceCategory
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15910,15 +15910,15 @@ function Update-MgBetaDeviceManagementDeviceCompliancePolicy
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceComplianceDeviceOverview]
+        [PSObject]
         $DeviceStatusOverview,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceComplianceUserOverview]
+        [PSObject]
         $UserStatusOverview,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -15930,7 +15930,7 @@ function Update-MgBetaDeviceManagementDeviceCompliancePolicy
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -15950,7 +15950,7 @@ function Update-MgBetaDeviceManagementDeviceCompliancePolicy
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceCompliancePolicy]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -15970,7 +15970,7 @@ function Update-MgBetaDeviceManagementDeviceCompliancePolicy
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -15995,15 +15995,15 @@ function Update-MgBetaDeviceManagementDeviceConfiguration
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceConfigurationDeviceOverview]
+        [PSObject]
         $DeviceStatusOverview,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceConfigurationUserOverview]
+        [PSObject]
         $UserStatusOverview,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -16015,11 +16015,11 @@ function Update-MgBetaDeviceManagementDeviceConfiguration
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementApplicabilityRuleOSVersion]
+        [PSObject]
         $DeviceManagementApplicabilityRuleOSVersion,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -16035,7 +16035,7 @@ function Update-MgBetaDeviceManagementDeviceConfiguration
         $DeviceConfigurationId,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementApplicabilityRuleOSEdition]
+        [PSObject]
         $DeviceManagementApplicabilityRuleOSEdition,
 
         [Parameter()]
@@ -16043,7 +16043,7 @@ function Update-MgBetaDeviceManagementDeviceConfiguration
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceConfiguration]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -16055,7 +16055,7 @@ function Update-MgBetaDeviceManagementDeviceConfiguration
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementApplicabilityRuleDeviceMode]
+        [PSObject]
         $DeviceManagementApplicabilityRuleDeviceMode,
 
         [Parameter()]
@@ -16067,7 +16067,7 @@ function Update-MgBetaDeviceManagementDeviceConfiguration
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -16088,7 +16088,7 @@ function Update-MgBetaDeviceManagementIntent
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -16100,7 +16100,7 @@ function Update-MgBetaDeviceManagementIntent
         $IsAssigned,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -16120,7 +16120,7 @@ function Update-MgBetaDeviceManagementIntent
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementIntent]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -16136,7 +16136,7 @@ function Update-MgBetaDeviceManagementIntent
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementIntentUserStateSummary]
+        [PSObject]
         $UserStateSummary,
 
         [Parameter()]
@@ -16144,7 +16144,7 @@ function Update-MgBetaDeviceManagementIntent
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementIntentDeviceStateSummary]
+        [PSObject]
         $DeviceStateSummary,
 
         [Parameter()]
@@ -16152,7 +16152,7 @@ function Update-MgBetaDeviceManagementIntent
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -16173,7 +16173,7 @@ function Update-MgBetaDeviceManagementIntentSetting
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -16181,7 +16181,7 @@ function Update-MgBetaDeviceManagementIntentSetting
         $ValueJson,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -16193,7 +16193,7 @@ function Update-MgBetaDeviceManagementIntentSetting
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceManagementSettingInstance]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -16217,7 +16217,7 @@ function Update-MgBetaDeviceManagementIntentSetting
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -16228,7 +16228,7 @@ function Get-MgBetaDeviceAppManagement
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -16252,7 +16252,7 @@ function Get-MgBetaDeviceAppManagement
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -16269,7 +16269,7 @@ function Get-MgBetaDeviceAppManagementAndroidManagedAppProtection
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -16281,7 +16281,7 @@ function Get-MgBetaDeviceAppManagementAndroidManagedAppProtection
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -16333,7 +16333,7 @@ function Get-MgBetaDeviceAppManagementAndroidManagedAppProtection
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -16346,7 +16346,7 @@ function Get-MgBetaDeviceAppManagementiOSManagedAppProtection
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -16358,7 +16358,7 @@ function Get-MgBetaDeviceAppManagementiOSManagedAppProtection
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -16410,7 +16410,7 @@ function Get-MgBetaDeviceAppManagementiOSManagedAppProtection
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -16423,7 +16423,7 @@ function Get-MgBetaDeviceAppManagementiOSManagedAppProtectionApp
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -16435,7 +16435,7 @@ function Get-MgBetaDeviceAppManagementiOSManagedAppProtectionApp
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -16491,7 +16491,7 @@ function Get-MgBetaDeviceAppManagementiOSManagedAppProtectionApp
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -16504,7 +16504,7 @@ function Get-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -16516,7 +16516,7 @@ function Get-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -16568,7 +16568,7 @@ function Get-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -16581,7 +16581,7 @@ function Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -16593,7 +16593,7 @@ function Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -16645,7 +16645,7 @@ function Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -16658,7 +16658,7 @@ function Get-MgBetaDeviceAppManagementTargetedManagedAppConfigurationAssignment
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -16670,7 +16670,7 @@ function Get-MgBetaDeviceAppManagementTargetedManagedAppConfigurationAssignment
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -16726,7 +16726,7 @@ function Get-MgBetaDeviceAppManagementTargetedManagedAppConfigurationAssignment
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -16743,7 +16743,7 @@ function New-MgBetaDeviceAppManagementiOSManagedAppProtection
         $ExemptedUniversalLinks,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppDeviceThreatLevel]
+        [PSObject]
         $MaximumAllowedDeviceThreatLevel,
 
         [Parameter()]
@@ -16751,7 +16751,7 @@ function New-MgBetaDeviceAppManagementiOSManagedAppProtection
         $MinimumWipeSdkVersion,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppDataEncryptionType]
+        [PSObject]
         $AppDataEncryptionType,
 
         [Parameter()]
@@ -16759,7 +16759,7 @@ function New-MgBetaDeviceAppManagementiOSManagedAppProtection
         $AdditionalProperties,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.MobileThreatDefensePartnerPriority]
+        [PSObject]
         $MobileThreatDefensePartnerPriority,
 
         [Parameter()]
@@ -16767,7 +16767,7 @@ function New-MgBetaDeviceAppManagementiOSManagedAppProtection
         $CreatedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphManagedAppPolicyDeploymentSummary]
+        [PSObject]
         $DeploymentSummary,
 
         [Parameter()]
@@ -16775,7 +16775,7 @@ function New-MgBetaDeviceAppManagementiOSManagedAppProtection
         $MinimumWarningAppVersion,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedBrowserType]
+        [PSObject]
         $ManagedBrowser,
 
         [Parameter()]
@@ -16799,11 +16799,11 @@ function New-MgBetaDeviceAppManagementiOSManagedAppProtection
         $PeriodBeforePinReset,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.AppManagementLevel]
+        [PSObject]
         $TargetedAppManagementLevels,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfDeviceComplianceRequired,
 
         [Parameter()]
@@ -16819,7 +16819,7 @@ function New-MgBetaDeviceAppManagementiOSManagedAppProtection
         $ThirdPartyKeyboardsBlocked,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppDataIngestionLocation[]]
+        [PSObject]
         $AllowedDataIngestionLocations,
 
         [Parameter()]
@@ -16831,7 +16831,7 @@ function New-MgBetaDeviceAppManagementiOSManagedAppProtection
         $DeployedAppCount,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppNotificationRestriction]
+        [PSObject]
         $NotificationRestriction,
 
         [Parameter()]
@@ -16847,7 +16847,7 @@ function New-MgBetaDeviceAppManagementiOSManagedAppProtection
         $DeviceComplianceRequired,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.TargetedManagedAppGroupType]
+        [PSObject]
         $AppGroupType,
 
         [Parameter()]
@@ -16855,7 +16855,7 @@ function New-MgBetaDeviceAppManagementiOSManagedAppProtection
         $PeriodOfflineBeforeAccessCheck,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfUnableToAuthenticateUser,
 
         [Parameter()]
@@ -16895,7 +16895,7 @@ function New-MgBetaDeviceAppManagementiOSManagedAppProtection
         $PeriodOfflineBeforeWipeIsEnforced,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppDataTransferLevel]
+        [PSObject]
         $AllowedOutboundDataTransferDestinations,
 
         [Parameter()]
@@ -16907,7 +16907,7 @@ function New-MgBetaDeviceAppManagementiOSManagedAppProtection
         $OrganizationalCredentialsRequired,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppDataStorageLocation[]]
+        [PSObject]
         $AllowedDataStorageLocations,
 
         [Parameter()]
@@ -16927,7 +16927,7 @@ function New-MgBetaDeviceAppManagementiOSManagedAppProtection
         $IsAssigned,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppPhoneNumberRedirectLevel]
+        [PSObject]
         $DialerRestrictionLevel,
 
         [Parameter()]
@@ -16955,11 +16955,11 @@ function New-MgBetaDeviceAppManagementiOSManagedAppProtection
         $MinimumRequiredAppVersion,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $MobileThreatDefenseRemediationAction,
 
         [Parameter()]
@@ -16975,7 +16975,7 @@ function New-MgBetaDeviceAppManagementiOSManagedAppProtection
         $SimplePinBlocked,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppPinCharacterSet]
+        [PSObject]
         $PinCharacterSet,
 
         [Parameter()]
@@ -16995,19 +16995,19 @@ function New-MgBetaDeviceAppManagementiOSManagedAppProtection
         $MinimumWarningOSVersion,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphKeyValuePair[]]
+        [PSObject]
         $ExemptedAppProtocols,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfMaximumPinRetriesExceeded,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfIosDeviceModelNotAllowed,
 
         [Parameter()]
@@ -17035,7 +17035,7 @@ function New-MgBetaDeviceAppManagementiOSManagedAppProtection
         $CustomBrowserProtocol,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppDataTransferLevel]
+        [PSObject]
         $AllowedInboundDataTransferSources,
 
         [Parameter()]
@@ -17047,11 +17047,11 @@ function New-MgBetaDeviceAppManagementiOSManagedAppProtection
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphIosManagedAppProtection]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppClipboardSharingLevel]
+        [PSObject]
         $AllowedOutboundClipboardSharingLevel,
 
         [Parameter()]
@@ -17076,7 +17076,7 @@ function New-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $Description,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionProxiedDomainCollection[]]
+        [PSObject]
         $EnterpriseProxiedDomains,
 
         [Parameter()]
@@ -17092,7 +17092,7 @@ function New-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -17100,11 +17100,11 @@ function New-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $EnterpriseProxyServersAreAuthoritative,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionResourceCollection[]]
+        [PSObject]
         $SmbAutoEncryptedFileExtensions,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.WindowsInformationProtectionEnforcementLevel]
+        [PSObject]
         $EnforcementLevel,
 
         [Parameter()]
@@ -17112,7 +17112,7 @@ function New-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $EnterpriseDomain,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionResourceCollection[]]
+        [PSObject]
         $EnterpriseInternalProxyServers,
 
         [Parameter()]
@@ -17120,11 +17120,11 @@ function New-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $AdditionalProperties,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionResourceCollection[]]
+        [PSObject]
         $EnterpriseNetworkDomainNames,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -17132,7 +17132,7 @@ function New-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $Version,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionResourceCollection[]]
+        [PSObject]
         $EnterpriseProxyServers,
 
         [Parameter()]
@@ -17144,11 +17144,11 @@ function New-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $RightsManagementServicesTemplateId,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionDataRecoveryCertificate]
+        [PSObject]
         $DataRecoveryCertificate,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionApp[]]
+        [PSObject]
         $ExemptApps,
 
         [Parameter()]
@@ -17164,11 +17164,11 @@ function New-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionResourceCollection[]]
+        [PSObject]
         $EnterpriseProtectedDomainNames,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionResourceCollection[]]
+        [PSObject]
         $NeutralDomainResources,
 
         [Parameter()]
@@ -17196,7 +17196,7 @@ function New-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $ProtectionUnderLockConfigRequired,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionApp[]]
+        [PSObject]
         $ProtectedApps,
 
         [Parameter()]
@@ -17216,7 +17216,7 @@ function New-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionIPRangeCollection[]]
+        [PSObject]
         $EnterpriseIPRanges,
 
         [Parameter()]
@@ -17233,7 +17233,7 @@ function New-MgBetaDeviceAppManagementTargetedManagedAppConfiguration
         $DeployedAppCount,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.AppManagementLevel]
+        [PSObject]
         $TargetedAppManagementLevels,
 
         [Parameter()]
@@ -17261,7 +17261,7 @@ function New-MgBetaDeviceAppManagementTargetedManagedAppConfiguration
         $IsAssigned,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -17269,7 +17269,7 @@ function New-MgBetaDeviceAppManagementTargetedManagedAppConfiguration
         $Version,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphManagedAppPolicyDeploymentSummary]
+        [PSObject]
         $DeploymentSummary,
 
         [Parameter()]
@@ -17277,7 +17277,7 @@ function New-MgBetaDeviceAppManagementTargetedManagedAppConfiguration
         $RoleScopeTagIds,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.TargetedManagedAppGroupType]
+        [PSObject]
         $AppGroupType,
 
         [Parameter()]
@@ -17285,11 +17285,11 @@ function New-MgBetaDeviceAppManagementTargetedManagedAppConfiguration
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphKeyValuePair[]]
+        [PSObject]
         $CustomSettings,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphTargetedManagedAppConfiguration]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -17313,7 +17313,7 @@ function New-MgBetaDeviceAppManagementTargetedManagedAppConfiguration
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -17322,7 +17322,7 @@ function Remove-MgBetaDeviceAppManagementAndroidManagedAppProtection
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -17346,7 +17346,7 @@ function Remove-MgBetaDeviceAppManagementAndroidManagedAppProtection
         $AndroidManagedAppProtectionId,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -17362,7 +17362,7 @@ function Remove-MgBetaDeviceAppManagementAndroidManagedAppProtection
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -17371,7 +17371,7 @@ function Remove-MgBetaDeviceAppManagementiOSManagedAppProtection
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -17391,7 +17391,7 @@ function Remove-MgBetaDeviceAppManagementiOSManagedAppProtection
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -17411,7 +17411,7 @@ function Remove-MgBetaDeviceAppManagementiOSManagedAppProtection
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -17420,7 +17420,7 @@ function Remove-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -17440,7 +17440,7 @@ function Remove-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -17460,7 +17460,7 @@ function Remove-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -17473,7 +17473,7 @@ function Remove-MgBetaDeviceAppManagementTargetedManagedAppConfiguration
         $TargetedManagedAppConfigurationId,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -17493,7 +17493,7 @@ function Remove-MgBetaDeviceAppManagementTargetedManagedAppConfiguration
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -17501,7 +17501,7 @@ function Remove-MgBetaDeviceAppManagementTargetedManagedAppConfiguration
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -17530,7 +17530,7 @@ function Update-MgBetaDeviceAppManagement
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -17542,7 +17542,7 @@ function Update-MgBetaDeviceAppManagement
         $MicrosoftStoreForBusinessLastCompletedApplicationSyncTime,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphSymantecCodeSigningCertificate]
+        [PSObject]
         $SymantecCodeSigningCertificate,
 
         [Parameter()]
@@ -17550,7 +17550,7 @@ function Update-MgBetaDeviceAppManagement
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDeviceAppManagement]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -17558,7 +17558,7 @@ function Update-MgBetaDeviceAppManagement
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsManagementApp]
+        [PSObject]
         $WindowsManagementApp,
 
         [Parameter()]
@@ -17566,7 +17566,7 @@ function Update-MgBetaDeviceAppManagement
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.MicrosoftStoreForBusinessPortalSelectionOptions]
+        [PSObject]
         $MicrosoftStoreForBusinessPortalSelection,
 
         [Parameter()]
@@ -17582,7 +17582,7 @@ function Update-MgBetaDeviceAppManagement
         $MicrosoftStoreForBusinessLastSuccessfulSyncDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -17599,7 +17599,7 @@ function Update-MgBetaDeviceAppManagementiOSManagedAppProtection
         $ExemptedUniversalLinks,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppDeviceThreatLevel]
+        [PSObject]
         $MaximumAllowedDeviceThreatLevel,
 
         [Parameter()]
@@ -17607,7 +17607,7 @@ function Update-MgBetaDeviceAppManagementiOSManagedAppProtection
         $MinimumWipeSdkVersion,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppDataEncryptionType]
+        [PSObject]
         $AppDataEncryptionType,
 
         [Parameter()]
@@ -17615,7 +17615,7 @@ function Update-MgBetaDeviceAppManagementiOSManagedAppProtection
         $AdditionalProperties,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.MobileThreatDefensePartnerPriority]
+        [PSObject]
         $MobileThreatDefensePartnerPriority,
 
         [Parameter()]
@@ -17623,7 +17623,7 @@ function Update-MgBetaDeviceAppManagementiOSManagedAppProtection
         $CreatedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.AppManagementLevel]
+        [PSObject]
         $TargetedAppManagementLevels,
 
         [Parameter()]
@@ -17631,7 +17631,7 @@ function Update-MgBetaDeviceAppManagementiOSManagedAppProtection
         $ThirdPartyKeyboardsBlocked,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedBrowserType]
+        [PSObject]
         $ManagedBrowser,
 
         [Parameter()]
@@ -17655,7 +17655,7 @@ function Update-MgBetaDeviceAppManagementiOSManagedAppProtection
         $PeriodBeforePinReset,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfDeviceComplianceRequired,
 
         [Parameter()]
@@ -17667,7 +17667,7 @@ function Update-MgBetaDeviceAppManagementiOSManagedAppProtection
         $PinRequired,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppDataIngestionLocation[]]
+        [PSObject]
         $AllowedDataIngestionLocations,
 
         [Parameter()]
@@ -17679,7 +17679,7 @@ function Update-MgBetaDeviceAppManagementiOSManagedAppProtection
         $DeployedAppCount,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppNotificationRestriction]
+        [PSObject]
         $NotificationRestriction,
 
         [Parameter()]
@@ -17687,7 +17687,7 @@ function Update-MgBetaDeviceAppManagementiOSManagedAppProtection
         $RoleScopeTagIds,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppClipboardSharingLevel]
+        [PSObject]
         $AllowedOutboundClipboardSharingLevel,
 
         [Parameter()]
@@ -17703,7 +17703,7 @@ function Update-MgBetaDeviceAppManagementiOSManagedAppProtection
         $DeviceComplianceRequired,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.TargetedManagedAppGroupType]
+        [PSObject]
         $AppGroupType,
 
         [Parameter()]
@@ -17711,7 +17711,7 @@ function Update-MgBetaDeviceAppManagementiOSManagedAppProtection
         $PeriodOfflineBeforeAccessCheck,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfUnableToAuthenticateUser,
 
         [Parameter()]
@@ -17747,11 +17747,11 @@ function Update-MgBetaDeviceAppManagementiOSManagedAppProtection
         $PeriodOfflineBeforeWipeIsEnforced,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppDataTransferLevel]
+        [PSObject]
         $AllowedOutboundDataTransferDestinations,
 
         [Parameter()]
@@ -17763,7 +17763,7 @@ function Update-MgBetaDeviceAppManagementiOSManagedAppProtection
         $OrganizationalCredentialsRequired,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppDataStorageLocation[]]
+        [PSObject]
         $AllowedDataStorageLocations,
 
         [Parameter()]
@@ -17787,7 +17787,7 @@ function Update-MgBetaDeviceAppManagementiOSManagedAppProtection
         $IsAssigned,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppPhoneNumberRedirectLevel]
+        [PSObject]
         $DialerRestrictionLevel,
 
         [Parameter()]
@@ -17815,11 +17815,11 @@ function Update-MgBetaDeviceAppManagementiOSManagedAppProtection
         $MinimumRequiredAppVersion,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $MobileThreatDefenseRemediationAction,
 
         [Parameter()]
@@ -17827,7 +17827,7 @@ function Update-MgBetaDeviceAppManagementiOSManagedAppProtection
         $AllowedOutboundClipboardSharingExceptionLength,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphManagedAppPolicyDeploymentSummary]
+        [PSObject]
         $DeploymentSummary,
 
         [Parameter()]
@@ -17835,7 +17835,7 @@ function Update-MgBetaDeviceAppManagementiOSManagedAppProtection
         $SimplePinBlocked,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppPinCharacterSet]
+        [PSObject]
         $PinCharacterSet,
 
         [Parameter()]
@@ -17855,7 +17855,7 @@ function Update-MgBetaDeviceAppManagementiOSManagedAppProtection
         $MinimumWarningOSVersion,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -17863,15 +17863,15 @@ function Update-MgBetaDeviceAppManagementiOSManagedAppProtection
         $GracePeriodToBlockAppsDuringOffClockHours,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphKeyValuePair[]]
+        [PSObject]
         $ExemptedAppProtocols,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfMaximumPinRetriesExceeded,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppRemediationAction]
+        [PSObject]
         $AppActionIfIosDeviceModelNotAllowed,
 
         [Parameter()]
@@ -17903,7 +17903,7 @@ function Update-MgBetaDeviceAppManagementiOSManagedAppProtection
         $CustomBrowserProtocol,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.ManagedAppDataTransferLevel]
+        [PSObject]
         $AllowedInboundDataTransferSources,
 
         [Parameter()]
@@ -17915,7 +17915,7 @@ function Update-MgBetaDeviceAppManagementiOSManagedAppProtection
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphIosManagedAppProtection]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -17940,7 +17940,7 @@ function Update-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $Description,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionProxiedDomainCollection[]]
+        [PSObject]
         $EnterpriseProxiedDomains,
 
         [Parameter()]
@@ -17956,11 +17956,11 @@ function Update-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionResourceCollection[]]
+        [PSObject]
         $SmbAutoEncryptedFileExtensions,
 
         [Parameter()]
@@ -17972,7 +17972,7 @@ function Update-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $AdditionalProperties,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.WindowsInformationProtectionEnforcementLevel]
+        [PSObject]
         $EnforcementLevel,
 
         [Parameter()]
@@ -17980,7 +17980,7 @@ function Update-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $EnterpriseDomain,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionResourceCollection[]]
+        [PSObject]
         $EnterpriseInternalProxyServers,
 
         [Parameter()]
@@ -17988,7 +17988,7 @@ function Update-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $IndexingEncryptedStoresOrItemsBlocked,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -17996,7 +17996,7 @@ function Update-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $Version,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionResourceCollection[]]
+        [PSObject]
         $EnterpriseProxyServers,
 
         [Parameter()]
@@ -18008,11 +18008,11 @@ function Update-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $RightsManagementServicesTemplateId,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionDataRecoveryCertificate]
+        [PSObject]
         $DataRecoveryCertificate,
 
         [Parameter()]
@@ -18032,15 +18032,15 @@ function Update-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionResourceCollection[]]
+        [PSObject]
         $EnterpriseProtectedDomainNames,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionResourceCollection[]]
+        [PSObject]
         $NeutralDomainResources,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionApp[]]
+        [PSObject]
         $ExemptApps,
 
         [Parameter()]
@@ -18068,7 +18068,7 @@ function Update-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $ProtectionUnderLockConfigRequired,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionApp[]]
+        [PSObject]
         $ProtectedApps,
 
         [Parameter()]
@@ -18088,11 +18088,11 @@ function Update-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionIPRangeCollection[]]
+        [PSObject]
         $EnterpriseIPRanges,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphWindowsInformationProtectionResourceCollection[]]
+        [PSObject]
         $EnterpriseNetworkDomainNames
     )
 }
@@ -18101,11 +18101,11 @@ function Update-MgBetaDeviceAppManagementTargetedManagedAppConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphManagedAppPolicyDeploymentSummary]
+        [PSObject]
         $DeploymentSummary,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.AppManagementLevel]
+        [PSObject]
         $TargetedAppManagementLevels,
 
         [Parameter()]
@@ -18121,7 +18121,7 @@ function Update-MgBetaDeviceAppManagementTargetedManagedAppConfiguration
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDevicesCorporateManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -18137,7 +18137,7 @@ function Update-MgBetaDeviceAppManagementTargetedManagedAppConfiguration
         $IsAssigned,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -18153,7 +18153,7 @@ function Update-MgBetaDeviceAppManagementTargetedManagedAppConfiguration
         $RoleScopeTagIds,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.TargetedManagedAppGroupType]
+        [PSObject]
         $AppGroupType,
 
         [Parameter()]
@@ -18161,11 +18161,11 @@ function Update-MgBetaDeviceAppManagementTargetedManagedAppConfiguration
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphKeyValuePair[]]
+        [PSObject]
         $CustomSettings,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphTargetedManagedAppConfiguration]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -18193,7 +18193,7 @@ function Update-MgBetaDeviceAppManagementTargetedManagedAppConfiguration
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -18208,7 +18208,7 @@ function Get-MgBetaDevice
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -18224,7 +18224,7 @@ function Get-MgBetaDevice
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -18276,7 +18276,7 @@ function Get-MgBetaDevice
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -18285,7 +18285,7 @@ function Get-MgBetaDirectory
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -18309,7 +18309,7 @@ function Get-MgBetaDirectory
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -18330,7 +18330,7 @@ function Get-MgBetaDirectorySetting
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -18342,7 +18342,7 @@ function Get-MgBetaDirectorySetting
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -18386,7 +18386,7 @@ function Get-MgBetaDirectorySetting
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -18411,7 +18411,7 @@ function New-MgBetaDevice
         $ComplianceExpirationDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphAlternativeSecurityId[]]
+        [PSObject]
         $AlternativeSecurityIds,
 
         [Parameter()]
@@ -18471,7 +18471,7 @@ function New-MgBetaDevice
         $Manufacturer,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -18495,7 +18495,7 @@ function New-MgBetaDevice
         $OperatingSystemVersion,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphOnPremisesExtensionAttributes]
+        [PSObject]
         $ExtensionAttributes,
 
         [Parameter()]
@@ -18515,7 +18515,7 @@ function New-MgBetaDevice
         $Hostnames,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDevice]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -18575,7 +18575,7 @@ function New-MgBetaDevice
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -18588,7 +18588,7 @@ function New-MgBetaDirectorySetting
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphSettingValue[]]
+        [PSObject]
         $Values
     )
 }
@@ -18597,7 +18597,7 @@ function Remove-MgBetaDevice
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -18617,7 +18617,7 @@ function Remove-MgBetaDevice
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -18637,7 +18637,7 @@ function Remove-MgBetaDevice
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -18650,7 +18650,7 @@ function Remove-MgBetaDirectorySetting
         $DirectorySettingId,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -18670,7 +18670,7 @@ function Remove-MgBetaDirectorySetting
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -18686,7 +18686,7 @@ function Remove-MgBetaDirectorySetting
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -18715,7 +18715,7 @@ function Update-MgBetaDevice
         $ComplianceExpirationDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphAlternativeSecurityId[]]
+        [PSObject]
         $AlternativeSecurityIds,
 
         [Parameter()]
@@ -18735,7 +18735,7 @@ function Update-MgBetaDevice
         $Name,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IIdentityDirectoryManagementIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -18767,7 +18767,7 @@ function Update-MgBetaDevice
         $Manufacturer,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -18799,7 +18799,7 @@ function Update-MgBetaDevice
         $OperatingSystemVersion,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphOnPremisesExtensionAttributes]
+        [PSObject]
         $ExtensionAttributes,
 
         [Parameter()]
@@ -18819,7 +18819,7 @@ function Update-MgBetaDevice
         $Hostnames,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDevice]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -18883,7 +18883,7 @@ function Update-MgBetaDevice
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -18900,11 +18900,11 @@ function Update-MgBetaDirectory
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphDirectory]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -18932,7 +18932,7 @@ function Update-MgBetaDirectory
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -18941,7 +18941,7 @@ function Update-MgBetaDirectorySetting
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphSettingValue[]]
+        [PSObject]
         $Values
     )
 }
@@ -18960,7 +18960,7 @@ function Get-MgBetaEntitlementManagementAccessPackage
         $CatalogId,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IIdentityGovernanceIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -18972,7 +18972,7 @@ function Get-MgBetaEntitlementManagementAccessPackage
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -19032,7 +19032,7 @@ function Get-MgBetaEntitlementManagementAccessPackage
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -19045,7 +19045,7 @@ function Get-MgBetaEntitlementManagementAccessPackageCatalog
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IIdentityGovernanceIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -19057,7 +19057,7 @@ function Get-MgBetaEntitlementManagementAccessPackageCatalog
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -19117,7 +19117,7 @@ function Get-MgBetaEntitlementManagementAccessPackageCatalog
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -19138,7 +19138,7 @@ function Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResourc
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -19190,7 +19190,7 @@ function Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResourc
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -19211,7 +19211,7 @@ function Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResourc
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -19263,7 +19263,7 @@ function Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResourc
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -19284,7 +19284,7 @@ function Get-MgBetaEntitlementManagementAccessPackageIncompatibleAccessPackage
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -19336,7 +19336,7 @@ function Get-MgBetaEntitlementManagementAccessPackageIncompatibleAccessPackage
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -19357,7 +19357,7 @@ function Get-MgBetaEntitlementManagementAccessPackageIncompatibleGroup
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -19409,7 +19409,7 @@ function Get-MgBetaEntitlementManagementAccessPackageIncompatibleGroup
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -19422,7 +19422,7 @@ function Get-MgBetaEntitlementManagementAccessPackageIncompatibleWith
         $Property,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IIdentityGovernanceIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -19434,7 +19434,7 @@ function Get-MgBetaEntitlementManagementAccessPackageIncompatibleWith
         $PageSize,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -19490,7 +19490,7 @@ function Get-MgBetaEntitlementManagementAccessPackageIncompatibleWith
         $ExpandProperty,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -19511,7 +19511,7 @@ function New-MgBetaEntitlementManagementAccessPackage
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphAccessPackageCatalog]
+        [PSObject]
         $AccessPackageCatalog,
 
         [Parameter()]
@@ -19531,7 +19531,7 @@ function New-MgBetaEntitlementManagementAccessPackage
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -19547,7 +19547,7 @@ function New-MgBetaEntitlementManagementAccessPackage
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphAccessPackage]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -19571,7 +19571,7 @@ function New-MgBetaEntitlementManagementAccessPackage
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -19612,7 +19612,7 @@ function New-MgBetaEntitlementManagementAccessPackageCatalog
         $Description,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -19624,7 +19624,7 @@ function New-MgBetaEntitlementManagementAccessPackageCatalog
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphAccessPackageCatalog]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -19656,7 +19656,7 @@ function New-MgBetaEntitlementManagementAccessPackageCatalog
         $CatalogType,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -19669,11 +19669,11 @@ function New-MgBetaEntitlementManagementAccessPackageIncompatibleAccessPackageBy
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IReferenceCreate]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -19685,7 +19685,7 @@ function New-MgBetaEntitlementManagementAccessPackageIncompatibleAccessPackageBy
         $PassThru,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IIdentityGovernanceIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -19693,7 +19693,7 @@ function New-MgBetaEntitlementManagementAccessPackageIncompatibleAccessPackageBy
         $OdataId,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -19726,11 +19726,11 @@ function New-MgBetaEntitlementManagementAccessPackageIncompatibleGroupByRef
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IReferenceCreate]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -19742,7 +19742,7 @@ function New-MgBetaEntitlementManagementAccessPackageIncompatibleGroupByRef
         $PassThru,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IIdentityGovernanceIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -19750,7 +19750,7 @@ function New-MgBetaEntitlementManagementAccessPackageIncompatibleGroupByRef
         $OdataId,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -19783,7 +19783,7 @@ function New-MgBetaEntitlementManagementAccessPackageResourceRequest
         $Justification,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphAccessPackageResource]
+        [PSObject]
         $AccessPackageResource,
 
         [Parameter()]
@@ -19807,11 +19807,11 @@ function New-MgBetaEntitlementManagementAccessPackageResourceRequest
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphAccessPackageSubject]
+        [PSObject]
         $Requestor,
 
         [Parameter()]
@@ -19823,7 +19823,7 @@ function New-MgBetaEntitlementManagementAccessPackageResourceRequest
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphAccessPackageResourceRequest]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -19855,7 +19855,7 @@ function New-MgBetaEntitlementManagementAccessPackageResourceRequest
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -19872,7 +19872,7 @@ function New-MgBetaEntitlementManagementAccessPackageResourceRoleScope
         $ModifiedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IIdentityGovernanceIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -19884,7 +19884,7 @@ function New-MgBetaEntitlementManagementAccessPackageResourceRoleScope
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -19892,7 +19892,7 @@ function New-MgBetaEntitlementManagementAccessPackageResourceRoleScope
         $CreatedBy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphAccessPackageResourceScope]
+        [PSObject]
         $AccessPackageResourceScope,
 
         [Parameter()]
@@ -19900,7 +19900,7 @@ function New-MgBetaEntitlementManagementAccessPackageResourceRoleScope
         $AccessPackageId,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphAccessPackageResourceRoleScope]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -19912,7 +19912,7 @@ function New-MgBetaEntitlementManagementAccessPackageResourceRoleScope
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphAccessPackageResourceRole]
+        [PSObject]
         $AccessPackageResourceRole,
 
         [Parameter()]
@@ -19932,7 +19932,7 @@ function New-MgBetaEntitlementManagementAccessPackageResourceRoleScope
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -19941,7 +19941,7 @@ function Remove-MgBetaEntitlementManagementAccessPackage
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -19961,7 +19961,7 @@ function Remove-MgBetaEntitlementManagementAccessPackage
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IIdentityGovernanceIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -19981,7 +19981,7 @@ function Remove-MgBetaEntitlementManagementAccessPackage
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -19994,7 +19994,7 @@ function Remove-MgBetaEntitlementManagementAccessPackageCatalog
         $AccessPackageCatalogId,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -20014,7 +20014,7 @@ function Remove-MgBetaEntitlementManagementAccessPackageCatalog
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IIdentityGovernanceIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -20030,7 +20030,7 @@ function Remove-MgBetaEntitlementManagementAccessPackageCatalog
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -20047,7 +20047,7 @@ function Remove-MgBetaEntitlementManagementAccessPackageIncompatibleAccessPackag
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -20063,7 +20063,7 @@ function Remove-MgBetaEntitlementManagementAccessPackageIncompatibleAccessPackag
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IIdentityGovernanceIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -20071,7 +20071,7 @@ function Remove-MgBetaEntitlementManagementAccessPackageIncompatibleAccessPackag
         $Confirm,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -20100,7 +20100,7 @@ function Remove-MgBetaEntitlementManagementAccessPackageIncompatibleGroupByRef
         $Id,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -20120,11 +20120,11 @@ function Remove-MgBetaEntitlementManagementAccessPackageIncompatibleGroupByRef
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IIdentityGovernanceIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -20157,7 +20157,7 @@ function Remove-MgBetaEntitlementManagementAccessPackageResourceRoleScope
         $ProxyCredential,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -20173,7 +20173,7 @@ function Remove-MgBetaEntitlementManagementAccessPackageResourceRoleScope
         $IfMatch,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IIdentityGovernanceIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -20197,7 +20197,7 @@ function Remove-MgBetaEntitlementManagementAccessPackageResourceRoleScope
         $AccessPackageResourceRoleScopeId,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -20218,7 +20218,7 @@ function Update-MgBetaEntitlementManagementAccessPackage
         $DisplayName,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphAccessPackageCatalog]
+        [PSObject]
         $AccessPackageCatalog,
 
         [Parameter()]
@@ -20230,7 +20230,7 @@ function Update-MgBetaEntitlementManagementAccessPackage
         $ModifiedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IIdentityGovernanceIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -20242,7 +20242,7 @@ function Update-MgBetaEntitlementManagementAccessPackage
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -20258,7 +20258,7 @@ function Update-MgBetaEntitlementManagementAccessPackage
         $AccessPackageId,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphAccessPackage]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -20286,7 +20286,7 @@ function Update-MgBetaEntitlementManagementAccessPackage
         $Break,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
@@ -20315,7 +20315,7 @@ function Update-MgBetaEntitlementManagementAccessPackageCatalog
         $ModifiedDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IIdentityGovernanceIdentity]
+        [PSObject]
         $InputObject,
 
         [Parameter()]
@@ -20327,7 +20327,7 @@ function Update-MgBetaEntitlementManagementAccessPackageCatalog
         $Description,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
@@ -20343,7 +20343,7 @@ function Update-MgBetaEntitlementManagementAccessPackageCatalog
         $Proxy,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphAccessPackageCatalog]
+        [PSObject]
         $BodyParameter,
 
         [Parameter()]
@@ -20379,7 +20379,7 @@ function Update-MgBetaEntitlementManagementAccessPackageCatalog
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]
+        [PSObject]
         $HttpPipelineAppend
     )
 }
@@ -23643,59 +23643,6 @@ function New-MgDirectoryAdministrativeUnit
         $Break
     )
 }
-function New-MgDirectoryAdministrativeUnitExtension
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $AdministrativeUnitId,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
-    )
-}
 function New-MgDirectoryAdministrativeUnitMemberByRef
 {
     [CmdletBinding()]
@@ -24028,59 +23975,6 @@ function Remove-MgDirectoryAdministrativeUnit
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
-    )
-}
-function Remove-MgDirectoryAdministrativeUnitExtension
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
-        [System.String]
-        $IfMatch,
-
-        [Parameter()]
-        [System.String]
-        $AdministrativeUnitId,
-
-        [Parameter()]
-        [System.String]
-        $ExtensionId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -24548,63 +24442,6 @@ function Update-MgDirectoryAdministrativeUnit
         [Parameter()]
         [PSObject]
         $HttpPipelineAppend
-    )
-}
-function Update-MgDirectoryAdministrativeUnitExtension
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $AdministrativeUnitId,
-
-        [Parameter()]
-        [System.String]
-        $ExtensionId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
     )
 }
 function Update-MgOrganization
@@ -36968,6 +36805,31 @@ function Remove-PnPPropertyBagValue
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Force
+    )
+}
+function Remove-PnPSearchConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Configuration,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.SearchConfigurationScope]
+        $Scope,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.String]
+        $Path
     )
 }
 function Remove-PnPSiteDesign
