@@ -181,12 +181,6 @@ function Set-TargetResource
 
     $currentMailbox = Get-TargetResource @PSBoundParameters
 
-    # CASE: Mailbox doesn't exist but should;
-    if ($Ensure -eq 'Present' -and $currentMailbox.Ensure -eq 'Absent')
-    {
-        throw "The specified mailbox {$($DisplayName)} does not exist."
-    }
-
     $AllowedTimeZones = (Get-ChildItem 'HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Time zones' | `
             ForEach-Object { Get-ItemProperty $_.PSPath }).PSChildName
 
@@ -273,8 +267,7 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @('Ensure', `
-            'DisplayName', `
+        -ValuesToCheck @('DisplayName', `
             'TimeZone', `
             'Locale')
 

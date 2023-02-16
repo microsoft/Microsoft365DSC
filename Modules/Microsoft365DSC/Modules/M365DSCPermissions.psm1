@@ -754,7 +754,7 @@ function Update-M365DSCResourcesSettingsJSON
                 }
             }
             $json = ConvertTo-Json -InputObject $settings -Depth 10
-            #Set-Content -Path $settingsFile -Value $json -Encoding UTF8
+            Set-Content -Path $settingsFile -Value $json -Encoding UTF8
         }
         else
         {
@@ -1361,10 +1361,14 @@ function Update-M365DSCAzureAdApplication
         $context = Get-AzContext
     }
 
+    $resourceAppIdMsGraph = '00000003-0000-0000-c000-000000000000'
+    $resourceAppIdSharePoint = '00000003-0000-0ff1-ce00-000000000000'
+    $resourceAppIdExchange = '00000002-0000-0ff1-ce00-000000000000'
+
     $allPrincipals = Get-AzADServicePrincipal
-    $graphSvcprincipal = $allPrincipals | Where-Object -FilterScript { $_.DisplayName -eq 'Microsoft Graph' }
-    $spSvcprincipal = $allPrincipals | Where-Object -FilterScript { $_.DisplayName -eq 'Office 365 SharePoint Online' }
-    $exSvcprincipal = $allPrincipals | Where-Object -FilterScript { $_.DisplayName -eq 'Office 365 Exchange Online' }
+    $graphSvcprincipal = $allPrincipals | Where-Object -FilterScript { $_.AppId -eq $resourceAppIdMsGraph }
+    $spSvcprincipal = $allPrincipals | Where-Object -FilterScript { $_.AppId -eq $resourceAppIdSharePoint }
+    $exSvcprincipal = $allPrincipals | Where-Object -FilterScript { $_.AppId -eq $resourceAppIdExchange }
 
     Write-LogEntry ' '
     Write-LogEntry 'Checking existance of AD Application'

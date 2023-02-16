@@ -567,15 +567,8 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('CertificatePath') | Out-Null
-    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
-    if ($CurrentValues -is [System.Collections.Hashtable] -and $CurrentValues.Count -gt 1)
+    if ($CurrentValues -is [System.Collections.Hashtable] -and $CurrentValues.Count -lt 1)
     {
         # In case transport config is missing at all for whatever reason.
         $TestResult = $false
