@@ -45,14 +45,16 @@ function New-M365DSCStubFiles
         @{Name = 'ExchangeOnline'; ModuleName = 'ExchangeOnlineManagement'; CommandName = 'Get-Mailbox' },
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Applications'; },
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Authentication'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement'; },
+        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.DeviceManagement'; },
+        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.Devices.CorporateManagement'; },
+        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.Identity.DirectoryManagement'; },
+        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.Identity.Governance'; },
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement.Administration'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement.Enrolment'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Devices.CorporateManagement'; },
+        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement.Enrollment'; },
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Groups'; },
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.DirectoryManagement'; },
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.Governance'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.Signins'; },
+        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.SignIns'; },
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Planner'; },
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Teams'; },
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Users'; },
@@ -93,9 +95,7 @@ function New-M365DSCStubFiles
 
         if ($Module.Name -eq 'MicrosoftGraph')
         {
-            Write-Host 'Loading Beta Graph APIs'
             $MaximumFunctionCount = 32000
-            Select-MgProfile -Name beta | Out-Null
             $betaCmdlets = Get-Command -CommandType 'Cmdlet' -Module $CurrentModuleName
             $betaCmdlets += Get-Command -CommandType 'Function' -Module $CurrentModuleName
             foreach ($cmdlet in $betaCmdlets)
