@@ -65,6 +65,11 @@ function Get-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
+
+    $nullReturn = @{
+        CDNType = $CDNType
+    }
+
     try
     {
         $Policies = Get-PnPTenantCdnPolicies -CdnType $CDNType -ErrorAction Stop
@@ -109,7 +114,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return @{}
+        return $nullReturn
     }
 }
 
@@ -357,11 +362,12 @@ function Export-TargetResource
             Managedidentity       = $ManagedIdentity.IsPresent
             Credential            = $Credential
         }
-
-        $Results = Get-TargetResource @Params
-        Write-Host "`r`n    |---[1/2] Public" -NoNewline
         $dscContent = ''
-        if ($null -ne $Results)
+
+        Write-Host "`r`n    |---[1/2] Public" -NoNewline
+        $Results = Get-TargetResource @Params
+
+        if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
         {
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
@@ -370,8 +376,15 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
+            Save-M365DSCPartialExport -Content $dscContent `
+                -FileName $Global:PartialExportFileName
+
+            Write-Host $Global:M365DSCEmojiGreenCheckmark
         }
-        Write-Host $Global:M365DSCEmojiGreenCheckmark
+        else
+        {
+            Write-Host $Global:M365DSCEmojiRedX
+        }
 
         $Params = @{
             CdnType               = 'Private'
@@ -385,7 +398,8 @@ function Export-TargetResource
         }
         Write-Host '    |---[2/2] Private' -NoNewline
         $Results = Get-TargetResource @params
-        if ($null -ne $result)
+
+        if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
         {
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
@@ -397,8 +411,14 @@ function Export-TargetResource
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
+
+            Write-Host $Global:M365DSCEmojiGreenCheckmark
         }
-        Write-Host $Global:M365DSCEmojiGreenCheckmark
+        else
+        {
+            Write-Host $Global:M365DSCEmojiRedX
+        }
+
         return $dscContent
     }
     catch

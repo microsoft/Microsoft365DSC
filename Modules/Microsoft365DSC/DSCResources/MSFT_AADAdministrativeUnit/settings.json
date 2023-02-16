@@ -1,4 +1,4 @@
-{
+﻿{
     "resourceName": "AADAdministrativeUnit",
     "description": "This resource configures an Azure Active Directory administrative unit.",
     "permissions": {
@@ -9,24 +9,30 @@
                         "name": "AdministrativeUnit.Read.All"
                     },
                     {
-                        "name": "Directory.Read.All"
+                        "name": "RoleManagement.Read.Directory"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "AdministrativeUnit.Read.All"
+                    },
+                    {
+                        "name": "AdministrativeUnit.ReadWrite.All"
+                    },
+                    {
+                        "name": "Application.Read.All"
+                    },
+                    {
+                        "name": "Device.Read.All"
+                    },
+                    {
+                        "name": "Group.Read.All"
                     },
                     {
                         "name": "RoleManagement.Read.Directory"
                     },
                     {
-                        "name": "Member.Read.Hidden"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "AdministrativeUnit.ReadWrite.All"
-                    },
-                    {
-                        "name": "Directory.ReadWrite.All"
-                    },
-                    {
-                        "name": "RoleManagement.ReadWrite.Directory"
+                        "name": "User.Read.All"
                     }
                 ]
             },
@@ -36,24 +42,30 @@
                         "name": "AdministrativeUnit.Read.All"
                     },
                     {
-                        "name": "Directory.Read.All"
+                        "name": "RoleManagement.Read.Directory"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "AdministrativeUnit.Read.All"
+                    },
+                    {
+                        "name": "AdministrativeUnit.ReadWrite.All"
+                    },
+                    {
+                        "name": "Application.Read.All"
+                    },
+                    {
+                        "name": "Device.Read.All"
+                    },
+                    {
+                        "name": "Group.Read.All"
                     },
                     {
                         "name": "RoleManagement.Read.Directory"
                     },
                     {
-                        "name": "Member.Read.Hidden"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "AdministrativeUnit.ReadWrite.All"
-                    },
-                    {
-                        "name": "Directory.ReadWrite.All"
-                    },
-                    {
-                        "name": "RoleManagement.ReadWrite.Directory"
+                        "name": "User.Read.All"
                     }
                 ]
             }

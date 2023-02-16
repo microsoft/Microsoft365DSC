@@ -1,18 +1,52 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-
 * IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
   * Initial release.
     FIXES [#2658](https://github.com/microsoft/Microsoft365DSC/issues/2658)
+* PPPowerAppsEnvironment
+  * Added all the latest location return from Get-AdminPowerAppEnvironmentLocations
+* MISC
+  * Updated Tasks.Read and Tasks.ReadWrite Permissions for Planner Plans and Planner Buckets
+    FIXES [#2866](https://github.com/microsoft/Microsoft365DSC/issues/2866)
+  * Fixed Permissions Scopes for AADAuthorizationPolicy and AADSecurityDefaults
+
+# 1.23.215.1
+
+* EXOIRMConfiguration
+  * Fixed issue where the export did not the correct type for RMSOnlineKeySharingLocation
+    FIXES [#2890](https://github.com/microsoft/Microsoft365DSC/issues/2890)
+* IntuneRoleAssignment
+  * Fixed issue where the export did not the correct type for ScopeType
+    FIXES [#2889](https://github.com/microsoft/Microsoft365DSC/issues/2889)
+* O365OrgSettings
+  * Initial Release.
+* MISC
+  * Updated required permissions of several resources
+    FIXES [#2866](https://github.com/microsoft/Microsoft365DSC/issues/2866)
+  * Added filter to Update-M365DSCAzureAdApplication to be more specific.
+    FIXES [2565](https://github.com/microsoft/Microsoft365DSC/issues/2565)
+  * Fixed the JSON conversion depth for the New-M365DSCConfigurationToJSON cmdlet.
+    FIXES [#2891](https://github.com/microsoft/Microsoft365DSC/issues/2891)
+  * Added new ParameterSet for Export-M365DSConfiguration
+    FIXES [[#2802](https://github.com/microsoft/Microsoft365DSC/issues/2802)]
+
+# 1.23.208.1
+
+* TeamsTenantTrustedIPAddress
+  * Initial Release.
 
 # 1.23.201.1
 
+* IntuneDeviceCompliancePolicyWindows10
+  * Updated example
+* IntuneDeviceConfigurationPolicyWindows10
+  * Updated example
 * PlannerTask
   * Fixed issue where Attachments Uri weren't properly exiting single quotes.
     FIXES [#2822](https://github.com/microsoft/Microsoft365DSC/issues/2822)
 * PPPowerAppsEnvironment
-  * Adds support for Developr SKU and fix for Teams SKU
+  * Adds support for Developer SKU and fix for Teams SKU
     FIXES [#2821](https://github.com/microsoft/Microsoft365DSC/issues/2821)
 * SCProtectionAlert
   * Support for certificate based auth
@@ -28,6 +62,12 @@
 * DEPENDENCIES
   * Updated Microsoft.Graph.* to version 1.21.0
   * Updated MicrosoftTeams to version 4.9.3
+* MISC
+  * Corrected Ensure parameter logic for many resources.
+    Removed requirement for Ensure=Present only.
+    FIXES [#2718](https://github.com/microsoft/Microsoft365DSC/issues/2718)
+  * Updated documentation to reflect new authentication possibilities
+    FIXES [#2863](https://github.com/microsoft/Microsoft365DSC/issues/2863)
 
 # 1.23.125.1
 
@@ -94,7 +134,7 @@
   * Refactored to leverage the official cmdlets instead of using the legacy GraphHandlers.
     FIXES [#2767](https://github.com/microsoft/Microsoft365DSC/issues/2767)
   * Changed Export-TargetResource to call Get-M365DSCExportContentForResource
-    to simplify/conform + variables for authentation are added correctly
+    to simplify/conform + variables for authentication are added correctly
     FIXES [#2784](https://github.com/microsoft/Microsoft365DSC/issues/2784)
 * SCRetentionCompliancePolicy
   * Fixes an issue where the SkypeLocation was trying to be converted to a string when it was an array.

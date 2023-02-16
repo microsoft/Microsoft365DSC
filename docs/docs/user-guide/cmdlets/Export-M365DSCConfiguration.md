@@ -43,7 +43,7 @@ This function does not generate any output.
 
 -------------------------- EXAMPLE 3 --------------------------
 
-`Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential -Path 'C:\DSC\Config.ps1'`
+`Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential -Path 'C:\DSC' -FileName 'MyConfig.ps1'`
 
 -------------------------- EXAMPLE 4 --------------------------
 

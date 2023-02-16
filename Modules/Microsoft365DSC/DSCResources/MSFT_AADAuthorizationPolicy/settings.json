@@ -1,4 +1,4 @@
-{
+﻿{
     "resourceName": "AADAuthorizationPolicy",
     "description": "This resource configures the Azure Active Directory Authorization Policy.",
     "permissions": {
