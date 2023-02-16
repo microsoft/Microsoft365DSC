@@ -1,7 +1,10 @@
 # Change log for Microsoft365DSC
 
+
 # UNRELEASED
 
+* PPPowerAppsEnvironment
+  * Added all the latest location return from Get-AdminPowerAppEnvironmentLocations
 * MISC
   * Updated Tasks.Read and Tasks.ReadWrite Permissions for Planner Plans and Planner Buckets
     FIXES [#2866](https://github.com/microsoft/Microsoft365DSC/issues/2866)
