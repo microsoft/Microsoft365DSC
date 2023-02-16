@@ -181,7 +181,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Absent from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be $null
+                (Get-TargetResource @testParams).Ensure | Should -Be "Absent"
             }
 
             It 'Should return false from the Test method' {
