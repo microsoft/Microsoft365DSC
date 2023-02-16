@@ -76,8 +76,9 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
+    $nullReturn = @{
+        DisplayName = $DisplayName
+    }
 
     try
     {
@@ -98,7 +99,6 @@ function Get-TargetResource
         DisplayName           = $DisplayName
         TimeZone              = $mailboxSettings.TimeZone
         Locale                = $mailboxSettings.Language.Name
-        Ensure                = 'Present'
         Credential            = $Credential
         ApplicationId         = $ApplicationId
         CertificateThumbprint = $CertificateThumbprint
@@ -107,6 +107,7 @@ function Get-TargetResource
         Managedidentity       = $ManagedIdentity.IsPresent
         TenantId              = $TenantId
     }
+
     Write-Verbose -Message "Found an existing instance of Mailbox '$($DisplayName)'"
     return $result
 }
@@ -180,12 +181,6 @@ function Set-TargetResource
 
     $currentMailbox = Get-TargetResource @PSBoundParameters
 
-    # CASE: Mailbox doesn't exist but should;
-    if ($Ensure -eq 'Present' -and $currentMailbox.Ensure -eq 'Absent')
-    {
-        throw "The specified mailbox {$($DisplayName)} does not exist."
-    }
-
     $AllowedTimeZones = (Get-ChildItem 'HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Time zones' | `
             ForEach-Object { Get-ItemProperty $_.PSPath }).PSChildName
 
@@ -193,7 +188,6 @@ function Set-TargetResource
     {
         throw "The specified Time Zone {$($TimeZone)} is not valid."
     }
-
 
     Set-MailboxRegionalConfiguration -Identity $DisplayName `
         -Language $Locale `
@@ -273,8 +267,7 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @('Ensure', `
-            'DisplayName', `
+        -ValuesToCheck @('DisplayName', `
             'TimeZone', `
             'Locale')
 
@@ -349,7 +342,7 @@ function Export-TargetResource
     {
         Write-Host "    |---[$i/$($mailboxes.Length)] $($mailbox.Name)" -NoNewline
         $mailboxName = $mailbox.Name
-        if (![System.String]::IsNullOrEmpty($mailboxName))
+        if (-not [System.String]::IsNullOrEmpty($mailboxName))
         {
             $Params = @{
                 Credential            = $Credential
@@ -363,7 +356,7 @@ function Export-TargetResource
             }
             $Results = Get-TargetResource @Params
 
-            if ($Results.Ensure -eq 'Present')
+            if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
             {
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
@@ -375,9 +368,15 @@ function Export-TargetResource
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
+
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
+            }
+            else
+            {
+                Write-Host $Global:M365DSCEmojiRedX
             }
         }
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+
         $i++
     }
     return $dscContent
