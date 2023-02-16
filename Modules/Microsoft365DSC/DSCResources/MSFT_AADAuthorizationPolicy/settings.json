@@ -11,7 +11,7 @@
                 ],
                 "update": [
                     {
-                        "name": "Policy.ReadWrite.All"
+                        "name": "Policy.ReadWrite.Authorization"
                     }
                 ]
             },
@@ -23,7 +23,7 @@
                 ],
                 "update": [
                     {
-                        "name": "Policy.ReadWrite.All"
+                        "name": "Policy.ReadWrite.Authorization"
                     }
                 ]
             }

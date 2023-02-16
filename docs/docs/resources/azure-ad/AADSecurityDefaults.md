@@ -34,7 +34,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Update**
 
-    - Policy.ReadWrite.All
+    - Policy.ReadWrite.ConditionalAccess
 
 #### Application permissions
 
@@ -44,7 +44,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Update**
 
-    - Policy.ReadWrite.All
+    - Policy.ReadWrite.ConditionalAccess
 
 ## Examples
 

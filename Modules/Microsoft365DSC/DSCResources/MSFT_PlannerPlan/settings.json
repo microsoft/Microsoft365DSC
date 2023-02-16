@@ -9,7 +9,7 @@
                         "name": "Group.Read.All"
                     },
                     {
-                        "name": "Tasks.Read.All"
+                        "name": "Tasks.Read"
                     }
                 ],
                 "update": [
@@ -17,10 +17,10 @@
                         "name": "Group.Read.All"
                     },
                     {
-                        "name": "Tasks.Read.All"
+                        "name": "Tasks.Read"
                     },
                     {
-                        "name": "Tasks.ReadWrite.All"
+                        "name": "Tasks.ReadWrite"
                     }
                 ]
             },
@@ -30,7 +30,7 @@
                         "name": "Group.Read.All"
                     },
                     {
-                        "name": "Tasks.Read.All"
+                        "name": "Tasks.Read"
                     }
                 ],
                 "update": [
@@ -38,10 +38,10 @@
                         "name": "Group.Read.All"
                     },
                     {
-                        "name": "Tasks.Read.All"
+                        "name": "Tasks.Read"
                     },
                     {
-                        "name": "Tasks.ReadWrite.All"
+                        "name": "Tasks.ReadWrite"
                     }
                 ]
             }
