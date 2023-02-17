@@ -1,6 +1,9 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+
+* AADEntitlementManagementAccessPackageAssignmentPolicy
+  * Initial release
 * IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
   * Initial release.
     FIXES [#2658](https://github.com/microsoft/Microsoft365DSC/issues/2658)
