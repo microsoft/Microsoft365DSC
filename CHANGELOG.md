@@ -4,6 +4,9 @@
 
 * AADEntitlementManagementAccessPackageAssignmentPolicy
   * Initial release
+* IntuneDeviceEnrollmentConfigurationWindows10
+  * Initial release
+    FIXES [#2829](https://github.com/microsoft/Microsoft365DSC/issues/2829)
 * IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
   * Initial release.
     FIXES [#2658](https://github.com/microsoft/Microsoft365DSC/issues/2658)
@@ -12,6 +15,9 @@
     FIXES [#2657](https://github.com/microsoft/Microsoft365DSC/issues/2657)
 * PPPowerAppsEnvironment
   * Added all the latest location return from Get-AdminPowerAppEnvironmentLocations
+* TeamsChannelTab
+  * Updated key parameters to prevent detected duplicates
+    FIXES [#2897](https://github.com/microsoft/Microsoft365DSC/issues/2897)
 * DRG
   * Various fixes
 * MISC
@@ -29,6 +35,9 @@
     FIXES [#2889](https://github.com/microsoft/Microsoft365DSC/issues/2889)
 * O365OrgSettings
   * Initial Release.
+* TeamsChannelTab
+  * Updated key parameters to prevent detected duplicates
+    FIXES [#2897](https://github.com/microsoft/Microsoft365DSC/issues/2897)
 * MISC
   * Updated required permissions of several resources
     FIXES [#2866](https://github.com/microsoft/Microsoft365DSC/issues/2866)
