@@ -5,12 +5,172 @@ function Get-TargetResource
     param
     (
         #region resource generator code
-<ParameterBlock><AssignmentsParam>        #endregion
+        [Parameter()]
+        [System.Boolean]
+        $AllowWindows11Upgrade,
+
+        [Parameter()]
+        [ValidateSet('userDefined','notifyDownload','autoInstallAtMaintenanceTime','autoInstallAndRebootAtMaintenanceTime','autoInstallAndRebootAtScheduledTime','autoInstallAndRebootWithoutEndUserControl','windowsDefault')]
+        [System.String]
+        $AutomaticUpdateMode,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','automatic','user','unknownFutureValue')]
+        [System.String]
+        $AutoRestartNotificationDismissal,
+
+        [Parameter()]
+        [ValidateSet('userDefined','all','businessReadyOnly','windowsInsiderBuildFast','windowsInsiderBuildSlow','windowsInsiderBuildRelease')]
+        [System.String]
+        $BusinessReadyUpdatesOnly,
+
+        [Parameter()]
+        [System.Int32]
+        $DeadlineForFeatureUpdatesInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $DeadlineForQualityUpdatesInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $DeadlineGracePeriodInDays,
+
+        [Parameter()]
+        [ValidateSet('userDefined','httpOnly','httpWithPeeringNat','httpWithPeeringPrivateGroup','httpWithInternetPeering','simpleDownload','bypassMode')]
+        [System.String]
+        $DeliveryOptimizationMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $DriversExcluded,
+
+        [Parameter()]
+        [System.Int32]
+        $EngagedRestartDeadlineInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $EngagedRestartSnoozeScheduleInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $EngagedRestartTransitionScheduleInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $FeatureUpdatesDeferralPeriodInDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $FeatureUpdatesPaused,
+
+        [Parameter()]
+        [System.String]
+        $FeatureUpdatesPauseExpiryDateTime,
+
+        [Parameter()]
+        [System.String]
+        $FeatureUpdatesPauseStartDate,
+
+        [Parameter()]
+        [System.String]
+        $FeatureUpdatesRollbackStartDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $FeatureUpdatesRollbackWindowInDays,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $InstallationSchedule,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftUpdateServiceAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $PostponeRebootUntilAfterDeadline,
+
+        [Parameter()]
+        [ValidateSet('userDefined','settingsOnly','settingsAndExperimentations','notAllowed')]
+        [System.String]
+        $PrereleaseFeatures,
+
+        [Parameter()]
+        [System.Int32]
+        $QualityUpdatesDeferralPeriodInDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $QualityUpdatesPaused,
+
+        [Parameter()]
+        [System.String]
+        $QualityUpdatesPauseExpiryDateTime,
+
+        [Parameter()]
+        [System.String]
+        $QualityUpdatesPauseStartDate,
+
+        [Parameter()]
+        [System.String]
+        $QualityUpdatesRollbackStartDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $ScheduleImminentRestartWarningInMinutes,
+
+        [Parameter()]
+        [System.Int32]
+        $ScheduleRestartWarningInHours,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipChecksBeforeRestart,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','defaultNotifications','restartWarningsOnly','disableAllNotifications','unknownFutureValue')]
+        [System.String]
+        $UpdateNotificationLevel,
+
+        [Parameter()]
+        [ValidateSet('userDefined','firstWeek','secondWeek','thirdWeek','fourthWeek','everyWeek','unknownFutureValue')]
+        [System.String]
+        $UpdateWeeks,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $UserPauseAccess,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $UserWindowsUpdateScanAccess,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
 
         [Parameter(Mandatory = $true)]
         [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+        #endregion
+
+        [Parameter()]
+        [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -39,10 +199,11 @@ function Get-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload '<#Workload#>' `
-            -InboundParameters $PSBoundParameters
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters `
+            -ProfileName 'beta'
+            Select-MgProfile -Name beta
 
-        Select-MgProfile -Name '<#APIVersion#>'
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
 
@@ -58,34 +219,215 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
         $nullResult.Ensure = 'Absent'
 
-        $getValue = $null<#ResourceGenerator
+        $getValue = $null
         #region resource generator code
-        $getValue = <GetCmdLetName> <getKeyIdentifier> -ErrorAction SilentlyContinue
+        $getValue = Get-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id  -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>}"
+            Write-Verbose -Message "Could not find an Intune Window Update For Business Ring Update Profile for Windows10 with Id {$Id}"
 
-            if(-Not [string]::IsNullOrEmpty($<FilterKey>))
+            if(-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = <GetCmdLetName> `
-<AlternativeFilter>
+                $getValue = Get-MgDeviceManagementDeviceConfiguration `
+                    -Filter "DisplayName eq '$DisplayName'" `
+                    -ErrorAction SilentlyContinue
             }
         }
-        #endregionResourceGenerator#>
+        #endregion
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an <ResourceDescription> with <FilterKey> {$<FilterKey>}"
+            Write-Verbose -Message "Could not find an Intune Window Update For Business Ring Update Profile for Windows10 with DisplayName {$DisplayName}"
             return $nullResult
         }
-        $<PrimaryKey> = $getValue.<PrimaryKey>
-        Write-Verbose -Message "An <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>} was found."<#ResourceGenerator
-<ComplexTypeConstructor><EnumTypeConstructor><DateTypeConstructor><TimeTypeConstructor>ResourceGenerator#>
-        $results = @{<#ResourceGenerator
-            #region resource generator code
-<HashTableMapping>            #endregionResourceGenerator#>
+        $Id = $getValue.Id
+        Write-Verbose -Message "An Intune Window Update For Business Ring Update Profile for Windows10 with Id {$Id} and DisplayName {$DisplayName} was found."
+
+        #region resource generator code
+        $complexInstallationSchedule = @{}
+        if($null -ne $getValue.AdditionalProperties.installationSchedule.activeHoursEnd)
+        {
+            $complexInstallationSchedule.Add('ActiveHoursEnd', ([TimeSpan]$getValue.AdditionalProperties.installationSchedule.activeHoursEnd).ToString())
         }
-<#ComplexTypeContent#><#AssignmentsGet#>
+        if($null -ne $getValue.AdditionalProperties.installationSchedule.activeHoursStart)
+        {
+            $complexInstallationSchedule.Add('ActiveHoursStart', ([TimeSpan]$getValue.AdditionalProperties.installationSchedule.activeHoursStart).ToString())
+        }
+        if ($null -ne $getValue.AdditionalProperties.installationSchedule.scheduledInstallDay)
+        {
+            $complexInstallationSchedule.Add('ScheduledInstallDay', $getValue.AdditionalProperties.installationSchedule.scheduledInstallDay.toString())
+        }
+        if($null -ne $getValue.AdditionalProperties.installationSchedule.scheduledInstallTime)
+        {
+            $complexInstallationSchedule.Add('ScheduledInstallTime', ([TimeSpan]$getValue.AdditionalProperties.installationSchedule.scheduledInstallTime).ToString())
+        }
+        if ($null -ne $getValue.AdditionalProperties.installationSchedule.'@odata.type')
+        {
+            $complexInstallationSchedule.Add('odataType', $getValue.AdditionalProperties.installationSchedule.'@odata.type'.toString())
+        }
+        if($complexInstallationSchedule.values.Where({ $null -ne $_ }).count -eq 0)
+        {
+            $complexInstallationSchedule = $null
+        }
+        #endregion
+
+        #region resource generator code
+        $enumAutomaticUpdateMode = $null
+        if ($null -ne $getValue.AdditionalProperties.automaticUpdateMode)
+        {
+            $enumAutomaticUpdateMode = $getValue.AdditionalProperties.automaticUpdateMode.ToString()
+        }
+
+        $enumAutoRestartNotificationDismissal = $null
+        if ($null -ne $getValue.AdditionalProperties.autoRestartNotificationDismissal)
+        {
+            $enumAutoRestartNotificationDismissal = $getValue.AdditionalProperties.autoRestartNotificationDismissal.ToString()
+        }
+
+        $enumBusinessReadyUpdatesOnly = $null
+        if ($null -ne $getValue.AdditionalProperties.businessReadyUpdatesOnly)
+        {
+            $enumBusinessReadyUpdatesOnly = $getValue.AdditionalProperties.businessReadyUpdatesOnly.ToString()
+        }
+
+        $enumDeliveryOptimizationMode = $null
+        if ($null -ne $getValue.AdditionalProperties.deliveryOptimizationMode)
+        {
+            $enumDeliveryOptimizationMode = $getValue.AdditionalProperties.deliveryOptimizationMode.ToString()
+        }
+
+        $enumPrereleaseFeatures = $null
+        if ($null -ne $getValue.AdditionalProperties.prereleaseFeatures)
+        {
+            $enumPrereleaseFeatures = $getValue.AdditionalProperties.prereleaseFeatures.ToString()
+        }
+
+        $enumUpdateNotificationLevel = $null
+        if ($null -ne $getValue.AdditionalProperties.updateNotificationLevel)
+        {
+            $enumUpdateNotificationLevel = $getValue.AdditionalProperties.updateNotificationLevel.ToString()
+        }
+
+        $enumUpdateWeeks = $null
+        if ($null -ne $getValue.AdditionalProperties.updateWeeks)
+        {
+            $enumUpdateWeeks = $getValue.AdditionalProperties.updateWeeks.ToString()
+        }
+
+        $enumUserPauseAccess = $null
+        if ($null -ne $getValue.AdditionalProperties.userPauseAccess)
+        {
+            $enumUserPauseAccess = $getValue.AdditionalProperties.userPauseAccess.ToString()
+        }
+
+        $enumUserWindowsUpdateScanAccess = $null
+        if ($null -ne $getValue.AdditionalProperties.userWindowsUpdateScanAccess)
+        {
+            $enumUserWindowsUpdateScanAccess = $getValue.AdditionalProperties.userWindowsUpdateScanAccess.ToString()
+        }
+        #endregion
+
+        #region resource generator code
+        $dateFeatureUpdatesPauseExpiryDateTime = $null
+        if ($null -ne $getValue.AdditionalProperties.featureUpdatesPauseExpiryDateTime)
+        {
+            $dateFeatureUpdatesPauseExpiryDateTime = ([DateTimeOffset]$getValue.AdditionalProperties.featureUpdatesPauseExpiryDateTime).ToString('o')
+        }
+
+        $dateFeatureUpdatesPauseStartDate = $null
+        if ($null -ne $getValue.AdditionalProperties.featureUpdatesPauseStartDate)
+        {
+            $dateFeatureUpdatesPauseStartDate = ([DateTime]$getValue.AdditionalProperties.featureUpdatesPauseStartDate).ToString('o')
+        }
+
+        $dateFeatureUpdatesRollbackStartDateTime = $null
+        if ($null -ne $getValue.AdditionalProperties.featureUpdatesRollbackStartDateTime)
+        {
+            $dateFeatureUpdatesRollbackStartDateTime = ([DateTimeOffset]$getValue.AdditionalProperties.featureUpdatesRollbackStartDateTime).ToString('o')
+        }
+
+        $dateQualityUpdatesPauseExpiryDateTime = $null
+        if ($null -ne $getValue.AdditionalProperties.qualityUpdatesPauseExpiryDateTime)
+        {
+            $dateQualityUpdatesPauseExpiryDateTime = ([DateTimeOffset]$getValue.AdditionalProperties.qualityUpdatesPauseExpiryDateTime).ToString('o')
+        }
+
+        $dateQualityUpdatesPauseStartDate = $null
+        if ($null -ne $getValue.AdditionalProperties.qualityUpdatesPauseStartDate)
+        {
+            $dateQualityUpdatesPauseStartDate = ([DateTime]$getValue.AdditionalProperties.qualityUpdatesPauseStartDate).ToString('o')
+        }
+
+        $dateQualityUpdatesRollbackStartDateTime = $null
+        if ($null -ne $getValue.AdditionalProperties.qualityUpdatesRollbackStartDateTime)
+        {
+            $dateQualityUpdatesRollbackStartDateTime = ([DateTimeOffset]$getValue.AdditionalProperties.qualityUpdatesRollbackStartDateTime).ToString('o')
+        }
+        #endregion
+
+        $results = @{
+            #region resource generator code
+            AllowWindows11Upgrade                   = $getValue.AdditionalProperties.allowWindows11Upgrade
+            AutomaticUpdateMode                     = $enumAutomaticUpdateMode
+            AutoRestartNotificationDismissal        = $enumAutoRestartNotificationDismissal
+            BusinessReadyUpdatesOnly                = $enumBusinessReadyUpdatesOnly
+            DeadlineForFeatureUpdatesInDays         = $getValue.AdditionalProperties.deadlineForFeatureUpdatesInDays
+            DeadlineForQualityUpdatesInDays         = $getValue.AdditionalProperties.deadlineForQualityUpdatesInDays
+            DeadlineGracePeriodInDays               = $getValue.AdditionalProperties.deadlineGracePeriodInDays
+            DeliveryOptimizationMode                = $enumDeliveryOptimizationMode
+            DriversExcluded                         = $getValue.AdditionalProperties.driversExcluded
+            EngagedRestartDeadlineInDays            = $getValue.AdditionalProperties.engagedRestartDeadlineInDays
+            EngagedRestartSnoozeScheduleInDays      = $getValue.AdditionalProperties.engagedRestartSnoozeScheduleInDays
+            EngagedRestartTransitionScheduleInDays  = $getValue.AdditionalProperties.engagedRestartTransitionScheduleInDays
+            FeatureUpdatesDeferralPeriodInDays      = $getValue.AdditionalProperties.featureUpdatesDeferralPeriodInDays
+            FeatureUpdatesPaused                    = $getValue.AdditionalProperties.featureUpdatesPaused
+            FeatureUpdatesPauseExpiryDateTime       = $dateFeatureUpdatesPauseExpiryDateTime
+            FeatureUpdatesPauseStartDate            = $dateFeatureUpdatesPauseStartDate
+            FeatureUpdatesRollbackStartDateTime     = $dateFeatureUpdatesRollbackStartDateTime
+            FeatureUpdatesRollbackWindowInDays      = $getValue.AdditionalProperties.featureUpdatesRollbackWindowInDays
+            InstallationSchedule                    = $complexInstallationSchedule
+            MicrosoftUpdateServiceAllowed           = $getValue.AdditionalProperties.microsoftUpdateServiceAllowed
+            PostponeRebootUntilAfterDeadline        = $getValue.AdditionalProperties.postponeRebootUntilAfterDeadline
+            PrereleaseFeatures                      = $enumPrereleaseFeatures
+            QualityUpdatesDeferralPeriodInDays      = $getValue.AdditionalProperties.qualityUpdatesDeferralPeriodInDays
+            QualityUpdatesPaused                    = $getValue.AdditionalProperties.qualityUpdatesPaused
+            QualityUpdatesPauseExpiryDateTime       = $dateQualityUpdatesPauseExpiryDateTime
+            QualityUpdatesPauseStartDate            = $dateQualityUpdatesPauseStartDate
+            QualityUpdatesRollbackStartDateTime     = $dateQualityUpdatesRollbackStartDateTime
+            ScheduleImminentRestartWarningInMinutes = $getValue.AdditionalProperties.scheduleImminentRestartWarningInMinutes
+            ScheduleRestartWarningInHours           = $getValue.AdditionalProperties.scheduleRestartWarningInHours
+            SkipChecksBeforeRestart                 = $getValue.AdditionalProperties.skipChecksBeforeRestart
+            UpdateNotificationLevel                 = $enumUpdateNotificationLevel
+            UpdateWeeks                             = $enumUpdateWeeks
+            UserPauseAccess                         = $enumUserPauseAccess
+            UserWindowsUpdateScanAccess             = $enumUserWindowsUpdateScanAccess
+            Description                             = $getValue.Description
+            DisplayName                             = $getValue.DisplayName
+            Id                                      = $getValue.Id
+            Ensure                                  = 'Present'
+            Credential                              = $Credential
+            ApplicationId                           = $ApplicationId
+            TenantId                                = $TenantId
+            ApplicationSecret                       = $ApplicationSecret
+            CertificateThumbprint                   = $CertificateThumbprint
+            Managedidentity                         = $ManagedIdentity.IsPresent
+            #endregion
+        }
+        $assignmentsValues = Get-MgDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
+        $assignmentResult = @()
+        foreach ($assignmentEntry in $AssignmentsValues)
+        {
+            $assignmentValue = @{
+                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+                deviceAndAppManagementAssignmentFilterType = $(if($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
+                    {$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()})
+                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
+                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
+            }
+            $assignmentResult += $assignmentValue
+        }
+        $results.Add('Assignments', $assignmentResult)
+
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -106,11 +448,172 @@ function Set-TargetResource
     param
     (
         #region resource generator code
-<ParameterBlock><AssignmentsParam>        #endregion
+        [Parameter()]
+        [System.Boolean]
+        $AllowWindows11Upgrade,
+
+        [Parameter()]
+        [ValidateSet('userDefined','notifyDownload','autoInstallAtMaintenanceTime','autoInstallAndRebootAtMaintenanceTime','autoInstallAndRebootAtScheduledTime','autoInstallAndRebootWithoutEndUserControl','windowsDefault')]
+        [System.String]
+        $AutomaticUpdateMode,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','automatic','user','unknownFutureValue')]
+        [System.String]
+        $AutoRestartNotificationDismissal,
+
+        [Parameter()]
+        [ValidateSet('userDefined','all','businessReadyOnly','windowsInsiderBuildFast','windowsInsiderBuildSlow','windowsInsiderBuildRelease')]
+        [System.String]
+        $BusinessReadyUpdatesOnly,
+
+        [Parameter()]
+        [System.Int32]
+        $DeadlineForFeatureUpdatesInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $DeadlineForQualityUpdatesInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $DeadlineGracePeriodInDays,
+
+        [Parameter()]
+        [ValidateSet('userDefined','httpOnly','httpWithPeeringNat','httpWithPeeringPrivateGroup','httpWithInternetPeering','simpleDownload','bypassMode')]
+        [System.String]
+        $DeliveryOptimizationMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $DriversExcluded,
+
+        [Parameter()]
+        [System.Int32]
+        $EngagedRestartDeadlineInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $EngagedRestartSnoozeScheduleInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $EngagedRestartTransitionScheduleInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $FeatureUpdatesDeferralPeriodInDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $FeatureUpdatesPaused,
+
+        [Parameter()]
+        [System.String]
+        $FeatureUpdatesPauseExpiryDateTime,
+
+        [Parameter()]
+        [System.String]
+        $FeatureUpdatesPauseStartDate,
+
+        [Parameter()]
+        [System.String]
+        $FeatureUpdatesRollbackStartDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $FeatureUpdatesRollbackWindowInDays,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $InstallationSchedule,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftUpdateServiceAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $PostponeRebootUntilAfterDeadline,
+
+        [Parameter()]
+        [ValidateSet('userDefined','settingsOnly','settingsAndExperimentations','notAllowed')]
+        [System.String]
+        $PrereleaseFeatures,
+
+        [Parameter()]
+        [System.Int32]
+        $QualityUpdatesDeferralPeriodInDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $QualityUpdatesPaused,
+
+        [Parameter()]
+        [System.String]
+        $QualityUpdatesPauseExpiryDateTime,
+
+        [Parameter()]
+        [System.String]
+        $QualityUpdatesPauseStartDate,
+
+        [Parameter()]
+        [System.String]
+        $QualityUpdatesRollbackStartDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $ScheduleImminentRestartWarningInMinutes,
+
+        [Parameter()]
+        [System.Int32]
+        $ScheduleRestartWarningInHours,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipChecksBeforeRestart,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','defaultNotifications','restartWarningsOnly','disableAllNotifications','unknownFutureValue')]
+        [System.String]
+        $UpdateNotificationLevel,
+
+        [Parameter()]
+        [ValidateSet('userDefined','firstWeek','secondWeek','thirdWeek','fourthWeek','everyWeek','unknownFutureValue')]
+        [System.String]
+        $UpdateWeeks,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $UserPauseAccess,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $UserWindowsUpdateScanAccess,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
         [Parameter(Mandatory = $true)]
         [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+        #endregion
+
+        [Parameter()]
+        [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -162,8 +665,9 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating an <ResourceDescription> with <FilterKey> {$DisplayName}"
-<#AssignmentsRemove#>
+        Write-Verbose -Message "Creating an Intune Window Update For Business Ring Update Profile for Windows10 with DisplayName {$DisplayName}"
+        $PSBoundParameters.Remove("Assignments") | Out-Null
+
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
         $CreateParameters.Remove('Id') | Out-Null
@@ -175,15 +679,29 @@ function Set-TargetResource
             {
                 $CreateParameters.$key= Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
-        }<#ResourceGenerator
+        }
         #region resource generator code
-<NewDataType>        $policy=<NewCmdLetName> <#NewKeyIdentifier#>
-<#AssignmentsNew#>        #endregionResourceGenerator#>
+        $CreateParameters.Add("@odata.type", "#microsoft.graph.windowsUpdateForBusinessConfiguration")
+        $policy=New-MgDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
+        $assignmentsHash=@()
+        foreach($assignment in $Assignments)
+        {
+            $assignmentsHash+=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+        }
+
+        if($policy.id)
+        {
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+                -Targets $assignmentsHash `
+                -Repository 'deviceManagement/deviceConfigurations'
+        }
+        #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}"
-<#AssignmentsRemove#>
+        Write-Verbose -Message "Updating the Intune Window Update For Business Ring Update Profile for Windows10 with Id {$($currentInstance.Id)}"
+        $PSBoundParameters.Remove("Assignments") | Out-Null
+
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
@@ -196,17 +714,28 @@ function Set-TargetResource
             {
                 $UpdateParameters.$key= Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
-        }<#ResourceGenerator
+        }
         #region resource generator code
-<UpdateDataType>        <UpdateCmdLetName> <#UpdateKeyIdentifier#>
-<#AssignmentsUpdate#>        #endregionResourceGenerator#>
+        $UpdateParameters.Add("@odata.type", "#microsoft.graph.windowsUpdateForBusinessConfiguration")
+        Update-MgDeviceManagementDeviceConfiguration  `
+            -DeviceConfigurationId $currentInstance.Id `
+            -BodyParameter $UpdateParameters
+        $assignmentsHash=@()
+        foreach($assignment in $Assignments)
+        {
+            $assignmentsHash+=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+        }
+        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentInstance.id `
+            -Targets $assignmentsHash `
+            -Repository 'deviceManagement/deviceConfigurations'
+        #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}" <#ResourceGenerator
+        Write-Verbose -Message "Removing the Intune Window Update For Business Ring Update Profile for Windows10 with Id {$($currentInstance.Id)}"
         #region resource generator code
-        <RemoveCmdLetName> <#removeKeyIdentifier#>
-        #endregionResourceGenerator#>
+        Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
+        #endregion
     }
 }
 
@@ -217,12 +746,172 @@ function Test-TargetResource
     param
     (
         #region resource generator code
-<ParameterBlock><AssignmentsParam>        #endregion
+        [Parameter()]
+        [System.Boolean]
+        $AllowWindows11Upgrade,
+
+        [Parameter()]
+        [ValidateSet('userDefined','notifyDownload','autoInstallAtMaintenanceTime','autoInstallAndRebootAtMaintenanceTime','autoInstallAndRebootAtScheduledTime','autoInstallAndRebootWithoutEndUserControl','windowsDefault')]
+        [System.String]
+        $AutomaticUpdateMode,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','automatic','user','unknownFutureValue')]
+        [System.String]
+        $AutoRestartNotificationDismissal,
+
+        [Parameter()]
+        [ValidateSet('userDefined','all','businessReadyOnly','windowsInsiderBuildFast','windowsInsiderBuildSlow','windowsInsiderBuildRelease')]
+        [System.String]
+        $BusinessReadyUpdatesOnly,
+
+        [Parameter()]
+        [System.Int32]
+        $DeadlineForFeatureUpdatesInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $DeadlineForQualityUpdatesInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $DeadlineGracePeriodInDays,
+
+        [Parameter()]
+        [ValidateSet('userDefined','httpOnly','httpWithPeeringNat','httpWithPeeringPrivateGroup','httpWithInternetPeering','simpleDownload','bypassMode')]
+        [System.String]
+        $DeliveryOptimizationMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $DriversExcluded,
+
+        [Parameter()]
+        [System.Int32]
+        $EngagedRestartDeadlineInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $EngagedRestartSnoozeScheduleInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $EngagedRestartTransitionScheduleInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $FeatureUpdatesDeferralPeriodInDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $FeatureUpdatesPaused,
+
+        [Parameter()]
+        [System.String]
+        $FeatureUpdatesPauseExpiryDateTime,
+
+        [Parameter()]
+        [System.String]
+        $FeatureUpdatesPauseStartDate,
+
+        [Parameter()]
+        [System.String]
+        $FeatureUpdatesRollbackStartDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $FeatureUpdatesRollbackWindowInDays,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $InstallationSchedule,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftUpdateServiceAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $PostponeRebootUntilAfterDeadline,
+
+        [Parameter()]
+        [ValidateSet('userDefined','settingsOnly','settingsAndExperimentations','notAllowed')]
+        [System.String]
+        $PrereleaseFeatures,
+
+        [Parameter()]
+        [System.Int32]
+        $QualityUpdatesDeferralPeriodInDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $QualityUpdatesPaused,
+
+        [Parameter()]
+        [System.String]
+        $QualityUpdatesPauseExpiryDateTime,
+
+        [Parameter()]
+        [System.String]
+        $QualityUpdatesPauseStartDate,
+
+        [Parameter()]
+        [System.String]
+        $QualityUpdatesRollbackStartDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $ScheduleImminentRestartWarningInMinutes,
+
+        [Parameter()]
+        [System.Int32]
+        $ScheduleRestartWarningInHours,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipChecksBeforeRestart,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','defaultNotifications','restartWarningsOnly','disableAllNotifications','unknownFutureValue')]
+        [System.String]
+        $UpdateNotificationLevel,
+
+        [Parameter()]
+        [ValidateSet('userDefined','firstWeek','secondWeek','thirdWeek','fourthWeek','everyWeek','unknownFutureValue')]
+        [System.String]
+        $UpdateWeeks,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $UserPauseAccess,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $UserWindowsUpdateScanAccess,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
 
         [Parameter(Mandatory = $true)]
         [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+        #endregion
+
+        [Parameter()]
+        [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -261,7 +950,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>}"
+    Write-Verbose -Message "Testing configuration of the Intune Window Update For Business Ring Update Profile for Windows10 with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
@@ -293,7 +982,6 @@ function Test-TargetResource
             }
 
             $ValuesToCheck.Remove($key) | Out-Null
-
         }
     }
 
@@ -349,8 +1037,9 @@ function Export-TargetResource
         $ManagedIdentity
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload '<#Workload#>' `
-        -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -365,9 +1054,15 @@ function Export-TargetResource
     #endregion
 
     try
-    {<#ResourceGenerator
+    {
         #region resource generator code
-<exportGetCommand>        #endregionResourceGenerator#>
+        [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
+            -All `
+            -ErrorAction Stop | Where-Object `
+            -FilterScript { `
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windowsUpdateForBusinessConfiguration' `
+            }
+        #endregion
 
         $i = 1
         $dscContent = ''
@@ -381,14 +1076,14 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
-            $displayedKey = $config.<PrimaryKey>
+            $displayedKey = $config.Id
             if (-not [String]::IsNullOrEmpty($config.displayName))
             {
                 $displayedKey = $config.displayName
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                <PrimaryKey>                    = $config.<PrimaryKey>
+                Id                    = $config.Id
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -401,13 +1096,48 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-<#ConvertComplexToString#><#AssignmentsConvertComplexToString#>
+            if ( $null -ne $Results.InstallationSchedule)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.InstallationSchedule `
+                    -CIMInstanceName 'MicrosoftGraphwindowsUpdateInstallScheduleType'
+                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.InstallationSchedule = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('InstallationSchedule') | Out-Null
+                }
+            }
+            if($Results.Assignments)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
+                if ($complexTypeStringResult)
+                {
+                    $Results.Assignments = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Assignments') | Out-Null
+                }
+            }
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-<#ConvertComplexToVariable#><#AssignmentsConvertComplexToVariable#><#TrailingCharRemoval#>
+            if ($Results.InstallationSchedule)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "InstallationSchedule" -isCIMArray:$False
+            }
+            if ($Results.Assignments)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$true
+            }
+            #removing trailing commas and semi colons between items of an array of cim instances added by Convert-DSCStringParamToVariable
+            $currentDSCBlock=$currentDSCBlock.replace( "    ,`r`n" , "    `r`n" )
+            $currentDSCBlock=$currentDSCBlock.replace( "`r`n;`r`n" , "`r`n" )
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -429,7 +1159,75 @@ function Export-TargetResource
         return ''
     }
 }
-<#AssignmentsFunctions#>function Rename-M365DSCCimInstanceParameter
+function Update-DeviceConfigurationPolicyAssignment
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceConfigurationPolicyId,
+
+        [Parameter()]
+        [Array]
+        $Targets,
+
+        [Parameter()]
+        [System.String]
+        $Repository='deviceManagement/configurationPolicies',
+
+        [Parameter()]
+        [ValidateSet('v1.0','beta')]
+        [System.String]
+        $APIVersion='beta'
+    )
+    try
+    {
+        $deviceManagementPolicyAssignments=@()
+
+        $Uri="https://graph.microsoft.com/$APIVersion/$Repository/$DeviceConfigurationPolicyId/assign"
+
+        foreach($target in $targets)
+        {
+            $formattedTarget=@{"@odata.type"=$target.dataType}
+            if($target.groupId)
+            {
+                $formattedTarget.Add('groupId',$target.groupId)
+            }
+            if($target.collectionId)
+            {
+                $formattedTarget.Add('collectionId',$target.collectionId)
+            }
+            if($target.deviceAndAppManagementAssignmentFilterType)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',$target.deviceAndAppManagementAssignmentFilterType)
+            }
+            if($target.deviceAndAppManagementAssignmentFilterId)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',$target.deviceAndAppManagementAssignmentFilterId)
+            }
+            $deviceManagementPolicyAssignments+=@{'target'= $formattedTarget}
+        }
+        $body=@{'assignments'=$deviceManagementPolicyAssignments}|ConvertTo-Json -Depth 20
+        #write-verbose -Message $body
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
+
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating data:'
+            -Exception $_
+            -Source $($MyInvocation.MyCommand.Source)
+            -TenantId $TenantId
+            -Credential $Credential
+
+        return $null
+    }
+
+
+}
+
+function Rename-M365DSCCimInstanceParameter
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable],[System.Collections.Hashtable[]])]
