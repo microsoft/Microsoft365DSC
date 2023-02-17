@@ -85,10 +85,7 @@ function Get-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
-
-        Select-MgProfile 'beta'
+            -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
@@ -106,7 +103,7 @@ function Get-TargetResource
         $nullResult.Ensure = 'Absent'
 
         $getValue = $null
-        $getValue = Get-MgEntitlementManagementAccessPackageAssignmentPolicy `
+        $getValue = Get-MgBetaEntitlementManagementAccessPackageAssignmentPolicy `
             -AccessPackageAssignmentPolicyId $id `
             -ExpandProperty "customExtensionHandlers(`$expand=customExtension)" `
             -ErrorAction SilentlyContinue
@@ -114,7 +111,7 @@ function Get-TargetResource
         if ($null -eq $getValue)
         {
             Write-Verbose -Message "The access package assignment policy with id {$id} was not found"
-            $getValue = Get-MgEntitlementManagementAccessPackageAssignmentPolicy `
+            $getValue = Get-MgBetaEntitlementManagementAccessPackageAssignmentPolicy `
                 -DisplayNameEq $DisplayName `
                 -ExpandProperty "customExtensionHandlers(`$expand=customExtension)" `
                 -ErrorAction SilentlyContinue
@@ -129,7 +126,7 @@ function Get-TargetResource
         Write-Verbose -Message "Found access package assignment policy with id {$($getValue.Id)} and DisplayName {$DisplayName}"
 
         #region Format AccessReviewSettings
-        $formattedAccessReviewSettings=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.AccessReviewSettings
+        $formattedAccessReviewSettings = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.AccessReviewSettings
         if($null -ne $formattedAccessReviewSettings)
         {
             $formattedAccessReviewSettings.remove('additionalProperties')
@@ -390,10 +387,7 @@ function Set-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
-
-    Select-MgProfile 'beta' -ErrorAction Stop
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -439,7 +433,7 @@ function Set-TargetResource
             }
         }
 
-        New-MgEntitlementManagementAccessPackageAssignmentPolicy `
+        New-MgBetaEntitlementManagementAccessPackageAssignmentPolicy `
             -BodyParameter $CreateParameters
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -463,14 +457,14 @@ function Set-TargetResource
             }
         }
 
-        Set-MgEntitlementManagementAccessPackageAssignmentPolicy `
+        Set-MgBetaEntitlementManagementAccessPackageAssignmentPolicy `
             -BodyParameter $UpdateParameters `
             -AccessPackageAssignmentPolicyId $currentInstance.Id
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing the access package assignment policy {$DisplayName}"
-        Remove-MgEntitlementManagementAccessPackageAssignmentPolicy -AccessPackageAssignmentPolicyId $currentInstance.Id
+        Remove-MgBetaEntitlementManagementAccessPackageAssignmentPolicy -AccessPackageAssignmentPolicyId $currentInstance.Id
     }
 }
 
@@ -659,9 +653,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
-    Select-MgProfile 'beta' -ErrorAction Stop
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -677,7 +669,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$getValue = Get-MgEntitlementManagementAccessPackageAssignmentPolicy `
+        [array]$getValue = Get-MgBetaEntitlementManagementAccessPackageAssignmentPolicy `
             -All `
             -ErrorAction Stop
 
