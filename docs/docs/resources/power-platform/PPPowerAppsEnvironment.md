@@ -5,7 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **DisplayName** | Key | String | Display name for the PowerApps environment | |
-| **Location** | Required | String | Location of the PowerApps environment. | `canada`, `unitedstates`, `europe`, `asia`, `australia`, `india`, `japan`, `unitedkingdom`, `unitedstatesfirstrelease`, `southamerica`, `france`, `usgov` |
+| **Location** | Required | String | Location of the PowerApps environment. | `canada`, `unitedstates`, `europe`, `asia`, `australia`, `india`, `japan`, `unitedkingdom`, `unitedstatesfirstrelease`, `southamerica`, `france`, `usgov`, `unitedarabemirates`, `germany`, `switzerland`, `norway`, `korea`, `southafrica` |
 | **EnvironmentSKU** | Required | String | Environment type. | `Production`, `Standard`, `Trial`, `Sandbox`, `SubscriptionBasedTrial`, `Teams`, `Developer` |
 | **Ensure** | Write | String | Only accepted value is 'Present'. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Power Platform Admin | |

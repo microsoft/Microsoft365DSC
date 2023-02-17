@@ -138,8 +138,9 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = @{
-        Name = $Name
-        Type = $Type
+        Name   = $Name
+        Type   = $Type
+        Ensure = 'Absent'
     }
 
     try
@@ -222,6 +223,7 @@ function Get-TargetResource
             CertificatePath             = $CertificatePath
             CertificateThumbprint       = $CertificateThumbprint
             Managedidentity             = $ManagedIdentity.IsPresent
+            Ensure                      = 'Present'
         }
     }
     catch
@@ -373,6 +375,12 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
+    if ($Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message "Removing SPOSearchManagedProperty {$Name}"
+        Remove-PnPSearchConfiguration -Configuration $Name -Scope Subscription
+        return
+    }
     $SearchConfigTemplatePath = Join-Path -Path $PSScriptRoot `
         -ChildPath '..\..\Dependencies\SearchConfigurationSettings.xml' `
         -Resolve
