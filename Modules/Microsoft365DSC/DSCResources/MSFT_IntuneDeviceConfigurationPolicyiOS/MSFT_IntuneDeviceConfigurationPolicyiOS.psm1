@@ -13,7 +13,7 @@ function Get-TargetResource
         [System.String]
         $Description,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -1113,7 +1113,7 @@ function Set-TargetResource
         [System.String]
         $Description,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -2055,7 +2055,7 @@ function Test-TargetResource
         [System.String]
         $Description,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -3003,6 +3003,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($getValue.Count)] $($config.displayName)" -NoNewline
             $params = @{
                 id                    = $config.id
+                displayName           = $config.displayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
