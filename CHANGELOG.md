@@ -4,6 +4,9 @@
 
 * AADEntitlementManagementAccessPackageAssignmentPolicy
   * Initial release
+* IntuneDeviceEnrollmentConfigurationWindows10
+  * Initial release
+    FIXES [#2829](https://github.com/microsoft/Microsoft365DSC/issues/2829)
 * IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
   * Initial release.
     FIXES [#2658](https://github.com/microsoft/Microsoft365DSC/issues/2658)

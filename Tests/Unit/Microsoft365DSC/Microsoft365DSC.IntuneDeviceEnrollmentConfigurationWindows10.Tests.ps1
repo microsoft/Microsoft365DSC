@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource 'IntuneDeviceManagementDeviceEnrollmentConfigurationWindows10' -GenericStubModule $GenericStubPath
+    -DscResource 'IntuneDeviceEnrollmentConfigurationWindows10' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -47,7 +47,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
         # Test contexts
-        Context -Name 'The IntuneDeviceManagementDeviceEnrollmentConfigurationWindows10 should exist but it DOES NOT' -Fixture {
+        Context -Name 'The IntuneDeviceEnrollmentConfigurationWindows10 should exist but it DOES NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
                     Id                                      = 'FakeStringValue'
@@ -85,7 +85,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'The IntuneDeviceManagementDeviceEnrollmentConfigurationWindows10 exists but it SHOULD NOT' -Fixture {
+        Context -Name 'The IntuneDeviceEnrollmentConfigurationWindows10 exists but it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
                     Id                                      = 'FakeStringValue'
@@ -109,6 +109,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
+                        Id                   = 'FakeStringValue'
+                        DisplayName          = 'FakeStringValue'
+                        Description          = 'FakeStringValue'
                         AdditionalProperties = @{
                             trackInstallProgressForAutopilotOnly    = $True
                             '@odata.type'                           = '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration'
@@ -124,11 +127,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             allowDeviceResetOnInstallFailure        = $True
                             installProgressTimeoutInMinutes         = 25
                         }
-                        Description          = 'FakeStringValue'
-                        DisplayName          = @('FakeStringValue')
-                        Id                   = @('FakeStringValue')
-                        Priority             = @('25')
-
                     }
                 }
             }
@@ -146,38 +144,39 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Should -Invoke -CommandName Remove-MgDeviceManagementDeviceEnrollmentConfiguration -Exactly 1
             }
         }
-        Context -Name 'The IntuneDeviceManagementDeviceEnrollmentConfigurationWindows10 Exists and Values are already in the desired state' -Fixture {
+        Context -Name 'The IntuneDeviceEnrollmentConfigurationWindows10 Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
+                    Id                                      = 'FakeStringValue'
+                    DisplayName                             = 'FakeStringValue'
+                    Description                             = 'FakeStringValue'
                     AllowDeviceResetOnInstallFailure        = $True
                     AllowDeviceUseOnInstallFailure          = $True
                     AllowLogCollectionOnInstallFailure      = $True
                     AllowNonBlockingAppInstallation         = $True
                     BlockDeviceSetupRetryByUser             = $True
                     CustomErrorMessage                      = 'FakeStringValue'
-                    Description                             = @('FakeStringValue')
-                    DeviceEnrollmentConfigurationType       = @('unknown')
                     DisableUserStatusTrackingAfterFirstUser = $True
-                    DisplayName                             = @('FakeStringValue')
-                    Id                                      = @('FakeStringValue')
                     InstallProgressTimeoutInMinutes         = 25
                     InstallQualityUpdates                   = $True
-                    Priority                                = @('25')
                     SelectedMobileAppIds                    = @('FakeStringValue')
-                    ShowInstallationProgress                = @('True')
-                    TrackInstallProgressForAutopilotOnly    = @('True')
+                    ShowInstallationProgress                = $True
+                    TrackInstallProgressForAutopilotOnly    = $True
                     Ensure                                  = 'Present'
                     Credential                              = $Credential
                 }
 
                 Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
-                        AdditionalProperties              = @{
-                            trackInstallProgressForAutopilotOnly    = @('True')
+                        Id                   = 'FakeStringValue'
+                        DisplayName          = 'FakeStringValue'
+                        Description          = 'FakeStringValue'
+                        AdditionalProperties = @{
+                            trackInstallProgressForAutopilotOnly    = $True
                             '@odata.type'                           = '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration'
                             disableUserStatusTrackingAfterFirstUser = $True
                             installQualityUpdates                   = $True
-                            showInstallationProgress                = @('True')
+                            showInstallationProgress                = $True
                             selectedMobileAppIds                    = @('FakeStringValue')
                             blockDeviceSetupRetryByUser             = $True
                             allowDeviceUseOnInstallFailure          = $True
@@ -187,12 +186,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             allowDeviceResetOnInstallFailure        = $True
                             installProgressTimeoutInMinutes         = 25
                         }
-                        Description                       = @('FakeStringValue')
-                        DeviceEnrollmentConfigurationType = @('unknown')
-                        DisplayName                       = @('FakeStringValue')
-                        Id                                = @('FakeStringValue')
-                        Priority                          = @('25')
-
+                        Priority             = 25
                     }
                 }
             }
@@ -203,44 +197,41 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'The IntuneDeviceManagementDeviceEnrollmentConfigurationWindows10 exists and values are NOT in the desired state' -Fixture {
+        Context -Name 'The IntuneDeviceEnrollmentConfigurationWindows10 exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
+                    Id                                      = 'FakeStringValue'
+                    DisplayName                             = 'FakeStringValue'
+                    Description                             = 'FakeStringValue'
                     AllowDeviceResetOnInstallFailure        = $True
                     AllowDeviceUseOnInstallFailure          = $True
                     AllowLogCollectionOnInstallFailure      = $True
                     AllowNonBlockingAppInstallation         = $True
                     BlockDeviceSetupRetryByUser             = $True
                     CustomErrorMessage                      = 'FakeStringValue'
-                    Description                             = @('FakeStringValue')
-                    DeviceEnrollmentConfigurationType       = @('unknown')
                     DisableUserStatusTrackingAfterFirstUser = $True
-                    DisplayName                             = @('FakeStringValue')
-                    Id                                      = @('FakeStringValue')
                     InstallProgressTimeoutInMinutes         = 25
                     InstallQualityUpdates                   = $True
-                    Priority                                = @('25')
                     SelectedMobileAppIds                    = @('FakeStringValue')
-                    ShowInstallationProgress                = @('True')
-                    TrackInstallProgressForAutopilotOnly    = @('True')
+                    ShowInstallationProgress                = $True
+                    TrackInstallProgressForAutopilotOnly    = $True
                     Ensure                                  = 'Present'
                     Credential                              = $Credential
                 }
 
                 Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
-                        AdditionalProperties              = @{
+                        Id                   = 'FakeStringValue'
+                        DisplayName          = 'FakeStringValue'
+                        Description          = 'FakeStringValue'
+                        AdditionalProperties = @{
                             installProgressTimeoutInMinutes      = 7
                             customErrorMessage                   = 'FakeStringValue'
-                            trackInstallProgressForAutopilotOnly = @('False')
+                            trackInstallProgressForAutopilotOnly = $False
                             selectedMobileAppIds                 = @('FakeStringValue')
-                            showInstallationProgress             = @('False')
+                            showInstallationProgress             = $False
                         }
-                        Description                       = @('FakeStringValue')
-                        DeviceEnrollmentConfigurationType = @('unknown')
-                        DisplayName                       = @('FakeStringValue')
-                        Id                                = @('FakeStringValue')
-                        Priority                          = @('7')
+                        Priority             = 7
                     }
                 }
             }
@@ -268,12 +259,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
-                        AdditionalProperties              = @{
-                            trackInstallProgressForAutopilotOnly    = @('True')
+                        Id                   = 'FakeStringValue'
+                        DisplayName          = 'FakeStringValue'
+                        Description          = 'FakeStringValue'
+                        AdditionalProperties = @{
+                            trackInstallProgressForAutopilotOnly    = $True
                             '@odata.type'                           = '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration'
                             disableUserStatusTrackingAfterFirstUser = $True
                             installQualityUpdates                   = $True
-                            showInstallationProgress                = @('True')
+                            showInstallationProgress                = $True
                             selectedMobileAppIds                    = @('FakeStringValue')
                             blockDeviceSetupRetryByUser             = $True
                             allowDeviceUseOnInstallFailure          = $True
@@ -283,12 +277,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             allowDeviceResetOnInstallFailure        = $True
                             installProgressTimeoutInMinutes         = 25
                         }
-                        Description                       = @('FakeStringValue')
-                        DeviceEnrollmentConfigurationType = @('unknown')
-                        DisplayName                       = @('FakeStringValue')
-                        Id                                = @('FakeStringValue')
-                        Priority                          = @('25')
-
+                        Priority             = 25
                     }
                 }
             }
