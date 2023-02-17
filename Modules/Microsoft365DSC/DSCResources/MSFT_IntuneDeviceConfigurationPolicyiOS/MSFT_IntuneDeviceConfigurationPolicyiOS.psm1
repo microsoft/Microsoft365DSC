@@ -5,6 +5,10 @@ function Get-TargetResource
     param
     (
         #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
         [Parameter()]
         [System.String]
         $Id,
@@ -12,10 +16,6 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [System.Boolean]
@@ -1105,6 +1105,10 @@ function Set-TargetResource
     param
     (
         #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
         [Parameter()]
         [System.String]
         $Id,
@@ -1112,10 +1116,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [System.Boolean]
@@ -2047,6 +2047,10 @@ function Test-TargetResource
     param
     (
         #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
         [Parameter()]
         [System.String]
         $Id,
@@ -2054,10 +2058,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [System.Boolean]

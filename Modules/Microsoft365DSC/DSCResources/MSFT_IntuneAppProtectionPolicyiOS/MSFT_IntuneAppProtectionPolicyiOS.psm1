@@ -4,13 +4,13 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter()]
-        [System.String]
-        $Identity,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
 
         [Parameter()]
         [System.String]
