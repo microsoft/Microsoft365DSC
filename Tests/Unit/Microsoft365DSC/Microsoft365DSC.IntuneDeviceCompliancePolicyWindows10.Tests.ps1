@@ -42,16 +42,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
             }
 
-            Mock -CommandName Update-MgDeviceManagementDeviceCompliancePolicy -MockWith {
+            Mock -CommandName Update-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
             }
 
-            Mock -CommandName New-MgDeviceManagementDeviceCompliancePolicy -MockWith {
+            Mock -CommandName New-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
                 return @{
                     Id = '12345-12345-12345-12345-12345'
                 }
             }
 
-            Mock -CommandName Remove-MgDeviceManagementDeviceCompliancePolicy -MockWith {
+            Mock -CommandName Remove-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
             }
 
             # Mock Write-Host to hide output during the tests
@@ -101,7 +101,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                                  = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
                     return $null
                 }
             }
@@ -116,7 +116,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create the Windows 10 Device Compliance Policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'New-MgDeviceManagementDeviceCompliancePolicy' -Exactly 1
+                Should -Invoke -CommandName 'New-MgBetaDeviceManagementDeviceCompliancePolicy' -Exactly 1
             }
         }
 
@@ -161,7 +161,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                                  = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
                     return @{
                         DisplayName          = 'Windows 10 DSC Policy'
                         Description          = 'Test policy'
@@ -216,7 +216,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the iOS Device Compliance Policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgDeviceManagementDeviceCompliancePolicy -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaDeviceManagementDeviceCompliancePolicy -Exactly 1
             }
         }
 
@@ -261,7 +261,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                                  = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
                     return @{
                         DisplayName          = 'Windows 10 DSC Policy'
                         Description          = 'Test policy'
@@ -352,7 +352,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                                  = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
                     return @{
                         DisplayName          = 'Windows 10 DSC Policy'
                         Description          = 'Test policy'
@@ -407,7 +407,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the iOS Device Compliance Policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgDeviceManagementDeviceCompliancePolicy -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaDeviceManagementDeviceCompliancePolicy -Exactly 1
             }
         }
 
@@ -418,7 +418,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
                     return @{
                         DisplayName          = 'Windows 10 DSC Policy'
                         Description          = 'Test policy'

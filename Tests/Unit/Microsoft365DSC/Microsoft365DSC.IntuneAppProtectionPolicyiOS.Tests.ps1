@@ -32,16 +32,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            Mock -CommandName New-MgDeviceAppManagementiosManagedAppProtection -MockWith {
+            Mock -CommandName New-MgBetaDeviceAppManagementiosManagedAppProtection -MockWith {
                 return @{
                     id = '12345-12345-12345-12345-12345'
                 }
             }
 
-            Mock -CommandName Update-MgDeviceAppManagementiosManagedAppProtection -MockWith {
+            Mock -CommandName Update-MgBetaDeviceAppManagementiosManagedAppProtection -MockWith {
             }
 
-            Mock -CommandName Remove-MgDeviceAppManagementiosManagedAppProtection -MockWith {
+            Mock -CommandName Remove-MgBetaDeviceAppManagementiosManagedAppProtection -MockWith {
             }
 
             Mock -CommandName Update-IntuneAppProtectionPolicyiOSAssignment -MockWith {
@@ -97,7 +97,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SaveAsBlocked                           = $True
                     SimplePinBlocked                        = $False
                 }
-                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtection -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementiosManagedAppProtection -MockWith {
                     return $null
                 }
             }
@@ -112,7 +112,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create the Policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'New-MgDeviceAppManagementiosManagedAppProtection' -Exactly 1
+                Should -Invoke -CommandName 'New-MgBetaDeviceAppManagementiosManagedAppProtection' -Exactly 1
             }
         }
 
@@ -159,7 +159,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                                = '12345-12345-12345-12345-12345'
                 }
 
-                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtection -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementiosManagedAppProtection -MockWith {
                     return @{
                         '@odata.type'                           = '#microsoft.graph.iosManagedAppProtection'
                         AllowedDataStorageLocations             = @('sharePoint')
@@ -197,7 +197,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         id                                      = '12345-12345-12345-12345-12345'
                     }
                 }
-                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtectionApp -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementiosManagedAppProtectionApp -MockWith {
                     return @(
                         @{
                             id                  = 'com.cisco.jabberimintune.ios.ios'
@@ -257,7 +257,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the App Configuration Policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgDeviceAppManagementiosManagedAppProtection -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaDeviceAppManagementiosManagedAppProtection -Exactly 1
             }
         }
 
@@ -304,7 +304,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                                = '12345-12345-12345-12345-12345'
                 }
 
-                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtection -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementiosManagedAppProtection -MockWith {
                     return @{
                         '@odata.type'                           = '#microsoft.graph.iosManagedAppProtection'
                         AllowedDataStorageLocations             = @('sharePoint')
@@ -342,7 +342,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         id                                      = '12345-12345-12345-12345-12345'
                     }
                 }
-                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtectionApp -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementiosManagedAppProtectionApp -MockWith {
                     return @(
                         @{
                             id                  = 'com.cisco.jabberimintune.ios.ios'
@@ -440,7 +440,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                                = '12345-12345-12345-12345-12345'
                 }
 
-                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtection -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementiosManagedAppProtection -MockWith {
                     return @{
                         '@odata.type'                           = '#microsoft.graph.iosManagedAppProtection'
                         AllowedDataStorageLocations             = @('sharePoint')
@@ -478,7 +478,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         id                                      = '12345-12345-12345-12345-12345'
                     }
                 }
-                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtectionApp -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementiosManagedAppProtectionApp -MockWith {
                     return @(
                         @{
                             id                  = 'com.cisco.jabberimintune.ios.ios'
@@ -538,7 +538,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the App Configuration Policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgDeviceAppManagementiosManagedAppProtection -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaDeviceAppManagementiosManagedAppProtection -Exactly 1
             }
         }
 
@@ -549,7 +549,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtection -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementiosManagedAppProtection -MockWith {
                     return @{
                         '@odata.type'                           = '#microsoft.graph.iosManagedAppProtection'
                         AllowedDataStorageLocations             = @('sharePoint')
@@ -587,7 +587,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         id                                      = '12345-12345-12345-12345-12345'
                     }
                 }
-                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtectionApp -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementiosManagedAppProtectionApp -MockWith {
                     return @(
                         @{
                             id                  = 'com.cisco.jabberimintune.ios.ios'

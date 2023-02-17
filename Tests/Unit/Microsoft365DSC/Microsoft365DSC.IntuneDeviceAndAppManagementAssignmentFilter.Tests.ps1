@@ -39,13 +39,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            Mock -CommandName Update-MgDeviceManagementAssignmentFilter -MockWith {
+            Mock -CommandName Update-MgBetaDeviceManagementAssignmentFilter -MockWith {
             }
 
-            Mock -CommandName New-MgDeviceManagementAssignmentFilter -MockWith {
+            Mock -CommandName New-MgBetaDeviceManagementAssignmentFilter -MockWith {
             }
 
-            Mock -CommandName Remove-MgDeviceManagementAssignmentFilter -MockWith {
+            Mock -CommandName Remove-MgBetaDeviceManagementAssignmentFilter -MockWith {
             }
 
             # Mock Write-Host to hide output during the tests
@@ -65,7 +65,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementAssignmentFilter -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementAssignmentFilter -MockWith {
                     return $null
                 }
             }
@@ -80,7 +80,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create the Android Device Compliance Policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'New-MgDeviceManagementAssignmentFilter' -Exactly 1
+                Should -Invoke -CommandName 'New-MgBetaDeviceManagementAssignmentFilter' -Exactly 1
             }
         }
 
@@ -95,7 +95,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementAssignmentFilter -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementAssignmentFilter -MockWith {
                     return @{
                         Description = 'Test'
                         DisplayName = 'Test Device Filter'
@@ -115,7 +115,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the iOS Device Compliance Policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Update-MgDeviceManagementAssignmentFilter' -Exactly 1
+                Should -Invoke -CommandName 'Update-MgBetaDeviceManagementAssignmentFilter' -Exactly 1
             }
         }
 
@@ -130,7 +130,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementAssignmentFilter -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementAssignmentFilter -MockWith {
                     return @{
                         Description = 'Test'
                         DisplayName = 'Test Device Filter'
@@ -156,7 +156,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementAssignmentFilter -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementAssignmentFilter -MockWith {
                     return @{
                         Description = 'Test'
                         DisplayName = 'Test Device Filter'
@@ -176,7 +176,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the iOS Device Compliance Policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Remove-MgDeviceManagementAssignmentFilter' -Exactly 1
+                Should -Invoke -CommandName 'Remove-MgBetaDeviceManagementAssignmentFilter' -Exactly 1
             }
         }
 
@@ -187,7 +187,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementAssignmentFilter -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementAssignmentFilter -MockWith {
                     return @{
                         Description = 'Test'
                         DisplayName = 'Test Device Filter'

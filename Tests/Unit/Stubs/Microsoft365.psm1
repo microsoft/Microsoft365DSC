@@ -18589,7 +18589,55 @@ function New-MgBetaDirectorySetting
     param(
         [Parameter()]
         [PSObject]
-        $Values
+        $Values,
+
+        [Parameter()]
+        [System.String]
+        $TemplateId,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
     )
 }
 function Remove-MgBetaDevice
@@ -18941,8 +18989,64 @@ function Update-MgBetaDirectorySetting
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.String]
+        $DirectorySettingId,
+
+        [Parameter()]
         [PSObject]
-        $Values
+        $Values,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $TemplateId,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
     )
 }
 #endregion
@@ -38068,7 +38172,23 @@ function Set-PnPUserProfileProperty
     param(
         [Parameter()]
         [System.String[]]
-        $Values
+        $Values,
+
+        [Parameter()]
+        [System.String]
+        $Value,
+
+        [Parameter()]
+        [System.String]
+        $Account,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.String]
+        $PropertyName
     )
 }
 function Unregister-PnPHubSite

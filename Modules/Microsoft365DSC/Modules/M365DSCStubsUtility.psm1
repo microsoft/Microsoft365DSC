@@ -93,20 +93,6 @@ function New-M365DSCStubFiles
             $cmdlets += Get-Command -CommandType 'Function' -Module $CurrentModuleName
         }
 
-        if ($Module.Name -eq 'MicrosoftGraph')
-        {
-            $MaximumFunctionCount = 32000
-            $betaCmdlets = Get-Command -CommandType 'Cmdlet' -Module $CurrentModuleName
-            $betaCmdlets += Get-Command -CommandType 'Function' -Module $CurrentModuleName
-            foreach ($cmdlet in $betaCmdlets)
-            {
-                if ($cmdlets.Name -notcontains $cmdlet.Name)
-                {
-                    $cmdlets += $cmdlet
-                }
-            }
-        }
-
         try
         {
             $aliases = Get-Command -CommandType 'Alias' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
@@ -171,18 +157,18 @@ function New-M365DSCStubFiles
                 $invalidTypes = @('ActionPreference')
 
                 $foundParamNames = @()
-                foreach ($param in $parameters.Values)
+                foreach ($key in $parameters.Keys)
                 {
-                    Write-Verbose -Message "    --> $($param.Name)"
-                    if ($foundParamNames -notcontains $param.Name)
+                    Write-Verbose -Message "    --> $($parameters.$key.Name)"
+                    if ($foundParamNames -notcontains $parameters.$key.Name)
                     {
-                        $foundParamNames += $param.Name
-                        if ($param.ParameterType.Name -notin $invalidTypes -and `
-                                $param.Name -notin $invalidParameters -and `
-                                -not [System.String]::IsNullOrEmpty($param.Name))
+                        $foundParamNames += $parameters.$key.Name
+                        if ($parameters.$key.ParameterType.Name -notin $invalidTypes -and `
+                        $parameters.$key.Name -notin $invalidParameters -and `
+                                -not [System.String]::IsNullOrEmpty($parameters.$key.Name))
                         {
                             $StubContent += "        [Parameter()]`r`n"
-                            $ParamType = $param.ParameterType.ToString()
+                            $ParamType = $parameters.$key.ParameterType.ToString()
                             if ($ParamType -eq 'System.Collections.Generic.List`1[System.String]')
                             {
                                 $ParamType = 'System.String[]'
@@ -208,7 +194,7 @@ function New-M365DSCStubFiles
                                 $ParamType = 'PSObject'
                             }
                             $StubContent += "        [$ParamType]`r`n"
-                            $StubContent += "        `$$($param.Name),`r`n`r`n"
+                            $StubContent += "        `$$($parameters.$key.Name),`r`n`r`n"
                         }
                     }
                 }

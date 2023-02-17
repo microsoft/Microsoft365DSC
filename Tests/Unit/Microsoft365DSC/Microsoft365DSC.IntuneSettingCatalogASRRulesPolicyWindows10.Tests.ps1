@@ -47,10 +47,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Update-IntuneDeviceConfigurationPolicy -MockWith {
             }
 
-            Mock -CommandName Remove-MgDeviceManagementConfigurationPolicy -MockWith {
+            Mock -CommandName Remove-MgBetaDeviceManagementConfigurationPolicy -MockWith {
             }
 
-            Mock -CommandName Get-MgDeviceManagementConfigurationPolicyTemplate -MockWith {
+            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyTemplate -MockWith {
                 return @{
                     TemplateId = 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
                 }
@@ -77,19 +77,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                                                          = 'a90ca9bc-8a68-4901-a991-dafaa633b034'
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
                     return $null
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicySetting -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
                     return $null
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicyAssignment -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignment -MockWith {
                     return @()
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicyTemplateSettingTemplate -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate -MockWith {
                     return @(
                         @{
                             id                      = '0'
@@ -176,7 +176,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                                                          = '12345-12345-12345-12345-12345'
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
                     return @{
                         Id          = '12345-12345-12345-12345-12345'
                         Description = 'My Test'
@@ -184,7 +184,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicySetting -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
                     return @{
                         id                   = '0'
                         SettingDefinitions   = $null
@@ -239,11 +239,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicyAssignment -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignment -MockWith {
                     return @()
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicyTemplateSettingTemplate -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate -MockWith {
                     return @(
                         @{
                             id                      = '0'
@@ -330,7 +330,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                                                          = '12345-12345-12345-12345-12345'
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
                     return @{
                         Id          = '12345-12345-12345-12345-12345'
                         Description = 'My Test'
@@ -338,7 +338,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicySetting -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
                     return @{
                         id                   = '0'
                         SettingDefinitions   = $null
@@ -393,11 +393,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicyAssignment -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignment -MockWith {
                     return @()
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicyTemplateSettingTemplate -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate -MockWith {
                     return @(
                         @{
                             id                      = '0'
@@ -475,7 +475,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                                                          = '12345-12345-12345-12345-12345'
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
                     return @{
                         Id          = '12345-12345-12345-12345-12345'
                         Description = 'My Test'
@@ -483,7 +483,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicySetting -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
                     return @{
                         id                   = '0'
                         SettingDefinitions   = $null
@@ -538,11 +538,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicyAssignment -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignment -MockWith {
                     return @()
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicyTemplateSettingTemplate -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate -MockWith {
                     return @(
                         @{
                             id                      = '0'
@@ -611,7 +611,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgDeviceManagementConfigurationPolicy -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaDeviceManagementConfigurationPolicy -Exactly 1
             }
         }
 
@@ -621,7 +621,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
                     return @{
                         Id          = '12345-12345-12345-12345-12345'
                         Description = 'My Test'
@@ -629,7 +629,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicySetting -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
                     return @{
                         id                   = '0'
                         SettingDefinitions   = $null
@@ -684,11 +684,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicyAssignment -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignment -MockWith {
                     return @()
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicyTemplateSettingTemplate -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate -MockWith {
                     return @(
                         @{
                             id                      = '0'

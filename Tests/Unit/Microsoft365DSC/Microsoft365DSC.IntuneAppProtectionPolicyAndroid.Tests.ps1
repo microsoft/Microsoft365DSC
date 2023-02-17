@@ -191,19 +191,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            Mock -CommandName New-MgDeviceAppMgtAndroidManagedAppProtection -MockWith {
+            Mock -CommandName New-MgBetaDeviceAppMgtAndroidManagedAppProtection -MockWith {
             }
 
-            Mock -CommandName Update-MgDeviceAppMgtAndroidManagedAppProtection -MockWith {
+            Mock -CommandName Update-MgBetaDeviceAppMgtAndroidManagedAppProtection -MockWith {
             }
 
             Mock -CommandName Invoke-MgTargetDeviceAppMgtTargetedManagedAppConfigurationApp -MockWith {
             }
 
-            Mock -CommandName set-MgDeviceAppMgtTargetedManagedAppConfiguration -MockWith {
+            Mock -CommandName set-MgBetaDeviceAppMgtTargetedManagedAppConfiguration -MockWith {
             }
 
-            Mock -CommandName Remove-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
+            Mock -CommandName Remove-MgBetaDeviceAppManagementAndroidManagedAppProtection -MockWith {
             }
 
             # Mock Write-Host to hide output during the tests
@@ -216,7 +216,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = get-DefaultTestParams
                 $Global:Count = 0
-                Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementAndroidManagedAppProtection -MockWith {
                     if ($Global:Count -le 1)
                     {
                         $Global:Count++
@@ -227,7 +227,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         return Get-DefaultReturnObj
                     }
                 }
-                Mock -CommandName New-MgDeviceAppMgtAndroidManagedAppProtection -MockWith {
+                Mock -CommandName New-MgBetaDeviceAppMgtAndroidManagedAppProtection -MockWith {
                     return Get-DefaultReturnObj
                 }
             }
@@ -244,7 +244,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should create the Policy from the Set method' {
                 $Global:Count = 0
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'New-MgDeviceAppMgtAndroidManagedAppProtection' -Exactly 1
+                Should -Invoke -CommandName 'New-MgBetaDeviceAppMgtAndroidManagedAppProtection' -Exactly 1
             }
         }
 
@@ -254,7 +254,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams.FingerprintBlocked = $true #Drift
 
 
-                Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementAndroidManagedAppProtection -MockWith {
                     return Get-DefaultReturnObj
                 }
             }
@@ -269,7 +269,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the App Configuration Policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgDeviceAppMgtAndroidManagedAppProtection -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaDeviceAppMgtAndroidManagedAppProtection -Exactly 1
             }
         }
 
@@ -277,7 +277,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = get-DefaultTestParams
 
-                Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementAndroidManagedAppProtection -MockWith {
                     return Get-DefaultReturnObj
                 }
             }
@@ -292,7 +292,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = get-DefaultTestParams
                 $testParams.Ensure = 'Absent'
 
-                Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementAndroidManagedAppProtection -MockWith {
                     return Get-DefaultReturnObj
                 }
             }
@@ -307,7 +307,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the App Configuration Policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgDeviceAppManagementAndroidManagedAppProtection -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaDeviceAppManagementAndroidManagedAppProtection -Exactly 1
             }
         }
 
@@ -318,7 +318,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementAndroidManagedAppProtection -MockWith {
                     return Get-DefaultReturnObj
                 }
             }

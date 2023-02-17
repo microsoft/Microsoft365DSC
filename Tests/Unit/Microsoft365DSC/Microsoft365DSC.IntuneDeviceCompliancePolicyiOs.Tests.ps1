@@ -37,16 +37,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            Mock -CommandName Update-MgDeviceManagementDeviceCompliancePolicy -MockWith {
+            Mock -CommandName Update-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
             }
 
-            Mock -CommandName New-MgDeviceManagementDeviceCompliancePolicy -MockWith {
+            Mock -CommandName New-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
             }
 
-            Mock -CommandName Remove-MgDeviceManagementDeviceCompliancePolicy -MockWith {
+            Mock -CommandName Remove-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
             }
 
-            Mock -CommandName Get-MGDeviceManagementDeviceCompliancePolicyAssignment -MockWith {
+            Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicyAssignment -MockWith {
 
                 return @()
             }
@@ -80,7 +80,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                                  = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
                     return $null
                 }
             }
@@ -95,7 +95,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create the iOS Device Compliance Policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'New-MgDeviceManagementDeviceCompliancePolicy' -Exactly 1
+                Should -Invoke -CommandName 'New-MgBetaDeviceManagementDeviceCompliancePolicy' -Exactly 1
             }
         }
 
@@ -122,7 +122,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                                  = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
                     return @{
                         DisplayName          = 'Test iOS Device Compliance Policy'
                         Description          = 'Different Value'
@@ -159,7 +159,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the iOS Device Compliance Policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgDeviceManagementDeviceCompliancePolicy -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaDeviceManagementDeviceCompliancePolicy -Exactly 1
             }
         }
 
@@ -186,7 +186,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                                  = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
                     return @{
                         DisplayName          = 'Test iOS Device Compliance Policy'
                         Description          = 'Test iOS Device Compliance Policy Description'
@@ -241,7 +241,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                                  = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
                     return @{
                         DisplayName          = 'Test iOS Device Compliance Policy'
                         Description          = 'Test iOS Device Compliance Policy Description'
@@ -278,7 +278,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the iOS Device Compliance Policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgDeviceManagementDeviceCompliancePolicy -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaDeviceManagementDeviceCompliancePolicy -Exactly 1
             }
         }
 
@@ -289,7 +289,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
                     return @{
                         DisplayName          = 'Test iOS Device Compliance Policy'
                         Description          = 'Test iOS Device Compliance Policy Description'
