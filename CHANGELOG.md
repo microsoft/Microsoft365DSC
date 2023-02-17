@@ -3,6 +3,8 @@
 
 # UNRELEASED
 
+* AADEntitlementManagementAccessPackageAssignmentPolicy
+  * Initial release
 * PPPowerAppsEnvironment
   * Added all the latest location return from Get-AdminPowerAppEnvironmentLocations
 * MISC
