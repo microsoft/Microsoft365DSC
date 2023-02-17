@@ -4,13 +4,58 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        #region resource generator code
-<ParameterBlock><AssignmentsParam>        #endregion
-
         [Parameter(Mandatory = $true)]
         [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $AccessPackageId,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $AccessReviewSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $CanExtend,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $DurationInDays,
+
+        [Parameter()]
+        [system.datetimeoffset]
+        $ExpirationDateTime,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Questions,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $RequestApprovalSettings,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $RequestorSettings,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $CustomExtensionHandlers,
+
+        [Parameter()]
+        [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -39,11 +84,12 @@ function Get-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload '<#Workload#>' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
-            -ProfileName '<#APIVersion#>'
+            -ProfileName 'beta'
 
-        Select-MgProfile -Name '<#APIVersion#>'
+        Select-MgProfile 'beta'
+
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
 
@@ -59,34 +105,193 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
         $nullResult.Ensure = 'Absent'
 
-        $getValue = $null<#ResourceGenerator
-        #region resource generator code
-        $getValue = <GetCmdLetName> <getKeyIdentifier> -ErrorAction SilentlyContinue
+        $getValue = $null
+        $getValue = Get-MgEntitlementManagementAccessPackageAssignmentPolicy `
+            -AccessPackageAssignmentPolicyId $id `
+            -ExpandProperty "customExtensionHandlers(`$expand=customExtension)" `
+            -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>}"
-
-            if(-Not [string]::IsNullOrEmpty($<FilterKey>))
-            {
-                $getValue = <GetCmdLetName> `
-<AlternativeFilter>
-            }
+            Write-Verbose -Message "The access package assignment policy with id {$id} was not found"
+            $getValue = Get-MgEntitlementManagementAccessPackageAssignmentPolicy `
+                -DisplayNameEq $DisplayName `
+                -ExpandProperty "customExtensionHandlers(`$expand=customExtension)" `
+                -ErrorAction SilentlyContinue
         }
-        #endregionResourceGenerator#>
+
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an <ResourceDescription> with <FilterKey> {$<FilterKey>}"
+            Write-Verbose -Message "The access package assignment policy with displayName {$DisplayName} was not found"
             return $nullResult
         }
-        $<PrimaryKey> = $getValue.<PrimaryKey>
-        Write-Verbose -Message "An <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>} was found."<#ResourceGenerator
-<ComplexTypeConstructor><EnumTypeConstructor><DateTypeConstructor><TimeTypeConstructor>ResourceGenerator#>
-        $results = @{<#ResourceGenerator
-            #region resource generator code
-<HashTableMapping>            #endregionResourceGenerator#>
+
+        Write-Verbose -Message "Found access package assignment policy with id {$($getValue.Id)} and DisplayName {$DisplayName}"
+
+        #region Format AccessReviewSettings
+        $formattedAccessReviewSettings=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.AccessReviewSettings
+        if($null -ne $formattedAccessReviewSettings)
+        {
+            $formattedAccessReviewSettings.remove('additionalProperties')
         }
-<#ComplexTypeContent#><#AssignmentsGet#>
+        if ($null -ne $formattedAccessReviewSettings.Reviewers -and  $formattedAccessReviewSettings.Reviewers.count -gt 0 )
+        {
+            foreach($setting in $formattedAccessReviewSettings.Reviewers)
+            {
+                $setting.add('odataType',$setting.AdditionalProperties."@odata.type")
+                if(-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
+                {
+                    $setting.add('Id',$setting.AdditionalProperties.id)
+                }
+                if(-not [String]::isNullOrEmpty($setting.AdditionalProperties.managerLevel))
+                {
+                    $setting.add('ManagerLevel',$setting.AdditionalProperties.managerLevel)
+                }
+                $setting.remove('additionalProperties')
+            }
+        }
+        #endregion
+
+        #region Format RequestApprovalSettings
+        $formattedRequestApprovalSettings=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.RequestApprovalSettings
+        if($null -ne $formattedRequestApprovalSettings)
+        {
+            $formattedRequestApprovalSettings.remove('additionalProperties')
+        }
+        if ($null -ne $formattedRequestApprovalSettings.approvalStages -and  $formattedRequestApprovalSettings.approvalStages.count -gt 0 )
+        {
+            foreach($approvalStage in $formattedRequestApprovalSettings.approvalStages)
+            {
+                if($null -ne $approvalStage.PrimaryApprovers -and $approvalStage.PrimaryApprovers.count -gt 0)
+                {
+                    foreach($setting in $approvalStage.PrimaryApprovers)
+                    {
+                        $setting.add('odataType',$setting.AdditionalProperties."@odata.type")
+                        if(-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
+                        {
+                            $setting.add('Id',$setting.AdditionalProperties.id)
+                        }
+                        if(-not [String]::isNullOrEmpty($setting.AdditionalProperties.managerLevel))
+                        {
+                            $setting.add('ManagerLevel',$setting.AdditionalProperties.managerLevel)
+                        }
+                        $setting.remove('additionalProperties')
+                    }
+                }
+
+                if($null -ne $approvalStage.EscalationApprovers -and $approvalStage.EscalationApprovers.count -gt 0)
+                {
+                    foreach($setting in $approvalStage.EscalationApprovers)
+                    {
+                        $setting.add('odataType',$setting.AdditionalProperties."@odata.type")
+                        if(-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
+                        {
+                            $setting.add('Id',$setting.AdditionalProperties.id)
+                        }
+                        if(-not [String]::isNullOrEmpty($setting.AdditionalProperties.managerLevel))
+                        {
+                            $setting.add('ManagerLevel',$setting.AdditionalProperties.managerLevel)
+                        }
+                        $setting.remove('additionalProperties')
+                    }
+                }
+                $approvalStage.remove('additionalProperties')
+            }
+        }
+        #endregion
+
+        #region Format RequestorSettings
+        $formattedRequestorSettings=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.RequestorSettings
+        if($null -ne $formattedRequestorSettings)
+        {
+            $formattedRequestorSettings.remove('additionalProperties')
+        }
+        if ($null -ne $formattedRequestorSettings.allowedRequestors -and  $formattedRequestorSettings.allowedRequestors.count -gt 0 )
+        {
+            foreach($setting in $formattedRequestorSettings.allowedRequestors)
+            {
+                $setting.add('odataType',$setting.AdditionalProperties."@odata.type")
+                if(-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
+                {
+                    $setting.add('Id',$setting.AdditionalProperties.id)
+                }
+                if(-not [String]::isNullOrEmpty($setting.AdditionalProperties.managerLevel))
+                {
+                    $setting.add('ManagerLevel',$setting.AdditionalProperties.managerLevel)
+                }
+                $setting.remove('additionalProperties')
+            }
+        }
+        #endregion
+
+        #region Format Questions
+        $formattedQuestions=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.Questions
+        foreach ($question in $formattedQuestions)
+        {
+            $question.add("odataType",$question.AdditionalProperties."@odata.type")
+            if ($null -ne $question.Text)
+            {
+                $question.add("QuestionText", $question.Text)
+                $question.remove("Text")
+                $question.QuestionText.remove('additionalProperties')
+                foreach ($localizedText in $question.QuestionText.localizedTexts)
+                {
+                    $localizedText.remove('additionalProperties')
+                }
+            }
+            if ($null -ne $question.AdditionalProperties.isSingleLineQuestion)
+            {
+                $question.add("IsSingleLineQuestion",$question.AdditionalProperties.isSingleLineQuestion)
+            }
+            if ($null -ne $question.AdditionalProperties.choices)
+            {
+                $question.add("Choices",[Array]$question.AdditionalProperties.choices)
+            }
+            if ($null -ne $question.AdditionalProperties.allowsMultipleSelection)
+            {
+                $question.add("AllowsMultipleSelection",$question.AdditionalProperties.allowsMultipleSelection)
+            }
+            $question.remove('additionalProperties')
+        }
+        #endregion
+
+        #region Format CustomExtensionHandlers
+        $formattedCustomExtensionHandlers=@()
+        foreach ($customExtensionHandler in $getValue.CustomExtensionHandlers)
+        {
+            $customExt=@{
+                Id = $customExtensionHandler.Id
+                Stage = $customExtensionHandler.Stage
+                CustomExtension= @{
+                    Id = $customExtensionHandler.CustomExtension.Id
+                }
+            }
+            $formattedCustomExtensionHandlers += $customExt
+        }
+        #endregion
+
+        $results = @{
+            Id                      = $getValue.Id
+            AccessPackageId         = $getValue.AccessPackageId
+            AccessReviewSettings    = $formattedAccessReviewSettings
+            CanExtend               = $getValue.CanExtend
+            CustomExtensionHandlers = $formattedCustomExtensionHandlers
+            Description             = $getValue.Description
+            DisplayName             = $getValue.DisplayName
+            DurationInDays          = $getValue.DurationInDays
+            ExpirationDateTime      = $getValue.ExpirationDateTime
+            Questions               = $formattedQuestions
+            RequestApprovalSettings = $formattedRequestApprovalSettings
+            RequestorSettings       = $formattedRequestorSettings
+            Ensure                  = 'Present'
+            Credential              = $Credential
+            ApplicationId           = $ApplicationId
+            TenantId                = $TenantId
+            ApplicationSecret       = $ApplicationSecret
+            CertificateThumbprint   = $CertificateThumbprint
+            ManagedIdentity         = $ManagedIdentity.IsPresent
+        }
+
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -106,12 +311,58 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        #region resource generator code
-<ParameterBlock><AssignmentsParam>        #endregion
         [Parameter(Mandatory = $true)]
         [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $AccessPackageId,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $AccessReviewSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $CanExtend,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $DurationInDays,
+
+        [Parameter()]
+        [system.datetimeoffset]
+        $ExpirationDateTime,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Questions,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $RequestApprovalSettings,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $RequestorSettings,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $CustomExtensionHandlers,
+
+        [Parameter()]
+        [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -137,6 +388,12 @@ function Set-TargetResource
         [Switch]
         $ManagedIdentity
     )
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'beta'
+
+    Select-MgProfile 'beta' -ErrorAction Stop
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -163,51 +420,57 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating an <ResourceDescription> with <FilterKey> {$DisplayName}"
-<#AssignmentsRemove#>
+        Write-Verbose -Message "Creating a new access package assignment policy {$DisplayName}"
+
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
+
         $CreateParameters.Remove('Id') | Out-Null
+        $CreateParameters.Remove('Verbose') | Out-Null
 
         $keys=(([Hashtable]$CreateParameters).clone()).Keys
         foreach($key in $keys)
         {
+            $keyValue= $CreateParameters.$key
             if($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like "*cimInstance*")
             {
-                $CreateParameters.$key= Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
+                $keyValue= Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
+                $CreateParameters.$key=$keyValue
             }
-        }<#ResourceGenerator
-        #region resource generator code
-<NewDataType>        $policy=<NewCmdLetName> <#NewKeyIdentifier#>
-<#AssignmentsNew#>        #endregionResourceGenerator#>
+        }
+
+        New-MgEntitlementManagementAccessPackageAssignmentPolicy `
+            -BodyParameter $CreateParameters
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}"
-<#AssignmentsRemove#>
+        Write-Verbose -Message "Updating the access package assignment policy {$DisplayName}"
+
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
         $UpdateParameters.Remove('Id') | Out-Null
+        $UpdateParameters.Remove('Verbose') | Out-Null
 
         $keys=(([Hashtable]$UpdateParameters).clone()).Keys
         foreach($key in $keys)
         {
+            $keyValue= $UpdateParameters.$key
             if($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like "*cimInstance*")
             {
-                $UpdateParameters.$key= Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
+                $keyValue= Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
+                $UpdateParameters.$key=$keyValue
             }
-        }<#ResourceGenerator
-        #region resource generator code
-<UpdateDataType>        <UpdateCmdLetName> <#UpdateKeyIdentifier#>
-<#AssignmentsUpdate#>        #endregionResourceGenerator#>
+        }
+
+        Set-MgEntitlementManagementAccessPackageAssignmentPolicy `
+            -BodyParameter $UpdateParameters `
+            -AccessPackageAssignmentPolicyId $currentInstance.Id
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}" <#ResourceGenerator
-        #region resource generator code
-        <RemoveCmdLetName> <#removeKeyIdentifier#>
-        #endregionResourceGenerator#>
+        Write-Verbose -Message "Removing the access package assignment policy {$DisplayName}"
+        Remove-MgEntitlementManagementAccessPackageAssignmentPolicy -AccessPackageAssignmentPolicyId $currentInstance.Id
     }
 }
 
@@ -217,13 +480,58 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        #region resource generator code
-<ParameterBlock><AssignmentsParam>        #endregion
-
         [Parameter(Mandatory = $true)]
         [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $AccessPackageId,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $AccessReviewSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $CanExtend,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $DurationInDays,
+
+        [Parameter()]
+        [system.datetimeoffset]
+        $ExpirationDateTime,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Questions,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $RequestApprovalSettings,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $RequestorSettings,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $CustomExtensionHandlers,
+
+        [Parameter()]
+        [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -262,39 +570,38 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>}"
+    Write-Verbose -Message "Testing the configuration of the access package policy assignment with {$id}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    if($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
     }
-    $testResult = $true
+    $testResult=$true
 
     #Compare Cim instances
-    foreach ($key in $PSBoundParameters.Keys)
+    foreach($key in $PSBoundParameters.Keys)
     {
-        $source = $PSBoundParameters.$key
-        $target = $CurrentValues.$key
-        if ($source.getType().Name -like '*CimInstance*')
+        $source=$PSBoundParameters.$key
+        $target=$CurrentValues.$key
+        if($source.getType().Name -like "*CimInstance*")
         {
-            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
+            $source=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
 
-            $testResult = Compare-M365DSCComplexObject `
+            $testResult=Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
 
-            if (-Not $testResult)
+            if(-Not $testResult)
             {
-                $testResult = $false
+                $testResult=$false
                 break;
             }
 
-            $ValuesToCheck.Remove($key) | Out-Null
-
+            $ValuesToCheck.Remove($key)|Out-Null
         }
     }
 
@@ -302,6 +609,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -311,7 +619,7 @@ function Test-TargetResource
         $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
             -Source $($MyInvocation.MyCommand.Source) `
             -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
+            -ValuesToCheck $ValuesToCheck.Keys -verbose
     }
 
     Write-Verbose -Message "Test-TargetResource returned $testResult"
@@ -350,9 +658,10 @@ function Export-TargetResource
         $ManagedIdentity
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload '<#Workload#>' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName '<#APIVersion#>'
+        -ProfileName 'beta'
+    Select-MgProfile 'beta' -ErrorAction Stop
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -367,9 +676,10 @@ function Export-TargetResource
     #endregion
 
     try
-    {<#ResourceGenerator
-        #region resource generator code
-<exportGetCommand>        #endregionResourceGenerator#>
+    {
+        [array]$getValue = Get-MgEntitlementManagementAccessPackageAssignmentPolicy `
+            -All `
+            -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
@@ -383,14 +693,14 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
-            $displayedKey = $config.<PrimaryKey>
-            if (-not [String]::IsNullOrEmpty($config.displayName))
+            $displayedKey=$config.id
+            if(-not [String]::IsNullOrEmpty($config.displayName))
             {
-                $displayedKey = $config.displayName
+                $displayedKey=$config.displayName
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                <PrimaryKey>                    = $config.<PrimaryKey>
+                id                    = $config.id
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -403,13 +713,173 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-<#ConvertComplexToString#><#AssignmentsConvertComplexToString#>
+
+            if ($null -ne $Results.AccessReviewSettings)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.AccessReviewSettings -CIMInstanceName MicrosoftGraphassignmentreviewsettings
+                if ($complexTypeStringResult)
+                {
+                    $Results.AccessReviewSettings = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('AccessReviewSettings') | Out-Null
+                }
+            }
+            if ($null -ne $Results.Questions)
+            {
+                $complexMapping=@(
+                    @{
+                        Name="QuestionText"
+                        CimInstanceName="MicrosoftGraphaccessPackageLocalizedContent"
+                        IsRequired=$false
+                    }
+                    @{
+                        Name="Choices"
+                        CimInstanceName="MicrosoftGraphaccessPackageAnswerChoice"
+                        IsRequired=$false
+                    }
+                    @{
+                        Name="DisplayValue"
+                        CimInstanceName="MicrosoftGraphaccessPackageLocalizedContent"
+                        IsRequired=$false
+                    }
+                    @{
+                        Name="localizedTexts"
+                        CimInstanceName="MicrosoftGraphaccessPackageLocalizedText"
+                        IsRequired=$false
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Questions `
+                    -CIMInstanceName MicrosoftGraphaccesspackagequestion `
+                    -ComplexTypeMapping $complexMapping
+
+                if ($complexTypeStringResult)
+                {
+                    $Results.Questions = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Questions') | Out-Null
+                }
+            }
+            if ($null -ne $Results.RequestApprovalSettings)
+            {
+                $complexMapping=@(
+                    @{
+                        Name="ApprovalStages"
+                        CimInstanceName="MicrosoftGraphapprovalstage1"
+                        IsRequired=$false
+                    }
+                    @{
+                        Name="PrimaryApprovers"
+                        CimInstanceName="MicrosoftGraphuserset"
+                        IsRequired=$false
+                    }
+                    @{
+                        Name="EscalationApprovers"
+                        CimInstanceName="MicrosoftGraphuserset"
+                        IsRequired=$false
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.RequestApprovalSettings `
+                    -CIMInstanceName MicrosoftGraphapprovalsettings `
+                    -ComplexTypeMapping $complexMapping
+                if ($complexTypeStringResult)
+                {
+                    $Results.RequestApprovalSettings = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('RequestApprovalSettings') | Out-Null
+                }
+            }
+            if ($null -ne $Results.RequestorSettings)
+            {
+                $complexMapping=@(
+                    @{
+                        Name="AllowedRequestors"
+                        CimInstanceName="MicrosoftGraphuserset"
+                        IsRequired=$false
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.RequestorSettings `
+                    -CIMInstanceName MicrosoftGraphrequestorsettings `
+                    -ComplexTypeMapping $complexMapping
+
+                if ($complexTypeStringResult)
+                {
+                    $Results.RequestorSettings = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('RequestorSettings') | Out-Null
+                }
+            }
+            if ($null -ne $Results.CustomExtensionHandlers )
+            {
+                $complexMapping=@(
+                    @{
+                        Name="AuthenticationConfiguration"
+                        CimInstanceName="MicrosoftGraphcustomextensionauthenticationconfiguration"
+                        IsRequired=$false
+                    }
+                    @{
+                        Name="ClientConfiguration"
+                        CimInstanceName="MicrosoftGraphcustomextensionclientconfiguration"
+                        IsRequired=$false
+                    }
+                    @{
+                        Name="EndpointConfiguration"
+                        CimInstanceName="MicrosoftGraphcustomextensionauthenticationconfiguration"
+                        IsRequired=$false
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.CustomExtensionHandlers `
+                    -CIMInstanceName MicrosoftGraphcustomextensionhandler `
+                    -ComplexTypeMapping $complexMapping
+
+                if ($complexTypeStringResult)
+                {
+                    $Results.CustomExtensionHandlers = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('CustomExtensionHandlers') | Out-Null
+                }
+            }
+
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-<#ConvertComplexToVariable#><#AssignmentsConvertComplexToVariable#><#TrailingCharRemoval#>
+
+            if ($null -ne $Results.AccessReviewSettings)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AccessReviewSettings"
+            }
+            if ($null -ne $Results.Questions )
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Questions" -isCIMArray:$true
+            }
+            if ($null -ne $Results.RequestApprovalSettings)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "RequestApprovalSettings"
+            }
+            if ($null -ne $Results.RequestorSettings)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "RequestorSettings"
+            }
+            if ($null -ne $Results.CustomExtensionHandlers)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CustomExtensionHandlers" -isCIMArray:$true
+            }
+
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -422,7 +892,7 @@ function Export-TargetResource
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message 'Error during Export:' `
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
@@ -431,7 +901,8 @@ function Export-TargetResource
         return ''
     }
 }
-<#AssignmentsFunctions#>function Rename-M365DSCCimInstanceParameter
+
+function Rename-M365DSCCimInstanceParameter
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable],[System.Collections.Hashtable[]])]
@@ -442,6 +913,7 @@ function Export-TargetResource
 
     $keyToRename=@{
         "odataType"="@odata.type"
+        "QuestionText"="text"
     }
 
     $result=$Properties
@@ -592,31 +1064,6 @@ function Get-M365DSCDRGComplexTypeToHashtable
     return [hashtable]$results
 }
 
-<#
-    Use ComplexTypeMapping to overwrite the type of nested CIM
-    Example
-    $complexMapping=@(
-                    @{
-                        Name="ApprovalStages"
-                        CimInstanceName="MSFT_MicrosoftGraphapprovalstage1"
-                        IsRequired=$false
-                    }
-                    @{
-                        Name="PrimaryApprovers"
-                        CimInstanceName="MicrosoftGraphuserset"
-                        IsRequired=$false
-                    }
-                    @{
-                        Name="EscalationApprovers"
-                        CimInstanceName="MicrosoftGraphuserset"
-                        IsRequired=$false
-                    }
-                )
-    With
-    Name: the name of the parameter to be overwritten
-    CimInstanceName: The type of the CIM instance (can include or not the prefix MSFT_)
-    IsRequired: If isRequired equals true, an empty hashtable or array will be returned. Some of the Graph parameters are required even though they are empty
-#>
 function Get-M365DSCDRGComplexTypeToString
 {
     [CmdletBinding()]
@@ -720,7 +1167,7 @@ function Get-M365DSCDRGComplexTypeToString
                 #overwrite type if object defined in mapping complextypemapping
                 if($key -in $ComplexTypeMapping.Name)
                 {
-                    $hashPropertyType=([Array]($ComplexTypeMapping|Where-Object -FilterScript {$_.Name -eq $key}).CimInstanceName)[0]
+                    $hashPropertyType=($ComplexTypeMapping|Where-Object -FilterScript {$_.Name -eq $key}).CimInstanceName
                     $hashProperty=$ComplexObject[$key]
                 }
                 else
@@ -751,32 +1198,22 @@ function Get-M365DSCDRGComplexTypeToString
                         {
                             $item=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
                         }
-                        $nestedPropertyString = Get-M365DSCDRGComplexTypeToString `
-                        -ComplexObject $item `
-                        -CIMInstanceName $hashPropertyType `
-                        -IndentLevel $IndentLevel `
-                        -ComplexTypeMapping $ComplexTypeMapping `
-                        -IsArray:$true
-                        if([string]::IsNullOrWhiteSpace($nestedPropertyString))
-                        {
-                            $nestedPropertyString = "@()`r`n"
-                        }
-                        $currentProperty += $nestedPropertyString
+                        $currentProperty += Get-M365DSCDRGComplexTypeToString `
+                            -ComplexObject $item `
+                            -CIMInstanceName $hashPropertyType `
+                            -IndentLevel $IndentLevel `
+                            -ComplexTypeMapping $ComplexTypeMapping `
+                            -IsArray:$true
                     }
                     $IndentLevel--
                 }
                 else
                 {
-                    $nestedPropertyString = Get-M365DSCDRGComplexTypeToString `
+                    $currentProperty += Get-M365DSCDRGComplexTypeToString `
                                     -ComplexObject $hashProperty `
                                     -CIMInstanceName $hashPropertyType `
                                     -IndentLevel $IndentLevel `
                                     -ComplexTypeMapping $ComplexTypeMapping
-                    if([string]::IsNullOrWhiteSpace($nestedPropertyString))
-                    {
-                        $nestedPropertyString = "`$null`r`n"
-                    }
-                    $currentProperty += $nestedPropertyString
                 }
                 if($isArray)
                 {
@@ -832,13 +1269,6 @@ function Get-M365DSCDRGComplexTypeToString
         }
         $currentProperty += $indent
     }
-
-    $emptyCIM=$currentProperty.replace(" ","").replace("`r`n","")
-    if($emptyCIM -eq "MSFT_$CIMInstanceName{}")
-    {
-        $currentProperty=$null
-    }
-
     return $currentProperty
 }
 
@@ -890,7 +1320,7 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
                 $whitespace=$Space+"    "
                 $newline="`r`n"
             }
-            foreach ($item in ($Value | Where-Object -FilterScript {$null -ne $_ }))
+            foreach ($item in $Value)
             {
                 switch -Wildcard ($item.GetType().Fullname )
                 {
