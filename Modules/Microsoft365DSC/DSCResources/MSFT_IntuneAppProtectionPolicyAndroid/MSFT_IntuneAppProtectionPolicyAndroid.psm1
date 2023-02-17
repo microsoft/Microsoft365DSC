@@ -669,7 +669,7 @@ function Set-TargetResource
             Write-Verbose -Message 'ID in Configuration Document will be ignored, Policy will be created with a new ID'
         }
         $setParams.add('Assignments', $assignmentsArray)
-        $newpolicy = New-MgBetaDeviceAppMgtAndroidManagedAppProtection @setParams
+        $newpolicy = New-MgBetaDeviceAppManagementAndroidManagedAppProtection @setParams
         $setParams.add('AndroidManagedAppProtectionId', $newpolicy.Id)
 
     }
@@ -681,15 +681,15 @@ function Set-TargetResource
             Write-Verbose -Message ("id in configuration document and returned policy do not match - updating policy with matching Displayname {$displayname} - ID {" + $currentPolicy.id + '}')
         }
         $setParams.add('AndroidManagedAppProtectionId', $currentPolicy.id)
-        Update-MgBetaDeviceAppMgtAndroidManagedAppProtection @setParams
+        Update-MgBetaDeviceAppManagementAndroidManagedAppProtection @setParams
 
         Write-Verbose -Message 'Setting Group Assignments...'
-        Set-MgBetaDeviceAppMgtTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Assignments $assignmentsArray
+        Set-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Assignments $assignmentsArray
 
     }
     # now we need to set up the apps
     Write-Verbose -Message ('Setting Application values of type: ' + $AppsHash.AppGroupType)
-    Invoke-MgBetaTargetDeviceAppMgtTargetedManagedAppConfigurationApp -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Apps $appsarray -AppGroupType $AppsHash.AppGroupType
+    Invoke-MgBetaTargetDeviceAppManagementTargetedManagedAppConfigurationApp -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Apps $appsarray -AppGroupType $AppsHash.AppGroupType
 }
 
 function Test-TargetResource

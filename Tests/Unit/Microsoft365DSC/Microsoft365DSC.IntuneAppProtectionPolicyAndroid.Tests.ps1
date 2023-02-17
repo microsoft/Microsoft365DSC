@@ -191,16 +191,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            Mock -CommandName New-MgBetaDeviceAppMgtAndroidManagedAppProtection -MockWith {
+            Mock -CommandName New-MgBetaDeviceAppManagementAndroidManagedAppProtection -MockWith {
             }
 
-            Mock -CommandName Update-MgBetaDeviceAppMgtAndroidManagedAppProtection -MockWith {
+            Mock -CommandName Update-MgBetaDeviceAppManagementAndroidManagedAppProtection -MockWith {
             }
 
-            Mock -CommandName Invoke-MgTargetDeviceAppMgtTargetedManagedAppConfigurationApp -MockWith {
+            Mock -CommandName Invoke-MgTargetDeviceAppManagementTargetedManagedAppConfigurationApp -MockWith {
             }
 
-            Mock -CommandName set-MgBetaDeviceAppMgtTargetedManagedAppConfiguration -MockWith {
+            Mock -CommandName set-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -MockWith {
             }
 
             Mock -CommandName Remove-MgBetaDeviceAppManagementAndroidManagedAppProtection -MockWith {
@@ -227,7 +227,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         return Get-DefaultReturnObj
                     }
                 }
-                Mock -CommandName New-MgBetaDeviceAppMgtAndroidManagedAppProtection -MockWith {
+                Mock -CommandName New-MgBetaDeviceAppManagementAndroidManagedAppProtection -MockWith {
                     return Get-DefaultReturnObj
                 }
             }
@@ -244,7 +244,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should create the Policy from the Set method' {
                 $Global:Count = 0
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'New-MgBetaDeviceAppMgtAndroidManagedAppProtection' -Exactly 1
+                Should -Invoke -CommandName 'New-MgBetaDeviceAppManagementAndroidManagedAppProtection' -Exactly 1
             }
         }
 
@@ -269,7 +269,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the App Configuration Policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgBetaDeviceAppMgtAndroidManagedAppProtection -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaDeviceAppManagementAndroidManagedAppProtection -Exactly 1
             }
         }
 

@@ -622,7 +622,7 @@ function Set-TargetResource
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationPolicyAndroidWorkProfileAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        $policy = NewBetaDeviceManagementDeviceConfiguration -DisplayName $DisplayName `
+        $policy = New-MgBetaDeviceManagementDeviceConfiguration -DisplayName $DisplayName `
             -Description $Description `
             -AdditionalProperties $AdditionalProperties
 

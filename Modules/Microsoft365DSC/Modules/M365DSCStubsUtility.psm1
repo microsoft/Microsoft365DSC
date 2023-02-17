@@ -56,7 +56,7 @@ function New-M365DSCStubFiles
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.Governance'; },
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.SignIns'; },
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Planner'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Teams'; },
+        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.Teams'; },
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Users'; },
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Users.Actions';},
         @{Name = 'SecurityComplianceCenter'; ModuleName = 'ExchangeOnlineManagement'; CommandName = 'Get-Label' },
@@ -177,7 +177,8 @@ function New-M365DSCStubFiles
                             {
                                 $ParamType = 'System.Boolean'
                             }
-                            elseif ($ParamType.StartsWith("System.Collections.Generic.List``1[Microsoft.Open.MSGraph.Model."))
+                            elseif ($ParamType.StartsWith("System.Collections.Generic.List``1[Microsoft.Open.MSGraph.Model.") -or
+                                    $ParamType.StartsWith("System.Management.Automation.PSListModifier`1[Microsoft.Teams."))
                             {
                                 $ParamType = 'System.Object[]'
                             }
@@ -185,7 +186,8 @@ function New-M365DSCStubFiles
                             {
                                 $ParamType = 'PSObject'
                             }
-                            elseif ($ParamType.StartsWith('Microsoft.Teams.'))
+                            elseif ($ParamType.StartsWith('Microsoft.Teams.') -or
+                                    $ParamType.StartsWith("System.Nullable`1[Microsoft.Teams.Policy"))
                             {
                                 $ParamType = 'PSObject'
                             }

@@ -33,6 +33,10 @@
             RequiredVersion = '2.0.0'
         },
         @{
+            ModuleName      = 'Microsoft.Graph.Beta.Teams'
+            RequiredVersion = '2.0.0'
+        },
+        @{
             ModuleName      = 'Microsoft.Graph.DeviceManagement.Administration'
             RequiredVersion = '2.0.0'
         },
@@ -58,10 +62,6 @@
         },
         @{
             ModuleName      = 'Microsoft.Graph.Planner'
-            RequiredVersion = '2.0.0'
-        },
-        @{
-            ModuleName      = 'Microsoft.Graph.Teams'
             RequiredVersion = '2.0.0'
         },
         @{
