@@ -609,6 +609,37 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                     }
                 }
+                Mock -CommandName Get-PnPHubSite -MockWith {
+                    return @(
+                        @{
+                            ID                   = 'fcc3c848-6d2f-4821-a56c-980eea7990c5'
+                            Title                = 'Hub Site'
+                            SiteId               = 'fcc3c848-6d2f-4821-a56c-980eea7990c5'
+                            SiteUrl              = 'https://contoso.sharepoint.com/sites/hub'
+                            LogoUrl              = 'https://contoso.sharepoint.com/images/logo.png'
+                            Description          = 'Contoso Hub Site'
+                            Permissions          = @(
+                                @{
+                                    DisplayName   = 'Contoso Admin'
+                                    PrincipalName = 'i:0#.f|membership|admin@contoso.onmicrosoft.com'
+                                    Rights        = 'Join'
+                                },
+                                @{
+                                    DisplayName   = 'Contoso Admin Group'
+                                    PrincipalName = 'c:0t.c|tenant|1e78c600-11ce-4e7b-91c2-f3bb053f7682'
+                                    Rights        = 'Join'
+                                },
+                                @{
+                                    DisplayName   = 'Contoso Admin Office 365 Group'
+                                    PrincipalName = 'c:0o.c|federateddirectoryclaimprovider|bfc75218-faac-4202-bf33-3a8ba2e2b4a7'
+                                    Rights        = 'Join'
+                                }
+                            )
+                            SiteDesignId         = '00000000-0000-0000-0000-000000000000'
+                            RequiresJoinApproval = $false
+                        }
+                    )
+                }
             }
 
             It 'Should Reverse Engineer resource from the Export method' {

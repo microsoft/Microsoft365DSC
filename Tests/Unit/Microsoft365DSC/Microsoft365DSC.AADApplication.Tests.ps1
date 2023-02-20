@@ -82,7 +82,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IdentifierUris            = 'https://app.contoso.com'
                     KnownClientApplications   = ''
                     LogoutURL                 = 'https://app.contoso.com/logout'
-                    Oauth2RequirePostResponse = $false
                     PublicClient              = $false
                     ReplyURLs                 = @('https://app.contoso.com')
                     Ensure                    = 'Present'
@@ -118,7 +117,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IdentifierUris            = 'https://app.contoso.com'
                     KnownClientApplications   = ''
                     LogoutURL                 = 'https://app.contoso.com/logout'
-                    Oauth2RequirePostResponse = $false
                     PublicClient              = $false
                     ReplyURLs                 = 'https://app.contoso.com'
                     Ensure                    = 'Absent'
@@ -167,7 +165,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IdentifierUris            = 'https://app.contoso.com'
                     KnownClientApplications   = ''
                     LogoutURL                 = 'https://app.contoso.com/logout'
-                    Oauth2RequirePostResponse = $false
                     PublicClient              = $false
                     ReplyURLs                 = 'https://app.contoso.com'
                     Ensure                    = 'Present'
@@ -215,7 +212,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IdentifierUris            = 'https://app.contoso.com'
                     KnownClientApplications   = ''
                     LogoutURL                 = 'https://app.contoso.com/logout'
-                    Oauth2RequirePostResponse = $false
                     PublicClient              = $false
                     ReplyURLs                 = 'https://app.contoso.com'
                     Ensure                    = 'Present'
@@ -263,7 +259,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IdentifierUris            = 'https://app.contoso.com'
                     KnownClientApplications   = ''
                     LogoutURL                 = 'https://app.contoso.com/logout'
-                    Oauth2RequirePostResponse = $false
                     PublicClient              = $false
                     ReplyURLs                 = 'https://app.contoso.com'
                     Permissions               = @(New-CimInstance -ClassName MSFT_AADApplicationPermission -Property @{

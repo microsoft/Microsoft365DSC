@@ -1302,7 +1302,7 @@ function Get-MgBetaDeviceManagementPolicyAssignments
     }
 }
 
-function UpdateBetaDeviceManagementPolicyAssignments
+function Update-MgBetaDeviceManagementPolicyAssignments
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]

@@ -22623,364 +22623,6 @@ function Update-MgDeviceManagementRoleDefinition
 }
 #endregion
 #region MicrosoftGraph
-function Get-MgDeviceManagementDeviceEnrollmentConfiguration
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String[]]
-        $Property,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Int32]
-        $PageSize,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Int32]
-        $Skip,
-
-        [Parameter()]
-        [System.Int32]
-        $Top,
-
-        [Parameter()]
-        [System.String]
-        $CountVariable,
-
-        [Parameter()]
-        [System.String]
-        $DeviceEnrollmentConfigurationId,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.String[]]
-        $Sort,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $All,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $Search,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
-    )
-}
-function Get-MgRoleManagement
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [System.String[]]
-        $Property,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
-    )
-}
-function New-MgDeviceManagementDeviceEnrollmentConfiguration
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.DateTime]
-        $LastModifiedDateTime,
-
-        [Parameter()]
-        [System.DateTime]
-        $CreatedDateTime,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Int32]
-        $Priority,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Int32]
-        $Version,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
-    )
-}
-function Remove-MgDeviceManagementDeviceEnrollmentConfiguration
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
-        [System.String]
-        $IfMatch,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.String]
-        $DeviceEnrollmentConfigurationId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
-    )
-}
-function Update-MgDeviceManagementDeviceEnrollmentConfiguration
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.DateTime]
-        $LastModifiedDateTime,
-
-        [Parameter()]
-        [System.DateTime]
-        $CreatedDateTime,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Int32]
-        $Priority,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Int32]
-        $Version,
-
-        [Parameter()]
-        [System.String]
-        $DeviceEnrollmentConfigurationId,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
-    )
-}
-function Update-MgRoleManagement
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [PSObject]
-        $EntitlementManagement,
-
-        [Parameter()]
-        [PSObject]
-        $Directory,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
-    )
-}
 #endregion
 #region MicrosoftGraph
 function Get-MgGroup
@@ -29225,6 +28867,1062 @@ function Update-MgPlannerPlan
 }
 #endregion
 #region MicrosoftGraph
+function Get-MgBetaTeam
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.String]
+        $TeamId,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgBetaTeamChannel
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [System.String]
+        $ChannelId,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.String]
+        $TeamId,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgBetaTeamChannelTab
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [System.String]
+        $ChannelId,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.String]
+        $TeamId,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.String]
+        $TeamsTabId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function New-MgBetaTeam
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $PrimaryChannel,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsMembershipLimitedToOwners,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $Classification,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsArchived,
+
+        [Parameter()]
+        [System.String]
+        $InternalId,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $Group,
+
+        [Parameter()]
+        [PSObject]
+        $Photo,
+
+        [Parameter()]
+        [System.String]
+        $Visibility,
+
+        [Parameter()]
+        [PSObject]
+        $MessagingSettings,
+
+        [Parameter()]
+        [System.String]
+        $Specialization,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $Schedule,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [PSObject]
+        $FunSettings,
+
+        [Parameter()]
+        [PSObject]
+        $GuestSettings,
+
+        [Parameter()]
+        [System.String]
+        $WebUrl,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Template,
+
+        [Parameter()]
+        [PSObject]
+        $Summary,
+
+        [Parameter()]
+        [PSObject]
+        $DiscoverySettings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $TemplateDefinition,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject]
+        $MemberSettings
+    )
+}
+function New-MgBetaTeamChannel
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $FilesFolder,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsFavoriteByDefault,
+
+        [Parameter()]
+        [System.String]
+        $TeamId,
+
+        [Parameter()]
+        [System.String]
+        $Email,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $ModerationSettings,
+
+        [Parameter()]
+        [System.String]
+        $MembershipType,
+
+        [Parameter()]
+        [System.String]
+        $WebUrl,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $Summary,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function New-MgBetaTeamChannelTab
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TeamsAppId,
+
+        [Parameter()]
+        [System.String]
+        $MessageId,
+
+        [Parameter()]
+        [System.String]
+        $SortOrderIndex,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $ChannelId,
+
+        [Parameter()]
+        [PSObject]
+        $TeamsApp,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $TeamId,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $Configuration,
+
+        [Parameter()]
+        [System.String]
+        $WebUrl,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgBetaTeam
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $TeamId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgBetaTeamChannel
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $ChannelId,
+
+        [Parameter()]
+        [System.String]
+        $TeamId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgBetaTeamChannelTab
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $ChannelId,
+
+        [Parameter()]
+        [System.String]
+        $TeamsTabId,
+
+        [Parameter()]
+        [System.String]
+        $TeamId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Update-MgBetaTeam
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $PrimaryChannel,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsMembershipLimitedToOwners,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $Classification,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsArchived,
+
+        [Parameter()]
+        [System.String]
+        $InternalId,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $TeamId,
+
+        [Parameter()]
+        [PSObject]
+        $Photo,
+
+        [Parameter()]
+        [System.String]
+        $Visibility,
+
+        [Parameter()]
+        [PSObject]
+        $MessagingSettings,
+
+        [Parameter()]
+        [System.String]
+        $Specialization,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [PSObject]
+        $FunSettings,
+
+        [Parameter()]
+        [PSObject]
+        $Schedule,
+
+        [Parameter()]
+        [PSObject]
+        $GuestSettings,
+
+        [Parameter()]
+        [System.String]
+        $WebUrl,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Template,
+
+        [Parameter()]
+        [PSObject]
+        $Summary,
+
+        [Parameter()]
+        [PSObject]
+        $DiscoverySettings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $TemplateDefinition,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject]
+        $MemberSettings
+    )
+}
+function Update-MgBetaTeamChannel
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $FilesFolder,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $ChannelId,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsFavoriteByDefault,
+
+        [Parameter()]
+        [System.String]
+        $TeamId,
+
+        [Parameter()]
+        [System.String]
+        $Email,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $ModerationSettings,
+
+        [Parameter()]
+        [System.String]
+        $MembershipType,
+
+        [Parameter()]
+        [System.String]
+        $WebUrl,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $Summary,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgBetaTeamChannelTab
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TeamsAppId,
+
+        [Parameter()]
+        [System.String]
+        $MessageId,
+
+        [Parameter()]
+        [System.String]
+        $SortOrderIndex,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $ChannelId,
+
+        [Parameter()]
+        [PSObject]
+        $TeamsApp,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $TeamId,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $Configuration,
+
+        [Parameter()]
+        [System.String]
+        $WebUrl,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $TeamsTabId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
 #endregion
 #region MicrosoftGraph
 function Get-MgUser
@@ -37078,7 +37776,7 @@ function Get-PnPTenantSite
         $Filter,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $GroupIdDefined
     )
 }
@@ -37845,7 +38543,7 @@ function Set-PnPSite
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $RestrictedAccessControl,
 
         [Parameter()]
@@ -37897,11 +38595,11 @@ function Set-PnPSite
         $DefaultLinkPermission,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $RequestFilesLinkEnabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $DefaultLinkToExistingAccess,
 
         [Parameter()]
@@ -37929,7 +38627,7 @@ function Set-PnPSite
         $SocialBarOnSitePagesDisabled,
 
         [Parameter()]
-        [System.String[]]
+        [System.Collections.Generic.List`1[System.String]]
         $Owners,
 
         [Parameter()]
@@ -38085,11 +38783,11 @@ function Set-PnPTenant
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $ExternalServicesEnabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $UsePersistentCookiesForExplorerView,
 
         [Parameter()]
@@ -38109,11 +38807,11 @@ function Set-PnPTenant
         $OrphanedPersonalSitesRetentionPeriod,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $CommentsOnListItemsDisabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $OwnerAnonymousNotification,
 
         [Parameter()]
@@ -38121,27 +38819,27 @@ function Set-PnPTenant
         $ConditionalAccessPolicy,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $NotificationsInSharePointEnabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowFilesWithKeepLabelToBeDeletedODB,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $ShowAllUsersClaim,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $ViewInFileExplorerEnabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $RequireAcceptingAccountMatchInvitedAccount,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $EnableRestrictedAccessControl,
 
         [Parameter()]
@@ -38149,11 +38847,11 @@ function Set-PnPTenant
         $DefaultLinkPermission,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $StopNew2013Workflows,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $DisableCustomAppAuthentication,
 
         [Parameter()]
@@ -38161,39 +38859,39 @@ function Set-PnPTenant
         $DisabledWebPartIds,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $NotificationsInOneDriveForBusinessEnabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $EnableAutoNewsDigest,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $NotifyOwnersWhenItemsReshared,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $SearchResolveExactEmailOrUPN,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowFilesWithKeepLabelToBeDeletedSPO,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $EnableAIPIntegration,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $IsLoopEnabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $FilePickerExternalImageSearchEnabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $ExternalUserExpirationRequired,
 
         [Parameter()]
@@ -38205,7 +38903,7 @@ function Set-PnPTenant
         $ODBAccessRequests,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $DisplayNamesOfFileViewers,
 
         [Parameter()]
@@ -38213,15 +38911,15 @@ function Set-PnPTenant
         $NoAccessRedirectUrl,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $ShowPeoplePickerSuggestionsForGuestUsers,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $SocialBarOnSitePagesDisabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $PublicCdnEnabled,
 
         [Parameter()]
@@ -38253,7 +38951,7 @@ function Set-PnPTenant
         $SignInAccelerationDomain,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $ProvisionSharedWithEveryoneFolder,
 
         [Parameter()]
@@ -38265,11 +38963,11 @@ function Set-PnPTenant
         $EmailAttestationReAuthDays,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $ShowEveryoneExceptExternalUsersClaim,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $OneDriveForGuestsEnabled,
 
         [Parameter()]
@@ -38277,23 +38975,23 @@ function Set-PnPTenant
         $StartASiteFormUrl,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $IsFluidEnabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $EmailAttestationRequired,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowDownloadingNonWebViewableFiles,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $UseFindPeopleInPeoplePicker,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $ShowEveryoneClaim,
 
         [Parameter()]
@@ -38301,23 +38999,23 @@ function Set-PnPTenant
         $IPAddressWACTokenLifetime,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $HideDefaultThemes,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $ApplyAppEnforcedRestrictionsToAdHocRecipients,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $OfficeClientADALDisabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $BccExternalSharingInvitations,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $IPAddressEnforcement,
 
         [Parameter()]
@@ -38325,7 +39023,7 @@ function Set-PnPTenant
         $SharingCapability,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $NotifyOwnersWhenInvitationsAccepted,
 
         [Parameter()]
@@ -38337,35 +39035,35 @@ function Set-PnPTenant
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $DisallowInfectedFileDownload,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowEditing,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $DisableAddToOneDrive,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $InformationBarriersSuspension,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $DisableBackToClassic,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $DisplayNamesOfFileViewersInSpo,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $PreventExternalUsersFromResharing,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $DisablePersonalListCreation,
 
         [Parameter()]
@@ -38373,11 +39071,11 @@ function Set-PnPTenant
         $ODBMembersCanShare,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $CommentsOnFilesDisabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $LegacyAuthProtocolsEnabled,
 
         [Parameter()]
@@ -38393,11 +39091,11 @@ function Set-PnPTenant
         $PublicCdnAllowedFileTypes,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $OneDriveRequestFilesLinkEnabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $UserVoiceForFeedbackEnabled,
 
         [Parameter()]
@@ -38409,7 +39107,7 @@ function Set-PnPTenant
         $OneDriveStorageQuota,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $CommentsOnSitePagesDisabled,
 
         [Parameter()]
@@ -38417,7 +39115,7 @@ function Set-PnPTenant
         $ExternalUserExpireInDays,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $EnableGuestSignInAcceleration,
 
         [Parameter()]
@@ -38425,7 +39123,7 @@ function Set-PnPTenant
         $MaxCompatibilityLevel,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $DisplayStartASiteOption
     )
 }
@@ -38580,7 +39278,7 @@ function Set-PnPTenantSite
         $AddInformationSegment,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $DefaultLinkToExistingAccess,
 
         [Parameter()]
@@ -38608,7 +39306,7 @@ function Set-PnPTenantSite
         $StorageQuotaReset,
 
         [Parameter()]
-        [System.String[]]
+        [System.Collections.Generic.List`1[System.String]]
         $Owners,
 
         [Parameter()]
@@ -38701,7 +39399,7 @@ function Set-PnPTenantSyncClientRestriction
         $BlockMacSync,
 
         [Parameter()]
-        [System.String[]]
+        [System.Collections.Generic.List`1[System.String]]
         $ExcludedFileExtensions
     )
 }
@@ -39094,7 +39792,7 @@ function Get-Team
         $DisplayName,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $Archived,
 
         [Parameter()]
@@ -39157,7 +39855,7 @@ function New-CsOnlineVoicemailPolicy
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $EnableEditingCallAnswerRulesSetting,
 
         [Parameter()]
@@ -39165,7 +39863,7 @@ function New-CsOnlineVoicemailPolicy
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $EnableTranscriptionProfanityMasking,
 
         [Parameter()]
@@ -39197,15 +39895,15 @@ function New-CsOnlineVoicemailPolicy
         $PostambleAudioFile,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $PreamblePostambleMandatory,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $EnableTranscription,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $EnableTranscriptionTranslation
     )
 }
@@ -39247,7 +39945,7 @@ function New-CsTeamsChannelsPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowSharedChannelCreation,
 
         [Parameter()]
@@ -39255,7 +39953,7 @@ function New-CsTeamsChannelsPolicy
         $Description,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowChannelSharingToExternalUser,
 
         [Parameter()]
@@ -39267,19 +39965,19 @@ function New-CsTeamsChannelsPolicy
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowPrivateChannelCreation,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $EnablePrivateTeamDiscovery,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowOrgWideTeamCreation,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowUserToParticipateInExternalSharedChannel,
 
         [Parameter()]
@@ -39316,11 +40014,11 @@ function New-CsTeamsEmergencyCallingPolicy
         $EnhancedEmergencyServiceDisclaimer,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Teams.Policy.Administration.Cmdlets.Core.NotificationMode]]
+        [PSObject]
         $NotificationMode,
 
         [Parameter()]
-        [System.Management.Automation.PSListModifier`1[Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsEmergencyCallingExtendedNotification]]
+        [System.Object[]]
         $ExtendedNotifications,
 
         [Parameter()]
@@ -39328,7 +40026,7 @@ function New-CsTeamsEmergencyCallingPolicy
         $Force,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Teams.Policy.Administration.Cmdlets.Core.ExternalLocationLookupMode]]
+        [PSObject]
         $ExternalLocationLookupMode
     )
 }
@@ -39337,11 +40035,11 @@ function New-CsTeamsFeedbackPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowLogCollection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $EnableFeatureSuggestions,
 
         [Parameter()]
@@ -39349,7 +40047,7 @@ function New-CsTeamsFeedbackPolicy
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowEmailCollection,
 
         [Parameter()]
@@ -39365,7 +40063,7 @@ function New-CsTeamsFeedbackPolicy
         $UserInitiatedMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowScreenshotCollection,
 
         [Parameter()]
@@ -39382,11 +40080,11 @@ function New-CsTeamsMeetingPolicy
         $TeamsCameraFarEndPTZMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowMeetingCoach,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowAnnotations,
 
         [Parameter()]
@@ -39394,15 +40092,15 @@ function New-CsTeamsMeetingPolicy
         $AudibleRecordingNotification,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowIPAudio,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowWhiteboard,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowAnonymousUsersToDialOut,
 
         [Parameter()]
@@ -39414,11 +40112,11 @@ function New-CsTeamsMeetingPolicy
         $ExplicitRecordingConsent,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowNetworkConfigurationSettingsLookup,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowTranscription,
 
         [Parameter()]
@@ -39438,11 +40136,11 @@ function New-CsTeamsMeetingPolicy
         $AllowUserToJoinExternalMeeting,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowExternalParticipantGiveRequestControl,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowAnonymousUsersToStartMeeting,
 
         [Parameter()]
@@ -39454,7 +40152,7 @@ function New-CsTeamsMeetingPolicy
         $AllowTasksFromTranscript,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowMeetingRegistration,
 
         [Parameter()]
@@ -39474,7 +40172,7 @@ function New-CsTeamsMeetingPolicy
         $AllowCartCaptionsScheduling,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowPrivateMeetNow,
 
         [Parameter()]
@@ -39482,11 +40180,11 @@ function New-CsTeamsMeetingPolicy
         $AllowEngagementReport,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowWatermarkForCameraVideo,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowWatermarkForScreenSharing,
 
         [Parameter()]
@@ -39494,7 +40192,7 @@ function New-CsTeamsMeetingPolicy
         $PreferredMeetingProviderForIslandsMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowOrganizersToOverrideLobbySettings,
 
         [Parameter()]
@@ -39506,7 +40204,7 @@ function New-CsTeamsMeetingPolicy
         $Description,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowNDIStreaming,
 
         [Parameter()]
@@ -39530,11 +40228,11 @@ function New-CsTeamsMeetingPolicy
         $NewMeetingRecordingExpirationDays,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowMeetNow,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowAnonymousUsersToJoinMeeting,
 
         [Parameter()]
@@ -39546,11 +40244,11 @@ function New-CsTeamsMeetingPolicy
         $WhoCanRegister,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowAvatarsInGallery,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowCloudRecording,
 
         [Parameter()]
@@ -39558,7 +40256,7 @@ function New-CsTeamsMeetingPolicy
         $AllowedStreamingMediaInput,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowIPVideo,
 
         [Parameter()]
@@ -39570,11 +40268,11 @@ function New-CsTeamsMeetingPolicy
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowImmersiveView,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowOutlookAddIn,
 
         [Parameter()]
@@ -39598,7 +40296,7 @@ function New-CsTeamsMeetingPolicy
         $QnAEngagementMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowSharedNotes,
 
         [Parameter()]
@@ -39606,7 +40304,7 @@ function New-CsTeamsMeetingPolicy
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowParticipantGiveRequestControl,
 
         [Parameter()]
@@ -39618,19 +40316,19 @@ function New-CsTeamsMeetingPolicy
         $EnrollUserOverride,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowPowerPointSharing,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowPrivateMeetingScheduling,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowChannelMeetingScheduling,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowMeetingReactions,
 
         [Parameter()]
@@ -39646,7 +40344,7 @@ function New-CsTeamsMeetingPolicy
         $LiveStreamingMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowBreakoutRooms,
 
         [Parameter()]
@@ -39654,15 +40352,15 @@ function New-CsTeamsMeetingPolicy
         $AllowDocumentCollaboration,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowRecordingStorageOutsideRegion,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowPSTNUsersToBypassLobby,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowCarbonSummary,
 
         [Parameter()]
@@ -39675,15 +40373,15 @@ function New-CsTeamsMessagingPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowOwnerDeleteMessage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowSmartReply,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowUserChat,
 
         [Parameter()]
@@ -39691,11 +40389,11 @@ function New-CsTeamsMessagingPolicy
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowGiphy,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowUserDeleteMessage,
 
         [Parameter()]
@@ -39707,31 +40405,31 @@ function New-CsTeamsMessagingPolicy
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowStickers,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowSmartCompose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowFullChatPermissionUserToDeleteAnyMessage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowUrlPreviews,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowGiphyDisplay,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowChatWithGroup,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowCommunicationComplianceEndUserReporting,
 
         [Parameter()]
@@ -39739,15 +40437,15 @@ function New-CsTeamsMessagingPolicy
         $ChatPermissionRole,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowImmersiveReader,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowUserTranslation,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowUserEditMessage,
 
         [Parameter()]
@@ -39755,11 +40453,11 @@ function New-CsTeamsMessagingPolicy
         $AudioMessageEnabledType,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowRemoveUser,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowPasteInternetImage,
 
         [Parameter()]
@@ -39771,11 +40469,11 @@ function New-CsTeamsMessagingPolicy
         $Description,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowMemes,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowFluidCollaborate,
 
         [Parameter()]
@@ -39783,15 +40481,15 @@ function New-CsTeamsMessagingPolicy
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowSecurityEndUserReporting,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowPriorityMessages,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowVideoMessages,
 
         [Parameter()]
@@ -39799,7 +40497,7 @@ function New-CsTeamsMessagingPolicy
         $GiphyRatingType,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowUserDeleteChat
     )
 }
@@ -39828,7 +40526,7 @@ function New-CsTeamsUpdateManagementPolicy
         $UpdateTimeOfDay,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowManagedUpdates,
 
         [Parameter()]
@@ -39836,7 +40534,7 @@ function New-CsTeamsUpdateManagementPolicy
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowPreview,
 
         [Parameter()]
@@ -39857,11 +40555,11 @@ function New-Team
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowGuestDeleteChannels,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowUserDeleteMessages,
 
         [Parameter()]
@@ -39877,11 +40575,11 @@ function New-Team
         $DisplayName,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowCreateUpdateChannels,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowDeleteChannels,
 
         [Parameter()]
@@ -39889,19 +40587,19 @@ function New-Team
         $Classification,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowCreateUpdateRemoveConnectors,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowUserEditMessages,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowCreateUpdateRemoveTabs,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowAddRemoveApps,
 
         [Parameter()]
@@ -39909,11 +40607,11 @@ function New-Team
         $RetainCreatedGroup,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowOwnerDeleteMessages,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowTeamMentions,
 
         [Parameter()]
@@ -39921,11 +40619,11 @@ function New-Team
         $GroupId,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowCreatePrivateChannels,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowGuestCreateUpdateChannels,
 
         [Parameter()]
@@ -39937,11 +40635,11 @@ function New-Team
         $GiphyContentRating,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowStickersAndMemes,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $ShowInTeamsSearchAndSuggestions,
 
         [Parameter()]
@@ -39953,15 +40651,15 @@ function New-Team
         $Template,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowGiphy,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowChannelMentions,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowCustomMemes
     )
 }
@@ -40178,7 +40876,7 @@ function Set-CsOnlineVoicemailPolicy
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $EnableEditingCallAnswerRulesSetting,
 
         [Parameter()]
@@ -40186,7 +40884,7 @@ function Set-CsOnlineVoicemailPolicy
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $EnableTranscriptionProfanityMasking,
 
         [Parameter()]
@@ -40218,15 +40916,15 @@ function Set-CsOnlineVoicemailPolicy
         $PostambleAudioFile,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $PreamblePostambleMandatory,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $EnableTranscription,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $EnableTranscriptionTranslation
     )
 }
@@ -40268,7 +40966,7 @@ function Set-CsTeamsChannelsPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowSharedChannelCreation,
 
         [Parameter()]
@@ -40276,7 +40974,7 @@ function Set-CsTeamsChannelsPolicy
         $Description,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowChannelSharingToExternalUser,
 
         [Parameter()]
@@ -40288,19 +40986,19 @@ function Set-CsTeamsChannelsPolicy
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowPrivateChannelCreation,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $EnablePrivateTeamDiscovery,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowOrgWideTeamCreation,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowUserToParticipateInExternalSharedChannel,
 
         [Parameter()]
@@ -40337,11 +41035,11 @@ function Set-CsTeamsEmergencyCallingPolicy
         $EnhancedEmergencyServiceDisclaimer,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Teams.Policy.Administration.Cmdlets.Core.NotificationMode]]
+        [PSObject]
         $NotificationMode,
 
         [Parameter()]
-        [System.Management.Automation.PSListModifier`1[Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsEmergencyCallingExtendedNotification]]
+        [System.Object[]]
         $ExtendedNotifications,
 
         [Parameter()]
@@ -40349,7 +41047,7 @@ function Set-CsTeamsEmergencyCallingPolicy
         $Force,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Teams.Policy.Administration.Cmdlets.Core.ExternalLocationLookupMode]]
+        [PSObject]
         $ExternalLocationLookupMode
     )
 }
@@ -40358,11 +41056,11 @@ function Set-CsTeamsFeedbackPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowLogCollection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $EnableFeatureSuggestions,
 
         [Parameter()]
@@ -40370,7 +41068,7 @@ function Set-CsTeamsFeedbackPolicy
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowEmailCollection,
 
         [Parameter()]
@@ -40386,7 +41084,7 @@ function Set-CsTeamsFeedbackPolicy
         $UserInitiatedMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowScreenshotCollection,
 
         [Parameter()]
@@ -40403,11 +41101,11 @@ function Set-CsTeamsMeetingPolicy
         $TeamsCameraFarEndPTZMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowMeetingCoach,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowAnnotations,
 
         [Parameter()]
@@ -40415,15 +41113,15 @@ function Set-CsTeamsMeetingPolicy
         $AudibleRecordingNotification,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowIPAudio,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowWhiteboard,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowAnonymousUsersToDialOut,
 
         [Parameter()]
@@ -40435,11 +41133,11 @@ function Set-CsTeamsMeetingPolicy
         $ExplicitRecordingConsent,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowNetworkConfigurationSettingsLookup,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowTranscription,
 
         [Parameter()]
@@ -40459,11 +41157,11 @@ function Set-CsTeamsMeetingPolicy
         $AllowUserToJoinExternalMeeting,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowExternalParticipantGiveRequestControl,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowAnonymousUsersToStartMeeting,
 
         [Parameter()]
@@ -40475,7 +41173,7 @@ function Set-CsTeamsMeetingPolicy
         $AllowTasksFromTranscript,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowMeetingRegistration,
 
         [Parameter()]
@@ -40495,7 +41193,7 @@ function Set-CsTeamsMeetingPolicy
         $AllowCartCaptionsScheduling,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowPrivateMeetNow,
 
         [Parameter()]
@@ -40503,11 +41201,11 @@ function Set-CsTeamsMeetingPolicy
         $AllowEngagementReport,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowWatermarkForCameraVideo,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowWatermarkForScreenSharing,
 
         [Parameter()]
@@ -40515,7 +41213,7 @@ function Set-CsTeamsMeetingPolicy
         $PreferredMeetingProviderForIslandsMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowOrganizersToOverrideLobbySettings,
 
         [Parameter()]
@@ -40527,7 +41225,7 @@ function Set-CsTeamsMeetingPolicy
         $Description,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowNDIStreaming,
 
         [Parameter()]
@@ -40551,11 +41249,11 @@ function Set-CsTeamsMeetingPolicy
         $NewMeetingRecordingExpirationDays,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowMeetNow,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowAnonymousUsersToJoinMeeting,
 
         [Parameter()]
@@ -40567,11 +41265,11 @@ function Set-CsTeamsMeetingPolicy
         $WhoCanRegister,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowAvatarsInGallery,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowCloudRecording,
 
         [Parameter()]
@@ -40579,7 +41277,7 @@ function Set-CsTeamsMeetingPolicy
         $AllowedStreamingMediaInput,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowIPVideo,
 
         [Parameter()]
@@ -40591,11 +41289,11 @@ function Set-CsTeamsMeetingPolicy
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowImmersiveView,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowOutlookAddIn,
 
         [Parameter()]
@@ -40619,7 +41317,7 @@ function Set-CsTeamsMeetingPolicy
         $QnAEngagementMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowSharedNotes,
 
         [Parameter()]
@@ -40627,7 +41325,7 @@ function Set-CsTeamsMeetingPolicy
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowParticipantGiveRequestControl,
 
         [Parameter()]
@@ -40639,19 +41337,19 @@ function Set-CsTeamsMeetingPolicy
         $EnrollUserOverride,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowPowerPointSharing,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowPrivateMeetingScheduling,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowChannelMeetingScheduling,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowMeetingReactions,
 
         [Parameter()]
@@ -40667,7 +41365,7 @@ function Set-CsTeamsMeetingPolicy
         $LiveStreamingMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowBreakoutRooms,
 
         [Parameter()]
@@ -40675,15 +41373,15 @@ function Set-CsTeamsMeetingPolicy
         $AllowDocumentCollaboration,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowRecordingStorageOutsideRegion,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowPSTNUsersToBypassLobby,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowCarbonSummary,
 
         [Parameter()]
@@ -40696,15 +41394,15 @@ function Set-CsTeamsMessagingPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowOwnerDeleteMessage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowSmartReply,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowUserChat,
 
         [Parameter()]
@@ -40712,11 +41410,11 @@ function Set-CsTeamsMessagingPolicy
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowGiphy,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowUserDeleteMessage,
 
         [Parameter()]
@@ -40728,31 +41426,31 @@ function Set-CsTeamsMessagingPolicy
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowStickers,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowSmartCompose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowFullChatPermissionUserToDeleteAnyMessage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowUrlPreviews,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowGiphyDisplay,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowChatWithGroup,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowCommunicationComplianceEndUserReporting,
 
         [Parameter()]
@@ -40760,15 +41458,15 @@ function Set-CsTeamsMessagingPolicy
         $ChatPermissionRole,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowImmersiveReader,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowUserTranslation,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowUserEditMessage,
 
         [Parameter()]
@@ -40776,11 +41474,11 @@ function Set-CsTeamsMessagingPolicy
         $AudioMessageEnabledType,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowRemoveUser,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowPasteInternetImage,
 
         [Parameter()]
@@ -40792,11 +41490,11 @@ function Set-CsTeamsMessagingPolicy
         $Description,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowMemes,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowFluidCollaborate,
 
         [Parameter()]
@@ -40804,15 +41502,15 @@ function Set-CsTeamsMessagingPolicy
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowSecurityEndUserReporting,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowPriorityMessages,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowVideoMessages,
 
         [Parameter()]
@@ -40820,7 +41518,7 @@ function Set-CsTeamsMessagingPolicy
         $GiphyRatingType,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowUserDeleteChat
     )
 }
@@ -40849,7 +41547,7 @@ function Set-CsTeamsUpdateManagementPolicy
         $UpdateTimeOfDay,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowManagedUpdates,
 
         [Parameter()]
@@ -40857,7 +41555,7 @@ function Set-CsTeamsUpdateManagementPolicy
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowPreview,
 
         [Parameter()]
@@ -40878,11 +41576,11 @@ function Set-Team
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowGuestDeleteChannels,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowUserDeleteMessages,
 
         [Parameter()]
@@ -40898,11 +41596,11 @@ function Set-Team
         $DisplayName,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowCreateUpdateChannels,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowDeleteChannels,
 
         [Parameter()]
@@ -40910,23 +41608,23 @@ function Set-Team
         $Classification,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowCreateUpdateRemoveConnectors,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowUserEditMessages,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowAddRemoveApps,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowOwnerDeleteMessages,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowTeamMentions,
 
         [Parameter()]
@@ -40934,11 +41632,11 @@ function Set-Team
         $GroupId,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowCreatePrivateChannels,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowGuestCreateUpdateChannels,
 
         [Parameter()]
@@ -40946,11 +41644,11 @@ function Set-Team
         $GiphyContentRating,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowStickersAndMemes,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $ShowInTeamsSearchAndSuggestions,
 
         [Parameter()]
@@ -40958,19 +41656,19 @@ function Set-Team
         $Visibility,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowCreateUpdateRemoveTabs,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowGiphy,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowChannelMentions,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $AllowCustomMemes
     )
 }
@@ -43750,7 +44448,7 @@ function Set-CsOnlineVoicemailUserSettings
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $OofGreetingEnabled,
 
         [Parameter()]
@@ -43758,7 +44456,7 @@ function Set-CsOnlineVoicemailUserSettings
         $PromptLanguage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $ShareData,
 
         [Parameter()]
@@ -43778,11 +44476,11 @@ function Set-CsOnlineVoicemailUserSettings
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $VoicemailEnabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $OofGreetingFollowCalendarEnabled,
 
         [Parameter()]
@@ -43790,7 +44488,7 @@ function Set-CsOnlineVoicemailUserSettings
         $DefaultGreetingPromptOverwrite,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $OofGreetingFollowAutomaticRepliesEnabled,
 
         [Parameter()]
@@ -45185,7 +45883,7 @@ function Set-CsUser
         $PrivateLine,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Nullable`1[System.Boolean]]
         $HostedVoiceMail,
 
         [Parameter()]

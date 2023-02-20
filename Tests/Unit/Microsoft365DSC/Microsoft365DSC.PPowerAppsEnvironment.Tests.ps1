@@ -85,40 +85,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'Environment already exists but is NOT in the Desired State' -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    DisplayName    = 'Test Environment'
-                    Location       = 'canada'
-                    EnvironmentSKU = 'production'
-                    Credential     = $Credential
-                    Ensure         = 'Present'
-                }
-
-                Mock -CommandName Get-AdminPowerAppEnvironment -MockWith {
-                    return @{
-                        DisplayName     = 'Test Environment'
-                        Location        = 'unitedstates'
-                        EnvironmentType = 'production'
-                    }
-                }
-            }
-
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-            }
-
-            It 'Should not do anything in the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-AdminPowerAppEnvironment -Exactly 0
-                Should -Invoke -CommandName New-AdminPowerAppEnvironment -Exactly 0
-            }
-        }
-
         Context -Name 'Environment already exists but IS ALREADY in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{

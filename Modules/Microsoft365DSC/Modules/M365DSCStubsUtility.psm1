@@ -50,7 +50,7 @@ function New-M365DSCStubFiles
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.Identity.DirectoryManagement'; },
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.Identity.Governance'; },
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement.Administration'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement.Enrollment'; },
+        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.DeviceManagement.Enrollment'; },
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Groups'; },
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.DirectoryManagement'; },
         @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.Governance'; },
@@ -169,25 +169,26 @@ function New-M365DSCStubFiles
                         {
                             $StubContent += "        [Parameter()]`r`n"
                             $ParamType = $parameters.$key.ParameterType.ToString()
-                            if ($ParamType -eq 'System.Collections.Generic.List`1[System.String]')
+                            if ($ParamType -eq 'System.Collections.Generic.List``1[System.String]')
                             {
                                 $ParamType = 'System.String[]'
                             }
-                            elseif ($ParamType -eq 'System.Nullable`1[System.Boolean]')
+                            elseif ($ParamType -eq 'System.Nullable``1[System.Boolean]')
                             {
                                 $ParamType = 'System.Boolean'
                             }
                             elseif ($ParamType.StartsWith("System.Collections.Generic.List``1[Microsoft.Open.MSGraph.Model.") -or
-                                    $ParamType.StartsWith("System.Management.Automation.PSListModifier`1[Microsoft.Teams."))
+                                    $ParamType.StartsWith("System.Management.Automation.PSListModifier``1[Microsoft.Teams."))
                             {
                                 $ParamType = 'System.Object[]'
                             }
-                            elseif ($ParamType.StartsWith('Microsoft.Graph.PowerShell.') -or $ParamType.StartsWith('Microsoft.Graph.Beta.PowerShell.'))
+                            elseif ($ParamType.StartsWith('Microsoft.Graph.PowerShell.') -or `
+                                    $ParamType.StartsWith('Microsoft.Graph.Beta.PowerShell.'))
                             {
                                 $ParamType = 'PSObject'
                             }
                             elseif ($ParamType.StartsWith('Microsoft.Teams.') -or
-                                    $ParamType.StartsWith("System.Nullable`1[Microsoft.Teams.Policy"))
+                                    $ParamType.StartsWith("System.Nullable``1[Microsoft.Teams"))
                             {
                                 $ParamType = 'PSObject'
                             }

@@ -89,6 +89,7 @@ function Get-TargetResource
         DisplayName = $DisplayName
         TeamName    = $TeamName
         ChannelName = $ChannelName
+        Ensure      = "Absent"
     }
 
     try
@@ -108,7 +109,7 @@ function Get-TargetResource
             else
             {
                 Write-Verbose -Message "Getting team by Id {$TeamId}"
-                $teamInstance = Get-MgTeam -TeamId $TeamId -ErrorAction Stop
+                $teamInstance = Get-MgBetaTeam -TeamId $TeamId -ErrorAction Stop
             }
         }
         catch
@@ -135,7 +136,7 @@ function Get-TargetResource
 
         # Get the Channel ID
         Write-Verbose -Message "Getting Channels for Team {$TeamName} with ID {$($teamInstance.Id)}"
-        $channelInstance = Get-MgTeamChannel -TeamId $teamInstance.Id | Where-Object -FilterScript { $_.DisplayName -eq $ChannelName }
+        $channelInstance = Get-MgBetaTeamChannel -TeamId $teamInstance.Id | Where-Object -FilterScript { $_.DisplayName -eq $ChannelName }
 
         if ($null -eq $channelInstance)
         {
@@ -150,7 +151,7 @@ function Get-TargetResource
 
         # Get the Channel Tab
         Write-Verbose -Message "Getting Tabs for Channel {$ChannelName}"
-        [array]$tabInstance = Get-MgTeamChannelTab -TeamId $teamInstance.Id `
+        [array]$tabInstance = Get-MgBetaTeamChannelTab -TeamId $teamInstance.Id `
             -ChannelId $channelInstance.Id `
             -Filter "DisplayName eq '$DisplayName'" `
             -ExpandProperty 'TeamsApp'
@@ -294,7 +295,7 @@ function Set-TargetResource
     $CurrentParameters.Remove('Credential') | Out-Null
 
     Write-Verbose -Message "Retrieving Team Channel {$ChannelName} from Team {$($tab.TeamId)}"
-    $ChannelInstance = Get-MgTeamChannel -TeamId $tab.TeamId `
+    $ChannelInstance = Get-MgBetaTeamChannel -TeamId $tab.TeamId `
         -Filter "DisplayName eq '$ChannelName'"
 
     $configuration = @{}
@@ -325,7 +326,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and ($tab.Ensure -eq 'Present'))
     {
         Write-Verbose -Message "Retrieving Tab {$DisplayName} from Channel {$($ChannelInstance.Id))} from Team {$($tab.TeamId)}"
-        $tabInstance = Get-MgTeamChannelTab -TeamId $tab.TeamId `
+        $tabInstance = Get-MgBetaTeamChannelTab -TeamId $tab.TeamId `
             -ChannelId $ChannelInstance.Id `
             -Filter "DisplayName eq '$DisplayName'"
 
@@ -335,7 +336,7 @@ function Set-TargetResource
         $CurrentParameters.Remove('ChannelName') | Out-Null
         $CurrentParameters.Add('TeamsTabId', $tabInstance.Id)
         Write-Verbose -Message "Params: $($CurrentParameters | Out-String)"
-        Update-MgTeamChannelTab  @CurrentParameters | Out-Null
+        Update-MgBetaTeamChannelTab  @CurrentParameters | Out-Null
     }
     elseif ($Ensure -eq 'Present' -and ($tab.Ensure -eq 'Absent'))
     {
@@ -351,12 +352,12 @@ function Set-TargetResource
         }
         $CurrentParameters.Add('AdditionalProperties', $additionalProperties)
 
-        New-MgTeamChannelTab @CurrentParameters
+        New-MgBetaTeamChannelTab @CurrentParameters
     }
     elseif ($Ensure -eq 'Absent' -and ($tab.Ensure -eq 'Present'))
     {
         Write-Verbose -Message "Retrieving Tab {$DisplayName} from Channel {$($ChannelInstance.Id))} from Team {$($tab.TeamId)}"
-        $tabInstance = Get-MgTeamChannelTab -TeamId $tab.TeamId `
+        $tabInstance = Get-MgBetaTeamChannelTab -TeamId $tab.TeamId `
             -ChannelId $ChannelInstance.Id `
             -Filter "DisplayName eq '$DisplayName'"
         Write-Verbose -Message "Removing existing tab {$DisplayName}"
@@ -365,7 +366,7 @@ function Set-TargetResource
             TeamId     = $tab.TeamId
             TeamsTabId = $tabInstance.Id
         }
-        Remove-MgTeamChannelTab @RemoveParams | Out-Null
+        Remove-MgBetaTeamChannelTab @RemoveParams | Out-Null
     }
 }
 
@@ -525,7 +526,7 @@ function Export-TargetResource
             $channels = $null
             try
             {
-                [array]$channels = Get-MgTeamChannel -TeamId $team.Id -ErrorAction Stop
+                [array]$channels = Get-MgBetaTeamChannel -TeamId $team.Id -ErrorAction Stop
             }
             catch
             {
@@ -544,7 +545,7 @@ function Export-TargetResource
                 $tabs = $null
                 try
                 {
-                    [array]$tabs = Get-MgTeamChannelTab -TeamId $team.Id `
+                    [array]$tabs = Get-MgBetaTeamChannelTab -TeamId $team.Id `
                         -ChannelId $channel.Id -ErrorAction Stop
                 }
                 catch

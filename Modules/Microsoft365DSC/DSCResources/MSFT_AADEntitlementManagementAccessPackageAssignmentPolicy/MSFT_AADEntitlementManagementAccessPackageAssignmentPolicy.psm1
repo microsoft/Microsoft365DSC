@@ -207,7 +207,10 @@ function Get-TargetResource
         {
             foreach($setting in $formattedRequestorSettings.allowedRequestors)
             {
-                $setting.add('odataType',$setting.AdditionalProperties."@odata.type")
+                if (-not $setting.ContainsKey("odataType"))
+                {
+                    $setting.add('odataType',$setting.AdditionalProperties."@odata.type")
+                }
                 if(-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
                 {
                     $setting.add('Id',$setting.AdditionalProperties.id)
@@ -225,7 +228,10 @@ function Get-TargetResource
         $formattedQuestions=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.Questions
         foreach ($question in $formattedQuestions)
         {
-            $question.add("odataType",$question.AdditionalProperties."@odata.type")
+            if (-not $question.ContainsKey("odataType"))
+            {
+                $question.add("odataType",$question.AdditionalProperties."@odata.type")
+            }
             if ($null -ne $question.Text)
             {
                 $question.add("QuestionText", $question.Text)

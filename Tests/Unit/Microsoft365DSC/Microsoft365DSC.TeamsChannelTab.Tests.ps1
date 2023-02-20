@@ -40,13 +40,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            Mock -CommandName New-MgTeamChannelTab -MockWith {
+            Mock -CommandName New-MgBetaTeamChannelTab -MockWith {
             }
 
-            Mock -CommandName Update-MgTeamChannelTab -MockWith {
+            Mock -CommandName Update-MgBetaTeamChannelTab -MockWith {
             }
 
-            Mock -CommandName Remove-MgTeamChannelTab -MockWith {
+            Mock -CommandName Remove-MgBetaTeamChannelTab -MockWith {
             }
 
             # Mock Write-Host to hide output during the tests
@@ -78,14 +78,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgTeamChannel -MockWith {
+                Mock -CommandName Get-MgBetaTeamChannel -MockWith {
                     return @{
                         Id          = '67890-67890-67890-67890-67890'
                         DisplayName = 'General'
                     }
                 }
 
-                Mock -CommandName Get-MgTeamChannelTab -MockWith {
+                Mock -CommandName Get-MgBetaTeamChannelTab -MockWith {
                     return $null
                 }
             }
@@ -100,7 +100,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create the tab in the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgTeamChannelTab -Exactly 1
+                Should -Invoke -CommandName New-MgBetaTeamChannelTab -Exactly 1
             }
         }
 
@@ -127,14 +127,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgTeamChannel -MockWith {
+                Mock -CommandName Get-MgBetaTeamChannel -MockWith {
                     return @{
                         Id          = '67890-67890-67890-67890-67890'
                         DisplayName = 'General'
                     }
                 }
 
-                Mock -CommandName Get-MgTeamChannelTab -MockWith {
+                Mock -CommandName Get-MgBetaTeamChannelTab -MockWith {
                     return @{
                         id             = '12345-12345-12345-12345-12345'
                         displayName    = 'TestTab'
@@ -163,7 +163,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the settings from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgTeamChannelTab -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaTeamChannelTab -Exactly 1
             }
         }
 
@@ -190,14 +190,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgTeamChannel -MockWith {
+                Mock -CommandName Get-MgBetaTeamChannel -MockWith {
                     return @{
                         Id          = '67890-67890-67890-67890-67890'
                         DisplayName = 'General'
                     }
                 }
 
-                Mock -CommandName Get-MgTeamChannelTab -MockWith {
+                Mock -CommandName Get-MgBetaTeamChannelTab -MockWith {
                     return @{
                         id             = '12345-12345-12345-12345-12345'
                         displayName    = 'TestTab'
@@ -243,19 +243,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgGroup -MockWith {
                     return @{
-                        GroupId     = '12345-12345-12345-12345-12345'
                         DisplayName = 'Contoso Team'
+                        Id          = '12345-12345-12345-12345-12345'
                     }
                 }
 
-                Mock -CommandName Get-MgTeamChannel -MockWith {
+                Mock -CommandName Get-MgBetaTeamChannel -MockWith {
                     return @{
                         Id          = '67890-67890-67890-67890-67890'
                         DisplayName = 'General'
                     }
                 }
 
-                Mock -CommandName Get-MgTeamChannelTab -MockWith {
+                Mock -CommandName Get-MgBetaTeamChannelTab -MockWith {
                     return @{
                         id             = '12345-12345-12345-12345-12345'
                         displayName    = 'TestTab'
@@ -284,7 +284,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgTeamChannelTab -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaTeamChannelTab -Exactly 1
             }
         }
 
@@ -304,14 +304,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgTeamChannel -MockWith {
+                Mock -CommandName Get-MgBetaTeamChannel -MockWith {
                     return @{
                         Id          = '67890-67890-67890-67890-67890'
                         DisplayName = 'General'
                     }
                 }
 
-                Mock -CommandName Get-MgTeamChannelTab -MockWith {
+                Mock -CommandName Get-MgBetaTeamChannelTab -MockWith {
                     return @{
                         id             = '12345-12345-12345-12345-12345'
                         displayName    = 'TestTab'

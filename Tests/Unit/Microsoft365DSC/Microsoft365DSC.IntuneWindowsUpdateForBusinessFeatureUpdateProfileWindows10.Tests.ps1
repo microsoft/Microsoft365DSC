@@ -33,22 +33,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName Update-MgDeviceManagementWindowFeatureUpdateProfile -MockWith {
+            Mock -CommandName Update-MgBetaDeviceManagementWindowFeatureUpdateProfile -MockWith {
             }
 
-            Mock -CommandName New-MgDeviceManagementWindowFeatureUpdateProfile -MockWith {
+            Mock -CommandName New-MgBetaDeviceManagementWindowFeatureUpdateProfile -MockWith {
             }
 
-            Mock -CommandName Remove-MgDeviceManagementWindowFeatureUpdateProfile -MockWith {
+            Mock -CommandName Remove-MgBetaDeviceManagementWindowFeatureUpdateProfile -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
             }
 
-            Mock -CommandName Get-MgDeviceManagementWindowFeatureUpdateProfileAssignment -MockWith {
+            Mock -CommandName Get-MgBetaDeviceManagementWindowFeatureUpdateProfileAssignment -MockWith {
             }
 
+            Mock -CommandName Write-Host -MockWith {
+            }
         }
         # Test contexts
         Context -Name "The IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10 should exist but it DOES NOT" -Fixture {
@@ -67,7 +69,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgDeviceManagementWindowFeatureUpdateProfile -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementWindowFeatureUpdateProfile -MockWith {
                     return $null
                 }
             }
@@ -79,7 +81,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should Create the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgDeviceManagementWindowFeatureUpdateProfile -Exactly 1
+                Should -Invoke -CommandName New-MgBetaDeviceManagementWindowFeatureUpdateProfile -Exactly 1
             }
         }
 
@@ -99,7 +101,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgDeviceManagementWindowFeatureUpdateProfile -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementWindowFeatureUpdateProfile -MockWith {
                     return @{
                         AdditionalProperties = @{
                             '@odata.type' = "#microsoft.graph.WindowsFeatureUpdateProfile"
@@ -128,7 +130,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgDeviceManagementWindowFeatureUpdateProfile -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaDeviceManagementWindowFeatureUpdateProfile -Exactly 1
             }
         }
         Context -Name "The IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10 Exists and Values are already in the desired state" -Fixture {
@@ -147,7 +149,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgDeviceManagementWindowFeatureUpdateProfile -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementWindowFeatureUpdateProfile -MockWith {
                     return @{
                         AdditionalProperties = @{
                             '@odata.type' = "#microsoft.graph.WindowsFeatureUpdateProfile"
@@ -188,7 +190,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgDeviceManagementWindowFeatureUpdateProfile -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementWindowFeatureUpdateProfile -MockWith {
                     return @{
                         Description = "FakeStringValue"
                         DisplayName = "FakeStringValue"
@@ -213,7 +215,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgDeviceManagementWindowFeatureUpdateProfile -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaDeviceManagementWindowFeatureUpdateProfile -Exactly 1
             }
         }
 
@@ -224,7 +226,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementWindowFeatureUpdateProfile -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementWindowFeatureUpdateProfile -MockWith {
                     return @{
                         AdditionalProperties = @{
                             '@odata.type' = "#microsoft.graph.WindowsFeatureUpdateProfile"

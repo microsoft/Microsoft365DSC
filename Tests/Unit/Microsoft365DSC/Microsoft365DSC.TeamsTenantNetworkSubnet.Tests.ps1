@@ -45,6 +45,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
             }
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
+            }
         }
         # Test contexts
         Context -Name "The TeamsTenantNetworkSubnet should exist but it DOES NOT" -Fixture {
@@ -113,7 +117,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description          = "Nik Test";
                     Identity             = "192.168.0.0";
                     MaskBits             = 24;
-                    NetworkSiteID        = "Nik";                    
+                    NetworkSiteID        = "Nik";
                     Ensure = "Present"
                     Credential = $Credential;
                 }

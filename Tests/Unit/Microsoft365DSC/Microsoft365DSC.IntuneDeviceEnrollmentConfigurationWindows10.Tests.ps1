@@ -45,6 +45,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
             }
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
+            }
         }
         # Test contexts
         Context -Name 'The IntuneDeviceEnrollmentConfigurationWindows10 should exist but it DOES NOT' -Fixture {

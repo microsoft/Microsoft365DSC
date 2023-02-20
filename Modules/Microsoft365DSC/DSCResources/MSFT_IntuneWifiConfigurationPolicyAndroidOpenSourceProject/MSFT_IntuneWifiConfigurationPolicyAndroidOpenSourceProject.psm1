@@ -405,7 +405,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing {$DisplayName}"
         #region resource generator code
-        Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
+        Remove-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
     }
 }
