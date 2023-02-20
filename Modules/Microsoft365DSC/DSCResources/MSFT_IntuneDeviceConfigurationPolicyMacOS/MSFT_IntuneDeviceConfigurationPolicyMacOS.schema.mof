@@ -118,11 +118,9 @@ class MSFT_IntuneDeviceConfigurationPolicyMacOS : OMI_BaseResource
     [Write, Description("Delay the user's software update for this many days. The maximum is 90 days. (1-90)")] UInt32 SoftwareUpdatesEnforcedDelayInDays;
     [Write, Description("Blocks Spotlight from returning any results from an Internet search")] Boolean SpotlightBlockInternetResults;
     [Write, Description("")] UInt32 TouchIdTimeoutInHours;
-    [Write, Description(""), ValueMap{"none","delayOSUpdateVisibility","delayAppUpdateVisibility","unknownFutureValue","delayMajorOsUpdateVisibility"}, Values{"none","delayOSUpdateVisibility","delayAppUpdateVisibility","unknownFutureValue","delayMajorOsUpdateVisibility"}] String UpdateDelayPolicy;
+    [Write, Description(""), ValueMap{"none","delayOSUpdateVisibility","delayAppUpdateVisibility","unknownFutureValue","delayMajorOsUpdateVisibility"}, Values{"none","delayOSUpdateVisibility","delayAppUpdateVisibility","unknownFutureValue","delayMajorOsUpdateVisibility"}] String UpdateDelayPolicy[];
     [Write, Description("")] Boolean WallpaperModificationBlocked;
-
     [Write, Description("Represents the assignment to the Intune policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];
-
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
     [Write, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

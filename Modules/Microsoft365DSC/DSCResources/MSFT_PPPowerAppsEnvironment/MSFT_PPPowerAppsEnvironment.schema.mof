@@ -2,8 +2,12 @@
 class MSFT_PPPowerAppsEnvironment : OMI_BaseResource
 {
     [Key, Description("Display name for the PowerApps environment")] String DisplayName;
-    [Required, Description("Location of the PowerApps environment."), ValueMap{"canada","unitedstates","europe","asia","australia","india","japan","unitedkingdom","unitedstatesfirstrelease","southamerica","france","usgov"}, Values{"canada","unitedstates","europe","asia","australia","india","japan","unitedkingdom","unitedstatesfirstrelease","southamerica","france","usgov"}] string Location;
-    [Required, Description("Environment type."), ValueMap{"Production","Standard","Trial","Sandbox","SubscriptionBasedTrial", "Teams"}, Values{"Production","Standard","Trial","Sandbox","SubscriptionBasedTrial", "Teams"}] String EnvironmentSKU;
+    [Required, Description("Location of the PowerApps environment."), ValueMap{"canada","unitedstates","europe","asia","australia","india","japan","unitedkingdom","unitedstatesfirstrelease","southamerica","france","usgov","unitedarabemirates","germany","switzerland","norway","korea","southafrica"}, Values{"canada","unitedstates","europe","asia","australia","india","japan","unitedkingdom","unitedstatesfirstrelease","southamerica","france","usgov","unitedarabemirates","germany","switzerland","norway","korea","southafrica"}] string Location;
+    [Required, Description("Environment type."), ValueMap{"Production","Standard","Trial","Sandbox","SubscriptionBasedTrial", "Teams", "Developer"}, Values{"Production","Standard","Trial","Sandbox","SubscriptionBasedTrial", "Teams", "Developer"}] String EnvironmentSKU;
     [Write, Description("Only accepted value is 'Present'."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the Power Platform Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
 };

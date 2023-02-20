@@ -18,7 +18,7 @@
 | **UntrustedUSBProcessType** | Write | String | With this rule, admins can prevent unsigned or untrusted executable files from running from USB removable drives, including SD cards. | `notConfigured`, `userDefined`, `block`, `auditMode`, `warn`, `disable` |
 | **AttackSurfaceReductionExcludedPaths** | Write | StringArray[] | Exclude files and paths from attack surface reduction rules | |
 | **UntrustedExecutableType** | Write | String | This rule blocks executable files that don't meet a prevalence, age, or trusted list criteria, such as .exe, .dll, or .scr, from launching. | `userDefined`, `block`, `auditMode`, `warn`, `disable` |
-| **OfficeCommunicationAppsLaunchChildProcess** | Write | String | This rule prevents Outlook from creating child processes, while still allowing legitimate Outlook functions. | `notConfigured`, `userDefined`, `block`, `auditMode`, `warn`, `disable` |
+| **OfficeCommunicationAppsLaunchChildProcess** | Write | String | This rule prevents Outlook from creating child processes, while still allowing legitimate Outlook functions. | `notConfigured`, `enable`, `auditMode`, `warn`, `disable` |
 | **EmailContentExecutionType** | Write | String | This rule blocks the following file types from launching from email opened within the Microsoft Outlook application, or Outlook.com and other popular webmail providers. | `notConfigured`, `block`, `auditMode`, `userDefined`, `disable` |
 | **ScriptDownloadedPayloadExecutionType** | Write | String | This rule prevents scripts from launching potentially malicious downloaded content. | `userDefined`, `block`, `auditMode`, `warn`, `disable` |
 | **AdditionalGuardedFolders** | Write | StringArray[] | List of additional folders that need to be protected | |

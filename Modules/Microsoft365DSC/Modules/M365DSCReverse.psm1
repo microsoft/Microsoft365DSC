@@ -638,7 +638,7 @@ function Start-M365DSCConfigurationExtract
                 $credsContent = ''
                 $credsContent += '        ' + (Resolve-Credentials $certCreds) + " = Get-Credential -Message `"Certificate Password`""
                 $credsContent += "`r`n"
-                $startPosition = $DSCContent.IndexOf('<# Credentials #>') + 19
+                $startPosition = $DSCContent.ToString().IndexOf('<# Credentials #>') + 19
                 $DSCContent = $DSCContent.Insert($startPosition, $credsContent)
                 $launchCommand += " -CertificatePassword `$CertificatePassword"
             }

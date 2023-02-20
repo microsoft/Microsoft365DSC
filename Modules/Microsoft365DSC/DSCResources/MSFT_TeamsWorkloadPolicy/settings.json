@@ -1,0 +1,16 @@
+﻿{
+    "resourceName": "TeamsWorkloadPolicy",
+    "description": "This resources implements a Teams workload policy.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        }
+    }
+}

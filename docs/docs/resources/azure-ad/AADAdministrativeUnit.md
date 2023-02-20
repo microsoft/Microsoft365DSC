@@ -4,9 +4,9 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
+| **DisplayName** | Key | String | DisplayName of the Administrative Unit | |
 | **Id** | Write | String | Object-Id of the Administrative Unit | |
 | **Description** | Write | String | Description of the Administrative Unit | |
-| **DisplayName** | Write | String | DisplayName of the Administrative Unit | |
 | **Visibility** | Write | String | Visibility of the Administrative Unit. Specify HiddenMembership if members of the AU are hidden | |
 | **MembershipType** | Write | String | Specify membership type. Possible values are Assigned and Dynamic if the AU-preview has been activated. Otherwise do not use | |
 | **MembershipRule** | Write | String | Specify membership rule. Requires that MembershipType is set to Dynamic AND the AU-preview has been activated. Otherwise, do not use | |
@@ -54,21 +54,21 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - AdministrativeUnit.Read.All, Directory.Read.All, RoleManagement.Read.Directory, Member.Read.Hidden
+    - AdministrativeUnit.Read.All, RoleManagement.Read.Directory
 
 - **Update**
 
-    - AdministrativeUnit.ReadWrite.All, Directory.ReadWrite.All, RoleManagement.ReadWrite.Directory
+    - AdministrativeUnit.Read.All, AdministrativeUnit.ReadWrite.All, Application.Read.All, Device.Read.All, Group.Read.All, RoleManagement.Read.Directory, User.Read.All
 
 #### Application permissions
 
 - **Read**
 
-    - AdministrativeUnit.Read.All, Directory.Read.All, RoleManagement.Read.Directory, Member.Read.Hidden
+    - AdministrativeUnit.Read.All, RoleManagement.Read.Directory
 
 - **Update**
 
-    - AdministrativeUnit.ReadWrite.All, Directory.ReadWrite.All, RoleManagement.ReadWrite.Directory
+    - AdministrativeUnit.Read.All, AdministrativeUnit.ReadWrite.All, Application.Read.All, Device.Read.All, Group.Read.All, RoleManagement.Read.Directory, User.Read.All
 
 ## Examples
 

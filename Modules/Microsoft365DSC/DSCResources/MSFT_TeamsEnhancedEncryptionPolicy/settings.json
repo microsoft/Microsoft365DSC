@@ -1,0 +1,16 @@
+﻿{
+    "resourceName": "TeamsEnhancedEncryptionPolicy",
+    "description": "This resource configures an Use this resource to create a new Teams enhanced encryption policy..",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        }
+    }
+}

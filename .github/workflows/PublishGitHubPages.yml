@@ -21,6 +21,7 @@ jobs:
           New-M365DSCCmdletDocumentation
       - name: Commit files # commit the output folder
         if: always()
+        shell: pwsh
         run: |
           git config --local user.email "nik.charlebois@microsoft.com"
           git config --local user.name "Nik Charlebois"
@@ -28,6 +29,8 @@ jobs:
           git pull
           git commit -m "Updated Resources and Cmdlet documentation pages"
           git push
+          $SHA = git rev-parse HEAD
+          echo "commitid=$SHA" >> $env:GITHUB_OUTPUT
 
   deploy:
     needs: GenerateResource
@@ -38,6 +41,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ needs.GenerateResource.outputs.commitid }}
       - uses: actions/setup-python@v4
         with:
           python-version: 3.x

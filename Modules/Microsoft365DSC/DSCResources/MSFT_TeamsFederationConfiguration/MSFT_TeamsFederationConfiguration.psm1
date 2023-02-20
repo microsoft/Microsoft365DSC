@@ -34,6 +34,18 @@ function Get-TargetResource
         $AllowTeamsConsumerInbound,
 
         [Parameter()]
+        [System.Boolean]
+        $TreatDiscoveredPartnersAsUnverified,
+
+        [Parameter()]
+        [System.Boolean]
+        $SharedSipAddressSpace,
+
+        [Parameter()]
+        [System.Boolean]
+        $RestrictTeamsConsumerToExternalUserProfiles,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -67,6 +79,10 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $nullReturn = @{
+        Identity = 'Global'
+    }
+
     try
     {
         $config = Get-CsTenantFederationConfiguration -ErrorAction Stop
@@ -94,17 +110,20 @@ function Get-TargetResource
         }
 
         return @{
-            Identity                  = $Identity
-            AllowedDomains            = $AllowedDomainsValues
-            BlockedDomains            = $BlockedDomainsValues
-            AllowFederatedUsers       = $config.AllowFederatedUsers
-            AllowPublicUsers          = $config.AllowPublicUsers
-            AllowTeamsConsumer        = $config.AllowTeamsConsumer
-            AllowTeamsConsumerInbound = $config.AllowTeamsConsumerInbound
-            Credential                = $Credential
-            ApplicationId             = $ApplicationId
-            TenantId                  = $TenantId
-            CertificateThumbprint     = $CertificateThumbprint
+            Identity                                    = $Identity
+            AllowedDomains                              = $AllowedDomainsValues
+            BlockedDomains                              = $BlockedDomainsValues
+            AllowFederatedUsers                         = $config.AllowFederatedUsers
+            AllowPublicUsers                            = $config.AllowPublicUsers
+            AllowTeamsConsumer                          = $config.AllowTeamsConsumer
+            AllowTeamsConsumerInbound                   = $config.AllowTeamsConsumerInbound
+            TreatDiscoveredPartnersAsUnverified         = $config.TreatDiscoveredPartnersAsUnverified
+            SharedSipAddressSpace                       = $config.SharedSipAddressSpace
+            RestrictTeamsConsumerToExternalUserProfiles = $config.RestrictTeamsConsumerToExternalUserProfiles
+            Credential                                  = $Credential
+            ApplicationId                               = $ApplicationId
+            TenantId                                    = $TenantId
+            CertificateThumbprint                       = $CertificateThumbprint
         }
     }
     catch
@@ -115,7 +134,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return @{}
+        return $nullReturn
     }
 }
 
@@ -152,6 +171,18 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowTeamsConsumerInbound,
+
+        [Parameter()]
+        [System.Boolean]
+        $TreatDiscoveredPartnersAsUnverified,
+
+        [Parameter()]
+        [System.Boolean]
+        $SharedSipAddressSpace,
+
+        [Parameter()]
+        [System.Boolean]
+        $RestrictTeamsConsumerToExternalUserProfiles,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -192,9 +223,15 @@ function Set-TargetResource
     $SetParams.Remove('ApplicationId') | Out-Null
     $SetParams.Remove('TenantId') | Out-Null
     $SetParams.Remove('CertificateThumbprint') | Out-Null
-
     $SetParams.Remove('AllowedDomains') | Out-Null
-    $SetParams.Add('AllowedDomainsAsAList', $AllowedDomains)
+    if($allowedDomains.Length -gt 0)
+    {
+        $SetParams.Add('AllowedDomainsAsAList', $AllowedDomains)
+    }
+    else{
+        $AllowAllKnownDomains = New-CsEdgeAllowAllKnownDomains
+        $SetParams.Add('AllowedDomains', $AllowAllKnownDomains)
+    }
 
     Write-Verbose -Message "SetParams: $(Convert-M365DscHashtableToString -Hashtable $SetParams)"
     Set-CsTenantFederationConfiguration @SetParams
@@ -234,6 +271,18 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowTeamsConsumerInbound,
+
+        [Parameter()]
+        [System.Boolean]
+        $TreatDiscoveredPartnersAsUnverified,
+
+        [Parameter()]
+        [System.Boolean]
+        $SharedSipAddressSpace,
+
+        [Parameter()]
+        [System.Boolean]
+        $RestrictTeamsConsumerToExternalUserProfiles,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -331,17 +380,27 @@ function Export-TargetResource
             CertificateThumbprint = $CertificateThumbprint
         }
         $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -Credential $Credential
-        $dscContent += $currentDSCBlock
-        Save-M365DSCPartialExport -Content $currentDSCBlock `
-            -FileName $Global:PartialExportFileName
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+
+        if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
+        {
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host $Global:M365DSCEmojiRedX
+        }
+
         return $dscContent
     }
     catch

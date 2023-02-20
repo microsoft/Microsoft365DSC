@@ -8,7 +8,12 @@
 | **Description** | Write | String | The description of the case. | |
 | **Ensure** | Write | String | Specify if this case should exist or not. | `Present`, `Absent` |
 | **Status** | Write | String | Status for the case. Can either be 'Active' or 'Closed' | `Active`, `Closed` |
-| **Credential** | Required | PSCredential | Credentials of the Global Admin Account | |
+| **Credential** | Write | PSCredential | Credentials of the Global Admin Account | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
+| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
+| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 
 ## Description
 

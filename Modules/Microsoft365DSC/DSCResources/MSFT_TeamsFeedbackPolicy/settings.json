@@ -1,0 +1,16 @@
+﻿{
+    "resourceName": "TeamsFeedbackPolicy",
+    "description": "This resource configures an \r\nNew-CsTeamsFeedbackPolicy [-Identity] \u003cstring\u003e [-UserInitiatedMode \u003cstring\u003e] [-ReceiveSurveysMode \u003cstring\u003e] [-AllowScreenshotCollection \u003cbool\u003e] [-AllowEmailCollection \u003cbool\u003e] [-AllowLogCollection \u003cbool\u003e] [-EnableFeatureSuggestions \u003cbool\u003e] [-Force] [-WhatIf] [-Confirm] [\u003cCommonParameters\u003e]\r\n.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        }
+    }
+}
