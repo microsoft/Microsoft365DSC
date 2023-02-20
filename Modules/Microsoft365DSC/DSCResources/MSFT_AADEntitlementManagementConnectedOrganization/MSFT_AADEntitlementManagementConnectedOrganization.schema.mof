@@ -1,6 +1,6 @@
 
 [ClassVersion("1.0.0")]
-class MSFT_MicrosoftGraphidentitysource
+class MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource
 {
     [Write, Description("Type of the identity source."), ValueMap{"#microsoft.graph.azureActiveDirectoryTenant","#microsoft.graph.crossCloudAzureActiveDirectoryTenant","#microsoft.graph.domainIdentitySource","#microsoft.graph.externalDomainFederation"}, Values{"#microsoft.graph.azureActiveDirectoryTenant","#microsoft.graph.crossCloudAzureActiveDirectoryTenant","#microsoft.graph.domainIdentitySource","#microsoft.graph.externalDomainFederation"}] String odataType;
     [Write, Description("The name of the Azure Active Directory tenant.")] String DisplayName;
@@ -13,10 +13,10 @@ class MSFT_MicrosoftGraphidentitysource
 [ClassVersion("1.0.0.0"), FriendlyName("AADEntitlementManagementConnectedOrganization")]
 class MSFT_AADEntitlementManagementConnectedOrganization : OMI_BaseResource
 {
-    [Write, Description("The Id of the Connected organization object.")] String Id;
+    [Key, Description("The Id of the Connected organization object.")] String Id;
     [Write, Description("The description of the connected organization.")] String Description;
     [Write, Description("The display name of the connected organization.")] String DisplayName;
-    [Write, Description("The identity sources in this connected organization."), EmbeddedInstance("MSFT_MicrosoftGraphidentitysource")] String IdentitySources[];
+    [Write, Description("The identity sources in this connected organization."), EmbeddedInstance("MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource")] String IdentitySources[];
     [Write, Description("The state of a connected organization defines whether assignment policies with requestor scope type AllConfiguredConnectedOrganizationSubjects are applicable or not."), ValueMap{"configured","proposed","unknownFutureValue"}, Values{"configured","proposed","unknownFutureValue"}] String State;
     [Write, Description("Collection of objectID of extenal sponsors. the sponsor can be a user or a group.")] String ExternalSponsors[];
     [Write, Description("Collection of objectID of internal sponsors. the sponsor can be a user or a group.")] String InternalSponsors[];

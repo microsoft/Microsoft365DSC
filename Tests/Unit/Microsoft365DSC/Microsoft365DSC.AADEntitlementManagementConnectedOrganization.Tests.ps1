@@ -67,7 +67,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ExternalSponsors =@("12345678-1234-1234-1234-123456789012")
                         Id = "ConnectedOrganization_Id"
                         IdentitySources =@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphidentitysource -Property @{
+                            (New-CimInstance -ClassName MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource -Property @{
                                 ExternalTenantId = "IdentitySource_TenantId"
                                 odataType = "#microsoft.graph.azureActiveDirectoryTenant"
                                 displayName = "IdentitySource_DisplayName"
@@ -125,7 +125,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExternalSponsors =@("12345678-1234-1234-1234-123456789012")
                     Id = "ConnectedOrganization_Id"
                     IdentitySources =@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphidentitysource -Property @{
+                        (New-CimInstance -ClassName MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource -Property @{
                             ExternalTenantId = "IdentitySource_TenantId"
                             odataType = "#microsoft.graph.azureActiveDirectoryTenant"
                             displayName = "IdentitySource_DisplayName"
@@ -192,7 +192,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExternalSponsors =@("12345678-1234-1234-1234-123456789012")
                     Id = "12345678-1234-1234-1234-123456789012"
                     IdentitySources =@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphidentitysource -Property @{
+                        (New-CimInstance -ClassName MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource -Property @{
                             ExternalTenantId = "IdentitySource_TenantId"
                             odataType = "#microsoft.graph.azureActiveDirectoryTenant"
                             displayName = "IdentitySource_DisplayName"
@@ -249,7 +249,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExternalSponsors =@("12345678-1234-1234-1234-123456789012")
                     Id = "12345678-1234-1234-1234-123456789012"
                     IdentitySources =@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphidentitysource -Property @{
+                        (New-CimInstance -ClassName MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource -Property @{
                             ExternalTenantId = "IdentitySource_TenantId"
                             odataType = "#microsoft.graph.azureActiveDirectoryTenant"
                             displayName = "IdentitySource_DisplayName"
