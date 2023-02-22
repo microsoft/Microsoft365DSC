@@ -44,13 +44,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
-            }<AssignmentMock>
+            }
         }
         # Test contexts
         Context -Name "The TeamsTenantTrustedIPAddress should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Present"
+                    Identity             = "10.2.34.3";
+                    MaskBits             = 32;
+                    Ensure = "Present"
                     Credential = $Credential;
                 }
 
@@ -73,16 +75,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The TeamsTenantTrustedIPAddress exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Absent"
+                    Identity             = "10.2.34.3";
+                    MaskBits             = 32;
+                    Ensure = "Absent"
                     Credential = $Credential;
                 }
 
                 Mock -CommandName Get-CsTenantTrustedIPAddress -MockWith {
                     return @{
                     Description           = "FakeStringValue"
-                    MaskBits              = 
-                    Identity              = "FakeStringValue"
-
+                    MaskBits              = 32
+                    Identity              = "10.2.34.3"
                     }
                 }
             }
@@ -103,15 +106,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The TeamsTenantTrustedIPAddress Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Present"
+                    Identity             = "10.2.34.3";
+                    MaskBits             = 32;
+                    Ensure = "Present"
                     Credential = $Credential;
                 }
 
                 Mock -CommandName Get-CsTenantTrustedIPAddress -MockWith {
                     return @{
                     Description           = "FakeStringValue"
-                    MaskBits              = 
-                    Identity              = "FakeStringValue"
+                    MaskBits              = 32
+                    Identity              = "10.2.34.3"
 
                     }
                 }
@@ -126,15 +131,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The TeamsTenantTrustedIPAddress exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Present"
+                    Identity             = "10.2.34.3";
+                    MaskBits             = 32;
+                    Description= "Fake"
+                    Ensure = "Present"
                     Credential = $Credential;
                 }
 
                 Mock -CommandName Get-CsTenantTrustedIPAddress -MockWith {
                     return @{
                     Description           = "FakeStringValueDrift #Drift"
-                    MaskBits              = 
-                    Identity              = "FakeStringValue"
+                    MaskBits              = 32
+                    Identity              = "10.2.34.3"
                     }
                 }
             }
@@ -163,7 +171,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-CsTenantTrustedIPAddress -MockWith {
                     return @{
                     Description           = "FakeStringValue"
-                    MaskBits              = 
+                    MaskBits              = 32
                     Identity              = "FakeStringValue"
 
                     }

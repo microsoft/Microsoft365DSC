@@ -44,13 +44,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
-            }<AssignmentMock>
+            }
         }
         # Test contexts
         Context -Name "The TeamsUnassignedNumberTreatment should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Present"
+                    Identity             = "TR2";
+                    Pattern              = "^\+15552224444$";
+                    Target               = "ae274f0a-9c9c-496a-8dd3-8a57640d93aa";
+                    TargetType           = "User";
+                    TreatmentPriority    = 3;
+                    Ensure = "Present"
                     Credential = $Credential;
                 }
 
@@ -73,18 +78,23 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The TeamsUnassignedNumberTreatment exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Absent"
+                    Identity             = "TR2";
+                    Pattern              = "^\+15552224444$";
+                    Target               = "ae274f0a-9c9c-496a-8dd3-8a57640d93aa";
+                    TargetType           = "User";
+                    TreatmentPriority    = 3;
+                    Ensure = "Absent"
                     Credential = $Credential;
                 }
 
                 Mock -CommandName Get-CsTeamsUnassignedNumberTreatment -MockWith {
                     return @{
-                    Target                = "FakeStringValue"
+                    Target                = "ae274f0a-9c9c-496a-8dd3-8a57640d93aa"
                     Description           = "FakeStringValue"
                     TreatmentPriority     = 3
-                    Identity              = "FakeStringValue"
-                    TargetType            = "FakeStringValue"
-                    Pattern               = "FakeStringValue"
+                    Identity              = "TR2"
+                    TargetType            = "User"
+                    Pattern               = "^\+15552224444$"
 
                     }
                 }
@@ -106,18 +116,23 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The TeamsUnassignedNumberTreatment Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Present"
+                    Identity             = "TR2";
+                    Pattern              = "^\+15552224444$";
+                    Target               = "ae274f0a-9c9c-496a-8dd3-8a57640d93aa";
+                    TargetType           = "User";
+                    TreatmentPriority    = 3;
+                    Ensure = "Present"
                     Credential = $Credential;
                 }
 
                 Mock -CommandName Get-CsTeamsUnassignedNumberTreatment -MockWith {
                     return @{
-                    Target                = "FakeStringValue"
                     Description           = "FakeStringValue"
-                    TreatmentPriority     = 3
-                    Identity              = "FakeStringValue"
-                    TargetType            = "FakeStringValue"
-                    Pattern               = "FakeStringValue"
+                    Identity             = "TR2";
+                    Pattern              = "^\+15552224444$";
+                    Target               = "ae274f0a-9c9c-496a-8dd3-8a57640d93aa";
+                    TargetType           = "User";
+                    TreatmentPriority    = 3;
 
                     }
                 }
@@ -132,18 +147,23 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The TeamsUnassignedNumberTreatment exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Present"
+                    Identity             = "TR2";
+                    Pattern              = "^\+15552224444$";
+                    Target               = "ae274f0a-9c9c-496a-8dd3-8a57640d93aa";
+                    TargetType           = "User";
+                    TreatmentPriority    = 3;
+                    Ensure = "Present"
                     Credential = $Credential;
                 }
 
                 Mock -CommandName Get-CsTeamsUnassignedNumberTreatment -MockWith {
                     return @{
-                    Target                = "FakeStringValueDrift #Drift"
                     Description           = "FakeStringValueDrift #Drift"
                     TreatmentPriority     = 2
-                    Identity              = "FakeStringValue"
-                    TargetType            = "FakeStringValueDrift #Drift"
-                    Pattern               = "FakeStringValueDrift #Drift"
+                    Identity             = "TR2";
+                    Pattern              = "^\+15552224444$";
+                    Target               = "ae274f0a-9c9c-496a-8dd3-8a57640d93aa";
+                    TargetType           = "User";
                     }
                 }
             }

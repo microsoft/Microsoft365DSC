@@ -2,8 +2,8 @@
 class MSFT_TeamsChannelTab : OMI_BaseResource
 {
     [Key, Description("Display Name of the Channel Tab.")]String DisplayName;
-    [Required, Description("Display Name of the Team.")]String TeamName;
-    [Required, Description("Display Name of the Channel.")]String ChannelName;
+    [Key, Description("Display Name of the Team.")]String TeamName;
+    [Key, Description("Display Name of the Channel.")]String ChannelName;
     [Write, Description("Unique Id of the Team of the instance on the source tenant.")]String TeamId;
     [Write, Description("Id of the Teams App associated with the custom tab.")]String TeamsApp;
     [Write, Description("Index of the sort order for the custom tab.")]UInt32 SortOrderIndex;

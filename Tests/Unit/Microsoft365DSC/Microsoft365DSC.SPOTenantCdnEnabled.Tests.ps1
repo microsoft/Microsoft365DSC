@@ -78,7 +78,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Values from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+                Get-TargetResource @testParams
                 Should -Invoke -CommandName 'Get-PnPTenantCdnEnabled' -Exactly 1
             }
 

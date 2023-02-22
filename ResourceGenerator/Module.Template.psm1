@@ -43,6 +43,7 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters `
             -ProfileName '<#APIVersion#>'
 
+        Select-MgProfile -Name '<#APIVersion#>'
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
 
@@ -177,7 +178,7 @@ function Set-TargetResource
             }
         }<#ResourceGenerator
         #region resource generator code
-        $policy=<NewCmdLetName> <#NewKeyIdentifier#>
+<NewDataType>        $policy=<NewCmdLetName> <#NewKeyIdentifier#>
 <#AssignmentsNew#>        #endregionResourceGenerator#>
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -198,7 +199,7 @@ function Set-TargetResource
             }
         }<#ResourceGenerator
         #region resource generator code
-<oDataType>        <UpdateCmdLetName> <#UpdateKeyIdentifier#>
+<UpdateDataType>        <UpdateCmdLetName> <#UpdateKeyIdentifier#>
 <#AssignmentsUpdate#>        #endregionResourceGenerator#>
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
