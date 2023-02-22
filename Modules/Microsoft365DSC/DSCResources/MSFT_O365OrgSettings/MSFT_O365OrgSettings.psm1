@@ -14,6 +14,10 @@ function Get-TargetResource
         $M365WebEnableUsersToOpenFilesFrom3PStorage,
 
         [Parameter()]
+        [System.Boolean]
+        $PlannerAllowCalendarSharing,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -52,6 +56,9 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters `
         -ProfileName 'v1.0'
 
+    $ConnectionMode = New-M365DSCConnection -Workload 'Tasks' `
+        -InboundParameters $PSBoundParameters
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -74,9 +81,11 @@ function Get-TargetResource
         $OfficeOnlineId = 'c1f33bc0-bdb4-4248-ba9b-096807ddb43e'
         $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Get-MgServicePrincipal -Filter "appId eq '$OfficeOnlineId'" -Property 'AccountEnabled'
 
+        $PlannerSettings = Get-M365DSCO365OrgSettingsPlannerConfig
         return @{
             IsSingleInstance                           = 'Yes'
             M365WebEnableUsersToOpenFilesFrom3PStorage = $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled
+            PlannerAllowCalendarSharing                = $PlannerSettings.allowCalendarSharing
             Ensure                                     = 'Present'
             Credential                                 = $Credential
             ApplicationId                              = $ApplicationId
@@ -111,6 +120,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $M365WebEnableUsersToOpenFilesFrom3PStorage,
+
+        [Parameter()]
+        [System.Boolean]
+        $PlannerAllowCalendarSharing,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -160,17 +173,20 @@ function Set-TargetResource
     #endregion
 
     Write-Verbose -Message "Setting configuration of Office 365 Settings"
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'v1.0'
+    $currentValues = Get-TargetResource @PSBoundParameters
 
-    $OfficeOnlineId = 'c1f33bc0-bdb4-4248-ba9b-096807ddb43e'
-    $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Get-MgServicePrincipal -Filter "appId eq '$OfficeOnlineId'" -Property 'AccountEnabled, Id'
-    if ($M365WebEnableUsersToOpenFilesFrom3PStorage -ne $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled)
+    if ($M365WebEnableUsersToOpenFilesFrom3PStorage -ne $currentValues.M365WebEnableUsersToOpenFilesFrom3PStorage)
     {
         Write-Verbose -Message "Setting the Microsoft 365 On the Web setting to {$M365WebEnableUsersToOpenFilesFrom3PStorage}"
+        $OfficeOnlineId = 'c1f33bc0-bdb4-4248-ba9b-096807ddb43e'
+        $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Get-MgServicePrincipal -Filter "appId eq '$OfficeOnlineId'" -Property 'AccountEnabled, Id'
         Update-MgservicePrincipal -ServicePrincipalId $($M365WebEnableUsersToOpenFilesFrom3PStorageValue.Id) `
             -AccountEnabled:$M365WebEnableUsersToOpenFilesFrom3PStorage
+    }
+    if ($PlannerAllowCalendarSharing -ne $currentValues.PlannerAllowCalendarSharing)
+    {
+        Write-Verbose -Message "Setting the Planner Allow Calendar Sharing setting to {$PlannerAllowCalendarSharing}"
+        Set-M365DSCO365OrgSettingsPlannerConfig -AllowCalendarSharing $PlannerAllowCalendarSharing
     }
 }
 
@@ -188,6 +204,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $M365WebEnableUsersToOpenFilesFrom3PStorage,
+
+        [Parameter()]
+        [System.Boolean]
+        $PlannerAllowCalendarSharing,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -339,6 +359,40 @@ function Export-TargetResource
 
         return ''
     }
+}
+
+function Get-M365DSCO365OrgSettingsPlannerConfig
+{
+    [CmdletBinding()]
+    param()
+    $Uri = $Global:MSCloudLoginConnectionProfile.Tasks.HostUrl + "/taskAPI/tenantAdminSettings/Settings";
+    $results = Invoke-RestMethod -ContentType "application/json;odata.metadata=full" `
+        -Headers @{"Accept"="application/json"; "Authorization"=$Global:MSCloudLoginConnectionProfile.Tasks.AccessToken; "Accept-Charset"="UTF-8"; "OData-Version"="4.0;NetFx"; "OData-MaxVersion"="4.0;NetFx"} `
+        -Method GET `
+        $Uri
+    return $results
+}
+
+function Set-M365DSCO365OrgSettingsPlannerConfig
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Boolean]
+        $AllowCalendarSharing
+    )
+
+    $flags = @{
+        allowCalendarSharing = $AllowCalendarSharing
+    }
+
+    $requestBody = $flags | ConvertTo-Json
+    $Uri = $Global:MSCloudLoginConnectionProfile.Tasks.HostUrl + "/taskAPI/tenantAdminSettings/Settings";
+    $results = Invoke-RestMethod -ContentType "application/json;odata.metadata=full" `
+        -Headers @{"Accept"="application/json"; "Authorization"=$Global:MSCloudLoginConnectionProfile.Tasks.AccessToken; "Accept-Charset"="UTF-8"; "OData-Version"="4.0;NetFx"; "OData-MaxVersion"="4.0;NetFx"} `
+        -Method PATCH `
+        -Body $requestBody `
+        $Uri
 }
 
 Export-ModuleMember -Function *-TargetResource
