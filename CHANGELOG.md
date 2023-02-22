@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.222.1
 
 * AADEntitlementManagementAccessPackageAssignmentPolicy
   * Initial release
