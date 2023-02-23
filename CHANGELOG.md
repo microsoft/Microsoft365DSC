@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* IntuneDeviceEnrollmentConfigurationWindows10
+  * Fix settings.json
+    FIXES [#2930](https://github.com/microsoft/Microsoft365DSC/issues/2930)
 * TeamsOnlineVoiceUser
   * Fix issue where the cmdlet Get-CsOnlineVoiceUser is now deprecated.
 
