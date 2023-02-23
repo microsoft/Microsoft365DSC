@@ -2,6 +2,7 @@
 class MSFT_O365OrgSettings : OMI_BaseResource
 {
     [Key, Description("Specifies the resource is a single instance, the value must be 'Yes'"), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
+    [Write, Description("Allow Cortana in windows 10 (version 1909 and earlier), and the Cortana app on iOS and Android, to access Microsoft-hosted data on behalf of people in your organization.")] Boolean CortanaEnabled;
     [Write, Description("Let users open files stored in third-party storage services in Microsoft 365 on the Web.")] Boolean M365WebEnableUsersToOpenFilesFrom3PStorage;
     [Write, Description("Since there is only one setting availble, this must be set to 'Present'"), ValueMap{"Present"}, Values{"Present"}] String Ensure;
     [Write, Description("Credentials of the Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
