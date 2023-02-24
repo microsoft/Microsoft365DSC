@@ -61,9 +61,9 @@ Describe -Name 'Successfully compile examples' {
             }
 
             <#
-                    Set this first because it is used in the final block,
-                    and must be set otherwise it fails on not being assigned.
-                #>
+                Set this first because it is used in the final block,
+                and must be set otherwise it fails on not being assigned.
+            #>
             $existingCommandName = $null
 
             try
@@ -71,20 +71,20 @@ Describe -Name 'Successfully compile examples' {
                 . $ExampleFile.FullName
 
                 <#
-                        Test for either a configuration named 'Example',
-                        or parse the name from the filename and try that
-                        as the configuration name (requirement for Azure
-                        Automation).
-                    #>
+                    Test for either a configuration named 'Example',
+                    or parse the name from the filename and try that
+                    as the configuration name (requirement for Azure
+                    Automation).
+                #>
                 $commandName = @(
                     'Example',
                         (Get-PublishFileName -Path $ExampleFile.FullName)
                 )
 
                 # Get the first one that matches.
-                $existingCommand = Get-ChildItem -Path 'function:' |
-                Where-Object { $_.Name -in $commandName } |
-                Select-Object -First 1
+                $existingCommand = Get-ChildItem -Path 'function:' | Where-Object {
+                    $_.Name -in $commandName
+                } | Select-Object -First 1
 
                 if ($existingCommand)
                 {
@@ -97,9 +97,8 @@ Describe -Name 'Successfully compile examples' {
                         $exampleParameters = @{}
 
                         # Remove any common parameters that are available.
-                        $commandParameters = $exampleCommand.Parameters.Keys |
-                        Where-Object -FilterScript {
-                                    ($_ -notin [System.Management.Automation.PSCmdlet]::CommonParameters) -and `
+                        $commandParameters = $exampleCommand.Parameters.Keys | Where-Object -FilterScript {
+                                ($_ -notin [System.Management.Automation.PSCmdlet]::CommonParameters) -and `
                             ($_ -notin [System.Management.Automation.PSCmdlet]::OptionalCommonParameters)
                         }
 
@@ -153,7 +152,6 @@ Describe -Name 'Successfully compile examples' {
                 {
                     throw ('The example ''{0}'' does not contain a configuration named ''{1}''.' -f $exampleDescriptiveName, ($commandName -join "', or '"))
                 }
-
             }
             finally
             {
