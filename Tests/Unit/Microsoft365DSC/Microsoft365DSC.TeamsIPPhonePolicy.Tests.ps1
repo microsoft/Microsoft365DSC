@@ -43,9 +43,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return 'Credential'
+                return 'Credentials'
+            }
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
             }
         }
+
         # Test contexts
         Context -Name 'The TeamsIPPhonePolicy should exist but it DOES NOT' -Fixture {
             BeforeAll {
@@ -59,19 +64,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                       = 'FakeStringValue'
                     AllowHomeScreen                = 'Enabled'
                     Ensure                         = 'Present'
-                    Credential                     = $Credential;
+                    Credential                     = $Credential
                 }
 
                 Mock -CommandName Get-CsTeamsIPPhonePolicy -MockWith {
                     return $null
                 }
             }
+
             It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
+
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
+
             It 'Should Create the group from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName New-CsTeamsIPPhonePolicy -Exactly 1
@@ -90,7 +98,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                       = 'FakeStringValue'
                     AllowHomeScreen                = 'Enabled'
                     Ensure                         = 'Absent'
-                    Credential                     = $Credential;
+                    Credential                     = $Credential
                 }
 
                 Mock -CommandName Get-CsTeamsIPPhonePolicy -MockWith {
@@ -120,6 +128,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Should -Invoke -CommandName Remove-CsTeamsIPPhonePolicy -Exactly 1
             }
         }
+
         Context -Name 'The TeamsIPPhonePolicy Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
@@ -132,7 +141,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                       = 'FakeStringValue'
                     AllowHomeScreen                = 'Enabled'
                     Ensure                         = 'Present'
-                    Credential                     = $Credential;
+                    Credential                     = $Credential
                 }
 
                 Mock -CommandName Get-CsTeamsIPPhonePolicy -MockWith {
@@ -166,7 +175,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                       = 'FakeStringValue'
                     AllowHomeScreen                = 'Enabled'
                     Ensure                         = 'Present'
-                    Credential                     = $Credential;
+                    Credential                     = $Credential
                 }
 
                 Mock -CommandName Get-CsTeamsIPPhonePolicy -MockWith {
@@ -200,6 +209,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
                 }
@@ -218,8 +228,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
             }
+
             It 'Should Reverse Engineer resource from the Export method' {
-                Export-TargetResource @testParams
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }

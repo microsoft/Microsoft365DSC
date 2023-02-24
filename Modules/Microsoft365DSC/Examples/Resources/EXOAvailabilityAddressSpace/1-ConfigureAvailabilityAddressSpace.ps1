@@ -11,18 +11,18 @@ Configuration Example
         [PSCredential]
         $credsGlobalAdmin
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
         EXOAvailabilityAddressSpace 'ConfigureAvailabilityAddressSpace'
         {
-            Identity              = "Contoso.com"
-            AccessMethod          = "OrgWideFB"
-            Credentials           = $credsGlobalAdmin
-            ForestName            = "example.contoso.com"
-            TargetAutodiscoverEpr = "https://contoso.com/autodiscover/autodiscover.xml"
-            Ensure                = "Present"
+            Identity              = 'Contoso.com'
+            AccessMethod          = 'OrgWideFB'
+            ForestName            = 'example.contoso.com'
+            TargetAutodiscoverEpr = 'https://contoso.com/autodiscover/autodiscover.xml'
+            Ensure                = 'Present'
             Credential            = $credsGlobalAdmin
         }
     }

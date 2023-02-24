@@ -648,13 +648,13 @@ function Test-TargetResource
                 if (-Not $testResult)
                 {
                     $testResult = $false
-                    break;
+                    break
                 }
             }
             if (-Not $testResult)
             {
                 $testResult = $false
-                break;
+                break
             }
 
             $ValuesToCheck.Remove($key) | Out-Null
@@ -750,7 +750,6 @@ function Export-TargetResource
         }
         #endregion
 
-
         $i = 1
         $dscContent = ''
         if ($getValue.Length -eq 0)
@@ -779,7 +778,6 @@ function Export-TargetResource
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
 
-
             if ($Results.Assignments)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
@@ -798,7 +796,6 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-
 
             if ($Results.Assignments)
             {
@@ -927,7 +924,6 @@ function Get-M365DSCDRGComplexTypeToString
             return $null
         }
         return $currentProperty
-
     }
 
     #If ComplexObject is a single CIM Instance

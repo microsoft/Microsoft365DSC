@@ -43,7 +43,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return 'Credential'
+                return 'Credentials'
             }
 
             # Mock Write-Host to hide output during the tests
@@ -55,19 +55,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The AADEntitlementManagementAccessPackage should exist but it DOES NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    CatalogId           = 'FakeStringValue'
-                    Description         = 'FakeStringValue'
-                    DisplayName         = 'FakeStringValue'
-                    Id                  = 'FakeStringValue'
-                    IsHidden            = $True
-                    IsRoleScopesVisible = $True
+                    CatalogId                       = 'FakeStringValue'
+                    Description                     = 'FakeStringValue'
+                    DisplayName                     = 'FakeStringValue'
+                    Id                              = 'FakeStringValue'
+                    IsHidden                        = $True
+                    IsRoleScopesVisible             = $True
                     AccessPackageResourceRoleScopes = (New-CimInstance -ClassName MSFT_AccessPackageResourceRoleScope -Property @{
-                        Id = 'FakeStringValue'
-                        AccessPackageResourceOriginId = '123456789'
-                        AccessPackageResourceRoleDisplayName = 'TestRole'
-                    } -ClientOnly)
-                    Ensure              = 'Present'
-                    Credential          = $Credential
+                            Id                                   = 'FakeStringValue'
+                            AccessPackageResourceOriginId        = '123456789'
+                            AccessPackageResourceRoleDisplayName = 'TestRole'
+                        } -ClientOnly)
+                    Ensure                          = 'Present'
+                    Credential                      = $Credential
                 }
 
                 Mock -CommandName Get-MgEntitlementManagementAccessPackage -MockWith {
@@ -89,34 +89,34 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The AADEntitlementManagementAccessPackage exists but it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    CatalogId           = 'FakeStringValue'
-                    Description         = 'FakeStringValue'
-                    DisplayName         = 'FakeStringValue'
-                    Id                  = 'FakeStringValue'
-                    IsHidden            = $True
-                    IsRoleScopesVisible = $True                    
+                    CatalogId                       = 'FakeStringValue'
+                    Description                     = 'FakeStringValue'
+                    DisplayName                     = 'FakeStringValue'
+                    Id                              = 'FakeStringValue'
+                    IsHidden                        = $True
+                    IsRoleScopesVisible             = $True
                     AccessPackageResourceRoleScopes = (New-CimInstance -ClassName MSFT_AccessPackageResourceRoleScope -Property @{
-                        Id = 'FakeStringValue'
-                        AccessPackageResourceOriginId = '123456789'
-                        AccessPackageResourceRoleDisplayName = 'TestRole'
-                    } -ClientOnly)
-                    Ensure              = 'Absent'
-                    Credential          = $Credential
+                            Id                                   = 'FakeStringValue'
+                            AccessPackageResourceOriginId        = '123456789'
+                            AccessPackageResourceRoleDisplayName = 'TestRole'
+                        } -ClientOnly)
+                    Ensure                          = 'Absent'
+                    Credential                      = $Credential
                 }
 
                 Mock -CommandName Get-MgEntitlementManagementAccessPackage -MockWith {
                     return @{
-                        CatalogId           = 'FakeStringValue'
-                        Description         = 'FakeStringValue'
-                        DisplayName         = 'FakeStringValue'
-                        Id                  = 'FakeStringValue'
-                        IsHidden            = $True
-                        IsRoleScopesVisible = $True
+                        CatalogId                       = 'FakeStringValue'
+                        Description                     = 'FakeStringValue'
+                        DisplayName                     = 'FakeStringValue'
+                        Id                              = 'FakeStringValue'
+                        IsHidden                        = $True
+                        IsRoleScopesVisible             = $True
                         AccessPackageResourceRoleScopes = @{
                             AccessPackageResourceScope = @{
                                 OriginId = '123456789'
                             }
-                            AccessPackageResourceRole = @{
+                            AccessPackageResourceRole  = @{
                                 DisplayName = 'TestRole'
                             }
                         }
@@ -150,36 +150,36 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The AADEntitlementManagementAccessPackage Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    CatalogId                  = 'FakeStringValue'
-                    Description                = 'FakeStringValue'
-                    DisplayName                = 'FakeStringValue'
-                    Id                         = 'FakeStringValue'
-                    IsHidden                   = $True
-                    IsRoleScopesVisible        = $True
-                    IncompatibleAccessPackages = @('packageId1', 'packageId2')
-                    IncompatibleGroups         = @('groupId1', 'groupId2')
+                    CatalogId                       = 'FakeStringValue'
+                    Description                     = 'FakeStringValue'
+                    DisplayName                     = 'FakeStringValue'
+                    Id                              = 'FakeStringValue'
+                    IsHidden                        = $True
+                    IsRoleScopesVisible             = $True
+                    IncompatibleAccessPackages      = @('packageId1', 'packageId2')
+                    IncompatibleGroups              = @('groupId1', 'groupId2')
                     AccessPackageResourceRoleScopes = (New-CimInstance -ClassName MSFT_AccessPackageResourceRoleScope -Property @{
-                        Id = 'FakeStringValue'
-                        AccessPackageResourceOriginId = '123456789'
-                        AccessPackageResourceRoleDisplayName = 'TestRole'
-                    } -ClientOnly)
-                    Ensure                     = 'Present'
-                    Credential                 = $Credential
+                            Id                                   = 'FakeStringValue'
+                            AccessPackageResourceOriginId        = '123456789'
+                            AccessPackageResourceRoleDisplayName = 'TestRole'
+                        } -ClientOnly)
+                    Ensure                          = 'Present'
+                    Credential                      = $Credential
                 }
 
                 Mock -CommandName Get-MgEntitlementManagementAccessPackage -MockWith {
                     return @{
-                        CatalogId           = 'FakeStringValue'
-                        Description         = 'FakeStringValue'
-                        DisplayName         = 'FakeStringValue'
-                        Id                  = 'FakeStringValue'
-                        IsHidden            = $True
-                        IsRoleScopesVisible = $True
+                        CatalogId                       = 'FakeStringValue'
+                        Description                     = 'FakeStringValue'
+                        DisplayName                     = 'FakeStringValue'
+                        Id                              = 'FakeStringValue'
+                        IsHidden                        = $True
+                        IsRoleScopesVisible             = $True
                         AccessPackageResourceRoleScopes = @{
                             AccessPackageResourceScope = @{
                                 OriginId = '123456789'
                             }
-                            AccessPackageResourceRole = @{
+                            AccessPackageResourceRole  = @{
                                 DisplayName = 'TestRole'
                             }
                         }
@@ -219,34 +219,34 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The AADEntitlementManagementAccessPackage exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    CatalogId           = 'FakeStringValue'
-                    Description         = 'FakeStringValue'
-                    DisplayName         = 'FakeStringValue'
-                    Id                  = 'FakeStringValue'
-                    IsHidden            = $True
-                    IsRoleScopesVisible = $True
+                    CatalogId                       = 'FakeStringValue'
+                    Description                     = 'FakeStringValue'
+                    DisplayName                     = 'FakeStringValue'
+                    Id                              = 'FakeStringValue'
+                    IsHidden                        = $True
+                    IsRoleScopesVisible             = $True
                     AccessPackageResourceRoleScopes = (New-CimInstance -ClassName MSFT_AccessPackageResourceRoleScope -Property @{
-                        Id = 'FakeStringValue'
-                        AccessPackageResourceOriginId = '123456789'
-                        AccessPackageResourceRoleDisplayName = 'TestRole'
-                    } -ClientOnly)
-                    Ensure              = 'Present'
-                    Credential          = $Credential
+                            Id                                   = 'FakeStringValue'
+                            AccessPackageResourceOriginId        = '123456789'
+                            AccessPackageResourceRoleDisplayName = 'TestRole'
+                        } -ClientOnly)
+                    Ensure                          = 'Present'
+                    Credential                      = $Credential
                 }
 
                 Mock -CommandName Get-MgEntitlementManagementAccessPackage -MockWith {
                     return @{
-                        CatalogId           = 'FakeStringValue'
-                        Description         = 'FakeStringValue'
-                        DisplayName         = 'FakeStringValue'
-                        Id                  = 'FakeStringValue'
-                        IsHidden            = $False #Drift
-                        IsRoleScopesVisible = $True
+                        CatalogId                       = 'FakeStringValue'
+                        Description                     = 'FakeStringValue'
+                        DisplayName                     = 'FakeStringValue'
+                        Id                              = 'FakeStringValue'
+                        IsHidden                        = $False #Drift
+                        IsRoleScopesVisible             = $True
                         AccessPackageResourceRoleScopes = @{
                             AccessPackageResourceScope = @{
                                 OriginId = '123456789'
                             }
-                            AccessPackageResourceRole = @{
+                            AccessPackageResourceRole  = @{
                                 DisplayName = 'TestRole'
                             }
                         }
@@ -281,23 +281,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
                 }
 
                 Mock -CommandName Get-MgEntitlementManagementAccessPackage -MockWith {
                     return @{
-                        CatalogId           = 'FakeStringValue'
-                        Description         = 'FakeStringValue'
-                        DisplayName         = 'FakeStringValue'
-                        Id                  = 'FakeStringValue'
-                        IsHidden            = $True
-                        IsRoleScopesVisible = $True
+                        CatalogId                       = 'FakeStringValue'
+                        Description                     = 'FakeStringValue'
+                        DisplayName                     = 'FakeStringValue'
+                        Id                              = 'FakeStringValue'
+                        IsHidden                        = $True
+                        IsRoleScopesVisible             = $True
                         AccessPackageResourceRoleScopes = @{
                             AccessPackageResourceScope = @{
                                 OriginId = '123456789'
                             }
-                            AccessPackageResourceRole = @{
+                            AccessPackageResourceRole  = @{
                                 DisplayName = 'TestRole'
                             }
                         }
@@ -315,7 +316,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
             It 'Should Reverse Engineer resource from the Export method' {
-                Export-TargetResource @testParams
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }
