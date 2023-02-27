@@ -7,6 +7,9 @@
     FIXES [#2930](https://github.com/microsoft/Microsoft365DSC/issues/2930)
 * O365OrgSettings
   * Adds support for Cortana enabling.
+* SPOUserProfileProperty
+  * Fixes the required API permissions in the documentation.
+    FIXES [#2798](https://github.com/microsoft/Microsoft365DSC/issues/2798)
 * TeamsOnlineVoiceUser
   * Fix issue where the cmdlet Get-CsOnlineVoiceUser is now deprecated.
 * DEPENDENCIES
