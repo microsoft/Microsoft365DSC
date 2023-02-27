@@ -650,7 +650,7 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Warning "New-Label is not available in tenant $($Credential.UserName.Split('@')[0])"
+            Write-Warning "New-Label is not available in tenant $($Credential.UserName.Split('@')[0]): $_"
         }
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $label.Ensure))

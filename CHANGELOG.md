@@ -14,6 +14,7 @@
   * Fix issue where the cmdlet Get-CsOnlineVoiceUser is now deprecated.
 * DEPENDENCIES
   * Updated Microsoft.Graph.* to version 1.22.0
+  * Updated MSCloudLoginAssistant to version 1.0.105
   * Updated ReverseDSC to version 2.0.0.14
 
 # 1.23.222.1
