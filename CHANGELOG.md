@@ -7,6 +7,9 @@
     FIXES [#2930](https://github.com/microsoft/Microsoft365DSC/issues/2930)
 * O365OrgSettings
   * Adds support for Cortana enabling.
+* SCSensitivityLabel
+  * Fixes issues around Test-TargetResource always returning False when encryption parameters are used.
+    FIXES [#2683](https://github.com/microsoft/Microsoft365DSC/issues/2683)
 * SPOUserProfileProperty
   * Fixes the required API permissions in the documentation.
     FIXES [#2798](https://github.com/microsoft/Microsoft365DSC/issues/2798)
