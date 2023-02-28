@@ -664,7 +664,7 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Warning "New-Label is not available in tenant $($Credential.UserName.Split('@')[0]): $_"
+            Write-Warning "New-Label is not available in tenant $($Credential.UserName.Split('@')[1]): $_"
         }
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $label.Ensure))
@@ -674,7 +674,7 @@ function Set-TargetResource
 
         if ($PSBoundParameters.ContainsKey('AdvancedSettings'))
         {
-            $advanced = Convert-CIMToAdvancedSettings  $AdvancedSettings
+            $advanced = Convert-CIMToAdvancedSettings $AdvancedSettings
             $SetParams['AdvancedSettings'] = $advanced
         }
 
@@ -706,7 +706,7 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Warning "Set-Label is not available in tenant $($Credential.UserName.Split('@')[0])"
+            Write-Warning "Set-Label is not available in tenant $($Credential.UserName.Split('@')[1]): $_"
         }
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $label.Ensure))
@@ -721,10 +721,11 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Warning "Remove-Label is not available in tenant $($Credential.UserName.Split('@')[0])"
+            Write-Warning "Remove-Label is not available in tenant $($Credential.UserName.Split('@')[1]): $_"
         }
     }
 }
+
 function Test-TargetResource
 {
     [CmdletBinding()]
@@ -971,18 +972,30 @@ function Test-TargetResource
 
     if ($null -ne $AdvancedSettings -and $null -ne $CurrentValues.AdvancedSettings)
     {
+        Write-Verbose -Message 'Testing AdvancedSettings'
         $TestAdvancedSettings = Test-AdvancedSettings -DesiredProperty $AdvancedSettings -CurrentProperty $CurrentValues.AdvancedSettings
         if ($false -eq $TestAdvancedSettings)
         {
+            New-M365DSCLogEntry -Message 'AdvancedSettings do not match!' `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
             return $false
         }
     }
 
     if ($null -ne $LocaleSettings -and $null -ne $CurrentValues.LocaleSettings)
     {
+        Write-Verbose -Message 'Testing LocaleSettings'
         $localeSettingsSame = Test-LocaleSettings -DesiredProperty $LocaleSettings -CurrentProperty $CurrentValues.LocaleSettings
         if ($false -eq $localeSettingsSame)
         {
+            New-M365DSCLogEntry -Message 'LocaleSettings do not match!' `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
             return $false
         }
     }
@@ -1285,12 +1298,12 @@ function Test-AdvancedSettings
             if ($foundKey.Value.ToString() -ne $desiredSetting.Value.ToString())
             {
                 $foundSettings = $false
-                break;
+                break
             }
         }
     }
 
-    Write-Verbose -Message "Test AdvancedSettings  returns $foundSettings"
+    Write-Verbose -Message "Test AdvancedSettings returns $foundSettings"
     return $foundSettings
 }
 
@@ -1315,18 +1328,18 @@ function Test-LocaleSettings
         {
             if ($null -ne $foundKey)
             {
-                $myLabel = $foundKey.Settings | Where-Object { $_.Key -eq $setting.Key -and $_.Value -eq $setting.Value }
+                $myLabel = $foundKey.LabelSettings | Where-Object { $_.Key -eq $setting.Key -and $_.Value -eq $setting.Value }
 
                 if ($null -eq $myLabel)
                 {
                     $foundSettings = $false
-                    break;
+                    break
                 }
             }
             else
             {
                 $foundSettings = $false
-                break;
+                break
 
             }
         }
