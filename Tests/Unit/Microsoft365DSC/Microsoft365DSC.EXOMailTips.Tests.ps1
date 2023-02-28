@@ -24,13 +24,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@contoso.onmicrosoft.com', $secpasswd)
 
-            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
-                return @{}
-            }
-
-            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-            }
-
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
@@ -68,8 +61,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).MailTipsAllTipsEnabled | Should -Be $False
             }
 
-            It 'Should set MailTipsAllTipsEnabled to True with the Set method' {
+            It 'Should set MailTipsAllTipsEnabled to True from the Set method' {
                 Set-TargetResource @testParams
+            }
+
+            It 'Should return False from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
             }
         }
 
@@ -100,6 +97,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should set MailTipsGroupMetricsEnabled to True with the Set method' {
                 Set-TargetResource @testParams
             }
+
+            It 'Should return False from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
         }
 
         Context -Name 'MailTipsLargeAudienceThreshold are 25 and should be 50' -Fixture {
@@ -128,6 +129,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should set MailTipsLargeAudienceThreshold to 50 with the Set method' {
                 Set-TargetResource @testParams
+            }
+
+            It 'Should return False from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
             }
         }
 
@@ -187,6 +192,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should set MailTipsExternalRecipientsTipsEnabled to True with the Set method' {
                 Set-TargetResource @testParams
             }
+
+            It 'Should return False from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
         }
 
         Context -Name 'MailTips are Enabled and should be Enabled' -Fixture {
@@ -244,6 +253,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
                 }
@@ -261,7 +271,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should Reverse Engineer resource from the Export method' {
-                Export-TargetResource @testParams
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }

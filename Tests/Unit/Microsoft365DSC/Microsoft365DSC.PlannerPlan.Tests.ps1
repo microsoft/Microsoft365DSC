@@ -37,6 +37,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
+                return 'Credentials'
             }
 
             # Mock Write-Host to hide output during the tests
@@ -193,11 +194,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
                 }
 
-                $Global:PartialExportFileName = 'PlannerPlan.ps1'
                 Mock -CommandName Get-MgGroup -MockWith {
                     return @(
                         @{
@@ -217,7 +218,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should Reverse Engineer resource from the Export method' {
-                Export-TargetResource @testParams
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }

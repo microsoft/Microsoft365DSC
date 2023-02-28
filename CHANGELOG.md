@@ -27,6 +27,9 @@
     FIXES [#2798](https://github.com/microsoft/Microsoft365DSC/issues/2798)
 * TeamsOnlineVoiceUser
   * Fix issue where the cmdlet Get-CsOnlineVoiceUser is now deprecated.
+* MISC
+  * Updated unit tests
+  * Added quality check tests
 * DEPENDENCIES
   * Updated Microsoft.Graph.* to version 1.22.0
   * Updated MSCloudLoginAssistant to version 1.0.105

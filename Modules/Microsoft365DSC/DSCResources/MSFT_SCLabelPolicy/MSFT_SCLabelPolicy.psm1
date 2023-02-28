@@ -334,7 +334,7 @@ function Set-TargetResource
         $CreationParams.Remove('RemoveExchangeLocationException') | Out-Null
         $CreationParams.Remove('RemoveModernGroupLocation') | Out-Null
         $CreationParams.Remove('RemoveModernGroupLocationException') | Out-Null
-        Write-Verbose "Creating new Sensitivity label policy $Name."
+        Write-Verbose "Creating new Sensitivity label policy '$Name'."
 
         try
         {

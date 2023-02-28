@@ -382,7 +382,7 @@ function Set-TargetResource
         {
             $CurrentParameters.Add('GroupID', $team.GroupID)
         }
-        if ($ConnectionMode -eq 'Credential')
+        if ($ConnectionMode -eq 'Credentials')
         {
             $CurrentParameters.Remove('Credential') | Out-Null
         }
@@ -719,7 +719,7 @@ function Export-TargetResource
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `

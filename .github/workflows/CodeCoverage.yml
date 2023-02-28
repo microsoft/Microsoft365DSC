@@ -14,100 +14,108 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-      - name: Run Test Harness
-        shell: powershell
+      - name: Install Modules
+        shell: pwsh
         run: |
           $Dependencies = @(
-          @{
-              ModuleName      = "DSCParser"
-              RequiredVersion = "1.3.0.5"
-          },
-          @{
-              ModuleName      = "ExchangeOnlineManagement"
-              RequiredVersion = "2.0.5"
-          },
-          @{
-              ModuleName      = "Microsoft.Graph.Applications"
-              RequiredVersion = "1.10.0"
-          },
-          @{
-              ModuleName      = "Microsoft.Graph.Authentication"
-              RequiredVersion = "1.10.0"
-          },
-          @{
-              ModuleName      = "Microsoft.Graph.DeviceManagement"
-              RequiredVersion = "1.10.0"
-          },
-          @{
-              ModuleName      = "Microsoft.Graph.DeviceManagement.Administration"
-              RequiredVersion = "1.10.0"
-          },
-          @{
-              ModuleName      = "Microsoft.Graph.DeviceManagement.Enrolment"
-              RequiredVersion = "1.10.0"
-          },
-          @{
-              ModuleName      = "Microsoft.Graph.Devices.CorporateManagement"
-              RequiredVersion = "1.10.0"
-          },
-          @{
-              ModuleName      = "Microsoft.Graph.Groups"
-              RequiredVersion = "1.10.0"
-          },
-          @{
-              ModuleName      = "Microsoft.Graph.Identity.DirectoryManagement"
-              RequiredVersion = "1.10.0"
-          },
-          @{
-              ModuleName      = "Microsoft.Graph.Identity.Governance"
-              RequiredVersion = "1.10.0"
-          },
-          @{
-              ModuleName      = "Microsoft.Graph.Identity.SignIns"
-              RequiredVersion = "1.10.0"
-          },
-          @{
-              ModuleName      = "Microsoft.Graph.Planner"
-              RequiredVersion = "1.10.0"
-          },
-          @{
-              ModuleName      = "Microsoft.Graph.Teams"
-              RequiredVersion = "1.10.0"
-          },
-          @{
-              ModuleName      = "Microsoft.Graph.Users"
-              RequiredVersion = "1.10.0"
-          },
-          @{
-              ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
-              RequiredVersion = "2.0.150"
-          },
-          @{
-              ModuleName      = "MicrosoftTeams"
-              RequiredVersion = "4.5.0"
-          },
-          @{
-              ModuleName      = "MSCloudLoginAssistant"
-              RequiredVersion = "1.0.101"
-          },
-          @{
-              ModuleName      = "PnP.PowerShell"
-              RequiredVersion = "1.11.0"
-          },
-          @{
-              ModuleName      = "ReverseDSC"
-              RequiredVersion = "2.0.0.11"
-          }
+            @{
+                ModuleName      = 'DSCParser'
+            },
+            @{
+                ModuleName      = 'ExchangeOnlineManagement'
+            },
+            @{
+                ModuleName      = 'Microsoft.Graph.Applications'
+            },
+            @{
+                ModuleName      = 'Microsoft.Graph.Authentication'
+            },
+            @{
+                ModuleName      = 'Microsoft.Graph.DeviceManagement'
+            },
+            @{
+                ModuleName      = 'Microsoft.Graph.DeviceManagement.Administration'
+            },
+            @{
+                ModuleName      = 'Microsoft.Graph.DeviceManagement.Enrolment'
+            },
+            @{
+                ModuleName      = 'Microsoft.Graph.Devices.CorporateManagement'
+            },
+            @{
+                ModuleName      = 'Microsoft.Graph.Groups'
+            },
+            @{
+                ModuleName      = 'Microsoft.Graph.Identity.DirectoryManagement'
+            },
+            @{
+                ModuleName      = 'Microsoft.Graph.Identity.Governance'
+            },
+            @{
+                ModuleName      = 'Microsoft.Graph.Identity.SignIns'
+            },
+            @{
+                ModuleName      = 'Microsoft.Graph.Planner'
+            },
+            @{
+                ModuleName      = 'Microsoft.Graph.Teams'
+            },
+            @{
+                ModuleName      = 'Microsoft.Graph.Users'
+            },
+            @{
+                ModuleName      = 'Microsoft.Graph.Users.Actions'
+            },
+            @{
+                ModuleName      = 'Microsoft.PowerApps.Administration.PowerShell'
+            },
+            @{
+                ModuleName      = 'MicrosoftTeams'
+            },
+            @{
+                ModuleName      = "MSCloudLoginAssistant"
+            },
+            @{
+                ModuleName      = 'PnP.PowerShell'
+            },
+            @{
+                ModuleName      = 'ReverseDSC'
+            }
           )
 
           foreach ($module in $Dependencies)
           {
-            Install-Module $module.ModuleName -Force
+            Install-Module $module.ModuleName -Force -Scope AllUsers
             Import-Module $module.ModuleName -Force
           }
 
-          Install-Module Pester -Force -SkipPublisherCheck -RequiredVersion 5.0.4
+          Install-Module PSDesiredStateConfiguration -Force -Scope AllUsers
+          Install-Module Pester -Force -SkipPublisherCheck -RequiredVersion 5.4.0 -Scope AllUsers
+          Install-Module Profiler -Force -Scope AllUsers
           [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);
+      - name: Run Quality Checks
+        shell: pwsh
+        run: |
+          Import-Module './Tests/TestHarness.psm1' -Force;
+          $MaximumFunctionCount = 9999
+
+          try
+          {
+              $results = Invoke-QualityChecksHarness
+          }
+          catch
+          {
+              $MaximumFunctionCount = 9999
+              Import-Module './Tests/TestHarness.psm1' -Force;
+              $results = Invoke-QualityChecksHarness
+          }
+          if ($results.FailedCount -gt 0)
+          {
+              throw "{$($results.FailedCount)} Quality Check(s) Failed"
+          }
+      - name: Run Test Harness
+        shell: pwsh
+        run: |
           Import-Module './Tests/TestHarness.psm1' -Force;
           $MaximumFunctionCount = 9999
 

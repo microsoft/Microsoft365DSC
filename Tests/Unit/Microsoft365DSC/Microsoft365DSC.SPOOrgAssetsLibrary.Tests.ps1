@@ -31,13 +31,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@contoso.com', $secpasswd)
             $global:tenantName = $Credential.UserName.Split('@')[1].Split('.')[0]
 
-            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
-                return @{}
-            }
-
-            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-            }
-
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
@@ -200,10 +193,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         LibraryUrl = @{
                             decodedurl = 'sites/m365dsc/Missing'
                         }
-
                         CdnType    = 'Public'
-                        Credential = $Credential
-                        Ensure     = 'Present'
                     }
                 }
 
@@ -230,16 +220,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName New-M365DSCConnection -MockWith {
-                    return 'Credential'
-                }
-
-                Mock -CommandName New-M365DSCConnection -MockWith {
-                    return 'Credential'
                 }
 
                 Mock -CommandName Get-M365TenantName -MockWith {
@@ -252,13 +235,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-PNPOrgAssetsLibrary -MockWith {
                     return @{
-                        LibraryUrl = 'https://contoso.sharepoint.com/sites/m365dsc/Branding'
-                        CdnType    = 'Private'
+                        LibraryUrl = @{
+                            decodedurl = 'https://contoso.sharepoint.com/sites/m365dsc/Branding'
+                        }
+                        CdnType            = 'Public'
                     }
                 }
             }
+
             It 'Should Reverse Engineer resource from the Export method' {
-                Export-TargetResource @testParams
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }

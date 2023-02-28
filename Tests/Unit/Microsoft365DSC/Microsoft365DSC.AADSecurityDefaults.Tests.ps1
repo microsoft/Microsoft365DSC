@@ -21,10 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
             $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
-
-            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-            }
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
