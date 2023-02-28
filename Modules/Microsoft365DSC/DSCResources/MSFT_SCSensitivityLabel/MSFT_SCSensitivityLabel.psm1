@@ -313,10 +313,30 @@ function Get-TargetResource
                 }
             }
 
-            $encryptionEnabledValue = -not [Boolean]::Parse(($encrypt.Settings | Where-Object -FilterScript {$_.Key -eq 'disabled'}).Value)
-            $contentExpiredOnDateValue = ($encrypt.Settings | Where-Object -FilterScript {$_.Key -eq 'contentexpiredondateindaysornever'}).Value
-            $protectionTypeValue = ($encrypt.Settings | Where-Object -FilterScript {$_.Key -eq 'protectiontype'}).Value
-            $offlineAccessDaysValue = ($encrypt.Settings | Where-Object -FilterScript {$_.Key -eq 'offlineaccessdays'}).Value
+            $entry = $encrypt.Settings | Where-Object -FilterScript {$_.Key -eq 'disabled'}
+
+            if ($null -ne $entry)
+            {
+                $encryptionEnabledValue = -not [Boolean]::Parse($entry.Value)
+            }
+
+            $entry = $encrypt.Settings | Where-Object -FilterScript {$_.Key -eq 'contentexpiredondateindaysornever'}
+            if ($null -ne $entry)
+            {
+                $contentExpiredOnDateValue = $entry.Value
+            }
+
+            $entry = $encrypt.Settings | Where-Object -FilterScript {$_.Key -eq 'protectiontype'}
+            if ($null -ne $entry)
+            {
+                $protectionTypeValue = $entry.Value
+            }
+
+            $entry = $encrypt.Settings | Where-Object -FilterScript {$_.Key -eq 'offlineaccessdays'}
+            if ($null -ne $entry)
+            {
+                $offlineAccessDaysValue = $entry.Value
+            }
             $result = @{
                 Name                                           = $label.Name
                 Comment                                        = $label.Comment
