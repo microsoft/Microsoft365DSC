@@ -303,6 +303,40 @@ function Get-TargetResource
                 $ApplyWaterMarkingTextValue = $label.ApplyWaterMarkingText.Replace('$', '`$')
             }
 
+            $labelActions = [Array]$label.LabelActions
+            foreach ($labelAction in $labelActions)
+            {
+                $encrypt = ConvertFrom-Json ($labelAction | Out-String)
+                if ($encrypt.Type -eq 'encrypt')
+                {
+                    break
+                }
+            }
+
+            $entry = $encrypt.Settings | Where-Object -FilterScript {$_.Key -eq 'disabled'}
+
+            if ($null -ne $entry)
+            {
+                $encryptionEnabledValue = -not [Boolean]::Parse($entry.Value)
+            }
+
+            $entry = $encrypt.Settings | Where-Object -FilterScript {$_.Key -eq 'contentexpiredondateindaysornever'}
+            if ($null -ne $entry)
+            {
+                $contentExpiredOnDateValue = $entry.Value
+            }
+
+            $entry = $encrypt.Settings | Where-Object -FilterScript {$_.Key -eq 'protectiontype'}
+            if ($null -ne $entry)
+            {
+                $protectionTypeValue = $entry.Value
+            }
+
+            $entry = $encrypt.Settings | Where-Object -FilterScript {$_.Key -eq 'offlineaccessdays'}
+            if ($null -ne $entry)
+            {
+                $offlineAccessDaysValue = $entry.Value
+            }
             $result = @{
                 Name                                           = $label.Name
                 Comment                                        = $label.Comment
@@ -336,12 +370,12 @@ function Get-TargetResource
                 ApplyWaterMarkingLayout                        = $label.ApplyWaterMarkingLayout
                 ApplyWaterMarkingText                          = $ApplyWaterMarkingTextValue
                 EncryptionAipTemplateScopes                    = $label.EncryptionAipTemplateScopes
-                EncryptionContentExpiredOnDateInDaysOrNever    = $label.EncryptionContentExpiredOnDateInDaysOrNever
+                EncryptionContentExpiredOnDateInDaysOrNever    = $contentExpiredOnDateValue
                 EncryptionDoNotForward                         = $label.EncryptionDoNotForward
-                EncryptionEnabled                              = $label.EncryptionEnabled
-                EncryptionOfflineAccessDays                    = $label.EncryptionOfflineAccessDays
+                EncryptionEnabled                              = $encryptionEnabledValue
+                EncryptionOfflineAccessDays                    = $offlineAccessDaysValue
                 EncryptionPromptUser                           = $label.EncryptionPromptUser
-                EncryptionProtectionType                       = $label.EncryptionProtectionType
+                EncryptionProtectionType                       = $protectionTypeValue
                 EncryptionRightsDefinitions                    = $EncryptionRightsDefinitionsValue
                 EncryptionRightsUrl                            = $label.EncryptionRightsUrl
                 SiteAndGroupProtectionAllowAccessToGuestUsers  = $label.SiteAndGroupProtectionAllowAccessToGuestUsers

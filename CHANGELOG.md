@@ -20,6 +20,8 @@
   * Fixed issue where the Test method always tested false when the LocaleSettings
     property was used
     FIXES [#2949](https://github.com/microsoft/Microsoft365DSC/issues/2949)
+  * Fixes issues around Test-TargetResource always returning False when encryption parameters are used.
+    FIXES [#2683](https://github.com/microsoft/Microsoft365DSC/issues/2683)
 * SPOUserProfileProperty
   * Fixes the required API permissions in the documentation.
     FIXES [#2798](https://github.com/microsoft/Microsoft365DSC/issues/2798)
