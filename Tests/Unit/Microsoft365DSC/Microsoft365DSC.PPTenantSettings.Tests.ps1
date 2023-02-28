@@ -23,14 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
-
-            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
-                return @{}
-            }
-
-            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-            }
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
@@ -135,14 +128,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                     }
                 }
+            }
 
-                It 'Should return false from the Test method' {
-                    Test-TargetResource @testParams | Should -Be $false
-                }
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
 
-                It 'Sets the tenant settings in Set method' {
-                    Set-TargetResource @testParams
-                }
+            It 'Sets the tenant settings in Set method' {
+                Set-TargetResource @testParams
             }
         }
 
@@ -154,43 +147,42 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-TenantSettings -MockWith {
                     return @{
-                        TenantSettings = @{
-                            WalkMeOptOut                                   = $testParams.WalkMeOptOut
-                            DisableNPSCommentsReachout                     = $testParams.DisableNPSCommentsReachout
-                            DisableNewsletterSendout                       = $testParams.DisableNewsletterSendout
-                            DisableEnvironmentCreationByNonAdminUsers      = $testParams.DisableEnvironmentCreationByNonAdminUsers
-                            DisablePortalsCreationByNonAdminUsers          = $testParams.DisablePortalsCreationByNonAdminUsers
-                            DisableSurveyFeedback                          = $testParams.DisableSurveyFeedback
-                            DisableTrialEnvironmentCreationByNonAdminUsers = $testParams.DisableTrialEnvironmentCreationByNonAdminUsers
-                            DisableCapacityAllocationByEnvironmentAdmins   = $testParams.DisableCapacityAllocationByEnvironmentAdmins
-                            DisableSupportTicketsVisibleByAllUsers         = $testParams.DisableSupportTicketsVisibleByAllUsers
-                            powerPlatform                                  = @(
-                                @{
-                                    search = @{
-                                        DisableDocsSearch      = $testParams.DisableDocsSearch
-                                        DisableCommunitySearch = $testParams.DisableCommunitySearch
-                                        DisableBingVideoSearch = $testParams.DisableBingVideoSearch
-                                    }
-                                },
-                                @{
-                                    powerApps = @{
-                                        DisableShareWithEveryone = $testParams.DisableShareWithEveryone
-                                        EnableGuestsToMake       = $testParams.EnableGuestsToMake
-                                    }
-                                },
-                                @{
-                                    teamsIntegration = @{
-                                        ShareWithColleaguesUserLimit = $testParams.ShareWithColleaguesUserLimit
-                                    }
+                        WalkMeOptOut                                   = $false
+                        DisableNPSCommentsReachout                     = $false
+                        DisableNewsletterSendout                       = $false
+                        DisableEnvironmentCreationByNonAdminUsers      = $false
+                        DisablePortalsCreationByNonAdminUsers          = $false
+                        DisableSurveyFeedback                          = $false
+                        DisableTrialEnvironmentCreationByNonAdminUsers = $false
+                        DisableCapacityAllocationByEnvironmentAdmins   = $false
+                        DisableSupportTicketsVisibleByAllUsers         = $false
+                        powerPlatform                                  = @(
+                            @{
+                                search = @{
+                                    DisableDocsSearch      = $false
+                                    DisableCommunitySearch = $false
+                                    DisableBingVideoSearch = $false
                                 }
-                            )
-                        }
+                            },
+                            @{
+                                powerApps = @{
+                                    DisableShareWithEveryone = $false
+                                    EnableGuestsToMake       = $false
+                                }
+                            },
+                            @{
+                                teamsIntegration = @{
+                                    ShareWithColleaguesUserLimit = 10000
+                                }
+                            }
+                        )
                     }
                 }
             }
 
             It 'Should Reverse Engineer resource from the Export method' {
-                Export-TargetResource @testParams
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }#inmodulescope

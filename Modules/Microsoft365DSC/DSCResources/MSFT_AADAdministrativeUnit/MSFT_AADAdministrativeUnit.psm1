@@ -174,21 +174,21 @@ function Get-TargetResource
                     'group'
                     {
                         $memberSpec += @{
-                            Identity = $memberObject.DisplayName;
+                            Identity = $memberObject.DisplayName
                             Type     = 'Group'
                         }
                     }
                     'user'
                     {
                         $memberSpec += @{
-                            Identity = $memberObject.UserPrincipalName;
+                            Identity = $memberObject.UserPrincipalName
                             Type     = 'User'
                         }
                     }
                     'device'
                     {
                         $memberSpec += @{
-                            Identity = $memberObject.DisplayName;
+                            Identity = $memberObject.DisplayName
                             Type     = 'Device'
                         }
                     }
@@ -216,16 +216,16 @@ function Get-TargetResource
                 {
                     if ([regex]::Escape($roleMemberObject.'@odata.type') -match 'group')
                     {
-                        $memberType = 'Group';
+                        $memberType = 'Group'
                     }
                     else
                     {
-                        $memberType = 'ServicePrincipal';
+                        $memberType = 'ServicePrincipal'
                     }
                     $memberIdentity = $roleMemberObject.DisplayName
                 }
                 $scopedRoleMemberInfo = @{
-                    RoleName       = $roleObject.DisplayName;
+                    RoleName       = $roleObject.DisplayName
                     RoleMemberInfo = @{
                         Identity = $memberIdentity
                         Type     = $memberType
@@ -978,13 +978,13 @@ function Test-TargetResource
                 if (-Not $testResult)
                 {
                     $testResult = $false
-                    break;
+                    break
                 }
             }
             if (-Not $testResult)
             {
                 $testResult = $false
-                break;
+                break
             }
 
             $ValuesToCheck.Remove($key) | Out-Null
@@ -1083,7 +1083,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgDirectoryAdministrativeUnit -All `
+        [array]$getValue = Get-MgAdministrativeUnit -All `
             -ErrorAction Stop
 
         #endregion
