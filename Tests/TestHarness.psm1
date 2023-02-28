@@ -16,6 +16,8 @@ function Invoke-TestHarness
         $IgnoreCodeCoverage
     )
 
+    $sw = [System.Diagnostics.StopWatch]::startnew()
+
     $MaximumFunctionCount = 9999
     Write-Host -Object 'Running all Microsoft365DSC Unit Tests'
 
@@ -80,21 +82,33 @@ function Invoke-TestHarness
     $Configuration = [PesterConfiguration]@{
         Run    = @{
             Container = $Container
+            PassThru  = $true
         }
         Output = @{
             Verbosity = 'Detailed'
         }
     }
 
+    if ([String]::IsNullOrEmpty($TestResultsFile) -eq $false)
+    {
+        $Configuration.Output.Enabled = $true
+        $Configuration.Output.OutputFormat = 'NUnitXml'
+        $Configuration.Output.OutputFile = $TestResultsFile
+    }
+
     if ($IgnoreCodeCoverage.IsPresent -eq $false)
     {
         $Configuration.CodeCoverage.Enabled = $true
         $Configuration.CodeCoverage.Path = $testCoverageFiles
-        $Configuration.CodeCoverage.Path = 'CodeCov.xml'
-        $Configuration.CodeCoverage.OutputFormat = 'NUnitXml'
+        $Configuration.CodeCoverage.OutputPath = 'CodeCov.xml'
+        $Configuration.CodeCoverage.OutputFormat = 'JaCoCo'
+        $Configuration.CodeCoverage.UseBreakpoints = $false
     }
 
     $results = Invoke-Pester -Configuration $Configuration
+
+    $message = 'Running the tests took {0} hours, {1} minutes, {2} seconds' -f $sw.Hours, $sw.Minutes, $sw.Seconds
+    Write-Host -Object $message
 
     $env:PSModulePath = $oldModPath
     Write-Host -Object 'Completed running all Microsoft365DSC Unit Tests'
@@ -106,6 +120,8 @@ function Invoke-QualityChecksHarness
 {
     [CmdletBinding()]
     param ()
+
+    $sw = [System.Diagnostics.StopWatch]::startnew()
 
     Write-Host -Object 'Running all Quality Check Tests'
 
@@ -149,6 +165,9 @@ function Invoke-QualityChecksHarness
     }
 
     $results = Invoke-Pester -Configuration $Configuration
+
+    $message = 'Running the tests took {0} hours, {1} minutes, {2} seconds' -f $sw.Hours, $sw.Minutes, $sw.Seconds
+    Write-Host -Object $message
 
     $env:PSModulePath = $oldModPath
     Write-Host -Object 'Completed running all Quality Check Tests'

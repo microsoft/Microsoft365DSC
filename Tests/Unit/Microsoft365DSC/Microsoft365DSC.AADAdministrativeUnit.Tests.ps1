@@ -25,6 +25,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
+            Mock -CommandName Add-M365DSCTelemetryEvent -MockWith {
+            }
+
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
@@ -64,7 +67,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgDirectoryAdministrativeUnitScopedRoleMember -MockWith {
             }
             Mock -CommandName New-M365DSCConnection -MockWith {
-                Select-MgProfile beta
                 return 'Credentials'
             }
 
