@@ -49,15 +49,16 @@ Configuration Example
         [PSCredential]
         $credsGlobalAdmin
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
         EXOResourceConfiguration 'ConfigureResourceConfiguration'
         {
-            Identity               = "Global"
-            ResourcePropertySchema = @(@{Add = "Room/TV"; Remove = "Equipment/Laptop"})
-            Ensure                 = "Present"
+            Identity               = 'Global'
+            ResourcePropertySchema = @('Room/TV', 'Equipment/Laptop')
+            Ensure                 = 'Present'
             Credential             = $credsGlobalAdmin
         }
     }
