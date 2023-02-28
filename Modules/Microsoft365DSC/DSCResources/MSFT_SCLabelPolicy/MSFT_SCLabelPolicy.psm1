@@ -318,7 +318,7 @@ function Set-TargetResource
 
         if ($PSBoundParameters.ContainsKey('AdvancedSettings'))
         {
-            $advanced = Convert-CIMToAdvancedSettings $AdvancedSettings
+            $advanced = Convert-CIMToAdvancedSettings -AdvancedSettings $AdvancedSettings
             $CreationParams['AdvancedSettings'] = $advanced
         }
         #Remove parameters not used in New-LabelPolicy
@@ -342,7 +342,7 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Warning "New-LabelPolicy is not available in tenant $($Credential.UserName.Split('@')[0])"
+            Write-Warning "New-LabelPolicy is not available in tenant $($Credential.UserName.Split('@')[1]): $_"
         }
         try
         {
@@ -351,7 +351,7 @@ function Set-TargetResource
 
             if ($PSBoundParameters.ContainsKey('AdvancedSettings'))
             {
-                $advanced = Convert-CIMToAdvancedSettings  $AdvancedSettings
+                $advanced = Convert-CIMToAdvancedSettings -AdvancedSettings $AdvancedSettings
                 $SetParams['AdvancedSettings'] = $advanced
             }
             #Remove unused parameters for Set-Label cmdlet
@@ -368,7 +368,7 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Warning "Set-LabelPolicy is not available in tenant $($Credential.UserName.Split('@')[0])"
+            Write-Warning "Set-LabelPolicy is not available in tenant $($Credential.UserName.Split('@')[1]): $_"
         }
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
@@ -377,7 +377,7 @@ function Set-TargetResource
 
         if ($PSBoundParameters.ContainsKey('AdvancedSettings'))
         {
-            $advanced = Convert-CIMToAdvancedSettings  $AdvancedSettings
+            $advanced = Convert-CIMToAdvancedSettings -AdvancedSettings $AdvancedSettings
             $SetParams['AdvancedSettings'] = $advanced
         }
         #Remove unused parameters for Set-Label cmdlet
@@ -396,7 +396,7 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Warning "Set-LabelPolicy is not available in tenant $($Credential.UserName.Split('@')[0])"
+            Write-Warning "Set-LabelPolicy is not available in tenant $($Credential.UserName.Split('@')[1]): $_"
         }
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
@@ -410,10 +410,11 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Warning "Remove-LabelPolicy is not available in tenant $($Credential.UserName.Split('@')[0])"
+            Write-Warning "Remove-LabelPolicy is not available in tenant $($Credential.UserName.Split('@')[1]): $_"
         }
     }
 }
+
 function Test-TargetResource
 {
     [CmdletBinding()]
@@ -554,6 +555,11 @@ function Test-TargetResource
         $TestAdvancedSettings = Test-AdvancedSettings -DesiredProperty $AdvancedSettings -CurrentProperty $CurrentValues.AdvancedSettings
         if ($false -eq $TestAdvancedSettings)
         {
+            New-M365DSCLogEntry -Message 'AdvancedSettings do not match!' `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
             return $false
         }
     }
@@ -570,6 +576,11 @@ function Test-TargetResource
                 -and $null -ne $RemoveModernGroupLocation)
         {
             #last entry removed so trigger drift
+            New-M365DSCLogEntry -Message 'ModernGroupLocation do not match!' `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
             return $false
         }
     }
@@ -588,6 +599,11 @@ function Test-TargetResource
                 -and $null -ne $RemoveModernGroupLocationException)
         {
             #last entry removed so trigger drift
+            New-M365DSCLogEntry -Message 'ModernGroupLocationException do not match!' `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
             return $false
         }
     }
@@ -604,6 +620,11 @@ function Test-TargetResource
                 -and $null -ne $RemoveExchangeLocation)
         {
             #last entry removed so trigger drift
+            New-M365DSCLogEntry -Message 'ExchangeLocation do not match!' `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
             return $false
         }
     }
@@ -622,6 +643,11 @@ function Test-TargetResource
                 -and $null -ne $RemoveExchangeLocationException)
         {
             #last entry removed so trigger drift
+            New-M365DSCLogEntry -Message 'ExchangeLocationException do not match!' `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
             return $false
         }
     }
@@ -640,6 +666,11 @@ function Test-TargetResource
                 -and $null -ne $RemoveLabels)
         {
             #last entry removed so trigger drift
+            New-M365DSCLogEntry -Message 'Labels do not match!' `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
             return $false
         }
     }
@@ -782,7 +813,20 @@ function Convert-StringToAdvancedSettings
         {
             $startPos = $settingString.IndexOf(',', 0) + 1
             $valueString = $settingString.Substring($startPos, $settingString.Length - $startPos).Trim()
-            $values = $valueString.Split(',')
+            if ($valueString -like '*,*')
+            {
+                $values = $valueString -split ','
+            }
+            else
+            {
+                $values = $valueString
+            }
+
+            if ($settingKey -like '*defaultlabel*')
+            {
+                $label = Get-Label -Identity $values
+                $values = $label.DisplayName
+            }
 
             $entry = @{
                 Key   = $settingKey
@@ -791,6 +835,7 @@ function Convert-StringToAdvancedSettings
             $settings += $entry
         }
     }
+
     return $settings
 }
 
@@ -809,12 +854,20 @@ function Convert-CIMToAdvancedSettings
     foreach ($obj in $AdvancedSettings)
     {
         $settingsValues = ''
-        foreach ($objVal in $obj.Value)
+        if ($obj.Key -like '*defaultlabel*')
         {
-            $settingsValues += $objVal
-            $settingsValues += ','
+            $label = Get-Label | Where-Object -FilterScript { $_.DisplayName -eq $obj.Value }
+            $settingsValues = $label.ImmutableId.ToString()
         }
-        $entry[$obj.Key] = $settingsValues.Substring(0, ($settingsValues.Length - 1))
+        else
+        {
+            foreach ($objVal in $obj.Value)
+            {
+                $settingsValues += $objVal
+                $settingsValues += ','
+            }
+        }
+        $entry[$obj.Key] = $settingsValues.TrimEnd(',')
     }
 
     return $entry
@@ -839,10 +892,15 @@ function Test-AdvancedSettings
         $foundKey = $CurrentProperty | Where-Object { $_.Key -eq $desiredSetting.Key }
         if ($null -ne $foundKey)
         {
-            if ($foundKey.Value.ToString() -ne $desiredSetting.Value.ToString())
+            $checkValue = $desiredSetting.Value
+            if ($checkValue.Count -eq 1)
+            {
+                $checkValue = $desiredSetting.Value[0]
+            }
+            if ($foundKey.Value.ToString() -ne $checkValue.ToString())
             {
                 $foundSettings = $false
-                break;
+                break
             }
         }
     }

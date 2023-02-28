@@ -7,6 +7,19 @@
     FIXES [#2930](https://github.com/microsoft/Microsoft365DSC/issues/2930)
 * O365OrgSettings
   * Adds support for Cortana enabling.
+* SCLabelPolicy
+  * Added more detailed logging
+  * Converting the GUIDs of all defaultlabel settings in the AdvancedSettings
+    parameters to the actual label name, since the GUID is different per
+    environment
+    FIXES [#2840](https://github.com/microsoft/Microsoft365DSC/issues/2840)
+  * Fixed issue where the Test method resulted in False on any existing policy
+    FIXES [#2948](https://github.com/microsoft/Microsoft365DSC/issues/2948)
+* SCSensitivityLabel
+  * Added more detailed logging
+  * Fixed issue where the Test method always tested false when the LocaleSettings
+    property was used
+    FIXES [#2949](https://github.com/microsoft/Microsoft365DSC/issues/2949)
 * SPOUserProfileProperty
   * Fixes the required API permissions in the documentation.
     FIXES [#2798](https://github.com/microsoft/Microsoft365DSC/issues/2798)
