@@ -495,9 +495,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     }
 ]
 '@
-            $role = $json | ConvertFrom-Json
+            $mockRole = $json | ConvertFrom-Json
             Mock -CommandName Get-MgPolicyRoleManagementPolicyRule -MockWith {
-                return $role
+                return $mockRole
             }
 
             # Mock Write-Host to hide output during the tests

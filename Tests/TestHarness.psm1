@@ -85,7 +85,7 @@ function Invoke-TestHarness
             PassThru  = $true
         }
         Output = @{
-            Verbosity = 'Detailed'
+            Verbosity = 'Normal'
         }
     }
 
@@ -107,7 +107,7 @@ function Invoke-TestHarness
 
     $results = Invoke-Pester -Configuration $Configuration
 
-    $message = 'Running the tests took {0} hours, {1} minutes, {2} seconds' -f $sw.Hours, $sw.Minutes, $sw.Seconds
+    $message = 'Running the tests took {0} hours, {1} minutes, {2} seconds' -f $sw.Elapsed.Hours, $sw.Elapsed.Minutes, $sw.Elapsed.Seconds
     Write-Host -Object $message
 
     $env:PSModulePath = $oldModPath
