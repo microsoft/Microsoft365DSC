@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* MISC
+  * Updated logic for drift detection to be case insensitive.
+    FIXES [#2873](https://github.com/microsoft/Microsoft365DSC/issues/2873)
+
 # 1.23.301.1
 
 * IntuneDeviceEnrollmentConfigurationWindows10
