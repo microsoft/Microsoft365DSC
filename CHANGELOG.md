@@ -43,6 +43,11 @@
 
 # 1.23.222.1
 
+* TeamsOnlineVoiceUser
+  * Fix issue where the cmdlet Get-CsOnlineVoiceUser is now deprecated.
+
+# 1.23.222.1
+
 * AADEntitlementManagementAccessPackageAssignmentPolicy
   * Initial release
 * IntuneDeviceEnrollmentConfigurationWindows10

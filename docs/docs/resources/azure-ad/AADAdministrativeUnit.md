@@ -147,4 +147,47 @@ Configuration Example
     }
 }
 ```
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        AADAdministrativeUnit 'TestUnit'
+        {
+            Credential                    = $credsCredential;
+            DisplayName                   = "Test-Unit";
+            Ensure                        = "Present";
+            Members                       = @(
+                MSFT_MicrosoftGraphMember{
+                    Identity = "jane.doe@mytenant.com"
+                    Type     = "User"
+                }
+                MSFT_MicrosoftGraphMember{
+                    Identity = "Sales"
+                    Type     = "Group"
+                }
+            )
+            ScopedRoleMembers             = @(
+                MSFT_MicrosoftGraphScopedRoleMembership{
+                    RoleName = "User Administrator"
+                    Type     = "User"
+                    Identity = "john.doe@mytenant.com"
+                }
+            )
+        }
+    }
+}
+```
 

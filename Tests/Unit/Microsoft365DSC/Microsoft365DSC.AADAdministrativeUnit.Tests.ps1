@@ -44,6 +44,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Update-MgDirectoryAdministrativeUnit -MockWith {
+            Mock -CommandName Update-MgDirectoryAdministrativeUnit -MockWith {
             }
 
             Mock -CommandName Remove-MgDirectoryAdministrativeUnit -MockWith {
