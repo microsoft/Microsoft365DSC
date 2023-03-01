@@ -363,7 +363,7 @@ function Export-TargetResource
                 -InboundParameters $PSBoundParameters `
                 -Url $tenantAppCatalogUrl
 
-            if ($ConnectionMode -eq 'Credential')
+            if ($ConnectionMode -eq 'Credentials')
             {
                 $filesToDownload = Get-AllSPOPackages -Credential $Credential
             }

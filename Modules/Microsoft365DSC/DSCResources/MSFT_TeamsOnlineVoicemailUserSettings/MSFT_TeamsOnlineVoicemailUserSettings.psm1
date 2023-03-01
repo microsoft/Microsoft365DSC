@@ -389,7 +389,7 @@ function Export-TargetResource
 
     try
     {
-        $allUsers = Get-MgUser -All -Select 'UserPrincipalName'
+        $allUsers = Get-MgUser -All -Property 'UserPrincipalName'
         $i = 1
         Write-Host "`r`n" -NoNewline
         $dscContent = [System.Text.StringBuilder]::New()

@@ -860,8 +860,8 @@ function Test-M365DSCParameterState
             if ($null -ne $env:M365DSCTelemetryInstrumentationKey -and `
                     $env:M365DSCTelemetryInstrumentationKey -ne 'bc5aa204-0b1e-4499-a955-d6a639bdb4fa')
             {
-                $driftedData.Add('CurrentValue', [string]($CurrentValues[$key]));
-                $driftedData.Add('DesiredValue', [string]($DesiredValues[$key]));
+                $driftedData.Add('CurrentValue', [string]($CurrentValues[$key]))
+                $driftedData.Add('DesiredValue', [string]($DesiredValues[$key]))
             }
             $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
             $driftedData.Add('Tenant', $TenantName)
@@ -1751,7 +1751,7 @@ function New-M365DSCConnection
                 Write-Verbose -Message $_
             }
             Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
-            return 'Credential'
+            return 'Credentials'
         }
         # Case only the ApplicationID and Credentials parameters are specified
         elseif ($null -ne $InboundParameters.Credential -and `

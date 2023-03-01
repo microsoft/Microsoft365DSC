@@ -23,9 +23,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         BeforeAll {
 
             $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
-            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
+            Mock -CommandName Add-M365DSCTelemetryEvent -MockWith {
             }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
@@ -37,9 +37,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
+            Mock -CommandName Select-MgProfile -MockWith {
+            }
 
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
-
             }
 
             Mock -CommandName Update-MgAdministrativeUnit -MockWith {
@@ -66,8 +67,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgDirectoryAdministrativeUnitScopedRoleMember -MockWith {
             }
             Mock -CommandName New-M365DSCConnection -MockWith {
-                Select-MgProfile beta
-                return 'Credential'
+                return 'Credentials'
             }
 
             # Mock Write-Host to hide output during the tests
@@ -82,9 +82,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName = 'FakeStringValue1'
                     Id          = 'FakeStringValue1'
                     Members     = (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
-                        Type = 'User'
-                        Identity = 'john.smith@contoso.com'
-                    } -ClientOnly)
+                            Type     = 'User'
+                            Identity = 'john.smith@contoso.com'
+                        } -ClientOnly)
                     Visibility  = 'Public'
                     Ensure      = 'Present'
                     Credential  = $Credential
@@ -92,7 +92,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgUser -MockWith {
                     return @{
-                        Id = "123456"
+                        Id = '123456'
                     }
                 }
 
@@ -119,9 +119,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName = 'FakeStringValue2'
                     Id          = 'FakeStringValue2'
                     Members     = (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
-                        Type = 'User'
-                        Identity = 'john.smith@contoso.com'
-                    } -ClientOnly)
+                            Type     = 'User'
+                            Identity = 'john.smith@contoso.com'
+                        } -ClientOnly)
                     Ensure      = 'Absent'
                     Credential  = $Credential
                 }
@@ -157,16 +157,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The AU Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Description       = 'DSCAU'
-                    DisplayName       = 'DSCAU'
-                    Id                = 'DSCAU'
-                    Members           = @(
+                    Description                   = 'DSCAU'
+                    DisplayName                   = 'DSCAU'
+                    Id                            = 'DSCAU'
+                    Members                       = @(
                                     (New-CimInstance -ClassName MSFT_MicrosoftGraphdirectoryobject -Property @{
                             Identity = 'John.Doe@mytenant.com'
                             Type     = 'User'
                         } -ClientOnly)
                     )
-                    ScopedRoleMembers = @(
+                    ScopedRoleMembers             = @(
                                 (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
                             RoleName       = 'User Administrator'
                             RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
@@ -185,19 +185,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 } -ClientOnly)
                             )
                         #>
-                    Visibility        = 'Public'
-                    MembershipType    = 'Assigned'
-                    MembershipRule = 'Canada'
+                    Visibility                    = 'Public'
+                    MembershipType                = 'Assigned'
+                    MembershipRule                = 'Canada'
                     MembershipRuleProcessingState = 'On'
-                    Ensure            = 'Present'
-                    Credential        = $Credential
+                    Ensure                        = 'Present'
+                    Credential                    = $Credential
                 }
 
                 Mock -CommandName Get-MgAdministrativeUnit -MockWith {
                     return [pscustomobject]@{
-                        Description       = 'DSCAU'
-                        DisplayName       = 'DSCAU'
-                        Id                = 'DSCAU'
+                        Description          = 'DSCAU'
+                        DisplayName          = 'DSCAU'
+                        Id                   = 'DSCAU'
                         <#
                         Extensions =@(
                             [pscustomobject]@{
@@ -206,10 +206,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             }
                         )
                         #>
-                        Members           = @(
+                        Members              = @(
                             [pscustomobject]@{Id = '1234567890' }
                         )
-                        ScopedRoleMembers = @(
+                        ScopedRoleMembers    = @(
                             [pscustomobject]@{
                                 RoleId         = '12345-67890'
                                 RoleMemberInfo = @(
@@ -220,10 +220,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 )
                             }
                         )
-                        Visibility        = 'Public'
+                        Visibility           = 'Public'
                         AdditionalProperties = @{
-                            membershipType = 'Assigned'
-                            membershipRule = 'Canada'
+                            membershipType                = 'Assigned'
+                            membershipRule                = 'Canada'
                             membershipRuleProcessingState = 'On'
                         }
                     }
@@ -510,6 +510,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
                 }
@@ -587,7 +588,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
             It 'Should Reverse Engineer resource from the Export method' {
-                Export-TargetResource @testParams
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }

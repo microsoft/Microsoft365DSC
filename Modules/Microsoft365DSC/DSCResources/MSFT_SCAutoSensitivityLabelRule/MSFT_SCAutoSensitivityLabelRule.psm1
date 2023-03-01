@@ -1074,7 +1074,7 @@ function Export-TargetResource
 
                 $Results = Get-TargetResource @PSBoundParameters `
                     -Name $rule.name `
-                    -Policy $rule.Policy `
+                    -Policy $rule.ParentPolicyName `
                     -Workload $workload
 
                 $IsCIMArray = $false
