@@ -117,7 +117,7 @@ function Get-TargetResource
 
     try
     {
-        $roleAssignment = Get-ManagementRoleAssignment -Identity $Name -ErrorAction Stop
+        $roleAssignment = Get-ManagementRoleAssignment -Identity $Name -ErrorAction SilentlyContinue
 
         if ($null -eq $roleAssignment)
         {
@@ -280,7 +280,7 @@ function Set-TargetResource
         [Switch]
         $ManagedIdentity
     )
-
+$VerbosePreference = 'Continue'
     Write-Verbose -Message "Setting Management Role Assignment for $Name"
 
     $currentManagementRoleConfig = Get-TargetResource @PSBoundParameters
@@ -327,13 +327,13 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Management Role Assignment'$($Name)' does not exist but it should. Create and configure it."
         # Create Management Role
-        New-ManagementRoleAssignment @NewManagementRoleParams
+        New-ManagementRoleAssignment @NewManagementRoleParams | Out-Null
     }
     # CASE: Management Role exists but it shouldn't;
     elseif ($Ensure -eq 'Absent' -and $currentManagementRoleConfig.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Management Role Assignment'$($Name)' exists but it shouldn't. Remove it."
-        Remove-ManagementRoleAssignment -Identity $Name -Confirm:$false -Force
+        Remove-ManagementRoleAssignment -Identity $Name -Confirm:$false -Force | Out-Null
     }
     # CASE: Management Role exists and it should, but has different values than the desired ones
     elseif ($Ensure -eq 'Present' -and $currentManagementRoleConfig.Ensure -eq 'Present')
@@ -347,26 +347,31 @@ function Set-TargetResource
         $NewManagementRoleParams.Remove('App') | Out-Null
         $NewManagementRoleParams.Remove('Policy') | Out-Null
         $NewManagementRoleParams.Remove('SecurityGroup') | Out-Null
-        Set-ManagementRoleAssignment @NewManagementRoleParams
+        Set-ManagementRoleAssignment @NewManagementRoleParams | Out-Null
     }
 
     # Wait for the permission to be applied
     $testResults = $false
-    $retries = 6
+    $retries = 12
+    $count = 1
     do
     {
         Write-Verbose -Message "Testing to ensure changes were applied."
         $testResults = Test-TargetResource @PSBoundParameters
         if (-not $testResults)
         {
+            Write-Verbose -Message "Test-TargetResource returned $false. Waiting for a total of $(($count * 10).ToString()) out of $(($retries * 10).ToString())"
             Start-Sleep -Seconds 10
         }
         $retries--
+        $count++
     } while (-not $testResults -and $retries -gt 0)
 
     # Need to force reconnect to Exchange for the new permissions to kick in.
     if ($null -ne $Global:MSCloudLoginConnectionProfile.ExchangeOnline)
     {
+        Write-Verbose -Message "Waiting for 20 seconds for new permissions to be effective."
+        Start-Sleep 20
         Write-Verbose -Message "Disconnecting from Exchange Online"
         $Global:MSCloudLoginConnectionProfile.ExchangeOnline.Disconnect()
      }
