@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.301.1
 
 * IntuneDeviceEnrollmentConfigurationWindows10
   * Fix settings.json
