@@ -280,7 +280,6 @@ function Set-TargetResource
         [Switch]
         $ManagedIdentity
     )
-$VerbosePreference = 'Continue'
     Write-Verbose -Message "Setting Management Role Assignment for $Name"
 
     $currentManagementRoleConfig = Get-TargetResource @PSBoundParameters
