@@ -8,6 +8,9 @@
 * EXOManagementRoleAssignment
   * Added delays before disconnecting from EXO to ensure new permissions are applied.
     FIXES [#2523](https://github.com/microsoft/Microsoft365DSC/issues/2523)
+* O365AdminAuditLogConfig
+  * Added support for ManagedIdentity.
+  * Fixed the Get-TargetResource method to return all authentication parameters.
 * MISC
   * Updated logic for drift detection to be case insensitive.
     FIXES [#2873](https://github.com/microsoft/Microsoft365DSC/issues/2873)
