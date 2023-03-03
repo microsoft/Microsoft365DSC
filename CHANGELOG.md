@@ -5,6 +5,9 @@
 * AADAdministrativeUnit
   * Fixed general issues caused by improper handling of nested CIMInstances
     FIXES #2775, #2776, #2786
+* AADServicePrincipal
+  * Change Write-Error to Write-Verbose to make sure the Test method will continue
+    FIXES [#2961](https://github.com/microsoft/Microsoft365DSC/issues/2961)
 * EXOManagementRoleAssignment
   * Added delays before disconnecting from EXO to ensure new permissions are applied.
     FIXES [#2523](https://github.com/microsoft/Microsoft365DSC/issues/2523)
