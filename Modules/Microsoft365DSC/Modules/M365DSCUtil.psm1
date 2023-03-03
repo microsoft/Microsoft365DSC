@@ -1730,14 +1730,14 @@ function New-M365DSCConnection
             Write-Verbose -Message 'Credential was specified. Connecting via User Principal'
             if ([System.String]::IsNullOrEmpty($Url))
             {
-                Connect-M365Tenant -Platform $Platform `
+                Connect-M365Tenant -Workload $Platform `
                     -Credential $InboundParameters.Credential `
                     -SkipModuleReload $Global:CurrentModeIsExport `
                     -ProfileName $ProfileName
             }
             else
             {
-                Connect-M365Tenant -Platform $Platform `
+                Connect-M365Tenant -Workload $Platform `
                     -Credential $InboundParameters.Credential `
                     -ConnectionUrl $Url `
                     -SkipModuleReload $Global:CurrentModeIsExport `
