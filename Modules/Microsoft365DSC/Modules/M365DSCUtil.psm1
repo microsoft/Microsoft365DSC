@@ -1385,6 +1385,14 @@ function Get-M365DSCTenantDomain
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
+        #2942 - check correct profile applied
+        if ($ProfileName -ne $global:MSCloudLoginConnectionProfile.MicrosoftGraph.ProfileName)
+        {
+            $currVerbosePreference = $VerbosePreference
+            $VerbosePreference = 'SilentlyContinue'
+            select-mgprofile -Name $ProfileName
+            $VerbosePreference = $currVerbosePreference
+        }
 
         try
         {
@@ -1882,6 +1890,14 @@ function Get-SPOAdministrationUrl
     Write-Verbose -Message 'Connection to Azure AD is required to automatically determine SharePoint Online admin URL...'
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
+    #2942 - check correct profile applied
+    if ($ProfileName -ne $global:MSCloudLoginConnectionProfile.MicrosoftGraph.ProfileName)
+    {
+        $currVerbosePreference = $VerbosePreference
+        $VerbosePreference = 'SilentlyContinue'
+        select-mgprofile -Name $ProfileName
+        $VerbosePreference = $currVerbosePreference
+    }
     Write-Verbose -Message 'Getting SharePoint Online admin URL...'
     [Array]$defaultDomain = Get-MgDomain | Where-Object { ($_.Id -like '*.onmicrosoft.com' -or $_.Id -like '*.onmicrosoft.de' -or $_.Id -like '*.onmicrosoft.us') -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
 
@@ -1929,6 +1945,14 @@ function Get-M365TenantName
     Write-Verbose -Message 'Connection to Azure AD is required to automatically determine SharePoint Online admin URL...'
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
+    #2942 - check correct profile applied
+    if ($ProfileName -ne $global:MSCloudLoginConnectionProfile.MicrosoftGraph.ProfileName)
+    {
+        $currVerbosePreference = $VerbosePreference
+        $VerbosePreference = 'SilentlyContinue'
+        select-mgprofile -Name $ProfileName
+        $VerbosePreference = $currVerbosePreference
+    }
     Write-Verbose -Message 'Getting SharePoint Online admin URL...'
     [Array]$defaultDomain = Get-MgDomain | Where-Object { ($_.Id -like '*.onmicrosoft.com' -or $_.Id -like '*.onmicrosoft.de') -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
 
@@ -2209,12 +2233,28 @@ function Get-AllSPOPackages
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
             -InboundParameters $PSBoundParameters
+        #2942 - check correct profile applied
+        if ($ProfileName -ne $global:MSCloudLoginConnectionProfile.MicrosoftGraph.ProfileName)
+        {
+            $currVerbosePreference = $VerbosePreference
+            $VerbosePreference = 'SilentlyContinue'
+            select-mgprofile -Name $ProfileName
+            $VerbosePreference = $currVerbosePreference
+        }
 
         $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl -ErrorAction Stop
 
         $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
             -InboundParameters $PSBoundParameters `
             -Url $tenantAppCatalogUrl
+        #2942 - check correct profile applied
+        if ($ProfileName -ne $global:MSCloudLoginConnectionProfile.MicrosoftGraph.ProfileName)
+        {
+            $currVerbosePreference = $VerbosePreference
+            $VerbosePreference = 'SilentlyContinue'
+            select-mgprofile -Name $ProfileName
+            $VerbosePreference = $currVerbosePreference
+        }
 
         $filesToDownload = @()
 
