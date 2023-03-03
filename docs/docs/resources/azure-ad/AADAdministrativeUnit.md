@@ -21,13 +21,13 @@
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 
-### MSFT_MicrosoftGraphIdentity
+### MSFT_MicrosoftGraphMember
 
 #### Parameters
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Identity** | Write | String | Identity of direcory-object. For users, specify a UserPrincipalName. For Groups and SPNs, specify DisplayName | |
+| **Identity** | Write | String | Identity of directory-object. For users, specify a UserPrincipalName. For Groups and SPNs, specify DisplayName | |
 | **Type** | Write | String | Specify User, Group or ServicePrincipal to interpret the Identity | |
 
 ### MSFT_MicrosoftGraphScopedRoleMembership
@@ -37,7 +37,8 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **RoleName** | Write | String | Name of the Azure AD Role that is assigned | |
-| **RoleMemberInfo** | Write | MSFT_MicrosoftGraphIdentity | Member that is assigned the scoped role | |
+| **Identity** | Write | String | Identity of directory-object to be assigned the role. For users, specify a UserPrincipalName. For Groups and SPNs, specify DisplayName | |
+| **Type** | Write | String | Specify User, Group or ServicePrincipal to interpret the Identity | |
 
 
 ## Description
@@ -99,6 +100,92 @@ Configuration Example
             MembershipType                = 'Dynamic'
             Ensure                        = 'Present'
             Credential                    = $credsGlobalAdmin
+        }
+    }
+}
+```
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        AADAdministrativeUnit 'TestUnit'
+        {
+            Credential                    = $credsCredential;
+            DisplayName                   = "Test-Unit";
+            Ensure                        = "Present";
+            Members                       = @(
+                MSFT_MicrosoftGraphMember{
+                    Identity = "jane.doe@mytenant.com"
+                    Type     = "User"
+                }
+                MSFT_MicrosoftGraphMember{
+                    Identity = "Sales"
+                    Type     = "Group"
+                }
+            )
+            ScopedRoleMembers             = @(
+                MSFT_MicrosoftGraphScopedRoleMembership{
+                    RoleName = "User Administrator"
+                    Type     = "User"
+                    Identity = "john.doe@mytenant.com"
+                }
+            )
+        }
+    }
+}
+```
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        AADAdministrativeUnit 'TestUnit'
+        {
+            Credential                    = $credsCredential;
+            DisplayName                   = "Test-Unit";
+            Ensure                        = "Present";
+            Members                       = @(
+                MSFT_MicrosoftGraphMember{
+                    Identity = "jane.doe@mytenant.com"
+                    Type     = "User"
+                }
+                MSFT_MicrosoftGraphMember{
+                    Identity = "Sales"
+                    Type     = "Group"
+                }
+            )
+            ScopedRoleMembers             = @(
+                MSFT_MicrosoftGraphScopedRoleMembership{
+                    RoleName = "User Administrator"
+                    Type     = "User"
+                    Identity = "john.doe@mytenant.com"
+                }
+            )
         }
     }
 }

@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Fixed general issues caused by improper handling of nested CIMInstances
+    FIXES #2775, #2776, #2786
 * EXOManagementRoleAssignment
   * Added delays before disconnecting from EXO to ensure new permissions are applied.
     FIXES [#2523](https://github.com/microsoft/Microsoft365DSC/issues/2523)
@@ -45,6 +48,11 @@
   * Updated Microsoft.Graph.* to version 1.22.0
   * Updated MSCloudLoginAssistant to version 1.0.105
   * Updated ReverseDSC to version 2.0.0.14
+
+# 1.23.222.1
+
+* TeamsOnlineVoiceUser
+  * Fix issue where the cmdlet Get-CsOnlineVoiceUser is now deprecated.
 
 # 1.23.222.1
 
