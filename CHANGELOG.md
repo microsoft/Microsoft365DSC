@@ -19,6 +19,8 @@
     FIXES [#2873](https://github.com/microsoft/Microsoft365DSC/issues/2873)
   * Changed the -Platform parameter for Connect-M365Tenant to -Workload in 2 remaining places.
     FIXES [#2921](https://github.com/microsoft/Microsoft365DSC/issues/2921)
+  * Added application credential support to Assert-M365DSCBlueprint
+    FIXES [#1792](https://github.com/microsoft/Microsoft365DSC/pull/1792)
 * DEPENDENCIES
   * Updated MicrosoftTeams to version 5.0.0
 
