@@ -988,8 +988,6 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.ScopedRoleMembers) `
                             -CIMInstanceName MicrosoftGraphScopedRoleMembership -ComplexTypeMapping $complexMapping
 
-                write-verbose "ScopedRoleMembers on next line:`r`n$complexTypeStringResult"
-
                 $Results.ScopedRoleMembers = $complexTypeStringResult
 
                 if ([String]::IsNullOrEmpty($complexTypeStringResult))
@@ -1001,7 +999,6 @@ function Export-TargetResource
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Members) `
                             -CIMInstanceName MicrosoftGraphIdentity
-                write-verbose "Members on next line:`r`n$complexTypeStringResult"
                 $Results.Members = $complexTypeStringResult
 
                 if ([String]::IsNullOrEmpty($complexTypeStringResult))
@@ -1027,7 +1024,6 @@ function Export-TargetResource
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Members" -isCIMArray $true
             }
-            write-verbose "currentDSCBlock on next line:`r`n$($currentDSCBlock -join "`r`n")"
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -1038,6 +1034,8 @@ function Export-TargetResource
     }
     catch
     {
+        write-verbose "Exception: $($_.Exception.Message)"
+
         Write-Host $Global:M365DSCEmojiRedX
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
