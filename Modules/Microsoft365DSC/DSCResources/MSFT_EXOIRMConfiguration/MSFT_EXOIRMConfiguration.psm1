@@ -4,7 +4,7 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
@@ -134,7 +134,7 @@ function Get-TargetResource
     try
     {
         $IRMConfiguration = Get-IRMConfiguration -ErrorAction Stop
-        
+
         $RMSOnlineKeySharingLocationValue = $null
         if ($IRMConfiguration.RMSOnlineKeySharingLocation)
         {
@@ -188,7 +188,7 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
@@ -329,7 +329,7 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 

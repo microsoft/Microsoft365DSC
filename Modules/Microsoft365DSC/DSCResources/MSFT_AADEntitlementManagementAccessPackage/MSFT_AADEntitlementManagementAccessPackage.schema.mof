@@ -9,10 +9,10 @@ class MSFT_AccessPackageResourceRoleScope
 [ClassVersion("1.0.0.0"), FriendlyName("AADEntitlementManagementAccessPackage")]
 class MSFT_AADEntitlementManagementAccessPackage : OMI_BaseResource
 {
-    [Write, Description("The Id of the access package.")] String Id;
+    [Key, Description("The Id of the access package.")] String Id;
+    [Required, Description("The display name of the access package.")] String DisplayName;
     [Write, Description("Identifier of the access package catalog referencing this access package.")] String CatalogId;
     [Write, Description("The description of the access package.")] String Description;
-    [Write, Description("The display name of the access package.")] String DisplayName;
     [Write, Description("Whether the access package is hidden from the requestor.")] Boolean IsHidden;
     [Write, Description("Indicates whether role scopes are visible.")] Boolean IsRoleScopesVisible;
     [Write, Description("The resources and roles included in the access package."), EmbeddedInstance("MSFT_AccessPackageResourceRoleScope")] String AccessPackageResourceRoleScopes[];

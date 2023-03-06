@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("EXOIRMConfiguration")]
 class MSFT_EXOIRMConfiguration : OMI_BaseResource
 {
-    [Write, Description("The Identity parameter specifies the Perimeter Configuration policy that you want to modify.")] String Identity;
+    [Key, Description("The Identity parameter specifies the Perimeter Configuration policy that you want to modify.")] String Identity;
     [Write, Description("The AutomaticServiceUpdateEnabled parameter specifies whether to allow the automatic addition of new features within Azure Information Protection for your cloud-based organization.")] Boolean AutomaticServiceUpdateEnabled;
     [Write, Description("The AzureRMSLicensingEnabled parameter specifies whether the Exchange Online organization can to connect directly to Azure Rights Management.")] Boolean AzureRMSLicensingEnabled;
     [Write, Description("The DecryptAttachmentForEncryptOnly parameter specifies whether mail recipients have unrestricted rights on the attachment or not for Encrypt-only mails sent using Microsoft Purview Message Encryption.")] Boolean DecryptAttachmentForEncryptOnly;
