@@ -2,6 +2,65 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Fixed general issues caused by improper handling of nested CIMInstances
+    FIXES #2775, #2776, #2786
+* EXOManagementRoleAssignment
+  * Added delays before disconnecting from EXO to ensure new permissions are applied.
+    FIXES [#2523](https://github.com/microsoft/Microsoft365DSC/issues/2523)
+* O365AdminAuditLogConfig
+  * Added support for ManagedIdentity.
+  * Fixed the Get-TargetResource method to return all authentication parameters.
+* MISC
+  * Updated logic for drift detection to be case insensitive.
+    FIXES [#2873](https://github.com/microsoft/Microsoft365DSC/issues/2873)
+  * Changed the -Platform parameter for Connect-M365Tenant to -Workload in 2 remaining places.
+    FIXES [#2921](https://github.com/microsoft/Microsoft365DSC/issues/2921)
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 5.0.0
+
+# 1.23.301.1
+
+* IntuneDeviceEnrollmentConfigurationWindows10
+  * Fix settings.json
+    FIXES [#2930](https://github.com/microsoft/Microsoft365DSC/issues/2930)
+* O365OrgSettings
+  * Adds support for Cortana enabling.
+* SCLabelPolicy
+  * Added more detailed logging
+  * Converting the GUIDs of all defaultlabel settings in the AdvancedSettings
+    parameters to the actual label name, since the GUID is different per
+    environment
+    FIXES [#2840](https://github.com/microsoft/Microsoft365DSC/issues/2840)
+  * Fixed issue where the Test method resulted in False on any existing policy
+    FIXES [#2948](https://github.com/microsoft/Microsoft365DSC/issues/2948)
+* SCSensitivityLabel
+  * Added more detailed logging
+  * Fixed issue where the Test method always tested false when the LocaleSettings
+    property was used
+    FIXES [#2949](https://github.com/microsoft/Microsoft365DSC/issues/2949)
+  * Fixes issues around Test-TargetResource always returning False when encryption parameters are used.
+    FIXES [#2683](https://github.com/microsoft/Microsoft365DSC/issues/2683)
+* SPOUserProfileProperty
+  * Fixes the required API permissions in the documentation.
+    FIXES [#2798](https://github.com/microsoft/Microsoft365DSC/issues/2798)
+* TeamsOnlineVoiceUser
+  * Fix issue where the cmdlet Get-CsOnlineVoiceUser is now deprecated.
+* MISC
+  * Updated unit tests
+  * Added quality check tests
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.22.0
+  * Updated MSCloudLoginAssistant to version 1.0.105
+  * Updated ReverseDSC to version 2.0.0.14
+
+# 1.23.222.1
+
+* TeamsOnlineVoiceUser
+  * Fix issue where the cmdlet Get-CsOnlineVoiceUser is now deprecated.
+
+# 1.23.222.1
+
 * AADEntitlementManagementAccessPackageAssignmentPolicy
   * Initial release
 * IntuneDeviceEnrollmentConfigurationWindows10

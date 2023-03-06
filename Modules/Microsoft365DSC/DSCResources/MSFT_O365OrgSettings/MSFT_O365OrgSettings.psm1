@@ -11,6 +11,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $CortanaEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $M365WebEnableUsersToOpenFilesFrom3PStorage,
 
         [Parameter()]
@@ -74,8 +78,12 @@ function Get-TargetResource
         $OfficeOnlineId = 'c1f33bc0-bdb4-4248-ba9b-096807ddb43e'
         $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Get-MgServicePrincipal -Filter "appId eq '$OfficeOnlineId'" -Property 'AccountEnabled'
 
+        $CortanaId = '0a0a29f9-0a25-49c7-94bf-c53c3f8fa69d'
+        $CortanaEnabledValue = Get-MgServicePrincipal -Filter "appId eq '$CortanaId'" -Property 'AccountEnabled'
+
         return @{
             IsSingleInstance                           = 'Yes'
+            CortanaEnabled                             = $CortanaEnabledValue.AccountEnabled
             M365WebEnableUsersToOpenFilesFrom3PStorage = $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled
             Ensure                                     = 'Present'
             Credential                                 = $Credential
@@ -107,6 +115,10 @@ function Set-TargetResource
         [ValidateSet('Yes')]
         [String]
         $IsSingleInstance,
+
+        [Parameter()]
+        [System.Boolean]
+        $CortanaEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -172,6 +184,15 @@ function Set-TargetResource
         Update-MgservicePrincipal -ServicePrincipalId $($M365WebEnableUsersToOpenFilesFrom3PStorageValue.Id) `
             -AccountEnabled:$M365WebEnableUsersToOpenFilesFrom3PStorage
     }
+
+    $CortanaId = '0a0a29f9-0a25-49c7-94bf-c53c3f8fa69d'
+    $CortanaEnabledValue = Get-MgServicePrincipal -Filter "appId eq '$CortanaId'" -Property 'AccountEnabled, Id'
+    if ($CortanaEnabled -ne $CortanaEnabledValue.AccountEnabled)
+    {
+        Write-Verbose -Message "Setting the Cortana setting to {$CortanaEnabled}"
+        Update-MgservicePrincipal -ServicePrincipalId $($CortanaEnabledValue.Id) `
+            -AccountEnabled:$CortanaEnabled
+    }
 }
 
 function Test-TargetResource
@@ -184,6 +205,10 @@ function Test-TargetResource
         [ValidateSet('Yes')]
         [String]
         $IsSingleInstance,
+
+        [Parameter()]
+        [System.Boolean]
+        $CortanaEnabled,
 
         [Parameter()]
         [System.Boolean]

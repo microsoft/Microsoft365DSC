@@ -22,14 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
-
-            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
-                return @{}
-            }
-
-            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-            }
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
@@ -120,7 +113,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                         classifiertype = 'Content'
                                         mincount       = '1'
                                         maxcount       = '-1'
-                                    } -ClientOnly;
+                                    } -ClientOnly
                                     New-CimInstance -ClassName MSFT_SCDLPSensitiveInformation -Property @{
                                         name           = 'Argentina Unique Tax Identification Key (CUIT/CUIL)'
                                         id             = '98da3da1-9199-4571-b7c4-b6522980b507'
@@ -240,12 +233,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-                    return "SCDLPComplianceRule Test{ContentContainsSensitiveInformation = `"`$Test`"}"
                 }
 
                 Mock -CommandName Get-DLPComplianceRule -MockWith {
@@ -260,7 +250,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should Reverse Engineer resource from the Export method' {
-                Export-TargetResource @testParams
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }

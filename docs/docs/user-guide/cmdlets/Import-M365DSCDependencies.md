@@ -10,7 +10,10 @@ This function does not generate any output.
 
 ## Parameters
 
-This function does not have any input parameters.
+| Parameter | Required | DataType | Default Value | Allowed Values | Description |
+| --- | --- | --- | --- | --- | --- |
+| Global | False | SwitchParameter |  |  |  |
+
 ## Examples
 
 -------------------------- EXAMPLE 1 --------------------------

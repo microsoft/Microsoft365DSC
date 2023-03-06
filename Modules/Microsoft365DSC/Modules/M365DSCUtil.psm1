@@ -860,8 +860,8 @@ function Test-M365DSCParameterState
             if ($null -ne $env:M365DSCTelemetryInstrumentationKey -and `
                     $env:M365DSCTelemetryInstrumentationKey -ne 'bc5aa204-0b1e-4499-a955-d6a639bdb4fa')
             {
-                $driftedData.Add('CurrentValue', [string]($CurrentValues[$key]));
-                $driftedData.Add('DesiredValue', [string]($DesiredValues[$key]));
+                $driftedData.Add('CurrentValue', [string]($CurrentValues[$key]))
+                $driftedData.Add('DesiredValue', [string]($DesiredValues[$key]))
             }
             $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
             $driftedData.Add('Tenant', $TenantName)
@@ -1286,7 +1286,10 @@ Public
 function Import-M365DSCDependencies
 {
     [CmdletBinding()]
-    param()
+    param(
+        [parameter()]
+        [switch]$Global
+    )
 
     $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
     $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
@@ -1294,7 +1297,7 @@ function Import-M365DSCDependencies
 
     foreach ($dependency in $dependencies)
     {
-        Import-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force
+        Import-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -Global:$Global
     }
 }
 
@@ -1727,14 +1730,14 @@ function New-M365DSCConnection
             Write-Verbose -Message 'Credential was specified. Connecting via User Principal'
             if ([System.String]::IsNullOrEmpty($Url))
             {
-                Connect-M365Tenant -Platform $Platform `
+                Connect-M365Tenant -Workload $Platform `
                     -Credential $InboundParameters.Credential `
                     -SkipModuleReload $Global:CurrentModeIsExport `
                     -ProfileName $ProfileName
             }
             else
             {
-                Connect-M365Tenant -Platform $Platform `
+                Connect-M365Tenant -Workload $Platform `
                     -Credential $InboundParameters.Credential `
                     -ConnectionUrl $Url `
                     -SkipModuleReload $Global:CurrentModeIsExport `
@@ -1751,7 +1754,7 @@ function New-M365DSCConnection
                 Write-Verbose -Message $_
             }
             Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
-            return 'Credential'
+            return 'Credentials'
         }
         # Case only the ApplicationID and Credentials parameters are specified
         elseif ($null -ne $InboundParameters.Credential -and `

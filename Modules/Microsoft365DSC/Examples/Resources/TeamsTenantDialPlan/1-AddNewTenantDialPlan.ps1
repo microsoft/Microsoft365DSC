@@ -4,31 +4,36 @@ This example configures the Teams Guest Calling Configuration.
 
 Configuration Example
 {
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [PSCredential]
         $credsGlobalAdmin
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
         TeamsTenantDialPlan 'ConfigureTenantDialPlan'
         {
-            Identity              = "DemoPlan"
+            Identity              = 'DemoPlan'
             Description           = 'This is a demo dial plan'
-            NormalizationRules    = MSFT_TeamsVoiceNormalizationRule{
-                Pattern = '^00(\d+)$'
-                Description = 'LB International Dialing Rule'
-                Identity = 'LB Intl Dialing'
-                Translation = '+$1'
-                Priority = 0
-                IsInternalExtension = $False
-            }
+            NormalizationRules    = @(
+                MSFT_TeamsVoiceNormalizationRule
+                {
+                    Pattern             = '^00(\d+)$'
+                    Description         = 'LB International Dialing Rule'
+                    Identity            = 'LB Intl Dialing'
+                    Translation         = '+$1'
+                    Priority            = 0
+                    IsInternalExtension = $False
+                }
+            )
             OptimizeDeviceDialing = $true
-            SimpleName            = "DemoPlan"
-            Ensure                = "Present"
-            Credential            = $Credsglobaladmin
+            SimpleName            = 'DemoPlan'
+            Ensure                = 'Present'
+            Credential            = $credsGlobalAdmin
         }
     }
 }

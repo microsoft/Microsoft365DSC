@@ -8,11 +8,11 @@
 | **Id** | Write | String | Object-Id of the Administrative Unit | |
 | **Description** | Write | String | Description of the Administrative Unit | |
 | **Visibility** | Write | String | Visibility of the Administrative Unit. Specify HiddenMembership if members of the AU are hidden | |
-| **MembershipType** | Write | String | Specify membership type. Possible values are Assigned and Dynamic if the AU-preview has been activated. Otherwise do not use | |
-| **MembershipRule** | Write | String | Specify membership rule. Requires that MembershipType is set to Dynamic AND the AU-preview has been activated. Otherwise, do not use | |
-| **MembershipRuleProcessingState** | Write | String | Specify dynamic membership-rule processing-state. Valid values are 'On' and 'Paused'. Requires that MembershipType is set to Dynamic AND the AU-preview has been activated. Otherwise, do not use | |
-| **Members** | Write | MSFT_MicrosoftGraphIdentity[] | Specify members. Only specify if MembershipType is set to Static | |
-| **ScopedRoleMembers** | Write | MSFT_MicrosoftGraphScopedRoleMembership[] | | |
+| **MembershipType** | Write | String | Specify membership type. Possible values are Assigned and Dynamic. Note that the functionality is currently in preview. | |
+| **MembershipRule** | Write | String | Specify membership rule. Requires that MembershipType is set to Dynamic. Note that the functionality is currently in preview. | |
+| **MembershipRuleProcessingState** | Write | String | Specify dynamic membership-rule processing-state. Valid values are 'On' and 'Paused'. Requires that MembershipType is set to Dynamic. Note that the functionality is currently in preview. | |
+| **Members** | Write | MSFT_MicrosoftGraphMember[] | Specify members. Only specify if MembershipType is NOT set to Dynamic | |
+| **ScopedRoleMembers** | Write | MSFT_MicrosoftGraphScopedRoleMembership[] | Specify Scoped Role Membership. | |
 | **Ensure** | Write | String | Present ensures the Administrative Unit exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -27,8 +27,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Identity** | Write | String | Identity of direcory-object. For users, specify a UserPrincipalName. For Groups and SPNs, specify DisplayName | |
-| **Type** | Write | String | Specify User, Group or ServicePrincipal to interpret the Identity | |
+| **Identity** | Write | String | Identity of member. For users, specify a UserPrincipalName. For groups and devices, specify DisplayName | |
+| **Type** | Write | String | Specify User, Group or Device to interpret the identity. Can be Principal in ScopedRoleMembers | |
 
 ### MSFT_MicrosoftGraphScopedRoleMembership
 
@@ -80,23 +80,25 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsCredential
+        $credsGlobalAdmin
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
         AADAdministrativeUnit 'TestUnit'
         {
-            Credential                    = $credsCredential;
-            DisplayName                   = "Test-Unit";
-            Ensure                        = "Present";
-            MembershipRule                = "(user.country -eq `"Canada`")";
-            MembershipRuleProcessingState = "On";
-            MembershipType                = "Dynamic";
+            DisplayName                   = 'Test-Unit'
+            MembershipRule                = "(user.country -eq `"Canada`")"
+            MembershipRuleProcessingState = 'On'
+            MembershipType                = 'Dynamic'
+            Ensure                        = 'Present'
+            Credential                    = $credsGlobalAdmin
         }
     }
 }
