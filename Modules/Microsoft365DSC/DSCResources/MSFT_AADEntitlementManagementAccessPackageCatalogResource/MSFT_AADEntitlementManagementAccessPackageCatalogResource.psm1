@@ -5,7 +5,7 @@ function Get-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -29,7 +29,7 @@ function Get-TargetResource
         [System.String]
         $Description,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -52,13 +52,12 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $Url,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -116,7 +115,7 @@ function Get-TargetResource
 
         #region resource generator code
         $getValue = Get-MgEntitlementManagementAccessPackageCatalogAccessPackageResource `
-            -AccessPackageCatalogId  $CatalogId `
+            -AccessPackageCatalogId $CatalogId `
             -Filter "Id eq '$Id'" -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
@@ -196,7 +195,7 @@ function Set-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -220,7 +219,7 @@ function Set-TargetResource
         [System.String]
         $Description,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -243,13 +242,12 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Url,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -392,11 +390,8 @@ function Set-TargetResource
             AccessPackageresource = $resource
         }
         #region resource generator code
-        #write-verbose ($resourceRequest|convertTo-Json -depth 20)
         New-MgEntitlementManagementAccessPackageResourceRequest @resourceRequest
-
         #endregion
-
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -428,16 +423,13 @@ function Set-TargetResource
         $resource = Rename-M365DSCCimInstanceParameter -Properties $resource `
             -Mapping $mapping
 
-
         #region resource generator code
         $resourceRequest = @{
             CatalogId             = $CatalogId
             RequestType           = 'AdminRemove'
             AccessPackageresource = $resource
         }
-        #region resource generator code
         New-MgEntitlementManagementAccessPackageResourceRequest @resourceRequest
-
         #endregion
     }
 }
@@ -449,7 +441,7 @@ function Test-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -473,7 +465,7 @@ function Test-TargetResource
         [System.String]
         $Description,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -496,13 +488,12 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Url,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -675,7 +666,7 @@ function Export-TargetResource
 
             $catalogId = $catalog.id
 
-            [array]$resources = Get-MgEntitlementManagementAccessPackageCatalogAccessPackageResource -AccessPackageCatalogId  $catalogId -ErrorAction Stop
+            [array]$resources = Get-MgEntitlementManagementAccessPackageCatalogAccessPackageResource -AccessPackageCatalogId $catalogId -ErrorAction Stop
 
             $j = 1
             $dscContent = ''

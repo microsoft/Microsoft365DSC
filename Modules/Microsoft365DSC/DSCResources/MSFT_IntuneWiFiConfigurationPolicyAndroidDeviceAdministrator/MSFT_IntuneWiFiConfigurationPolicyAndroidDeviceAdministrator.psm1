@@ -5,7 +5,7 @@ function Get-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -13,7 +13,7 @@ function Get-TargetResource
         [System.String]
         $Description,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -38,17 +38,15 @@ function Get-TargetResource
         [System.String]
         $WiFiSecurityType,
 
-
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -124,7 +122,6 @@ function Get-TargetResource
         }
         #endregion
 
-
         if ($null -eq $getValue)
         {
             Write-Verbose -Message "Nothing with id {$id} was found"
@@ -133,7 +130,6 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found something with id {$id}"
         $results = @{
-
             #region resource generator code
             Id                             = $getValue.Id
             Description                    = $getValue.Description
@@ -143,8 +139,6 @@ function Get-TargetResource
             NetworkName                    = $getValue.AdditionalProperties.networkName
             Ssid                           = $getValue.AdditionalProperties.ssid
             WiFiSecurityType               = $getValue.AdditionalProperties.wiFiSecurityType
-
-
             Ensure                         = 'Present'
             Credential                     = $Credential
             ApplicationId                  = $ApplicationId
@@ -155,7 +149,7 @@ function Get-TargetResource
         }
 
         $myAssignments = @()
-        $myAssignments += Get-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $getValue.Id -repository 'deviceConfigurations'
+        $myAssignments += Get-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $getValue.Id -Repository 'deviceConfigurations'
         $results.Add('Assignments', $myAssignments)
 
         return [System.Collections.Hashtable] $results
@@ -179,7 +173,7 @@ function Set-TargetResource
     (
 
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -187,7 +181,7 @@ function Set-TargetResource
         [System.String]
         $Description,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -212,17 +206,15 @@ function Set-TargetResource
         [System.String]
         $WiFiSecurityType,
 
-
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -317,7 +309,6 @@ function Set-TargetResource
             $CreateParameters.add('AdditionalProperties', $AdditionalProperties)
         }
 
-
         #region resource generator code
         $policy = New-MgDeviceManagementDeviceConfiguration @CreateParameters
         $assignmentsHash = @()
@@ -332,9 +323,7 @@ function Set-TargetResource
                 -Targets $assignmentsHash `
                 -Repository deviceConfigurations
         }
-
         #endregion
-
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -370,7 +359,6 @@ function Set-TargetResource
             $UpdateParameters.add('AdditionalProperties', $AdditionalProperties)
         }
 
-
         #region resource generator code
         Update-MgDeviceManagementDeviceConfiguration @UpdateParameters `
             -DeviceConfigurationId $currentInstance.Id
@@ -382,24 +370,15 @@ function Set-TargetResource
         Update-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $currentInstance.id `
             -Targets $assignmentsHash `
             -Repository deviceConfigurations
-
         #endregion
-
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing {$DisplayName}"
 
-
-        #region resource generator code
-        #endregion
-
-
-
         #region resource generator code
         Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
-
     }
 }
 
@@ -409,9 +388,8 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -419,7 +397,7 @@ function Test-TargetResource
         [System.String]
         $Description,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -444,17 +422,15 @@ function Test-TargetResource
         [System.String]
         $WiFiSecurityType,
 
-
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -531,13 +507,13 @@ function Test-TargetResource
                 if (-Not $testResult)
                 {
                     $testResult = $false
-                    break;
+                    break
                 }
             }
             if (-Not $testResult)
             {
                 $testResult = $false
-                break;
+                break
             }
 
             $ValuesToCheck.Remove($key) | Out-Null
@@ -1264,7 +1240,7 @@ function Get-MgDeviceManagementPolicyAssignments
         $deviceManagementPolicyAssignments = @()
 
         $Uri = "https://graph.microsoft.com/$APIVersion/deviceManagement/$Repository/$DeviceManagementPolicyId/assignments"
-        $results = Invoke-MgGraphRequest -Method GET  -Uri $Uri -ErrorAction Stop
+        $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
         foreach ($result in $results.value.target)
         {
             $deviceManagementPolicyAssignments += @{

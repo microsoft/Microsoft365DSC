@@ -5,7 +5,7 @@ function Get-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -13,7 +13,7 @@ function Get-TargetResource
         [System.String]
         $Description,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -256,17 +256,15 @@ function Get-TargetResource
         [System.Boolean]
         $WallpaperModificationBlocked,
 
-
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -341,7 +339,6 @@ function Get-TargetResource
             }
         }
         #endregion
-
 
         if ($null -eq $getValue)
         {
@@ -431,7 +428,7 @@ function Get-TargetResource
         }
 
         $myAssignments = @()
-        $myAssignments += Get-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $getValue.Id -repository 'deviceConfigurations'
+        $myAssignments += Get-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $getValue.Id -Repository 'deviceConfigurations'
         $results.Add('Assignments', $myAssignments)
 
         return [System.Collections.Hashtable] $results
@@ -454,7 +451,7 @@ function Set-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -462,7 +459,7 @@ function Set-TargetResource
         [System.String]
         $Description,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -710,10 +707,10 @@ function Set-TargetResource
         $Assignments,
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -858,7 +855,6 @@ function Set-TargetResource
             $UpdateParameters.add('AdditionalProperties', $AdditionalProperties)
         }
 
-
         #region resource generator code
         Update-MgDeviceManagementDeviceConfiguration @UpdateParameters `
             -DeviceConfigurationId $currentInstance.Id
@@ -871,7 +867,6 @@ function Set-TargetResource
             -Targets $assignmentsHash `
             -Repository deviceConfigurations
         #endregion
-
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -890,7 +885,7 @@ function Test-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -898,7 +893,7 @@ function Test-TargetResource
         [System.String]
         $Description,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -1146,10 +1141,10 @@ function Test-TargetResource
         $Assignments,
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -1204,7 +1199,6 @@ function Test-TargetResource
     {
         if ($PSBoundParameters[$key].getType().Name -like '*CimInstance*')
         {
-
             $CIMArraySource = @()
             $CIMArrayTarget = @()
             $CIMArraySource += $PSBoundParameters[$key]
@@ -1226,13 +1220,13 @@ function Test-TargetResource
                 if (-Not $testResult)
                 {
                     $testResult = $false
-                    break;
+                    break
                 }
             }
             if (-Not $testResult)
             {
                 $testResult = $false
-                break;
+                break
             }
 
             $ValuesToCheck.Remove($key) | Out-Null
@@ -2076,7 +2070,7 @@ function Get-MgDeviceManagementPolicyAssignments
         $deviceManagementPolicyAssignments = @()
 
         $Uri = "https://graph.microsoft.com/$APIVersion/deviceManagement/$Repository/$DeviceManagementPolicyId/assignments"
-        $results = Invoke-MgGraphRequest -Method GET  -Uri $Uri -ErrorAction Stop
+        $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
         foreach ($result in $results.value.target)
         {
             $deviceManagementPolicyAssignments += @{

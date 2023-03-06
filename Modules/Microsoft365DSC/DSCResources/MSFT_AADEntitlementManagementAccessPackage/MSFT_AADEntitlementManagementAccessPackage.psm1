@@ -5,7 +5,7 @@ function Get-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -17,7 +17,7 @@ function Get-TargetResource
         [System.String]
         $Description,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -44,13 +44,12 @@ function Get-TargetResource
         [Parameter()]
         [System.String[]]
         $IncompatibleGroups,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -205,7 +204,7 @@ function Set-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -217,7 +216,7 @@ function Set-TargetResource
         [System.String]
         $Description,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -244,13 +243,12 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $IncompatibleGroups,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -467,7 +465,7 @@ function Set-TargetResource
         {
             Remove-MgEntitlementManagementAccessPackageIncompatibleAccessPackageByRef `
                 -AccessPackageId $currentInstance.Id `
-                -AccessPackageId1  $incompatibleAccessPackage
+                -AccessPackageId1 $incompatibleAccessPackage
         }
         #endregion
 
@@ -504,7 +502,7 @@ function Set-TargetResource
         {
             Remove-MgEntitlementManagementAccessPackageIncompatibleGroupByRef `
                 -AccessPackageId $currentInstance.Id `
-                -GroupId  $incompatibleGroup
+                -GroupId $incompatibleGroup
         }
         #endregion
 
@@ -625,8 +623,6 @@ function Set-TargetResource
                             }
                         }
 
-                        #write-verbose -message ($params|convertTo-json -depth 20)
-
                         Remove-MgEntitlementManagementAccessPackageResourceRoleScope `
                             -AccessPackageId $currentInstance.Id  `
                             -AccessPackageResourceRoleScopeId $currentRole.Id
@@ -656,8 +652,6 @@ function Set-TargetResource
                 -AccessPackageId $currentInstance.Id  `
                 -AccessPackageResourceRoleScopeId $currentRoleScope.Id
         }
-
-        #endregion
         #endregion
 
     }
@@ -668,7 +662,6 @@ function Set-TargetResource
         #region resource generator code
         Remove-MgEntitlementManagementAccessPackage -AccessPackageId $currentInstance.Id
         #endregion
-
     }
 }
 
@@ -679,7 +672,7 @@ function Test-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -691,7 +684,7 @@ function Test-TargetResource
         [System.String]
         $Description,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -718,13 +711,12 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $IncompatibleGroups,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
