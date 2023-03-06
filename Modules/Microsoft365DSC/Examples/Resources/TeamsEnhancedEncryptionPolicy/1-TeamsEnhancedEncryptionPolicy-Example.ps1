@@ -16,11 +16,11 @@ Configuration Example
     {
         TeamsEnhancedEncryptionPolicy 'Example'
         {
-            CallingEndtoEndEncryptionEnabledType = "Disabled";
-            Credential                           = $Credscredential;
-            Ensure                               = "Present";
-            Identity                             = "Global";
-            MeetingEndToEndEncryption            = "DisabledUserOverride";
+            CallingEndtoEndEncryptionEnabledType = 'Disabled'
+            Credential                           = $Credscredential
+            Ensure                               = 'Present'
+            Identity                             = 'Global'
+            MeetingEndToEndEncryption            = 'DisabledUserOverride'
         }
     }
 }

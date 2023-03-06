@@ -21,6 +21,7 @@
     FIXES [#2921](https://github.com/microsoft/Microsoft365DSC/issues/2921)
   * Added application credential support to Assert-M365DSCBlueprint
     FIXES [#1792](https://github.com/microsoft/Microsoft365DSC/pull/1792)
+  * Updated/added various examples
 * DEPENDENCIES
   * Updated MicrosoftTeams to version 5.0.0
 
