@@ -685,7 +685,8 @@ function Export-TargetResource
                 Write-Host "        |---[$j/$($resources.Count)] $($resource.DisplayName)" -NoNewline
 
                 $params = @{
-                    id                    = $resource.id
+                    Id                    = $resource.id
+                    DisplayName           = $resource.displayName
                     CatalogId             = $catalogId
                     Ensure                = 'Present'
                     Credential            = $Credential
