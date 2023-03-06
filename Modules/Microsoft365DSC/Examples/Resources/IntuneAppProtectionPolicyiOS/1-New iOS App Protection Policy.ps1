@@ -15,7 +15,7 @@ Configuration Example
     {
         IntuneAppProtectionPolicyiOS 'MyCustomiOSPolicy'
         {
-            Id                                      = '1352a41f-bd32-4ee3-b227-2f11b17b8614'
+            Identity                                = '1352a41f-bd32-4ee3-b227-2f11b17b8614'
             DisplayName                             = 'My DSC iOS App Protection Policy'
             AllowedDataStorageLocations             = @('sharePoint')
             AllowedInboundDataTransferSources       = 'managedApps'
