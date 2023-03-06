@@ -16,6 +16,8 @@
     FIXES [#2873](https://github.com/microsoft/Microsoft365DSC/issues/2873)
   * Changed the -Platform parameter for Connect-M365Tenant to -Workload in 2 remaining places.
     FIXES [#2921](https://github.com/microsoft/Microsoft365DSC/issues/2921)
+  * Added QA test to validate if used permissions in Settings.json files
+    actually exist.
 * DEPENDENCIES
   * Updated MicrosoftTeams to version 5.0.0
 
