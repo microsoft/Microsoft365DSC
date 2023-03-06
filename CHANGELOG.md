@@ -14,6 +14,8 @@
 * O365AdminAuditLogConfig
   * Added support for ManagedIdentity.
   * Fixed the Get-TargetResource method to return all authentication parameters.
+* DRG
+  * Fixed the default settings for the Ensure parameter.
 * MISC
   * Updated logic for drift detection to be case insensitive.
     FIXES [#2873](https://github.com/microsoft/Microsoft365DSC/issues/2873)
