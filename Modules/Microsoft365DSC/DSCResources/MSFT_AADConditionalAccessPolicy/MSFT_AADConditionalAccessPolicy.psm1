@@ -57,12 +57,12 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
-        [validateSet('none','internalGuest','b2bCollaborationGuest','b2bCollaborationMember','b2bDirectConnectUser','otherExternalUser','serviceProvider','unknownFutureValue')]
+        [validateSet('none', 'internalGuest', 'b2bCollaborationGuest', 'b2bCollaborationMember', 'b2bDirectConnectUser', 'otherExternalUser', 'serviceProvider', 'unknownFutureValue')]
         $IncludeGuestOrExternalUserTypes,
 
         [Parameter()]
         [System.String]
-        [ValidateSet('','all','enumerated','unknownFutureValue')]
+        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
         $IncludeExternalTenantsMembershipKind,
 
         [Parameter()]
@@ -71,12 +71,12 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
-        [validateSet('none','internalGuest','b2bCollaborationGuest','b2bCollaborationMember','b2bDirectConnectUser','otherExternalUser','serviceProvider','unknownFutureValue')]
+        [validateSet('none', 'internalGuest', 'b2bCollaborationGuest', 'b2bCollaborationMember', 'b2bDirectConnectUser', 'otherExternalUser', 'serviceProvider', 'unknownFutureValue')]
         $ExcludeGuestOrExternalUserTypes,
 
         [Parameter()]
         [System.String]
-        [ValidateSet('','all','enumerated','unknownFutureValue')]
+        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
         $ExcludeExternalTenantsMembershipKind,
 
         [Parameter()]
@@ -475,7 +475,7 @@ function Get-TargetResource
                     {
                         $IncludeLocations += $IncludeLocationGUID
                     }
-                    elseif($IncludeLocationGUID -eq '00000000-0000-0000-0000-000000000000')
+                    elseif ($IncludeLocationGUID -eq '00000000-0000-0000-0000-000000000000')
                     {
                         $IncludeLocations += 'Multifactor authentication trusted IPs'
                     }
@@ -503,7 +503,7 @@ function Get-TargetResource
                     {
                         $ExcludeLocations += $ExcludeLocationGUID
                     }
-                    elseif($IncludeLocationGUID -eq '00000000-0000-0000-0000-000000000000')
+                    elseif ($IncludeLocationGUID -eq '00000000-0000-0000-0000-000000000000')
                     {
                         $IncludeLocations += 'Multifactor authentication trusted IPs'
                     }
@@ -546,11 +546,13 @@ function Get-TargetResource
         {
             $PersistentBrowserMode = $null
         }
-        if($Policy.Conditions.Users.IncludeGuestsOrExternalUsers.GuestOrExternalUserTypes){
-            [Array]$IncludeGuestOrExternalUserTypes = ($Policy.Conditions.Users.IncludeGuestsOrExternalUsers.GuestOrExternalUserTypes).Split(",")
+        if ($Policy.Conditions.Users.IncludeGuestsOrExternalUsers.GuestOrExternalUserTypes)
+        {
+            [Array]$IncludeGuestOrExternalUserTypes = ($Policy.Conditions.Users.IncludeGuestsOrExternalUsers.GuestOrExternalUserTypes).Split(',')
         }
-        if($Policy.Conditions.Users.ExcludeGuestsOrExternalUsers.GuestOrExternalUserTypes){
-            [Array]$ExcludeGuestOrExternalUserTypes = ($Policy.Conditions.Users.ExcludeGuestsOrExternalUsers.GuestOrExternalUserTypes).Split(",")
+        if ($Policy.Conditions.Users.ExcludeGuestsOrExternalUsers.GuestOrExternalUserTypes)
+        {
+            [Array]$ExcludeGuestOrExternalUserTypes = ($Policy.Conditions.Users.ExcludeGuestsOrExternalUsers.GuestOrExternalUserTypes).Split(',')
         }
 
         $termsOfUseName = $null
@@ -702,12 +704,12 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
-        [validateSet('none','internalGuest','b2bCollaborationGuest','b2bCollaborationMember','b2bDirectConnectUser','otherExternalUser','serviceProvider','unknownFutureValue')]
+        [validateSet('none', 'internalGuest', 'b2bCollaborationGuest', 'b2bCollaborationMember', 'b2bDirectConnectUser', 'otherExternalUser', 'serviceProvider', 'unknownFutureValue')]
         $IncludeGuestOrExternalUserTypes,
 
         [Parameter()]
         [System.String]
-        [ValidateSet('','all','enumerated','unknownFutureValue')]
+        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
         $IncludeExternalTenantsMembershipKind,
 
         [Parameter()]
@@ -716,12 +718,12 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
-        [validateSet('none','internalGuest','b2bCollaborationGuest','b2bCollaborationMember','b2bDirectConnectUser','otherExternalUser','serviceProvider','unknownFutureValue')]
+        [validateSet('none', 'internalGuest', 'b2bCollaborationGuest', 'b2bCollaborationMember', 'b2bDirectConnectUser', 'otherExternalUser', 'serviceProvider', 'unknownFutureValue')]
         $ExcludeGuestOrExternalUserTypes,
 
         [Parameter()]
         [System.String]
-        [ValidateSet('','all','enumerated','unknownFutureValue')]
+        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
         $ExcludeExternalTenantsMembershipKind,
 
         [Parameter()]
@@ -1150,44 +1152,52 @@ function Set-TargetResource
         Write-Verbose -Message 'Set-Targetresource: process includeGuestsOrExternalUsers'
         $includeGuestsOrExternalUsers = @{}
         [string]$IncludeGuestOrExternalUserTypes = $IncludeGuestOrExternalUserTypes -join ','
-        $includeGuestsOrExternalUsers.Add('guestOrExternalUserTypes',$IncludeGuestOrExternalUserTypes)
+        $includeGuestsOrExternalUsers.Add('guestOrExternalUserTypes', $IncludeGuestOrExternalUserTypes)
         $externalTenants = @{}
-        if($IncludeExternalTenantsMembershipKind -eq "All"){
-            $externalTenants.Add("@odata.type","#microsoft.graph.conditionalAccessAllExternalTenants")
+        if ($IncludeExternalTenantsMembershipKind -eq 'All')
+        {
+            $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessAllExternalTenants')
         }
-        elseif($IncludeExternalTenantsMembershipKind -eq "enumerated"){
-            $externalTenants.Add("@odata.type","#microsoft.graph.conditionalAccessEnumeratedExternalTenants")
+        elseif ($IncludeExternalTenantsMembershipKind -eq 'enumerated')
+        {
+            $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessEnumeratedExternalTenants')
         }
-        else{
-            $externalTenants.Add("@odata.type","")
+        else
+        {
+            $externalTenants.Add('@odata.type', '')
         }
-        $externalTenants.Add("membershipKind",$IncludeExternalTenantsMembershipKind)
-        if($IncludeExternalTenantsMembers){
-            $externalTenants.Add("members",$IncludeExternalTenantsMembers)
+        $externalTenants.Add('membershipKind', $IncludeExternalTenantsMembershipKind)
+        if ($IncludeExternalTenantsMembers)
+        {
+            $externalTenants.Add('members', $IncludeExternalTenantsMembers)
         }
-        $includeGuestsOrExternalUsers.Add('externalTenants',$externalTenants)
-        $conditions.Users.Add('includeGuestsOrExternalUsers',$includeGuestsOrExternalUsers)
+        $includeGuestsOrExternalUsers.Add('externalTenants', $externalTenants)
+        $conditions.Users.Add('includeGuestsOrExternalUsers', $includeGuestsOrExternalUsers)
 
         Write-Verbose -Message 'Set-Targetresource: process excludeGuestsOrExternalUsers'
         $excludeGuestsOrExternalUsers = @{}
         [string]$ExcludeGuestOrExternalUserTypes = $ExcludeGuestOrExternalUserTypes -join ','
-        $excludeGuestsOrExternalUsers.Add('guestOrExternalUserTypes',$ExcludeGuestOrExternalUserTypes)
+        $excludeGuestsOrExternalUsers.Add('guestOrExternalUserTypes', $ExcludeGuestOrExternalUserTypes)
         $externalTenants = @{}
-        if($ExcludeExternalTenantsMembershipKind -eq "All"){
-            $externalTenants.Add("@odata.type","#microsoft.graph.conditionalAccessAllExternalTenants")
+        if ($ExcludeExternalTenantsMembershipKind -eq 'All')
+        {
+            $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessAllExternalTenants')
         }
-        elseif($ExcludeExternalTenantsMembershipKind -eq "enumerated"){
-            $externalTenants.Add("@odata.type","#microsoft.graph.conditionalAccessEnumeratedExternalTenants")
+        elseif ($ExcludeExternalTenantsMembershipKind -eq 'enumerated')
+        {
+            $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessEnumeratedExternalTenants')
         }
-        else{
-            $externalTenants.Add("@odata.type","")
+        else
+        {
+            $externalTenants.Add('@odata.type', '')
         }
-        $externalTenants.Add("membershipKind",$ExcludeExternalTenantsMembershipKind)
-        if($ExcludeExternalTenantsMembers){
-            $externalTenants.Add("members",$ExcludeExternalTenantsMembers)
+        $externalTenants.Add('membershipKind', $ExcludeExternalTenantsMembershipKind)
+        if ($ExcludeExternalTenantsMembers)
+        {
+            $externalTenants.Add('members', $ExcludeExternalTenantsMembers)
         }
-        $excludeGuestsOrExternalUsers.Add('externalTenants',$externalTenants)
-        $conditions.Users.Add('excludeGuestsOrExternalUsers',$excludeGuestsOrExternalUsers)
+        $excludeGuestsOrExternalUsers.Add('externalTenants', $externalTenants)
+        $conditions.Users.Add('excludeGuestsOrExternalUsers', $excludeGuestsOrExternalUsers)
 
         Write-Verbose -Message 'Set-Targetresource: process platform condition'
         if ($IncludePlatforms -or $ExcludePlatforms)
@@ -1274,7 +1284,7 @@ function Set-TargetResource
                     {
                         $conditions.Locations.ExcludeLocations += $ExcludeLocation
                     }
-                    elseif($ExcludeLocation -eq 'Multifactor authentication trusted IPs')
+                    elseif ($ExcludeLocation -eq 'Multifactor authentication trusted IPs')
                     {
                         $conditions.Locations.ExcludeLocations += '00000000-0000-0000-0000-000000000000'
                     }
@@ -1562,12 +1572,12 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String[]]
-        [validateSet('none','internalGuest','b2bCollaborationGuest','b2bCollaborationMember','b2bDirectConnectUser','otherExternalUser','serviceProvider','unknownFutureValue')]
+        [validateSet('none', 'internalGuest', 'b2bCollaborationGuest', 'b2bCollaborationMember', 'b2bDirectConnectUser', 'otherExternalUser', 'serviceProvider', 'unknownFutureValue')]
         $IncludeGuestOrExternalUserTypes,
 
         [Parameter()]
         [System.String]
-        [ValidateSet('','all','enumerated','unknownFutureValue')]
+        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
         $IncludeExternalTenantsMembershipKind,
 
         [Parameter()]
@@ -1576,12 +1586,12 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String[]]
-        [validateSet('none','internalGuest','b2bCollaborationGuest','b2bCollaborationMember','b2bDirectConnectUser','otherExternalUser','serviceProvider','unknownFutureValue')]
+        [validateSet('none', 'internalGuest', 'b2bCollaborationGuest', 'b2bCollaborationMember', 'b2bDirectConnectUser', 'otherExternalUser', 'serviceProvider', 'unknownFutureValue')]
         $ExcludeGuestOrExternalUserTypes,
 
         [Parameter()]
         [System.String]
-        [ValidateSet('','all','enumerated','unknownFutureValue')]
+        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
         $ExcludeExternalTenantsMembershipKind,
 
         [Parameter()]
