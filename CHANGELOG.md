@@ -21,6 +21,8 @@
     FIXES [#2873](https://github.com/microsoft/Microsoft365DSC/issues/2873)
   * Changed the -Platform parameter for Connect-M365Tenant to -Workload in 2 remaining places.
     FIXES [#2921](https://github.com/microsoft/Microsoft365DSC/issues/2921)
+  * Added QA test to validate if used permissions in Settings.json files
+    actually exist.
   * Added application credential support to Assert-M365DSCBlueprint
     FIXES [#1792](https://github.com/microsoft/Microsoft365DSC/pull/1792)
   * Updated/added various examples
