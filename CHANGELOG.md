@@ -1,6 +1,8 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+* AADAdministrativeUnit
+  * Updated validation of properties in schema to assist usage
 
 * AADAdministrativeUnit
   * Fixed general issues caused by improper handling of nested CIMInstances
