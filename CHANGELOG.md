@@ -1,12 +1,11 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
-* AADAdministrativeUnit
-  * Updated validation of properties in schema to assist usage
+# 1.23.308.1
 
 * AADAdministrativeUnit
   * Fixed general issues caused by improper handling of nested CIMInstances
     FIXES #2775, #2776, #2786
+  * Updated validation of properties in schema to assist usage
 * AADServicePrincipal
   * Change Write-Error to Write-Verbose to make sure the Test method will continue
     FIXES [#2961](https://github.com/microsoft/Microsoft365DSC/issues/2961)
