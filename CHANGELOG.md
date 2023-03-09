@@ -5,12 +5,17 @@
 * AADAdministrativeUnit
   * Fixed general issues caused by improper handling of nested CIMInstances
     FIXES #2775, #2776, #2786
+* AADServicePrincipal
+  * Change Write-Error to Write-Verbose to make sure the Test method will continue
+    FIXES [#2961](https://github.com/microsoft/Microsoft365DSC/issues/2961)
 * EXOManagementRoleAssignment
   * Added delays before disconnecting from EXO to ensure new permissions are applied.
     FIXES [#2523](https://github.com/microsoft/Microsoft365DSC/issues/2523)
 * O365AdminAuditLogConfig
   * Added support for ManagedIdentity.
   * Fixed the Get-TargetResource method to return all authentication parameters.
+* DRG
+  * Fixed the default settings for the Ensure parameter.
 * MISC
   * Updated logic for drift detection to be case insensitive.
     FIXES [#2873](https://github.com/microsoft/Microsoft365DSC/issues/2873)
@@ -18,6 +23,9 @@
     FIXES [#2921](https://github.com/microsoft/Microsoft365DSC/issues/2921)
   * Added QA test to validate if used permissions in Settings.json files
     actually exist.
+  * Added application credential support to Assert-M365DSCBlueprint
+    FIXES [#1792](https://github.com/microsoft/Microsoft365DSC/pull/1792)
+  * Updated/added various examples
 * DEPENDENCIES
   * Updated MicrosoftTeams to version 5.0.0
 
