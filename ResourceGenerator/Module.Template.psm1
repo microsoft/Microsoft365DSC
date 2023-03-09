@@ -7,10 +7,10 @@ function Get-TargetResource
         #region resource generator code
 <ParameterBlock><AssignmentsParam>        #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -108,10 +108,10 @@ function Set-TargetResource
     (
         #region resource generator code
 <ParameterBlock><AssignmentsParam>        #endregion
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -220,10 +220,10 @@ function Test-TargetResource
         #region resource generator code
 <ParameterBlock><AssignmentsParam>        #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]

@@ -14,13 +14,13 @@ Configuration Example
 
     node localhost
     {
-        TeamsEnhancedEncryptionPolicy 'Example'
+        TeamsAudioConferencingPolicy 'Example'
         {
-            CallingEndtoEndEncryptionEnabledType = "Disabled";
-            Credential                           = $Credscredential;
-            Ensure                               = "Present";
-            Identity                             = "Global";
-            MeetingEndToEndEncryption            = "DisabledUserOverride";
+            AllowTollFreeDialin       = $True
+            Credential                = $Credscredential
+            Ensure                    = 'Present'
+            Identity                  = 'Global'
+            MeetingInvitePhoneNumbers = @()
         }
     }
 }
