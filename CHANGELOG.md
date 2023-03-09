@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+* MISC
+    FIXES [#2942](https://github.com/microsoft/Microsoft365DSC/issues/2942)
+  * Updated/added various examples
+
 # 1.23.308.1
 
 * AADAdministrativeUnit
@@ -27,8 +32,6 @@
   * Added application credential support to Assert-M365DSCBlueprint
     FIXES [#1792](https://github.com/microsoft/Microsoft365DSC/pull/1792)
   * Added checks in New-M365DSCConnection to ensure beta MSGraph profile is correctly set when requested
-    FIXES [#2942](https://github.com/microsoft/Microsoft365DSC/issues/2942)
-  * Updated/added various examples
 * DEPENDENCIES
   * Updated MicrosoftTeams to version 5.0.0
 
