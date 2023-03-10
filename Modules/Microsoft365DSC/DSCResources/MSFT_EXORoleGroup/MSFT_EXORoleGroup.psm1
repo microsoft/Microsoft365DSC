@@ -208,7 +208,6 @@ function Set-TargetResource {
     if ([System.String]::IsNullOrEmpty($Description)) {
         $NewRoleGroupParams.Remove('Description') | Out-Null
     }
-
     # CASE: Role Group doesn't exist but should;
     if ($Ensure -eq 'Present' -and $currentRoleGroupConfig.Ensure -eq 'Absent') {
         Write-Verbose -Message "Role Group '$($Name)' does not exist but it should. Create and configure it."
@@ -220,14 +219,6 @@ function Set-TargetResource {
     elseif ($Ensure -eq 'Absent' -and $currentRoleGroupConfig.Ensure -eq 'Present') {
         Write-Verbose -Message "Role Group '$($Name)' exists but it shouldn't. Remove it."
         Remove-RoleGroup -Identity $Name -Confirm:$false -Force
-    }
-    # CASE: Role Group exists and it should, but has different values than the desired ones
-    elseif ($Ensure -eq 'Present' -and $currentRoleGroupConfig.Ensure -eq 'Present') {
-        Write-Verbose -Message "Role Group '$($Name)' already exists, but needs updating."
-        Remove-RoleGroup -Identity $Name -Confirm:$false -Force
-        Write-Verbose -Message "Setting Role Group $($Name) with values: $(Convert-M365DscHashtableToString -Hashtable $NewRoleGroupParams)"
-        
-        New-RoleGroup @NewRoleGroupParams
     }
     # CASE: Role Group exists and it should, but has different member values than the desired ones
     elseif ($Ensure -eq 'Present' -and $currentRoleGroupConfig.Ensure -eq 'Present' -and $null -ne (Compare-Object -ReferenceObject $($currentRoleGroupConfig.Members) -DifferenceObject $Members)) {
@@ -414,10 +405,11 @@ function Export-TargetResource {
         $i = 1
         foreach ($RoleGroup in $AllRoleGroups) {
             Write-Host "    |---[$i/$($AllRoleGroups.Count)] $($RoleGroup.Name)" -NoNewline
+            $roleGroupMember = Get-RoleGroupMember -Identity $Name | Select-Object DisplayName
 
             $Params = @{
                 Name                  = $RoleGroup.Name
-                Members               = $RoleGroup.Members
+                Members               = $roleGroupMember.DisplayName
                 Roles                 = $RoleGroup.Roles
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
