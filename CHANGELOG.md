@@ -1,6 +1,9 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+* AADConditionalAccessPolicy
+  * Fixed [#2974](https://github.com/microsoft/Microsoft365DSC/issues/2974)
+  * Fixed [#2965](https://github.com/microsoft/Microsoft365DSC/issues/2965)
 * MISC
   * Added checks in New-M365DSCConnection to ensure beta MSGraph profile is correctly set when requested
     FIXES [#2942](https://github.com/microsoft/Microsoft365DSC/issues/2942)
