@@ -125,7 +125,7 @@ function Get-TargetResource
         }
         catch
         {
-            Write-Error -Message "Azure AD ServicePrincipal with ObjectID: $($ObjectID) could not be retrieved"
+            Write-Verbose -Message "Azure AD ServicePrincipal with ObjectID: $($ObjectID) could not be retrieved"
         }
 
         if ($null -eq $AADServicePrincipal)
