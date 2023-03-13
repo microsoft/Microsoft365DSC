@@ -7,6 +7,9 @@
 * MISC
   * Added checks in New-M365DSCConnection to ensure beta MSGraph profile is correctly set when requested
     FIXES [#2942](https://github.com/microsoft/Microsoft365DSC/issues/2942)
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 1.23.0.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.156.
 
 # 1.23.308.1
 
