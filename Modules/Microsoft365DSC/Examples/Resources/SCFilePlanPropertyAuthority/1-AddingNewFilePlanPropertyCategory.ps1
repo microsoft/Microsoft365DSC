@@ -5,20 +5,22 @@ It is not meant to use as a production baseline.
 
 Configuration Example
 {
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [PSCredential]
         $credsGlobalAdmin
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
         SCFilePlanPropertyAuthority 'FilePlanPropertyAuthority'
         {
-            Name               = "My Authority"
-            Ensure             = "Present"
-            Credential         = $credsGlobalAdmin
+            Name       = 'My Authority'
+            Ensure     = 'Present'
+            Credential = $credsGlobalAdmin
         }
     }
 }

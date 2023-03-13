@@ -60,24 +60,29 @@ This example adds a new Teams Channels Policy.
 ```powershell
 Configuration Example
 {
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [PSCredential]
         $credsGlobalAdmin
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
         TeamsChannelsPolicy 'ConfigureChannelsPolicy'
         {
-            Identity                    = 'New Channels Policy'
-            AllowOrgWideTeamCreation    = $True
-            AllowPrivateChannelCreation = $True
-            AllowPrivateTeamDiscovery   = $True
-            Description                 = 'This is an example'
-            Ensure                      = 'Present'
-            Credential                  = $credsGlobalAdmin
+            Identity                                      = 'New Channels Policy'
+            Description                                   = 'This is an example'
+            AllowChannelSharingToExternalUser             = $True
+            AllowOrgWideTeamCreation                      = $True
+            EnablePrivateTeamDiscovery                    = $True
+            AllowPrivateChannelCreation                   = $True
+            AllowSharedChannelCreation                    = $True
+            AllowUserToParticipateInExternalSharedChannel = $True
+            Ensure                                        = 'Present'
+            Credential                                    = $credsGlobalAdmin
         }
     }
 }

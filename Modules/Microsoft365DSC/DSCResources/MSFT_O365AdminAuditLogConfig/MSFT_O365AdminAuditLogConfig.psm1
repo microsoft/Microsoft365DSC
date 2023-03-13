@@ -41,7 +41,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message 'Getting configuration for Office 365 Audit Log'
@@ -87,6 +91,12 @@ function Get-TargetResource
             $Result = @{
                 IsSingleInstance                = $IsSingleInstance
                 Credential                      = $Credential
+                ApplicationId                   = $ApplicationId
+                TenantId                        = $TenantId
+                CertificateThumbprint           = $CertificateThumbprint
+                CertificatePath                 = $CertificatePath
+                CertificatePassword             = $CertificatePassword
+                Managedidentity                 = $ManagedIdentity.IsPresent
                 UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabledReturnValue
             }
             return $Result
@@ -146,7 +156,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message 'Setting configuration for Office 365 Audit Log'
@@ -244,7 +258,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -304,7 +322,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
@@ -338,6 +360,9 @@ function Export-TargetResource
             ApplicationId                   = $ApplicationId
             TenantId                        = $TenantId
             CertificateThumbprint           = $CertificateThumbprint
+            CertificatePassword             = $CertificatePassword
+            Managedidentity                 = $ManagedIdentity.IsPresent
+            CertificatePath                 = $CertificatePath
         }
         $Results = Get-TargetResource @Params
 

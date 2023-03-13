@@ -569,11 +569,10 @@ function Test-TargetResource
             if (-Not $testResult)
             {
                 $testResult = $false
-                break;
+                break
             }
 
             $ValuesToCheck.Remove($key) | Out-Null
-
         }
     }
 
@@ -585,8 +584,8 @@ function Test-TargetResource
     $ValuesToCheck.Remove('AddedOn') | Out-Null
     $ValuesToCheck.Remove('IsPendingOnboarding') | Out-Null
 
-    #Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    #Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
     if ($testResult)
     {

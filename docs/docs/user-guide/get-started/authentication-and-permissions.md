@@ -52,6 +52,12 @@ It is also important to note that we have added logic inside of the commands tha
 
 In order to authenticate to Power Apps using a Service Principal (Certificate Thumbprint or ApplicationSecret), you will first need to define your app as a Power App Management app. For details on how to proceed, please refer to the folloring link: <a href="https://learn.microsoft.com/en-us/power-platform/admin/powershell-create-service-principal#registering-an-admin-management-application">https://learn.microsoft.com/en-us/power-platform/admin/powershell-create-service-principal#registering-an-admin-management-application</a>
 
+Additionally, to be able to authenticate using a Certificate Thumbprint, the underlying Power Apps PowerShell module used by Microsoft365DSC requires the certificate's private key (.pfx) to be registered under the current user's certificate store at <strong>Cert:\CurrentUser\My\</strong>. Omitting to register the private key will result in Microsoft365DSC throwing the following error when trying to authenticate to the Power Platform:
+
+```
+Get-Item: Cannot find path 'Cert:\CurrentUser\My\****************************************' because it does not exist.
+```
+
 ## Microsoft Graph Permissions
 
 Most components of the Microsoft365DSC solution are using the Microsoft Graph PowerShell SDK under the cover to authenticate and interact with Microsoft 365. The Graph API has two different authentication implementations:

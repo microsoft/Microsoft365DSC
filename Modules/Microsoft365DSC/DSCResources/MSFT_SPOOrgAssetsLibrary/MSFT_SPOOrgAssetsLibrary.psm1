@@ -471,7 +471,7 @@ function Export-TargetResource
         }
         if ($null -ne $orgAssets)
         {
-            foreach ($orgAssetLib in $orgAssets.OrgAssetsLibraries)
+            foreach ($orgAssetLib in $orgAssets)
             {
                 Write-Host "    [$i/$($orgAssets.Length)] $($orgAssetLib.libraryurl.DecodedUrl)" -NoNewline
                 $Params = @{

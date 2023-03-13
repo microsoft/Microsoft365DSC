@@ -54,25 +54,26 @@ This examples configure a TeamsGroupPolicyAssignment.
 ```powershell
 Configuration Example
 {
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [PSCredential]
         $credsGlobalAdmin
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
-        TeamsGroupPolicyAssignment "TeamsGroupPolicyAssignment"
+        TeamsGroupPolicyAssignment 'TeamsGroupPolicyAssignment'
         {
-            Id                 = "1"
-			Ensure             = "Present";
-            GroupDisplayname   = "SecGroup";
-            GroupId            = "";
-            PolicyName         = "AllowCalling";
-            PolicyType         = "TeamsCallingPolicy";
-            Priority           = 1;
-            Credential         = $credsGlobalAdmin
+            Ensure           = 'Present'
+            GroupDisplayname = 'SecGroup'
+            GroupId          = ''
+            PolicyName       = 'AllowCalling'
+            PolicyType       = 'TeamsCallingPolicy'
+            Priority         = 1
+            Credential       = $credsGlobalAdmin
         }
     }
 }
