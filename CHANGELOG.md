@@ -1,6 +1,9 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+* EXOOrganizationConfig
+  * Add support for the MessageRecallEnabled parameter.
+    FIXES [#2978](https://github.com/microsoft/Microsoft365DSC/issues/2978)
 * MISC
   * Added checks in New-M365DSCConnection to ensure beta MSGraph profile is correctly set when requested
     FIXES [#2942](https://github.com/microsoft/Microsoft365DSC/issues/2942)
