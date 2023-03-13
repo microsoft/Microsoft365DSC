@@ -1,6 +1,10 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+
+* EXOOrganizationConfig
+  * Add support for the MessageRecallEnabled parameter.
+    FIXES [#2978](https://github.com/microsoft/Microsoft365DSC/issues/2978)
 * EXORoleAssignmentPolicy
   * Allow description and role change at the same time.
     FIXES [#2977](https://github.com/microsoft/Microsoft365DSC/issues/2977)
