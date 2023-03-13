@@ -2,7 +2,9 @@
 
 # UNRELEASED
 * AADConditionalAccessPolicy
+  * Handle Named Location "Multifactor authentication trusted IPs"
   * Fixed [#2974](https://github.com/microsoft/Microsoft365DSC/issues/2974)
+  * Export and handle guest and external users.
   * Fixed [#2965](https://github.com/microsoft/Microsoft365DSC/issues/2965)
 * MISC
   * Added checks in New-M365DSCConnection to ensure beta MSGraph profile is correctly set when requested
