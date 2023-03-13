@@ -97,6 +97,18 @@ function Get-TargetResource
         $IsFluidEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $CommentsOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.UInt32]
+        $StorageQuota,
+
+        [Parameter()]
+        [System.UInt32]
+        $StorageQuotaAllocated,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -190,6 +202,9 @@ function Get-TargetResource
             MarkNewFilesSensitiveByDefault                = $SPOTenantSettings.MarkNewFilesSensitiveByDefault
             ConditionalAccessPolicy                       = $SPOTenantSettings.ConditionalAccessPolicy
             DisabledWebPartIds                            = $SPOTenantSettings.DisabledWebPartIds
+            CommentsOnSitePagesDisabled                   = $SPOTenantSettings.CommentsOnSitePagesDisabled
+            StorageQuota                                  = $SPOTenantSettings.StorageQuota
+            StorageQuotaAllocated                         = $SPOTenantSettings.StorageQuotaAllocated
             Credential                                    = $Credential
             ApplicationId                                 = $ApplicationId
             TenantId                                      = $TenantId
@@ -310,6 +325,18 @@ function Set-TargetResource
         [Parameter()]
         [System.Guid[]]
         $DisabledWebPartIds,
+
+        [Parameter()]
+        [System.Boolean]
+        $CommentsOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.UInt32]
+        $StorageQuota,
+
+        [Parameter()]
+        [System.UInt32]
+        $StorageQuotaAllocated,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -482,6 +509,18 @@ function Test-TargetResource
         [Parameter()]
         [System.Guid[]]
         $DisabledWebPartIds,
+
+        [Parameter()]
+        [System.Boolean]
+        $CommentsOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.UInt32]
+        $StorageQuota,
+
+        [Parameter()]
+        [System.UInt32]
+        $StorageQuotaAllocated,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
