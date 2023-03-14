@@ -13,6 +13,8 @@
   * Allow description and role change at the same time.
     FIXES [#2977](https://github.com/microsoft/Microsoft365DSC/issues/2977)
 
+* SPOTenantSettings
+  * Add support for the CommentsOnSitePagesDisabled parameter.
 * MISC
   * Added checks in New-M365DSCConnection to ensure beta MSGraph profile is correctly set when requested
     FIXES [#2942](https://github.com/microsoft/Microsoft365DSC/issues/2942)
