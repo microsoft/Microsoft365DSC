@@ -579,7 +579,7 @@ function Test-TargetResource
             'MarkNewFilesSensitiveByDefault', `
             'ConditionalAccessPolicy', `
             'DisabledWebPartIds', `
-            '$CommentsOnSitePagesDisabled'
+            'CommentsOnSitePagesDisabled'
     )
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
