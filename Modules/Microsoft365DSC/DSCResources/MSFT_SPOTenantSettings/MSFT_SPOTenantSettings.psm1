@@ -97,6 +97,10 @@ function Get-TargetResource
         $IsFluidEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $CommentsOnSitePagesDisabled,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -190,6 +194,7 @@ function Get-TargetResource
             MarkNewFilesSensitiveByDefault                = $SPOTenantSettings.MarkNewFilesSensitiveByDefault
             ConditionalAccessPolicy                       = $SPOTenantSettings.ConditionalAccessPolicy
             DisabledWebPartIds                            = $SPOTenantSettings.DisabledWebPartIds
+            CommentsOnSitePagesDisabled                   = $SPOTenantSettings.CommentsOnSitePagesDisabled
             Credential                                    = $Credential
             ApplicationId                                 = $ApplicationId
             TenantId                                      = $TenantId
@@ -310,6 +315,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Guid[]]
         $DisabledWebPartIds,
+
+        [Parameter()]
+        [System.Boolean]
+        $CommentsOnSitePagesDisabled,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -484,6 +493,10 @@ function Test-TargetResource
         $DisabledWebPartIds,
 
         [Parameter()]
+        [System.Boolean]
+        $CommentsOnSitePagesDisabled,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -565,7 +578,8 @@ function Test-TargetResource
             'HideDefaultThemes', `
             'MarkNewFilesSensitiveByDefault', `
             'ConditionalAccessPolicy', `
-            'DisabledWebPartIds'
+            'DisabledWebPartIds', `
+            '$CommentsOnSitePagesDisabled'
     )
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
