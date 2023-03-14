@@ -1,13 +1,18 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-
+* AADConditionalAccessPolicy
+  * Handle Named Location "Multifactor authentication trusted IPs"
+  * Fixed [#2974](https://github.com/microsoft/Microsoft365DSC/issues/2974)
+  * Export and handle guest and external users.
+  * Fixed [#2965](https://github.com/microsoft/Microsoft365DSC/issues/2965)
 * EXOOrganizationConfig
   * Add support for the MessageRecallEnabled parameter.
     FIXES [#2978](https://github.com/microsoft/Microsoft365DSC/issues/2978)
 * EXORoleAssignmentPolicy
   * Allow description and role change at the same time.
     FIXES [#2977](https://github.com/microsoft/Microsoft365DSC/issues/2977)
+
 * SPOTenantSettings
   * Add support for the CommentsOnSitePagesDisabled parameter.
 * MISC
