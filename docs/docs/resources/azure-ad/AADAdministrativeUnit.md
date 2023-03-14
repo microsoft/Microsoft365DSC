@@ -28,7 +28,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Identity** | Write | String | Identity of member. For users, specify a UserPrincipalName. For groups and devices, specify DisplayName | |
-| **Type** | Write | String | Specify User, Group or Device to interpret the identity. Can be Principal in ScopedRoleMembers | |
+| **Type** | Write | String | Specify User, Group or Device to interpret the identity. Can be ServicePrincipal in ScopedRoleMembers | `User`, `Group`, `Device`, `ServicePrincipal` |
 
 ### MSFT_MicrosoftGraphScopedRoleMembership
 
@@ -36,7 +36,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **RoleName** | Write | String | Name of the Azure AD Role that is assigned | |
+| **RoleName** | Write | String | Name of the Azure AD Role that is assigned. See https://learn.microsoft.com/en-us/azure/active-directory/roles/admin-units-assign-roles#roles-that-can-be-assigned-with-administrative-unit-scope | |
 | **RoleMemberInfo** | Write | MSFT_MicrosoftGraphIdentity | Member that is assigned the scoped role | |
 
 

@@ -4,8 +4,34 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        #region resource generator code
-<ParameterBlock><AssignmentsParam>        #endregion
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $IdentitySources,
+
+        [Parameter()]
+        [ValidateSet('configured','proposed','unknownFutureValue')]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [String[]]
+        $ExternalSponsors,
+
+        [Parameter()]
+        [String[]]
+        $InternalSponsors,
 
         [Parameter()]
         [System.String]
@@ -39,11 +65,12 @@ function Get-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload '<#Workload#>' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
-            -ProfileName '<#APIVersion#>'
+            -ProfileName 'beta'
 
-        Select-MgProfile -Name '<#APIVersion#>'
+        Select-MgProfile 'beta'
+
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
 
@@ -59,34 +86,110 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
         $nullResult.Ensure = 'Absent'
 
-        $getValue = $null<#ResourceGenerator
-        #region resource generator code
-        $getValue = <GetCmdLetName> <getKeyIdentifier> -ErrorAction SilentlyContinue
+        $getValue = $null
+
+        $getValue = Get-MgEntitlementManagementConnectedOrganization -ConnectedOrganizationId $id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>}"
+            Write-Verbose -Message "Entitlement Management Connected Organization with id {$id} was not found."
 
-            if(-Not [string]::IsNullOrEmpty($<FilterKey>))
+            if(-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = <GetCmdLetName> `
-<AlternativeFilter>
+                $getValue = Get-MgEntitlementManagementConnectedOrganization `
+                    -Filter "displayName eq '$DisplayName'" `
+                    -ErrorAction SilentlyContinue
             }
         }
-        #endregionResourceGenerator#>
+
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an <ResourceDescription> with <FilterKey> {$<FilterKey>}"
+            Write-Verbose -Message "Entitlement Management Connected Organization with displayName {$DisplayName} was not found."
             return $nullResult
         }
-        $<PrimaryKey> = $getValue.<PrimaryKey>
-        Write-Verbose -Message "An <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>} was found."<#ResourceGenerator
-<ComplexTypeConstructor><EnumTypeConstructor><DateTypeConstructor><TimeTypeConstructor>ResourceGenerator#>
-        $results = @{<#ResourceGenerator
-            #region resource generator code
-<HashTableMapping>            #endregionResourceGenerator#>
+
+        Write-Verbose -Message "Entitlement Management Connected Organization with id {$($getValue.id)} and displayName {$($getValue.DisplayName)} was found."
+        [Array]$getExternalSponsors=Get-MgEntitlementManagementConnectedOrganizationExternalSponsor -ConnectedOrganizationId $getValue.id
+
+        if ($null -ne $getExternalSponsors -and $getExternalSponsors.count -gt 0)
+        {
+            $sponsors=@()
+            foreach($sponsor in $getExternalSponsors)
+            {
+                $sponsors+= $sponsor.id
+            }
+            $getExternalSponsors=$sponsors
         }
-<#ComplexTypeContent#><#AssignmentsGet#>
+
+        [Array]$getInternalSponsors=Get-MgEntitlementManagementConnectedOrganizationInternalSponsor -ConnectedOrganizationId $getValue.id
+
+        if ($null -ne $getInternalSponsors -and $getInternalSponsors.count -gt 0)
+        {
+            $sponsors=@()
+            foreach($sponsor in $getInternalSponsors)
+            {
+                $sponsors+= $sponsor.id
+            }
+            $getInternalSponsors=$sponsors
+        }
+
+        $getIdentitySources=$null
+        if ($null -ne $getValue.IdentitySources)
+        {
+            $sources=@()
+            foreach ($source in $getValue.IdentitySources)
+            {
+                $formattedSource=@{
+                    odataType = $source.AdditionalProperties."@odata.type"
+                }
+
+                if(-not [String]::IsNullOrEmpty($source.AdditionalProperties.displayName))
+                {
+                    $formattedSource.Add('DisplayName',$source.AdditionalProperties.displayName)
+                }
+
+                if(-not [String]::IsNullOrEmpty($source.AdditionalProperties.tenantId))
+                {
+                    $formattedSource.Add('ExternalTenantId',$source.AdditionalProperties.tenantId)
+                }
+
+                if(-not [String]::IsNullOrEmpty($source.AdditionalProperties.cloudInstance))
+                {
+                    $formattedSource.Add('CloudInstance',$source.AdditionalProperties.cloudInstance)
+                }
+
+                if(-not [String]::IsNullOrEmpty($source.AdditionalProperties.domainName))
+                {
+                    $formattedSource.Add('DomainName',$source.AdditionalProperties.domainName)
+                }
+
+                if(-not [String]::IsNullOrEmpty($source.AdditionalProperties.issuerUri))
+                {
+                    $formattedSource.Add('IssuerUri',$source.AdditionalProperties.issuerUri)
+                }
+                $sources+=$formattedSource
+            }
+            $getIdentitySources=$sources
+        }
+
+
+        $results = @{
+            Id                    = $getValue.id
+            Description           = $getValue.description
+            DisplayName           = $getValue.displayName
+            ExternalSponsors      = $getExternalSponsors
+            IdentitySources       = $getIdentitySources
+            InternalSponsors      = $getInternalSponsors
+            State                 = $getValue.state
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            Managedidentity       = $ManagedIdentity.IsPresent
+        }
+
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -106,8 +209,35 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        #region resource generator code
-<ParameterBlock><AssignmentsParam>        #endregion
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $IdentitySources,
+
+        [Parameter()]
+        [ValidateSet('configured','proposed','unknownFutureValue')]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [String[]]
+        $ExternalSponsors,
+
+        [Parameter()]
+        [String[]]
+        $InternalSponsors,
+
         [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -138,6 +268,7 @@ function Set-TargetResource
         $ManagedIdentity
     )
 
+    #Import-Module Microsoft.Graph.DirectoryObjects -Force
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -163,11 +294,15 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating an <ResourceDescription> with <FilterKey> {$DisplayName}"
-<#AssignmentsRemove#>
+        Write-Verbose -Message "Creating a new Entitlement Management Connected Organization {$DisplayName}"
+
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
+
         $CreateParameters.Remove('Id') | Out-Null
+        $CreateParameters.Remove('ExternalSponsors') | Out-Null
+        $CreateParameters.Remove('InternalSponsors') | Out-Null
+
 
         $keys=(([Hashtable]$CreateParameters).clone()).Keys
         foreach($key in $keys)
@@ -176,19 +311,49 @@ function Set-TargetResource
             {
                 $CreateParameters.$key= Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
-        }<#ResourceGenerator
-        #region resource generator code
-<NewDataType>        $policy=<NewCmdLetName> <#NewKeyIdentifier#>
-<#AssignmentsNew#>        #endregionResourceGenerator#>
+        }
+
+        $newConnectedOrganization=New-MgEntitlementManagementConnectedOrganization -BodyParameter $CreateParameters
+
+        foreach ($sponsor in $ExternalSponsors)
+        {
+            $directoryObject=Get-MgDirectoryObject -DirectoryObjectId $sponsor
+            $directoryObjectType=$directoryObject.AdditionalProperties."@odata.type"
+            $directoryObjectType=($directoryObject.AdditionalProperties."@odata.type").split(".")|select-object -last 1
+            $directoryObjectRef=@{
+                "@odata.id" = "https://graph.microsoft.com/beta/$($directoryObjectType)s/$($sponsor)"
+            }
+
+            New-MgEntitlementManagementConnectedOrganizationExternalSponsorByRef `
+                -ConnectedOrganizationId $newConnectedOrganization.id `
+                -BodyParameter $directoryObjectRef
+        }
+
+        foreach ($sponsor in $InternalSponsors)
+        {
+            $directoryObject=Get-MgDirectoryObject -DirectoryObjectId $sponsor
+            $directoryObjectType=($directoryObject.AdditionalProperties."@odata.type").split(".")|select-object -last 1
+            $directoryObjectRef=@{
+                "@odata.id" = "https://graph.microsoft.com/beta/$($directoryObjectType)s/$($sponsor)"
+            }
+
+            New-MgEntitlementManagementConnectedOrganizationInternalSponsorByRef `
+                -ConnectedOrganizationId $newConnectedOrganization.id `
+                -BodyParameter $directoryObjectRef
+        }
+
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}"
-<#AssignmentsRemove#>
+        Write-Verbose -Message "Updating a new Entitlement Management Connected Organization {$($currentInstance.Id)}"
+
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
         $UpdateParameters.Remove('Id') | Out-Null
+        $UpdateParameters.Remove('ExternalSponsors') | Out-Null
+        $UpdateParameters.Remove('InternalSponsors') | Out-Null
+
 
         $keys=(([Hashtable]$UpdateParameters).clone()).Keys
         foreach($key in $keys)
@@ -197,17 +362,68 @@ function Set-TargetResource
             {
                 $UpdateParameters.$key= Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
-        }<#ResourceGenerator
-        #region resource generator code
-<UpdateDataType>        <UpdateCmdLetName> <#UpdateKeyIdentifier#>
-<#AssignmentsUpdate#>        #endregionResourceGenerator#>
+        }
+
+        Update-MgEntitlementManagementConnectedOrganization -BodyParameter $UpdateParameters `
+            -ConnectedOrganizationId $currentInstance.Id
+
+        #region External Sponsors
+        $sponsorsDifferences=compare-object -ReferenceObject @($ExternalSponsors|select-object) -DifferenceObject @($currentInstance.ExternalSponsors|select-object)
+        $sponsorsToAdd=($sponsorsDifferences | where-object -filterScript {$_.SideIndicator -eq '<='}).InputObject
+        $sponsorsToRemove=($sponsorsDifferences | where-object -filterScript {$_.SideIndicator -eq '=>'}).InputObject
+        foreach ($sponsor in $sponsorsToAdd)
+        {
+            $directoryObject=Get-MgDirectoryObject -DirectoryObjectId $sponsor
+            $directoryObjectType=$directoryObject.AdditionalProperties."@odata.type"
+            $directoryObjectType=($directoryObject.AdditionalProperties."@odata.type").split(".")|select-object -last 1
+            $directoryObjectRef=@{
+                "@odata.id" = "https://graph.microsoft.com/beta/$($directoryObjectType)s/$($sponsor)"
+            }
+
+            New-MgEntitlementManagementConnectedOrganizationExternalSponsorByRef `
+                -ConnectedOrganizationId $currentInstance.Id `
+                -BodyParameter $directoryObjectRef
+        }
+        foreach ($sponsor in $sponsorsToRemove)
+        {
+            Remove-MgEntitlementManagementConnectedOrganizationExternalSponsorByRef `
+                -ConnectedOrganizationId $currentInstance.Id `
+                -DirectoryObjectId $sponsor
+        }
+        #endregion
+
+        #region Internal Sponsors
+        $sponsorsDifferences=compare-object -ReferenceObject @($InternalSponsors|select-object) -DifferenceObject @($currentInstance.InternalSponsors|select-object)
+        $sponsorsToAdd=($sponsorsDifferences | where-object -filterScript {$_.SideIndicator -eq '<='}).InputObject
+        $sponsorsToRemove=($sponsorsDifferences | where-object -filterScript {$_.SideIndicator -eq '=>'}).InputObject
+        foreach ($sponsor in $sponsorsToAdd)
+        {
+            $directoryObject=Get-MgDirectoryObject -DirectoryObjectId $sponsor
+            $directoryObjectType=$directoryObject.AdditionalProperties."@odata.type"
+            $directoryObjectType=($directoryObject.AdditionalProperties."@odata.type").split(".")|select-object -last 1
+            $directoryObjectRef=@{
+                "@odata.id" = "https://graph.microsoft.com/beta/$($directoryObjectType)s/$($sponsor)"
+            }
+
+            New-MgEntitlementManagementConnectedOrganizationInternalSponsorByRef `
+                -ConnectedOrganizationId $currentInstance.Id `
+                -BodyParameter $directoryObjectRef
+        }
+        foreach ($sponsor in $sponsorsToRemove)
+        {
+            Remove-MgEntitlementManagementConnectedOrganizationInternalSponsorByRef `
+                -ConnectedOrganizationId $currentInstance.Id `
+                -DirectoryObjectId $sponsor
+        }
+        #endregion
+
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}" <#ResourceGenerator
-        #region resource generator code
-        <RemoveCmdLetName> <#removeKeyIdentifier#>
-        #endregionResourceGenerator#>
+        Write-Verbose -Message "Removing a new Entitlement Management Connected Organization  {$($currentInstance.Id)}"
+        Remove-MgEntitlementManagementConnectedOrganization -ConnectedOrganizationId $currentInstance.Id
+
+
     }
 }
 
@@ -217,8 +433,34 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        #region resource generator code
-<ParameterBlock><AssignmentsParam>        #endregion
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $IdentitySources,
+
+        [Parameter()]
+        [ValidateSet('configured','proposed','unknownFutureValue')]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [String[]]
+        $ExternalSponsors,
+
+        [Parameter()]
+        [String[]]
+        $InternalSponsors,
 
         [Parameter()]
         [System.String]
@@ -262,38 +504,39 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>}"
+    Write-Verbose -Message "Testing configuration of {$id}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    if($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
     }
-    $testResult = $true
+
+    $testResult=$true
 
     #Compare Cim instances
-    foreach ($key in $PSBoundParameters.Keys)
+    foreach($key in $PSBoundParameters.Keys)
     {
-        $source = $PSBoundParameters.$key
-        $target = $CurrentValues.$key
-        if ($source.getType().Name -like '*CimInstance*')
+        $source=$PSBoundParameters.$key
+        $target=$CurrentValues.$key
+        if($source.getType().Name -like "*CimInstance*")
         {
-            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
+            $source=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
 
-            $testResult = Compare-M365DSCComplexObject `
+            $testResult=Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
 
-            if (-Not $testResult)
+            if(-Not $testResult)
             {
-                $testResult = $false
+                $testResult=$false
                 break;
             }
 
-            $ValuesToCheck.Remove($key) | Out-Null
+            $ValuesToCheck.Remove($key)|Out-Null
 
         }
     }
@@ -350,9 +593,10 @@ function Export-TargetResource
         $ManagedIdentity
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload '<#Workload#>' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName '<#APIVersion#>'
+        -ProfileName 'beta'
+    Select-MgProfile 'beta' -ErrorAction Stop
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -367,9 +611,14 @@ function Export-TargetResource
     #endregion
 
     try
-    {<#ResourceGenerator
+    {
+
         #region resource generator code
-<exportGetCommand>        #endregionResourceGenerator#>
+        [array]$getValue = Get-MgEntitlementManagementConnectedOrganization `
+            -ErrorAction Stop `
+            -All
+        #endregion
+
 
         $i = 1
         $dscContent = ''
@@ -383,14 +632,14 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
-            $displayedKey = $config.<PrimaryKey>
-            if (-not [String]::IsNullOrEmpty($config.displayName))
+            $displayedKey=$config.id
+            if(-not [String]::IsNullOrEmpty($config.displayName))
             {
-                $displayedKey = $config.displayName
+                $displayedKey=$config.displayName
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                <PrimaryKey>                    = $config.<PrimaryKey>
+                id                    = $config.id
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -403,13 +652,31 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-<#ConvertComplexToString#><#AssignmentsConvertComplexToString#>
+
+            if ($Results.IdentitySources)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.IdentitySources -CIMInstanceName AADEntitlementManagementConnectedOrganizationIdentitySource
+                if ($complexTypeStringResult)
+                {
+                    $Results.IdentitySources = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('IdentitySources') | Out-Null
+                }
+            }
+
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -Credential $Credential
-<#ConvertComplexToVariable#><#AssignmentsConvertComplexToVariable#><#TrailingCharRemoval#>
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -Credential $Credential
+
+            if ($Results.IdentitySources)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "IdentitySources" -IsCIMArray:$true
+            }
+
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -420,9 +687,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
-
-        New-M365DSCLogEntry -Message 'Error during Export:' `
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
@@ -431,7 +696,8 @@ function Export-TargetResource
         return ''
     }
 }
-<#AssignmentsFunctions#>function Rename-M365DSCCimInstanceParameter
+
+function Rename-M365DSCCimInstanceParameter
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable],[System.Collections.Hashtable[]])]
@@ -442,6 +708,7 @@ function Export-TargetResource
 
     $keyToRename=@{
         "odataType"="@odata.type"
+        "ExternalTenantId"="tenantId"
     }
 
     $result=$Properties
@@ -592,31 +859,6 @@ function Get-M365DSCDRGComplexTypeToHashtable
     return [hashtable]$results
 }
 
-<#
-    Use ComplexTypeMapping to overwrite the type of nested CIM
-    Example
-    $complexMapping=@(
-                    @{
-                        Name="ApprovalStages"
-                        CimInstanceName="MSFT_MicrosoftGraphapprovalstage1"
-                        IsRequired=$false
-                    }
-                    @{
-                        Name="PrimaryApprovers"
-                        CimInstanceName="MicrosoftGraphuserset"
-                        IsRequired=$false
-                    }
-                    @{
-                        Name="EscalationApprovers"
-                        CimInstanceName="MicrosoftGraphuserset"
-                        IsRequired=$false
-                    }
-                )
-    With
-    Name: the name of the parameter to be overwritten
-    CimInstanceName: The type of the CIM instance (can include or not the prefix MSFT_)
-    IsRequired: If isRequired equals true, an empty hashtable or array will be returned. Some of the Graph parameters are required even though they are empty
-#>
 function Get-M365DSCDRGComplexTypeToString
 {
     [CmdletBinding()]
@@ -720,7 +962,7 @@ function Get-M365DSCDRGComplexTypeToString
                 #overwrite type if object defined in mapping complextypemapping
                 if($key -in $ComplexTypeMapping.Name)
                 {
-                    $hashPropertyType=([Array]($ComplexTypeMapping|Where-Object -FilterScript {$_.Name -eq $key}).CimInstanceName)[0]
+                    $hashPropertyType=($ComplexTypeMapping|Where-Object -FilterScript {$_.Name -eq $key}).CimInstanceName
                     $hashProperty=$ComplexObject[$key]
                 }
                 else
@@ -751,32 +993,22 @@ function Get-M365DSCDRGComplexTypeToString
                         {
                             $item=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
                         }
-                        $nestedPropertyString = Get-M365DSCDRGComplexTypeToString `
-                        -ComplexObject $item `
-                        -CIMInstanceName $hashPropertyType `
-                        -IndentLevel $IndentLevel `
-                        -ComplexTypeMapping $ComplexTypeMapping `
-                        -IsArray:$true
-                        if([string]::IsNullOrWhiteSpace($nestedPropertyString))
-                        {
-                            $nestedPropertyString = "@()`r`n"
-                        }
-                        $currentProperty += $nestedPropertyString
+                        $currentProperty += Get-M365DSCDRGComplexTypeToString `
+                            -ComplexObject $item `
+                            -CIMInstanceName $hashPropertyType `
+                            -IndentLevel $IndentLevel `
+                            -ComplexTypeMapping $ComplexTypeMapping `
+                            -IsArray:$true
                     }
                     $IndentLevel--
                 }
                 else
                 {
-                    $nestedPropertyString = Get-M365DSCDRGComplexTypeToString `
+                    $currentProperty += Get-M365DSCDRGComplexTypeToString `
                                     -ComplexObject $hashProperty `
                                     -CIMInstanceName $hashPropertyType `
                                     -IndentLevel $IndentLevel `
                                     -ComplexTypeMapping $ComplexTypeMapping
-                    if([string]::IsNullOrWhiteSpace($nestedPropertyString))
-                    {
-                        $nestedPropertyString = "`$null`r`n"
-                    }
-                    $currentProperty += $nestedPropertyString
                 }
                 if($isArray)
                 {
@@ -832,13 +1064,6 @@ function Get-M365DSCDRGComplexTypeToString
         }
         $currentProperty += $indent
     }
-
-    $emptyCIM=$currentProperty.replace(" ","").replace("`r`n","")
-    if($emptyCIM -eq "MSFT_$CIMInstanceName{}")
-    {
-        $currentProperty=$null
-    }
-
     return $currentProperty
 }
 
@@ -890,7 +1115,7 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
                 $whitespace=$Space+"    "
                 $newline="`r`n"
             }
-            foreach ($item in ($Value | Where-Object -FilterScript {$null -ne $_ }))
+            foreach ($item in $Value)
             {
                 switch -Wildcard ($item.GetType().Fullname )
                 {

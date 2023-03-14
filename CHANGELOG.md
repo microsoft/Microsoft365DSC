@@ -2,20 +2,58 @@
 
 # UNRELEASED
 
+* AADEntitlementManagementConnectedOrganization
+  * Initial release
+* AADConditionalAccessPolicy
+  * Handle Named Location "Multifactor authentication trusted IPs"
+    Fixed [#2974](https://github.com/microsoft/Microsoft365DSC/issues/2974)
+  * Export and handle guest and external users.
+    Fixed [#2965](https://github.com/microsoft/Microsoft365DSC/issues/2965)
+* EXOOrganizationConfig
+  * Add support for the MessageRecallEnabled parameter.
+    FIXES [#2978](https://github.com/microsoft/Microsoft365DSC/issues/2978)
+* EXORoleAssignmentPolicy
+  * Allow description and role change at the same time.
+    FIXES [#2977](https://github.com/microsoft/Microsoft365DSC/issues/2977)
+* IntuneAppProtectionPolicyiOS
+  * Amended MinimumWipeOSVersion case
+    FIXES [#3000](https://github.com/microsoft/Microsoft365DSC/issues/3000)
+* SPOTenantSettings
+  * Add support for the CommentsOnSitePagesDisabled parameter.
+* MISC
+  * Added checks in New-M365DSCConnection to ensure beta MSGraph profile is correctly set when requested
+    FIXES [#2942](https://github.com/microsoft/Microsoft365DSC/issues/2942)
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 1.23.0.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.156.
+
+# 1.23.308.1
+
 * AADAdministrativeUnit
   * Fixed general issues caused by improper handling of nested CIMInstances
     FIXES #2775, #2776, #2786
+  * Updated validation of properties in schema to assist usage
+* AADServicePrincipal
+  * Change Write-Error to Write-Verbose to make sure the Test method will continue
+    FIXES [#2961](https://github.com/microsoft/Microsoft365DSC/issues/2961)
 * EXOManagementRoleAssignment
   * Added delays before disconnecting from EXO to ensure new permissions are applied.
     FIXES [#2523](https://github.com/microsoft/Microsoft365DSC/issues/2523)
 * O365AdminAuditLogConfig
   * Added support for ManagedIdentity.
   * Fixed the Get-TargetResource method to return all authentication parameters.
+* DRG
+  * Fixed the default settings for the Ensure parameter.
 * MISC
   * Updated logic for drift detection to be case insensitive.
     FIXES [#2873](https://github.com/microsoft/Microsoft365DSC/issues/2873)
   * Changed the -Platform parameter for Connect-M365Tenant to -Workload in 2 remaining places.
     FIXES [#2921](https://github.com/microsoft/Microsoft365DSC/issues/2921)
+  * Added QA test to validate if used permissions in Settings.json files
+    actually exist.
+  * Added application credential support to Assert-M365DSCBlueprint
+    FIXES [#1792](https://github.com/microsoft/Microsoft365DSC/pull/1792)
+  * Updated/added various examples
 * DEPENDENCIES
   * Updated MicrosoftTeams to version 5.0.0
 
