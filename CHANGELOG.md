@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager
+  * Fix resource
 * AADEntitlementManagementConnectedOrganization
   * Initial release
 * AADConditionalAccessPolicy
