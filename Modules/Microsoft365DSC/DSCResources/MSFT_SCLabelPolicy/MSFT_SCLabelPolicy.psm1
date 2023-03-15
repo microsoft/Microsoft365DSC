@@ -162,6 +162,11 @@ function Get-TargetResource
                 Comment                      = $policy.Comment
                 AdvancedSettings             = $advancedSettingsValue
                 Credential                   = $Credential
+                ApplicationId                = $ApplicationId
+                TenantId                     = $TenantId
+                CertificateThumbprint        = $CertificateThumbprint
+                CertificatePath              = $CertificatePath
+                CertificatePassword          = $CertificatePassword
                 Ensure                       = 'Present'
                 Labels                       = $policy.Labels
                 ExchangeLocation             = Convert-ArrayList -CurrentProperty $policy.ExchangeLocation

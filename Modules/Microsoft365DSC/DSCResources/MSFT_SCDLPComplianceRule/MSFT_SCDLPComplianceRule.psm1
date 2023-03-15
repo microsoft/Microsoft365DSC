@@ -281,6 +281,12 @@ function Get-TargetResource
                 AnyOfRecipientAddressMatchesPatterns        = $AnyOfRecipientAddressMatchesPatterns
                 ContentExtensionMatchesWords                = $ContentExtensionMatchesWords
                 ExceptIfContentExtensionMatchesWords        = $ExceptIfContentExtensionMatchesWords
+                Credential                                  = $Credential
+                ApplicationId                               = $ApplicationId
+                TenantId                                    = $TenantId
+                CertificateThumbprint                       = $CertificateThumbprint
+                CertificatePath                             = $CertificatePath
+                CertificatePassword                         = $CertificatePassword
             }
 
             $paramsToRemove = @()

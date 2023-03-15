@@ -1,12 +1,25 @@
-function Get-TargetResource
+function Get-TargetResource 
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateLength(1, 64)]
         [System.String]
         $Name,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $Members,
+
+        [Parameter()]
+        [System.String[]]
+        $Roles,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -35,19 +48,23 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
-    Write-Verbose -Message "Getting configuration of SCFilePlanPropertyAuthority for $Name"
-    if ($Global:CurrentModeIsExport)
+    Write-Verbose -Message "Getting Role Group configuration for $Name"
+    if ($Global:CurrentModeIsExport) 
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
-    else
+    else 
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -66,35 +83,42 @@ function Get-TargetResource
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = 'Absent'
 
-    try
+    try 
     {
-        $property = Get-FilePlanPropertyAuthority -ErrorAction Stop | Where-Object -FilterScript { $_.DisplayName -eq $Name }
+        $AllRoleGroups = Get-RoleGroup -ErrorAction Stop
 
-        if ($null -eq $property)
+        $RoleGroup = $AllRoleGroups | Where-Object -FilterScript { $_.Name -eq $Name }
+
+        if ($null -eq $RoleGroup) 
         {
-            Write-Verbose -Message "SCFilePlanPropertyAuthority $($Name) does not exist."
+            Write-Verbose -Message "Role Group $($Name) does not exist."
             return $nullReturn
         }
-        else
+        else 
         {
-            Write-Verbose "Found existing SCFilePlanPropertyAuthority $($Name)"
+            # Get RoleGroup Members DN if RoleGroup exists. This is required especially when adding Members like "Exchange Administrator" or "Global Administrator" that have different Names across Tenants
+            $roleGroupMember = Get-RoleGroupMember -Identity $Name | Select-Object DisplayName
 
             $result = @{
-                Name                  = $property.DisplayName
+                Name                  = $RoleGroup.Name
+                Description           = $RoleGroup.Description
+                Members               = $roleGroupMember.DisplayName
+                Roles                 = $RoleGroup.Roles
+                Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePath       = $CertificatePath
                 CertificatePassword   = $CertificatePassword
-                Ensure                = 'Present'
+                Managedidentity       = $ManagedIdentity.IsPresent
+                TenantId              = $TenantId
             }
 
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            Write-Verbose -Message "Found Role Group $($Name)"
             return $result
         }
     }
-    catch
+    catch 
     {
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
@@ -106,14 +130,27 @@ function Get-TargetResource
     }
 }
 
-function Set-TargetResource
+function Set-TargetResource 
 {
     [CmdletBinding()]
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateLength(1, 64)]
         [System.String]
         $Name,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $Members,
+
+        [Parameter()]
+        [System.String[]]
+        $Roles,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -142,10 +179,16 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
-    Write-Verbose -Message "Setting configuration of SCFilePlanPropertyAuthority for $Name"
+    Write-Verbose -Message "Setting Role Group configuration for $Name"
+
+    $currentRoleGroupConfig = Get-TargetResource @PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -159,55 +202,85 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $Current = Get-TargetResource @PSBoundParameters
-
-    if (('Present' -eq $Ensure) -and ('Absent' -eq $Current.Ensure))
+    $NewRoleGroupParams = @{
+        Name        = $Name
+        Description = $Description
+        Members     = $Members
+        Roles       = $Roles
+        Confirm     = $false
+    } 
+    # Remove Description Parameter if null or Empty as the creation fails with $null parameter
+    if ([System.String]::IsNullOrEmpty($Description)) 
     {
-        $CreationParams = $PSBoundParameters
-        $CreationParams.Remove('Credential') | Out-Null
-        $CreationParams.Remove('Ensure') | Out-Null
-
-        New-FilePlanPropertyAuthority @CreationParams
+        $NewRoleGroupParams.Remove('Description') | Out-Null
     }
-    elseif (('Present' -eq $Ensure) -and ('Present' -eq $Current.Ensure))
+    # CASE: Role Group doesn't exist but should;
+    if ($Ensure -eq 'Present' -and $currentRoleGroupConfig.Ensure -eq 'Absent') 
     {
-        # Do Nothing
+        Write-Verbose -Message "Role Group '$($Name)' does not exist but it should. Create and configure it."
+        # Create Role Group
+        New-RoleGroup @NewRoleGroupParams
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $Current.Ensure))
+    # CASE: Role Group exists but it shouldn't;
+    elseif ($Ensure -eq 'Absent' -and $currentRoleGroupConfig.Ensure -eq 'Present') 
     {
-        try
+        Write-Verbose -Message "Role Group '$($Name)' exists but it shouldn't. Remove it."
+        Remove-RoleGroup -Identity $Name -Confirm:$false -Force
+    }
+    # CASE: Role Group exists and it should, but has different member values than the desired ones
+    elseif ($Ensure -eq 'Present' -and $currentRoleGroupConfig.Ensure -eq 'Present' -and $null -ne (Compare-Object -ReferenceObject $($currentRoleGroupConfig.Members) -DifferenceObject $Members)) 
+    {
+        Write-Verbose -Message "Role Group '$($Name)' already exists, but members need updating."
+        Write-Verbose -Message "Updating Role Group $($Name) members with values: $(Convert-M365DscHashtableToString -Hashtable $NewRoleGroupParams)"
+        Update-RoleGroupMember -Identity $Name -Members $Members -Confirm:$false
+    }
+    # CASE: Role Assignment Policy exists and it should, but Roles attribute has different values than the desired ones
+    # Set-RoleGroup cannot change Roles attribute. Therefore we have to remove and recreate the assignment policies for the group if Roles attribute should be changed.
+    elseif ($Ensure -eq 'Present' -and $currentRoleGroupConfig.Ensure -eq 'Present' -and $null -ne (Compare-Object -ReferenceObject $($currentRoleGroupConfig.Roles) -DifferenceObject $Roles))
+    {
+        Write-Verbose -Message "Role Group '$($Name)' already exists, but roles attribute needs updating."
+        $differences = Compare-Object -ReferenceObject $($currentRoleGroupConfig.Roles) -DifferenceObject $Roles
+        foreach ($difference in $differences)
         {
-            $property = Get-FilePlanPropertyAuthority | Where-Object -FilterScript { $_.DisplayName -eq $Name }
-            if (-not $property.Mode.ToString() -eq 'PendingDeletion')
+            if ($difference.SideIndicator -eq '=>')
             {
-                Remove-FilePlanPropertyAuthority -Identity $Name -Confirm:$false -ErrorAction Stop
+                Write-Verbose -Message "Adding Role {$($difference.InputObject)} to Role Group {$Name}"
+                New-ManagementRoleAssignment -Role $($difference.InputObject) -SecurityGroup $Name
             }
-            else
+            elseif ($difference.SideIndicator -eq '<=')
             {
-                Write-Verbose -Message "Property $Name is already in the process of being deleted."
+                Write-Verbose -Message "Removing Role {$($difference.InputObject)} from Role Group {$Name}"
+                Remove-ManagementRoleAssignment -Identity "$($difference.InputObject)-$Name"
             }
-        }
-        catch
-        {
-            New-M365DSCLogEntry  -Message $_ `
-                -Exception $_ `
-                -Source $MyInvocation.MyCommand.ModuleName
         }
     }
 }
 
-function Test-TargetResource
+function Test-TargetResource 
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateLength(1, 64)]
         [System.String]
         $Name,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $Members,
+
+        [Parameter()]
+        [System.String[]]
+        $Roles,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -236,7 +309,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -250,13 +327,21 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of SCFilePlanPropertyAuthority for $Name"
+    Write-Verbose -Message "Testing Role Group configuration for $Name"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('Credential') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -268,7 +353,7 @@ function Test-TargetResource
     return $TestResult
 }
 
-function Export-TargetResource
+function Export-TargetResource 
 {
     [CmdletBinding()]
     [OutputType([System.String])]
@@ -296,9 +381,13 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
@@ -314,25 +403,38 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    try
-    {
-        [array]$Properties = Get-FilePlanPropertyAuthority -ErrorAction Stop
+    try {
+        [array]$AllRoleGroups = Get-RoleGroup 
 
-        $i = 1
         $dscContent = ''
-        if ($Properties.Length -eq 0)
-        {
-            Write-Host "`r`n" -NoNewline
-        }
-        else
+
+        if ($AllRoleGroups.Length -eq 0) 
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        foreach ($Property in $Properties)
+        else 
         {
-            Write-Host "    |---[$i/$($Properties.Length)] $($Property.Name)" -NoNewline
+            Write-Host "`r`n" -NoNewline
+        }
+        $i = 1
+        foreach ($RoleGroup in $AllRoleGroups) 
+        {
+            Write-Host "    |---[$i/$($AllRoleGroups.Count)] $($RoleGroup.Name)" -NoNewline
+            $roleGroupMember = Get-RoleGroupMember -Identity $Name | Select-Object DisplayName
 
-            $Results = Get-TargetResource @PSBoundParameters -Name $Property.DisplayName
+            $Params = @{
+                Name                  = $RoleGroup.Name
+                Members               = $roleGroupMember.DisplayName
+                Roles                 = $RoleGroup.Roles
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
+                CertificatePath       = $CertificatePath
+            }
+            $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -348,7 +450,7 @@ function Export-TargetResource
         }
         return $dscContent
     }
-    catch
+    catch 
     {
         Write-Host $Global:M365DSCEmojiRedX
 
@@ -363,3 +465,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

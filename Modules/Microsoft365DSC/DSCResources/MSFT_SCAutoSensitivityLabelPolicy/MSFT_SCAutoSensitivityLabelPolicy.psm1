@@ -205,6 +205,11 @@ function Get-TargetResource
                 RemoveSharePointLocationException = $policy.RemoveSharePointLocationException
                 AddSharePointLocation             = $policy.AddSharePointLocation
                 RemoveSharePointLocation          = $policy.RemoveSharePointLocation
+                ApplicationId                     = $ApplicationId
+                TenantId                          = $TenantId
+                CertificateThumbprint             = $CertificateThumbprint
+                CertificatePath                   = $CertificatePath
+                CertificatePassword               = $CertificatePassword
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"

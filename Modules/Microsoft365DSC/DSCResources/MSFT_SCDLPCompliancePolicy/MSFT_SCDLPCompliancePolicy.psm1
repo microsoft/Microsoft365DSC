@@ -160,6 +160,12 @@ function Get-TargetResource
                 SharePointLocationException     = $PolicyObject.SharePointLocationException
                 TeamsLocation                   = $PolicyObject.TeamsLocation.Name
                 TeamsLocationException          = $PolicyObject.TeamsLocationException
+                Credential                      = $Credential
+                ApplicationId                   = $ApplicationId
+                TenantId                        = $TenantId
+                CertificateThumbprint           = $CertificateThumbprint
+                CertificatePath                 = $CertificatePath
+                CertificatePassword             = $CertificatePassword
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"

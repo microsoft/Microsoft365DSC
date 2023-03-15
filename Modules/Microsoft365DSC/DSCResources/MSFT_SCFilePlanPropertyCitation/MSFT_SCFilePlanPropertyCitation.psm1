@@ -89,11 +89,16 @@ function Get-TargetResource
             Write-Verbose "Found existing SCFilePlanPropertyCitation $($Name)"
 
             $result = @{
-                Name                 = $property.Name
-                CitationUrl          = $property.CitationUrl
-                CitationJurisdiction = $property.CitationJurisdiction
-                Credential           = $Credential
-                Ensure               = 'Present'
+                Name                  = $property.Name
+                CitationUrl           = $property.CitationUrl
+                CitationJurisdiction  = $property.CitationJurisdiction
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                Ensure                = 'Present'
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"

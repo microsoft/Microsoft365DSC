@@ -92,11 +92,16 @@ function Get-TargetResource
                 $Status = 'Closed'
             }
             $result = @{
-                Name        = $Case.Name
-                Description = $Case.Description
-                Status      = $Status
-                Credential  = $Credential
-                Ensure      = 'Present'
+                Name                  = $Case.Name
+                Description           = $Case.Description
+                Status                = $Status
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                Ensure                = 'Present'
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"

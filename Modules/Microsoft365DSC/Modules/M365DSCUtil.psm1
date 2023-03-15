@@ -1594,6 +1594,13 @@ function New-M365DSCConnection
                 -Credential $InboundParameters.Credential `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
+
+            #2942 - check correct profile applied
+            if (($ProfileName -ne $global:MSCloudLoginConnectionProfile.MicrosoftGraph.ProfileName) -and ($Workload -eq 'MicrosoftGraph') )
+            {
+                Select-MgProfile -Name $ProfileName
+            }
+
             $data.Add('ConnectionType', 'Credential')
 
             try
@@ -1617,6 +1624,13 @@ function New-M365DSCConnection
                 -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
+
+            #2942 - check correct profile applied
+            if (($ProfileName -ne $global:MSCloudLoginConnectionProfile.MicrosoftGraph.ProfileName) -and ($Workload -eq 'MicrosoftGraph') )
+            {
+                Select-MgProfile -Name $ProfileName
+            }
+
             $data.Add('ConnectionType', 'Credential')
 
             try
@@ -1646,6 +1660,13 @@ function New-M365DSCConnection
                 -Credential $InboundParameters.Credential `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
+
+            #2942 - check correct profile applied
+            if (($ProfileName -ne $global:MSCloudLoginConnectionProfile.MicrosoftGraph.ProfileName) -and ($Workload -eq 'MicrosoftGraph') )
+            {
+                Select-MgProfile -Name $ProfileName
+            }
+
             $data.Add('ConnectionType', 'CredentialsWithApplicationId')
 
             try
@@ -1669,6 +1690,13 @@ function New-M365DSCConnection
                 -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
+
+            #2942 - check correct profile applied
+            if (($ProfileName -ne $global:MSCloudLoginConnectionProfile.MicrosoftGraph.ProfileName) -and ($Workload -eq 'MicrosoftGraph') )
+            {
+                Select-MgProfile -Name $ProfileName
+            }
+
             $data.Add('ConnectionType', 'CredentialsWithApplicationId')
 
             try
@@ -1702,6 +1730,12 @@ function New-M365DSCConnection
                 -CertificatePath $InboundParameters.CertificatePath `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
+
+            #2942 - check correct profile applied
+            if (($ProfileName -ne $global:MSCloudLoginConnectionProfile.MicrosoftGraph.ProfileName) -and ($Workload -eq 'MicrosoftGraph') )
+            {
+                Select-MgProfile -Name $ProfileName
+            }
 
             $data.Add('ConnectionType', 'ServicePrincipalWithPath')
             $data.Add('Tenant', $InboundParameters.TenantId)
@@ -1762,6 +1796,13 @@ function New-M365DSCConnection
                     -SkipModuleReload $Global:CurrentModeIsExport `
                     -ProfileName $ProfileName
             }
+
+            #2942 - check correct profile applied
+            if (($ProfileName -ne $global:MSCloudLoginConnectionProfile.MicrosoftGraph.ProfileName) -and ($Workload -eq 'MicrosoftGraph') )
+            {
+                Select-MgProfile-Name $ProfileName
+            }
+
             $data.Add('ConnectionType', 'Credential')
             try
             {
@@ -1788,6 +1829,13 @@ function New-M365DSCConnection
                 -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
+
+            #2942 - check correct profile applied
+            if (($ProfileName -ne $global:MSCloudLoginConnectionProfile.MicrosoftGraph.ProfileName) -and ($Workload -eq 'MicrosoftGraph') )
+            {
+                Select-MgProfile -Name $ProfileName
+            }
+
         }
         $data.Add('ConnectionType', 'ServicePrincipalWithPath')
         $data.Add('Tenant', $InboundParameters.TenantId)
@@ -1811,6 +1859,12 @@ function New-M365DSCConnection
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
 
+            #2942 - check correct profile applied
+            if (($ProfileName -ne $global:MSCloudLoginConnectionProfile.MicrosoftGraph.ProfileName) -and ($Workload -eq 'MicrosoftGraph') )
+            {
+                Select-MgProfile -Name $ProfileName
+            }
+
             $data.Add('ConnectionType', 'ServicePrincipalWithSecret')
             $data.Add('Tenant', $InboundParameters.TenantId)
             Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
@@ -1825,6 +1879,12 @@ function New-M365DSCConnection
                 -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
+
+            #2942 - check correct profile applied
+            if (($ProfileName -ne $global:MSCloudLoginConnectionProfile.MicrosoftGraph.ProfileName) -and ($Workload -eq 'MicrosoftGraph') )
+            {
+                Select-MgProfile -Name $ProfileName
+            }
 
             $data.Add('ConnectionType', 'ServicePrincipalWithSecret')
             $data.Add('Tenant', $InboundParameters.TenantId)
@@ -1843,6 +1903,12 @@ function New-M365DSCConnection
             -ProfileName $ProfileName `
             -Url $Url
 
+        #2942 - check correct profile applied
+        if (($ProfileName -ne $global:MSCloudLoginConnectionProfile.MicrosoftGraph.ProfileName) -and ($Workload -eq 'MicrosoftGraph') )
+        {
+            Select-MgProfile -Name $ProfileName
+        }
+
         $data.Add('ConnectionType', 'ServicePrincipalWithThumbprint')
         $data.Add('Tenant', $InboundParameters.TenantId)
         Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
@@ -1858,6 +1924,12 @@ function New-M365DSCConnection
             -TenantId $InboundParameters.TenantId `
             -SkipModuleReload $Global:CurrentModeIsExport `
             -ProfileName $ProfileName
+
+        #2942 - check correct profile applied
+        if (($ProfileName -ne $global:MSCloudLoginConnectionProfile.MicrosoftGraph.ProfileName) -and ($Workload -eq 'MicrosoftGraph') )
+        {
+            Select-MgProfile -Name $ProfileName
+        }
 
         $data.Add('ConnectionType', 'ManagedIdentity')
         $data.Add('Tenant', $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.TenantId)

@@ -88,6 +88,7 @@
 | **MaskClientIpInReceivedHeadersEnabled** | Write | Boolean | No description available for MaskClientIpInReceivedHeadersEnabled. | |
 | **MatchSenderOrganizerProperties** | Write | Boolean | No description available for MatchSenderOrganizerProperties. | |
 | **MessageHighlightsEnabled** | Write | Boolean | No description available for MessageHighlightsEnabled. | |
+| **MessageRecallEnabled** | Write | Boolean | The MessageRecallEnabled parameter enables or disables the message recall feature in the organization. | |
 | **MessageRemindersEnabled** | Write | Boolean | The MessageRemindersEnabled parameter enables or disables the message reminders feature in the organization. | |
 | **MobileAppEducationEnabled** | Write | Boolean | The MobileAppEducationEnabled specifies whether to show or hide the Outlook for iOS and Android education reminder in Outlook on the web. | |
 | **OAuth2ClientProfileEnabled** | Write | Boolean | The OAuth2ClientProfileEnabled parameter enables or disables modern authentication in the Exchange organization. | |
