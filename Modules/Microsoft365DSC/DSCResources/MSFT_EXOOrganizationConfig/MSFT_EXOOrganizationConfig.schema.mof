@@ -85,6 +85,7 @@ class MSFT_EXOOrganizationConfig : OMI_BaseResource
     [Write, Description("No description available for MaskClientIpInReceivedHeadersEnabled.")] Boolean MaskClientIpInReceivedHeadersEnabled;
     [Write, Description("No description available for MatchSenderOrganizerProperties.")] Boolean MatchSenderOrganizerProperties;
     [Write, Description("No description available for MessageHighlightsEnabled.")] Boolean MessageHighlightsEnabled;
+    [Write, Description("The MessageRecallEnabled parameter enables or disables the message recall feature in the organization.")] Boolean MessageRecallEnabled;
     [Write, Description("The MessageRemindersEnabled parameter enables or disables the message reminders feature in the organization.")] Boolean MessageRemindersEnabled;
     [Write, Description("The MobileAppEducationEnabled specifies whether to show or hide the Outlook for iOS and Android education reminder in Outlook on the web.")] Boolean MobileAppEducationEnabled;
     [Write, Description("The OAuth2ClientProfileEnabled parameter enables or disables modern authentication in the Exchange organization.")] Boolean OAuth2ClientProfileEnabled;

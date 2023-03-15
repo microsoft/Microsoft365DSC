@@ -352,6 +352,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $MessageRecallEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $MessageRemindersEnabled,
 
         [Parameter()]
@@ -593,6 +597,7 @@ function Get-TargetResource
             MaskClientIpInReceivedHeadersEnabled                      = $ConfigSettings.MaskClientIpInReceivedHeadersEnabled
             MatchSenderOrganizerProperties                            = $ConfigSettings.MatchSenderOrganizerProperties
             MessageHighlightsEnabled                                  = $ConfigSettings.MessageHighlightsEnabled
+            MessageRecallEnabled                                      = $ConfigSettings.MessageRecallEnabled
             MessageRemindersEnabled                                   = $ConfigSettings.MessageRemindersEnabled
             MobileAppEducationEnabled                                 = $ConfigSettings.MobileAppEducationEnabled
             OAuth2ClientProfileEnabled                                = $ConfigSettings.OAuth2ClientProfileEnabled
@@ -1009,6 +1014,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $MessageHighlightsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MessageRecallEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -1535,6 +1544,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $MessageHighlightsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MessageRecallEnabled,
 
         [Parameter()]
         [System.Boolean]

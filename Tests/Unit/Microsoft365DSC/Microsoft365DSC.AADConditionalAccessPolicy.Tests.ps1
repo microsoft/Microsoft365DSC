@@ -51,40 +51,46 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When Conditional Access Policy doesn't exist but should" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    BuiltInControls            = @('Mfa', 'CompliantDevice', 'DomainJoinedDevice', 'ApprovedApplication', 'CompliantApplication')
-                    ClientAppTypes             = @('Browser', 'MobileAppsAndDesktopClients')
-                    CloudAppSecurityIsEnabled  = $True
-                    CloudAppSecurityType       = 'MonitorOnly'
-                    DisplayName                = 'Allin'
-                    Ensure                     = 'Present'
-                    ExcludeApplications        = @('00000012-0000-0000-c000-000000000000', 'Office365')
-                    ExcludeDevices             = @('Compliant', 'DomainJoined')
-                    ExcludeGroups              = @('Group 01')
-                    ExcludeLocations           = 'Contoso LAN'
-                    ExcludePlatforms           = @('Windows', 'WindowsPhone', 'MacOS')
-                    ExcludeRoles               = @('Compliance Administrator')
-                    ExcludeUsers               = 'alexw@contoso.com'
-                    Credential                 = $Credsglobaladmin
-                    GrantControlOperator       = 'AND'
-                    Id                         = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
-                    IncludeApplications        = @('All')
-                    IncludeDevices             = @('All')
-                    IncludeGroups              = @('Group 01')
-                    IncludeLocations           = 'AllTrusted'
-                    IncludePlatforms           = @('Android', 'IOS')
-                    IncludeRoles               = @('Compliance Administrator')
-                    IncludeUserActions         = @('urn:user:registersecurityinfo')
-                    IncludeUsers               = 'All'
-                    PersistentBrowserIsEnabled = $True
-                    PersistentBrowserMode      = 'Always'
-                    SignInFrequencyIsEnabled   = $True
-                    SignInFrequencyType        = 'Days'
-                    SignInFrequencyValue       = 5
-                    SignInRiskLevels           = @('High')
-                    State                      = 'disabled'
-                    UserRiskLevels             = @('High')
-                    DeviceFilterMode           = 'exclude'
-                    DeviceFilterRule           = 'device.isCompliant -eq True -or device.trustType -eq "ServerAD"'
+                    BuiltInControls                         = @('Mfa', 'CompliantDevice', 'DomainJoinedDevice', 'ApprovedApplication', 'CompliantApplication')
+                    ClientAppTypes                          = @('Browser', 'MobileAppsAndDesktopClients')
+                    CloudAppSecurityIsEnabled               = $True
+                    CloudAppSecurityType                    = 'MonitorOnly'
+                    DisplayName                             = 'Allin'
+                    Ensure                                  = 'Present'
+                    ExcludeApplications                     = @('00000012-0000-0000-c000-000000000000', 'Office365')
+                    ExcludeDevices                          = @('Compliant', 'DomainJoined')
+                    ExcludeGroups                           = @('Group 01')
+                    ExcludeLocations                        = 'Contoso LAN'
+                    ExcludePlatforms                        = @('Windows', 'WindowsPhone', 'MacOS')
+                    ExcludeRoles                            = @('Compliance Administrator')
+                    ExcludeUsers                            = 'alexw@contoso.com'
+                    ExcludeExternalTenantsMembers           = @();
+                    ExcludeExternalTenantsMembershipKind    = "all";
+                    ExcludeGuestOrExternalUserTypes         = @("internalGuest","b2bCollaborationMember");
+                    Credential                              = $Credsglobaladmin
+                    GrantControlOperator                    = 'AND'
+                    Id                                      = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
+                    IncludeApplications                     = @('All')
+                    IncludeDevices                          = @('All')
+                    IncludeGroups                           = @('Group 01')
+                    IncludeLocations                        = 'AllTrusted'
+                    IncludePlatforms                        = @('Android', 'IOS')
+                    IncludeRoles                            = @('Compliance Administrator')
+                    IncludeUserActions                      = @('urn:user:registersecurityinfo')
+                    IncludeUsers                            = 'All'
+                    IncludeExternalTenantsMembers           = @("11111111-1111-1111-1111-111111111111");
+                    IncludeExternalTenantsMembershipKind    = "enumerated";
+                    IncludeGuestOrExternalUserTypes         = @("b2bCollaborationGuest");
+                    PersistentBrowserIsEnabled              = $True
+                    PersistentBrowserMode                   = 'Always'
+                    SignInFrequencyIsEnabled                = $True
+                    SignInFrequencyType                     = 'Days'
+                    SignInFrequencyValue                    = 5
+                    SignInRiskLevels                        = @('High')
+                    State                                   = 'disabled'
+                    UserRiskLevels                          = @('High')
+                    DeviceFilterMode                        = 'exclude'
+                    DeviceFilterRule                        = 'device.isCompliant -eq True -or device.trustType -eq "ServerAD"'
                 }
 
                 Mock -CommandName Get-MGIdentityConditionalAccessPolicy -MockWith {
@@ -147,6 +153,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExcludePlatforms                         = @('Windows', 'WindowsPhone', 'MacOS')
                     ExcludeRoles                             = @('Compliance Administrator')
                     ExcludeUsers                             = 'alexw@contoso.com'
+                    ExcludeExternalTenantsMembers            = @();
+                    ExcludeExternalTenantsMembershipKind     = "all";
+                    ExcludeGuestOrExternalUserTypes          = @("internalGuest","b2bCollaborationMember");
                     Credential                               = $Credsglobaladmin
                     GrantControlOperator                     = 'AND'
                     Id                                       = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
@@ -158,6 +167,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IncludeRoles                             = @('Compliance Administrator')
                     IncludeUserActions                       = @('urn:user:registersecurityinfo')
                     IncludeUsers                             = 'All'
+                    IncludeExternalTenantsMembers            = @("11111111-1111-1111-1111-111111111111");
+                    IncludeExternalTenantsMembershipKind     = "enumerated";
+                    IncludeGuestOrExternalUserTypes          = @("b2bCollaborationGuest");
                     PersistentBrowserIsEnabled               = $True
                     PersistentBrowserMode                    = 'Always'
                     SignInFrequencyIsEnabled                 = $True
@@ -286,6 +298,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExcludePlatforms                         = @('Windows', 'WindowsPhone', 'MacOS')
                     ExcludeRoles                             = @('Compliance Administrator')
                     ExcludeUsers                             = 'alexw@contoso.com'
+                    ExcludeExternalTenantsMembers            = @();
+                    ExcludeExternalTenantsMembershipKind     = "all";
+                    ExcludeGuestOrExternalUserTypes          = @("internalGuest","b2bCollaborationMember");
                     Credential                               = $Credsglobaladmin
                     GrantControlOperator                     = 'AND'
                     Id                                       = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
@@ -297,6 +312,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IncludeRoles                             = @('Compliance Administrator')
                     IncludeUserActions                       = @('urn:user:registersecurityinfo')
                     IncludeUsers                             = 'All'
+                    IncludeExternalTenantsMembers            = @("11111111-1111-1111-1111-111111111111");
+                    IncludeExternalTenantsMembershipKind     = "enumerated";
+                    IncludeGuestOrExternalUserTypes          = @("b2bCollaborationGuest");
                     PersistentBrowserIsEnabled               = $True
                     PersistentBrowserMode                    = 'Always'
                     SignInFrequencyIsEnabled                 = $True
@@ -327,6 +345,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 ExcludeGroups = @('f1eb1a09-c0c2-4df4-9e69-fee01f00db31')
                                 IncludeRoles  = @('17315797-102d-40b4-93e0-432062caca18')
                                 ExcludeRoles  = @('17315797-102d-40b4-93e0-432062caca18')
+                                includeGuestsOrExternalUsers = @{
+                                    guestOrExternalUserTypes = 'b2bCollaborationGuest'
+                                    externalTenants = @{
+                                        membershipKind = 'enumerated'
+                                        AdditionalProperties = @{
+                                            members = @('11111111-1111-1111-1111-111111111111')
+                                        }
+                                    }
+                                }
+                                excludeGuestsOrExternalUsers = @{
+                                    guestOrExternalUserTypes = 'internalGuest,b2bCollaborationMember'
+                                    externalTenants = @{
+                                        membershipKind = 'all'
+                                        AdditionalProperties = @{
+
+                                        }
+                                    }
+                                }
                             }
                             Platforms        = @{
                                 IncludePlatforms = @('Android', 'IOS')
