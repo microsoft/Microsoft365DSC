@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* EXORoleGroup
+  * Initial release
 * AADEntitlementManagementConnectedOrganization
   * Initial release
 * AADConditionalAccessPolicy
