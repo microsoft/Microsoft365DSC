@@ -23,6 +23,9 @@
 * IntuneAppProtectionPolicyiOS
   * Amended MinimumWipeOSVersion case
     FIXES [#3000](https://github.com/microsoft/Microsoft365DSC/issues/3000)
+* PPTenantIsolationSettings
+  * Fixes the export of the Rules block which wasn't properly formatted.
+    FIXES [#2979](https://github.com/microsoft/Microsoft365DSC/issues/2979)
 * SPOTenantSettings
   * Add support for the CommentsOnSitePagesDisabled parameter.
 * MISC
