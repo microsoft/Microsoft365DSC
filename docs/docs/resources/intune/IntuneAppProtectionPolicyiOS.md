@@ -36,7 +36,7 @@
 | **MinimumRequiredOSVersion** | Write | String | Versions less than the specified version will block the managed app from accessing company data. | |
 | **MinimumWarningOSVersion** | Write | String | Versions less than the specified version will result in warning message on the managed app from accessing company data. | |
 | **MinimumRequiredSdkVersion** | Write | String | Versions less than the specified version will block the managed app from accessing company data. | |
-| **MinimumWipeOsVersion** | Write | String | Versions less than or equal to the specified version will wipe the managed app and the associated company data. | |
+| **MinimumWipeOSVersion** | Write | String | Versions less than or equal to the specified version will wipe the managed app and the associated company data. | |
 | **MinimumWipeAppVersion** | Write | String | Versions less than or equal to the specified version will wipe the managed app and the associated company data. | |
 | **AppActionIfDeviceComplianceRequired** | Write | String | Defines a managed app behavior, either block or wipe, when the device is either rooted or jailbroken, if DeviceComplianceRequired is set to true. | `block`, `wipe`, `warn` |
 | **AppActionIfMaximumPinRetriesExceeded** | Write | String | Defines a managed app behavior, either block or wipe, based on maximum number of incorrect pin retry attempts. | `block`, `wipe`, `warn` |
