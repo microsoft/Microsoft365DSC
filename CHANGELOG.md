@@ -4,6 +4,9 @@
 
 * EXORoleGroup
   * Initial release
+* EXOTransportConfig
+  * Ensures the ExternalDsnDefaultLanguage property is correctly escaped.
+    FIXES [#2970](https://github.com/microsoft/Microsoft365DSC/issues/2970)
 * AADEntitlementManagementConnectedOrganization
   * Initial release
 * AADConditionalAccessPolicy
