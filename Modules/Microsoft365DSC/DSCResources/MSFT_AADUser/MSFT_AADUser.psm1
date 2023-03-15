@@ -128,7 +128,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [Boolean]
+        $IsExport = $false
     )
     Write-Verbose -Message "Getting configuration of Office 365 User $UserPrincipalName"
 
@@ -166,13 +170,16 @@ function Get-TargetResource
 
     try
     {
-        Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
-        $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
-        $user = Get-MgUser -UserId $UserPrincipalName -Property $propertiesToRetrieve -ErrorAction SilentlyContinue
-        if ($null -eq $user)
+        if (-not $IsExport)
         {
-            Write-Verbose -Message "The specified User doesn't already exist."
-            return $nullReturn
+            Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
+            $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
+            $user = Get-MgUser -UserId $UserPrincipalName -Property $propertiesToRetrieve -ErrorAction SilentlyContinue
+            if ($null -eq $user)
+            {
+                Write-Verbose -Message "The specified User doesn't already exist."
+                return $nullReturn
+            }
         }
 
         Write-Verbose -Message "Found User $($UserPrincipalName)"
@@ -370,7 +377,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [Boolean]
+        $IsExport = $false
     )
 
     # PreferredDataLocation is no longer an accepted value;
@@ -723,7 +734,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [Boolean]
+        $IsExport = $false
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -840,6 +855,24 @@ function Export-TargetResource
             {
                 $Params = @{
                     UserPrincipalName     = $userUPN
+                    DisplayName           = $user.DisplayName
+                    FirstName             = $user.GivenName
+                    LastName              = $user.Surname
+                    UsageLocation         = $user.UsageLocation
+                    LicenseAssignment     = $currentLicenseAssignment
+                    City                  = $user.City
+                    Country               = $user.Country
+                    Department            = $user.Department
+                    Fax                   = $user.FacsimileTelephoneNumber
+                    MobilePhone           = $user.Mobile
+                    Office                = $user.OfficeLocation
+                    PasswordPolicies      = $user.PasswordPolicies
+                    PhoneNumber           = $user.TelephoneNumber
+                    PostalCode            = $user.PostalCode
+                    PreferredLanguage     = $user.PreferredLanguage
+                    State                 = $user.State
+                    StreetAddress         = $user.StreetAddress
+                    Title                 = $user.JobTitle
                     Credential            = $Credential
                     Password              = $Credential
                     ApplicationId         = $ApplicationId
@@ -847,6 +880,7 @@ function Export-TargetResource
                     CertificateThumbprint = $CertificateThumbprint
                     Managedidentity       = $ManagedIdentity.IsPresent
                     ApplicationSecret     = $ApplicationSecret
+                    IsExport              = $true
                 }
 
                 $Results = Get-TargetResource @Params
