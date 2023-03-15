@@ -39,6 +39,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
+            Mock -CommandName Get-RoleGroup -MockWith {
+            }
+
+            Mock -CommandName New-RoleGroup -MockWith {
+            }
+
+            Mock -CommandName Get-RoleGroupMember -MockWith {
+            }
+
+            Mock -CommandName Update-RoleGroupMember -MockWith {
+            }
+
+            Mock -CommandName Remove-RoleGroup -MockWith {
+            }
+
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
@@ -59,17 +74,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return false from the Test method' {
-                Mock -CommandName Get-RoleGroup -MockWith {
-                    return $null
-                }
                 Test-TargetResource @testParams | Should -Be $false
             }
 
             It 'Should call the Set method' {
-                Mock -CommandName New-RoleGroup -MockWith {
-                    return $null
-                }
                 Set-TargetResource @testParams
+                Assert-MockCalled -CommandName New-RoleGroup -Exactly 1
             }
         }
 
@@ -84,9 +94,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential
                 }
 
-            }
-
-            It 'Should return true from the Test method' {
                 Mock -CommandName Get-RoleGroup -MockWith {
                     return @{
                         Name        = 'Contoso Role Group'
@@ -95,9 +102,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description = 'This is the Contoso Role Group'
                     }
                 }
+
                 Mock -Command Get-RoleGroupMember -parameterFilter { $name -eq 'Contoso Role Group'}  -MockWith {
                     [PSCustomObject]@{Displayname = 'Exchange Administrator'}
                 }
+
+            }
+
+            It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
 
@@ -106,7 +118,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'Role Group should exist. Role Group exists, Description mismatch. Test should fail.' -Fixture {
+        Context -Name 'Role Group should exist. Role Group exists, Members mismatch. Test should fail.' -Fixture {
             BeforeAll {
                 $testParams = @{
                     Name        = 'Contoso Role Group'
@@ -116,15 +128,60 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure      = 'Present'
                     Credential  = $Credential
                 }
-
+                Mock -CommandName Get-RoleGroup -MockWith {
+                    return @{
+                        Name        = 'Contoso Role Group'
+                        Members     = 'Drift Administrator'
+                        Roles       = 'Address Lists'
+                        Description = 'This is the Contoso Role Group'
+                    }
+                }
             }
 
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
+            It 'Should return Present from the Get Method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It 'Should call the Update Members method' {
+                Set-TargetResource @testParams
+                Assert-MockCalled -CommandName Update-RoleGroupMember -Exactly 1
+            }
+        }
+        Context -Name 'Role Group exists and it SHOULD NOT.' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Name        = 'Contoso Role Group'
+                    Members     = 'Exchange Administrator'
+                    Roles       = 'Address Lists'
+                    Description = 'This is the Contoso Role Group'
+                    Ensure      = 'Absent'
+                    Credential  = $Credential
+                }
+                Mock -CommandName Get-RoleGroup -MockWith {
+                    return @{
+                        Name        = 'Contoso Role Group'
+                        Members     = 'Exchange Administrator'
+                        Roles       = 'Address Lists'
+                        Description = 'This is the Contoso Role Group'
+                    }
+                }
+            }
+
+            It 'Should return true from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should return Present from the Get Method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
+                Assert-MockCalled -CommandName Remove-RoleGroup -Exactly 1
             }
         }
 
@@ -138,9 +195,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 $RoleGroup = @{
                     Name        = 'Contoso Role Group'
-                    Members     = 'Exchange Administrator'
-                    Roles       = 'Address Lists'
-                    Description = 'This is the Contoso Role Group'
+                }
+
+                Mock -CommandName Get-RoleGroup -MockWith {
+                    return @{
+                        Name             = 'Contoso Role Group'
+                        Members          = 'Exchange Administrator'
+                        Roles            = 'Address Lists'
+                        Description      = 'This is the Contoso Role Group'
+                    }
                 }
             }
 
