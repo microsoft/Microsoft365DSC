@@ -184,6 +184,11 @@ function Get-TargetResource
                 Category                                                    = $AlertObject.Category
                 Comment                                                     = $AlertObject.Comment
                 Credential                                                  = $Credential
+                ApplicationId                                               = $ApplicationId
+                TenantId                                                    = $TenantId
+                CertificateThumbprint                                       = $CertificateThumbprint
+                CertificatePath                                             = $CertificatePath
+                CertificatePassword                                         = $CertificatePassword
                 Disabled                                                    = $AlertObject.Disabled
                 Filter                                                      = $AlertObject.Filter
                 Name                                                        = $AlertObject.Name

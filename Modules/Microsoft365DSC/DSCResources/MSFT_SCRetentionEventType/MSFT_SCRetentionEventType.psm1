@@ -84,10 +84,15 @@ function Get-TargetResource
         {
             Write-Verbose "Found existing RetentionComplianceEventType $($Name)"
             $result = @{
-                Name       = $EventTypeObject.Name
-                Comment    = $EventTypeObject.Comment
-                Credential = $Credential
-                Ensure     = 'Present'
+                Name                  = $EventTypeObject.Name
+                Comment               = $EventTypeObject.Comment
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                Ensure                = 'Present'
             }
 
             Write-Verbose -Message "Found RetentionComplianceEventType $($Name)"
