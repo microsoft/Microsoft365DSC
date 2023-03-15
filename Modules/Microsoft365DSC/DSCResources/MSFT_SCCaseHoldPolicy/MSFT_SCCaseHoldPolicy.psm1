@@ -103,14 +103,20 @@ function Get-TargetResource
         {
             Write-Verbose "Found existing SCCaseHoldPolicy $($Name)"
             $result = @{
-                Ensure               = 'Present'
-                Name                 = $PolicyObject.Name
-                Case                 = $Case
-                Enabled              = $PolicyObject.Enabled
-                Comment              = $PolicyObject.Comment
-                ExchangeLocation     = $PolicyObject.ExchangeLocation.Name
-                PublicFolderLocation = $PolicyObject.PublicFolderLocation.Name
-                SharePointLocation   = $PolicyObject.SharePointLocation.Name
+                Ensure                = 'Present'
+                Name                  = $PolicyObject.Name
+                Case                  = $Case
+                Enabled               = $PolicyObject.Enabled
+                Comment               = $PolicyObject.Comment
+                ExchangeLocation      = $PolicyObject.ExchangeLocation.Name
+                PublicFolderLocation  = $PolicyObject.PublicFolderLocation.Name
+                SharePointLocation    = $PolicyObject.SharePointLocation.Name
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"

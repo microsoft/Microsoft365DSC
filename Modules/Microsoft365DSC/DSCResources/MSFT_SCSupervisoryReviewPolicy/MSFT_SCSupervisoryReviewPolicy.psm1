@@ -87,11 +87,16 @@ function Get-TargetResource
         {
             Write-Verbose "Found existing SupervisoryReviewPolicy $($Name)"
             $result = @{
-                Name       = $PolicyObject.Name
-                Comment    = $PolicyObject.Comment
-                Reviewers  = $PolicyObject.Reviewers
-                Ensure     = 'Present'
-                Credential = $Credential
+                Name                  = $PolicyObject.Name
+                Comment               = $PolicyObject.Comment
+                Reviewers             = $PolicyObject.Reviewers
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
             }
 
             Write-Verbose -Message "Found SupervisoryReviewPolicy $($Name)"

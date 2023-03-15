@@ -96,13 +96,18 @@ function Get-TargetResource
             Write-Verbose "Found existing SCCaseHoldRule $($Name)"
 
             $result = @{
-                Name              = $Rule.Name
-                Policy            = $Policy
-                Comment           = $Rule.Comment
-                Disabled          = $Rule.Disabled
-                ContentMatchQuery = $Rule.ContentMatchQuery
-                Credential        = $Credential
-                Ensure            = 'Present'
+                Name                  = $Rule.Name
+                Policy                = $Policy
+                Comment               = $Rule.Comment
+                Disabled              = $Rule.Disabled
+                ContentMatchQuery     = $Rule.ContentMatchQuery
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                Ensure                = 'Present'
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"

@@ -89,11 +89,16 @@ function Get-TargetResource
         {
             Write-Verbose "Found existing Device Configuration Policy $($Name)"
             $result = @{
-                Ensure     = 'Present'
-                Name       = $PolicyObject.Name
-                Comment    = $PolicyObject.Comment
-                Enabled    = $PolicyObject.Enabled
-                Credential = $Credential
+                Ensure                = 'Present'
+                Name                  = $PolicyObject.Name
+                Comment               = $PolicyObject.Comment
+                Enabled               = $PolicyObject.Enabled
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"

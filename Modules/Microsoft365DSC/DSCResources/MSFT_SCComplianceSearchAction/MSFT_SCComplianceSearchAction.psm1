@@ -136,6 +136,11 @@ function Get-TargetResource
                     RetryOnError                        = $currentAction.Retry
                     ActionScope                         = $ScopeValue
                     Credential                          = $Credential
+                    ApplicationId                       = $ApplicationId
+                    TenantId                            = $TenantId
+                    CertificateThumbprint               = $CertificateThumbprint
+                    CertificatePath                     = $CertificatePath
+                    CertificatePassword                 = $CertificatePassword
                     Ensure                              = 'Present'
                 }
             }
@@ -143,12 +148,17 @@ function Get-TargetResource
             {
                 $PurgeTP = Get-ResultProperty -ResultString $currentAction.Results -PropertyName 'Purge Type'
                 $result = @{
-                    Action       = $currentAction.Action
-                    SearchName   = $currentAction.SearchName
-                    PurgeType    = $PurgeTP
-                    RetryOnError = $currentAction.Retry
-                    Credential   = $Credential
-                    Ensure       = 'Present'
+                    Action                = $currentAction.Action
+                    SearchName            = $currentAction.SearchName
+                    PurgeType             = $PurgeTP
+                    RetryOnError          = $currentAction.Retry
+                    Credential            = $Credential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    CertificatePath       = $CertificatePath
+                    CertificatePassword   = $CertificatePassword
+                    Ensure                = 'Present'
                 }
             }
 

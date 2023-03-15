@@ -129,6 +129,11 @@ function Get-TargetResource
                 RetentionDurationDisplayHint = $RuleObject.RetentionDurationDisplayHint
                 ExpirationDateOption         = $RuleObject.ExpirationDateOption
                 Credential                   = $Credential
+                ApplicationId                = $ApplicationId
+                TenantId                     = $TenantId
+                CertificateThumbprint        = $CertificateThumbprint
+                CertificatePath              = $CertificatePath
+                CertificatePassword          = $CertificatePassword
                 Ensure                       = 'Present'
             }
             if (-not $associatedPolicy.TeamsPolicy)
