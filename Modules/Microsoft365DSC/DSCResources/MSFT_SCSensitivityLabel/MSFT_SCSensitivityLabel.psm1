@@ -129,6 +129,11 @@ function Get-TargetResource
         $ApplyWaterMarkingText,
 
         [Parameter()]
+        [ValidateSet('File, Email', 'Site, UnifiedGroup', 'PurviewAssets', 'Teamwork', 'SchematizedData')]
+        [System.String[]]
+        $ContentType,
+
+        [Parameter()]
         [System.String]
         $EncryptionAipTemplateScopes,
 
@@ -139,6 +144,10 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $EncryptionDoNotForward,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionEncryptOnly,
 
         [Parameter()]
         [System.Boolean]
@@ -189,9 +198,14 @@ function Get-TargetResource
         $SiteAndGroupProtectionEnabled,
 
         [Parameter()]
-        [ValidateSet('Public', 'Private')]
+        [ValidateSet('Public', 'Private', 'Unspecified')]
         [System.String]
         $SiteAndGroupProtectionPrivacy,
+
+        [Parameter()]
+        [ValidateSet('ExternalUserAndGuestSharing', 'ExternalUserSharingOnly', 'ExistingExternalUserSharingOnly', 'Disabled')]
+        [System.String]
+        $SiteAndGroupExternalSharingControlType,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -279,73 +293,167 @@ function Get-TargetResource
             {
                 $advancedSettingsValue = Convert-StringToAdvancedSettings -AdvancedSettings $label.Settings
             }
-            if ($null -ne $label.EncryptionRightsDefinitions)
-            {
-                $EncryptionRightsDefinitionsValue = Convert-EncryptionRightDefinition -RightsDefinition $label.EncryptionRightsDefinitions
-            }
             Write-Verbose "Found existing Sensitivity Label $($Name)"
 
-            $ApplyContentMarkingFooterTextValue = $null
-            if ($null -ne $label.ApplyContentMarkingFooterText)
+            [Array]$labelActions = $label.LabelActions
+            $actions = @()
+            foreach ($labelAction in $labelActions)
             {
-                $ApplyContentMarkingFooterTextValue = $label.ApplyContentMarkingFooterText.Replace('$', '`$')
+                $action = ConvertFrom-Json ($labelAction | Out-String)
+                $actions += $action
+            }
+
+            $encryption = ($actions | Where-Object -FilterScript { $_.Type -eq 'encrypt' }).Settings
+            $header = ($actions | Where-Object -FilterScript { $_.Type -eq 'applycontentmarking' -and $_.Subtype -eq 'header' }).Settings
+            $footer = ($actions | Where-Object -FilterScript { $_.Type -eq 'applycontentmarking' -and $_.Subtype -eq 'footer' }).Settings
+            $watermark = ($actions | Where-Object -FilterScript { $_.Type -eq 'applywatermarking' }).Settings
+            $protectgroup = ($actions | Where-Object -FilterScript { $_.Type -eq 'protectgroup' }).Settings
+            $protectsite = ($actions | Where-Object -FilterScript { $_.Type -eq 'protectsite' }).Settings
+
+            $ApplyContentMarkingFooterTextValue = $null
+            $footerText = ($footer | Where-Object -FilterScript { $_.Key -eq 'text' }).Value
+            if ([System.String]::IsNullOrEmpty($footerText) -eq $false)
+            {
+                $ApplyContentMarkingFooterTextValue = $footerText -replace '$', '`$'
             }
 
             $ApplyContentMarkingHeaderTextValue = $null
-            if ($null -ne $label.ApplyContentMarkingHeaderText)
+            $headerText = ($header | Where-Object -FilterScript { $_.Key -eq 'text' }).Value
+            if ([System.String]::IsNullOrEmpty($headerText) -eq $false)
             {
-                $ApplyContentMarkingHeaderTextValue = $label.ApplyContentMarkingHeaderText.Replace('$', '`$')
+                $ApplyContentMarkingHeaderTextValue = $headerText -replace '$', '`$'
             }
 
             $ApplyWaterMarkingTextValue = $null
-            if ($null -ne $label.ApplyWaterMarkingText)
+            $watermarkText = ($watermark | Where-Object -FilterScript { $_.Key -eq 'text' }).Value
+            if ([System.String]::IsNullOrEmpty($watermarkText) -eq $false)
             {
-                $ApplyWaterMarkingTextValue = $label.ApplyWaterMarkingText.Replace('$', '`$')
+                $ApplyWaterMarkingTextValue = $watermarkText -replace '$', '`$'
             }
 
-            $labelActions = [Array]$label.LabelActions
-            foreach ($labelAction in $labelActions)
+            $currentContentType = @()
+            switch -Regex ($label.ContentType)
             {
-                $encrypt = ConvertFrom-Json ($labelAction | Out-String)
-                if ($encrypt.Type -eq 'encrypt')
+                'File, Email'
                 {
-                    break
+                    $currentContentType += 'File, Email'
+                }
+                'Site, UnifiedGroup'
+                {
+                    $currentContentType += 'Site, UnifiedGroup'
+                }
+                'PurviewAssets'
+                {
+                    $currentContentType += 'PurviewAssets'
+                }
+                'Teamwork'
+                {
+                    $currentContentType += 'Teamwork'
+                }
+                'SchematizedData'
+                {
+                    $currentContentType += 'SchematizedData'
                 }
             }
 
-            $entry = $encrypt.Settings | Where-Object -FilterScript {$_.Key -eq 'disabled'}
-
+            # Encryption
+            $entry = $encryption | Where-Object -FilterScript { $_.Key -eq 'disabled' }
             if ($null -ne $entry)
             {
                 $encryptionEnabledValue = -not [Boolean]::Parse($entry.Value)
             }
 
-            $entry = $encrypt.Settings | Where-Object -FilterScript {$_.Key -eq 'contentexpiredondateindaysornever'}
+            $entry = $encryption | Where-Object -FilterScript { $_.Key -eq 'contentexpiredondateindaysornever' }
             if ($null -ne $entry)
             {
                 $contentExpiredOnDateValue = $entry.Value
             }
 
-            $entry = $encrypt.Settings | Where-Object -FilterScript {$_.Key -eq 'protectiontype'}
+            $entry = $encryption | Where-Object -FilterScript { $_.Key -eq 'protectiontype' }
             if ($null -ne $entry)
             {
                 $protectionTypeValue = $entry.Value
             }
 
-            $entry = $encrypt.Settings | Where-Object -FilterScript {$_.Key -eq 'offlineaccessdays'}
+            $entry = $encryption | Where-Object -FilterScript { $_.Key -eq 'offlineaccessdays' }
             if ($null -ne $entry)
             {
                 $offlineAccessDaysValue = $entry.Value
             }
+
+            $entry = $encryption | Where-Object -FilterScript { $_.Key -eq 'rightsdefinitions' }
+            if ($null -ne $entry)
+            {
+                $EncryptionRightsDefinitionsValue = Convert-EncryptionRightDefinition -RightsDefinition $entry.Value
+            }
+
+            # Watermark
+            $entry = $watermark | Where-Object -FilterScript { $_.Key -eq 'disabled' }
+            if ($null -ne $entry)
+            {
+                $watermarkEnabledValue = -not [Boolean]::Parse($entry.Value)
+            }
+
+            # Watermark Footer
+            $entry = $footer | Where-Object -FilterScript { $_.Key -eq 'disabled' }
+            if ($null -ne $entry)
+            {
+                $footerEnabledValue = -not [Boolean]::Parse($entry.Value)
+            }
+
+            # Watermark Header
+            $entry = $header | Where-Object -FilterScript { $_.Key -eq 'disabled' }
+            if ($null -ne $entry)
+            {
+                $headerEnabledValue = -not [Boolean]::Parse($entry.Value)
+            }
+
+            # Site and Group
+            $entry = $protectgroup | Where-Object -FilterScript { $_.Key -eq 'disabled' }
+            if ($null -ne $entry)
+            {
+                $siteAndGroupEnabledValue = -not [Boolean]::Parse($entry.Value)
+            }
+
+            $entry = $protectgroup | Where-Object -FilterScript { $_.Key -eq 'allowaccesstoguestusers' }
+            if ($null -ne $entry)
+            {
+                $siteAndGroupAccessToGuestUsersValue = -not [Boolean]::Parse($entry.Value)
+            }
+
+            $entry = $protectgroup | Where-Object -FilterScript { $_.Key -eq 'allowemailfromguestusers' }
+            if ($null -ne $entry)
+            {
+                $siteAndGroupAllowEmailFromGuestUsers = -not [Boolean]::Parse($entry.Value)
+            }
+
+            $entry = $protectsite | Where-Object -FilterScript { $_.Key -eq 'allowfullaccess' }
+            if ($null -ne $entry)
+            {
+                $siteAndGroupAllowFullAccess = -not [Boolean]::Parse($entry.Value)
+            }
+
+            $entry = $protectsite | Where-Object -FilterScript { $_.Key -eq 'allowlimitedaccess' }
+            if ($null -ne $entry)
+            {
+                $siteAndGroupAllowLimitedAccess = -not [Boolean]::Parse($entry.Value)
+            }
+
+            $entry = $protectsite | Where-Object -FilterScript { $_.Key -eq 'blockaccess' }
+            if ($null -ne $entry)
+            {
+                $siteAndGroupBlockAccess = -not [Boolean]::Parse($entry.Value)
+            }
+
             $result = @{
                 Name                                           = $label.Name
-                Comment                                        = $label.Comment
+                Comment                                        = $label.Comment -replace "`n", "``n"
                 ParentId                                       = $parentLabelID
                 AdvancedSettings                               = $advancedSettingsValue
                 DisplayName                                    = $label.DisplayName
                 LocaleSettings                                 = $localeSettingsValue
                 Priority                                       = $label.Priority
-                Tooltip                                        = $label.Tooltip
+                Tooltip                                        = $label.Tooltip -replace "`n", "``n"
                 Disabled                                       = $label.Disabled
                 Credential                                     = $Credential
                 ApplicationId                                  = $ApplicationId
@@ -354,42 +462,46 @@ function Get-TargetResource
                 CertificatePath                                = $CertificatePath
                 CertificatePassword                            = $CertificatePassword
                 Ensure                                         = 'Present'
-                ApplyContentMarkingFooterAlignment             = $label.ApplyContentMarkingFooterAlignment
-                ApplyContentMarkingFooterEnabled               = $label.ApplyContentMarkingFooterEnabled
-                ApplyContentMarkingFooterFontColor             = $label.ApplyContentMarkingFooterFontColor
-                ApplyContentMarkingFooterFontName              = $label.ApplyContentMarkingFooterFontName
-                ApplyContentMarkingFooterFontSize              = $label.ApplyContentMarkingFooterFontSize
-                ApplyContentMarkingFooterMargin                = $label.ApplyContentMarkingFooterMargin
+                ApplyContentMarkingFooterAlignment             = ($footer | Where-Object { $_.Key -eq 'alignment' }).Value
+                ApplyContentMarkingFooterEnabled               = $footerEnabledValue
+                ApplyContentMarkingFooterFontColor             = ($footer | Where-Object { $_.Key -eq 'fontcolor' }).Value
+                #ApplyContentMarkingFooterFontName              = 'N/A'
+                ApplyContentMarkingFooterFontSize              = ($footer | Where-Object { $_.Key -eq 'fontsize' }).Value
+                ApplyContentMarkingFooterMargin                = ($footer | Where-Object { $_.Key -eq 'margin' }).Value
                 ApplyContentMarkingFooterText                  = $ApplyContentMarkingFooterTextValue
-                ApplyContentMarkingHeaderAlignment             = $label.ApplyContentMarkingHeaderAlignment
-                ApplyContentMarkingHeaderEnabled               = $label.ApplyContentMarkingHeaderEnabled
-                ApplyContentMarkingHeaderFontColor             = $label.ApplyContentMarkingHeaderFontColor
-                ApplyContentMarkingHeaderFontName              = $label.ApplyContentMarkingHeaderFontName
-                ApplyContentMarkingHeaderFontSize              = $label.ApplyContentMarkingHeaderFontSize
-                ApplyContentMarkingHeaderMargin                = $label.ApplyContentMarkingHeaderMargin
+                ApplyContentMarkingHeaderAlignment             = ($header | Where-Object { $_.Key -eq 'alignment' }).Value
+                ApplyContentMarkingHeaderEnabled               = $headerEnabledValue
+                ApplyContentMarkingHeaderFontColor             = ($header | Where-Object { $_.Key -eq 'fontcolor' }).Value
+                #ApplyContentMarkingHeaderFontName              = 'N/A'
+                ApplyContentMarkingHeaderFontSize              = ($header | Where-Object { $_.Key -eq 'fontsize' }).Value
+                ApplyContentMarkingHeaderMargin                = ($header | Where-Object { $_.Key -eq 'margin' }).Value
+                #TODO ADD HEADER PLACEMENT?
                 ApplyContentMarkingHeaderText                  = $ApplyContentMarkingHeaderTextValue
-                ApplyWaterMarkingEnabled                       = $label.ApplyWaterMarkingEnabled
-                ApplyWaterMarkingFontColor                     = $label.ApplyWaterMarkingFontColor
-                ApplyWaterMarkingFontName                      = $label.ApplyWaterMarkingFontName
-                ApplyWaterMarkingFontSize                      = $label.ApplyWaterMarkingFontSize
-                ApplyWaterMarkingLayout                        = $label.ApplyWaterMarkingLayout
+                ApplyWaterMarkingEnabled                       = $watermarkEnabledValue
+                ApplyWaterMarkingFontColor                     = ($watermark | Where-Object { $_.Key -eq 'fontcolor' }).Value
+                #ApplyWaterMarkingFontName                      = 'N/A'
+                ApplyWaterMarkingFontSize                      = ($watermark | Where-Object { $_.Key -eq 'fontsize' }).Value
+                ApplyWaterMarkingLayout                        = ($watermark | Where-Object { $_.Key -eq 'layout' }).Value
                 ApplyWaterMarkingText                          = $ApplyWaterMarkingTextValue
-                EncryptionAipTemplateScopes                    = $label.EncryptionAipTemplateScopes
+                ContentType                                    = $currentContentType
+                #EncryptionAipTemplateScopes                    = $label.EncryptionAipTemplateScopes
                 EncryptionContentExpiredOnDateInDaysOrNever    = $contentExpiredOnDateValue
-                EncryptionDoNotForward                         = $label.EncryptionDoNotForward
+                EncryptionDoNotForward                         = ($encryption | Where-Object { $_.Key -eq 'donotforward' }).Value
+                EncryptionEncryptOnly                          = ($encryption | Where-Object { $_.Key -eq 'encryptonly' }).Value
                 EncryptionEnabled                              = $encryptionEnabledValue
                 EncryptionOfflineAccessDays                    = $offlineAccessDaysValue
-                EncryptionPromptUser                           = $label.EncryptionPromptUser
+                EncryptionPromptUser                           = ($encryption | Where-Object { $_.Key -eq 'promptuser' }).Value
                 EncryptionProtectionType                       = $protectionTypeValue
                 EncryptionRightsDefinitions                    = $EncryptionRightsDefinitionsValue
-                EncryptionRightsUrl                            = $label.EncryptionRightsUrl
-                SiteAndGroupProtectionAllowAccessToGuestUsers  = $label.SiteAndGroupProtectionAllowAccessToGuestUsers
-                SiteAndGroupProtectionAllowEmailFromGuestUsers = $label.SiteAndGroupProtectionAllowEmailFromGuestUsers
-                SiteAndGroupProtectionAllowFullAccess          = $label.SiteAndGroupProtectionAllowFullAccess
-                SiteAndGroupProtectionAllowLimitedAccess       = $label.SiteAndGroupProtectionAllowLimitedAccess
-                SiteAndGroupProtectionBlockAccess              = $label.SiteAndGroupProtectionBlockAccess
-                SiteAndGroupProtectionEnabled                  = $label.SiteAndGroupProtectionEnabled
-                SiteAndGroupProtectionPrivacy                  = $label.SiteAndGroupProtectionPrivacy
+                EncryptionRightsUrl                            = ($encryption | Where-Object { $_.Key -eq 'doublekeyencryptionurl' }).Value
+                SiteAndGroupProtectionAllowAccessToGuestUsers  = $siteAndGroupAccessToGuestUsersValue
+                SiteAndGroupProtectionAllowEmailFromGuestUsers = $siteAndGroupAllowEmailFromGuestUsers
+                SiteAndGroupProtectionPrivacy                  = ($protectgroup | Where-Object { $_.Key -eq 'allowemailfromguestusers' }).Value
+                SiteAndGroupProtectionAllowFullAccess          = $siteAndGroupAllowFullAccess
+                SiteAndGroupProtectionAllowLimitedAccess       = $siteAndGroupAllowLimitedAccess
+                SiteAndGroupProtectionBlockAccess              = $siteAndGroupBlockAccess
+                SiteAndGroupProtectionEnabled                  = $siteAndGroupEnabledValue
+                SiteAndGroupExternalSharingControlType         = ($protectsite | Where-Object { $_.Key -eq 'externalsharingcontroltype' }).Value
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -538,6 +650,11 @@ function Set-TargetResource
         $ApplyWaterMarkingText,
 
         [Parameter()]
+        [ValidateSet('File, Email', 'Site, UnifiedGroup', 'PurviewAssets', 'Teamwork', 'SchematizedData')]
+        [System.String[]]
+        $ContentType,
+
+        [Parameter()]
         [System.String]
         $EncryptionAipTemplateScopes,
 
@@ -548,6 +665,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $EncryptionDoNotForward,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionEncryptOnly,
 
         [Parameter()]
         [System.Boolean]
@@ -572,7 +693,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $EncryptionRightsUrl,
-
 
         [Parameter()]
         [System.Boolean]
@@ -599,10 +719,14 @@ function Set-TargetResource
         $SiteAndGroupProtectionEnabled,
 
         [Parameter()]
-        [ValidateSet('Public', 'Private')]
+        [ValidateSet('Public', 'Private', 'Unspecified')]
         [System.String]
         $SiteAndGroupProtectionPrivacy,
 
+        [Parameter()]
+        [ValidateSet('ExternalUserAndGuestSharing', 'ExternalUserSharingOnly', 'ExistingExternalUserSharingOnly', 'Disabled')]
+        [System.String]
+        $SiteAndGroupExternalSharingControlType,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -648,9 +772,38 @@ function Set-TargetResource
 
     $label = Get-TargetResource @PSBoundParameters
 
-    if ($PSBoundParameters.ContainsKey('Disabled'))
+    foreach ($param in @('Disabled', 'ApplyContentMarkingFooterFontName', 'ApplyContentMarkingHeaderFontName', 'ApplyWaterMarkingFontName', 'EncryptionAipTemplateScopes'))
     {
-        Write-Verbose -Message 'The Disabled parameter is no longer available and will be deprecated.'
+        if ($PSBoundParameters.ContainsKey($param))
+        {
+            Write-Verbose -Message "The $param parameter is deprecated and will not be used."
+        }
+    }
+
+    if (($SiteAndGroupProtectionAllowFullAccess -and $SiteAndGroupProtectionAllowLimitedAccess) -or `
+        ($SiteAndGroupProtectionAllowFullAccess -and $SiteAndGroupProtectionBlockAccess) -or `
+        ($SiteAndGroupProtectionBlockAccess -and $SiteAndGroupProtectionAllowLimitedAccess))
+    {
+        throw '[ERROR] Only one of these values can be set to true: SiteAndGroupProtectionAllowFullAccess, SiteAndGroupProtectionAllowLimitedAccess, SiteAndGroupProtectionBlockAccess'
+    }
+
+    if ($PSBoundParameters.ContainsKey('EncryptionProtectionType') -and `
+        ($EncryptionProtectionType -ne 'UserDefined' -and `
+            ($PSBoundParameters.ContainsKey('EncryptionDoNotForward') -or `
+                    $PSBoundParameters.ContainsKey('EncryptionEncryptOnly') -or `
+                    $PSBoundParameters.ContainsKey('EncryptionPromptUser'))))
+    {
+        Write-Warning -Message "You have specified EncryptionDoNotForward, EncryptionEncryptOnly or EncryptionPromptUser, but EncryptionProtectionType isn't set to UserDefined."
+    }
+
+    if ($PSBoundParameters.ContainsKey('Comment'))
+    {
+        $PSBoundParameters.Comment = $PSBoundParameters.Comment -replace "``n", "`n"
+    }
+
+    if ($PSBoundParameters.ContainsKey('Tooltip'))
+    {
+        $PSBoundParameters.Tooltip = $PSBoundParameters.Tooltip -replace "``n", "`n"
     }
 
     if (('Present' -eq $Ensure) -and ('Absent' -eq $label.Ensure))
@@ -707,16 +860,6 @@ function Set-TargetResource
         {
             $locale = Convert-CIMToLocaleSettings $LocaleSettings
             $SetParams['LocaleSettings'] = $locale
-        }
-
-        if ($PSBoundParameters.ContainsKey('EncryptionAipTemplateScopes'))
-        {
-            if ($label.EncryptionAipTemplateScopes -ne $PSBoundParameters.EncryptionAipTemplateScopes)
-            {
-                Write-Verbose -Message "The EncryptionAipTemplateScopes specified has a different value than the one on the existing label. `
-                    This parameter cannot be updated and will be ignored."
-            }
-            $SetParams.Remove('EncryptionAipTemplateScopes') | Out-Null
         }
 
         #Remove unused parameters for Set-Label cmdlet
@@ -882,6 +1025,11 @@ function Test-TargetResource
         $ApplyWaterMarkingText,
 
         [Parameter()]
+        [ValidateSet('File, Email', 'Site, UnifiedGroup', 'PurviewAssets', 'Teamwork', 'SchematizedData')]
+        [System.String[]]
+        $ContentType,
+
+        [Parameter()]
         [System.String]
         $EncryptionAipTemplateScopes,
 
@@ -892,6 +1040,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $EncryptionDoNotForward,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionEncryptOnly,
 
         [Parameter()]
         [System.Boolean]
@@ -942,9 +1094,14 @@ function Test-TargetResource
         $SiteAndGroupProtectionEnabled,
 
         [Parameter()]
-        [ValidateSet('Public', 'Private')]
+        [ValidateSet('Public', 'Private', 'Unspecified')]
         [System.String]
         $SiteAndGroupProtectionPrivacy,
+
+        [Parameter()]
+        [ValidateSet('ExternalUserAndGuestSharing', 'ExternalUserSharingOnly', 'ExistingExternalUserSharingOnly', 'Disabled')]
+        [System.String]
+        $SiteAndGroupExternalSharingControlType,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -1200,7 +1357,7 @@ function Convert-StringToAdvancedSettings
         $settingString = $setting.Replace('[', '').Replace(']', '')
         $settingKey = $settingString.Split(',')[0]
 
-        if ($settingKey -ne 'displayname')
+        if ($settingKey -notin @('displayname', 'contenttype', 'tooltip'))
         {
             $startPos = $settingString.IndexOf(',', 0) + 1
             $valueString = $settingString.Substring($startPos, $settingString.Length - $startPos).Trim()
@@ -1208,7 +1365,7 @@ function Convert-StringToAdvancedSettings
 
             $entry = @{
                 Key   = $settingKey
-                Value = $values
+                Value = $values.Trim()
             }
             $settings += $entry
         }
@@ -1320,11 +1477,36 @@ function Test-AdvancedSettings
         $foundKey = $CurrentProperty | Where-Object { $_.Key -eq $desiredSetting.Key }
         if ($null -ne $foundKey)
         {
-            if ($foundKey.Value.ToString() -ne $desiredSetting.Value.ToString())
+            if ($foundKey.Value -is [Array])
             {
-                $foundSettings = $false
-                break
+                if ($desiredSetting.Value -is [Array])
+                {
+                    $diff = Compare-Object -ReferenceObject $foundKey.Value -DifferenceObject $desiredSetting.Value
+                    if ($diff.Count -ne 0)
+                    {
+                        $foundSettings = $false
+                        break
+                    }
+                }
+                else
+                {
+                    $foundSettings = $false
+                    break
+                }
             }
+            else
+            {
+                if ($foundKey.Value.ToString() -ne $desiredSetting.Value.ToString())
+                {
+                    $foundSettings = $false
+                    break
+                }
+            }
+        }
+        else
+        {
+            $foundSettings = $false
+            break
         }
     }
 
