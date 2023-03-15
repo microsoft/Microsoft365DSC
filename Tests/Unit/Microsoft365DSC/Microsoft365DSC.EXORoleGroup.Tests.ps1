@@ -42,26 +42,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
-            Function get-RoleGroup{
-                Return @{
-                    Name        = 'Contoso Role Group'
-                    Members     = 'Exchange Administrator'
-                    Roles       = 'Address Lists'
-                    Description = 'This is the Contoso Role Group'
-                }
-            }
-
-            Function New-RoleGroup{
-                Return $null
-            }
-
-            Function Remove-RoleGroup{
-                Return $null
-            }
-
-            Function Get-RoleGroupMember{
-                Return $null
-            }
         }
 
         # Test contexts

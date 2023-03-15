@@ -1,4 +1,5 @@
-function Get-TargetResource {
+function Get-TargetResource 
+{
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
@@ -55,12 +56,14 @@ function Get-TargetResource {
     )
 
     Write-Verbose -Message "Getting Role Group configuration for $Name"
-    if ($Global:CurrentModeIsExport) {
+    if ($Global:CurrentModeIsExport) 
+    {
         $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
-    else {
+    else 
+    {
         $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
@@ -80,16 +83,19 @@ function Get-TargetResource {
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = 'Absent'
 
-    try {
+    try 
+    {
         $AllRoleGroups = Get-RoleGroup -ErrorAction Stop
 
         $RoleGroup = $AllRoleGroups | Where-Object -FilterScript { $_.Name -eq $Name }
 
-        if ($null -eq $RoleGroup) {
+        if ($null -eq $RoleGroup) 
+        {
             Write-Verbose -Message "Role Group $($Name) does not exist."
             return $nullReturn
         }
-        else {
+        else 
+        {
             # Get RoleGroup Members DN if RoleGroup exists. This is required especially when adding Members like "Exchange Administrator" or "Global Administrator" that have different Names across Tenants
             $roleGroupMember = Get-RoleGroupMember -Identity $Name | Select-Object DisplayName
 
@@ -112,7 +118,8 @@ function Get-TargetResource {
             return $result
         }
     }
-    catch {
+    catch 
+    {
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
@@ -123,7 +130,8 @@ function Get-TargetResource {
     }
 }
 
-function Set-TargetResource {
+function Set-TargetResource 
+{
     [CmdletBinding()]
     param
     (
@@ -205,26 +213,28 @@ function Set-TargetResource {
         Confirm     = $false
     } 
     # Remove Description Parameter if null or Empty as the creation fails with $null parameter
-    if ([System.String]::IsNullOrEmpty($Description)) {
+    if ([System.String]::IsNullOrEmpty($Description)) 
+    {
         $NewRoleGroupParams.Remove('Description') | Out-Null
     }
     # CASE: Role Group doesn't exist but should;
-    if ($Ensure -eq 'Present' -and $currentRoleGroupConfig.Ensure -eq 'Absent') {
+    if ($Ensure -eq 'Present' -and $currentRoleGroupConfig.Ensure -eq 'Absent') 
+    {
         Write-Verbose -Message "Role Group '$($Name)' does not exist but it should. Create and configure it."
         # Create Role Group
         New-RoleGroup @NewRoleGroupParams
-
     }
     # CASE: Role Group exists but it shouldn't;
-    elseif ($Ensure -eq 'Absent' -and $currentRoleGroupConfig.Ensure -eq 'Present') {
+    elseif ($Ensure -eq 'Absent' -and $currentRoleGroupConfig.Ensure -eq 'Present') 
+    {
         Write-Verbose -Message "Role Group '$($Name)' exists but it shouldn't. Remove it."
         Remove-RoleGroup -Identity $Name -Confirm:$false -Force
     }
     # CASE: Role Group exists and it should, but has different member values than the desired ones
-    elseif ($Ensure -eq 'Present' -and $currentRoleGroupConfig.Ensure -eq 'Present' -and $null -ne (Compare-Object -ReferenceObject $($currentRoleGroupConfig.Members) -DifferenceObject $Members)) {
+    elseif ($Ensure -eq 'Present' -and $currentRoleGroupConfig.Ensure -eq 'Present' -and $null -ne (Compare-Object -ReferenceObject $($currentRoleGroupConfig.Members) -DifferenceObject $Members)) 
+    {
         Write-Verbose -Message "Role Group '$($Name)' already exists, but members need updating."
         Write-Verbose -Message "Updating Role Group $($Name) members with values: $(Convert-M365DscHashtableToString -Hashtable $NewRoleGroupParams)"
-        
         Update-RoleGroupMember -Identity $Name -Members $Members -Confirm:$false
     }
     # CASE: Role Assignment Policy exists and it should, but Roles attribute has different values than the desired ones
@@ -249,7 +259,8 @@ function Set-TargetResource {
     }
 }
 
-function Test-TargetResource {
+function Test-TargetResource 
+{
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
@@ -342,7 +353,8 @@ function Test-TargetResource {
     return $TestResult
 }
 
-function Export-TargetResource {
+function Export-TargetResource 
+{
     [CmdletBinding()]
     [OutputType([System.String])]
     param
@@ -396,14 +408,17 @@ function Export-TargetResource {
 
         $dscContent = ''
 
-        if ($AllRoleGroups.Length -eq 0) {
+        if ($AllRoleGroups.Length -eq 0) 
+        {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        else {
+        else 
+        {
             Write-Host "`r`n" -NoNewline
         }
         $i = 1
-        foreach ($RoleGroup in $AllRoleGroups) {
+        foreach ($RoleGroup in $AllRoleGroups) 
+        {
             Write-Host "    |---[$i/$($AllRoleGroups.Count)] $($RoleGroup.Name)" -NoNewline
             $roleGroupMember = Get-RoleGroupMember -Identity $Name | Select-Object DisplayName
 
@@ -435,7 +450,8 @@ function Export-TargetResource {
         }
         return $dscContent
     }
-    catch {
+    catch 
+    {
         Write-Host $Global:M365DSCEmojiRedX
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
