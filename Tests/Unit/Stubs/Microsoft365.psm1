@@ -5,7 +5,11 @@ function Get-RoleGroup
     param(
         [Parameter()]
         [System.Object]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Members
     )
 }
 function New-RoleGroup

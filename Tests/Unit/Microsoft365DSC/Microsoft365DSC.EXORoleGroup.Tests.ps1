@@ -136,6 +136,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description = 'This is the Contoso Role Group'
                     }
                 }
+
+                Mock -Command Get-RoleGroupMember -MockWith {
+                    [PSCustomObject]@{Displayname = 'Drift Administrator'}
+                }
             }
 
             It 'Should return false from the Test method' {
