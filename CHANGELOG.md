@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.315.1
 
 * AADConditionalAccessPolicy
   * Handle Named Location "Multifactor authentication trusted IPs"
