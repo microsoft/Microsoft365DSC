@@ -187,7 +187,7 @@ function Get-TargetResource
             ConvertDisclaimerWrapperToEml           = $TransportConfigSettings.ConvertDisclaimerWrapperToEml
             DSNConversionMode                       = $TransportConfigSettings.DSNConversionMode
             ExternalDelayDsnEnabled                 = $TransportConfigSettings.ExternalDelayDsnEnabled
-            ExternalDsnDefaultLanguage              = $TransportConfigSettings.ExternalDsnDefaultLanguage
+            ExternalDsnDefaultLanguage              = $TransportConfigSettings.ExternalDsnDefaultLanguage.Name
             ExternalDsnLanguageDetectionEnabled     = $TransportConfigSettings.ExternalDsnLanguageDetectionEnabled
             ExternalDsnReportingAuthority           = $TransportConfigSettings.ExternalDsnReportingAuthority
             ExternalDsnSendHtml                     = $TransportConfigSettings.ExternalDsnSendHtml
