@@ -15,8 +15,8 @@ Configuration Example
     {
         IntuneDeviceCompliancePolicyMacOS 'ConfigureDeviceCompliancePolicyMacOS'
         {
-            DisplayName                                 = "MacOS DSC Policy"
-            Description                                 = "Test policy"
+            DisplayName                                 = 'MacOS DSC Policy'
+            Description                                 = 'Test policy'
             PasswordRequired                            = $False
             PasswordBlockSimple                         = $False
             PasswordExpirationDays                      = 365
@@ -24,12 +24,12 @@ Configuration Example
             PasswordMinutesOfInactivityBeforeLock       = 5
             PasswordPreviousPasswordBlockCount          = 13
             PasswordMinimumCharacterSetCount            = 1
-            PasswordRequiredType                        = "DeviceDefault"
+            PasswordRequiredType                        = 'DeviceDefault'
             OsMinimumVersion                            = 10
             OsMaximumVersion                            = 13
             SystemIntegrityProtectionEnabled            = $False
             DeviceThreatProtectionEnabled               = $False
-            DeviceThreatProtectionRequiredSecurityLevel = "Unavailable"
+            DeviceThreatProtectionRequiredSecurityLevel = 'Unavailable'
             StorageRequireEncryption                    = $False
             FirewallEnabled                             = $False
             FirewallBlockAllIncoming                    = $False
