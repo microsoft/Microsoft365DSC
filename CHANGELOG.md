@@ -1,5 +1,9 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+* EXORoleAssignmentPolicy
+  * Fix issue with IsDefault parameter
+    FIXES [#2977](https://github.com/microsoft/Microsoft365DSC/issues/2977)
 # 1.23.315.2
 
 * EXORoleGroup
