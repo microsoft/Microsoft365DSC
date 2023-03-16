@@ -324,6 +324,11 @@ function Get-TargetResource
                 SubjectMatchesPatterns                       = $PolicyRule.SubjectMatchesPatterns
                 Ensure                                       = 'Present'
                 Credential                                   = $Credential
+                ApplicationId                                = $ApplicationId
+                TenantId                                     = $TenantId
+                CertificateThumbprint                        = $CertificateThumbprint
+                CertificatePath                              = $CertificatePath
+                CertificatePassword                          = $CertificatePassword
             }
 
             $paramsToRemove = @()
@@ -1074,7 +1079,7 @@ function Export-TargetResource
 
                 $Results = Get-TargetResource @PSBoundParameters `
                     -Name $rule.name `
-                    -Policy $rule.Policy `
+                    -Policy $rule.ParentPolicyName `
                     -Workload $workload
 
                 $IsCIMArray = $false

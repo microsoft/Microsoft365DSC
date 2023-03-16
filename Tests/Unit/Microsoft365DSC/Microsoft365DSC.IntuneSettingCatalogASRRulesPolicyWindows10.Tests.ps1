@@ -23,14 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString 'Pass@word1' -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
-            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
-                return @{}
-            }
-
-            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-            }
-
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
@@ -623,9 +616,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
                     return @{
-                        Id          = '12345-12345-12345-12345-12345'
-                        Description = 'My Test'
-                        Name        = 'asdfads'
+                        Id                = '12345-12345-12345-12345-12345'
+                        Description       = 'My Test'
+                        Name              = 'asdfads'
+                        TemplateReference = @{
+                            TemplateId = 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
+                        }
                     }
                 }
 
@@ -748,7 +744,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should Reverse Engineer resource from the Export method' {
-                Export-TargetResource @testParams
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }

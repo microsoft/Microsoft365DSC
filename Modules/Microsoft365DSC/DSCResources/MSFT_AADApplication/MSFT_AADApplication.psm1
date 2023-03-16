@@ -172,28 +172,28 @@ function Get-TargetResource
             }
 
             $result = @{
-                DisplayName               = $AADApp.DisplayName
-                AvailableToOtherTenants   = $AvailableToOtherTenantsValue
-                GroupMembershipClaims     = $AADApp.GroupMembershipClaims
-                Homepage                  = $AADApp.web.HomepageUrl
-                IdentifierUris            = $AADApp.IdentifierUris
-                KnownClientApplications   = $AADApp.Api.KnownClientApplications
-                LogoutURL                 = $AADApp.web.LogoutURL
+                DisplayName             = $AADApp.DisplayName
+                AvailableToOtherTenants = $AvailableToOtherTenantsValue
+                GroupMembershipClaims   = $AADApp.GroupMembershipClaims
+                Homepage                = $AADApp.web.HomepageUrl
+                IdentifierUris          = $AADApp.IdentifierUris
+                KnownClientApplications = $AADApp.Api.KnownClientApplications
+                LogoutURL               = $AADApp.web.LogoutURL
                 #DEPRECATED
                 #Oauth2RequirePostResponse = $currentOauth2RequirePostResponseValue
-                PublicClient              = $isPublicClient
-                ReplyURLs                 = $AADApp.web.RedirectUris
-                Owners                    = $OwnersValues
-                ObjectId                  = $AADApp.Id
-                AppId                     = $AADApp.AppId
-                Permissions               = $permissionsObj
-                Ensure                    = 'Present'
-                Credential                = $Credential
-                ApplicationId             = $ApplicationId
-                TenantId                  = $TenantId
-                ApplicationSecret         = $ApplicationSecret
-                CertificateThumbprint     = $CertificateThumbprint
-                Managedidentity           = $ManagedIdentity.IsPresent
+                PublicClient            = $isPublicClient
+                ReplyURLs               = $AADApp.web.RedirectUris
+                Owners                  = $OwnersValues
+                ObjectId                = $AADApp.Id
+                AppId                   = $AADApp.AppId
+                Permissions             = $permissionsObj
+                Ensure                  = 'Present'
+                Credential              = $Credential
+                ApplicationId           = $ApplicationId
+                TenantId                = $TenantId
+                ApplicationSecret       = $ApplicationSecret
+                CertificateThumbprint   = $CertificateThumbprint
+                Managedidentity         = $ManagedIdentity.IsPresent
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
@@ -341,9 +341,9 @@ function Set-TargetResource
     $backCurrentOwners = $currentAADApp.Owners
     $currentParameters.Remove('Owners') | Out-Null
 
-    if ($PSBoundParameters.ContainsKey("Oauth2RequirePostResponse"))
+    if ($PSBoundParameters.ContainsKey('Oauth2RequirePostResponse'))
     {
-        Write-Warning -Message "The Oauth2PermissionScopes parameter has been deprecated. Please remove it from your configuration."
+        Write-Warning -Message 'The Oauth2RequirePostResponse parameter has been deprecated. Please remove it from your configuration.'
 
         # Passing in the Oauth2RequirePostResponse parameter returns an error when calling update-mgapplication.
         # Removing it temporarly for the update scenario.

@@ -271,20 +271,6 @@ function Update-MgRoleManagementDirectoryRoleDefinition
     )
 }
 
-function Get-MgRoleManagementDirectoryRoleDefinition
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $UnifiedRoleDefinitionId,
-
-        [Parameter()]
-        [System.String]
-        $Filter
-    )
-}
-
 function Remove-MgRoleManagementDirectoryRoleDefinition
 {
     [CmdletBinding()]

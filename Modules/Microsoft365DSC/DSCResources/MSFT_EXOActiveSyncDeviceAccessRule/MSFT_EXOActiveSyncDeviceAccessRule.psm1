@@ -425,7 +425,7 @@ function Export-TargetResource
             $dscContent += $currentDSCBlock
 
             Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileNamerk
+                -FileName $Global:PartialExportFileName
             $i++
         }
         return $dscContent

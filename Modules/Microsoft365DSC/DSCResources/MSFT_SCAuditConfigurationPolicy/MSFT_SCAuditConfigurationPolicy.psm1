@@ -91,9 +91,14 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Found existing SCAuditConfigurationPolicy $Workload"
             $result = @{
-                Ensure     = 'Present'
-                Workload   = $Workload
-                Credential = $Credential
+                Ensure                = 'Present'
+                Workload              = $Workload
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"

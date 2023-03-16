@@ -10,7 +10,7 @@
                     },
                     {
                         "name": "DeviceManagementServiceConfig.Read.All"
-                    },
+                    }
                 ],
                 "update": [
                     {
@@ -28,7 +28,7 @@
                     },
                     {
                         "name": "DeviceManagementServiceConfig.Read.All"
-                    },
+                    }
                 ],
                 "update": [
                     {

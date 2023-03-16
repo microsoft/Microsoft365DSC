@@ -55,24 +55,24 @@ Configuration Example
         [PSCredential]
         $credsGlobalAdmin
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
         EXOOnPremisesOrganization 'ConfigureOnPremisesOrganization'
         {
-            Identity                 = "Contoso"
-            Comment                  = "Mail for Contoso"
-            HybridDomains            = "contoso.com", "sales.contoso.com"
-            InboundConnector         = "Inbound to Contoso"
-            OrganizationGuid         = "a1bc23cb-3456-bcde-abcd-feb363cacc88"
-            OrganizationName         = "Contoso"
-            OutboundConnector        = "Outbound to Contoso"
-            Ensure                   = "Present"
-            Credential               = $credsGlobalAdmin
+            Identity          = 'Contoso'
+            Comment           = 'Mail for Contoso'
+            HybridDomains     = 'contoso.com', 'sales.contoso.com'
+            InboundConnector  = 'Inbound to Contoso'
+            OrganizationGuid  = 'a1bc23cb-3456-bcde-abcd-feb363cacc88'
+            OrganizationName  = 'Contoso'
+            OutboundConnector = 'Outbound to Contoso'
+            Ensure            = 'Present'
+            Credential        = $credsGlobalAdmin
         }
     }
 }
-New-OnPremisesOrganization -Name  -OrganizationGuid  -HybridDomains  -InboundConnector  -OutboundConnector
 ```
 

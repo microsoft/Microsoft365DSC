@@ -23,16 +23,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString 'Pass@word1' -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             $Global:PartialExportFileName = 'c:\TestPath'
-            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
-                return @{}
-            }
 
-            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-                return 'FakeDSCContent'
-            }
             Mock -CommandName Save-M365DSCPartialExport -MockWith {
             }
 
@@ -291,15 +285,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
-                    ApplicationId         = '12345-12345-12345-12345-12345'
-                    TenantID              = '11111-11111-22222-22222-22222'
-                    CertificateThumbprint = '111111111111'
+                    Credential = $Credential
+                }
+
+                Mock -CommandName Get-MgTeam -MockWith {
+                    return @{
+                        Id          = '12345-12345-12345-12345-12345'
+                        DisplayName = 'Contoso Team'
+                    }
                 }
 
                 Mock -CommandName Get-MgGroup -MockWith {
                     return @{
-                        GroupId     = '12345-12345-12345-12345-12345'
+                        Id          = '12345-12345-12345-12345-12345'
                         DisplayName = 'Contoso Team'
                     }
                 }
@@ -331,7 +331,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should Reverse Engineer resource from the Export method' {
-                Export-TargetResource @testParams
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }
