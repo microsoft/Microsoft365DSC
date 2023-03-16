@@ -1242,6 +1242,7 @@ function Get-TypeProperties
                 if(-not [String]::IsNullOrWhiteSpace($property.Annotation.String))
                 {
                     $description =$property.Annotation.String.replace('"',"'")
+                    $description =$property.Annotation.String -replace '[^\p{L}\p{Nd}/(/}/_ -.,=:)'']', ''
                 }
                 $myProperty.Add('Description', $description)
 

@@ -4,10 +4,11 @@
 
 * DRG
   * Various fixes:
-    Removed Select-MgProfile from module
+    Remove invalid character from description in schema.mof
     Add Id as key in schema.mof
-    Fix Unit Test issue with nested CIM array
-    Fix issue with AdditionalProperties for nested objects
+    Fix issue with nested CIM array from test unit
+    Remove Select-MgProfile from module
+    Fix issue with AdditionalProperties for nested objects from module
 * EXORoleAssignmentPolicy
   * Fix issue with IsDefault parameter
     FIXES [#2977](https://github.com/microsoft/Microsoft365DSC/issues/2977)
