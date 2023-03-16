@@ -33,25 +33,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName Update-MgEntitlementManagementConnectedOrganization -MockWith {
+            Mock -CommandName Update-MgBetaEntitlementManagementConnectedOrganization -MockWith {
             }
 
-            Mock -CommandName New-MgEntitlementManagementConnectedOrganization -MockWith {
+            Mock -CommandName New-MgBetaEntitlementManagementConnectedOrganization -MockWith {
             }
 
-            Mock -CommandName Remove-MgEntitlementManagementConnectedOrganization -MockWith {
+            Mock -CommandName Remove-MgBetaEntitlementManagementConnectedOrganization -MockWith {
             }
 
-            Mock -CommandName New-MgEntitlementManagementConnectedOrganizationExternalSponsorByRef -MockWith {
+            Mock -CommandName New-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorByRef -MockWith {
             }
 
-            Mock -CommandName New-MgEntitlementManagementConnectedOrganizationInternalSponsorByRef -MockWith {
+            Mock -CommandName New-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorByRef -MockWith {
             }
 
-            Mock -CommandName Remove-MgEntitlementManagementConnectedOrganizationExternalSponsorByRef -MockWith {
+            Mock -CommandName Remove-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorByRef -MockWith {
             }
 
-            Mock -CommandName Remove-MgEntitlementManagementConnectedOrganizationInternalSponsorByRef -MockWith {
+            Mock -CommandName Remove-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorByRef -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -80,16 +80,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                    = $Credential;
                 }
 
-                Mock -CommandName Get-MgEntitlementManagementConnectedOrganization -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementConnectedOrganization -MockWith {
                     return $null
                 }
-                Mock -CommandName Get-MgEntitlementManagementConnectedOrganizationExternalSponsor -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementConnectedOrganizationExternalSponsor -MockWith {
                     return @()
                 }
-                Mock -CommandName Get-MgEntitlementManagementConnectedOrganizationInternalSponsor -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementConnectedOrganizationInternalSponsor -MockWith {
                     return @()
                 }
-                Mock -CommandName Get-MgDirectoryObject -MockWith {
+                Mock -CommandName Get-MgBetaDirectoryObject -MockWith {
                     return @{
                         Id="12345678-1234-1234-1234-123456789012"
                         AdditionalProperties=@{
@@ -97,7 +97,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                     }
                 }
-                Mock -CommandName New-MgEntitlementManagementConnectedOrganization -MockWith {
+                Mock -CommandName New-MgBetaEntitlementManagementConnectedOrganization -MockWith {
                     return @{
                         Id="12345678-1234-1234-1234-123456789012"
                     }
@@ -111,9 +111,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should Create the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgEntitlementManagementConnectedOrganization -Exactly 1
-                Should -Invoke -CommandName New-MgEntitlementManagementConnectedOrganizationExternalSponsorByRef -Exactly 1
-                Should -Invoke -CommandName New-MgEntitlementManagementConnectedOrganizationInternalSponsorByRef -Exactly 1
+                Should -Invoke -CommandName New-MgBetaEntitlementManagementConnectedOrganization -Exactly 1
+                Should -Invoke -CommandName New-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorByRef -Exactly 1
+                Should -Invoke -CommandName New-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorByRef -Exactly 1
             }
         }
 
@@ -137,7 +137,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                    = $Credential;
                 }
 
-                Mock -CommandName Get-MgEntitlementManagementConnectedOrganization -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementConnectedOrganization -MockWith {
                     return @{
                         Description = "ConnectedOrganization_Description"
                         DisplayName = "ConnectedOrganization_DisplayName"
@@ -155,14 +155,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                     }
                 }
-                Mock -CommandName Get-MgEntitlementManagementConnectedOrganizationExternalSponsor -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementConnectedOrganizationExternalSponsor -MockWith {
                     return @(
                         @{
                             Id="12345678-1234-1234-1234-123456789012"
                         }
                     )
                 }
-                Mock -CommandName Get-MgEntitlementManagementConnectedOrganizationInternalSponsor -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementConnectedOrganizationInternalSponsor -MockWith {
                     return @(
                         @{
                             Id="12345678-1234-1234-1234-123456789012"
@@ -181,7 +181,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgEntitlementManagementConnectedOrganization -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaEntitlementManagementConnectedOrganization -Exactly 1
             }
         }
         Context -Name "The AADEntitlementManagementConnectedOrganization Exists and Values are already in the desired state" -Fixture {
@@ -204,7 +204,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                    = $Credential;
                 }
 
-                Mock -CommandName Get-MgEntitlementManagementConnectedOrganization -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementConnectedOrganization -MockWith {
                     return @{
                         Description = "ConnectedOrganization_Description"
                         DisplayName = "ConnectedOrganization_DisplayName"
@@ -221,14 +221,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         State = "configured"
                     }
                 }
-                Mock -CommandName Get-MgEntitlementManagementConnectedOrganizationExternalSponsor -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementConnectedOrganizationExternalSponsor -MockWith {
                     return @(
                         @{
                             Id="12345678-1234-1234-1234-123456789012"
                         }
                     )
                 }
-                Mock -CommandName Get-MgEntitlementManagementConnectedOrganizationInternalSponsor -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementConnectedOrganizationInternalSponsor -MockWith {
                     return @(
                         @{
                             Id="12345678-1234-1234-1234-123456789012"
@@ -262,7 +262,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                    = $Credential;
                 }
 
-                Mock -CommandName Get-MgEntitlementManagementConnectedOrganization -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementConnectedOrganization -MockWith {
                     return @{
                         Description = "ConnectedOrganization_Description"
                         DisplayName = "ConnectedOrganization_DisplayName"
@@ -279,7 +279,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         State = "configured"
                     }
                 }
-                Mock -CommandName Get-MgEntitlementManagementConnectedOrganizationExternalSponsor -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementConnectedOrganizationExternalSponsor -MockWith {
                     return @(
                         @{
                             Id="12345678-1234-1234-1234-123456789012"
@@ -289,7 +289,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                     )
                 }
-                Mock -CommandName Get-MgEntitlementManagementConnectedOrganizationInternalSponsor -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementConnectedOrganizationInternalSponsor -MockWith {
                     return @(
                         @{
                             Id="12345678-1234-1234-1234-123456789012"
@@ -308,8 +308,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgEntitlementManagementConnectedOrganization -Exactly 1
-                Should -Invoke -CommandName Remove-MgEntitlementManagementConnectedOrganizationExternalSponsorByRef -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaEntitlementManagementConnectedOrganization -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorByRef -Exactly 1
             }
         }
 
@@ -320,7 +320,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgEntitlementManagementConnectedOrganization -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementConnectedOrganization -MockWith {
                     return @{
                         Description = "ConnectedOrganization_Description"
                         DisplayName = "ConnectedOrganization_DisplayName"
@@ -338,14 +338,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                     }
                 }
-                Mock -CommandName Get-MgEntitlementManagementConnectedOrganizationExternalSponsor -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementConnectedOrganizationExternalSponsor -MockWith {
                     return @(
                         @{
                             Id="12345678-1234-1234-1234-123456789012"
                         }
                     )
                 }
-                Mock -CommandName Get-MgEntitlementManagementConnectedOrganizationInternalSponsor -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementConnectedOrganizationInternalSponsor -MockWith {
                     return @(
                         @{
                             Id="12345678-1234-1234-1234-123456789012"
