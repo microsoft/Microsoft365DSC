@@ -1592,9 +1592,6 @@ function Get-ComplexTypeConstructorToString
                 $recallProperty=Get-StringFirstCharacterToLower -Value $propertyName
             }
             $valuePrefix += "$recallProperty."
-            write-host -ForegroundColor Yellow ($valuePrefix)
-
-
         }
         $AssignedPropertyName = $nestedProperty.Name
         if($nestedProperty.IsRootProperty -eq $false)
@@ -1611,7 +1608,6 @@ function Get-ComplexTypeConstructorToString
         {
             $AssignedPropertyName="'$AssignedPropertyName'"
         }
-        write-host -ForegroundColor Green ("$referencePrefix`: $isNested - $($Property.IsArray) - $([String]::IsNullOrWhiteSpace($ParentPropertyValuePath))")
         if((-not $isNested) -and (-not $Property.IsArray) -and ([String]::IsNullOrWhiteSpace($ParentPropertyValuePath)))
         {
             $valuePrefix += "$propertyName."
@@ -1622,8 +1618,6 @@ function Get-ComplexTypeConstructorToString
 
             #if($complexName -notin $global:ComplexList)
             #{
-
-                write-host -ForegroundColor Red ("$referencePrefix")
 
                 $global:ComplexList+= $complexName
                 $nestedString = ''
@@ -2457,6 +2451,10 @@ function Get-M365DSCHashAsString
                 $line = "$Space$extraSpace$key = "
                 if ($Values.$Key.isArray)
                 {
+                    if ($Values.$Key.CIMType)
+                    {
+                        $line += "[CimInstance[]]"
+                    }
                     $line += "@(`r$space    "
                     $extraSpace = '    '
                 }
@@ -2817,8 +2815,10 @@ function New-M365DSCExampleFile
     )
 
     $exportPath = Join-Path -Path $env:temp -ChildPath $ResourceName
-    Export-M365DSCConfiguration -Credential $Credential `
-        -Components $ResourceName -Path $exportPath `
+    Export-M365DSCConfiguration `
+        -Credential $Credential `
+        -Components $ResourceName `
+        -Path $exportPath `
         -FileName "$ResourceName.ps1" `
         -ConfigurationName 'Example' | Out-Null
 
@@ -2829,8 +2829,8 @@ function New-M365DSCExampleFile
     $start = $exportContent.IndexOf("{", $start) + 1
     $exampleContent = $exportContent.Substring($start, $end-$start)
 
-    $exampleFileFullPath = "$ExampleFilePath\$ResourceName\1-$ResourceName-Example.psm1"
-    $folderPath = "$ExampleFilePath\$ResourceName"
+    $exampleFileFullPath = "$Path\$ResourceName\1-$ResourceName-Example.psm1"
+    $folderPath = "$Path\$ResourceName"
     New-Item $folderPath -ItemType Directory -Force | Out-Null
     $templatePath = '.\Example.Template.ps1'
     Copy-Item -Path $templatePath -Destination $exampleFileFullPath -Force

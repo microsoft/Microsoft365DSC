@@ -1,6 +1,13 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+
+* DRG
+  * Various fixes:
+    Removed Select-MgProfile from module
+    Add Id as key in schema.mof
+    Fix Unit Test issue with nested CIM array
+    Fix issue with AdditionalProperties for nested objects
 * EXORoleAssignmentPolicy
   * Fix issue with IsDefault parameter
     FIXES [#2977](https://github.com/microsoft/Microsoft365DSC/issues/2977)
