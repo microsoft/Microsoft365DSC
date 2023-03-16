@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* IntuneDeviceConfigurationIdentityProtectionPolicyWindows10
+  * Initial release
+    FIXES [#2831](https://github.com/microsoft/Microsoft365DSC/issues/2831)
 * DRG
   * Various fixes:
     Remove invalid character from description in schema.mof
