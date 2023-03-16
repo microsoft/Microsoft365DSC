@@ -1,0 +1,39 @@
+{
+    "resourceName": "IntuneDeviceConfigurationEndpointProtectionPolicyWindows10",
+    "description": "This resource configures an Intune Device Configuration Endpoint Protection Policy for Windows10.",
+    "permissions":    {
+    "graph":  {
+                  "delegated":  {
+                                    "read":  [
+                                                 {
+                                                     "name":  "DeviceManagementConfiguration.Read.All"
+                                                 },
+                                                 {
+                                                     "name":  "DeviceManagementConfiguration.ReadWrite.All"
+                                                 }
+                                             ],
+                                    "update":  [
+                                                   {
+                                                       "name":  "DeviceManagementConfiguration.ReadWrite.All"
+                                                   }
+                                               ]
+                                },
+                  "application":  {
+                                      "read":  [
+                                                   {
+                                                       "name":  "DeviceManagementConfiguration.Read.All"
+                                                   },
+                                                   {
+                                                       "name":  "DeviceManagementConfiguration.ReadWrite.All"
+                                                   }
+                                               ],
+                                      "update":  [
+                                                     {
+                                                         "name":  "DeviceManagementConfiguration.ReadWrite.All"
+                                                     }
+                                                 ]
+                                  }
+              }
+}
+
+}
