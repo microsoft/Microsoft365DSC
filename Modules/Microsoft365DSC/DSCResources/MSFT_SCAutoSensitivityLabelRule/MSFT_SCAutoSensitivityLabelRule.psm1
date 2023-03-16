@@ -324,6 +324,11 @@ function Get-TargetResource
                 SubjectMatchesPatterns                       = $PolicyRule.SubjectMatchesPatterns
                 Ensure                                       = 'Present'
                 Credential                                   = $Credential
+                ApplicationId                                = $ApplicationId
+                TenantId                                     = $TenantId
+                CertificateThumbprint                        = $CertificateThumbprint
+                CertificatePath                              = $CertificatePath
+                CertificatePassword                          = $CertificatePassword
             }
 
             $paramsToRemove = @()

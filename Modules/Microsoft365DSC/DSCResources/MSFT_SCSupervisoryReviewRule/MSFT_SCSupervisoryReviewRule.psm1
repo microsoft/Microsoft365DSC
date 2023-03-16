@@ -94,12 +94,17 @@ function Get-TargetResource
             $PolicyName = (Get-SupervisoryReviewPolicyV2 -Identity $RuleObject.Policy).Name
 
             $result = @{
-                Name         = $RuleObject.Name
-                Policy       = $PolicyName
-                Condition    = $RuleObject.Condition
-                SamplingRate = $RuleObject.SamplingRate
-                Ensure       = 'Present'
-                Credential   = $Credential
+                Name                  = $RuleObject.Name
+                Policy                = $PolicyName
+                Condition             = $RuleObject.Condition
+                SamplingRate          = $RuleObject.SamplingRate
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
             }
 
             Write-Verbose -Message "Found SupervisoryReviewRule $($Name)"

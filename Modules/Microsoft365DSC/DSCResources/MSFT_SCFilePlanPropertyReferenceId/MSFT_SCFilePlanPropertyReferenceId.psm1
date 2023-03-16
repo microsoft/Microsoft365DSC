@@ -80,9 +80,14 @@ function Get-TargetResource
             Write-Verbose "Found existing SCFilePlanPropertyReferenceId $($Name)"
 
             $result = @{
-                Name       = $property.DisplayName
-                Credential = $Credential
-                Ensure     = 'Present'
+                Name                  = $property.DisplayName
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                Ensure                = 'Present'
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"

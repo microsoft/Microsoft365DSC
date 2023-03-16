@@ -147,6 +147,11 @@ function Get-TargetResource
                 SharePointLocation                    = $Search.SharePointLocation
                 SharePointLocationExclusion           = $Search.SharePointLocationExclusion
                 Credential                            = $Credential
+                ApplicationId                         = $ApplicationId
+                TenantId                              = $TenantId
+                CertificateThumbprint                 = $CertificateThumbprint
+                CertificatePath                       = $CertificatePath
+                CertificatePassword                   = $CertificatePassword
                 Ensure                                = 'Present'
             }
 

@@ -348,6 +348,11 @@ function Get-TargetResource
                 Tooltip                                        = $label.Tooltip
                 Disabled                                       = $label.Disabled
                 Credential                                     = $Credential
+                ApplicationId                                  = $ApplicationId
+                TenantId                                       = $TenantId
+                CertificateThumbprint                          = $CertificateThumbprint
+                CertificatePath                                = $CertificatePath
+                CertificatePassword                            = $CertificatePassword
                 Ensure                                         = 'Present'
                 ApplyContentMarkingFooterAlignment             = $label.ApplyContentMarkingFooterAlignment
                 ApplyContentMarkingFooterEnabled               = $label.ApplyContentMarkingFooterEnabled
