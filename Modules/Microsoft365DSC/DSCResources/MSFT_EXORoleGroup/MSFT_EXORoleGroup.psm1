@@ -420,7 +420,7 @@ function Export-TargetResource
         foreach ($RoleGroup in $AllRoleGroups) 
         {
             Write-Host "    |---[$i/$($AllRoleGroups.Count)] $($RoleGroup.Name)" -NoNewline
-            $roleGroupMember = Get-RoleGroupMember -Identity $Name | Select-Object DisplayName
+            $roleGroupMember = Get-RoleGroupMember -Identity $RoleGroup.Name | Select-Object DisplayName
 
             $Params = @{
                 Name                  = $RoleGroup.Name
