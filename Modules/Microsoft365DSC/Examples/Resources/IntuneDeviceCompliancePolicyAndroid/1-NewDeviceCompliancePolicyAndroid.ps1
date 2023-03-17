@@ -15,17 +15,17 @@ Configuration Example
     {
         IntuneDeviceCompliancePolicyAndroid 'AddDeviceCompliancePolicy'
         {
-            Description                                        = ""
+            DisplayName                                        = 'Test Policy'
+            Description                                        = ''
             DeviceThreatProtectionEnabled                      = $False
-            DeviceThreatProtectionRequiredSecurityLevel        = "unavailable"
-            DisplayName                                        = "Test Policy"
-            osMinimumVersion                                   = "7"
+            DeviceThreatProtectionRequiredSecurityLevel        = 'unavailable'
+            osMinimumVersion                                   = '7'
             PasswordExpirationDays                             = 90
             PasswordMinimumLength                              = 6
             PasswordMinutesOfInactivityBeforeLock              = 5
             PasswordPreviousPasswordBlockCount                 = 10
             PasswordRequired                                   = $True
-            PasswordRequiredType                               = "deviceDefault"
+            PasswordRequiredType                               = 'deviceDefault'
             SecurityBlockJailbrokenDevices                     = $False
             SecurityDisableUsbDebugging                        = $False
             SecurityPreventInstallAppsFromUnknownSources       = $False
@@ -36,7 +36,7 @@ Configuration Example
             SecurityRequireUpToDateSecurityProviders           = $False
             SecurityRequireVerifyApps                          = $False
             StorageRequireEncryption                           = $True
-            Ensure                                             = "Present"
+            Ensure                                             = 'Present'
             Credential                                         = $credsglobaladmin
         }
     }

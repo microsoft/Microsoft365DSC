@@ -2,9 +2,14 @@
 
 # UNRELEASED
 
+* EXORoleAssignmentPolicy
+  * Fix issue with IsDefault parameter
+    FIXES [#2977](https://github.com/microsoft/Microsoft365DSC/issues/2977)
 * IntuneDeviceConfigurationIdentityProtectionPolicyWindows10
   * Initial release
     FIXES [#2831](https://github.com/microsoft/Microsoft365DSC/issues/2831)
+* MISC
+  * Added QA test that checks for existence of an example for each resource.
 * DRG
   * Various fixes:
     Remove invalid character from description in schema.mof
@@ -12,9 +17,7 @@
     Fix issue with nested CIM array from test unit
     Remove Select-MgProfile from module
     Fix issue with AdditionalProperties for nested objects from module
-* EXORoleAssignmentPolicy
-  * Fix issue with IsDefault parameter
-    FIXES [#2977](https://github.com/microsoft/Microsoft365DSC/issues/2977)
+
 # 1.23.315.2
 
 * EXORoleGroup
