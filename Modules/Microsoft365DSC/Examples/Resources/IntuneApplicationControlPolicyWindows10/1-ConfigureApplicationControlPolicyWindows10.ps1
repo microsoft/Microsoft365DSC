@@ -17,12 +17,12 @@ Configuration Example
     {
         IntuneApplicationControlPolicyWindows10 'ConfigureApplicationControlPolicyWindows10'
         {
-            DisplayName                      = "Windows 10 Desktops"
-            Description                      = "All windows 10 Desktops"
-            AppLockerApplicationControl      = "enforceComponentsAndStoreApps"
+            DisplayName                      = 'Windows 10 Desktops'
+            Description                      = 'All windows 10 Desktops'
+            AppLockerApplicationControl      = 'enforceComponentsAndStoreApps'
             SmartScreenBlockOverrideForFiles = $True
             SmartScreenEnableInShell         = $True
-            Ensure                           = "Present"
+            Ensure                           = 'Present'
             Credential                       = $credsGlobalAdmin
         }
     }
