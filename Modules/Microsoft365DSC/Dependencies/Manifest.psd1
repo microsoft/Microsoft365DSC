@@ -45,6 +45,10 @@
             RequiredVersion = '2.0.0'
         },
         @{
+            ModuleName      = 'Microsoft.Graph.DirectoryObjects'
+            RequiredVersion = '2.0.0'
+        },
+        @{
             ModuleName      = 'Microsoft.Graph.Groups'
             RequiredVersion = '2.0.0'
         },

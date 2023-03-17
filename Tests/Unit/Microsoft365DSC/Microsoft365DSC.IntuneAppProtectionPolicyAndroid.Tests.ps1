@@ -190,7 +190,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Update-MgBetaDeviceAppManagementAndroidManagedAppProtection -MockWith {
             }
 
-            Mock -CommandName Invoke-MgTargetDeviceAppManagementTargetedManagedAppConfigurationApp -MockWith {
+            Mock -CommandName Invoke-MgBetaTargetDeviceAppManagementTargetedManagedAppConfigurationApp -MockWith {
             }
 
             Mock -CommandName set-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -MockWith {
