@@ -314,7 +314,7 @@ function Set-TargetResource
 
         foreach ($sponsor in $ExternalSponsors)
         {
-            $directoryObject = Get-MgBetaDirectoryObject -DirectoryObjectId $sponsor
+            $directoryObject = Get-MgDirectoryObject -DirectoryObjectId $sponsor
             $directoryObjectType=$directoryObject.AdditionalProperties."@odata.type"
             $directoryObjectType=($directoryObject.AdditionalProperties."@odata.type").split(".")|select-object -last 1
             $directoryObjectRef=@{
@@ -328,7 +328,7 @@ function Set-TargetResource
 
         foreach ($sponsor in $InternalSponsors)
         {
-            $directoryObject = Get-Mg DirectoryObject -DirectoryObjectId $sponsor
+            $directoryObject = Get-MgDirectoryObject -DirectoryObjectId $sponsor
             $directoryObjectType=($directoryObject.AdditionalProperties."@odata.type").split(".")|select-object -last 1
             $directoryObjectRef=@{
                 "@odata.id" = "https://graph.microsoft.com/beta/$($directoryObjectType)s/$($sponsor)"
@@ -370,7 +370,7 @@ function Set-TargetResource
         $sponsorsToRemove=($sponsorsDifferences | where-object -filterScript {$_.SideIndicator -eq '=>'}).InputObject
         foreach ($sponsor in $sponsorsToAdd)
         {
-            $directoryObject = Get-MgBetaDirectoryObject -DirectoryObjectId $sponsor
+            $directoryObject = Get-MgDirectoryObject -DirectoryObjectId $sponsor
             $directoryObjectType=$directoryObject.AdditionalProperties."@odata.type"
             $directoryObjectType=($directoryObject.AdditionalProperties."@odata.type").split(".")|select-object -last 1
             $directoryObjectRef=@{
@@ -609,7 +609,7 @@ function Export-TargetResource
     {
 
         #region resource generator code
-        [array]$getValue = GetBetaEntitlementManagementConnectedOrganization `
+        [array]$getValue = Get-MgBetaEntitlementManagementConnectedOrganization `
             -ErrorAction Stop `
             -All
         #endregion

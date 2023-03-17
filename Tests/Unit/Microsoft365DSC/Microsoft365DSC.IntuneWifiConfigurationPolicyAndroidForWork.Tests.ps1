@@ -223,6 +223,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
                 }
@@ -230,7 +231,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            '@odata.type'                  = '#microsoft.graph.androidForWorkWifiConfiguration'
+                            '@odata.type'                  = '#microsoft.graph.androidWorkProfileWiFiConfiguration'
                             NetworkName                    = 'FakeStringValue'
                             WiFiSecurityType               = 'open'
                             ConnectAutomatically           = $True

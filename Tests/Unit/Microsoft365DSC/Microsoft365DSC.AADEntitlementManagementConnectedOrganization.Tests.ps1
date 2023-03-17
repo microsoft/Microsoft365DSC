@@ -57,6 +57,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
             }
+
+            Mock -CommandName Write-Host -MockWith {
+            }
         }
         # Test contexts
         Context -Name "The AADEntitlementManagementConnectedOrganization should exist but it DOES NOT" -Fixture {
@@ -89,7 +92,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaEntitlementManagementConnectedOrganizationInternalSponsor -MockWith {
                     return @()
                 }
-                Mock -CommandName Get-MgBetaDirectoryObject -MockWith {
+                Mock -CommandName Get-MgDirectoryObject -MockWith {
                     return @{
                         Id="12345678-1234-1234-1234-123456789012"
                         AdditionalProperties=@{
@@ -316,6 +319,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
                 }

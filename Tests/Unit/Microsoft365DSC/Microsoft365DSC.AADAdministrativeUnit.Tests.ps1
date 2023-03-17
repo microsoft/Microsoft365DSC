@@ -37,7 +37,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName Select-MgProfile -MockWith {
+            Mock -CommandName Invoke-MgGraphRequest -MockWith {
             }
 
             Mock -CommandName Update-MgDirectoryAdministrativeUnit -MockWith {
@@ -64,7 +64,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgDirectoryAdministrativeUnitScopedRoleMember -MockWith {
             }
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return 'Credential'
+                # Select-MgProfile beta # not anymore
+                return 'Credentials'
             }
 
             # Mock Write-Host to hide output during the tests
@@ -99,6 +100,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return $null
                 }
                 Mock -CommandName Get-MgDirectoryAdministrativeUnitMember -MockWith {
+                    return $null
+                }
+                Mock -CommandName Get-MgDirectoryAdministrativeUnitScopedRoleMember -MockWith {
+                    return $null
+                }
+            }
+            It 'Should return Values from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
@@ -126,7 +135,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
-                    return [pscustomobject]@{
+                    return @{
                         Description = 'FakeStringValue2'
                         DisplayName = 'FakeStringValue2'
                         Id          = 'FakeStringValue2'
@@ -185,8 +194,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                    = $Credential
                 }
 
+                # Note: It is in fact possible to update the AU MembershipRule with any invalid value, but in the AAD-portal, updates are not possible unless the rule is valid.
+
                 Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
-                    return [pscustomobject]@{
+                    return @{
+                        Description       = 'DSCAU'
+                        DisplayName       = 'DSCAU'
+                        Id                = 'DSCAU'
+                        Visibility        = 'Public'
                         AdditionalProperties = @{
                             membershipType                = 'Assigned'
                             membershipRule                = 'Canada'
@@ -422,7 +437,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
-                    return [pscustomobject]@{
+                    return @{
                         Description       = 'ExportDSCAU'
                         DisplayName       = 'ExportDSCAU'
                         Id                = 'ExportDSCAU'
@@ -493,7 +508,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
             It 'Should Reverse Engineer resource from the Export method' {
-                $result = Export-TargetResource @testParams -Verbose
+                $result = Export-TargetResource @testParams
                 $result | Should -Not -BeNullOrEmpty
             }
         }
