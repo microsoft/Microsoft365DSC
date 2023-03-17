@@ -18,10 +18,12 @@ Configuration Example
         {
             Id                             = '2273c683-7590-4c56-81d3-14adb6b3d19c'
             DisplayName                    = 'win10 wifi - revised'
-            Assignments = MSFT_DeviceManagementConfigurationPolicyAssignments {
-                deviceAndAppManagementAssignmentFilterType = 'none'
-                dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
-            }
+            Assignments                    = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments {
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                }
+            )
             ConnectAutomatically           = $True
             ConnectToPreferredNetwork      = $True
             ConnectWhenNetworkNameIsHidden = $True

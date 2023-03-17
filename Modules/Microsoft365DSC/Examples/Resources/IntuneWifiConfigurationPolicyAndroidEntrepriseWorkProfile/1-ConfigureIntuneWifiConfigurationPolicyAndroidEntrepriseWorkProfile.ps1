@@ -18,10 +18,12 @@ Configuration Example
         {
             Id                             = 'b6c59816-7f9b-4f7a-a2a2-13a29c8bc315'
             DisplayName                    = 'wifi - android BYOD'
-            Assignments = MSFT_DeviceManagementConfigurationPolicyAssignments {
-                deviceAndAppManagementAssignmentFilterType = 'none'
-                dataType                                   = '#microsoft.graph.allLicensedUsersAssignmentTarget'
-            }
+            Assignments                    = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments {
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType                                   = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                }
+            )
             ConnectAutomatically           = $False
             ConnectWhenNetworkNameIsHidden = $False
             NetworkName                    = 'f8b79489-84fc-4434-b964-2a18dfe08f88'

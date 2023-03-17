@@ -14,21 +14,27 @@ Configuration Example
 
     node localhost
     {
-        IntuneWifiConfigurationPolicyAndroidEntrepriseWorkProfile 'myWifiConfigAndroidWorkProfilePolicy'
+        IntuneWifiConfigurationPolicyAndroidForWork 'Example'
         {
-            Id                             = 'b6c59816-7f9b-4f7a-a2a2-13a29c8bc315'
-            DisplayName                    = 'wifi - android BYOD'
-            Assignments = MSFT_DeviceManagementConfigurationPolicyAssignments {
-                deviceAndAppManagementAssignmentFilterType = 'none'
-                dataType                                   = '#microsoft.graph.allLicensedUsersAssignmentTarget'
-            }
-            ConnectAutomatically           = $False
-            ConnectWhenNetworkNameIsHidden = $False
-            NetworkName                    = 'f8b79489-84fc-4434-b964-2a18dfe08f88'
-            Ssid                           = 'MySSID'
-            WiFiSecurityType               = 'open'
+            Id                             = '41b6b491-9938-42d1-861a-c41762040ddb'
+            DisplayName                    = 'AndroindForWork'
+            Description                    = 'DSC'
+            Assignments                    = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments {
+                    dataType                                   = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                    deviceAndAppManagementAssignmentFilterType = 'include'
+                    deviceAndAppManagementAssignmentFilterId   = '17cb2318-cd4f-4a66-b742-6b79d4966ac7'
+                    groupId                                    = 'b9b732df-9f18-4c5f-99d1-682e151ec62b'
+                    collectionId                               = '2a8ea71f-039a-4ec8-8e41-5fba3ef9efba'
+                }
+            )
+            ConnectAutomatically           = $true
+            ConnectWhenNetworkNameIsHidden = $true
+            NetworkName                    = 'CorpNet'
+            Ssid                           = 'WiFi'
+            WiFiSecurityType               = 'wpa2Enterprise'
             Ensure                         = 'Present'
-            Credential                     = $credsGlobalAdmin
+            Credential                     = $Credscredential
         }
     }
 }

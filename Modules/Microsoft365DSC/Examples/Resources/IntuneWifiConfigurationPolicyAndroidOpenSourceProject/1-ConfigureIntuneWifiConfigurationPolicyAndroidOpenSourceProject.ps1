@@ -18,10 +18,12 @@ Configuration Example
         {
             Id                             = 'fe0a93dc-e9cc-4d4b-8dd6-361c51c70f77'
             DisplayName                    = 'wifi aosp'
-            Assignments = MSFT_DeviceManagementConfigurationPolicyAssignments {
-                deviceAndAppManagementAssignmentFilterType = 'none'
-                dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
-            }
+            Assignments                    = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments {
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                }
+            )
             ConnectAutomatically           = $False
             ConnectWhenNetworkNameIsHidden = $True
             NetworkName                    = 'aaaa'

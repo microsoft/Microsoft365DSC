@@ -17,10 +17,12 @@ Configuration Example
         IntuneWiFiConfigurationPolicyAndroidDeviceAdministrator 'myWifiConfigAndroidDevicePolicy'
         {
             Id                             = '41869a42-3217-4bfa-9929-92668fc674c5'
-            Assignments = MSFT_DeviceManagementConfigurationPolicyAssignments {
-                deviceAndAppManagementAssignmentFilterType = 'none'
-                dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
-            }
+            Assignments                    = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments {
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                }
+            )
             ConnectAutomatically           = $False
             ConnectWhenNetworkNameIsHidden = $True
             DisplayName                    = 'Wifi Configuration Androind Device'

@@ -18,10 +18,12 @@ Configuration Example
         {
             Id                             = '8e809b9e-0032-40b7-b263-e6029daf8e9c'
             DisplayName                    = 'ios wifi'
-            Assignments = MSFT_DeviceManagementConfigurationPolicyAssignments {
-                deviceAndAppManagementAssignmentFilterType = 'none'
-                dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
-            }
+            Assignments                    = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments {
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                }
+            )
             ConnectAutomatically           = $True
             ConnectWhenNetworkNameIsHidden = $True
             DisableMacAddressRandomization = $True

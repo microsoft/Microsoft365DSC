@@ -14,27 +14,44 @@ Configuration Example
 
     node localhost
     {
-        IntuneWifiConfigurationPolicyAndroidForWork 'Example'
+        IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled 'Example'
         {
-            Id                             = '41b6b491-9938-42d1-861a-c41762040ddb'
-            DisplayName                    = 'AndroindForWork'
-            Description                    = 'DSC'
-            Assignments                    = @(
-                MSFT_DeviceManagementConfigurationPolicyAssignments {
-                    dataType                                   = '#microsoft.graph.allLicensedUsersAssignmentTarget'
-                    deviceAndAppManagementAssignmentFilterType = 'include'
-                    deviceAndAppManagementAssignmentFilterId   = '17cb2318-cd4f-4a66-b742-6b79d4966ac7'
-                    groupId                                    = 'b9b732df-9f18-4c5f-99d1-682e151ec62b'
-                    collectionId                               = '2a8ea71f-039a-4ec8-8e41-5fba3ef9efba'
+            Id                                     = 'M_5c927889-a683-4588-afdb-4c90aa5e7e93'
+            DisplayName                            = 'WIP'
+            AzureRightsManagementServicesAllowed   = $False
+            Description                            = 'DSC'
+            EnforcementLevel                       = 'encryptAndAuditOnly'
+            EnterpriseDomain                       = 'domain.co.uk'
+            EnterpriseIPRanges                     = @(
+                MSFT_MicrosoftGraphwindowsInformationProtectionIPRangeCollection {
+                    DisplayName = 'ipv4 range'
+                    Ranges      = @(
+                        MSFT_MicrosoftGraphIpRange {
+                            UpperAddress = '1.1.1.3'
+                            LowerAddress = '1.1.1.1'
+                            odataType    = '#microsoft.graph.iPv4Range'
+                        }
+                    )
                 }
             )
-            ConnectAutomatically           = $true
-            ConnectWhenNetworkNameIsHidden = $true
-            NetworkName                    = 'CorpNet'
-            Ssid                           = 'WiFi'
-            WiFiSecurityType               = 'wpa2Enterprise'
-            Ensure                         = 'Present'
-            Credential                     = $Credscredential
+            EnterpriseIPRangesAreAuthoritative     = $True
+            EnterpriseProxyServersAreAuthoritative = $True
+            IconsVisible                           = $False
+            IndexingEncryptedStoresOrItemsBlocked  = $False
+            ProtectedApps                          = @(
+                MSFT_MicrosoftGraphwindowsInformationProtectionApp {
+                    Description   = 'Microsoft.MicrosoftEdge'
+                    odataType     = '#microsoft.graph.windowsInformationProtectionStoreApp'
+                    Denied        = $False
+                    PublisherName = 'CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US'
+                    ProductName   = 'Microsoft.MicrosoftEdge'
+                    DisplayName   = 'Microsoft Edge'
+                }
+            )
+            ProtectionUnderLockConfigRequired      = $False
+            RevokeOnUnenrollDisabled               = $False
+            Ensure                                 = 'Present'
+            Credential                             = $Credscredential
         }
     }
 }
