@@ -101,17 +101,6 @@ function Get-TargetResource
         [System.String[]]
         $ExcludeLocations,
 
-        #ConditionalAccessDevicesCondition
-        #DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $IncludeDevices,
-
-        #DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $ExcludeDevices,
-
         [Parameter()]
         [ValidateSet('include', 'exclude')]
         [System.String]
@@ -596,9 +585,6 @@ function Get-TargetResource
             IncludeLocations                         = $IncludeLocations
             ExcludeLocations                         = $ExcludeLocations
 
-            IncludeDevices                           = [System.String[]](@() + $Policy.Conditions.Devices.IncludeDevices)
-            ExcludeDevices                           = [System.String[]](@() + $Policy.Conditions.Devices.ExcludeDevices)
-
             #no translation needed, return empty string array if undefined
             DeviceFilterMode                         = [System.String]$Policy.Conditions.Devices.DeviceFilter.Mode
             #no translation or conversion needed
@@ -747,17 +733,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $ExcludeLocations,
-
-        #ConditionalAccessDevicesCondition
-        #DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $IncludeDevices,
-
-        #DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $ExcludeDevices,
 
         [Parameter()]
         [ValidateSet('include', 'exclude')]
@@ -1304,12 +1279,6 @@ function Set-TargetResource
             }
         }
 
-        #DEPRECATED
-        if ($IncludeDevices -or $ExcludeDevices)
-        {
-            Write-Verbose -Message 'IncludeDevices and ExcludeDevices parameters are deprecated. These settings will not be applied. Instead, use the DeviceFilterMode and DeviceFilterRule parameters.'
-        }
-
         Write-Verbose -Message 'Set-Targetresource: process device filter'
         if ($DeviceFilterMode -and $DeviceFilterRule)
         {
@@ -1616,17 +1585,6 @@ function Test-TargetResource
         [System.String[]]
         $ExcludeLocations,
 
-        #ConditionalAccessDevicesCondition
-        #DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $IncludeDevices,
-
-        #DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $ExcludeDevices,
-
         [Parameter()]
         [ValidateSet('include', 'exclude')]
         [System.String]
@@ -1834,19 +1792,6 @@ function Export-TargetResource
                     Managedidentity       = $ManagedIdentity.IsPresent
                 }
                 $Results = Get-TargetResource @Params
-
-                #DEPRECATED
-                if ($Results.IncludeDevices)
-                {
-                    Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The Include Devices parameter is deprecated. Instead use the Device Filter Mode and Device Filter Rule parameters in the portal."
-                    $Results.Remove('IncludeDevices') | Out-Null
-                }
-                #DEPRECATED
-                if ($Results.ExcludeDevices)
-                {
-                    Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The Exclude Devices parameter is deprecated. Instead use the Device Filter Mode and Device Filter Rule parameters in the portal."
-                    $Results.Remove('ExcludeDevices') | Out-Null
-                }
 
                 if ([System.String]::IsNullOrEmpty($Results.DeviceFilterMode))
                 {
