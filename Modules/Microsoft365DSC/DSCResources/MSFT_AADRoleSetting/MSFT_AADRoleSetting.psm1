@@ -1373,6 +1373,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($roles.Count)] $($role.DisplayName)" -NoNewline
             $Params = @{
                 Id                    = $role.Id
+                DisplayName           = $role.DisplayName
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
