@@ -39,11 +39,13 @@ Configuration Example
             ClassroomForceRequestPermissionToLeaveClasses   = $False
             ClassroomForceUnpromptedAppAndDeviceLock        = $False
             CompliantAppListType                            = 'appsNotInListCompliant'
-            CompliantAppsList = MSFT_MicrosoftGraphapplistitemMacOS {
-                name      = 'appname2'
-                publisher = 'publisher'
-                appId     = 'bundle'
-            }
+            CompliantAppsList                               = @(
+                MSFT_MicrosoftGraphapplistitemMacOS {
+                    name      = 'appname2'
+                    publisher = 'publisher'
+                    appId     = 'bundle'
+                }
+            )
             ContentCachingBlocked                           = $False
             DefinitionLookupBlocked                         = $True
             EmailInDomainSuffixes                           = @()

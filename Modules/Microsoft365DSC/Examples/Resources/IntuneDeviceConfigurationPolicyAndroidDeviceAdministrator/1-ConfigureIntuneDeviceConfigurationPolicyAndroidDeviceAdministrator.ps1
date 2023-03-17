@@ -21,10 +21,12 @@ Configuration Example
             AppsBlockClipboardSharing                = $True
             AppsBlockCopyPaste                       = $True
             AppsBlockYouTube                         = $False
-            Assignments = MSFT_DeviceManagementConfigurationPolicyAssignments {
+            Assignments = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments {
                 deviceAndAppManagementAssignmentFilterType = 'none'
                 dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
             }
+            )
             BluetoothBlocked                         = $True
             CameraBlocked                            = $True
             CellularBlockDataRoaming                 = $False
