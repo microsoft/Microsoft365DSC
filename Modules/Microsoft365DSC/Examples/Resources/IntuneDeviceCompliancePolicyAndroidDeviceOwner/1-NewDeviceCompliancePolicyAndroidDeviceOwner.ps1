@@ -17,8 +17,8 @@ Configuration Example
     {
         IntuneDeviceCompliancePolicyAndroidDeviceOwner 'ConfigureAndroidDeviceCompliancePolicyOwner'
         {
-            Description                                        = ''
             DisplayName                                        = 'DeviceOwner'
+            Description                                        = ''
             DeviceThreatProtectionEnabled                      = $False
             DeviceThreatProtectionRequiredSecurityLevel        = 'unavailable'
             AdvancedThreatProtectionRequiredSecurityLevel      = 'unavailable'
