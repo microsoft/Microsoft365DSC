@@ -115,28 +115,28 @@ Configuration Example
     {
         IntuneAppProtectionPolicyiOS 'MyCustomiOSPolicy'
         {
-            DisplayName                             = "My DSC iOS App Protection Policy"
-            AllowedDataStorageLocations             = @("sharePoint")
-            AllowedInboundDataTransferSources       = "managedApps"
-            AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn"
-            AllowedOutboundDataTransferDestinations = "managedApps"
-            AppDataEncryptionType                   = "whenDeviceLocked"
-            Apps                                    = @("com.cisco.jabberimintune.ios","com.pervasent.boardpapers.ios","com.sharefile.mobile.intune.ios")
-            Assignments                             = @("6ee86c9f-2b3c-471d-ad38-ff4673ed723e")
+            DisplayName                             = 'My DSC iOS App Protection Policy'
+            AllowedDataStorageLocations             = @('sharePoint')
+            AllowedInboundDataTransferSources       = 'managedApps'
+            AllowedOutboundClipboardSharingLevel    = 'managedAppsWithPasteIn'
+            AllowedOutboundDataTransferDestinations = 'managedApps'
+            AppDataEncryptionType                   = 'whenDeviceLocked'
+            Apps                                    = @('com.cisco.jabberimintune.ios', 'com.pervasent.boardpapers.ios', 'com.sharefile.mobile.intune.ios')
+            Assignments                             = @('6ee86c9f-2b3c-471d-ad38-ff4673ed723e')
             ContactSyncBlocked                      = $False
             DataBackupBlocked                       = $False
-            Description                             = ""
+            Description                             = ''
             DeviceComplianceRequired                = $True
-            ExcludedGroups                          = @("3eacc231-d77b-4efb-bb5f-310f68bd6198")
+            ExcludedGroups                          = @('3eacc231-d77b-4efb-bb5f-310f68bd6198')
             FingerprintBlocked                      = $False
             ManagedBrowserToOpenLinksRequired       = $True
             MaximumPinRetries                       = 5
             MinimumPinLength                        = 4
             OrganizationalCredentialsRequired       = $False
-            PeriodOfflineBeforeAccessCheck          = "PT12H"
-            PeriodOfflineBeforeWipeIsEnforced       = "P90D"
-            PeriodOnlineBeforeAccessCheck           = "PT30M"
-            PinCharacterSet                         = "alphanumericAndSymbol"
+            PeriodOfflineBeforeAccessCheck          = 'PT12H'
+            PeriodOfflineBeforeWipeIsEnforced       = 'P90D'
+            PeriodOnlineBeforeAccessCheck           = 'PT30M'
+            PinCharacterSet                         = 'alphanumericAndSymbol'
             PinRequired                             = $True
             PrintBlocked                            = $False
             SaveAsBlocked                           = $True
