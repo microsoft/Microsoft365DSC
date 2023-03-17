@@ -3,7 +3,10 @@
 # UNRELEASED
 
 * EXOIRMConfiguration
-  * Renamed unused Identity parameter to IsSingleInstance
+  * [BREAKING CHANGE] Renamed unused Identity parameter to IsSingleInstance
+    FIXES [#2969](https://github.com/microsoft/Microsoft365DSC/issues/2969)
+* EXOResourceConfiguration
+  * [BREAKING CHANGE] Renamed unused Identity parameter to IsSingleInstance
     FIXES [#2969](https://github.com/microsoft/Microsoft365DSC/issues/2969)
 * EXORoleAssignmentPolicy
   * Fix issue with IsDefault parameter
@@ -84,9 +87,6 @@
 * EXOManagementRoleAssignment
   * Added delays before disconnecting from EXO to ensure new permissions are applied.
     FIXES [#2523](https://github.com/microsoft/Microsoft365DSC/issues/2523)
-* EXOResourceConfiguration
-  * Renamed unused Identity parameter to IsSingleInstance
-    FIXES [#2969](https://github.com/microsoft/Microsoft365DSC/issues/2969)
 * O365AdminAuditLogConfig
   * Added support for ManagedIdentity.
   * Fixed the Get-TargetResource method to return all authentication parameters.
