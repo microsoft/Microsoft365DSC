@@ -66,10 +66,7 @@ function Get-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
-
-        Select-MgProfile 'beta'
+            -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
@@ -88,7 +85,7 @@ function Get-TargetResource
 
         $getValue = $null
 
-        $getValue = Get-MgEntitlementManagementConnectedOrganization -ConnectedOrganizationId $id -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaEntitlementManagementConnectedOrganization -ConnectedOrganizationId $id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -96,7 +93,7 @@ function Get-TargetResource
 
             if(-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgEntitlementManagementConnectedOrganization `
+                $getValue = Get-MgBetaEntitlementManagementConnectedOrganization `
                     -Filter "displayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue
             }
@@ -109,7 +106,7 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Entitlement Management Connected Organization with id {$($getValue.id)} and displayName {$($getValue.DisplayName)} was found."
-        [Array]$getExternalSponsors=Get-MgEntitlementManagementConnectedOrganizationExternalSponsor -ConnectedOrganizationId $getValue.id
+        [Array]$getExternalSponsors = Get-MgBetaEntitlementManagementConnectedOrganizationExternalSponsor -ConnectedOrganizationId $getValue.id
 
         if ($null -ne $getExternalSponsors -and $getExternalSponsors.count -gt 0)
         {
@@ -121,7 +118,7 @@ function Get-TargetResource
             $getExternalSponsors=$sponsors
         }
 
-        [Array]$getInternalSponsors=Get-MgEntitlementManagementConnectedOrganizationInternalSponsor -ConnectedOrganizationId $getValue.id
+        [Array]$getInternalSponsors = Get-MgBetaEntitlementManagementConnectedOrganizationInternalSponsor -ConnectedOrganizationId $getValue.id
 
         if ($null -ne $getInternalSponsors -and $getInternalSponsors.count -gt 0)
         {
@@ -313,31 +310,31 @@ function Set-TargetResource
             }
         }
 
-        $newConnectedOrganization=New-MgEntitlementManagementConnectedOrganization -BodyParameter $CreateParameters
+        $newConnectedOrganization = New-MgBetaEntitlementManagementConnectedOrganization -BodyParameter $CreateParameters
 
         foreach ($sponsor in $ExternalSponsors)
         {
-            $directoryObject=Get-MgDirectoryObject -DirectoryObjectId $sponsor
+            $directoryObject = Get-MgBetaDirectoryObject -DirectoryObjectId $sponsor
             $directoryObjectType=$directoryObject.AdditionalProperties."@odata.type"
             $directoryObjectType=($directoryObject.AdditionalProperties."@odata.type").split(".")|select-object -last 1
             $directoryObjectRef=@{
                 "@odata.id" = "https://graph.microsoft.com/beta/$($directoryObjectType)s/$($sponsor)"
             }
 
-            New-MgEntitlementManagementConnectedOrganizationExternalSponsorByRef `
+            New-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorByRef `
                 -ConnectedOrganizationId $newConnectedOrganization.id `
                 -BodyParameter $directoryObjectRef
         }
 
         foreach ($sponsor in $InternalSponsors)
         {
-            $directoryObject=Get-MgDirectoryObject -DirectoryObjectId $sponsor
+            $directoryObject = Get-Mg DirectoryObject -DirectoryObjectId $sponsor
             $directoryObjectType=($directoryObject.AdditionalProperties."@odata.type").split(".")|select-object -last 1
             $directoryObjectRef=@{
                 "@odata.id" = "https://graph.microsoft.com/beta/$($directoryObjectType)s/$($sponsor)"
             }
 
-            New-MgEntitlementManagementConnectedOrganizationInternalSponsorByRef `
+            New-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorByRef `
                 -ConnectedOrganizationId $newConnectedOrganization.id `
                 -BodyParameter $directoryObjectRef
         }
@@ -364,54 +361,54 @@ function Set-TargetResource
             }
         }
 
-        Update-MgEntitlementManagementConnectedOrganization -BodyParameter $UpdateParameters `
+        Update-MgBetaEntitlementManagementConnectedOrganization -BodyParameter $UpdateParameters `
             -ConnectedOrganizationId $currentInstance.Id
 
         #region External Sponsors
-        $sponsorsDifferences=compare-object -ReferenceObject @($ExternalSponsors|select-object) -DifferenceObject @($currentInstance.ExternalSponsors|select-object)
+        $sponsorsDifferences = compare-object -ReferenceObject @($ExternalSponsors|select-object) -DifferenceObject @($currentInstance.ExternalSponsors|select-object)
         $sponsorsToAdd=($sponsorsDifferences | where-object -filterScript {$_.SideIndicator -eq '<='}).InputObject
         $sponsorsToRemove=($sponsorsDifferences | where-object -filterScript {$_.SideIndicator -eq '=>'}).InputObject
         foreach ($sponsor in $sponsorsToAdd)
         {
-            $directoryObject=Get-MgDirectoryObject -DirectoryObjectId $sponsor
+            $directoryObject = Get-MgBetaDirectoryObject -DirectoryObjectId $sponsor
             $directoryObjectType=$directoryObject.AdditionalProperties."@odata.type"
             $directoryObjectType=($directoryObject.AdditionalProperties."@odata.type").split(".")|select-object -last 1
             $directoryObjectRef=@{
                 "@odata.id" = "https://graph.microsoft.com/beta/$($directoryObjectType)s/$($sponsor)"
             }
 
-            New-MgEntitlementManagementConnectedOrganizationExternalSponsorByRef `
+            New-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorByRef `
                 -ConnectedOrganizationId $currentInstance.Id `
                 -BodyParameter $directoryObjectRef
         }
         foreach ($sponsor in $sponsorsToRemove)
         {
-            Remove-MgEntitlementManagementConnectedOrganizationExternalSponsorByRef `
+            Remove-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorByRef `
                 -ConnectedOrganizationId $currentInstance.Id `
                 -DirectoryObjectId $sponsor
         }
         #endregion
 
         #region Internal Sponsors
-        $sponsorsDifferences=compare-object -ReferenceObject @($InternalSponsors|select-object) -DifferenceObject @($currentInstance.InternalSponsors|select-object)
+        $sponsorsDifferences = compare-object -ReferenceObject @($InternalSponsors|select-object) -DifferenceObject @($currentInstance.InternalSponsors|select-object)
         $sponsorsToAdd=($sponsorsDifferences | where-object -filterScript {$_.SideIndicator -eq '<='}).InputObject
         $sponsorsToRemove=($sponsorsDifferences | where-object -filterScript {$_.SideIndicator -eq '=>'}).InputObject
         foreach ($sponsor in $sponsorsToAdd)
         {
-            $directoryObject=Get-MgDirectoryObject -DirectoryObjectId $sponsor
+            $directoryObject = Get-MgDirectoryObject -DirectoryObjectId $sponsor
             $directoryObjectType=$directoryObject.AdditionalProperties."@odata.type"
             $directoryObjectType=($directoryObject.AdditionalProperties."@odata.type").split(".")|select-object -last 1
             $directoryObjectRef=@{
                 "@odata.id" = "https://graph.microsoft.com/beta/$($directoryObjectType)s/$($sponsor)"
             }
 
-            New-MgEntitlementManagementConnectedOrganizationInternalSponsorByRef `
+            New-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorByRef `
                 -ConnectedOrganizationId $currentInstance.Id `
                 -BodyParameter $directoryObjectRef
         }
         foreach ($sponsor in $sponsorsToRemove)
         {
-            Remove-MgEntitlementManagementConnectedOrganizationInternalSponsorByRef `
+            Remove-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorByRef `
                 -ConnectedOrganizationId $currentInstance.Id `
                 -DirectoryObjectId $sponsor
         }
@@ -421,7 +418,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing a new Entitlement Management Connected Organization  {$($currentInstance.Id)}"
-        Remove-MgEntitlementManagementConnectedOrganization -ConnectedOrganizationId $currentInstance.Id
+        Remove-MgBetaEntitlementManagementConnectedOrganization -ConnectedOrganizationId $currentInstance.Id
 
 
     }
@@ -594,9 +591,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
-    Select-MgProfile 'beta' -ErrorAction Stop
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -614,7 +609,7 @@ function Export-TargetResource
     {
 
         #region resource generator code
-        [array]$getValue = Get-MgEntitlementManagementConnectedOrganization `
+        [array]$getValue = GetBetaEntitlementManagementConnectedOrganization `
             -ErrorAction Stop `
             -All
         #endregion
