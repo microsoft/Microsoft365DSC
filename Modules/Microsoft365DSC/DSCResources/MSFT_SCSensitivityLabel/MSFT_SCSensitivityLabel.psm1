@@ -314,21 +314,21 @@ function Get-TargetResource
             $footerText = ($footer | Where-Object -FilterScript { $_.Key -eq 'text' }).Value
             if ([System.String]::IsNullOrEmpty($footerText) -eq $false)
             {
-                $ApplyContentMarkingFooterTextValue = $footerText -replace '$', '`$'
+                $ApplyContentMarkingFooterTextValue = $footerText.Replace('$', '`$')
             }
 
             $ApplyContentMarkingHeaderTextValue = $null
             $headerText = ($header | Where-Object -FilterScript { $_.Key -eq 'text' }).Value
             if ([System.String]::IsNullOrEmpty($headerText) -eq $false)
             {
-                $ApplyContentMarkingHeaderTextValue = $headerText -replace '$', '`$'
+                $ApplyContentMarkingHeaderTextValue = $headerText.Replace('$', '`$')
             }
 
             $ApplyWaterMarkingTextValue = $null
             $watermarkText = ($watermark | Where-Object -FilterScript { $_.Key -eq 'text' }).Value
             if ([System.String]::IsNullOrEmpty($watermarkText) -eq $false)
             {
-                $ApplyWaterMarkingTextValue = $watermarkText -replace '$', '`$'
+                $ApplyWaterMarkingTextValue = $watermarkText.Replace('$', '`$')
             }
 
             $currentContentType = @()
@@ -447,13 +447,13 @@ function Get-TargetResource
 
             $result = @{
                 Name                                           = $label.Name
-                Comment                                        = $label.Comment -replace "`n", "``n"
+                Comment                                        = $label.Comment
                 ParentId                                       = $parentLabelID
                 AdvancedSettings                               = $advancedSettingsValue
                 DisplayName                                    = $label.DisplayName
                 LocaleSettings                                 = $localeSettingsValue
                 Priority                                       = $label.Priority
-                Tooltip                                        = $label.Tooltip -replace "`n", "``n"
+                Tooltip                                        = $label.Tooltip
                 Disabled                                       = $label.Disabled
                 Credential                                     = $Credential
                 ApplicationId                                  = $ApplicationId
@@ -496,7 +496,7 @@ function Get-TargetResource
                 EncryptionRightsUrl                            = ($encryption | Where-Object { $_.Key -eq 'doublekeyencryptionurl' }).Value
                 SiteAndGroupProtectionAllowAccessToGuestUsers  = $siteAndGroupAccessToGuestUsersValue
                 SiteAndGroupProtectionAllowEmailFromGuestUsers = $siteAndGroupAllowEmailFromGuestUsers
-                SiteAndGroupProtectionPrivacy                  = ($protectgroup | Where-Object { $_.Key -eq 'allowemailfromguestusers' }).Value
+                SiteAndGroupProtectionPrivacy                  = ($protectgroup | Where-Object { $_.Key -eq 'privacy' }).Value
                 SiteAndGroupProtectionAllowFullAccess          = $siteAndGroupAllowFullAccess
                 SiteAndGroupProtectionAllowLimitedAccess       = $siteAndGroupAllowLimitedAccess
                 SiteAndGroupProtectionBlockAccess              = $siteAndGroupBlockAccess
@@ -796,20 +796,10 @@ function Set-TargetResource
         Write-Warning -Message "You have specified EncryptionDoNotForward, EncryptionEncryptOnly or EncryptionPromptUser, but EncryptionProtectionType isn't set to UserDefined."
     }
 
-    if ($PSBoundParameters.ContainsKey('Comment'))
-    {
-        $PSBoundParameters.Comment = $PSBoundParameters.Comment -replace "``n", "`n"
-    }
-
-    if ($PSBoundParameters.ContainsKey('Tooltip'))
-    {
-        $PSBoundParameters.Tooltip = $PSBoundParameters.Tooltip -replace "``n", "`n"
-    }
-
     if (('Present' -eq $Ensure) -and ('Absent' -eq $label.Ensure))
     {
         Write-Verbose -Message "Label {$Name} doesn't already exist, creating it from the Set-TargetResource function."
-        $CreationParams = $PSBoundParameters
+        $CreationParams = ([Hashtable]$PSBoundParameters).Clone()
 
         if ($PSBoundParameters.ContainsKey('AdvancedSettings'))
         {
@@ -823,6 +813,12 @@ function Set-TargetResource
             $CreationParams['LocaleSettings'] = $locale
         }
 
+        if ($CreationParams.ContainsKey('SiteAndGroupExternalSharingControlType'))
+        {
+            $CreationParams.SiteExternalSharingControlType = $CreationParams.SiteAndGroupExternalSharingControlType
+            $CreationParams.Remove('SiteAndGroupExternalSharingControlType')
+        }
+
         $CreationParams.Remove('Credential') | Out-Null
         $CreationParams.Remove('Ensure') | Out-Null
         $CreationParams.Remove('Priority') | Out-Null
@@ -832,6 +828,7 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Creating Label {$Name}"
             New-Label @CreationParams
+
             ## Can't set priority until label created
             if ($PSBoundParameters.ContainsKey('Priority'))
             {
@@ -1141,6 +1138,14 @@ function Test-TargetResource
 
     Write-Verbose -Message "Testing configuration of Sensitivity label for $Name"
 
+    foreach ($param in @('Disabled', 'ApplyContentMarkingFooterFontName', 'ApplyContentMarkingHeaderFontName', 'ApplyWaterMarkingFontName', 'EncryptionAipTemplateScopes'))
+    {
+        if ($PSBoundParameters.ContainsKey($param))
+        {
+            Write-Verbose -Message "The $param parameter is deprecated and will not be used."
+        }
+    }
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
@@ -1158,11 +1163,6 @@ function Test-TargetResource
         $TestAdvancedSettings = Test-AdvancedSettings -DesiredProperty $AdvancedSettings -CurrentProperty $CurrentValues.AdvancedSettings
         if ($false -eq $TestAdvancedSettings)
         {
-            New-M365DSCLogEntry -Message 'AdvancedSettings do not match!' `
-                -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $TenantId `
-                -Credential $Credential
-
             return $false
         }
     }
@@ -1173,11 +1173,6 @@ function Test-TargetResource
         $localeSettingsSame = Test-LocaleSettings -DesiredProperty $LocaleSettings -CurrentProperty $CurrentValues.LocaleSettings
         if ($false -eq $localeSettingsSame)
         {
-            New-M365DSCLogEntry -Message 'LocaleSettings do not match!' `
-                -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $TenantId `
-                -Credential $Credential
-
             return $false
         }
     }
@@ -1327,7 +1322,7 @@ function Convert-JSONToLocaleSettings
         {
             $entry = @{
                 Key   = $setting.Key
-                Value = $setting.Value
+                Value = $setting.Value -replace "`r"
             }
             $settings += $entry
         }
@@ -1335,7 +1330,6 @@ function Convert-JSONToLocaleSettings
         $settings = @()
         $entries += $result
         $result = @{ }
-
     }
     return $entries
 }
@@ -1471,43 +1465,68 @@ function Test-AdvancedSettings
         $CurrentProperty
     )
 
+    $driftedSetting = @()
     $foundSettings = $true
     foreach ($desiredSetting in $DesiredProperty)
     {
         $foundKey = $CurrentProperty | Where-Object { $_.Key -eq $desiredSetting.Key }
         if ($null -ne $foundKey)
         {
-            if ($foundKey.Value -is [Array])
+            if ($desiredSetting.Value -is [Array])
             {
-                if ($desiredSetting.Value -is [Array])
+                if ($foundKey.Value -is [Array])
                 {
                     $diff = Compare-Object -ReferenceObject $foundKey.Value -DifferenceObject $desiredSetting.Value
                     if ($diff.Count -ne 0)
                     {
                         $foundSettings = $false
-                        break
+                        $driftedSetting += $desiredSetting.Key
                     }
                 }
                 else
                 {
-                    $foundSettings = $false
-                    break
+                    if ($desiredSetting.Value.Count -ne 1 -or `
+                            $foundKey.Value.ToString() -ne $desiredSetting.Value[0].ToString())
+                    {
+                        $foundSettings = $false
+                        $driftedSetting += $desiredSetting.Key
+                    }
                 }
             }
             else
             {
-                if ($foundKey.Value.ToString() -ne $desiredSetting.Value.ToString())
+                if ($foundKey.Value -is [Array])
                 {
-                    $foundSettings = $false
-                    break
+                    if ($foundKey.Value.Count -ne 1 -or `
+                            $foundKey.Value[0].ToString() -ne $desiredSetting.Value.ToString())
+                    {
+                        $foundSettings = $false
+                        $driftedSetting += $desiredSetting.Key
+                    }
+                }
+                else
+                {
+                    if ($foundKey.Value.ToString() -ne $desiredSetting.Value.ToString())
+                    {
+                        $foundSettings = $false
+                        $driftedSetting += $desiredSetting.Key
+                    }
                 }
             }
         }
         else
         {
             $foundSettings = $false
-            break
+            $driftedSetting += $desiredSetting.Key
         }
+    }
+
+    if ($foundSettings -eq $false)
+    {
+        New-M365DSCLogEntry -Message "AdvancedSettings for label $Name do not match: $($driftedSetting -join ', ')" `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
     }
 
     Write-Verbose -Message "Test AdvancedSettings returns $foundSettings"
@@ -1527,6 +1546,7 @@ function Test-LocaleSettings
         $CurrentProperty
     )
 
+    $driftedSetting = @()
     $foundSettings = $true
     foreach ($desiredSetting in $DesiredProperty)
     {
@@ -1535,22 +1555,45 @@ function Test-LocaleSettings
         {
             if ($null -ne $foundKey)
             {
-                $myLabel = $foundKey.LabelSettings | Where-Object { $_.Key -eq $setting.Key -and $_.Value -eq $setting.Value }
+                if ($setting.Value -is [Array])
+                {
+                    if ($setting.Value.Count -eq 1)
+                    {
+                        $myLabel = $foundKey.LabelSettings | Where-Object { $_.Key -eq $setting.Key -and $_.Value -eq $setting.Value[0] }
+                    }
+                    else
+                    {
+                        $foundSettings = $false
+                        $driftedSetting += "$($desiredSetting.localeKey) ($($setting.Key))"
+                    }
+                }
+                else
+                {
+                    $myLabel = $foundKey.LabelSettings | Where-Object { $_.Key -eq $setting.Key -and $_.Value -eq $setting.Value }
+                }
 
                 if ($null -eq $myLabel)
                 {
                     $foundSettings = $false
-                    break
+                    $driftedSetting += "$($desiredSetting.localeKey) ($($setting.Key))"
                 }
             }
             else
             {
                 $foundSettings = $false
-                break
-
+                $driftedSetting += "$($desiredSetting.localeKey) ($($setting.Key))"
             }
         }
     }
+
+    if ($foundSettings -eq $false)
+    {
+        New-M365DSCLogEntry -Message "LocaleSettings for label $Name do not match: $($driftedSetting -join ', ')" `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+    }
+
     Write-Verbose -Message "Test LocaleSettings returns $foundSettings"
     return $foundSettings
 }
