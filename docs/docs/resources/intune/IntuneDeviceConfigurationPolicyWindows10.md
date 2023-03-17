@@ -454,7 +454,6 @@ Configuration Example
             storageRestrictAppInstallToSystemVolume               = $true
             gameDvrBlocked                                        = $true
             edgeSearchEngine                                      = 'bing'
-            #edgeSearchEngine                                     = "https://go.microsoft.com/fwlink/?linkid=842596"  #'Google'
             experienceBlockDeviceDiscovery                        = $true
             experienceBlockErrorDialogWhenNoSIM                   = $true
             experienceBlockTaskSwitcher                           = $true

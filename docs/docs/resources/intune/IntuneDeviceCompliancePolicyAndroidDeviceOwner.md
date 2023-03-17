@@ -215,8 +215,8 @@ Configuration Example
     {
         IntuneDeviceCompliancePolicyAndroidDeviceOwner 'ConfigureAndroidDeviceCompliancePolicyOwner'
         {
-            Description                                        = ''
             DisplayName                                        = 'DeviceOwner'
+            Description                                        = ''
             DeviceThreatProtectionEnabled                      = $False
             DeviceThreatProtectionRequiredSecurityLevel        = 'unavailable'
             AdvancedThreatProtectionRequiredSecurityLevel      = 'unavailable'
@@ -256,9 +256,9 @@ Configuration Example
     {
         IntuneDeviceCompliancePolicyAndroidDeviceOwner 'RemoveAndroidDeviceCompliancePolicyOwner'
         {
-            DisplayName          = "DeviceOwner"
-            Ensure               = "Absent"
-            Credential           = $credsGlobalAdmin
+            DisplayName = 'DeviceOwner'
+            Ensure      = 'Absent'
+            Credential  = $credsGlobalAdmin
         }
     }
 }
