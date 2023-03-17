@@ -75,29 +75,31 @@ Configuration Example
             PasswordBlockSimple                             = $False
             PasswordRequired                                = $False
             PasswordRequiredType                            = 'deviceDefault'
-            PrivacyAccessControls = MSFT_MicrosoftGraphmacosprivacyaccesscontrolitem {
-                displayName                  = 'test'
-                identifier                   = 'test45'
-                identifierType               = 'path'
-                codeRequirement              = 'test'
-                blockCamera                  = $True
-                speechRecognition            = 'notConfigured'
-                accessibility                = 'notConfigured'
-                addressBook                  = 'enabled'
-                calendar                     = 'notConfigured'
-                reminders                    = 'notConfigured'
-                photos                       = 'notConfigured'
-                mediaLibrary                 = 'notConfigured'
-                fileProviderPresence         = 'notConfigured'
-                systemPolicyAllFiles         = 'notConfigured'
-                systemPolicySystemAdminFiles = 'notConfigured'
-                systemPolicyDesktopFolder    = 'notConfigured'
-                systemPolicyDocumentsFolder  = 'notConfigured'
-                systemPolicyDownloadsFolder  = 'notConfigured'
-                systemPolicyNetworkVolumes   = 'notConfigured'
-                systemPolicyRemovableVolumes = 'notConfigured'
-                postEvent                    = 'notConfigured'
-            }
+            PrivacyAccessControls                           = @(
+                MSFT_MicrosoftGraphmacosprivacyaccesscontrolitem {
+                    displayName                  = 'test'
+                    identifier                   = 'test45'
+                    identifierType               = 'path'
+                    codeRequirement              = 'test'
+                    blockCamera                  = $True
+                    speechRecognition            = 'notConfigured'
+                    accessibility                = 'notConfigured'
+                    addressBook                  = 'enabled'
+                    calendar                     = 'notConfigured'
+                    reminders                    = 'notConfigured'
+                    photos                       = 'notConfigured'
+                    mediaLibrary                 = 'notConfigured'
+                    fileProviderPresence         = 'notConfigured'
+                    systemPolicyAllFiles         = 'notConfigured'
+                    systemPolicySystemAdminFiles = 'notConfigured'
+                    systemPolicyDesktopFolder    = 'notConfigured'
+                    systemPolicyDocumentsFolder  = 'notConfigured'
+                    systemPolicyDownloadsFolder  = 'notConfigured'
+                    systemPolicyNetworkVolumes   = 'notConfigured'
+                    systemPolicyRemovableVolumes = 'notConfigured'
+                    postEvent                    = 'notConfigured'
+                }
+            )
             SafariBlockAutofill                             = $False
             ScreenCaptureBlocked                            = $False
             SoftwareUpdateMajorOSDeferredInstallDelayInDays = 30

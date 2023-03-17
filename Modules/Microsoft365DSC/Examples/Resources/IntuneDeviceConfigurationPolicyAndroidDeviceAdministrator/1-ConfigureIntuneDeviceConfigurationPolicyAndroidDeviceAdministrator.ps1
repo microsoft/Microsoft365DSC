@@ -21,11 +21,11 @@ Configuration Example
             AppsBlockClipboardSharing                = $True
             AppsBlockCopyPaste                       = $True
             AppsBlockYouTube                         = $False
-            Assignments = @(
+            Assignments                              = @(
                 MSFT_DeviceManagementConfigurationPolicyAssignments {
-                deviceAndAppManagementAssignmentFilterType = 'none'
-                dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
-            }
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                }
             )
             BluetoothBlocked                         = $True
             CameraBlocked                            = $True
@@ -34,12 +34,14 @@ Configuration Example
             CellularBlockVoiceRoaming                = $False
             CellularBlockWiFiTethering               = $False
             CompliantAppListType                     = 'appsInListCompliant'
-            CompliantAppsList = MSFT_MicrosoftGraphAppListitem {
-                name        = 'customApp'
-                publisher   = 'google2'
-                appStoreUrl = 'https://appUrl.com'
-                appId       = 'com.custom.google.com'
-            }
+            CompliantAppsList                        = @(
+                MSFT_MicrosoftGraphAppListitem {
+                    name        = 'customApp'
+                    publisher   = 'google2'
+                    appStoreUrl = 'https://appUrl.com'
+                    appId       = 'com.custom.google.com'
+                }
+            )
             DateAndTimeBlockChanges                  = $True
             DeviceSharingAllowed                     = $False
             DiagnosticDataBlockSubmission            = $False
