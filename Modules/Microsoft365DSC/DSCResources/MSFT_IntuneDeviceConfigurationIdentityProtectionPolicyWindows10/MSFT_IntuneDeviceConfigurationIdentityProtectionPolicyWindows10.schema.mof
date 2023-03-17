@@ -26,7 +26,7 @@ class MSFT_IntuneDeviceConfigurationIdentityProtectionPolicyWindows10 : OMI_Base
     [Write, Description("Boolean value used to enable the Windows Hello security key as a logon credential.")] Boolean UseSecurityKeyForSignin;
     [Write, Description("Boolean value that blocks Windows Hello for Business as a method for signing into Windows.")] Boolean WindowsHelloForBusinessBlocked;
     [Write, Description("Admin provided description of the Device Configuration.")] String Description;
-    [Write, Description("Admin provided name of the device configuration.")] String DisplayName;
+    [Required, Description("Admin provided name of the device configuration.")] String DisplayName;
     [Write, Description("Indicates whether or not the underlying Device Configuration supports the assignment of scope tags. Assigning to the ScopeTags property is not allowed when this value is false and entities will not be visible to scoped users. This occurs for Legacy policies created in Silverlight and can be resolved by deleting and recreating the policy in the Azure Portal. This property is read-only.")] Boolean SupportsScopeTags;
     [Key, Description("The unique identifier for an entity. Read-only.")] String Id;
     [Write, Description("Represents the assignment to the Intune policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];

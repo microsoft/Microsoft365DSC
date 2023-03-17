@@ -68,7 +68,7 @@ function Get-TargetResource
         [System.String]
         $Description,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -308,7 +308,7 @@ function Set-TargetResource
         [System.String]
         $Description,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -324,6 +324,7 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
         #endregion
+
         [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -446,7 +447,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Intune Device Configuration Identity Protection Policy for Windows10 with Id {$($currentInstance.Id)}" 
+        Write-Verbose -Message "Removing the Intune Device Configuration Identity Protection Policy for Windows10 with Id {$($currentInstance.Id)}"
         #region resource generator code
         Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
@@ -523,7 +524,7 @@ function Test-TargetResource
         [System.String]
         $Description,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -717,6 +718,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
                 Id                    = $config.Id
+                DisplayName           = $config.displayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -828,10 +830,10 @@ function Export-TargetResource
         }
         catch
         {
-            New-M365DSCLogEntry -Message 'Error updating data:' 
-                -Exception $_ 
-                -Source $($MyInvocation.MyCommand.Source) 
-                -TenantId $TenantId 
+            New-M365DSCLogEntry -Message 'Error updating data:'
+                -Exception $_
+                -Source $($MyInvocation.MyCommand.Source)
+                -TenantId $TenantId
                 -Credential $Credential
 
             return $null

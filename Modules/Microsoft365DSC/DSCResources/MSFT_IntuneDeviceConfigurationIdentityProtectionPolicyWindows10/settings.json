@@ -7,9 +7,6 @@
                                     "read":  [
                                                  {
                                                      "name":  "DeviceManagementConfiguration.Read.All"
-                                                 },
-                                                 {
-                                                     "name":  "DeviceManagementConfiguration.ReadWrite.All"
                                                  }
                                              ],
                                     "update":  [
@@ -22,9 +19,6 @@
                                       "read":  [
                                                    {
                                                        "name":  "DeviceManagementConfiguration.Read.All"
-                                                   },
-                                                   {
-                                                       "name":  "DeviceManagementConfiguration.ReadWrite.All"
                                                    }
                                                ],
                                       "update":  [
