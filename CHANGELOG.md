@@ -11,9 +11,13 @@
   * Various fixes:
     Remove invalid character from description in schema.mof
     Add Id as key in schema.mof
+    Add DisplayName as Required in schema.mof
     Fix issue with nested CIM array from test unit
     Remove Select-MgProfile from module
+    Add DisplayName as Mandatory in module
     Fix issue with AdditionalProperties for nested objects from module
+    Fix Ensure default value
+
 
 # 1.23.315.2
 

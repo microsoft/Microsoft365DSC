@@ -315,10 +315,16 @@ function New-M365DSCResource
             $getKeyIdentifier = ($getDefaultParameterSet.Parameters | Where-Object -FilterScript { $_.IsMandatory }).Name
         }
 
+        $primaryKey = ''
+        $alternativeKey = ''
         if($typeProperties.Name -contains 'id')
         {
-            $primaryKey='Id'
-            $alternativeKey='DisplayName'
+            $primaryKey = 'Id'
+            $alternativeKey = 'DisplayName'
+            if($typeProperties.Name -contains 'name')
+            {
+                $alternativeKey = 'Name'
+            }
         }
 
         if ($null -ne $getKeyIdentifier )
@@ -465,7 +471,13 @@ function New-M365DSCResource
             $currentDSCBlock=$currentDSCBlock.replace( "`r`n;`r`n" , "`r`n" )
 '@
         }
+        $requiredKey = ''
+        if(-not [String]::IsNullOrEmpty($alternativeKey))
+        {
+            $requiredKey = "`r`n                DisplayName           =  `$config.DisplayName"
+        }
         Write-TokenReplacement -Token '<exportGetCommand>' -Value $exportGetCommand.ToString() -FilePath $moduleFilePath
+        Write-TokenReplacement -Token '<RequiredKey>' -Value $requiredKey -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<HashTableMapping>' -Value $hashTableMapping -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<#ComplexTypeContent#>' -Value $hashtableResults.ComplexTypeContent -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<#ConvertComplexToString#>' -Value $hashtableResults.ConvertToString -FilePath $moduleFilePath
@@ -1959,7 +1971,7 @@ function Get-ParameterBlockInformation
         $cmdletParameter = $DefaultParameterSetProperties | Where-Object -FilterScript { $_.Name -eq $property.Name }
         if (($null -ne $cmdletParameter `
                 -and $cmdletParameter.IsMandatory -eq $true) `
-            -or $property.Name -eq 'Id')
+            -or $property.Name -eq 'Id' -or $property.Name -eq 'DisplayName')
         {
             $isMandatory = $true
             $parameterAttribute = "[Parameter(Mandatory = `$true)]"
@@ -2712,6 +2724,10 @@ function New-M365SchemaPropertySet
                 {
                     $permission = "Key"
                 }
+                if ($_.Name -eq "DisplayName")
+                {
+                    $permission = "Required"
+                }
                 $schemaProperties += "    [$permission, Description(`"$($_.Description)`")$propertySet] $($propertyType) $($_.Name)"
                 if ($_.IsArray)
                 {
@@ -2830,7 +2846,7 @@ function New-M365DSCExampleFile
     $start = $exportContent.IndexOf("{", $start) + 1
     $exampleContent = $exportContent.Substring($start, $end-$start)
 
-    $exampleFileFullPath = "$Path\$ResourceName\1-$ResourceName-Example.psm1"
+    $exampleFileFullPath = "$Path\$ResourceName\1-$ResourceName-Example.ps1"
     $folderPath = "$Path\$ResourceName"
     New-Item $folderPath -ItemType Directory -Force | Out-Null
     $templatePath = '.\Example.Template.ps1'

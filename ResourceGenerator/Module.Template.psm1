@@ -389,7 +389,7 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                <PrimaryKey>                    = $config.<PrimaryKey>
+                <PrimaryKey>                    = $config.<PrimaryKey><RequiredKey>
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
