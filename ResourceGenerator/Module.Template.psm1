@@ -42,7 +42,6 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload '<#Workload#>' `
             -InboundParameters $PSBoundParameters
 
-        Select-MgProfile -Name '<#APIVersion#>'
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
 
