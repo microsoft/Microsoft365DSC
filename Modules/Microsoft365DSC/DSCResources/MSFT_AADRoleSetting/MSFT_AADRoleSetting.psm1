@@ -8,7 +8,7 @@ function Get-TargetResource
         [System.String]
         $Id,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Displayname,
 
@@ -376,7 +376,7 @@ function Set-TargetResource
         [System.String]
         $Id,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Displayname,
 
@@ -1078,7 +1078,7 @@ function Test-TargetResource
         [System.String]
         $Id,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Displayname,
 
