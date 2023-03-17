@@ -183,7 +183,7 @@ function Get-TargetResource
         if ($null -eq $policy)
         {
             Write-Verbose -Message "No Endpoint Protection Attack Surface Protection rules Policy {$Identity} was found"
-            $policy = Get-MgDeviceManagementConfigurationPolicy | Where-Object -FilterScript { $_.Name -eq "$DisplayName" -and $_.templateReference.TemplateId -eq "$templateReferenceId" }  -ErrorAction silentlyContinue
+            $policy = Get-MgDeviceManagementConfigurationPolicy | Where-Object -FilterScript { $_.Name -eq "$DisplayName" -and $_.templateReference.TemplateId -eq "$templateReferenceId" } -ErrorAction silentlyContinue
         }
 
         if ($null -eq $policy)
@@ -733,7 +733,7 @@ function Test-TargetResource
                 {
                     Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
                     $testResult = $false
-                    break;
+                    break
                 }
                 $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
                 $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
@@ -746,7 +746,7 @@ function Test-TargetResource
                 {
                     Write-Verbose -Message "Configuration drift: {$($assignment.dataType)} not found"
                     $testResult = $false
-                    break;
+                    break
                 }
                 $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
                 $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
@@ -755,7 +755,7 @@ function Test-TargetResource
             if (-not $testResult)
             {
                 $testResult = $false
-                break;
+                break
             }
         }
     }
@@ -853,6 +853,7 @@ function Export-TargetResource
 
             $params = @{
                 Identity              = $policy.id
+                DisplayName           = $policy.Name
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
