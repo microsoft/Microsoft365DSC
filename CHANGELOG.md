@@ -5,6 +5,9 @@
 * EXORoleAssignmentPolicy
   * Fix issue with IsDefault parameter
     FIXES [#2977](https://github.com/microsoft/Microsoft365DSC/issues/2977)
+* SCDLPCompliancePolicy
+  * Added support or Endpoint, On-Premises, PowerBI and ThirdPartyApps locations and exceptions.
+    FIXES [#3023](https://github.com/microsoft/Microsoft365DSC/issues/3023)
 * SCSensitivityLabel
   * Added ContentType parameter, so you can specify where to apply the label.
     FIXES [#2992](https://github.com/microsoft/Microsoft365DSC/issues/2992)
