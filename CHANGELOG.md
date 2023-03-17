@@ -8,6 +8,9 @@
 * IntuneDeviceConfigurationIdentityProtectionPolicyWindows10
   * Initial release
     FIXES [#2831](https://github.com/microsoft/Microsoft365DSC/issues/2831)
+* SCDLPCompliancePolicy
+  * Added support or Endpoint, On-Premises, PowerBI and ThirdPartyApps locations and exceptions.
+    FIXES [#3023](https://github.com/microsoft/Microsoft365DSC/issues/3023)
 * MISC
   * Added QA test that checks for existence of an example for each resource.
 * DRG
