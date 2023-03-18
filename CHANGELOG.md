@@ -5,6 +5,9 @@
 * EXORoleAssignmentPolicy
   * Fix issue with IsDefault parameter
     FIXES [#2977](https://github.com/microsoft/Microsoft365DSC/issues/2977)
+* IntuneDeviceConfigurationEndpointProtectionPolicyWindows10
+  * Initial release
+    FIXES [#2834](https://github.com/microsoft/Microsoft365DSC/issues/2834)
 * SCDLPCompliancePolicy
   * Added support or Endpoint, On-Premises, PowerBI and ThirdPartyApps locations and exceptions.
     FIXES [#3023](https://github.com/microsoft/Microsoft365DSC/issues/3023)
