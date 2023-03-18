@@ -1567,15 +1567,17 @@ function Get-ComplexTypeConstructorToString
     {
         $loopPropertyName=Get-StringFirstCharacterToLower -Value $loopPropertyName
     }
-    if($Property.IsRootProperty -eq $false -and -not $IsNested)
+    if($Property.IsRootProperty -eq $false )
     {
         $loopPropertyName=Get-StringFirstCharacterToLower -Value $Property.Name
         $propertyName = Get-StringFirstCharacterToLower -Value $Property.Name
-        $valuePrefix += "AdditionalProperties."
-        $referencePrefix += "AdditionalProperties."
-        $referencePrefix += "$propertyName."
+        if(-not $IsNested)
+        {
+            $valuePrefix += "AdditionalProperties."
+            $referencePrefix += "AdditionalProperties."
+        }
     }
-
+    $referencePrefix += "$propertyName."
 
     if($property.IsArray)
     {
