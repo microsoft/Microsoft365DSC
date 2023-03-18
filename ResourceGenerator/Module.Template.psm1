@@ -389,7 +389,7 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                <PrimaryKey>                    = $config.<PrimaryKey>
+                <PrimaryKey>                    = $config.<PrimaryKey><RequiredKey>
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -430,6 +430,7 @@ function Export-TargetResource
         return ''
     }
 }
+
 <#AssignmentsFunctions#>function Rename-M365DSCCimInstanceParameter
 {
     [CmdletBinding()]
@@ -491,6 +492,7 @@ function Export-TargetResource
     return $result
     #endregion
 }
+
 function Get-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
