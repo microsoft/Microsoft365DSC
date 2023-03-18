@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10
+  * Initial Release
+    FIXES [#2830](https://github.com/microsoft/Microsoft365DSC/issues/2830)
 * EXORoleAssignmentPolicy
   * Fix issue with IsDefault parameter
     FIXES [#2977](https://github.com/microsoft/Microsoft365DSC/issues/2977)
