@@ -1168,11 +1168,11 @@ function Get-CmdletDefinition
 
     if ($ApiVersion -eq 'v1.0')
     {
-        $Uri='https://raw.githubusercontent.com/microsoftgraph/msgraph-metadata/master/clean_v10_metadata/cleanMetadataWithDescriptionsv1.0.xml'
+        $Uri='https://raw.githubusercontent.com/microsoftgraph/msgraph-metadata/master/clean_v10_metadata/cleanMetadataWithDescriptionsAndAnnotationsv1.0.xml'
     }
     else
     {
-        $Uri='https://raw.githubusercontent.com/microsoftgraph/msgraph-metadata/master/clean_beta_metadata/cleanMetadataWithDescriptionsbeta.xml'
+        $Uri='https://raw.githubusercontent.com/microsoftgraph/msgraph-metadata/master/clean_beta_metadata/cleanMetadataWithDescriptionsAndAnnotationsbeta.xml'
     }
 
     $metadata=([XML](Invoke-RestMethod  -Uri $Uri)).Edmx.DataServices.schema
@@ -1254,7 +1254,17 @@ function Get-TypeProperties
                 if(-not [String]::IsNullOrWhiteSpace($property.Annotation.String))
                 {
                     $description =$property.Annotation.String.replace('"',"'")
-                    $description =$property.Annotation.String -replace '[^\p{L}\p{Nd}/(/}/_ -.,=:)'']', ''
+                    $description =$description -replace '[^\p{L}\p{Nd}/(/}/_ -.,=:)'']', ''
+                }
+                else
+                {
+                    $annotation = $CmdletDefinition.Annotations | where-object -FilterScript {$_.Target -like "microsoft.graph.$($property.ParentNode.Name)/$($property.Name)" }
+                    if(-not [String]::IsNullOrWhiteSpace($annotation.Annotation.String))
+                    {
+                        $description =$annotation.Annotation.String.replace('"',"'")
+                        $description =$description -replace '[^\p{L}\p{Nd}/(/}/_ -.,=:)'']', ''
+
+                    }
                 }
                 $myProperty.Add('Description', $description)
 
@@ -1284,7 +1294,22 @@ function Get-TypeProperties
                         $myProperty.Add('Type',$property.Type)
                         $myProperty.Add('IsRootProperty',$false)
                         $myProperty.Add('ParentType',$entityType.Name)
-                        $myProperty.Add('Description', $property.Annotation.String.replace('"',"'"))
+                        $description = ''
+                        if(-not [String]::IsNullOrWhiteSpace($property.Annotation.String))
+                        {
+                            $description =$property.Annotation.String.replace('"',"'")
+                            $description =$description -replace '[^\p{L}\p{Nd}/(/}/_ -.,=:)'']', ''
+                        }
+                        else
+                        {
+                            $annotation = $CmdletDefinition.Annotations | where-object -FilterScript {$_.Target -like "microsoft.graph.$($property.ParentNode.Name)/$($property.Name)" }
+                            if(-not [String]::IsNullOrWhiteSpace($annotation.Annotation.String))
+                            {
+                                $description =$annotation.Annotation.String.replace('"',"'")
+                                $description =$description -replace '[^\p{L}\p{Nd}/(/}/_ -.,=:)'']', ''
+                            }
+                        }
+                        $myProperty.Add('Description', $description)
 
                         $properties+=$myProperty
                     }
@@ -1544,7 +1569,7 @@ function Get-ComplexTypeConstructorToString
     {
         $loopPropertyName=Get-StringFirstCharacterToLower -Value $loopPropertyName
     }
-    if($Property.IsRootProperty -eq $false)
+    if($Property.IsRootProperty -eq $false -and -not $IsNested)
     {
         $loopPropertyName=Get-StringFirstCharacterToLower -Value $Property.Name
         $propertyName = Get-StringFirstCharacterToLower -Value $Property.Name
@@ -1564,7 +1589,7 @@ function Get-ComplexTypeConstructorToString
             {
                 $propRoot=$ParentPropertyName.replace("my","")
                 $valuePrefix="current$propRoot."
-                if($property.IsRootProperty -eq $false)
+                if($property.IsRootProperty -eq $false -and -not $IsNested)
                 {
                     $valuePrefix += "AdditionalProperties."
                 }
@@ -1607,7 +1632,7 @@ function Get-ComplexTypeConstructorToString
             $valuePrefix += "$recallProperty."
         }
         $AssignedPropertyName = $nestedProperty.Name
-        if($nestedProperty.IsRootProperty -eq $false)
+        if($nestedProperty.IsRootProperty -eq $false -and -not $IsNested)
         {
             $valuePrefix += "AdditionalProperties."
         }
@@ -2262,6 +2287,15 @@ function Get-M365DSCFakeValues
 
     foreach ($parameter in $parameters)
     {
+
+        if($null -ne (Get-Variable hashValue -ErrorAction SilentlyContinue))
+        {
+            try
+            {
+                clear-variable hashValue -force
+            }
+            catch {}
+        }
         $parameterName = $parameter.Name
         if($parameter.Name -eq "@odata.type" -and $IsGetTargetResource)
         {
@@ -2376,7 +2410,7 @@ function Get-M365DSCFakeValues
 
         if ($hashValue)
         {
-            if ((-Not $parameter.IsRootProperty ) -and -not $IsGetTargetResource)
+            if ((-Not $parameter.IsRootProperty ) -and -not $IsGetTargetResource -and -not $isRecursive)
             {
                 $parameterName = Get-StringFirstCharacterToLower -Value $parameterName
                 $additionalProperties.Add($parameterName, $hashValue)
@@ -2460,6 +2494,7 @@ function Get-M365DSCHashAsString
 
             'Hashtable'
             {
+                #read-host -Prompt ($Values.$Key|fl *|out-string)
                 $extraSpace = ''
                 $line = "$Space$extraSpace$key = "
                 if ($Values.$Key.isArray)
@@ -2477,6 +2512,7 @@ function Get-M365DSCHashAsString
                 }
 
                 $sb.AppendLine("$line@{") | Out-Null
+
                 if ($Values.$Key.Properties)
                 {
                     $propLine = ''
@@ -2491,7 +2527,6 @@ function Get-M365DSCHashAsString
                         $propLine += $l
                     }
                     $sb.Append($propLine) | Out-Null
-
                 }
                 else
                 {
