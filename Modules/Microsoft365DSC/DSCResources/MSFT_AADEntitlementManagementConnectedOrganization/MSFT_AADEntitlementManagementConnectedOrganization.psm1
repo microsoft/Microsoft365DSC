@@ -8,13 +8,13 @@ function Get-TargetResource
         [System.String]
         $Id,
 
-        [Parameter()]
-        [System.String]
-        $Description,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -172,7 +172,6 @@ function Get-TargetResource
             $getIdentitySources = $sources
         }
 
-
         $results = @{
             Id                    = $getValue.id
             Description           = $getValue.description
@@ -213,13 +212,13 @@ function Set-TargetResource
         [System.String]
         $Id,
 
-        [Parameter()]
-        [System.String]
-        $Description,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -416,14 +415,11 @@ function Set-TargetResource
                 -DirectoryObjectId $sponsor
         }
         #endregion
-
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing a new Entitlement Management Connected Organization  {$($currentInstance.Id)}"
         Remove-MgEntitlementManagementConnectedOrganization -ConnectedOrganizationId $currentInstance.Id
-
-
     }
 }
 
@@ -437,13 +433,13 @@ function Test-TargetResource
         [System.String]
         $Id,
 
-        [Parameter()]
-        [System.String]
-        $Description,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -537,7 +533,6 @@ function Test-TargetResource
             }
 
             $ValuesToCheck.Remove($key) | Out-Null
-
         }
     }
 
@@ -545,6 +540,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"

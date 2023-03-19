@@ -59,8 +59,8 @@ class MSFT_MicrosoftGraphmacosappleeventreceiver
 class MSFT_IntuneDeviceConfigurationPolicyMacOS : OMI_BaseResource
 {
     [Key, Description("")] String Id;
-    [Write, Description("")] String Description;
     [Required, Description("")] String DisplayName;
+    [Write, Description("")] String Description;
     [Write, Description("")] Boolean AddingGameCenterFriendsBlocked;
     [Write, Description("")] Boolean AirDropBlocked;
     [Write, Description("Blocks users from unlocking their Mac with Apple Watch.")] Boolean AppleWatchBlockAutoUnlock;

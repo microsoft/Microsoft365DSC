@@ -9,6 +9,10 @@ function Get-TargetResource
         [System.String]
         $Id,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
         [Parameter()]
         [System.String]
         $CatalogId,
@@ -28,10 +32,6 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [System.Boolean]
@@ -152,6 +152,7 @@ function Get-TargetResource
             }
             $hashAttributes += $hashAttribute
         }
+
         $results = [ordered]@{
             Id                    = $Id
             CatalogId             = $CatalogId
@@ -173,7 +174,6 @@ function Get-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             ManagedIdentity       = $ManagedIdentity.IsPresent
         }
-
 
         return [System.Collections.Hashtable] $results
     }
@@ -199,6 +199,10 @@ function Set-TargetResource
         [System.String]
         $Id,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
         [Parameter()]
         [System.String]
         $CatalogId,
@@ -218,10 +222,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [System.Boolean]
@@ -349,9 +349,7 @@ function Set-TargetResource
         }
         #region resource generator code
         New-MgEntitlementManagementAccessPackageResourceRequest @resourceRequest
-
         #endregion
-
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -445,6 +443,10 @@ function Test-TargetResource
         [System.String]
         $Id,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
         [Parameter()]
         [System.String]
         $CatalogId,
@@ -464,10 +466,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [System.Boolean]
@@ -574,6 +572,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('AddedBy') | Out-Null
     $ValuesToCheck.Remove('AddedOn') | Out-Null
     $ValuesToCheck.Remove('IsPendingOnboarding') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"

@@ -1,5 +1,32 @@
 # Change log for Microsoft365DSC
 
+# BREAKING CHANGES (APRIL 5TH RELEASE)
+
+* AADAdministrativeUnit, AADConditionalAccessPolicy, AADEntitlementManagementAccessPackage,
+  AADEntitlementManagementAccessPackageAssignmentPolicy, AADEntitlementManagementAccessPackageCatalog,
+  AADEntitlementManagementAccessPackageCatalogResource, AADEntitlementManagementAccessPackageCatalogResource,
+  AADEntitlementManagementConnectedOrganization, AADRoleSetting,
+  IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator, IntuneDeviceConfigurationPolicyAndroidDeviceOwner,
+  IntuneDeviceConfigurationPolicyAndroidOpenSourceProject, IntuneDeviceConfigurationPolicyMacOS,
+  IntuneDeviceConfigurationPolicyiOS, IntuneExploitProtectionPolicyWindows10SettingCatalog,
+  IntuneWifiConfigurationPolicyAndroidDeviceAdministrator, IntuneWifiConfigurationPolicyAndroidEntrepriseDeviceOwner,
+  IntuneWifiConfigurationPolicyAndroidEntrepriseWorkProfile, IntuneWifiConfigurationPolicyAndroidForWork,
+  IntuneWifiConfigurationPolicyAndroidOpenSourceProject, IntuneWifiConfigurationPolicyIOS,
+  IntuneWifiConfigurationPolicyMacOS, IntuneWifiConfigurationPolicyWindows10,
+  IntuneWindowUpdateForBusinessRingUpdateProfileWindows10, IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10,
+  IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled, IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
+  * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
+* EXOIRMConfiguration, EXOPerimeterConfiguration, EXOResourceConfiguration
+  * [BREAKING CHANGE] Setting Id as Key parameter
+* IntuneAntivirusPolicyWindows10SettingCatalog, IntuneASRRulesPolicyWindows10,
+  IntuneAppProtectionPolicyiOS, IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager,
+  IntuneSettingCatalogASRRulesPolicyWindows10,
+  * [BREAKING CHANGE] Setting Identity as Key parameter and DisplayName as Required
+* MISC
+  * Added a QA check to test for the presence of a Key parameter and fixes
+    resources where this was not the case.
+    FIXES [#2925](https://github.com/microsoft/Microsoft365DSC/issues/2925)
+
 # UNRELEASED
 
 * EXORoleAssignmentPolicy
@@ -7,9 +34,6 @@
     FIXES [#2977](https://github.com/microsoft/Microsoft365DSC/issues/2977)
 * MISC
   * Added QA test that checks for existence of an example for each resource.
-  * Added a QA check to test for the presence of a Key parameter and fixes
-    resources where this was not the case.
-    FIXES [#2925](https://github.com/microsoft/Microsoft365DSC/issues/2925)
 * DRG
   * Various fixes:
     Remove invalid character from description in schema.mof

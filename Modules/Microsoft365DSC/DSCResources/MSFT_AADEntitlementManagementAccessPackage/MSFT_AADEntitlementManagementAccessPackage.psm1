@@ -9,6 +9,10 @@ function Get-TargetResource
         [System.String]
         $Id,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
         [Parameter()]
         [System.String]
         $CatalogId,
@@ -16,10 +20,6 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [System.Boolean]
@@ -208,6 +208,10 @@ function Set-TargetResource
         [System.String]
         $Id,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
         [Parameter()]
         [System.String]
         $CatalogId,
@@ -215,10 +219,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [System.Boolean]
@@ -676,6 +676,10 @@ function Test-TargetResource
         [System.String]
         $Id,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
         [Parameter()]
         [System.String]
         $CatalogId,
@@ -683,10 +687,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [System.Boolean]

@@ -14,8 +14,8 @@ class MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource
 class MSFT_AADEntitlementManagementConnectedOrganization : OMI_BaseResource
 {
     [Key, Description("The Id of the Connected organization object.")] String Id;
-    [Write, Description("The description of the connected organization.")] String Description;
     [Required, Description("The display name of the connected organization.")] String DisplayName;
+    [Write, Description("The description of the connected organization.")] String Description;
     [Write, Description("The identity sources in this connected organization."), EmbeddedInstance("MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource")] String IdentitySources[];
     [Write, Description("The state of a connected organization defines whether assignment policies with requestor scope type AllConfiguredConnectedOrganizationSubjects are applicable or not."), ValueMap{"configured","proposed","unknownFutureValue"}, Values{"configured","proposed","unknownFutureValue"}] String State;
     [Write, Description("Collection of objectID of extenal sponsors. the sponsor can be a user or a group.")] String ExternalSponsors[];

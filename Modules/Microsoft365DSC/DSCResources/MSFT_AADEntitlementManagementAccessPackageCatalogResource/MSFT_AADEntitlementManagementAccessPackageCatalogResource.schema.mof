@@ -61,12 +61,12 @@ class MSFT_MicrosoftGraphaccessPackageAnswerChoice
 class MSFT_AADEntitlementManagementAccessPackageCatalogResource : OMI_BaseResource
 {
     [Key, Description("Id of the access package catalog resource.")] String Id;
+    [Required, Description("The display name of the resource, such as the application name, group name or site name.")] String DisplayName;
     [Write, Description("The unique ID of the access package catalog.")] String CatalogId;
     [Write, Description("The name of the user or application that first added this resource. Read-only.")] String AddedBy;
     [Write, Description("The Timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 is 2014-01-01T00:00:00Z. Read-only.")] String AddedOn;
     [Write, Description("Contains information about the attributes to be collected from the requestor and sent to the resource application."), EmbeddedInstance("MSFT_MicrosoftGraphaccesspackageresourceattribute")] String Attributes[];
     [Write, Description("A description for the resource.")] String Description;
-    [Required, Description("The display name of the resource, such as the application name, group name or site name.")] String DisplayName;
     [Write, Description("True if the resource is not yet available for assignment. Read-only.")] Boolean IsPendingOnboarding;
     [Write, Description("The unique identifier of the resource in the origin system. In the case of an Azure AD group, this is the identifier of the group.")] String OriginId;
     [Write, Description("The type of the resource in the origin system.")] String OriginSystem;

@@ -12,8 +12,8 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
 class MSFT_IntuneWifiConfigurationPolicyAndroidOpenSourceProject : OMI_BaseResource
 {
     [Key, Description("Id of the Intune policy.")] String Id;
-    [Write, Description("Description of the Intune policy.")] String Description;
     [Required, Description("Display name of the Intune policy.")] String DisplayName;
+    [Write, Description("Description of the Intune policy.")] String Description;
     [Write, Description("Connect automatically to the network.")] Boolean ConnectAutomatically;
     [Write, Description("Define if the network should be connected if hidden.")] Boolean ConnectWhenNetworkNameIsHidden;
     [Write, Description("Define the network name.")] String NetworkName;

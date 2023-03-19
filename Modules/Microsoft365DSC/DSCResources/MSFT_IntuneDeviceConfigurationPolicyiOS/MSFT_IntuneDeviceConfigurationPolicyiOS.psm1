@@ -9,13 +9,13 @@ function Get-TargetResource
         [System.String]
         $Id,
 
-        [Parameter()]
-        [System.String]
-        $Description,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
 
         [Parameter()]
         [System.Boolean]
@@ -1102,13 +1102,13 @@ function Set-TargetResource
         [System.String]
         $Id,
 
-        [Parameter()]
-        [System.String]
-        $Description,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
 
         [Parameter()]
         [System.Boolean]
@@ -2037,13 +2037,13 @@ function Test-TargetResource
         [System.String]
         $Id,
 
-        [Parameter()]
-        [System.String]
-        $Description,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
 
         [Parameter()]
         [System.Boolean]
@@ -2885,6 +2885,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -2961,7 +2962,6 @@ function Export-TargetResource
 
     try
     {
-
         #region resource generator code
         [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
             -ErrorAction Stop -All:$true | Where-Object `
