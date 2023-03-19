@@ -5,22 +5,22 @@ function Get-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Description,
+        $Id,
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
         [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
         [validateset('Public', 'HiddenMembership')]
         [System.String]
         $Visibility,
-
-        [Parameter()]
-        [System.String]
-        $Id,
 
         [Parameter()]
         [validateset('Assigned', 'Dynamic')]
@@ -43,10 +43,9 @@ function Get-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $ScopedRoleMembers,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
@@ -253,22 +252,22 @@ function Set-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Description,
+        $Id,
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
         [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
         [validateset('Public', 'HiddenMembership')]
         [System.String]
         $Visibility,
-
-        [Parameter()]
-        [System.String]
-        $Id,
 
         [Parameter()]
         [validateset('Assigned', 'Dynamic')]
@@ -291,9 +290,9 @@ function Set-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $ScopedRoleMembers,
-
         #endregion
-        [Parameter(Mandatory = $true)]
+
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
@@ -744,21 +743,22 @@ function Test-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Description,
+        $Id,
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
         [Parameter()]
         [validateset('Public', 'HiddenMembership')]
         [System.String]
         $Visibility,
-
-        [Parameter()]
-        [System.String]
-        $Id,
 
         [Parameter()]
         [validateset('Assigned', 'Dynamic')]
@@ -781,10 +781,9 @@ function Test-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $ScopedRoleMembers,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
@@ -867,6 +866,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
 
     # Visibility is currently not returned by Get-TargetResource
     $ValuesToCheck.Remove('Visibility') | Out-Null

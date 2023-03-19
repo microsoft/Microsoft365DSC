@@ -1036,7 +1036,7 @@ function Test-TargetResource
         [System.String]
         $CustomBrowserProtocol,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
@@ -1085,7 +1085,7 @@ function Test-TargetResource
 
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    $ValuesToCheck.remove('Identity')
+    $ValuesToCheck.Remove('Identity')
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

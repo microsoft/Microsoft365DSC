@@ -5,6 +5,14 @@ function Get-TargetResource
     param
     (
         #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
         [Parameter()]
         [System.Boolean]
         $AllowWindows11Upgrade,
@@ -153,14 +161,6 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $DisplayName,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Id,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -450,6 +450,14 @@ function Set-TargetResource
     param
     (
         #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
         [Parameter()]
         [System.Boolean]
         $AllowWindows11Upgrade,
@@ -598,14 +606,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $DisplayName,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Id,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -747,6 +747,14 @@ function Test-TargetResource
     param
     (
         #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
         [Parameter()]
         [System.Boolean]
         $AllowWindows11Upgrade,
@@ -896,14 +904,6 @@ function Test-TargetResource
         [System.String]
         $Description,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $DisplayName,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Id,
-
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
@@ -990,6 +990,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"

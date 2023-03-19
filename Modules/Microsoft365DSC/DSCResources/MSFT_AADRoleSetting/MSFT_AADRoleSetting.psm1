@@ -1059,8 +1059,6 @@ function Set-TargetResource
                     -UnifiedRoleManagementPolicyRuleId $role.id `
                     -BodyParameter $params `
                     -ErrorAction Stop
-
-
             }
             catch
             {
