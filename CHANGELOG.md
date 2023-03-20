@@ -1,7 +1,9 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-
+* EXODistributionGroup
+  * Initial Release
+    FIXES [#3044](https://github.com/microsoft/Microsoft365DSC/issues/3044)
 * IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10
   * Initial Release
     FIXES [#2832](https://github.com/microsoft/Microsoft365DSC/issues/2832)
