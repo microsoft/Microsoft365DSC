@@ -315,10 +315,16 @@ function New-M365DSCResource
             $getKeyIdentifier = ($getDefaultParameterSet.Parameters | Where-Object -FilterScript { $_.IsMandatory }).Name
         }
 
+        $primaryKey = ''
+        $alternativeKey = ''
         if($typeProperties.Name -contains 'id')
         {
-            $primaryKey='Id'
-            $alternativeKey='DisplayName'
+            $primaryKey = 'Id'
+            $alternativeKey = 'DisplayName'
+            if($typeProperties.Name -contains 'name')
+            {
+                $alternativeKey = 'Name'
+            }
         }
 
         if ($null -ne $getKeyIdentifier )
@@ -465,7 +471,13 @@ function New-M365DSCResource
             $currentDSCBlock=$currentDSCBlock.replace( "`r`n;`r`n" , "`r`n" )
 '@
         }
+        $requiredKey = ''
+        if(-not [String]::IsNullOrEmpty($alternativeKey))
+        {
+            $requiredKey = "`r`n                DisplayName           =  `$config.DisplayName"
+        }
         Write-TokenReplacement -Token '<exportGetCommand>' -Value $exportGetCommand.ToString() -FilePath $moduleFilePath
+        Write-TokenReplacement -Token '<RequiredKey>' -Value $requiredKey -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<HashTableMapping>' -Value $hashTableMapping -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<#ComplexTypeContent#>' -Value $hashtableResults.ComplexTypeContent -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<#ConvertComplexToString#>' -Value $hashtableResults.ConvertToString -FilePath $moduleFilePath
@@ -587,73 +599,71 @@ function New-M365DSCResource
             $AssignmentsUpdate += "            -Repository '$repository'`r`n"
 
             $AssignmentsFunctions = @"
-    function Update-DeviceConfigurationPolicyAssignment
+function Update-DeviceConfigurationPolicyAssignment
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        `$DeviceConfigurationPolicyId,
+
+        [Parameter()]
+        [Array]
+        `$Targets,
+
+        [Parameter()]
+        [System.String]
+        `$Repository='deviceManagement/configurationPolicies',
+
+        [Parameter()]
+        [ValidateSet('v1.0','beta')]
+        [System.String]
+        `$APIVersion='beta'
+    )
+    try
     {
-        [CmdletBinding()]
-        [OutputType([System.Collections.Hashtable])]
-        param (
-            [Parameter(Mandatory = 'true')]
-            [System.String]
-            `$DeviceConfigurationPolicyId,
+        `$deviceManagementPolicyAssignments=@()
+        `$Uri="https://graph.microsoft.com/`$APIVersion/`$Repository/`$DeviceConfigurationPolicyId/assign"
 
-            [Parameter()]
-            [Array]
-            `$Targets,
-
-            [Parameter()]
-            [System.String]
-            `$Repository='deviceManagement/configurationPolicies',
-
-            [Parameter()]
-            [ValidateSet('v1.0','beta')]
-            [System.String]
-            `$APIVersion='beta'
-        )
-        try
+        foreach(`$target in `$targets)
         {
-            `$deviceManagementPolicyAssignments=@()
-
-            `$Uri="https://graph.microsoft.com/`$APIVersion/`$Repository/`$DeviceConfigurationPolicyId/assign"
-
-            foreach(`$target in `$targets)
+            `$formattedTarget=@{"@odata.type"=`$target.dataType}
+            if(`$target.groupId)
             {
-                `$formattedTarget=@{"@odata.type"=`$target.dataType}
-                if(`$target.groupId)
-                {
-                    `$formattedTarget.Add('groupId',`$target.groupId)
-                }
-                if(`$target.collectionId)
-                {
-                    `$formattedTarget.Add('collectionId',`$target.collectionId)
-                }
-                if(`$target.deviceAndAppManagementAssignmentFilterType)
-                {
-                    `$formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',`$target.deviceAndAppManagementAssignmentFilterType)
-                }
-                if(`$target.deviceAndAppManagementAssignmentFilterId)
-                {
-                    `$formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',`$target.deviceAndAppManagementAssignmentFilterId)
-                }
-                `$deviceManagementPolicyAssignments+=@{'target'= `$formattedTarget}
+                `$formattedTarget.Add('groupId',`$target.groupId)
             }
-            `$body=@{'assignments'=`$deviceManagementPolicyAssignments}|ConvertTo-Json -Depth 20
-            #write-verbose -Message `$body
-            Invoke-MgGraphRequest -Method POST -Uri `$Uri -Body `$body -ErrorAction Stop
-
+            if(`$target.collectionId)
+            {
+                `$formattedTarget.Add('collectionId',`$target.collectionId)
+            }
+            if(`$target.deviceAndAppManagementAssignmentFilterType)
+            {
+                `$formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',`$target.deviceAndAppManagementAssignmentFilterType)
+            }
+            if(`$target.deviceAndAppManagementAssignmentFilterId)
+            {
+                `$formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',`$target.deviceAndAppManagementAssignmentFilterId)
+            }
+            `$deviceManagementPolicyAssignments+=@{'target'= `$formattedTarget}
         }
-        catch
-        {
-            New-M365DSCLogEntry -Message 'Error updating data:' `
-                -Exception `$_ `
-                -Source `$(`$MyInvocation.MyCommand.Source) `
-                -TenantId `$TenantId `
-                -Credential `$Credential
-
-            return `$null
-        }
-
-
+        `$body=@{'assignments'=`$deviceManagementPolicyAssignments}|ConvertTo-Json -Depth 20
+        #write-verbose -Message `$body
+        Invoke-MgGraphRequest -Method POST -Uri `$Uri -Body `$body -ErrorAction Stop
     }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating data:' ``
+            -Exception `$_ ``
+            -Source `$(`$MyInvocation.MyCommand.Source) ``
+            -TenantId `$TenantId ``
+            -Credential `$Credential
+
+        return `$null
+    }
+}
+
+
 "@
 
             $AssignmentsCIM = @'
@@ -1156,11 +1166,11 @@ function Get-CmdletDefinition
 
     if ($ApiVersion -eq 'v1.0')
     {
-        $Uri='https://raw.githubusercontent.com/microsoftgraph/msgraph-metadata/master/clean_v10_metadata/cleanMetadataWithDescriptionsv1.0.xml'
+        $Uri='https://raw.githubusercontent.com/microsoftgraph/msgraph-metadata/master/clean_v10_metadata/cleanMetadataWithDescriptionsAndAnnotationsv1.0.xml'
     }
     else
     {
-        $Uri='https://raw.githubusercontent.com/microsoftgraph/msgraph-metadata/master/clean_beta_metadata/cleanMetadataWithDescriptionsbeta.xml'
+        $Uri='https://raw.githubusercontent.com/microsoftgraph/msgraph-metadata/master/clean_beta_metadata/cleanMetadataWithDescriptionsAndAnnotationsbeta.xml'
     }
 
     $metadata=([XML](Invoke-RestMethod  -Uri $Uri)).Edmx.DataServices.schema
@@ -1242,7 +1252,17 @@ function Get-TypeProperties
                 if(-not [String]::IsNullOrWhiteSpace($property.Annotation.String))
                 {
                     $description =$property.Annotation.String.replace('"',"'")
-                    $description =$property.Annotation.String -replace '[^\p{L}\p{Nd}/(/}/_ -.,=:)'']', ''
+                    $description =$description -replace '[^\p{L}\p{Nd}/(/}/_ -.,=:)'']', ''
+                }
+                else
+                {
+                    $annotation = $CmdletDefinition.Annotations | where-object -FilterScript {$_.Target -like "microsoft.graph.$($property.ParentNode.Name)/$($property.Name)" }
+                    if(-not [String]::IsNullOrWhiteSpace($annotation.Annotation.String))
+                    {
+                        $description =$annotation.Annotation.String.replace('"',"'")
+                        $description =$description -replace '[^\p{L}\p{Nd}/(/}/_ -.,=:)'']', ''
+
+                    }
                 }
                 $myProperty.Add('Description', $description)
 
@@ -1272,7 +1292,22 @@ function Get-TypeProperties
                         $myProperty.Add('Type',$property.Type)
                         $myProperty.Add('IsRootProperty',$false)
                         $myProperty.Add('ParentType',$entityType.Name)
-                        $myProperty.Add('Description', $property.Annotation.String.replace('"',"'"))
+                        $description = ''
+                        if(-not [String]::IsNullOrWhiteSpace($property.Annotation.String))
+                        {
+                            $description =$property.Annotation.String.replace('"',"'")
+                            $description =$description -replace '[^\p{L}\p{Nd}/(/}/_ -.,=:)'']', ''
+                        }
+                        else
+                        {
+                            $annotation = $CmdletDefinition.Annotations | where-object -FilterScript {$_.Target -like "microsoft.graph.$($property.ParentNode.Name)/$($property.Name)" }
+                            if(-not [String]::IsNullOrWhiteSpace($annotation.Annotation.String))
+                            {
+                                $description =$annotation.Annotation.String.replace('"',"'")
+                                $description =$description -replace '[^\p{L}\p{Nd}/(/}/_ -.,=:)'']', ''
+                            }
+                        }
+                        $myProperty.Add('Description', $description)
 
                         $properties+=$myProperty
                     }
@@ -1532,7 +1567,7 @@ function Get-ComplexTypeConstructorToString
     {
         $loopPropertyName=Get-StringFirstCharacterToLower -Value $loopPropertyName
     }
-    if($Property.IsRootProperty -eq $false)
+    if($Property.IsRootProperty -eq $false -and -not $IsNested)
     {
         $loopPropertyName=Get-StringFirstCharacterToLower -Value $Property.Name
         $propertyName = Get-StringFirstCharacterToLower -Value $Property.Name
@@ -1552,7 +1587,7 @@ function Get-ComplexTypeConstructorToString
             {
                 $propRoot=$ParentPropertyName.replace("my","")
                 $valuePrefix="current$propRoot."
-                if($property.IsRootProperty -eq $false)
+                if($property.IsRootProperty -eq $false -and -not $IsNested)
                 {
                     $valuePrefix += "AdditionalProperties."
                 }
@@ -1595,7 +1630,7 @@ function Get-ComplexTypeConstructorToString
             $valuePrefix += "$recallProperty."
         }
         $AssignedPropertyName = $nestedProperty.Name
-        if($nestedProperty.IsRootProperty -eq $false)
+        if($nestedProperty.IsRootProperty -eq $false -and -not $IsNested)
         {
             $valuePrefix += "AdditionalProperties."
         }
@@ -1959,7 +1994,7 @@ function Get-ParameterBlockInformation
         $cmdletParameter = $DefaultParameterSetProperties | Where-Object -FilterScript { $_.Name -eq $property.Name }
         if (($null -ne $cmdletParameter `
                 -and $cmdletParameter.IsMandatory -eq $true) `
-            -or $property.Name -eq 'Id')
+            -or $property.Name -eq 'Id' -or $property.Name -eq 'DisplayName')
         {
             $isMandatory = $true
             $parameterAttribute = "[Parameter(Mandatory = `$true)]"
@@ -2250,6 +2285,15 @@ function Get-M365DSCFakeValues
 
     foreach ($parameter in $parameters)
     {
+
+        if($null -ne (Get-Variable hashValue -ErrorAction SilentlyContinue))
+        {
+            try
+            {
+                clear-variable hashValue -force
+            }
+            catch {}
+        }
         $parameterName = $parameter.Name
         if($parameter.Name -eq "@odata.type" -and $IsGetTargetResource)
         {
@@ -2364,7 +2408,7 @@ function Get-M365DSCFakeValues
 
         if ($hashValue)
         {
-            if ((-Not $parameter.IsRootProperty ) -and -not $IsGetTargetResource)
+            if ((-Not $parameter.IsRootProperty ) -and -not $IsGetTargetResource -and -not $isRecursive)
             {
                 $parameterName = Get-StringFirstCharacterToLower -Value $parameterName
                 $additionalProperties.Add($parameterName, $hashValue)
@@ -2448,6 +2492,7 @@ function Get-M365DSCHashAsString
 
             'Hashtable'
             {
+                #read-host -Prompt ($Values.$Key|fl *|out-string)
                 $extraSpace = ''
                 $line = "$Space$extraSpace$key = "
                 if ($Values.$Key.isArray)
@@ -2465,6 +2510,7 @@ function Get-M365DSCHashAsString
                 }
 
                 $sb.AppendLine("$line@{") | Out-Null
+
                 if ($Values.$Key.Properties)
                 {
                     $propLine = ''
@@ -2479,7 +2525,6 @@ function Get-M365DSCHashAsString
                         $propLine += $l
                     }
                     $sb.Append($propLine) | Out-Null
-
                 }
                 else
                 {
@@ -2712,6 +2757,10 @@ function New-M365SchemaPropertySet
                 {
                     $permission = "Key"
                 }
+                if ($_.Name -eq "DisplayName")
+                {
+                    $permission = "Required"
+                }
                 $schemaProperties += "    [$permission, Description(`"$($_.Description)`")$propertySet] $($propertyType) $($_.Name)"
                 if ($_.IsArray)
                 {
@@ -2830,7 +2879,7 @@ function New-M365DSCExampleFile
     $start = $exportContent.IndexOf("{", $start) + 1
     $exampleContent = $exportContent.Substring($start, $end-$start)
 
-    $exampleFileFullPath = "$Path\$ResourceName\1-$ResourceName-Example.psm1"
+    $exampleFileFullPath = "$Path\$ResourceName\1-$ResourceName-Example.ps1"
     $folderPath = "$Path\$ResourceName"
     New-Item $folderPath -ItemType Directory -Force | Out-Null
     $templatePath = '.\Example.Template.ps1'

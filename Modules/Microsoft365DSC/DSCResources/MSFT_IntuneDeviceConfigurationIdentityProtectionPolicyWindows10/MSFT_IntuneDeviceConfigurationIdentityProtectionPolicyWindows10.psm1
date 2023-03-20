@@ -5,7 +5,85 @@ function Get-TargetResource
     param
     (
         #region resource generator code
-<ParameterBlock><AssignmentsParam>        #endregion
+        [Parameter()]
+        [System.Boolean]
+        $EnhancedAntiSpoofingForFacialFeaturesEnabled,
+
+        [Parameter()]
+        [System.Int32]
+        $PinExpirationInDays,
+
+        [Parameter()]
+        [ValidateSet('blocked','required','allowed','notConfigured')]
+        [System.String]
+        $PinLowercaseCharactersUsage,
+
+        [Parameter()]
+        [System.Int32]
+        $PinMaximumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $PinMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $PinPreviousBlockCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $PinRecoveryEnabled,
+
+        [Parameter()]
+        [ValidateSet('blocked','required','allowed','notConfigured')]
+        [System.String]
+        $PinSpecialCharactersUsage,
+
+        [Parameter()]
+        [ValidateSet('blocked','required','allowed','notConfigured')]
+        [System.String]
+        $PinUppercaseCharactersUsage,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecurityDeviceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $UnlockWithBiometricsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseCertificatesForOnPremisesAuthEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseSecurityKeyForSignin,
+
+        [Parameter()]
+        [System.Boolean]
+        $WindowsHelloForBusinessBlocked,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $SupportsScopeTags,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+        #endregion
 
         [Parameter()]
         [System.String]
@@ -39,8 +117,9 @@ function Get-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload '<#Workload#>' `
-            -InboundParameters $PSBoundParameters
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters `
+            -ProfileName 'beta'
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
@@ -57,34 +136,95 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
         $nullResult.Ensure = 'Absent'
 
-        $getValue = $null<#ResourceGenerator
+        $getValue = $null
         #region resource generator code
-        $getValue = <GetCmdLetName> <getKeyIdentifier> -ErrorAction SilentlyContinue
+        $getValue = Get-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id  -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>}"
+            Write-Verbose -Message "Could not find an Intune Device Configuration Identity Protection Policy for Windows10 with Id {$Id}"
 
-            if(-Not [string]::IsNullOrEmpty($<FilterKey>))
+            if(-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = <GetCmdLetName> `
-<AlternativeFilter>
+                $getValue = Get-MgDeviceManagementDeviceConfiguration `
+                    -Filter "DisplayName eq '$DisplayName'" `
+                    -ErrorAction SilentlyContinue
             }
         }
-        #endregionResourceGenerator#>
+        #endregion
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an <ResourceDescription> with <FilterKey> {$<FilterKey>}"
+            Write-Verbose -Message "Could not find an Intune Device Configuration Identity Protection Policy for Windows10 with DisplayName {$DisplayName}"
             return $nullResult
         }
-        $<PrimaryKey> = $getValue.<PrimaryKey>
-        Write-Verbose -Message "An <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>} was found."<#ResourceGenerator
-<ComplexTypeConstructor><EnumTypeConstructor><DateTypeConstructor><TimeTypeConstructor>ResourceGenerator#>
-        $results = @{<#ResourceGenerator
-            #region resource generator code
-<HashTableMapping>            #endregionResourceGenerator#>
+        $Id = $getValue.Id
+        Write-Verbose -Message "An Intune Device Configuration Identity Protection Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName} was found."
+
+        #region resource generator code
+        $enumPinLowercaseCharactersUsage = $null
+        if ($null -ne $getValue.AdditionalProperties.pinLowercaseCharactersUsage)
+        {
+            $enumPinLowercaseCharactersUsage = $getValue.AdditionalProperties.pinLowercaseCharactersUsage.ToString()
         }
-<#ComplexTypeContent#><#AssignmentsGet#>
+
+        $enumPinSpecialCharactersUsage = $null
+        if ($null -ne $getValue.AdditionalProperties.pinSpecialCharactersUsage)
+        {
+            $enumPinSpecialCharactersUsage = $getValue.AdditionalProperties.pinSpecialCharactersUsage.ToString()
+        }
+
+        $enumPinUppercaseCharactersUsage = $null
+        if ($null -ne $getValue.AdditionalProperties.pinUppercaseCharactersUsage)
+        {
+            $enumPinUppercaseCharactersUsage = $getValue.AdditionalProperties.pinUppercaseCharactersUsage.ToString()
+        }
+
+        #endregion
+
+        $results = @{
+            #region resource generator code
+            EnhancedAntiSpoofingForFacialFeaturesEnabled = $getValue.AdditionalProperties.enhancedAntiSpoofingForFacialFeaturesEnabled
+            PinExpirationInDays                          = $getValue.AdditionalProperties.pinExpirationInDays
+            PinLowercaseCharactersUsage                  = $enumPinLowercaseCharactersUsage
+            PinMaximumLength                             = $getValue.AdditionalProperties.pinMaximumLength
+            PinMinimumLength                             = $getValue.AdditionalProperties.pinMinimumLength
+            PinPreviousBlockCount                        = $getValue.AdditionalProperties.pinPreviousBlockCount
+            PinRecoveryEnabled                           = $getValue.AdditionalProperties.pinRecoveryEnabled
+            PinSpecialCharactersUsage                    = $enumPinSpecialCharactersUsage
+            PinUppercaseCharactersUsage                  = $enumPinUppercaseCharactersUsage
+            SecurityDeviceRequired                       = $getValue.AdditionalProperties.securityDeviceRequired
+            UnlockWithBiometricsEnabled                  = $getValue.AdditionalProperties.unlockWithBiometricsEnabled
+            UseCertificatesForOnPremisesAuthEnabled      = $getValue.AdditionalProperties.useCertificatesForOnPremisesAuthEnabled
+            UseSecurityKeyForSignin                      = $getValue.AdditionalProperties.useSecurityKeyForSignin
+            WindowsHelloForBusinessBlocked               = $getValue.AdditionalProperties.windowsHelloForBusinessBlocked
+            Description                                  = $getValue.Description
+            DisplayName                                  = $getValue.DisplayName
+            SupportsScopeTags                            = $getValue.SupportsScopeTags
+            Id                                           = $getValue.Id
+            Ensure                                       = 'Present'
+            Credential                                   = $Credential
+            ApplicationId                                = $ApplicationId
+            TenantId                                     = $TenantId
+            ApplicationSecret                            = $ApplicationSecret
+            CertificateThumbprint                        = $CertificateThumbprint
+            Managedidentity                              = $ManagedIdentity.IsPresent
+            #endregion
+        }
+        $assignmentsValues = Get-MgDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
+        $assignmentResult = @()
+        foreach ($assignmentEntry in $AssignmentsValues)
+        {
+            $assignmentValue = @{
+                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+                deviceAndAppManagementAssignmentFilterType = $(if($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
+                    {$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()})
+                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
+                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
+            }
+            $assignmentResult += $assignmentValue
+        }
+        $results.Add('Assignments', $assignmentResult)
+
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -105,7 +245,86 @@ function Set-TargetResource
     param
     (
         #region resource generator code
-<ParameterBlock><AssignmentsParam>        #endregion
+        [Parameter()]
+        [System.Boolean]
+        $EnhancedAntiSpoofingForFacialFeaturesEnabled,
+
+        [Parameter()]
+        [System.Int32]
+        $PinExpirationInDays,
+
+        [Parameter()]
+        [ValidateSet('blocked','required','allowed','notConfigured')]
+        [System.String]
+        $PinLowercaseCharactersUsage,
+
+        [Parameter()]
+        [System.Int32]
+        $PinMaximumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $PinMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $PinPreviousBlockCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $PinRecoveryEnabled,
+
+        [Parameter()]
+        [ValidateSet('blocked','required','allowed','notConfigured')]
+        [System.String]
+        $PinSpecialCharactersUsage,
+
+        [Parameter()]
+        [ValidateSet('blocked','required','allowed','notConfigured')]
+        [System.String]
+        $PinUppercaseCharactersUsage,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecurityDeviceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $UnlockWithBiometricsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseCertificatesForOnPremisesAuthEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseSecurityKeyForSignin,
+
+        [Parameter()]
+        [System.Boolean]
+        $WindowsHelloForBusinessBlocked,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $SupportsScopeTags,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+        #endregion
+
         [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -161,8 +380,9 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating an <ResourceDescription> with <FilterKey> {$DisplayName}"
-<#AssignmentsRemove#>
+        Write-Verbose -Message "Creating an Intune Device Configuration Identity Protection Policy for Windows10 with DisplayName {$DisplayName}"
+        $PSBoundParameters.Remove("Assignments") | Out-Null
+
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
         $CreateParameters.Remove('Id') | Out-Null
@@ -174,15 +394,29 @@ function Set-TargetResource
             {
                 $CreateParameters.$key= Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
-        }<#ResourceGenerator
+        }
         #region resource generator code
-<NewDataType>        $policy=<NewCmdLetName> <#NewKeyIdentifier#>
-<#AssignmentsNew#>        #endregionResourceGenerator#>
+        $CreateParameters.Add("@odata.type", "#microsoft.graph.windowsIdentityProtectionConfiguration")
+        $policy=New-MgDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
+        $assignmentsHash=@()
+        foreach($assignment in $Assignments)
+        {
+            $assignmentsHash+=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+        }
+
+        if($policy.id)
+        {
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+                -Targets $assignmentsHash `
+                -Repository 'deviceManagement/deviceConfigurations'
+        }
+        #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}"
-<#AssignmentsRemove#>
+        Write-Verbose -Message "Updating the Intune Device Configuration Identity Protection Policy for Windows10 with Id {$($currentInstance.Id)}"
+        $PSBoundParameters.Remove("Assignments") | Out-Null
+
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
@@ -195,17 +429,28 @@ function Set-TargetResource
             {
                 $UpdateParameters.$key= Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
-        }<#ResourceGenerator
+        }
         #region resource generator code
-<UpdateDataType>        <UpdateCmdLetName> <#UpdateKeyIdentifier#>
-<#AssignmentsUpdate#>        #endregionResourceGenerator#>
+        $UpdateParameters.Add("@odata.type", "#microsoft.graph.windowsIdentityProtectionConfiguration")
+        Update-MgDeviceManagementDeviceConfiguration  `
+            -DeviceConfigurationId $currentInstance.Id `
+            -BodyParameter $UpdateParameters
+        $assignmentsHash=@()
+        foreach($assignment in $Assignments)
+        {
+            $assignmentsHash+=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+        }
+        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentInstance.id `
+            -Targets $assignmentsHash `
+            -Repository 'deviceManagement/deviceConfigurations'
+        #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}" <#ResourceGenerator
+        Write-Verbose -Message "Removing the Intune Device Configuration Identity Protection Policy for Windows10 with Id {$($currentInstance.Id)}"
         #region resource generator code
-        <RemoveCmdLetName> <#removeKeyIdentifier#>
-        #endregionResourceGenerator#>
+        Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
+        #endregion
     }
 }
 
@@ -216,7 +461,85 @@ function Test-TargetResource
     param
     (
         #region resource generator code
-<ParameterBlock><AssignmentsParam>        #endregion
+        [Parameter()]
+        [System.Boolean]
+        $EnhancedAntiSpoofingForFacialFeaturesEnabled,
+
+        [Parameter()]
+        [System.Int32]
+        $PinExpirationInDays,
+
+        [Parameter()]
+        [ValidateSet('blocked','required','allowed','notConfigured')]
+        [System.String]
+        $PinLowercaseCharactersUsage,
+
+        [Parameter()]
+        [System.Int32]
+        $PinMaximumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $PinMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $PinPreviousBlockCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $PinRecoveryEnabled,
+
+        [Parameter()]
+        [ValidateSet('blocked','required','allowed','notConfigured')]
+        [System.String]
+        $PinSpecialCharactersUsage,
+
+        [Parameter()]
+        [ValidateSet('blocked','required','allowed','notConfigured')]
+        [System.String]
+        $PinUppercaseCharactersUsage,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecurityDeviceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $UnlockWithBiometricsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseCertificatesForOnPremisesAuthEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseSecurityKeyForSignin,
+
+        [Parameter()]
+        [System.Boolean]
+        $WindowsHelloForBusinessBlocked,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $SupportsScopeTags,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+        #endregion
 
         [Parameter()]
         [System.String]
@@ -260,7 +583,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>}"
+    Write-Verbose -Message "Testing configuration of the Intune Device Configuration Identity Protection Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
@@ -348,8 +671,9 @@ function Export-TargetResource
         $ManagedIdentity
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload '<#Workload#>' `
-        -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -364,9 +688,15 @@ function Export-TargetResource
     #endregion
 
     try
-    {<#ResourceGenerator
+    {
         #region resource generator code
-<exportGetCommand>        #endregionResourceGenerator#>
+        [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
+            -All `
+            -ErrorAction Stop | Where-Object `
+            -FilterScript { `
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windowsIdentityProtectionConfiguration' `
+            }
+        #endregion
 
         $i = 1
         $dscContent = ''
@@ -380,14 +710,15 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
-            $displayedKey = $config.<PrimaryKey>
+            $displayedKey = $config.Id
             if (-not [String]::IsNullOrEmpty($config.displayName))
             {
                 $displayedKey = $config.displayName
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                <PrimaryKey>                    = $config.<PrimaryKey><RequiredKey>
+                Id                    = $config.Id
+                DisplayName           = $config.displayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -400,13 +731,28 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-<#ConvertComplexToString#><#AssignmentsConvertComplexToString#>
+            if($Results.Assignments)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
+                if ($complexTypeStringResult)
+                {
+                    $Results.Assignments = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Assignments') | Out-Null
+                }
+            }
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-<#ConvertComplexToVariable#><#AssignmentsConvertComplexToVariable#><#TrailingCharRemoval#>
+            if ($Results.Assignments)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$true
+            }
+
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -428,8 +774,71 @@ function Export-TargetResource
         return ''
     }
 }
+function Update-DeviceConfigurationPolicyAssignment
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceConfigurationPolicyId,
 
-<#AssignmentsFunctions#>function Rename-M365DSCCimInstanceParameter
+        [Parameter()]
+        [Array]
+        $Targets,
+
+        [Parameter()]
+        [System.String]
+        $Repository='deviceManagement/configurationPolicies',
+
+        [Parameter()]
+        [ValidateSet('v1.0','beta')]
+        [System.String]
+        $APIVersion='beta'
+    )
+    try
+    {
+        $deviceManagementPolicyAssignments=@()
+        $Uri="https://graph.microsoft.com/$APIVersion/$Repository/$DeviceConfigurationPolicyId/assign"
+
+        foreach($target in $targets)
+        {
+            $formattedTarget=@{"@odata.type"=$target.dataType}
+            if($target.groupId)
+            {
+                $formattedTarget.Add('groupId',$target.groupId)
+            }
+            if($target.collectionId)
+            {
+                $formattedTarget.Add('collectionId',$target.collectionId)
+            }
+            if($target.deviceAndAppManagementAssignmentFilterType)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',$target.deviceAndAppManagementAssignmentFilterType)
+            }
+            if($target.deviceAndAppManagementAssignmentFilterId)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',$target.deviceAndAppManagementAssignmentFilterId)
+            }
+            $deviceManagementPolicyAssignments+=@{'target'= $formattedTarget}
+        }
+        $body=@{'assignments'=$deviceManagementPolicyAssignments}|ConvertTo-Json -Depth 20
+        #write-verbose -Message $body
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating data:'
+            -Exception $_
+            -Source $($MyInvocation.MyCommand.Source)
+            -TenantId $TenantId
+            -Credential $Credential
+
+        return $null
+    }
+}
+
+function Rename-M365DSCCimInstanceParameter
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable],[System.Collections.Hashtable[]])]
