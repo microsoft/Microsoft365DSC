@@ -2,7 +2,7 @@
 
 # UNRELEASED
 * EXODistributionGroup
-  * Initial Release
+  * Fixed an error where the name wasn't properly escaped in the Filter
     FIXES [#3044](https://github.com/microsoft/Microsoft365DSC/issues/3044)
 * IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10
   * Initial Release
