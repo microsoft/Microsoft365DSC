@@ -34,6 +34,8 @@
     FIXES [#3050](https://github.com/microsoft/Microsoft365DSC/issues/3050)
 * MISC
   * Added QA test that checks for existence of an example for each resource.
+  * Amended output for Convert-M365DscHashtableToString to show each value on a new line
+    Fixes[#2980](https://github.com/microsoft/Microsoft365DSC/issues/2980)
 * DRG
   * Various fixes:
     Remove invalid character from description in schema.mof
