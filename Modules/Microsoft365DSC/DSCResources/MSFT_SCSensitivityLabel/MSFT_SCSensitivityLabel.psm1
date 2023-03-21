@@ -448,19 +448,19 @@ function Get-TargetResource
             $entry = $protectsite | Where-Object -FilterScript { $_.Key -eq 'allowfullaccess' }
             if ($null -ne $entry)
             {
-                $siteAndGroupAllowFullAccess = -not [Boolean]::Parse($entry.Value)
+                $siteAndGroupAllowFullAccess = [Boolean]::Parse($entry.Value)
             }
 
             $entry = $protectsite | Where-Object -FilterScript { $_.Key -eq 'allowlimitedaccess' }
             if ($null -ne $entry)
             {
-                $siteAndGroupAllowLimitedAccess = -not [Boolean]::Parse($entry.Value)
+                $siteAndGroupAllowLimitedAccess = [Boolean]::Parse($entry.Value)
             }
 
             $entry = $protectsite | Where-Object -FilterScript { $_.Key -eq 'blockaccess' }
             if ($null -ne $entry)
             {
-                $siteAndGroupBlockAccess = -not [Boolean]::Parse($entry.Value)
+                $siteAndGroupBlockAccess = [Boolean]::Parse($entry.Value)
             }
 
             $result = @{
