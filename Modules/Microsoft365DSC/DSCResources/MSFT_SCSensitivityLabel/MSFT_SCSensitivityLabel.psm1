@@ -387,6 +387,24 @@ function Get-TargetResource
                 $EncryptionRightsDefinitionsValue = Convert-EncryptionRightDefinition -RightsDefinition $entry.Value
             }
 
+            $entry = $encryption | Where-Object -FilterScript { $_.Key -eq 'donotforward' }
+            if ($null -ne $entry)
+            {
+                $encryptionDoNotForwardValue = [Boolean]::Parse($entry.Value)
+            }
+
+            $entry = $encryption | Where-Object -FilterScript { $_.Key -eq 'encryptonly' }
+            if ($null -ne $entry)
+            {
+                $encryptionEncryptOnlyValue = [Boolean]::Parse($entry.Value)
+            }
+
+            $entry = $encryption | Where-Object -FilterScript { $_.Key -eq 'promptuser' }
+            if ($null -ne $entry)
+            {
+                $encryptionPromptUserValue = [Boolean]::Parse($entry.Value)
+            }
+
             # Watermark
             $entry = $watermark | Where-Object -FilterScript { $_.Key -eq 'disabled' }
             if ($null -ne $entry)
@@ -486,11 +504,11 @@ function Get-TargetResource
                 ContentType                                    = $currentContentType
                 #EncryptionAipTemplateScopes                    = $label.EncryptionAipTemplateScopes
                 EncryptionContentExpiredOnDateInDaysOrNever    = $contentExpiredOnDateValue
-                EncryptionDoNotForward                         = ($encryption | Where-Object { $_.Key -eq 'donotforward' }).Value
-                EncryptionEncryptOnly                          = ($encryption | Where-Object { $_.Key -eq 'encryptonly' }).Value
+                EncryptionDoNotForward                         = $encryptionDoNotForwardValue
+                EncryptionEncryptOnly                          = $encryptionEncryptOnlyValue
                 EncryptionEnabled                              = $encryptionEnabledValue
                 EncryptionOfflineAccessDays                    = $offlineAccessDaysValue
-                EncryptionPromptUser                           = ($encryption | Where-Object { $_.Key -eq 'promptuser' }).Value
+                EncryptionPromptUser                           = $encryptionPromptUserValue
                 EncryptionProtectionType                       = $protectionTypeValue
                 EncryptionRightsDefinitions                    = $EncryptionRightsDefinitionsValue
                 EncryptionRightsUrl                            = ($encryption | Where-Object { $_.Key -eq 'doublekeyencryptionurl' }).Value
