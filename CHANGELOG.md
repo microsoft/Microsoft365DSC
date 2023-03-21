@@ -1,6 +1,9 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+
+* AADRoleSetting
+  * Added CertificateThumbPrint and ApplicationId to the output of the Get method
 * EXODistributionGroup
   * Fixed an error where the name wasn't properly escaped in the Filter
     FIXES [#3044](https://github.com/microsoft/Microsoft365DSC/issues/3044)
