@@ -167,6 +167,11 @@ function Get-TargetResource
                     TeamsChatLocation             = @()
                     TeamsChatLocationException    = @()
                     Credential                    = $Credential
+                    ApplicationId                 = $ApplicationId
+                    TenantId                      = $TenantId
+                    CertificateThumbprint         = $CertificateThumbprint
+                    CertificatePath               = $CertificatePath
+                    CertificatePassword           = $CertificatePassword
                 }
 
                 if ($PolicyObject.TeamsChannelLocation.Count -gt 0)

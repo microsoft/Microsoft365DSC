@@ -2,15 +2,89 @@
 
 # UNRELEASED
 
+* AADRoleSetting
+  * Added CertificateThumbPrint and ApplicationId to the output of the Get method
+* EXODistributionGroup
+  * Fixed an error where the name wasn't properly escaped in the Filter
+    FIXES [#3044](https://github.com/microsoft/Microsoft365DSC/issues/3044)
+* IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10
+  * Initial Release
+    FIXES [#2832](https://github.com/microsoft/Microsoft365DSC/issues/2832)
+* EXORoleAssignmentPolicy
+  * Fix issue with IsDefault parameter
+    FIXES [#2977](https://github.com/microsoft/Microsoft365DSC/issues/2977)
+* IntuneDeviceConfigurationEndpointProtectionPolicyWindows10
+  * Initial release
+    FIXES [#2834](https://github.com/microsoft/Microsoft365DSC/issues/2834)
+* IntuneDeviceConfigurationIdentityProtectionPolicyWindows10
+  * Initial release
+    FIXES [#2831](https://github.com/microsoft/Microsoft365DSC/issues/2831)
+* SCDLPCompliancePolicy
+  * Added support or Endpoint, On-Premises, PowerBI and ThirdPartyApps locations and exceptions.
+    FIXES [#3023](https://github.com/microsoft/Microsoft365DSC/issues/3023)
+* SCSensitivityLabel
+  * Added ContentType parameter, so you can specify where to apply the label.
+    FIXES [#2992](https://github.com/microsoft/Microsoft365DSC/issues/2992)
+  * Updated the resource to use and apply the correct parameters from the LabelActions
+    property.
+    FIXES [#3035](https://github.com/microsoft/Microsoft365DSC/issues/3035)
+  * Deprecated all FontName properties, since these are no longer configurable.
+    FIXES [#3035](https://github.com/microsoft/Microsoft365DSC/issues/3035)
+  * Fixed the collection of new and set parameters to ensure the correct values are passed to the New/Set cmdlets.
+    FIXES [#3050](https://github.com/microsoft/Microsoft365DSC/issues/3050)
+* MISC
+  * Added QA test that checks for existence of an example for each resource.
+* DRG
+  * Various fixes:
+    Remove invalid character from description in schema.mof
+    Add Id as key in schema.mof
+    Add DisplayName as Required in schema.mof
+    Fix issue with nested CIM array from test unit
+    Remove Select-MgProfile from module
+    Add DisplayName as Mandatory in module
+    Fix issue with AdditionalProperties for nested objects from module
+    Fix Ensure default value
+
+
+# 1.23.315.2
+
+* EXORoleGroup
+  * Fixes an issue with the Export process where the name of the role wasn't properly set causing errors.
+
+# 1.23.315.1
+
+* AADConditionalAccessPolicy
+  * Handle Named Location "Multifactor authentication trusted IPs"
+    Fixed [#2974](https://github.com/microsoft/Microsoft365DSC/issues/2974)
+  * Export and handle guest and external users.
+    Fixed [#2965](https://github.com/microsoft/Microsoft365DSC/issues/2965)
+* AADEntitlementManagementConnectedOrganization
+  * Initial release
 * EXOOrganizationConfig
   * Add support for the MessageRecallEnabled parameter.
     FIXES [#2978](https://github.com/microsoft/Microsoft365DSC/issues/2978)
 * EXORoleAssignmentPolicy
   * Allow description and role change at the same time.
     FIXES [#2977](https://github.com/microsoft/Microsoft365DSC/issues/2977)
+* EXORoleGroup
+  * Initial release
+* EXOTransportConfig
+  * Ensures the ExternalDsnDefaultLanguage property is correctly escaped.
+    FIXES [#2970](https://github.com/microsoft/Microsoft365DSC/issues/2970)
+* IntuneAppProtectionPolicyiOS
+  * Amended MinimumWipeOSVersion case
+    FIXES [#3000](https://github.com/microsoft/Microsoft365DSC/issues/3000)
+* PPTenantIsolationSettings
+  * Fixes the export of the Rules block which wasn't properly formatted.
+    FIXES [#2979](https://github.com/microsoft/Microsoft365DSC/issues/2979)
+* SPOTenantSettings
+  * Add support for the CommentsOnSitePagesDisabled parameter.
 * MISC
   * Added checks in New-M365DSCConnection to ensure beta MSGraph profile is correctly set when requested
     FIXES [#2942](https://github.com/microsoft/Microsoft365DSC/issues/2942)
+  * Added all Certificate related property to the returned values of the Get-TargetResource function
+    across all Security & Compliance resources.
+    FIXES [#2989](https://github.com/microsoft/Microsoft365DSC/issues/2989)
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 1.23.0.
   * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.156.

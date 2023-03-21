@@ -140,7 +140,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $MinimumWipeOsVersion,
+        $MinimumWipeOSVersion,
 
 
         [Parameter()]
@@ -570,7 +570,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $MinimumWipeOsVersion,
+        $MinimumWipeOSVersion,
 
 
         [Parameter()]
@@ -948,7 +948,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $MinimumWipeOsVersion,
+        $MinimumWipeOSVersion,
 
 
         [Parameter()]

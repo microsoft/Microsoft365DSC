@@ -33,7 +33,7 @@ class MSFT_IntuneAppProtectionPolicyiOS : OMI_BaseResource
     [Write, Description("Versions less than the specified version will block the managed app from accessing company data.")] String MinimumRequiredOSVersion;
     [Write, Description("Versions less than the specified version will result in warning message on the managed app from accessing company data.")] String MinimumWarningOSVersion;
     [Write, Description("Versions less than the specified version will block the managed app from accessing company data.")] String MinimumRequiredSdkVersion;
-    [Write, Description("Versions less than or equal to the specified version will wipe the managed app and the associated company data.")] String MinimumWipeOsVersion;
+    [Write, Description("Versions less than or equal to the specified version will wipe the managed app and the associated company data.")] String MinimumWipeOSVersion;
     [Write, Description("Versions less than or equal to the specified version will wipe the managed app and the associated company data.")] String MinimumWipeAppVersion;
     [Write, Description("Defines a managed app behavior, either block or wipe, when the device is either rooted or jailbroken, if DeviceComplianceRequired is set to true."), ValueMap{"block","wipe","warn"}, Values{"block","wipe","warn"}] String AppActionIfDeviceComplianceRequired;
     [Write, Description("Defines a managed app behavior, either block or wipe, based on maximum number of incorrect pin retry attempts."), ValueMap{"block","wipe","warn"}, Values{"block","wipe","warn"}] String AppActionIfMaximumPinRetriesExceeded;
