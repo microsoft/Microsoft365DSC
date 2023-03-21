@@ -837,10 +837,19 @@ function Set-TargetResource
             $CreationParams.Remove('SiteAndGroupExternalSharingControlType')
         }
 
-        $CreationParams.Remove('Credential') | Out-Null
-        $CreationParams.Remove('Ensure') | Out-Null
         $CreationParams.Remove('Priority') | Out-Null
         $CreationParams.Remove('Disabled') | Out-Null
+
+        # Remove authentication parameters
+        $CreationParams.Remove('Ensure') | Out-Null
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('ApplicationId') | Out-Null
+        $CreationParams.Remove('TenantId') | Out-Null
+        $CreationParams.Remove('CertificatePath') | Out-Null
+        $CreationParams.Remove('CertificatePassword') | Out-Null
+        $CreationParams.Remove('CertificateThumbprint') | Out-Null
+        $CreationParams.Remove('ManagedIdentity') | Out-Null
+        $CreationParams.Remove('ApplicationSecret') | Out-Null
 
         try
         {
@@ -878,10 +887,19 @@ function Set-TargetResource
         }
 
         #Remove unused parameters for Set-Label cmdlet
-        $SetParams.Remove('Credential') | Out-Null
-        $SetParams.Remove('Ensure') | Out-Null
         $SetParams.Remove('Name') | Out-Null
         $SetParams.Remove('Disabled') | Out-Null
+
+        # Remove authentication parameters
+        $SetParams.Remove('Ensure') | Out-Null
+        $SetParams.Remove('Credential') | Out-Null
+        $SetParams.Remove('ApplicationId') | Out-Null
+        $SetParams.Remove('TenantId') | Out-Null
+        $SetParams.Remove('CertificatePath') | Out-Null
+        $SetParams.Remove('CertificatePassword') | Out-Null
+        $SetParams.Remove('CertificateThumbprint') | Out-Null
+        $SetParams.Remove('ManagedIdentity') | Out-Null
+        $SetParams.Remove('ApplicationSecret') | Out-Null
 
         try
         {
