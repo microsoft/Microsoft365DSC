@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# Breaking Changes (APRIL 5TH RELEASE)
+
+* TeamsGroupPolicyAssignment change of key and required parameters
+  * [BREAKING CHANGE] Setting GroupId and PolicyType as Key parameters
+    FIXES [#3054](https://github.com/microsoft/Microsoft365DSC/issues/3054)
+
 # UNRELEASED
 
 * AADRoleSetting
