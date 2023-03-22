@@ -2,6 +2,11 @@
 
 # UNRELEASED
 
+* AADRoleSetting
+  * Added CertificateThumbPrint and ApplicationId to the output of the Get method
+* EXODistributionGroup
+  * Fixed an error where the name wasn't properly escaped in the Filter
+    FIXES [#3044](https://github.com/microsoft/Microsoft365DSC/issues/3044)
 * IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10
   * Initial Release
     FIXES [#2832](https://github.com/microsoft/Microsoft365DSC/issues/2832)
@@ -25,6 +30,8 @@
     FIXES [#3035](https://github.com/microsoft/Microsoft365DSC/issues/3035)
   * Deprecated all FontName properties, since these are no longer configurable.
     FIXES [#3035](https://github.com/microsoft/Microsoft365DSC/issues/3035)
+  * Fixed the collection of new and set parameters to ensure the correct values are passed to the New/Set cmdlets.
+    FIXES [#3050](https://github.com/microsoft/Microsoft365DSC/issues/3050)
 * MISC
   * Added QA test that checks for existence of an example for each resource.
 * DRG

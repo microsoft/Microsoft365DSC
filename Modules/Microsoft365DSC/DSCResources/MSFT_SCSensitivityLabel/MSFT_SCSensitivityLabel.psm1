@@ -387,6 +387,24 @@ function Get-TargetResource
                 $EncryptionRightsDefinitionsValue = Convert-EncryptionRightDefinition -RightsDefinition $entry.Value
             }
 
+            $entry = $encryption | Where-Object -FilterScript { $_.Key -eq 'donotforward' }
+            if ($null -ne $entry)
+            {
+                $encryptionDoNotForwardValue = [Boolean]::Parse($entry.Value)
+            }
+
+            $entry = $encryption | Where-Object -FilterScript { $_.Key -eq 'encryptonly' }
+            if ($null -ne $entry)
+            {
+                $encryptionEncryptOnlyValue = [Boolean]::Parse($entry.Value)
+            }
+
+            $entry = $encryption | Where-Object -FilterScript { $_.Key -eq 'promptuser' }
+            if ($null -ne $entry)
+            {
+                $encryptionPromptUserValue = [Boolean]::Parse($entry.Value)
+            }
+
             # Watermark
             $entry = $watermark | Where-Object -FilterScript { $_.Key -eq 'disabled' }
             if ($null -ne $entry)
@@ -430,19 +448,19 @@ function Get-TargetResource
             $entry = $protectsite | Where-Object -FilterScript { $_.Key -eq 'allowfullaccess' }
             if ($null -ne $entry)
             {
-                $siteAndGroupAllowFullAccess = -not [Boolean]::Parse($entry.Value)
+                $siteAndGroupAllowFullAccess = [Boolean]::Parse($entry.Value)
             }
 
             $entry = $protectsite | Where-Object -FilterScript { $_.Key -eq 'allowlimitedaccess' }
             if ($null -ne $entry)
             {
-                $siteAndGroupAllowLimitedAccess = -not [Boolean]::Parse($entry.Value)
+                $siteAndGroupAllowLimitedAccess = [Boolean]::Parse($entry.Value)
             }
 
             $entry = $protectsite | Where-Object -FilterScript { $_.Key -eq 'blockaccess' }
             if ($null -ne $entry)
             {
-                $siteAndGroupBlockAccess = -not [Boolean]::Parse($entry.Value)
+                $siteAndGroupBlockAccess = [Boolean]::Parse($entry.Value)
             }
 
             $result = @{
@@ -486,11 +504,11 @@ function Get-TargetResource
                 ContentType                                    = $currentContentType
                 #EncryptionAipTemplateScopes                    = $label.EncryptionAipTemplateScopes
                 EncryptionContentExpiredOnDateInDaysOrNever    = $contentExpiredOnDateValue
-                EncryptionDoNotForward                         = ($encryption | Where-Object { $_.Key -eq 'donotforward' }).Value
-                EncryptionEncryptOnly                          = ($encryption | Where-Object { $_.Key -eq 'encryptonly' }).Value
+                EncryptionDoNotForward                         = $encryptionDoNotForwardValue
+                EncryptionEncryptOnly                          = $encryptionEncryptOnlyValue
                 EncryptionEnabled                              = $encryptionEnabledValue
                 EncryptionOfflineAccessDays                    = $offlineAccessDaysValue
-                EncryptionPromptUser                           = ($encryption | Where-Object { $_.Key -eq 'promptuser' }).Value
+                EncryptionPromptUser                           = $encryptionPromptUserValue
                 EncryptionProtectionType                       = $protectionTypeValue
                 EncryptionRightsDefinitions                    = $EncryptionRightsDefinitionsValue
                 EncryptionRightsUrl                            = ($encryption | Where-Object { $_.Key -eq 'doublekeyencryptionurl' }).Value
@@ -819,10 +837,19 @@ function Set-TargetResource
             $CreationParams.Remove('SiteAndGroupExternalSharingControlType')
         }
 
-        $CreationParams.Remove('Credential') | Out-Null
-        $CreationParams.Remove('Ensure') | Out-Null
         $CreationParams.Remove('Priority') | Out-Null
         $CreationParams.Remove('Disabled') | Out-Null
+
+        # Remove authentication parameters
+        $CreationParams.Remove('Ensure') | Out-Null
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('ApplicationId') | Out-Null
+        $CreationParams.Remove('TenantId') | Out-Null
+        $CreationParams.Remove('CertificatePath') | Out-Null
+        $CreationParams.Remove('CertificatePassword') | Out-Null
+        $CreationParams.Remove('CertificateThumbprint') | Out-Null
+        $CreationParams.Remove('ManagedIdentity') | Out-Null
+        $CreationParams.Remove('ApplicationSecret') | Out-Null
 
         try
         {
@@ -860,10 +887,19 @@ function Set-TargetResource
         }
 
         #Remove unused parameters for Set-Label cmdlet
-        $SetParams.Remove('Credential') | Out-Null
-        $SetParams.Remove('Ensure') | Out-Null
         $SetParams.Remove('Name') | Out-Null
         $SetParams.Remove('Disabled') | Out-Null
+
+        # Remove authentication parameters
+        $SetParams.Remove('Ensure') | Out-Null
+        $SetParams.Remove('Credential') | Out-Null
+        $SetParams.Remove('ApplicationId') | Out-Null
+        $SetParams.Remove('TenantId') | Out-Null
+        $SetParams.Remove('CertificatePath') | Out-Null
+        $SetParams.Remove('CertificatePassword') | Out-Null
+        $SetParams.Remove('CertificateThumbprint') | Out-Null
+        $SetParams.Remove('ManagedIdentity') | Out-Null
+        $SetParams.Remove('ApplicationSecret') | Out-Null
 
         try
         {
@@ -1151,11 +1187,19 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('AdvancedSettings') | Out-Null
     $ValuesToCheck.Remove('LocaleSettings') | Out-Null
     $ValuesToCheck.Remove('Disabled') | Out-Null
     $ValuesToCheck.Remove('EncryptionAipTemplateScopes') | Out-Null
+
+    # Remove authentication parameters
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     if ($null -ne $AdvancedSettings -and $null -ne $CurrentValues.AdvancedSettings)
     {
