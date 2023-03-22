@@ -1008,8 +1008,8 @@ function Test-TargetResource
     # remove thre ID from the values to check as it may not match
     $targetvalues.remove('ID') | Out-Null
 
-    Write-Verbose -Message "Current Values: $((Convert-M365DscHashtableToString -Hashtable $CurrentValues) -replace ';', "`r`n")"
-    Write-Verbose -Message "Target Values: $((Convert-M365DscHashtableToString -Hashtable $targetvalues) -replace ';', "`r`n")"
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $targetvalues)"
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

@@ -138,7 +138,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         LocaleSettings = '{"LocaleKey":"DisplayName",
                                             "LabelSettings":[
                                             {"Key":"en-us","Value":"English Display Names"}]}'
-
                     }
                 }
             }
@@ -199,7 +198,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Credential = $Credential
                 }
-                Mock -CommandName Get-Label  -MockWith {
+                Mock -CommandName Get-Label -MockWith {
                     return @{
                         Name           = 'TestRule'
                         Settings       = '{"Key": "LabelStatus",

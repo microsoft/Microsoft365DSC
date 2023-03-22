@@ -43,7 +43,6 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters `
             -ProfileName '<#APIVersion#>'
 
-        Select-MgProfile -Name '<#APIVersion#>'
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
 
@@ -390,7 +389,7 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                <PrimaryKey>                    = $config.<PrimaryKey>
+                <PrimaryKey>                    = $config.<PrimaryKey><RequiredKey>
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -431,6 +430,7 @@ function Export-TargetResource
         return ''
     }
 }
+
 <#AssignmentsFunctions#>function Rename-M365DSCCimInstanceParameter
 {
     [CmdletBinding()]
@@ -492,6 +492,7 @@ function Export-TargetResource
     return $result
     #endregion
 }
+
 function Get-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]

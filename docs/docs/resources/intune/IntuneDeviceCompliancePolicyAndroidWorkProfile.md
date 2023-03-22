@@ -222,15 +222,15 @@ Configuration Example
     {
         IntuneDeviceCompliancePolicyAndroidWorkProfile 'ConfigureAndroidDeviceCompliancePolicyWorkProfile'
         {
-            DisplayName                                        = "Test Policy"
-            Description                                        = ""
+            DisplayName                                        = 'Test Policy'
+            Description                                        = ''
             DeviceThreatProtectionEnabled                      = $False
-            DeviceThreatProtectionRequiredSecurityLevel        = "unavailable"
+            DeviceThreatProtectionRequiredSecurityLevel        = 'unavailable'
             PasswordExpirationDays                             = 90
             PasswordMinimumLength                              = 6
             PasswordMinutesOfInactivityBeforeLock              = 5
             PasswordRequired                                   = $True
-            PasswordRequiredType                               = "numericComplex"
+            PasswordRequiredType                               = 'numericComplex'
             SecurityBlockJailbrokenDevices                     = $True
             SecurityDisableUsbDebugging                        = $False
             SecurityPreventInstallAppsFromUnknownSources       = $False
@@ -241,7 +241,7 @@ Configuration Example
             SecurityRequireUpToDateSecurityProviders           = $False
             SecurityRequireVerifyApps                          = $False
             StorageRequireEncryption                           = $True
-            Ensure                                             = "Present"
+            Ensure                                             = 'Present'
             Credential                                         = $credsglobaladmin
         }
     }
@@ -266,8 +266,8 @@ Configuration Example
     {
         IntuneDeviceCompliancePolicyAndroidWorkProfile 'RemoveDeviceCompliancePolicyAndroidWorkProfile'
         {
-            DisplayName = "Test Android Work Profile Device Compliance Policy"
-            Ensure      = "Absent"
+            DisplayName = 'Test Android Work Profile Device Compliance Policy'
+            Ensure      = 'Absent'
             Credential  = $credsGlobalAdmin
         }
     }

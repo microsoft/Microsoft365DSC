@@ -261,7 +261,7 @@ function Set-TargetResource
             }
         }
         # Update other attributes of role assignment policy
-        Set-RoleAssignmentPolicy -Identity $Name -Name $Name -Description $Description -IsDefault $IsDefault -Confirm:$false
+        Set-RoleAssignmentPolicy -Identity $Name -Name $Name -Description $Description -IsDefault:$IsDefault -Confirm:$false
     }
 }
 

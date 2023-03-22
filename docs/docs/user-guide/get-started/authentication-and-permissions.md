@@ -7,7 +7,7 @@ It is also very important to understand the authentication process of Microsoft3
 1. A set of credentials for a user
 2. A Service Principal by specifying parameters such as an Azure Active Directory (AD) Application ID, Tenant ID and a Secret or Certificate.
 
-Currently, each Microsoft 365 workload can support a different combination of authentication methods because of the underlying modules only supporting those methods. For example: The Security and Compliance and Microsoft Teams modules do **not** support authenticating using a Service Principal. The table in the next paragraph shows which workload uses which module and therefore supports which authentication method.
+Currently, each Microsoft 365 workload can support a different combination of authentication methods because of the underlying modules only supporting those methods. The table in the next paragraph shows which workload uses which module and therefore supports which authentication method.
 
 **Important**: The recommendation is to use Service Principal whenever possible because:
 
