@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.322.1
 
 * AADRoleSetting
   * Added CertificateThumbPrint and ApplicationId to the output of the Get method
@@ -34,6 +34,8 @@
     FIXES [#3050](https://github.com/microsoft/Microsoft365DSC/issues/3050)
 * MISC
   * Added QA test that checks for existence of an example for each resource.
+  * Amended output for Convert-M365DscHashtableToString to show each value on a new line
+    Fixes[#2980](https://github.com/microsoft/Microsoft365DSC/issues/2980)
 * DRG
   * Various fixes:
     Remove invalid character from description in schema.mof
@@ -44,7 +46,6 @@
     Add DisplayName as Mandatory in module
     Fix issue with AdditionalProperties for nested objects from module
     Fix Ensure default value
-
 
 # 1.23.315.2
 
