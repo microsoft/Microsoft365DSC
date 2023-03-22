@@ -12,12 +12,12 @@ function Get-TargetResource
         [System.String]
         $GroupId,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [ValidateSet('CallingLineIdentity', 'TeamsAppSetupPolicy', 'TeamsAudioConferencingPolicy', 'TeamsCallingPolicy', 'TeamsCallParkPolicy', 'TeamsChannelsPolicy', 'TeamsComplianceRecordingPolicy', 'TenantDialPlan', 'TeamsMeetingBroadcastPolicy', 'TeamsMeetingPolicy', 'TeamsMessagingPolicy', 'TeamsShiftsPolicy', 'TeamsUpdateManagementPolicy', 'TeamsVerticalPackagePolicy')]
         [System.String]
         $PolicyType,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $PolicyName,
 
@@ -66,20 +66,29 @@ function Get-TargetResource
 
     try
     {
-        Write-Verbose -Message "Getting GroupPOlicyAssignment for {$GroupId}"
-        $group = Find-CsGroup -SearchQuery $GroupId
-        if($group.Length -gt 1)
+        if ($GroupId -ne '')
         {
-            Write-Verbose -Message "Found $($group.Length) groups with the id {$GroupId}"
-            $Group = $Group | Where-Object { $_.DisplayName -eq $GroupDisplayName }
+            $queryparam = $GroupId
         }
-        else{
-            Write-Verbose -Message "Getting GroupPolicyAssignment for {$GroupDisplayName}"
-            $Group = Find-CsGroup -SearchQuery $GroupDisplayName
+        elseif ($GroupDisplayName -ne '')
+        {
+            $queryparam = $GroupDisplayName
+        }
+        else
+        {
+            Write-Verbose -Message 'No GroupId or GroupDisplayName specified'
+            return $nullReturn
+        }
+        Write-Verbose -Message "Getting GroupPolicyAssignment for {$queryparam}"
+        $group = Find-CsGroup -SearchQuery $queryparam
+        if ($group.Length -gt 1)
+        {
+            Write-Verbose -Message "Found $($group.Length) groups with the queryparameter {$queryparam}"
+            $Group = $Group | Where-Object { $_.DisplayName -eq $GroupDisplayName }
             if ($group.Length -gt 1)
             {
-                Write-Verbose -Message "Found $($group.Length) groups with the name $GroupDisplayName"
-                $Group = $Group | Where-Object { $_.DisplayName -eq $GroupDisplayName }
+                Write-Verbose -Message "Found $($group.Length) groups with the queryparameter {$queryparam} and GroupDisplayName {$GroupDisplayName}"
+                return $nullReturn
             }
         }
         if ($null -eq $Group)
@@ -132,12 +141,12 @@ function Set-TargetResource
         [System.String]
         $GroupId,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [ValidateSet('CallingLineIdentity', 'TeamsAppSetupPolicy', 'TeamsAudioConferencingPolicy', 'TeamsCallingPolicy', 'TeamsCallParkPolicy', 'TeamsChannelsPolicy', 'TeamsComplianceRecordingPolicy', 'TenantDialPlan', 'TeamsMeetingBroadcastPolicy', 'TeamsMeetingPolicy', 'TeamsMessagingPolicy', 'TeamsShiftsPolicy', 'TeamsUpdateManagementPolicy', 'TeamsVerticalPackagePolicy')]
         [System.String]
         $PolicyType,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $PolicyName,
 
@@ -275,12 +284,12 @@ function Test-TargetResource
         [System.String]
         $GroupId,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [ValidateSet('CallingLineIdentity', 'TeamsAppSetupPolicy', 'TeamsAudioConferencingPolicy', 'TeamsCallingPolicy', 'TeamsCallParkPolicy', 'TeamsChannelsPolicy', 'TeamsComplianceRecordingPolicy', 'TenantDialPlan', 'TeamsMeetingBroadcastPolicy', 'TeamsMeetingPolicy', 'TeamsMessagingPolicy', 'TeamsShiftsPolicy', 'TeamsUpdateManagementPolicy', 'TeamsVerticalPackagePolicy')]
         [System.String]
         $PolicyType,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $PolicyName,
 
