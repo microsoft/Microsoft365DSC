@@ -1,6 +1,13 @@
 # Change log for Microsoft365DSC
 
+
 # UNRELEASED
+
+* IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10
+  * Initial Release
+    FIXES [#2832](https://github.com/microsoft/Microsoft365DSC/issues/2832)
+
+# 1.23.322.1
 
 * EXORoleAssignmentPolicy
   * Fix issue with IsDefault parameter
@@ -31,8 +38,12 @@
     FIXES [#3035](https://github.com/microsoft/Microsoft365DSC/issues/3035)
   * Deprecated all FontName properties, since these are no longer configurable.
     FIXES [#3035](https://github.com/microsoft/Microsoft365DSC/issues/3035)
+  * Fixed the collection of new and set parameters to ensure the correct values are passed to the New/Set cmdlets.
+    FIXES [#3050](https://github.com/microsoft/Microsoft365DSC/issues/3050)
 * MISC
   * Added QA test that checks for existence of an example for each resource.
+  * Amended output for Convert-M365DscHashtableToString to show each value on a new line
+    Fixes[#2980](https://github.com/microsoft/Microsoft365DSC/issues/2980)
 * DRG
   * Various fixes:
     Remove invalid character from description in schema.mof
@@ -43,7 +54,6 @@
     Add DisplayName as Mandatory in module
     Fix issue with AdditionalProperties for nested objects from module
     Fix Ensure default value
-
 
 # 1.23.315.2
 

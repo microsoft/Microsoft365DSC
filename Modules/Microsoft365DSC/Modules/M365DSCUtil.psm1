@@ -170,7 +170,7 @@ function Convert-M365DscHashtableToString
     }
 
     [array]::Sort($values)
-    return ($values -join '; ')
+    return ($values -join "`r`n")
 }
 
 <#
