@@ -33,7 +33,7 @@ Configuration Example
                 HideEscapeLink = $True
                 HidePrivacySettings = $True
                 DeviceUsageType = 'singleUser'
-                SkipKeyboardSelectionPage = $True
+                SkipKeyboardSelectionPage = $False
                 UserType = 'standard'
             };
         }

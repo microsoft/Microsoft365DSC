@@ -2,10 +2,17 @@
 
 
 # UNRELEASED
-
-* IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10
-  * Initial Release
-    FIXES [#2832](https://github.com/microsoft/Microsoft365DSC/issues/2832)
+* IntuneWindowsAutopilotDeploymentProfileAzureADJoined
+  * Initial release
+    FIXES [#2605](https://github.com/microsoft/Microsoft365DSC/issues/2605)
+* IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined
+  * Initial release
+    FIXES [#2605](https://github.com/microsoft/Microsoft365DSC/issues/2605)
+* DRG
+  * Various fixes
+    Cleanup generated code
+    Fix AdditionalProperties complex constructor
+    Fix Read privileges in settings file
 
 # 1.23.322.1
 
@@ -21,12 +28,9 @@
 * IntuneDeviceConfigurationIdentityProtectionPolicyWindows10
   * Initial release
     FIXES [#2831](https://github.com/microsoft/Microsoft365DSC/issues/2831)
-* IntuneWindowsAutopilotDeploymentProfileAzureADJoined
-  * Initial release
-    FIXES [#2605](https://github.com/microsoft/Microsoft365DSC/issues/2605)
-* IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined
-  * Initial release
-    FIXES [#2605](https://github.com/microsoft/Microsoft365DSC/issues/2605)
+* IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10
+  * Initial Release
+    FIXES [#2832](https://github.com/microsoft/Microsoft365DSC/issues/2832)
 * SCDLPCompliancePolicy
   * Added support or Endpoint, On-Premises, PowerBI and ThirdPartyApps locations and exceptions.
     FIXES [#3023](https://github.com/microsoft/Microsoft365DSC/issues/3023)

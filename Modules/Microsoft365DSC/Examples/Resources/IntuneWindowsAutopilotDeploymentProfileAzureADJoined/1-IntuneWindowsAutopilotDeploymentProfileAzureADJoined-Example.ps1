@@ -33,7 +33,7 @@ Configuration Example
             Id                         = "30914319-d49b-46da-b054-625d933c5769";
             Language                   = "";
             OutOfBoxExperienceSettings = MSFT_MicrosoftGraphoutOfBoxExperienceSettings1{
-                HideEULA = $True
+                HideEULA = $False
                 HideEscapeLink = $True
                 HidePrivacySettings = $True
                 DeviceUsageType = 'singleUser'

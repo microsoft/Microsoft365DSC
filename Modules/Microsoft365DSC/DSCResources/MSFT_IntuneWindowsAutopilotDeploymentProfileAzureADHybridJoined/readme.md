@@ -3,4 +3,4 @@
 
 ## Description
 
-Intune Windows Autopilot Deployment Profile Azure A D Hybrid Joined
+Intune Windows Autopilot Deployment Profile Azure AD Hybrid Joined

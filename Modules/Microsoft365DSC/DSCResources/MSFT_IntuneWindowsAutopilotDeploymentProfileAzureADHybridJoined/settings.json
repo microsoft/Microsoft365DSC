@@ -1,6 +1,6 @@
 {
     "resourceName": "IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined",
-    "description": "This resource configures an Intune Windows Autopilot Deployment Profile Azure A D Hybrid Joined.",
+    "description": "This resource configures an Intune Windows Autopilot Deployment Profile Azure AD Hybrid Joined.",
     "permissions":    {
     "graph":  {
                   "delegated":  {
