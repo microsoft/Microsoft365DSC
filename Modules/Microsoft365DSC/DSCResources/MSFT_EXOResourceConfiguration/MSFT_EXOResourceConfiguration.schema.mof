@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("EXOResourceConfiguration")]
 class MSFT_EXOResourceConfiguration : OMI_BaseResource
 {
-    [Key, Description("The Identity parameter specifies the Perimeter Configuration policy that you want to modify.")] String Identity;
+    [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
     [Write, Description("The ResourcePropertySchema parameter specifies the custom resource property that you want to make available to room or equipment mailboxes. This parameter uses the syntax Room/<Text> or Equipment/<Text> where the <Text> value doesn't contain spaces. For example, Room/Whiteboard or Equipment/Van.")] String ResourcePropertySchema[];
     [Write, Description("Specifies if this Outbound connector should exist."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;

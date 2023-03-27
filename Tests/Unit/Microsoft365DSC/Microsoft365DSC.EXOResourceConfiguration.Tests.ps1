@@ -48,9 +48,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'Config is not in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
+                    IsSingleInstance       = 'Yes'
                     Credential             = $Credential
                     Ensure                 = 'Present'
-                    Identity               = 'Resource Schema'
                     ResourcePropertySchema = @('Room/TV', 'Equipment/Laptop')
                 }
 
@@ -76,9 +76,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'Config is already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
+                    IsSingleInstance       = 'Yes'
                     Credential             = $Credential
                     Ensure                 = 'Present'
-                    Identity               = 'Resource Schema'
                     ResourcePropertySchema = @('Room/TV', 'Equipment/Laptop')
                 }
 
