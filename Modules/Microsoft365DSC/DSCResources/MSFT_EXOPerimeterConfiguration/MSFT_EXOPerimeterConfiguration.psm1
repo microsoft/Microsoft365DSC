@@ -186,6 +186,7 @@ function Set-TargetResource
     $PerimeterConfigurationParams.Remove('CertificatePath') | Out-Null
     $PerimeterConfigurationParams.Remove('CertificatePassword') | Out-Null
     $PerimeterConfigurationParams.Remove('ManagedIdentity') | Out-Null
+    $PerimeterConfigurationParams.Remove('IsSingleInstance') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($Null -ne $PerimeterConfigurationParams))
     {
