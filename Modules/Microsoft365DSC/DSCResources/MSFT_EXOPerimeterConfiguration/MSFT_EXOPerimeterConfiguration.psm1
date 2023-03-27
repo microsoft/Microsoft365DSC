@@ -6,7 +6,8 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.String[]]
@@ -84,7 +85,7 @@ function Get-TargetResource
         }
 
         $result = @{
-            Identity              = $PerimeterConfiguration.Identity
+            IsSingleInstance      = 'Yes'
             GatewayIPAddresses    = $PerimeterConfiguration.GatewayIPAddresses
             Credential            = $Credential
             Ensure                = 'Present'
@@ -119,7 +120,8 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.String[]]
@@ -184,7 +186,6 @@ function Set-TargetResource
     $PerimeterConfigurationParams.Remove('CertificatePath') | Out-Null
     $PerimeterConfigurationParams.Remove('CertificatePassword') | Out-Null
     $PerimeterConfigurationParams.Remove('ManagedIdentity') | Out-Null
-    $PerimeterConfigurationParams.Remove('Identity') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($Null -ne $PerimeterConfigurationParams))
     {
@@ -201,7 +202,8 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.String[]]
@@ -284,9 +286,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.String[]]
@@ -352,7 +355,7 @@ function Export-TargetResource
         Write-Host "    |---[1/1] $($PerimeterConfiguration.Identity)" -NoNewline
 
         $Params = @{
-            Identity              = $PerimeterConfiguration.Identity
+            IsSingleInstance      = 'Yes'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -389,4 +392,5 @@ function Export-TargetResource
         return ''
     }
 }
+
 Export-ModuleMember -Function *-TargetResource
