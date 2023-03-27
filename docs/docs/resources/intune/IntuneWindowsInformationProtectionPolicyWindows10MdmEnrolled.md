@@ -4,6 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
+| **Id** | Key | String | The unique identifier for an entity. Read-only. | |
+| **DisplayName** | Required | String | Policy display name. | |
 | **AzureRightsManagementServicesAllowed** | Write | Boolean | Specifies whether to allow Azure RMS encryption for WIP | |
 | **DataRecoveryCertificate** | Write | MSFT_MicrosoftGraphwindowsInformationProtectionDataRecoveryCertificate | Specifies a recovery certificate that can be used for data recovery of encrypted files. This is the same as the data recovery agent(DRA) certificate for encrypting file system(EFS) | |
 | **EnforcementLevel** | Write | String | WIP enforcement level.See the Enum definition for supported values. Possible values are: noProtection, encryptAndAuditOnly, encryptAuditAndPrompt, encryptAuditAndBlock. | `noProtection`, `encryptAndAuditOnly`, `encryptAuditAndPrompt`, `encryptAuditAndBlock` |
@@ -26,8 +28,6 @@
 | **RightsManagementServicesTemplateId** | Write | String | TemplateID GUID to use for RMS encryption. The RMS template allows the IT admin to configure the details about who has access to RMS-protected file and how long they have access | |
 | **SmbAutoEncryptedFileExtensions** | Write | MSFT_MicrosoftGraphwindowsInformationProtectionResourceCollection[] | Specifies a list of file extensions, so that files with these extensions are encrypted when copying from an SMB share within the corporate boundary | |
 | **Description** | Write | String | The policy's description. | |
-| **DisplayName** | Write | String | Policy display name. | |
-| **Id** | Write | String | The unique identifier for an entity. Read-only. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |

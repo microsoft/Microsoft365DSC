@@ -5,7 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Identity** | Key | String | Identity of the endpoint protection attack surface protection rules policy for Windows 10. | |
-| **DisplayName** | Write | String | Display name of the endpoint protection attack surface protection rules policy for Windows 10. | |
+| **DisplayName** | Required | String | Display name of the endpoint protection attack surface protection rules policy for Windows 10. | |
 | **Description** | Write | String | Description of the endpoint protection attack surface protection rules policy for Windows 10. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the Intune Policy. | |
 | **ProcessCreationType** | Write | String | This rule blocks processes created through PsExec and WMI from running. | `userDefined`, `block`, `auditMode`, `warn`, `disable` |

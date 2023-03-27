@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **DisplayName** | Key | String | DisplayName of the Administrative Unit | |
-| **Id** | Write | String | Object-Id of the Administrative Unit | |
+| **Id** | Key | String | Object-Id of the Administrative Unit | |
+| **DisplayName** | Required | String | DisplayName of the Administrative Unit | |
 | **Description** | Write | String | Description of the Administrative Unit | |
 | **Visibility** | Write | String | Visibility of the Administrative Unit. Specify HiddenMembership if members of the AU are hidden | |
 | **MembershipType** | Write | String | Specify membership type. Possible values are Assigned and Dynamic. Note that the functionality is currently in preview. | |
@@ -93,6 +93,7 @@ Configuration Example
     {
         AADAdministrativeUnit 'TestUnit'
         {
+            Id                            = '49a843c7-e80c-4bae-8819-825656a108f2'
             DisplayName                   = 'Test-Unit'
             MembershipRule                = "(user.country -eq `"Canada`")"
             MembershipRuleProcessingState = 'On'
