@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* O365OrgSettings
+  * Added support for the Viva Insights and Briefing email settings.
+
 # 1.23.322.1
 
 * AADRoleSetting

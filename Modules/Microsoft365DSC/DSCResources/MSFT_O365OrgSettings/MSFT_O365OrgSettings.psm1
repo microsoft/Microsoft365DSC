@@ -18,6 +18,26 @@ function Get-TargetResource
         $M365WebEnableUsersToOpenFilesFrom3PStorage,
 
         [Parameter()]
+        [System.Boolean]
+        $MicrosoftVivaBriefingEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsWebExperience,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsDigestEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsOutlookAddInAndInlineSuggestions,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsScheduleSendSuggestions,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -56,6 +76,9 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters `
         -ProfileName 'v1.0'
 
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -81,17 +104,33 @@ function Get-TargetResource
         $CortanaId = '0a0a29f9-0a25-49c7-94bf-c53c3f8fa69d'
         $CortanaEnabledValue = Get-MgServicePrincipal -Filter "appId eq '$CortanaId'" -Property 'AccountEnabled'
 
+        # Microsoft Viva Briefing Email
+        $vivaBriefingEmailValue = $false
+        $currentBriefingConfig = Get-DefaultTenantBriefingConfig
+        if ($currentBriefingConfig.PrivacyMode -eq 'opt-in')
+        {
+            $vivaBriefingEmailValue = $true
+        }
+
+        # Viva Insightss settings
+        $currentVivaInsightsSettings = Get-DefaultTenantMyAnalyticsFeatureConfig
+
         return @{
-            IsSingleInstance                           = 'Yes'
-            CortanaEnabled                             = $CortanaEnabledValue.AccountEnabled
-            M365WebEnableUsersToOpenFilesFrom3PStorage = $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled
-            Ensure                                     = 'Present'
-            Credential                                 = $Credential
-            ApplicationId                              = $ApplicationId
-            TenantId                                   = $TenantId
-            ApplicationSecret                          = $ApplicationSecret
-            CertificateThumbprint                      = $CertificateThumbprint
-            Managedidentity                            = $ManagedIdentity.IsPresent
+            IsSingleInstance                             = 'Yes'
+            CortanaEnabled                               = $CortanaEnabledValue.AccountEnabled
+            M365WebEnableUsersToOpenFilesFrom3PStorage   = $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled
+            MicrosoftVivaBriefingEmail                   = $vivaBriefingEmailValue
+            VivaInsightsWebExperience                    = $currentVivaInsightsSettings.IsDashboardEnabled
+            VivaInsightsDigestEmail                      = $currentVivaInsightsSettings.IsDigestEmailEnabled
+            VivaInsightsOutlookAddInAndInlineSuggestions = $currentVivaInsightsSettings.IsAddInEnabled
+            VivaInsightsScheduleSendSuggestions          = $currentVivaInsightsSettings.IsScheduleSendEnabled
+            Ensure                                       = 'Present'
+            Credential                                   = $Credential
+            ApplicationId                                = $ApplicationId
+            TenantId                                     = $TenantId
+            ApplicationSecret                            = $ApplicationSecret
+            CertificateThumbprint                        = $CertificateThumbprint
+            Managedidentity                              = $ManagedIdentity.IsPresent
         }
     }
     catch
@@ -123,6 +162,26 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $M365WebEnableUsersToOpenFilesFrom3PStorage,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftVivaBriefingEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsWebExperience,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsDigestEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsOutlookAddInAndInlineSuggestions,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsScheduleSendSuggestions,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -193,6 +252,22 @@ function Set-TargetResource
         Update-MgservicePrincipal -ServicePrincipalId $($CortanaEnabledValue.Id) `
             -AccountEnabled:$CortanaEnabled
     }
+
+    # Microsoft Viva Briefing Email
+    Write-Verbose -Message "Updating Microsoft Viva Briefing Email settings."
+    $briefingValue = 'opt-out'
+    if ($MicrosoftVivaBriefingEmail)
+    {
+        $briefingValue = 'opt-in'
+    }
+    Set-DefaultTenantBriefingConfig -PrivacyMode $briefingValue | Out-Null
+
+    # Viva Insights
+    Write-Verbose -Message "Updating Viva Insights settings."
+    Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Dashboard" -IsEnabled $VivaInsightsWebExperience | Out-Null
+    Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Digest-email" -IsEnabled $VivaInsightsDigestEmail | Out-Null
+    Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Add-In" -IsEnabled $VivaInsightsOutlookAddInAndInlineSuggestions | Out-Null
+    Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Scheduled-send" -IsEnabled $VivaInsightsScheduleSendSuggestions | Out-Null
 }
 
 function Test-TargetResource
@@ -213,6 +288,26 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $M365WebEnableUsersToOpenFilesFrom3PStorage,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftVivaBriefingEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsWebExperience,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsDigestEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsOutlookAddInAndInlineSuggestions,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsScheduleSendSuggestions,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
