@@ -23,7 +23,6 @@ Configuration Example
             ClientAppTypes                       = @('ExchangeActiveSync', 'Browser', 'MobileAppsAndDesktopClients', 'Other')
             CloudAppSecurityIsEnabled            = $True
             CloudAppSecurityType                 = 'MonitorOnly'
-            DisplayName                          = 'Allin-example'
             ExcludeApplications                  = @('803ee9ca-3f7f-4824-bd6e-0b99d720c35c', '00000012-0000-0000-c000-000000000000', '00000007-0000-0000-c000-000000000000', 'Office365')
             ExcludeGroups                        = @()
             ExcludeLocations                     = @('Blocked Countries')
