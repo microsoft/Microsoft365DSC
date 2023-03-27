@@ -4,10 +4,10 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Write | String | The Id of the access package. | |
+| **Id** | Key | String | The Id of the access package. | |
+| **DisplayName** | Required | String | The display name of the access package. | |
 | **CatalogId** | Write | String | Identifier of the access package catalog referencing this access package. | |
 | **Description** | Write | String | The description of the access package. | |
-| **DisplayName** | Write | String | The display name of the access package. | |
 | **IsHidden** | Write | Boolean | Whether the access package is hidden from the requestor. | |
 | **IsRoleScopesVisible** | Write | Boolean | Indicates whether role scopes are visible. | |
 | **AccessPackageResourceRoleScopes** | Write | MSFT_AccessPackageResourceRoleScope[] | The resources and roles included in the access package. | |

@@ -4,11 +4,11 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Write | String | The id of the access package catalog. | |
+| **Id** | Key | String | The id of the access package catalog. | |
+| **DisplayName** | Required | String | The display name of the access package catalog. | |
 | **CatalogStatus** | Write | String | Has the value Published if the access packages are available for management. | |
 | **CatalogType** | Write | String | One of UserManaged or ServiceDefault. | `UserManaged`, `ServiceDefault` |
 | **Description** | Write | String | The description of the access package catalog. | |
-| **DisplayName** | Write | String | The display name of the access package catalog. | |
 | **IsExternallyVisible** | Write | Boolean | Whether the access packages in this catalog can be requested by users outside of the tenant. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
