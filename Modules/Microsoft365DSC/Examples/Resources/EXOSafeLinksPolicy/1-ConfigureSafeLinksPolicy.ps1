@@ -17,18 +17,15 @@ Configuration Example
     {
         EXOSafeLinksPolicy 'ConfigureSafeLinksPolicy'
         {
-            Identity                      = "Marketing Block URL"
-            AdminDisplayName              = "Marketing Block URL"
-            CustomNotificationText        = "Blocked URLs for Marketing"
+            Identity                      = 'Marketing Block URL'
+            AdminDisplayName              = 'Marketing Block URL'
+            CustomNotificationText        = 'Blocked URLs for Marketing'
             DeliverMessageAfterScan       = $True
-            DoNotAllowClickThrough        = $True
-            DoNotTrackUserClicks          = $True
             EnableOrganizationBranding    = $True
             EnableSafeLinksForTeams       = $True
-            IsEnabled                     = $True
             ScanUrls                      = $True
             UseTranslatedNotificationText = $True
-            Ensure                        = "Present"
+            Ensure                        = 'Present'
             Credential                    = $credsGlobalAdmin
         }
     }
