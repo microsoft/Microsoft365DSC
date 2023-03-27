@@ -2,6 +2,13 @@
 
 
 # UNRELEASED
+
+* EXOIRMConfiguration
+  * [BREAKING CHANGE] Renamed unused Identity parameter to IsSingleInstance
+    FIXES [#2969](https://github.com/microsoft/Microsoft365DSC/issues/2969)
+* EXOResourceConfiguration
+  * [BREAKING CHANGE] Renamed unused Identity parameter to IsSingleInstance
+    FIXES [#2969](https://github.com/microsoft/Microsoft365DSC/issues/2969)
 * IntuneWindowsAutopilotDeploymentProfileAzureADJoined
   * Initial release
     FIXES [#2605](https://github.com/microsoft/Microsoft365DSC/issues/2605)
@@ -24,15 +31,15 @@
 * EXORoleAssignmentPolicy
   * Fix issue with IsDefault parameter
     FIXES [#2977](https://github.com/microsoft/Microsoft365DSC/issues/2977)
+* IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10
+  * Initial Release
+    FIXES [#2832](https://github.com/microsoft/Microsoft365DSC/issues/2832)
 * IntuneDeviceConfigurationEndpointProtectionPolicyWindows10
   * Initial release
     FIXES [#2834](https://github.com/microsoft/Microsoft365DSC/issues/2834)
 * IntuneDeviceConfigurationIdentityProtectionPolicyWindows10
   * Initial release
     FIXES [#2831](https://github.com/microsoft/Microsoft365DSC/issues/2831)
-* IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10
-  * Initial Release
-    FIXES [#2832](https://github.com/microsoft/Microsoft365DSC/issues/2832)
 * SCDLPCompliancePolicy
   * Added support or Endpoint, On-Premises, PowerBI and ThirdPartyApps locations and exceptions.
     FIXES [#3023](https://github.com/microsoft/Microsoft365DSC/issues/3023)
