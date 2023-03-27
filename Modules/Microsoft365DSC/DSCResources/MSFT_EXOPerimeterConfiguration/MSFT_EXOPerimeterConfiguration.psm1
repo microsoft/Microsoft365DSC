@@ -4,9 +4,10 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.String[]]
@@ -84,7 +85,7 @@ function Get-TargetResource
         }
 
         $result = @{
-            Identity              = $PerimeterConfiguration.Identity
+            IsSingleInstance      = 'Yes'
             GatewayIPAddresses    = $PerimeterConfiguration.GatewayIPAddresses
             Credential            = $Credential
             Ensure                = 'Present'
@@ -117,9 +118,10 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.String[]]
@@ -184,7 +186,7 @@ function Set-TargetResource
     $PerimeterConfigurationParams.Remove('CertificatePath') | Out-Null
     $PerimeterConfigurationParams.Remove('CertificatePassword') | Out-Null
     $PerimeterConfigurationParams.Remove('ManagedIdentity') | Out-Null
-    $PerimeterConfigurationParams.Remove('Identity') | Out-Null
+    $PerimeterConfigurationParams.Remove('IsSingleInstance') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($Null -ne $PerimeterConfigurationParams))
     {
@@ -199,9 +201,10 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.String[]]
@@ -285,19 +288,6 @@ function Export-TargetResource
     param
     (
         [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String[]]
-        $GatewayIPAddresses,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -352,7 +342,7 @@ function Export-TargetResource
         Write-Host "    |---[1/1] $($PerimeterConfiguration.Identity)" -NoNewline
 
         $Params = @{
-            Identity              = $PerimeterConfiguration.Identity
+            IsSingleInstance      = 'Yes'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -380,7 +370,7 @@ function Export-TargetResource
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
@@ -389,4 +379,5 @@ function Export-TargetResource
         return ''
     }
 }
+
 Export-ModuleMember -Function *-TargetResource

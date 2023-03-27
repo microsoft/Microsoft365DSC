@@ -96,6 +96,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrintBlocked                            = $False
                     SaveAsBlocked                           = $True
                     SimplePinBlocked                        = $False
+                    Identity                                = '12345-12345-12345-12345-12345'
                 }
                 Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtection -MockWith {
                     return $null

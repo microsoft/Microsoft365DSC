@@ -120,11 +120,11 @@ class MSFT_MicrosoftGraphcustomextensionendpointconfiguration
 class MSFT_AADEntitlementManagementAccessPackageAssignmentPolicy : OMI_BaseResource
 {
     [Key, Description("Id of the access package assignment policy.")] String Id;
+    [Required, Description("The display name of the policy.")] String DisplayName;
     [Write, Description("Identifier of the access package.")] String AccessPackageId;
     [Write, Description("Who must review, and how often, the assignments to the access package from this policy. This property is null if reviews are not required."), EmbeddedInstance("MSFT_MicrosoftGraphassignmentreviewsettings")] String AccessReviewSettings;
     [Write, Description("Indicates whether a user can extend the access package assignment duration after approval.")] Boolean CanExtend;
     [Write, Description("The description of the policy.")] String Description;
-    [Write, Description("The display name of the policy.")] String DisplayName;
     [Write, Description("The number of days in which assignments from this policy last until they are expired.")] UInt32 DurationInDays;
     [Write, Description("The expiration date for assignments created in this policy. The Timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 is 2014-01-01T00:00:00Z")] String ExpirationDateTime;
     [Write, Description("Questions that are posed to the requestor."), EmbeddedInstance("MSFT_MicrosoftGraphaccesspackagequestion")] String Questions[];

@@ -1,14 +1,34 @@
 # Change log for Microsoft365DSC
 
-
 # UNRELEASED
 
+* AADAdministrativeUnit, AADConditionalAccessPolicy, AADEntitlementManagementAccessPackage,
+  AADEntitlementManagementAccessPackageAssignmentPolicy, AADEntitlementManagementAccessPackageCatalog,
+  AADEntitlementManagementAccessPackageCatalogResource, AADEntitlementManagementAccessPackageCatalogResource,
+  AADEntitlementManagementConnectedOrganization, AADRoleSetting,
+  IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator, IntuneDeviceConfigurationPolicyAndroidDeviceOwner,
+  IntuneDeviceConfigurationPolicyAndroidOpenSourceProject, IntuneDeviceConfigurationPolicyMacOS,
+  IntuneDeviceConfigurationPolicyiOS, IntuneExploitProtectionPolicyWindows10SettingCatalog,
+  IntuneWifiConfigurationPolicyAndroidDeviceAdministrator, IntuneWifiConfigurationPolicyAndroidEntrepriseDeviceOwner,
+  IntuneWifiConfigurationPolicyAndroidEntrepriseWorkProfile, IntuneWifiConfigurationPolicyAndroidForWork,
+  IntuneWifiConfigurationPolicyAndroidOpenSourceProject, IntuneWifiConfigurationPolicyIOS,
+  IntuneWifiConfigurationPolicyMacOS, IntuneWifiConfigurationPolicyWindows10,
+  IntuneWindowUpdateForBusinessRingUpdateProfileWindows10, IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10,
+  IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled, IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
+  * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
 * EXOIRMConfiguration
+  * [BREAKING CHANGE] Renamed unused Identity parameter to IsSingleInstance
+    FIXES [#2969](https://github.com/microsoft/Microsoft365DSC/issues/2969)
+* EXOPerimeterConfiguration
   * [BREAKING CHANGE] Renamed unused Identity parameter to IsSingleInstance
     FIXES [#2969](https://github.com/microsoft/Microsoft365DSC/issues/2969)
 * EXOResourceConfiguration
   * [BREAKING CHANGE] Renamed unused Identity parameter to IsSingleInstance
     FIXES [#2969](https://github.com/microsoft/Microsoft365DSC/issues/2969)
+* IntuneAntivirusPolicyWindows10SettingCatalog, IntuneASRRulesPolicyWindows10,
+  IntuneAppProtectionPolicyiOS, IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager,
+  IntuneSettingCatalogASRRulesPolicyWindows10,
+  * [BREAKING CHANGE] Setting Identity as Key parameter and DisplayName as Required
 * IntuneWindowsAutopilotDeploymentProfileAzureADJoined
   * Initial release
     FIXES [#2605](https://github.com/microsoft/Microsoft365DSC/issues/2605)
@@ -20,6 +40,10 @@
     * Cleanup generated code
     * Fix AdditionalProperties complex constructor
     * Fix Read privileges in settings file
+* MISC
+  * Added a QA check to test for the presence of a Key parameter and fixes
+    resources where this was not the case.
+    FIXES [#2925](https://github.com/microsoft/Microsoft365DSC/issues/2925)
 
 # 1.23.322.1
 
