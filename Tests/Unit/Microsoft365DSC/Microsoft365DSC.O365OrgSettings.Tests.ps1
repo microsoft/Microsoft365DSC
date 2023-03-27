@@ -38,21 +38,47 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgServicePrincipal -MockWith {
             }
+
+            Mock -CommandName Set-DefaultTenantBriefingConfig -MockWith {
+            }
+
+            Mock -CommandName Set-DefaultTenantMyAnalyticsFeatureConfig -MockWith {
+            }
         }
 
         # Test contexts
         Context -Name 'When Org Settings are already in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance                           = 'Yes'
-                    M365WebEnableUsersToOpenFilesFrom3PStorage = $False;
-                    Ensure                                     = 'Present'
-                    Credential                                 = $Credential
+                    IsSingleInstance                             = 'Yes'
+                    M365WebEnableUsersToOpenFilesFrom3PStorage   = $False
+                    MicrosoftVivaBriefingEmail                   = $True
+                    VivaInsightsWebExperience                    = $true
+                    VivaInsightsDigestEmail                      = $true
+                    VivaInsightsOutlookAddInAndInlineSuggestions = $true
+                    VivaInsightsScheduleSendSuggestions          = $true
+                    Ensure                                       = 'Present'
+                    Credential                                   = $Credential
                 }
 
                 Mock -CommandName Get-MgServicePrincipal -MockWith {
                     return @{
                         AccountEnabled = $False
+                    }
+                }
+
+                Mock -CommandName Get-DefaultTenantBriefingConfig -MockWith {
+                    return @{
+                        PrivacyMode = 'opt-in'
+                    }
+                }
+
+                Mock -CommandName Get-DefaultTenantMyAnalyticsFeatureConfig -MockWith {
+                    return @{
+                        IsDashboardEnabled    = $true
+                        IsDigestEmailEnabled  = $true
+                        IsAddInEnabled        = $true
+                        IsScheduleSendEnabled = $true
                     }
                 }
             }
@@ -71,15 +97,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'When Org Settings NOT in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance                           = 'Yes'
-                    M365WebEnableUsersToOpenFilesFrom3PStorage = $True;
-                    Ensure                                     = 'Present'
-                    Credential                                 = $Credential
+                    IsSingleInstance                             = 'Yes'
+                    M365WebEnableUsersToOpenFilesFrom3PStorage   = $True
+                    MicrosoftVivaBriefingEmail                   = $True
+                    VivaInsightsWebExperience                    = $true
+                    VivaInsightsDigestEmail                      = $true
+                    VivaInsightsOutlookAddInAndInlineSuggestions = $true
+                    VivaInsightsScheduleSendSuggestions          = $true
+                    Ensure                                       = 'Present'
+                    Credential                                   = $Credential
                 }
 
                 Mock -CommandName Get-MgServicePrincipal -MockWith {
                     return @{
                         AccountEnabled = $False
+                    }
+                }
+
+                Mock -CommandName Get-DefaultTenantBriefingConfig -MockWith {
+                    return @{
+                        PrivacyMode = 'opt-in'
+                    }
+                }
+
+                Mock -CommandName Get-DefaultTenantMyAnalyticsFeatureConfig -MockWith {
+                    return @{
+                        IsDashboardEnabled    = $true
+                        IsDigestEmailEnabled  = $true
+                        IsAddInEnabled        = $true
+                        IsScheduleSendEnabled = $true
                     }
                 }
             }
@@ -113,6 +159,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AccountEnabled = $False
                     }
                 }
+
+                Mock -CommandName Get-DefaultTenantBriefingConfig -MockWith {
+                    return @{
+                        PrivacyMode = 'opt-in'
+                    }
+                }
+
+                Mock -CommandName Get-DefaultTenantMyAnalyticsFeatureConfig -MockWith {
+                    return @{
+                        IsDashboardEnabled    = $true
+                        IsDigestEmailEnabled  = $true
+                        IsAddInEnabled        = $true
+                        IsScheduleSendEnabled = $true
+                    }
+                }
+
                 $result = Export-TargetResource @testParams
                 $result | Should -Not -BeNullOrEmpty
             }
