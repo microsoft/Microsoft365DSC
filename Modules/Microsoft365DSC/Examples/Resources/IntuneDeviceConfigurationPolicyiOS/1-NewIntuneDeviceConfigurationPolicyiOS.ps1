@@ -15,6 +15,7 @@ Configuration Example
     {
         IntuneDeviceConfigurationPolicyiOS 'ConfigureDeviceConfigurationPolicyiOS'
         {
+            Id                                             = '901c99e3-6429-4f02-851f-54b49a53f103'
             DisplayName                                    = 'iOS DSC Policy'
             AccountBlockModification                       = $False
             ActivationLockAllowWhenSupervised              = $False

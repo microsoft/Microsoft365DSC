@@ -4,9 +4,9 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Write | String | Id of the Intune Policy. | |
+| **Id** | Key | String | Id of the Intune Policy. | |
+| **DisplayName** | Required | String | Display name of the Intune Policy. | |
 | **Description** | Write | String | Description of the Intune Policy. | |
-| **DisplayName** | Write | String | Display name of the Intune Policy. | |
 | **ConnectAutomatically** | Write | Boolean | Connect automatically. | |
 | **ConnectWhenNetworkNameIsHidden** | Write | Boolean | Connect when network name is hidden. | |
 | **NetworkName** | Write | String | Network name. | |

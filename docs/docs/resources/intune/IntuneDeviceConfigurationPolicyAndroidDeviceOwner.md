@@ -4,9 +4,9 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Write | String | The Id of the policy. | |
+| **Id** | Key | String | The Id of the policy. | |
+| **DisplayName** | Required | String | The display name of hte policy. | |
 | **Description** | Write | String | The description of the policy. | |
-| **DisplayName** | Write | String | The display name of hte policy. | |
 | **AccountsBlockModification** | Write | Boolean | Block modification of accounts. Only supported on Dedicated devices. | |
 | **AppsAllowInstallFromUnknownSources** | Write | Boolean | When allowed, users can enable the 'unknown sources' setting to install apps from sources other than the Google Play Store. | |
 | **AppsAutoUpdatePolicy** | Write | String | Devices check for app updates daily. The default behavior is to let device users decide. They'll be able to set their preferences in the managed Google Play app. | `notConfigured`, `userChoice`, `never`, `wiFiOnly`, `always` |
