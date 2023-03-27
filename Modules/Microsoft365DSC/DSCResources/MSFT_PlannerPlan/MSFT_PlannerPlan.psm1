@@ -14,12 +14,32 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Getting configuration of Planner Plan {$Title}"
 
@@ -27,7 +47,7 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -39,7 +59,7 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
     try
     {
         $UsedID = $false
@@ -74,7 +94,7 @@ function Get-TargetResource
                 $plan = Get-MgGroupPlannerPlan -GroupId $group.Id | Where-Object -FilterScript { $_.Title -eq $Title }
                 if ($null -ne $plan)
                 {
-                    Write-Verbose -Message "Found Plan."
+                    Write-Verbose -Message 'Found Plan.'
                     if ($UsedID)
                     {
                         $OwnerGroupValue = $group.Id
@@ -88,42 +108,32 @@ function Get-TargetResource
             }
             catch
             {
-                try
-                {
-                    Write-Verbose -Message $_
-                    $tenantIdValue = ""
-                    if (-not [System.String]::IsNullOrEmpty($TenantId))
-                    {
-                        $tenantIdValue = $TenantId
-                    }
-                    elseif ($null -ne $Credential)
-                    {
-                        $tenantIdValue = $Credential.UserName.Split('@')[1]
-                    }
-                    Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                        -TenantId $tenantIdValue
-                }
-                catch
-                {
-                    Write-Verbose -Message $_
-                }
+                New-M365DSCLogEntry -Message 'Error retrieving data:' `
+                    -Exception $_ `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
             }
         }
 
         if ($null -eq $plan)
         {
-            Write-Verbose -Message "Plan not found, returning Ensure = Absent"
+            Write-Verbose -Message 'Plan not found, returning Ensure = Absent'
             return $nullReturn
         }
         else
         {
-            Write-Verbose -Message "Plan found, returning Ensure = Present"
+            Write-Verbose -Message 'Plan found, returning Ensure = Present'
             $results = @{
-                Title      = $Title
-                OwnerGroup = $OwnerGroupValue
-                Ensure     = 'Present'
-                Credential = $Credential
+                Title                 = $Title
+                OwnerGroup            = $OwnerGroupValue
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                ApplicationSecret     = $ApplicationSecret
+                ManagedIdentity       = $ManagedIdentity.IsPresent
             }
         }
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $results)"
@@ -131,26 +141,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -170,12 +166,32 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Setting configuration of Planner Plan {$Title}"
 
@@ -183,7 +199,7 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -196,8 +212,13 @@ function Set-TargetResource
 
     $SetParams = $PSBoundParameters
     $currentValues = Get-TargetResource @PSBoundParameters
-    $SetParams.Remove("Credential") | Out-Null
-    $SetParams.Remove("Ensure") | Out-Null
+    $SetParams.Remove('Credential') | Out-Null
+    $SetParams.Remove('ApplicationId') | Out-Null
+    $SetParams.Remove('TenantId') | Out-Null
+    $SetParams.Remove('CertificateThumbprint') | Out-Null
+    $SetParams.Remove('ApplicationSecret') | Out-Null
+    $SetParams.Remove('ManagedIdentity') | Out-Null
+    $SetParams.Remove('Ensure') | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
     {
@@ -215,9 +236,9 @@ function Set-TargetResource
             [Array]$AllGroups = Get-MgGroup -Search $OwnerGroup
         }
         $plan = Get-MgGroupPlannerPlan -GroupId $AllGroups[0].Id | Where-Object -FilterScript { $_.Title -eq $Title }
-        $SetParams.Add("PlannerPlanId", $plan.Id)
-        $SetParams.Add("Owner", $AllGroups[0].Id)
-        $SetParams.Remove("OwnerGroup") | Out-Null
+        $SetParams.Add('PlannerPlanId', $plan.Id)
+        $SetParams.Add('Owner', $AllGroups[0].Id)
+        $SetParams.Remove('OwnerGroup') | Out-Null
         Update-MgPlannerPlan @SetParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentValues.Ensure -eq 'Present')
@@ -242,18 +263,38 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -283,15 +324,39 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -299,13 +364,12 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = "Credentials"
-    $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     try
     {
-        [array]$groups = Get-MgGroup -All:$true -ErrorAction Stop
+        [array]$groups = Get-MgGroup -All:$true -ErrorAction Stop -Filter $filter
 
         $i = 1
         $dscContent = ''
@@ -317,16 +381,20 @@ function Export-TargetResource
             {
                 [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.Id `
                     -All:$true `
-                    -Filter $Filter `
                     -ErrorAction 'SilentlyContinue'
 
                 $j = 1
                 foreach ($plan in $plans)
                 {
                     $params = @{
-                        Title      = $plan.Title
-                        OwnerGroup = $group.Id
-                        Credential = $Credential
+                        Title                 = $plan.Title
+                        OwnerGroup            = $group.Id
+                        Credential            = $Credential
+                        ApplicationId         = $ApplicationId
+                        TenantId              = $TenantId
+                        CertificateThumbprint = $CertificateThumbprint
+                        ApplicationSecret     = $ApplicationSecret
+                        ManagedIdentity       = $ManagedIdentity.IsPresent
                     }
 
                     Write-Host "        [$j/$($plans.Length)] $($plan.Title)"
@@ -343,31 +411,19 @@ function Export-TargetResource
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
                     $j++
+                    Write-Host $Global:M365DSCEmojiGreenCheckmark
                 }
                 $i++
             }
             catch
             {
-                try
-                {
-                    Write-Verbose -Message $_
-                    $tenantIdValue = ""
-                    if (-not [System.String]::IsNullOrEmpty($TenantId))
-                    {
-                        $tenantIdValue = $TenantId
-                    }
-                    elseif ($null -ne $Credential)
-                    {
-                        $tenantIdValue = $Credential.UserName.Split('@')[1]
-                    }
-                    Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                        -TenantId $tenantIdValue
-                }
-                catch
-                {
-                    Write-Verbose -Message $_
-                }
+                Write-Host $Global:M365DSCEmojiRedX
+
+                New-M365DSCLogEntry -Message 'Error during Export:' `
+                    -Exception $_ `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
             }
         }
 
@@ -375,26 +431,13 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
     }
 }
 

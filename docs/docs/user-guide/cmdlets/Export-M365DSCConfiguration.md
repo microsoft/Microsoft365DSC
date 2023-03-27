@@ -29,6 +29,7 @@ This function does not generate any output.
 | Credential | False | PSCredential |  |  | Specifies the credentials to be used for authentication. |
 | CertificatePassword | False | PSCredential |  |  | Specifies the password of the PFX file which is used for authentication. |
 | CertificatePath | False | String |  |  | Specifies the path of the PFX file which is used for authentication. |
+| ManagedIdentity | False | SwitchParameter |  |  |  |
 
 ## Examples
 
@@ -42,7 +43,7 @@ This function does not generate any output.
 
 -------------------------- EXAMPLE 3 --------------------------
 
-`Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential -Path 'C:\DSC\Config.ps1'`
+`Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential -Path 'C:\DSC' -FileName 'MyConfig.ps1'`
 
 -------------------------- EXAMPLE 4 --------------------------
 

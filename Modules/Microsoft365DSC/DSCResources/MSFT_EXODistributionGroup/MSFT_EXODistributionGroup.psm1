@@ -153,7 +153,7 @@ function Get-TargetResource
 
     try
     {
-        $distributionGroup = Get-DistributionGroup -Filter "Name -eq '$Name'" -ErrorAction Stop
+        $distributionGroup = Get-DistributionGroup -Filter "Name -eq ""$Name""" -ErrorAction Stop
 
         if ($null -eq $distributionGroup)
         {
@@ -166,6 +166,12 @@ function Get-TargetResource
             if ($distributionGroup.Description.Length -gt 0)
             {
                 $descriptionValue = $distributionGroup.Description[0].Replace("`r", '').Replace("`n", '')
+            }
+
+            $groupTypeValue = 'Distribution'
+            if (([Array]$distributionGroup.GroupType.Replace(' ', '').Split(',')).Contains('SecurityEnabled'))
+            {
+                $groupTypeValue = 'Security'
             }
 
             $result = @{
@@ -188,7 +194,7 @@ function Get-TargetResource
                 RequireSenderAuthenticationEnabled = $distributionGroup.RequireSenderAuthenticationEnabled
                 RoomList                           = $distributionGroup.RoomList
                 SendModerationNotifications        = $distributionGroup.SendModerationNotifications
-                Type                               = $distributionGroup.Type
+                Type                               = $groupTypeValue
                 Ensure                             = 'Present'
                 Credential                         = $Credential
                 ApplicationId                      = $ApplicationId
@@ -206,26 +212,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -389,7 +381,7 @@ function Set-TargetResource
     $currentParameters.Remove('CertificateThumbprint') | Out-Null
     $currentParameters.Remove('CertificatePath') | Out-Null
     $currentParameters.Remove('CertificatePassword') | Out-Null
-    $currentParameters.Remove('Managedidentity') | Out-Null
+    $currentParameters.Remove('ManagedIdentity') | Out-Null
 
     # Distribution group doesn't exist but it should
     if ($Ensure -eq 'Present' -and $currentDistributionGroup.Ensure -eq 'Absent')
@@ -413,6 +405,7 @@ function Set-TargetResource
             Write-Warning -Message 'Desired and current OrganizationalUnit values differ. This property cannot be updated once the distribution group has been created. Delete and recreate the distribution group to update the value.'
         }
         $currentParameters.Remove('OrganizationalUnit') | Out-Null
+        $currentParameters.Remove('Type') | Out-Null
         Set-DistributionGroup @currentParameters -Identity $Name
     }
 }
@@ -670,26 +663,14 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }

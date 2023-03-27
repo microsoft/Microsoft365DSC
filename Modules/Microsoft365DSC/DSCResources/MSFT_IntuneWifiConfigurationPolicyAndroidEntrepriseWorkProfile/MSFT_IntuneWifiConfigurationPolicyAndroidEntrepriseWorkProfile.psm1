@@ -5,17 +5,17 @@ function Get-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [System.Boolean]
@@ -38,17 +38,15 @@ function Get-TargetResource
         [System.String]
         $WiFiSecurityType,
 
-
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -79,14 +77,7 @@ function Get-TargetResource
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
-            -ProfileName 'v1.0'
-        $context = Get-MgContext
-        if ($null -eq $context)
-        {
-            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-                -InboundParameters $PSBoundParameters -ProfileName 'beta'
-        }
-        Select-MgProfile 'beta' -ErrorAction Stop
+            -ProfileName 'beta'
     }
     catch
     {
@@ -131,7 +122,6 @@ function Get-TargetResource
         }
         #endregion
 
-
         if ($null -eq $getValue)
         {
             Write-Verbose -Message "Nothing with id {$id} was found"
@@ -140,7 +130,6 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found something with id {$id}"
         $results = @{
-
             #region resource generator code
             Id                             = $getValue.Id
             Description                    = $getValue.Description
@@ -150,8 +139,6 @@ function Get-TargetResource
             NetworkName                    = $getValue.AdditionalProperties.networkName
             Ssid                           = $getValue.AdditionalProperties.ssid
             WiFiSecurityType               = $getValue.AdditionalProperties.wiFiSecurityType
-
-
             Ensure                         = 'Present'
             Credential                     = $Credential
             ApplicationId                  = $ApplicationId
@@ -162,33 +149,19 @@ function Get-TargetResource
         }
 
         $myAssignments = @()
-        $myAssignments += Get-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $getValue.Id -repository 'deviceConfigurations'
+        $myAssignments += Get-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $getValue.Id -Repository 'deviceConfigurations'
         $results.Add('Assignments', $myAssignments)
 
         return [System.Collections.Hashtable] $results
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullResult
     }
 }
@@ -198,19 +171,18 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [System.Boolean]
@@ -233,17 +205,15 @@ function Set-TargetResource
         [System.String]
         $WiFiSecurityType,
 
-
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -274,14 +244,7 @@ function Set-TargetResource
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
-            -ProfileName 'v1.0'
-        $context = Get-MgContext
-        if ($null -eq $context)
-        {
-            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-                -InboundParameters $PSBoundParameters -ProfileName 'beta'
-        }
-        Select-MgProfile 'beta' -ErrorAction Stop
+            -ProfileName 'beta'
     }
     catch
     {
@@ -309,7 +272,6 @@ function Set-TargetResource
     $PSBoundParameters.Remove('TenantId') | Out-Null
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
-
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -345,7 +307,6 @@ function Set-TargetResource
             $CreateParameters.add('AdditionalProperties', $AdditionalProperties)
         }
 
-
         #region resource generator code
         $policy = New-MgDeviceManagementDeviceConfiguration @CreateParameters
         $assignmentsHash = @()
@@ -360,9 +321,7 @@ function Set-TargetResource
                 -Targets $assignmentsHash `
                 -Repository deviceConfigurations
         }
-
         #endregion
-
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -398,7 +357,6 @@ function Set-TargetResource
             $UpdateParameters.add('AdditionalProperties', $AdditionalProperties)
         }
 
-
         #region resource generator code
         Update-MgDeviceManagementDeviceConfiguration @UpdateParameters `
             -DeviceConfigurationId $currentInstance.Id
@@ -410,24 +368,15 @@ function Set-TargetResource
         Update-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $currentInstance.id `
             -Targets $assignmentsHash `
             -Repository deviceConfigurations
-
         #endregion
-
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing {$DisplayName}"
 
-
-        #region resource generator code
-        #endregion
-
-
-
         #region resource generator code
         Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
-
     }
 }
 
@@ -437,19 +386,18 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [System.Boolean]
@@ -472,17 +420,15 @@ function Test-TargetResource
         [System.String]
         $WiFiSecurityType,
 
-
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -537,7 +483,6 @@ function Test-TargetResource
     {
         if ($PSBoundParameters[$key].getType().Name -like '*CimInstance*')
         {
-
             $CIMArraySource = @()
             $CIMArrayTarget = @()
             $CIMArraySource += $PSBoundParameters[$key]
@@ -559,13 +504,13 @@ function Test-TargetResource
                 if (-Not $testResult)
                 {
                     $testResult = $false
-                    break;
+                    break
                 }
             }
             if (-Not $testResult)
             {
                 $testResult = $false
-                break;
+                break
             }
 
             $ValuesToCheck.Remove($key) | Out-Null
@@ -576,9 +521,10 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
 
-    #Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    #Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
     #Convert any DateTime to String
     foreach ($key in $ValuesToCheck.Keys)
@@ -636,14 +582,7 @@ function Export-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName 'v1.0'
-    $context = Get-MgContext
-    if ($null -eq $context)
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters -ProfileName 'beta'
-    }
-    Select-MgProfile 'beta' -ErrorAction Stop
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -659,17 +598,13 @@ function Export-TargetResource
 
     try
     {
-
         #region resource generator code
         [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileWiFiConfiguration'  `
         }
-
-
         #endregion
-
 
         $i = 1
         $dscContent = ''
@@ -685,7 +620,8 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($getValue.Count)] $($config.id)" -NoNewline
             $params = @{
-                id                    = $config.id
+                Id                    = $config.id
+                DisplayName           = $config.DisplayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -698,7 +634,6 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-
 
             if ($Results.Assignments)
             {
@@ -718,7 +653,6 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-
 
             if ($Results.Assignments)
             {
@@ -740,36 +674,23 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }
 
-
 function Get-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
-    param(
+    param
+    (
         [Parameter()]
         $ComplexObject
     )
@@ -819,7 +740,8 @@ function Get-M365DSCDRGComplexTypeToString
 {
     [CmdletBinding()]
     #[OutputType([System.String])]
-    param(
+    param
+    (
         [Parameter()]
         $ComplexObject,
 
@@ -835,6 +757,7 @@ function Get-M365DSCDRGComplexTypeToString
         [switch]
         $isArray = $false
     )
+
     if ($null -eq $ComplexObject)
     {
         return $null
@@ -851,14 +774,12 @@ function Get-M365DSCDRGComplexTypeToString
                 -isArray:$true `
                 -CIMInstanceName $CIMInstanceName `
                 -Whitespace '                '
-
         }
         if ([string]::IsNullOrEmpty($currentProperty))
         {
             return $null
         }
         return $currentProperty
-
     }
 
     #If ComplexObject is a single CIM Instance
@@ -916,15 +837,18 @@ function Get-M365DSCDRGComplexTypeToString
 
     return $currentProperty
 }
+
 function Test-M365DSCComplexObjectHasValues
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]
         $ComplexObject
     )
+
     $keys = $ComplexObject.keys
     $hasValue = $false
     foreach ($key in $keys)
@@ -949,11 +873,13 @@ function Test-M365DSCComplexObjectHasValues
     }
     return $hasValue
 }
-Function Get-M365DSCDRGSimpleObjectTypeToString
+
+function Get-M365DSCDRGSimpleObjectTypeToString
 {
     [CmdletBinding()]
     [OutputType([System.String])]
-    param(
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.String]
         $Key,
@@ -964,7 +890,6 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
         [Parameter()]
         [System.String]
         $Space = '                '
-
     )
 
     $returnValue = ''
@@ -1022,7 +947,6 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
             else
             {
                 $returnValue += ")`r`n"
-
             }
         }
         Default
@@ -1032,15 +956,18 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
     }
     return $returnValue
 }
+
 function Rename-M365DSCCimInstanceODataParameter
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param(
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.Collections.Hashtable]
         $Properties
     )
+
     $CIMparameters = $Properties.getEnumerator() | Where-Object -FilterScript { $_.value.GetType().Fullname -like '*CimInstance*' }
     foreach ($CIMParam in $CIMparameters)
     {
@@ -1074,11 +1001,13 @@ function Rename-M365DSCCimInstanceODataParameter
     }
     return $Properties
 }
+
 function Get-M365DSCAdditionalProperties
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param(
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.Collections.Hashtable]
         $Properties
@@ -1090,8 +1019,8 @@ function Get-M365DSCAdditionalProperties
         'NetworkName'
         'Ssid'
         'WiFiSecurityType'
-
     )
+
     $results = @{'@odata.type' = '#microsoft.graph.androidWorkProfileWiFiConfiguration' }
     $cloneProperties = $Properties.clone()
     foreach ($property in $cloneProperties.Keys)
@@ -1122,9 +1051,7 @@ function Get-M365DSCAdditionalProperties
                 $propertyValue = $properties.$property
             }
 
-
             $results.Add($propertyName, $propertyValue)
-
         }
     }
     if ($results.Count -eq 1)
@@ -1133,14 +1060,17 @@ function Get-M365DSCAdditionalProperties
     }
     return $results
 }
+
 function Compare-M365DSCComplexObject
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-    param(
+    param
+    (
         [Parameter()]
         [System.Collections.Hashtable]
         $Source,
+
         [Parameter()]
         [System.Collections.Hashtable]
         $Target
@@ -1226,7 +1156,6 @@ function Compare-M365DSCComplexObject
                     Write-Verbose -Message "Configuration drift - key: $key Source{$sourceValue} Target{$targetValue}"
                     return $false
                 }
-
             }
         }
     }
@@ -1237,7 +1166,8 @@ function Compare-M365DSCComplexObject
 function Convert-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
-    param(
+    param
+    (
         [Parameter(Mandatory = 'true')]
         $ComplexObject
     )
@@ -1274,15 +1204,16 @@ function Convert-M365DSCDRGComplexTypeToHashtable
             {
                 $results.remove($key) | Out-Null
             }
-
         }
     }
     return $results
 }
+
 function Get-MgDeviceManagementPolicyAssignments
 {
     [CmdletBinding()]
-    param (
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.String]
         $DeviceManagementPolicyId,
@@ -1297,12 +1228,13 @@ function Get-MgDeviceManagementPolicyAssignments
         [System.String]
         $APIVersion = 'beta'
     )
+
     try
     {
         $deviceManagementPolicyAssignments = @()
 
         $Uri = "https://graph.microsoft.com/$APIVersion/deviceManagement/$Repository/$DeviceManagementPolicyId/assignments"
-        $results = Invoke-MgGraphRequest -Method GET  -Uri $Uri -ErrorAction Stop
+        $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
         foreach ($result in $results.value.target)
         {
             $deviceManagementPolicyAssignments += @{
@@ -1333,29 +1265,22 @@ function Get-MgDeviceManagementPolicyAssignments
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $null
     }
-
-
 }
+
 function Update-MgDeviceManagementPolicyAssignments
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param (
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.String]
         $DeviceManagementPolicyId,
@@ -1374,6 +1299,7 @@ function Update-MgDeviceManagementPolicyAssignments
         [System.String]
         $APIVersion = 'beta'
     )
+
     try
     {
         $deviceManagementPolicyAssignments = @()
@@ -1404,26 +1330,17 @@ function Update-MgDeviceManagementPolicyAssignments
         $body = @{'assignments' = $deviceManagementPolicyAssignments } | ConvertTo-Json -Depth 20
         #write-verbose -Message $body
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
-
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $null
     }
-
-
 }
+
 Export-ModuleMember -Function *-TargetResource

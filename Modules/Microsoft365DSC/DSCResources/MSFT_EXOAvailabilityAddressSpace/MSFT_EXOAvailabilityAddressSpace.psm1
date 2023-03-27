@@ -95,7 +95,9 @@ function Get-TargetResource
         }
         catch
         {
-            New-M365DSCLogEntry -Error $_ -Message "Couldn't get AvailabilityAddressSpaces" -Source $MyInvocation.MyCommand.ModuleName
+            New-M365DSCLogEntry -Message "Couldn't get AvailabilityAddressSpaces" `
+                -Exception $_ `
+                -Source $MyInvocation.MyCommand.ModuleName
         }
 
         $AvailabilityAddressSpace = $AvailabilityAddressSpaces | Where-Object -FilterScript { $_.Identity -eq $Identity }
@@ -140,26 +142,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -247,7 +235,9 @@ function Set-TargetResource
     }
     catch
     {
-        New-M365DSCLogEntry -Error $_ -Message "Couldn't get AvailabilityAddressSpaces" -Source $MyInvocation.MyCommand.ModuleName
+        New-M365DSCLogEntry -Message "Couldn't get AvailabilityAddressSpaces" `
+            -Exception $_ `
+            -Source $MyInvocation.MyCommand.ModuleName
     }
 
     $AvailabilityAddressSpace = $AvailabilityAddressSpaces | Where-Object -FilterScript { $_.Identity -eq $Identity }
@@ -259,7 +249,7 @@ function Set-TargetResource
     $AvailabilityAddressSpaceParams.Remove('CertificateThumbprint') | Out-Null
     $AvailabilityAddressSpaceParams.Remove('CertificatePath') | Out-Null
     $AvailabilityAddressSpaceParams.Remove('CertificatePassword') | Out-Null
-    $AvailabilityAddressSpaceParams.Remove('Managedidentity') | Out-Null
+    $AvailabilityAddressSpaceParams.Remove('ManagedIdentity') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($null -eq $AvailabilityAddressSpace))
     {
@@ -273,7 +263,9 @@ function Set-TargetResource
         }
         catch
         {
-            New-M365DSCLogEntry -Error $_ -Message "Couldn't add new AvailabilityAddressSpace" -Source $MyInvocation.MyCommand.ModuleName
+            New-M365DSCLogEntry -Message "Couldn't add new AvailabilityAddressSpace" `
+                -Exception $_ `
+                -Source $MyInvocation.MyCommand.ModuleName
         }
     }
     elseif (('Present' -eq $Ensure ) -and ($Null -ne $AvailabilityAddressSpace))
@@ -286,7 +278,9 @@ function Set-TargetResource
         }
         catch
         {
-            New-M365DSCLogEntry -Error $_ -Message "Couldn't remove AvailabilityAddressSpace" -Source $MyInvocation.MyCommand.ModuleName
+            New-M365DSCLogEntry -Message "Couldn't remove AvailabilityAddressSpace" `
+                -Exception $_ `
+                -Source $MyInvocation.MyCommand.ModuleName
         }
 
         try
@@ -297,7 +291,9 @@ function Set-TargetResource
         }
         catch
         {
-            New-M365DSCLogEntry -Error $_ -Message "Couldn't add new AvailabilityAddressSpace" -Source $MyInvocation.MyCommand.ModuleName
+            New-M365DSCLogEntry -Message "Couldn't add new AvailabilityAddressSpace" `
+                -Exception $_ `
+                -Source $MyInvocation.MyCommand.ModuleName
         }
     }
     elseif (('Absent' -eq $Ensure ) -and ($null -ne $AvailabilityAddressSpace))
@@ -309,7 +305,9 @@ function Set-TargetResource
         }
         catch
         {
-            New-M365DSCLogEntry -Error $_ -Message "Couldn't remove AvailabilityAddressSpace" -Source $MyInvocation.MyCommand.ModuleName
+            New-M365DSCLogEntry -Message "Couldn't remove AvailabilityAddressSpace" `
+                -Exception $_ `
+                -Source $MyInvocation.MyCommand.ModuleName
         }
     }
 }
@@ -400,7 +398,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -475,7 +473,9 @@ function Export-TargetResource
         }
         catch
         {
-            New-M365DSCLogEntry -Error $_ -Message "Couldn't get AvailabilityAddressSpaces" -Source $MyInvocation.MyCommand.ModuleName
+            New-M365DSCLogEntry -Message "Couldn't get AvailabilityAddressSpaces" `
+                -Exception $_  `
+                -Source $MyInvocation.MyCommand.ModuleName
         }
 
         $dscContent = ''
@@ -521,26 +521,14 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }

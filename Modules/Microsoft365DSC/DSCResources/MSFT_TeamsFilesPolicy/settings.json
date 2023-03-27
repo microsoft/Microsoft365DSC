@@ -1,0 +1,16 @@
+﻿{
+    "resourceName": "TeamsFilesPolicy",
+    "description": "This resource configures an \r\nNew-CsTeamsFilesPolicy [-Identity] \u003cstring\u003e [-NativeFileEntryPoints \u003cstring\u003e] [-SPChannelFilesTab \u003cstring\u003e] [-MsftInternalProcessingMode \u003cstring\u003e] [-WhatIf] [-Confirm] [\u003cCommonParameters\u003e]\r\n.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        }
+    }
+}

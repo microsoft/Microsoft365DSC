@@ -25,21 +25,21 @@ function Get-TargetResource
         $RetentionDuration,
 
         [Parameter()]
-        [ValidateSet("Days", "Months", "Years")]
+        [ValidateSet('Days', 'Months', 'Years')]
         [System.String]
-        $RetentionDurationDisplayHint = "Days",
+        $RetentionDurationDisplayHint = 'Days',
 
         [Parameter()]
         [System.String]
         $ContentMatchQuery,
 
         [Parameter()]
-        [ValidateSet("CreationAgeInDays", "ModificationAgeInDays")]
+        [ValidateSet('CreationAgeInDays', 'ModificationAgeInDays')]
         [System.String]
         $ExpirationDateOption,
 
         [Parameter()]
-        [ValidateSet("Delete", "Keep", "KeepAndDelete")]
+        [ValidateSet('Delete', 'Keep', 'KeepAndDelete')]
         [System.String]
         $RetentionComplianceAction,
 
@@ -48,9 +48,29 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Getting configuration of RetentionComplianceRule for $Name"
@@ -70,8 +90,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -106,14 +126,19 @@ function Get-TargetResource
                 Policy                       = $AssociatedPolicy.Name
                 RetentionDuration            = $RuleObject.RetentionDuration
                 RetentionComplianceAction    = $RetentionComplianceActionValue
+                RetentionDurationDisplayHint = $RuleObject.RetentionDurationDisplayHint
+                ExpirationDateOption         = $RuleObject.ExpirationDateOption
                 Credential                   = $Credential
+                ApplicationId                = $ApplicationId
+                TenantId                     = $TenantId
+                CertificateThumbprint        = $CertificateThumbprint
+                CertificatePath              = $CertificatePath
+                CertificatePassword          = $CertificatePassword
                 Ensure                       = 'Present'
             }
             if (-not $associatedPolicy.TeamsPolicy)
             {
-                $result.Add('ExpirationDateOption', $RuleObject.ExpirationDateOption)
                 $result.Add('ExcludedItemClasses', $RuleObject.ExcludedItemClasses)
-                $result.Add('RetentionDurationDisplayHint', $RuleObject.RetentionDurationDisplayHint)
                 $result.Add('ContentMatchQuery', $RuleObject.ContentMatchQuery)
             }
 
@@ -124,26 +149,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -174,21 +185,21 @@ function Set-TargetResource
         $RetentionDuration,
 
         [Parameter()]
-        [ValidateSet("Days", "Months", "Years")]
+        [ValidateSet('Days', 'Months', 'Years')]
         [System.String]
-        $RetentionDurationDisplayHint = "Days",
+        $RetentionDurationDisplayHint = 'Days',
 
         [Parameter()]
         [System.String]
         $ContentMatchQuery,
 
         [Parameter()]
-        [ValidateSet("CreationAgeInDays", "ModificationAgeInDays")]
+        [ValidateSet('CreationAgeInDays', 'ModificationAgeInDays')]
         [System.String]
         $ExpirationDateOption,
 
         [Parameter()]
-        [ValidateSet("Delete", "Keep", "KeepAndDelete")]
+        [ValidateSet('Delete', 'Keep', 'KeepAndDelete')]
         [System.String]
         $RetentionComplianceAction,
 
@@ -197,9 +208,29 @@ function Set-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting configuration of RetentionComplianceRule for $Name"
@@ -208,8 +239,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -224,98 +255,123 @@ function Set-TargetResource
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentRule.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove("Credential")
-        $CreationParams.Remove("Ensure")
+        $CreationParams.Remove('Credential')
+        $CreationParams.Remove('Ensure')
 
-        Write-Verbose -Message "Checking to see if the policy is a Teams based one."
+        Write-Verbose -Message 'Checking to see if the policy is a Teams based one.'
         $RuleObject = Get-RetentionComplianceRule -Identity $Name `
             -ErrorAction SilentlyContinue
-        $AssociatedPolicy = Get-RetentionCompliancePolicy $RuleObject.Policy
+        $AssociatedPolicy = Get-RetentionCompliancePolicy $Policy
 
         if ($AssociatedPolicy.TeamsPolicy)
         {
-            Write-Verbose -Message "The current policy is a Teams based one, removing invalid parameters."
+            Write-Verbose -Message 'The current policy is a Teams based one, removing invalid parameters for Creation.'
             if ($CreationParams.ContainsKey('ApplyComplianceTag'))
             {
-                $CreationParams.Remove("ApplyComplianceTag") | Out-Null
+                $CreationParams.Remove('ApplyComplianceTag') | Out-Null
             }
             if ($CreationParams.ContainsKey('ContentContainsSensitiveInformation'))
             {
-                $CreationParams.Remove("ContentContainsSensitiveInformation") | Out-Null
+                $CreationParams.Remove('ContentContainsSensitiveInformation') | Out-Null
             }
             if ($CreationParams.ContainsKey('ContentMatchQuery'))
             {
-                $CreationParams.Remove("ContentMatchQuery") | Out-Null
+                $CreationParams.Remove('ContentMatchQuery') | Out-Null
             }
             if ($CreationParams.ContainsKey('ExcludedItemClasses'))
             {
-                $CreationParams.Remove("ExcludedItemClasses") | Out-Null
+                $CreationParams.Remove('ExcludedItemClasses') | Out-Null
             }
             if ($CreationParams.ContainsKey('ExpirationDateOption'))
             {
-                $CreationParams.Remove("ExpirationDateOption") | Out-Null
+                $CreationParams.Remove('ExpirationDateOption') | Out-Null
             }
             if ($CreationParams.ContainsKey('PublishComplianceTag'))
             {
-                $CreationParams.Remove("PublishComplianceTag") | Out-Null
+                $CreationParams.Remove('PublishComplianceTag') | Out-Null
             }
             if ($CreationParams.ContainsKey('RetentionDurationDisplayHint'))
             {
-                $CreationParams.Remove("RetentionDurationDisplayHint") | Out-Null
+                $CreationParams.Remove('RetentionDurationDisplayHint') | Out-Null
             }
         }
 
+        Write-Verbose -Message "Creating new RetentionComplianceRule with values:`r`n$(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
         New-RetentionComplianceRule @CreationParams
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove("Credential")
-        $CreationParams.Remove("Ensure")
-        $CreationParams.Remove("Name")
-        $CreationParams.Add("Identity", $Name)
-        $CreationParams.Remove("Policy")
+        $CreationParams.Remove('Credential')
+        $CreationParams.Remove('Ensure')
+        $CreationParams.Remove('Name')
+        $CreationParams.Add('Identity', $Name)
+        $CreationParams.Remove('Policy')
 
-        Write-Verbose -Message "Checking to see if the policy is a Teams based one."
+        Write-Verbose -Message 'Checking to see if the policy is a Teams based one.'
         $RuleObject = Get-RetentionComplianceRule -Identity $Name `
             -ErrorAction SilentlyContinue
         $AssociatedPolicy = Get-RetentionCompliancePolicy $RuleObject.Policy
 
         if ($AssociatedPolicy.TeamsPolicy)
         {
-            Write-Verbose -Message "The current policy is a Teams based one, removing invalid parameters."
+            Write-Verbose -Message 'The current policy is a Teams based one, removing invalid parameters for Update.'
 
             if ($CreationParams.ContainsKey('ApplyComplianceTag'))
             {
-                $CreationParams.Remove("ApplyComplianceTag") | Out-Null
+                $CreationParams.Remove('ApplyComplianceTag') | Out-Null
             }
             if ($CreationParams.ContainsKey('ContentContainsSensitiveInformation'))
             {
-                $CreationParams.Remove("ContentContainsSensitiveInformation") | Out-Null
+                $CreationParams.Remove('ContentContainsSensitiveInformation') | Out-Null
             }
             if ($CreationParams.ContainsKey('ContentMatchQuery'))
             {
-                $CreationParams.Remove("ContentMatchQuery") | Out-Null
+                $CreationParams.Remove('ContentMatchQuery') | Out-Null
             }
             if ($CreationParams.ContainsKey('ExcludedItemClasses'))
             {
-                $CreationParams.Remove("ExcludedItemClasses") | Out-Null
+                $CreationParams.Remove('ExcludedItemClasses') | Out-Null
             }
             if ($CreationParams.ContainsKey('ExpirationDateOption'))
             {
-                $CreationParams.Remove("ExpirationDateOption") | Out-Null
+                $CreationParams.Remove('ExpirationDateOption') | Out-Null
             }
             if ($CreationParams.ContainsKey('PublishComplianceTag'))
             {
-                $CreationParams.Remove("PublishComplianceTag") | Out-Null
+                $CreationParams.Remove('PublishComplianceTag') | Out-Null
             }
             if ($CreationParams.ContainsKey('RetentionDurationDisplayHint'))
             {
-                $CreationParams.Remove("RetentionDurationDisplayHint") | Out-Null
+                $CreationParams.Remove('RetentionDurationDisplayHint') | Out-Null
             }
         }
 
-        Set-RetentionComplianceRule @CreationParams
+        Write-Verbose -Message "Updating RetentionComplianceRule with values:`r`n$(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
+
+        $success = $false
+        $retries = 1
+        while (!$success -and $retries -le 10)
+        {
+            try
+            {
+                Set-RetentionComplianceRule @CreationParams -ErrorAction Stop
+                $success = $true
+            }
+            catch
+            {
+                if ($_.Exception.Message -like "*are being deployed. Once deployed, additional actions can be performed*")
+                {
+                    Write-Verbose -Message "The associated policy has pending changes being deployed. Waiting 30 seconds for a maximum of 300 seconds (5 minutes). Total time waited so far {$($retries * 30) seconds}"
+                    Start-Sleep -Seconds 30
+                }
+                else
+                {
+                    $success = $true
+                }
+            }
+            $retries++
+        }
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
@@ -351,21 +407,21 @@ function Test-TargetResource
         $RetentionDuration,
 
         [Parameter()]
-        [ValidateSet("Days", "Months", "Years")]
+        [ValidateSet('Days', 'Months', 'Years')]
         [System.String]
-        $RetentionDurationDisplayHint = "Days",
+        $RetentionDurationDisplayHint = 'Days',
 
         [Parameter()]
         [System.String]
         $ContentMatchQuery,
 
         [Parameter()]
-        [ValidateSet("CreationAgeInDays", "ModificationAgeInDays")]
+        [ValidateSet('CreationAgeInDays', 'ModificationAgeInDays')]
         [System.String]
         $ExpirationDateOption,
 
         [Parameter()]
-        [ValidateSet("Delete", "Keep", "KeepAndDelete")]
+        [ValidateSet('Delete', 'Keep', 'KeepAndDelete')]
         [System.String]
         $RetentionComplianceAction,
 
@@ -374,16 +430,36 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -414,9 +490,29 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
@@ -427,8 +523,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -459,16 +555,13 @@ function Export-TargetResource
             {
                 Write-Host "        |---[$i/$($rules.Length)] $($rule.Name)" -NoNewline
 
-                $Params = @{
-                    Credential = $Credential
-                    Name               = $rule.Name
-                    Policy             = $rule.Policy
-                }
-                $Results = Get-TargetResource @Params
+                $Results = Get-TargetResource @PSBoundParameters `
+                    -Name $rule.Name `
+                    -Policy $rule.Policy
 
                 if ([System.String]::IsNullOrEmpty($Results.ExpirationDateOption))
                 {
-                    $Results.Remove("ExpirationDateOption") | Out-Null
+                    $Results.Remove('ExpirationDateOption') | Out-Null
                 }
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
@@ -490,27 +583,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

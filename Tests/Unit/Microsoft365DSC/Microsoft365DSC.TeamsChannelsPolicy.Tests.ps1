@@ -23,20 +23,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString 'Pass@word1)' -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             $Global:PartialExportFileName = 'c:\TestPath'
-            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
-                return @{}
-            }
 
-            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-                return 'FakeDSCContent'
-            }
             Mock -CommandName Save-M365DSCPartialExport -MockWith {
             }
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return 'Credential'
+                return 'Credentials'
             }
 
             Mock -CommandName New-CsTeamsChannelsPolicy -MockWith {
@@ -47,6 +41,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Remove-CsTeamsChannelsPolicy -MockWith {
             }
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
+            }
         }
 
         # Test contexts
@@ -55,12 +53,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Identity                                      = 'Test Channels Policy'
                     Description                                   = 'Test Description'
-                    AllowChannelSharingToExternalUser             = $True;
-                    AllowOrgWideTeamCreation                      = $True;
-                    AllowPrivateChannelCreation                   = $True;
-                    AllowPrivateTeamDiscovery                     = $True;
-                    AllowSharedChannelCreation                    = $True;
-                    AllowUserToParticipateInExternalSharedChannel = $True;
+                    AllowChannelSharingToExternalUser             = $True
+                    AllowOrgWideTeamCreation                      = $True
+                    AllowPrivateChannelCreation                   = $True
+                    EnablePrivateTeamDiscovery                     = $True
+                    AllowSharedChannelCreation                    = $True
+                    AllowUserToParticipateInExternalSharedChannel = $True
                     Ensure                                        = 'Present'
                     Credential                                    = $Credential
                 }
@@ -89,12 +87,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Identity                                      = 'Test Channels Policy'
                     Description                                   = 'Test Description'
-                    AllowChannelSharingToExternalUser             = $True;
-                    AllowOrgWideTeamCreation                      = $True;
-                    AllowPrivateChannelCreation                   = $True;
-                    AllowPrivateTeamDiscovery                     = $True;
-                    AllowSharedChannelCreation                    = $True;
-                    AllowUserToParticipateInExternalSharedChannel = $True;
+                    AllowChannelSharingToExternalUser             = $True
+                    AllowOrgWideTeamCreation                      = $True
+                    AllowPrivateChannelCreation                   = $True
+                    EnablePrivateTeamDiscovery                     = $True
+                    AllowSharedChannelCreation                    = $True
+                    AllowUserToParticipateInExternalSharedChannel = $True
                     Ensure                                        = 'Present'
                     Credential                                    = $Credential
                 }
@@ -103,12 +101,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Identity                                      = 'Test Channels Policy'
                         Description                                   = 'Test Description'
-                        AllowChannelSharingToExternalUser             = $True;
-                        AllowOrgWideTeamCreation                      = $False;
-                        AllowPrivateChannelCreation                   = $True;
-                        AllowPrivateTeamDiscovery                     = $True;
-                        AllowSharedChannelCreation                    = $True;
-                        AllowUserToParticipateInExternalSharedChannel = $True;
+                        AllowChannelSharingToExternalUser             = $True
+                        AllowOrgWideTeamCreation                      = $False
+                        AllowPrivateChannelCreation                   = $True
+                        EnablePrivateTeamDiscovery                     = $True
+                        AllowSharedChannelCreation                    = $True
+                        AllowUserToParticipateInExternalSharedChannel = $True
                     }
                 }
             }
@@ -133,12 +131,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Identity                                      = 'Test Channels Policy'
                     Description                                   = 'Test Description'
-                    AllowChannelSharingToExternalUser             = $True;
-                    AllowOrgWideTeamCreation                      = $True;
-                    AllowPrivateChannelCreation                   = $True;
-                    AllowPrivateTeamDiscovery                     = $True;
-                    AllowSharedChannelCreation                    = $True;
-                    AllowUserToParticipateInExternalSharedChannel = $True;
+                    AllowChannelSharingToExternalUser             = $True
+                    AllowOrgWideTeamCreation                      = $True
+                    AllowPrivateChannelCreation                   = $True
+                    EnablePrivateTeamDiscovery                     = $True
+                    AllowSharedChannelCreation                    = $True
+                    AllowUserToParticipateInExternalSharedChannel = $True
                     Ensure                                        = 'Present'
                     Credential                                    = $Credential
                 }
@@ -147,12 +145,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Identity                                      = 'Test Channels Policy'
                         Description                                   = 'Test Description'
-                        AllowChannelSharingToExternalUser             = $True;
-                        AllowOrgWideTeamCreation                      = $True;
-                        AllowPrivateChannelCreation                   = $True;
-                        AllowPrivateTeamDiscovery                     = $True;
-                        AllowSharedChannelCreation                    = $True;
-                        AllowUserToParticipateInExternalSharedChannel = $True;
+                        AllowChannelSharingToExternalUser             = $True
+                        AllowOrgWideTeamCreation                      = $True
+                        AllowPrivateChannelCreation                   = $True
+                        EnablePrivateTeamDiscovery                     = $True
+                        AllowSharedChannelCreation                    = $True
+                        AllowUserToParticipateInExternalSharedChannel = $True
                     }
                 }
             }
@@ -171,12 +169,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Identity                                      = 'Test Channels Policy'
                     Description                                   = 'Test Description'
-                    AllowChannelSharingToExternalUser             = $True;
-                    AllowOrgWideTeamCreation                      = $True;
-                    AllowPrivateChannelCreation                   = $True;
-                    AllowPrivateTeamDiscovery                     = $True;
-                    AllowSharedChannelCreation                    = $True;
-                    AllowUserToParticipateInExternalSharedChannel = $True;
+                    AllowChannelSharingToExternalUser             = $True
+                    AllowOrgWideTeamCreation                      = $True
+                    AllowPrivateChannelCreation                   = $True
+                    EnablePrivateTeamDiscovery                     = $True
+                    AllowSharedChannelCreation                    = $True
+                    AllowUserToParticipateInExternalSharedChannel = $True
                     Ensure                                        = 'Absent'
                     Credential                                    = $Credential
                 }
@@ -185,12 +183,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Identity                                      = 'Test Channels Policy'
                         Description                                   = 'Test Description'
-                        AllowChannelSharingToExternalUser             = $True;
-                        AllowOrgWideTeamCreation                      = $True;
-                        AllowPrivateChannelCreation                   = $True;
-                        AllowPrivateTeamDiscovery                     = $True;
-                        AllowSharedChannelCreation                    = $True;
-                        AllowUserToParticipateInExternalSharedChannel = $True;
+                        AllowChannelSharingToExternalUser             = $True
+                        AllowOrgWideTeamCreation                      = $True
+                        AllowPrivateChannelCreation                   = $True
+                        EnablePrivateTeamDiscovery                     = $True
+                        AllowSharedChannelCreation                    = $True
+                        AllowUserToParticipateInExternalSharedChannel = $True
                     }
                 }
             }
@@ -219,18 +217,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Identity                                      = 'Test Channels Policy'
                         Description                                   = 'Test Description'
-                        AllowChannelSharingToExternalUser             = $True;
-                        AllowOrgWideTeamCreation                      = $True;
-                        AllowPrivateChannelCreation                   = $True;
-                        AllowPrivateTeamDiscovery                     = $True;
-                        AllowSharedChannelCreation                    = $True;
-                        AllowUserToParticipateInExternalSharedChannel = $True;
+                        AllowChannelSharingToExternalUser             = $True
+                        AllowOrgWideTeamCreation                      = $True
+                        AllowPrivateChannelCreation                   = $True
+                        EnablePrivateTeamDiscovery                     = $True
+                        AllowSharedChannelCreation                    = $True
+                        AllowUserToParticipateInExternalSharedChannel = $True
                     }
                 }
             }
 
             It 'Should Reverse Engineer resource from the Export method' {
-                Export-TargetResource @testParams
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }

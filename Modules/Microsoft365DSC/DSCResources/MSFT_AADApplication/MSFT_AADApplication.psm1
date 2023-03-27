@@ -157,7 +157,7 @@ function Get-TargetResource
             }
 
             [Array]$Owners = Get-MgApplicationOwner -ApplicationId $AADApp.Id -All:$true | `
-                    Where-Object { !$_.DeletedDateTime }
+                Where-Object { !$_.DeletedDateTime }
             $OwnersValues = @()
             foreach ($Owner in $Owners)
             {
@@ -172,27 +172,28 @@ function Get-TargetResource
             }
 
             $result = @{
-                DisplayName               = $AADApp.DisplayName
-                AvailableToOtherTenants   = $AvailableToOtherTenantsValue
-                GroupMembershipClaims     = $AADApp.GroupMembershipClaims
-                Homepage                  = $AADApp.web.HomepageUrl
-                IdentifierUris            = $AADApp.IdentifierUris
-                KnownClientApplications   = $AADApp.Api.KnownClientApplications
-                LogoutURL                 = $AADApp.web.LogoutURL
-                Oauth2RequirePostResponse = $currentOauth2RequirePostResponseValue
-                PublicClient              = $isPublicClient
-                ReplyURLs                 = $AADApp.web.RedirectUris
-                Owners                    = $OwnersValues
-                ObjectId                  = $AADApp.Id
-                AppId                     = $AADApp.AppId
-                Permissions               = $permissionsObj
-                Ensure                    = 'Present'
-                Credential                = $Credential
-                ApplicationId             = $ApplicationId
-                TenantId                  = $TenantId
-                ApplicationSecret         = $ApplicationSecret
-                CertificateThumbprint     = $CertificateThumbprint
-                Managedidentity           = $ManagedIdentity.IsPresent
+                DisplayName             = $AADApp.DisplayName
+                AvailableToOtherTenants = $AvailableToOtherTenantsValue
+                GroupMembershipClaims   = $AADApp.GroupMembershipClaims
+                Homepage                = $AADApp.web.HomepageUrl
+                IdentifierUris          = $AADApp.IdentifierUris
+                KnownClientApplications = $AADApp.Api.KnownClientApplications
+                LogoutURL               = $AADApp.web.LogoutURL
+                #DEPRECATED
+                #Oauth2RequirePostResponse = $currentOauth2RequirePostResponseValue
+                PublicClient            = $isPublicClient
+                ReplyURLs               = $AADApp.web.RedirectUris
+                Owners                  = $OwnersValues
+                ObjectId                = $AADApp.Id
+                AppId                   = $AADApp.AppId
+                Permissions             = $permissionsObj
+                Ensure                  = 'Present'
+                Credential              = $Credential
+                ApplicationId           = $ApplicationId
+                TenantId                = $TenantId
+                ApplicationSecret       = $ApplicationSecret
+                CertificateThumbprint   = $CertificateThumbprint
+                Managedidentity         = $ManagedIdentity.IsPresent
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
@@ -200,22 +201,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -350,6 +341,15 @@ function Set-TargetResource
     $backCurrentOwners = $currentAADApp.Owners
     $currentParameters.Remove('Owners') | Out-Null
 
+    if ($PSBoundParameters.ContainsKey('Oauth2RequirePostResponse'))
+    {
+        Write-Warning -Message 'The Oauth2RequirePostResponse parameter has been deprecated. Please remove it from your configuration.'
+
+        # Passing in the Oauth2RequirePostResponse parameter returns an error when calling update-mgapplication.
+        # Removing it temporarly for the update scenario.
+        $currentParameters.Remove('Oauth2RequirePostResponse') | Out-Null
+    }
+
     if ($KnownClientApplications)
     {
         Write-Verbose -Message 'Checking if the known client applications already exist.'
@@ -447,9 +447,6 @@ function Set-TargetResource
     {
         $currentParameters.Remove('ObjectId') | Out-Null
 
-        # Passing in the Oauth2RequirePostResponse parameter returns an error when calling update-mgapplication.
-        # Removing it temporarly for the update scenario.
-        $currentParameters.Remove('Oauth2RequirePostResponse') | Out-Null
         $currentParameters.Add('ApplicationId', $currentAADApp.ObjectId)
         Write-Verbose -Message "Updating existing AzureAD Application {$DisplayName} with values:`r`n$($currentParameters | Out-String)"
         Update-MgApplication @currentParameters
@@ -498,17 +495,11 @@ function Set-TargetResource
                 }
                 catch
                 {
-                    try
-                    {
-                        Write-Verbose -Message $_
-                        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                            -TenantId $tenantIdValue
-                    }
-                    catch
-                    {
-                        Write-Verbose -Message $_
-                    }
+                    New-M365DSCLogEntry -Message 'Error updating data:' `
+                        -Exception $_ `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
                 }
             }
             elseif ($diff.SideIndicator -eq '<=')
@@ -528,17 +519,11 @@ function Set-TargetResource
                 }
                 catch
                 {
-                    try
-                    {
-                        Write-Verbose -Message $_
-                        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                            -TenantId $tenantIdValue
-                    }
-                    catch
-                    {
-                        Write-Verbose -Message $_
-                    }
+                    New-M365DSCLogEntry -Message 'Error updating data:' `
+                        -Exception $_ `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
                 }
             }
         }
@@ -750,6 +735,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('Oauth2RequirePostResponse') | Out-Null # DEPRECATED
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -865,22 +851,13 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }

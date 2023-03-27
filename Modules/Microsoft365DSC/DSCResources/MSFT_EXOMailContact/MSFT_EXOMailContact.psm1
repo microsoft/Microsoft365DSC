@@ -135,8 +135,7 @@ function Get-TargetResource
 
     try
     {
-        $contactList = Get-MailContact -ErrorAction Stop
-        $contact = $contactList | Where-Object -FilterScript { $_.Name -eq $Name }
+        $contact = Get-MailContact -Identity $Name -ErrorAction Continue
 
         if ($null -eq $contact)
         {
@@ -178,26 +177,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -342,7 +327,7 @@ function Set-TargetResource
     $setParameters.Remove('CertificateThumbprint') | Out-Null
     $setParameters.Remove('CertificatePath') | Out-Null
     $setParameters.Remove('CertificatePassword') | Out-Null
-    $setParameters.Remove('Managedidentity') | Out-Null
+    $setParameters.Remove('ManagedIdentity') | Out-Null
     $setParameters.Remove('Ensure') | Out-Null
 
     # Mail Contact doesn't exist but it should
@@ -498,7 +483,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $ValuesToCheck.Remove('OrganizationalUnit') | Out-Null
 
@@ -563,7 +548,7 @@ function Export-TargetResource
     try
     {
         $dscContent = [System.Text.StringBuilder]::new()
-        [array]$contactList = Get-MailContact -ErrorAction Stop
+        [array]$contactList = Get-MailContact -ResultSize 'Unlimited' -ErrorAction Stop
         if ($contactList.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
@@ -607,26 +592,14 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }

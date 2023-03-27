@@ -2,35 +2,29 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-    -ChildPath "..\..\Unit" `
+    -ChildPath '..\..\Unit' `
     -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -ChildPath '\Stubs\Microsoft365.psm1' `
         -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\Stubs\Generic.psm1" `
+        -ChildPath '\Stubs\Generic.psm1' `
         -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\UnitTestHelper.psm1" `
+        -ChildPath '\UnitTestHelper.psm1' `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "AADAuthorizationPolicy" -GenericStubModule $GenericStubPath
+    -DscResource 'AADAuthorizationPolicy' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
-            $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
-            $Global:PartialExportFileName = "c:\TestPath"
-            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
-                return @{}
-            }
+            $Global:PartialExportFileName = 'c:\TestPath'
 
-            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-                return "FakeDSCContent"
-            }
             Mock -CommandName Save-M365DSCPartialExport -MockWith {
             }
 
@@ -43,61 +37,65 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credentials"
+                return 'Credentials'
+            }
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
             }
         }
 
         # Test contexts
         # NB The Authorization Policy always exists and cannot be removed or a new one added
 
-        Context -Name "The role definition exists and values are already in the desired state" -Fixture {
+        Context -Name 'The role definition exists and values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance = 'Yes'
-                    DisplayName = 'Authorization Policy'
-                    Description = 'something'
-                    allowedToSignUpEmailBasedSubscriptions = $true
-                    allowedToUseSSPR = $true
-                    allowEmailVerifiedUsersToJoinOrganization = $true
-                    AllowInvitesFrom = "Everyone"
-                    blockMsolPowerShell = $false
-                    DefaultuserRoleAllowedToCreateApps = $true
-                    DefaultUserRoleAllowedToCreateSecurityGroups = $true
-                    DefaultUserRoleAllowedToReadOtherUsers = $true
+                    IsSingleInstance                                  = 'Yes'
+                    DisplayName                                       = 'Authorization Policy'
+                    Description                                       = 'something'
+                    allowedToSignUpEmailBasedSubscriptions            = $true
+                    allowedToUseSSPR                                  = $true
+                    allowEmailVerifiedUsersToJoinOrganization         = $true
+                    AllowInvitesFrom                                  = 'Everyone'
+                    blockMsolPowerShell                               = $false
+                    DefaultuserRoleAllowedToCreateApps                = $true
+                    DefaultUserRoleAllowedToCreateSecurityGroups      = $true
+                    DefaultUserRoleAllowedToReadOtherUsers            = $true
                     PermissionGrantPolicyIdsAssignedToDefaultUserRole = [string[]]@()
-                    GuestUserRole    = 'Guest'
-                    Ensure           = "Present"
-                    Credential       = $Credential
+                    GuestUserRole                                     = 'Guest'
+                    Ensure                                            = 'Present'
+                    Credential                                        = $Credential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
-                    return "Credential"
+                    return 'Credentials'
                 }
                 Mock -CommandName Get-MgPolicyAuthorizationPolicy -MockWith {
                     $AADAuthPol = [pscustomobject]@{
-                        Id = "authorizationPolicy"
-                        DisplayName = 'Authorization Policy'
-                        Description = 'something'
-                        allowedToSignUpEmailBasedSubscriptions = $true
-                        allowedToUseSSPR = $true
+                        Id                                        = 'authorizationPolicy'
+                        DisplayName                               = 'Authorization Policy'
+                        Description                               = 'something'
+                        allowedToSignUpEmailBasedSubscriptions    = $true
+                        allowedToUseSSPR                          = $true
                         allowEmailVerifiedUsersToJoinOrganization = $true
-                        AllowInvitesFrom = "Everyone"
-                        blockMsolPowerShell = $false
-                        defaultUserRolePermissions = [pscustomobject]@{
-                                allowedToCreateApps = $true
-                                allowedToCreateSecurityGroups = $true
-                                allowedToReadOtherUsers = $true
-                                PermissionGrantPoliciesAssigned = [string[]]@()
-                            }
-                        GuestUserRoleId = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
+                        AllowInvitesFrom                          = 'Everyone'
+                        blockMsolPowerShell                       = $false
+                        defaultUserRolePermissions                = [pscustomobject]@{
+                            allowedToCreateApps             = $true
+                            allowedToCreateSecurityGroups   = $true
+                            allowedToReadOtherUsers         = $true
+                            PermissionGrantPoliciesAssigned = [string[]]@()
+                        }
+                        GuestUserRoleId                           = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
                     }
                     return $AADAuthPol
                 }
             }
 
-            It "Should return Values from the get method" {
+            It 'Should return Values from the get method' {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-MgPolicyAuthorizationPolicy" -Exactly 1
+                Should -Invoke -CommandName 'Get-MgPolicyAuthorizationPolicy' -Exactly 1
             }
 
             It 'Should return true from the test method' {
@@ -105,47 +103,47 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Values are not in the desired state" -Fixture {
+        Context -Name 'Values are not in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance = 'Yes'
-                    DisplayName = 'Authorization Policy'
-                    Description = 'something'
-                    allowedToSignUpEmailBasedSubscriptions = $False
-                    allowedToUseSSPR = $false
-                    allowEmailVerifiedUsersToJoinOrganization = $false
-                    AllowInvitesFrom = 'AdminsAndGuestInviters'
-                    blockMsolPowerShell = $false
-                    DefaultuserRoleAllowedToCreateApps = $true
-                    DefaultUserRoleAllowedToCreateSecurityGroups = $true
-                    DefaultUserRoleAllowedToReadOtherUsers = $true
+                    IsSingleInstance                                  = 'Yes'
+                    DisplayName                                       = 'Authorization Policy'
+                    Description                                       = 'something'
+                    allowedToSignUpEmailBasedSubscriptions            = $False
+                    allowedToUseSSPR                                  = $false
+                    allowEmailVerifiedUsersToJoinOrganization         = $false
+                    AllowInvitesFrom                                  = 'AdminsAndGuestInviters'
+                    blockMsolPowerShell                               = $false
+                    DefaultuserRoleAllowedToCreateApps                = $true
+                    DefaultUserRoleAllowedToCreateSecurityGroups      = $true
+                    DefaultUserRoleAllowedToReadOtherUsers            = $true
                     PermissionGrantPolicyIdsAssignedToDefaultUserRole = [string[]]@()
-                    GuestUserRole = 'RestrictedGuest'
-                    Ensure          = "Present"
-                    Credential      = $Credential
+                    GuestUserRole                                     = 'RestrictedGuest'
+                    Ensure                                            = 'Present'
+                    Credential                                        = $Credential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
-                    return "Credential"
+                    return 'Credentials'
                 }
 
                 Mock -CommandName Get-MgPolicyAuthorizationPolicy -MockWith {
                     $AADAuthPol = [pscustomobject]@{
-                        Id = "authorizationPolicy"
-                        DisplayName = 'Authorization Policy'
-                        Description = 'something'
-                        allowedToSignUpEmailBasedSubscriptions = $true
-                        allowedToUseSSPR = $true
+                        Id                                        = 'authorizationPolicy'
+                        DisplayName                               = 'Authorization Policy'
+                        Description                               = 'something'
+                        allowedToSignUpEmailBasedSubscriptions    = $true
+                        allowedToUseSSPR                          = $true
                         allowEmailVerifiedUsersToJoinOrganization = $true
-                        AllowInvitesFrom = "Everyone"
-                        blockMsolPowerShell = $false
-                        defaultUserRolePermissions = [pscustomobject]@{
-                                allowedToCreateApps = $true
-                                allowedToCreateSecurityGroups = $true
-                                allowedToReadOtherUsers = $true
-                                PermissionGrantPoliciesAssigned = [string[]]@()
-                            }
-                        GuestUserRoleId = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
+                        AllowInvitesFrom                          = 'Everyone'
+                        blockMsolPowerShell                       = $false
+                        defaultUserRolePermissions                = [pscustomobject]@{
+                            allowedToCreateApps             = $true
+                            allowedToCreateSecurityGroups   = $true
+                            allowedToReadOtherUsers         = $true
+                            PermissionGrantPoliciesAssigned = [string[]]@()
+                        }
+                        GuestUserRoleId                           = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
                     }
                     return $AADAuthPol
                 }
@@ -156,55 +154,57 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
-            It "Should return values from the get method" {
+            It 'Should return values from the get method' {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-MgPolicyAuthorizationPolicy" -Exactly 1
+                Should -Invoke -CommandName 'Get-MgPolicyAuthorizationPolicy' -Exactly 1
             }
 
             It 'Should return false from the test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Should call the set method" {
+            It 'Should call the set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName 'Update-MgPolicyAuthorizationPolicy' -Exactly 1
             }
         }
 
-        Context -Name "ReverseDSC Tests" -Fixture {
+        Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
-                    return "Credential"
+                    return 'Credentials'
                 }
 
                 Mock -CommandName Get-MgPolicyAuthorizationPolicy -MockWith {
                     $AADAuthPol = [pscustomobject]@{
-                        DisplayName = 'Authorization Policy'
-                        Description = 'something'
-                        allowedToSignUpEmailBasedSubscriptions = $true
-                        allowedToUseSSPR = $true
+                        DisplayName                               = 'Authorization Policy'
+                        Description                               = 'something'
+                        allowedToSignUpEmailBasedSubscriptions    = $true
+                        allowedToUseSSPR                          = $true
                         allowEmailVerifiedUsersToJoinOrganization = $true
-                        AllowInvitesFrom = "Everyone"
-                        blockMsolPowerShell = $false
-                        defaultUserRolePermissions = [pscustomobject]@{
-                                allowedToCreateApps = $true
-                                allowedToCreateSecurityGroups = $true
-                                allowedToReadOtherUsers = $true
-                                PermissionGrantPoliciesAssigned = [string[]]@()
-                            }
-                        GuestUserRoleId = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
+                        AllowInvitesFrom                          = 'Everyone'
+                        blockMsolPowerShell                       = $false
+                        defaultUserRolePermissions                = [pscustomobject]@{
+                            allowedToCreateApps             = $true
+                            allowedToCreateSecurityGroups   = $true
+                            allowedToReadOtherUsers         = $true
+                            PermissionGrantPoliciesAssigned = [string[]]@()
+                        }
+                        GuestUserRoleId                           = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
                     }
                     return $AADAuthPol
                 }
             }
 
-            It "Should reverse engineer resource from the export method" {
-                Export-TargetResource @testParams
+            It 'Should reverse engineer resource from the export method' {
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }

@@ -57,6 +57,10 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
             -InboundParameters $PSBoundParameters
 
+        $nullResult = @{
+            CdnType = $CdnType
+        }
+
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
 
@@ -75,7 +79,6 @@ function Get-TargetResource
         $result = @{
             CdnType               = $CdnType
             Enable                = $cdnEnabled.Value
-            Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -89,33 +92,19 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
 
         # This method is not implemented in some sovereign clouds (e.g. GCCHigh)
         if ($_.Exception -like '*The method or operation is not implemented*')
         {
             throw $_
         }
-        return ''
+
+        return $nullResult
     }
 }
 
@@ -134,7 +123,7 @@ function Set-TargetResource
         $Enable,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -217,7 +206,7 @@ function Test-TargetResource
         $Enable,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -273,14 +262,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: `n $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificatePath') | Out-Null
-    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('Ensure') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -355,6 +337,7 @@ function Export-TargetResource
         Write-Host "`r`n" -NoNewline
         foreach ($cType in $cdnTypes)
         {
+            Write-Host "    |---[$i/2] $cType" -NoNewline
             $Params = @{
                 Credential            = $Credential
                 CdnType               = $cType
@@ -368,8 +351,8 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-            Write-Host "    |---[$i/2] $cType" -NoNewline
-            if ($Results.Enable -eq $True)
+
+            if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
             {
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
@@ -381,9 +364,15 @@ function Export-TargetResource
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
+
+                Write-Host $Global:M365DSCEmojiGreenCheckmark
             }
+            else
+            {
+                Write-Host $Global:M365DSCEmojiRedX
+            }
+
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckmark
         }
 
         return $dscContent
@@ -398,26 +387,12 @@ function Export-TargetResource
         else
         {
             Write-Host $Global:M365DSCEmojiRedX
-            try
-            {
-                Write-Verbose -Message $_
-                $tenantIdValue = ''
-                if (-not [System.String]::IsNullOrEmpty($TenantId))
-                {
-                    $tenantIdValue = $TenantId
-                }
-                elseif ($null -ne $Credential)
-                {
-                    $tenantIdValue = $Credential.UserName.Split('@')[1]
-                }
-                Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                    -TenantId $tenantIdValue
-            }
-            catch
-            {
-                Write-Verbose -Message $_
-            }
+
+            New-M365DSCLogEntry -Message 'Error during Export:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
         }
         return ''
     }

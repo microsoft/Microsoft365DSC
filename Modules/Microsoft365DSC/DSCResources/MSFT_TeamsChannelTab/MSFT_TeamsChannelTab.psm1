@@ -48,42 +48,49 @@ function Get-TargetResource
         $RemoveUrl,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $TenantId,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $CertificateThumbprint
     )
     Write-Verbose -Message "Getting configuration of Tab $DisplayName"
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
-        -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
-
+    $nullReturn = @{
+        DisplayName = $DisplayName
+        TeamName    = $TeamName
+        ChannelName = $ChannelName
+    }
 
     try
     {
@@ -93,7 +100,7 @@ function Get-TargetResource
             if ([System.String]::IsNullOrEmpty($TeamId))
             {
                 Write-Verbose -Message "Getting team by Name {$TeamName}"
-                [array]$teamInstance = Get-Team | Where-Object -FilterScript { $_.DisplayName -eq $TeamName }
+                [array]$teamInstance = Get-MgGroup -Filter "resourceProvisioningOptions/Any(x:x eq 'Team') and DisplayName eq '$TeamName'" -All
                 if ($teamInstance.Length -gt 1)
                 {
                     throw "Multiple Teams with name {$TeamName} were found. Please specify TeamId in your configuration instead."
@@ -102,48 +109,52 @@ function Get-TargetResource
             else
             {
                 Write-Verbose -Message "Getting team by Id {$TeamId}"
-                $teamInstance = Get-Team -GroupId $TeamId -ErrorAction Stop
+                $teamInstance = Get-MgTeam -TeamId $TeamId -ErrorAction Stop
             }
         }
         catch
         {
-            Write-Verbose -Message $_
+            New-M365DSCLogEntry -Message 'Error retrieving data:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
             Write-Verbose "The specified Service Principal doesn't have access to read Group information. Permission Required: Group.Read.All & Team.ReadBasic.All"
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $TenantId
         }
 
         if ($null -eq $teamInstance)
         {
             $Message = "Team {$TeamName} was not found."
-            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $TenantID
+            New-M365DSCLogEntry -Message $Message `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
             throw $Message
         }
 
-        $nullReturn.TeamId = $teamInstance.GroupId
-
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
         # Get the Channel ID
-        Write-Verbose -Message "Getting Channels for Team {$TeamName} with ID {$($teamInstance.GroupId)}"
-        $channelInstance = Get-MgTeamChannel -TeamId $teamInstance.GroupId | Where-Object -FilterScript { $_.DisplayName -eq $ChannelName }
+        Write-Verbose -Message "Getting Channels for Team {$TeamName} with ID {$($teamInstance.Id)}"
+        $channelInstance = Get-MgTeamChannel -TeamId $teamInstance.Id | Where-Object -FilterScript { $_.DisplayName -eq $ChannelName }
 
         if ($null -eq $channelInstance)
         {
-            Add-M365DSCEvent -Message "Could not find Channels for Team {$($teamInstance.GroupId)}" -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $TenantID
-            throw "Channel {$ChannelName} was not found."
+            $message = "Could not find Channel {$ChannelName} for Team {$($teamInstance.Id)}"
+            New-M365DSCLogEntry -Message $Message `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
+            throw $message
         }
 
         # Get the Channel Tab
         Write-Verbose -Message "Getting Tabs for Channel {$ChannelName}"
-        [array]$tabInstance = Get-M365DSCTeamChannelTab -TeamId $teamInstance.GroupId `
+        [array]$tabInstance = Get-MgTeamChannelTab -TeamId $teamInstance.Id `
             -ChannelId $channelInstance.Id `
-            -DisplayName $DisplayName
+            -Filter "DisplayName eq '$DisplayName'" `
+            -ExpandProperty 'TeamsApp'
 
         if ($tabInstance.Length -gt 1)
         {
@@ -152,15 +163,15 @@ function Get-TargetResource
 
         if ($null -eq $tabInstance)
         {
-            $nullResult = $PSBoundParameters
-            $nullResult.Ensure = "Absent"
-            return $nullResult
+            $nullReturn.Ensure = 'Absent'
+            $nullReturn.TeamId = $teamInstance.Id
+            return $nullReturn
         }
 
         return @{
             DisplayName           = $tabInstance.DisplayName
             TeamName              = $TeamName
-            TeamId                = $teamInstance.GroupId
+            TeamId                = $teamInstance.Id
             ChannelName           = $channelInstance.DisplayName
             SortOrderIndex        = $tabInstance.SortOrderIndex
             WebSiteUrl            = $tabInstance.configuration.websiteUrl
@@ -168,35 +179,22 @@ function Get-TargetResource
             RemoveUrl             = $tabInstance.configuration.removeUrl
             EntityId              = $tabInstance.configuration.entityId
             TeamsApp              = $tabInstance.teamsApp.id
+            Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantID
             CertificateThumbprint = $CertificateThumbprint
-            Ensure                = "Present"
+            Ensure                = 'Present'
         }
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        throw $_
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $nullReturn
     }
 }
 
@@ -249,19 +247,23 @@ function Set-TargetResource
         $RemoveUrl,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $TenantId,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $CertificateThumbprint
     )
@@ -272,8 +274,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -281,46 +283,84 @@ function Set-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'beta'
 
     $tab = Get-TargetResource @PSBoundParameters
 
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("Ensure") | Out-Null
-    $CurrentParameters.Remove("ApplicationId") | Out-Null
-    $CurrentParameters.Remove("TenantId") | Out-Null
-    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
+    $CurrentParameters.Remove('Ensure') | Out-Null
+    $CurrentParameters.Remove('ApplicationId') | Out-Null
+    $CurrentParameters.Remove('TenantId') | Out-Null
+    $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
+    $CurrentParameters.Remove('Credential') | Out-Null
 
     Write-Verbose -Message "Retrieving Team Channel {$ChannelName} from Team {$($tab.TeamId)}"
     $ChannelInstance = Get-MgTeamChannel -TeamId $tab.TeamId `
         -Filter "DisplayName eq '$ChannelName'"
 
-    if ($Ensure -eq "Present" -and ($tab.Ensure -eq "Present"))
+    $configuration = @{}
+
+    if (-not [System.String]::IsNullOrEmpty($ContentUrl))
+    {
+        $configuration.Add('ContentUrl', $ContentUrl)
+    }
+    if (-not [System.String]::IsNullOrEmpty($EntityId))
+    {
+        $configuration.Add('EntityId', $EntityId)
+    }
+    if (-not [System.String]::IsNullOrEmpty($RemoveUrl))
+    {
+        $configuration.Add('RemoveUrl', $RemoveUrl)
+    }
+    if (-not [System.String]::IsNullOrEmpty($WebSiteUrl))
+    {
+        $configuration.Add('WebSiteUrl', $WebSiteUrl)
+    }
+    $CurrentParameters.Add('Configuration', $configuration)
+    $CurrentParameters.Remove('ContentUrl') | Out-Null
+    $CurrentParameters.Remove('EntityId') | Out-Null
+    $CurrentParameters.Remove('RemoveUrl') | Out-Null
+    $CurrentParameters.Remove('WebSiteUrl') | Out-Null
+    $CurrentParameters.Remove('TeamsApp') | Out-Null
+
+    if ($Ensure -eq 'Present' -and ($tab.Ensure -eq 'Present'))
     {
         Write-Verbose -Message "Retrieving Tab {$DisplayName} from Channel {$($ChannelInstance.Id))} from Team {$($tab.TeamId)}"
-        $tabInstance = Get-M365DSCTeamChannelTab -TeamId $tab.TeamId `
+        $tabInstance = Get-MgTeamChannelTab -TeamId $tab.TeamId `
             -ChannelId $ChannelInstance.Id `
-            -DisplayName $DisplayName
+            -Filter "DisplayName eq '$DisplayName'"
 
-        Set-M365DSCTeamsChannelTab -Parameters $CurrentParameters `
-            -TabId $tabInstance.Id | Out-Null
+        $CurrentParameters.TeamId = $tab.TeamId
+        $CurrentParameters.Add('ChannelId', $ChannelInstance.Id)
+        $CurrentParameters.Remove('TeamName') | Out-Null
+        $CurrentParameters.Remove('ChannelName') | Out-Null
+        $CurrentParameters.Add('TeamsTabId', $tabInstance.Id)
+        Write-Verbose -Message "Params: $($CurrentParameters | Out-String)"
+        Update-MgTeamChannelTab  @CurrentParameters | Out-Null
     }
-    elseif ($Ensure -eq "Present" -and ($tab.Ensure -eq "Absent"))
+    elseif ($Ensure -eq 'Present' -and ($tab.Ensure -eq 'Absent'))
     {
         Write-Verbose -Message "Creating new tab {$DisplayName}"
+        $CurrentParameters.TeamId = $tab.TeamId
+        $CurrentParameters.Add('ChannelId', $ChannelInstance.Id)
+        $CurrentParameters.Remove('TeamName') | Out-Null
+        $CurrentParameters.Remove('ChannelName') | Out-Null
         Write-Verbose -Message "Params: $($CurrentParameters | Out-String)"
-        $CurrentParameters.Add("TeamId", $tab.TeamId)
-        $CurrentParameters.Add("ChannelId", $ChannelInstance.Id)
-        $CurrentParameters.Remove("TeamName") | Out-Null
-        $CurrentParameters.Remove("ChannelName") | Out-Null
-        New-M365DSCTeamsChannelTab -Parameters $CurrentParameters
+
+        $additionalProperties = @{
+            'teamsApp@odata.bind' = "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/$TeamsApp"
+        }
+        $CurrentParameters.Add('AdditionalProperties', $additionalProperties)
+
+        New-MgTeamChannelTab @CurrentParameters
     }
-    elseif ($Ensure -eq "Absent" -and ($tab.Ensure -eq "Present"))
+    elseif ($Ensure -eq 'Absent' -and ($tab.Ensure -eq 'Present'))
     {
         Write-Verbose -Message "Retrieving Tab {$DisplayName} from Channel {$($ChannelInstance.Id))} from Team {$($tab.TeamId)}"
-        $tabInstance = Get-M365DSCTeamChannelTab -TeamId $tab.TeamId `
+        $tabInstance = Get-MgTeamChannelTab -TeamId $tab.TeamId `
             -ChannelId $ChannelInstance.Id `
-            -DisplayName $DisplayName
+            -Filter "DisplayName eq '$DisplayName'"
         Write-Verbose -Message "Removing existing tab {$DisplayName}"
         $RemoveParams = @{
             ChannelId  = $ChannelInstance.Id
@@ -381,19 +421,23 @@ function Test-TargetResource
         $RemoveUrl,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $TenantId,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $CertificateThumbprint
     )
@@ -401,8 +445,8 @@ function Test-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -456,17 +500,15 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
-
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
-            -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -475,9 +517,9 @@ function Export-TargetResource
 
     try
     {
-        [array]$teams = Get-Team
+        [array]$teams = Get-MgGroup -Filter "resourceProvisioningOptions/Any(x:x eq 'Team')" -All
         $i = 1
-        $dscContent = ""
+        $dscContent = ''
         Write-Host "`r`n" -NoNewline
         foreach ($team in $teams)
         {
@@ -486,14 +528,15 @@ function Export-TargetResource
             $channels = $null
             try
             {
-                [array]$channels = Get-MgTeamChannel -TeamId $team.GroupId -ErrorAction Stop
+                [array]$channels = Get-MgTeamChannel -TeamId $team.Id -ErrorAction Stop
             }
             catch
             {
-                Write-Host "        $($Global:M365DSCEmojiRedX) The specified Service Principal doesn't have access to read Channel information. Permission Required: Channel.ReadBasic.All"
-                Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                    -TenantId $TenantId
+                $message = "        $($Global:M365DSCEmojiRedX) The specified Service Principal doesn't have access to read Channel information. Permission Required: Channel.ReadBasic.All"
+                New-M365DSCLogEntry -Message $Message `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
             }
 
             $j = 1
@@ -504,15 +547,16 @@ function Export-TargetResource
                 $tabs = $null
                 try
                 {
-                    [array]$tabs = Get-MgTeamChannelTab -TeamId $team.GroupId `
+                    [array]$tabs = Get-MgTeamChannelTab -TeamId $team.Id `
                         -ChannelId $channel.Id -ErrorAction Stop
                 }
                 catch
                 {
-                    Write-Host "            $($Global:M365DSCEmojiRedX) The specified Service Principal doesn't have access to read Tab information. Permission Required: TeamsTab.Read.All"
-                    Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                        -TenantId $TenantId
+                    $message = "            $($Global:M365DSCEmojiRedX) The specified Service Principal doesn't have access to read Tab information. Permission Required: TeamsTab.Read.All"
+                    New-M365DSCLogEntry -Message $Message `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
                 }
 
                 $k = 1
@@ -521,28 +565,36 @@ function Export-TargetResource
                     Write-Host "            |---[$k/$($tabs.Length)] $($tab.DisplayName)" -NoNewline
                     $params = @{
                         TeamName              = $team.DisplayName
-                        TeamId                = $team.GroupId
+                        TeamId                = $team.Id
                         ChannelName           = $channel.DisplayName
                         DisplayName           = $tab.DisplayName
+                        Credential            = $Credential
                         ApplicationId         = $ApplicationId
                         TenantId              = $TenantId
                         CertificateThumbprint = $CertificateThumbprint
                     }
                     $Results = Get-TargetResource @params
 
-                    if ($null -ne $Results)
+                    if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 3)
                     {
                         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                             -Results $Results
                         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                             -ConnectionMode $ConnectionMode `
                             -ModulePath $PSScriptRoot `
-                            -Results $Results
+                            -Results $Results `
+                            -Credential $Credential
+
                         $dscContent += $currentDSCBlock
                         Save-M365DSCPartialExport -Content $currentDSCBlock `
                             -FileName $Global:PartialExportFileName
+
+                        Write-Host $Global:M365DSCEmojiGreenCheckmark
                     }
-                    Write-Host $Global:M365DSCEmojiGreenCheckmark
+                    else
+                    {
+                        Write-Host $Global:M365DSCEmojiRedX
+                    }
                     $k++
                 }
                 $j++
@@ -555,111 +607,15 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $TenantId
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
-}
-
-function New-M365DSCTeamsChannelTab
-{
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory = $true)]
-        [System.Collections.HashTable]
-        $Parameters
-    )
-
-    $jsonContent = @"
-    {
-        "displayName": "$($Parameters.DisplayName)",
-        "teamsApp@odata.bind": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/$($Parameters.TeamsApp)",
-        "sortOrderIndex": "$($Parameters.SortOrderIndex)",
-        "configuration": {
-            "websiteUrl": "$($Parameters.WebSiteUrl)",
-            "contentUrl": "$($Parameters.ContentUrl)",
-            "removeURL": "$($Parameters.RemoveUrl)",
-            "entityId": "$($Parameters.EntityId)"
-        }
-    }
-"@
-    $Url = "https://graph.microsoft.com/beta/teams/$($Parameters.TeamId)/channels/$($Parameters.ChannelId)/tabs"
-    Write-Verbose -Message "Creating new Teams Tab with JSON payload: `r`n$JSONContent"
-    Write-Verbose -Message "POST to {$Url}"
-    Invoke-MgGraphRequest -Method POST `
-        -Uri $Url `
-        -Body $JSONContent `
-        -Headers @{"Content-Type" = "application/json" } | Out-Null
-}
-
-function Set-M365DSCTeamsChannelTab
-{
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory = $true)]
-        [System.Collections.HashTable]
-        $Parameters,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $TabID
-    )
-
-    $jsonContent = @"
-    {
-        "displayName": "$($Parameters.DisplayName)",
-        "sortOrderIndex": "$($Parameters.SortOrderIndex)",
-        "configuration": {
-            "websiteUrl": "$($Parameters.WebSiteUrl)",
-            "contentUrl": "$($Parameters.ContentUrl)",
-            "removeURL": "$($Parameters.RemoveUrl)",
-            "entityId": "$($Parameters.EntityId)"
-        }
-    }
-"@
-    $Url = "https://graph.microsoft.com/beta/teams/$($Parameters.TeamId)/channels/$($Parameters.ChannelId)/tabs/$tabId"
-    Write-Verbose -Message "Updating Teams Tab with JSON payload: `r`n$JSONContent"
-    Write-Verbose -Message "PATCH to {$Url}"
-    Invoke-MgGraphRequest -Method PATCH `
-        -Uri $Url `
-        -Body $JSONContent `
-        -Headers @{"Content-Type" = "application/json" } | Out-Null
-}
-
-function Get-M365DSCTeamChannelTab
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $TeamID,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $ChannelId,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $DisplayName
-    )
-
-    $Url = "https://graph.microsoft.com/beta/teams/$TeamID/channels/$ChannelId/tabs?Expand=teamsApp&Filter=displayName eq '$($DisplayName.Replace("'","''"))'"
-    Write-Verbose -Message "Retrieving tab with TeamsID {$TeamID} ChannelID {$ChannelID} DisplayName {$DisplayName}"
-    Write-Verbose -Message "GET request to {$Url}"
-    $response = Invoke-MgGraphRequest -Method GET `
-        -Uri $Url `
-        -Headers @{"Content-Type" = "application/json" }
-    return $response.value
 }
 
 Export-ModuleMember -Function *-TargetResource

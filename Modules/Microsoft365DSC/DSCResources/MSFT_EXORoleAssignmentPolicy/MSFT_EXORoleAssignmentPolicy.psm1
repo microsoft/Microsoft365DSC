@@ -118,26 +118,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -266,14 +252,16 @@ function Set-TargetResource
             if ($difference.SideIndicator -eq '=>')
             {
                 Write-Verbose -Message "Adding Role {$($difference.InputObject)} to Role Assignment Policy {$Name}"
-                New-ManagementRoleAssignment -Role $($difference.InputObject) -Policy $Name
+                New-ManagementRoleAssignment -Role $($difference.InputObject) -Policy $Name -Confirm:$false
             }
             elseif ($difference.SideIndicator -eq '<=')
             {
                 Write-Verbose -Message "Removing Role {$($difference.InputObject)} from Role Assignment Policy {$Name}"
-                Remove-ManagementRoleAssignment -Identity "$($difference.InputObject)-$Name"
+                Remove-ManagementRoleAssignment -Identity "$($difference.InputObject)-$Name" -Confirm:$false
             }
         }
+        # Update other attributes of role assignment policy
+        Set-RoleAssignmentPolicy -Identity $Name -Name $Name -Description $Description -IsDefault:$IsDefault -Confirm:$false
     }
 }
 
@@ -359,7 +347,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -468,26 +456,14 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message "Error during Export:" `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }

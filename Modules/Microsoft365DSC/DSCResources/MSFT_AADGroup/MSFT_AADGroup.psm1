@@ -187,7 +187,7 @@ function Get-TargetResource
             [Array]$memberOf = Get-MgGroupMemberOf -GroupId $Group.Id -All # result also used for/by AssignedToRole
             $MemberOfValues = @()
             # Note: only process security-groups that this group is a member of and not directory roles (if any)
-            foreach ($member in ($memberOf  | Where-Object -FilterScript {$_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.group"}))
+            foreach ($member in ($memberOf  | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.group' }))
             {
                 if ($null -ne $member.AdditionalProperties.displayName)
                 {
@@ -201,7 +201,7 @@ function Get-TargetResource
             {
                 $AssignedToRoleValues = @()
                 # Note: only process directory roles and not group membership (if any)
-                foreach ($role in $($memberOf | Where-Object -FilterScript {$_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.directoryRole"}))
+                foreach ($role in $($memberOf | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.directoryRole' }))
                 {
                     if ($null -ne $role.AdditionalProperties.displayName)
                     {
@@ -209,7 +209,6 @@ function Get-TargetResource
                     }
                 }
             }
-
 
             # Licenses
             $assignedLicensesValues = $null
@@ -253,22 +252,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -542,8 +531,9 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Error -Message $_
-            New-M365DSCLogEntry -Error $_ -Message "Couldn't set group $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+            New-M365DSCLogEntry -Message "Couldn't set group $DisplayName" `
+                -Exception $_ `
+                -Source $MyInvocation.MyCommand.ModuleName
         }
     }
     elseif ($Ensure -eq 'Present' -and $currentGroup.Ensure -eq 'Absent')
@@ -565,7 +555,9 @@ function Set-TargetResource
         catch
         {
             Write-Verbose -Message $_
-            New-M365DSCLogEntry -Error $_ -Message "Couldn't create group $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+            New-M365DSCLogEntry -Message "Couldn't create group $DisplayName" `
+                -Exception $_ `
+                -Source $MyInvocation.MyCommand.ModuleName
         }
     }
     elseif ($Ensure -eq 'Absent' -and $currentGroup.Ensure -eq 'Present')
@@ -576,7 +568,9 @@ function Set-TargetResource
         }
         catch
         {
-            New-M365DSCLogEntry -Error $_ -Message "Couldn't delete group $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+            New-M365DSCLogEntry -Message "Couldn't delete group $DisplayName" `
+                -Exception $_ `
+                -Source $MyInvocation.MyCommand.ModuleName
         }
     }
 
@@ -618,7 +612,7 @@ function Set-TargetResource
         }
 
         #Members
-        if ($MembershipRuleProcessingState -ne 'On')
+        if ($MembershipRuleProcessingState -ne 'On' -and $PSBoundParameters.ContainsKey('Members'))
         {
             $currentMembersValue = @()
             if ($currentParameters.Members.Length -ne 0)
@@ -654,70 +648,72 @@ function Set-TargetResource
                 }
             }
         }
-        else
+        elseif ($MembershipRuleProcessingState -eq 'On')
         {
             Write-Verbose -Message 'Ignoring membership since this is a dynamic group.'
         }
 
         #MemberOf
-        $currentMemberOfValue = @()
-        if ($currentParameters.MemberOf.Length -ne 0)
+        if ($PSBoundParameters.ContainsKey('MemberOf'))
         {
-            $currentMemberOfValue = $backCurrentMemberOf
-        }
-        $desiredMemberOfValue = @()
-        if ($MemberOf.Length -ne 0)
-        {
-            $desiredMemberOfValue = $MemberOf
-        }
-        if ($null -eq $backCurrentMemberOf)
-        {
-            $backCurrentMemberOf = @()
-        }
-        $memberOfDiff = Compare-Object -ReferenceObject $backCurrentMemberOf -DifferenceObject $desiredMemberOfValue
-        foreach ($diff in $memberOfDiff)
-        {
-            try
+            $currentMemberOfValue = @()
+            if ($currentParameters.MemberOf.Length -ne 0)
             {
-                $memberOfGroup = Get-MgGroup -Filter "DisplayName -eq '$($diff.InputObject)'" -ErrorAction Stop
+                $currentMemberOfValue = $backCurrentMemberOf
             }
-            catch
+            $desiredMemberOfValue = @()
+            if ($MemberOf.Length -ne 0)
             {
-                $memberOfGroup = $null
+                $desiredMemberOfValue = $MemberOf
             }
-            if ($null -eq $memberOfGroup)
+            if ($null -eq $backCurrentMemberOf)
             {
-                throw "Security-group or directory role '$($diff.InputObject)' does not exist"
+                $backCurrentMemberOf = @()
             }
-            else
+            $memberOfDiff = Compare-Object -ReferenceObject $backCurrentMemberOf -DifferenceObject $desiredMemberOfValue
+            foreach ($diff in $memberOfDiff)
             {
-                if ($diff.SideIndicator -eq '=>')
+                try
                 {
-                    # see if memberOfGroup contains property SecurityEnabled (it can be true or false)
-                    if ($memberOfgroup.psobject.Typenames -match 'Group')
-                    {
-                        Write-Verbose -Message "Adding AAD group {$($currentGroup.DisplayName)} as member of AAD group {$($memberOfGroup.DisplayName)}"
-                        #$memberOfObject = @{
-                        #    "@odata.id"= "https://graph.microsoft.com/v1.0/groups/{$($group.Id)}"
-                        #}
-                        New-MgGroupMember -GroupId ($memberOfGroup.Id) -DirectoryObject ($currentGroup.Id) | Out-Null
-                    }
-                    else
-                    {
-                        Throw "Cannot add AAD group {$($currentGroup.DisplayName)} to {$($memberOfGroup.DisplayName)} as it is not a security-group"
-                    }
-
+                    $memberOfGroup = Get-MgGroup -Filter "DisplayName eq '$($diff.InputObject)'" -ErrorAction Stop
                 }
-                elseif ($diff.SideIndicator -eq '<=')
+                catch
                 {
-                    if ($memberOfgroup.psobject.Typenames -match 'Group')
+                    $memberOfGroup = $null
+                }
+                if ($null -eq $memberOfGroup)
+                {
+                    throw "Security-group or directory role '$($diff.InputObject)' does not exist"
+                }
+                else
+                {
+                    if ($diff.SideIndicator -eq '=>')
                     {
-                        Write-Verbose -Message "Removing AAD Group {$($currentGroup.DisplayName)} from AAD group {$($memberOfGroup.DisplayName)}"
-                        Remove-MgGroupMemberByRef -GroupId ($memberOfGroup.Id) -DirectoryObjectId ($currentGroup.Id) |Out-Null
+                        # see if memberOfGroup contains property SecurityEnabled (it can be true or false)
+                        if ($memberOfgroup.psobject.Typenames -match 'Group')
+                        {
+                            Write-Verbose -Message "Adding AAD group {$($currentGroup.DisplayName)} as member of AAD group {$($memberOfGroup.DisplayName)}"
+                            #$memberOfObject = @{
+                            #    "@odata.id"= "https://graph.microsoft.com/v1.0/groups/{$($group.Id)}"
+                            #}
+                            New-MgGroupMember -GroupId ($memberOfGroup.Id) -DirectoryObject ($currentGroup.Id) | Out-Null
+                        }
+                        else
+                        {
+                            Throw "Cannot add AAD group {$($currentGroup.DisplayName)} to {$($memberOfGroup.DisplayName)} as it is not a security-group"
+                        }
                     }
-                    else
+                    elseif ($diff.SideIndicator -eq '<=')
                     {
-                        Throw "Cannot remove AAD group {$($currentGroup.DisplayName)} from {$($memberOfGroup.DisplayName)} as it is not a security-group"
+                        if ($memberOfgroup.psobject.Typenames -match 'Group')
+                        {
+                            Write-Verbose -Message "Removing AAD Group {$($currentGroup.DisplayName)} from AAD group {$($memberOfGroup.DisplayName)}"
+                            Remove-MgGroupMemberByRef -GroupId ($memberOfGroup.Id) -DirectoryObjectId ($currentGroup.Id) | Out-Null
+                        }
+                        else
+                        {
+                            Throw "Cannot remove AAD group {$($currentGroup.DisplayName)} from {$($memberOfGroup.DisplayName)} as it is not a security-group"
+                        }
                     }
                 }
             }
@@ -745,7 +741,12 @@ function Set-TargetResource
             {
                 try
                 {
-                    $role = Get-MgDirectoryRole -Filter "DisplayName -eq '$($diff.InputObject)'" -ErrorAction Stop
+                    $role = Get-MgDirectoryRole -Filter "DisplayName eq '$($diff.InputObject)'"
+                    # If the role hasn't been activated, we need to get the role template ID to first activate the role
+                    if ($null -eq $role) {
+                        $adminRoleTemplate = Get-MgDirectoryRoleTemplate | Where-Object {$_.DisplayName -eq $diff.InputObject}
+                        $role = New-MgDirectoryRole -RoleTemplateId $adminRoleTemplate.Id
+                    }
                 }
                 catch
                 {
@@ -753,7 +754,7 @@ function Set-TargetResource
                 }
                 if ($null -eq $role)
                 {
-                    throw "Directory Role '$($diff.InputObject)' does not exist or is not enabled"
+                    throw "Directory Role '$($diff.InputObject)' does not exist"
                 }
                 else
                 {
@@ -761,15 +762,14 @@ function Set-TargetResource
                     {
                         Write-Verbose -Message "Assigning AAD group {$($currentGroup.DisplayName)} to Directory Role {$($diff.InputObject)}"
                         $DirObject = @{
-                            "@odata.id" = "https://graph.microsoft.com/v1.0/directoryObjects/$($currentGroup.Id)"
-                            }
-                        New-MgDirectoryRoleMemberByRef -DirectoryRoleId ($role.Id) -BodyParameter $DirObject | Out-null
-
+                            '@odata.id' = "https://graph.microsoft.com/v1.0/directoryObjects/$($currentGroup.Id)"
+                        }
+                        New-MgDirectoryRoleMemberByRef -DirectoryRoleId ($role.Id) -BodyParameter $DirObject | Out-Null
                     }
                     elseif ($diff.SideIndicator -eq '<=')
                     {
                         Write-Verbose -Message "Removing AAD group {$($currentGroup.DisplayName)} from Directory Role {$($role.DisplayName)}"
-                        Remove-MgDirectoryRoleMemberByRef -DirectoryRoleId ($role.Id) -DirectoryObjectId ($currentGroup.Id) | Out-null
+                        Remove-MgDirectoryRoleMemberByRef -DirectoryRoleId ($role.Id) -DirectoryObjectId ($currentGroup.Id) | Out-Null
                     }
                 }
             }
@@ -911,6 +911,7 @@ function Test-TargetResource
                     "They should contain {$($AssignedLicenses.SkuId)} but instead contained {$($CurrentValues.AssignedLicenses.SkuId)}"
                 Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
                     -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+
                 return $false
             }
             else
@@ -936,6 +937,7 @@ function Test-TargetResource
                     "They should contain {$($AssignedLicenses.DisabledPlans)} but instead contained {$($CurrentValues.AssignedLicenses.DisabledPlans)}"
                 Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
                     -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+
                 return $false
             }
             else
@@ -1018,6 +1020,9 @@ function Export-TargetResource
     try
     {
         [array] $groups = Get-MgGroup -Filter $Filter -All:$true -ErrorAction Stop
+        $groups = $groups | Where-Object -FilterScript {-not ($_.MailEnabled -and ($null -eq $_.GroupTypes -or $_.GroupTypes.Length -eq 0)) -and
+                                                        -not ($_.MailEnabled -and $_.SecurityEnabled)}
+
         $i = 1
         $dscContent = ''
         Write-Host "`r`n" -NoNewline
@@ -1064,22 +1069,13 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }
@@ -1192,7 +1188,7 @@ function Get-M365DSCCombinedLicenses
     {
         foreach ($license in $DesiredLicenses)
         {
-            if (-not $result.SkuId.Contains($license.SkuId))
+            if ($result.Length -eq 0)
             {
                 $result += @{
                     SkuId         = $license.SkuId
@@ -1201,12 +1197,22 @@ function Get-M365DSCCombinedLicenses
             }
             else
             {
-                #Set the Desired Disabled Plans if the sku is already added to the list
-                foreach ($item in $result)
+                if (-not $result.SkuId.Contains($license.SkuId))
                 {
-                    if ($item.SkuId -eq $license.SkuId)
+                    $result += @{
+                        SkuId         = $license.SkuId
+                        DisabledPlans = $license.DisabledPlans
+                    }
+                }
+                else
+                {
+                    #Set the Desired Disabled Plans if the sku is already added to the list
+                    foreach ($item in $result)
                     {
-                        $item.DisabledPlans = $license.DisabledPlans
+                        if ($item.SkuId -eq $license.SkuId)
+                        {
+                            $item.DisabledPlans = $license.DisabledPlans
+                        }
                     }
                 }
             }

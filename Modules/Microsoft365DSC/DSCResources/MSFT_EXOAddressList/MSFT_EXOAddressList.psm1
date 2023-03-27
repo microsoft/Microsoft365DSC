@@ -221,26 +221,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -401,88 +387,47 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-
-    if ($RecipientFilter)
-    {
-        Write-Verbose -Message "You can't use RecipientFilter and precanned filters at the same time. All precanned filters will be ignored."
-        $NewAddressListParams = @{
-            Name            = $Name
-            RecipientFilter = $RecipientFilter
-            Confirm         = $false
-        }
-    }
-    else
-    {
-        $NewAddressListParams = @{
-            Name                         = $Name
-            ConditionalCompany           = $ConditionalCompany
-            ConditionalCustomAttribute1  = $ConditionalCustomAttribute1
-            ConditionalCustomAttribute10 = $ConditionalCustomAttribute10
-            ConditionalCustomAttribute11 = $ConditionalCustomAttribute11
-            ConditionalCustomAttribute12 = $ConditionalCustomAttribute12
-            ConditionalCustomAttribute13 = $ConditionalCustomAttribute13
-            ConditionalCustomAttribute14 = $ConditionalCustomAttribute14
-            ConditionalCustomAttribute15 = $ConditionalCustomAttribute15
-            ConditionalCustomAttribute2  = $ConditionalCustomAttribute2
-            ConditionalCustomAttribute3  = $ConditionalCustomAttribute3
-            ConditionalCustomAttribute4  = $ConditionalCustomAttribute4
-            ConditionalCustomAttribute5  = $ConditionalCustomAttribute5
-            ConditionalCustomAttribute6  = $ConditionalCustomAttribute6
-            ConditionalCustomAttribute7  = $ConditionalCustomAttribute7
-            ConditionalCustomAttribute8  = $ConditionalCustomAttribute8
-            ConditionalCustomAttribute9  = $ConditionalCustomAttribute9
-            ConditionalDepartment        = $ConditionalDepartment
-            ConditionalStateOrProvince   = $ConditionalStateOrProvince
-            DisplayName                  = $DisplayName
-            IncludedRecipients           = $IncludedRecipients
-            Confirm                      = $false
-        }
-    }
-
-    if ($RecipientFilter)
-    {
-        Write-Verbose -Message "You can't use RecipientFilter and precanned filters at the same time. All precanned filters will be ignored."
-        $SetAddressListParams = @{
-            Identity        = $Name
-            Name            = $Name
-            RecipientFilter = $RecipientFilter
-            Confirm         = $false
-        }
-    }
-    else
-    {
-        $SetAddressListParams = @{
-            Identity                     = $Name
-            Name                         = $Name
-            ConditionalCompany           = $ConditionalCompany
-            ConditionalCustomAttribute1  = $ConditionalCustomAttribute1
-            ConditionalCustomAttribute10 = $ConditionalCustomAttribute10
-            ConditionalCustomAttribute11 = $ConditionalCustomAttribute11
-            ConditionalCustomAttribute12 = $ConditionalCustomAttribute12
-            ConditionalCustomAttribute13 = $ConditionalCustomAttribute13
-            ConditionalCustomAttribute14 = $ConditionalCustomAttribute14
-            ConditionalCustomAttribute15 = $ConditionalCustomAttribute15
-            ConditionalCustomAttribute2  = $ConditionalCustomAttribute2
-            ConditionalCustomAttribute3  = $ConditionalCustomAttribute3
-            ConditionalCustomAttribute4  = $ConditionalCustomAttribute4
-            ConditionalCustomAttribute5  = $ConditionalCustomAttribute5
-            ConditionalCustomAttribute6  = $ConditionalCustomAttribute6
-            ConditionalCustomAttribute7  = $ConditionalCustomAttribute7
-            ConditionalCustomAttribute8  = $ConditionalCustomAttribute8
-            ConditionalCustomAttribute9  = $ConditionalCustomAttribute9
-            ConditionalDepartment        = $ConditionalDepartment
-            ConditionalStateOrProvince   = $ConditionalStateOrProvince
-            DisplayName                  = $DisplayName
-            IncludedRecipients           = $IncludedRecipients
-            RecipientFilter              = $RecipientFilter
-            Confirm                      = $false
-        }
-    }
-
     #Address List doesn't exist but it should
     if ($Ensure -eq 'Present' -and $currentAddressListConfig.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "The Address List '$($Name)' does not exist but it should. Creating Address List."
+
+        if ($RecipientFilter)
+        {
+            Write-Verbose -Message "You can't use RecipientFilter and precanned filters at the same time. All precanned filters will be ignored."
+            $NewAddressListParams = @{
+                Name            = $Name
+                RecipientFilter = $RecipientFilter
+                Confirm         = $false
+            }
+        }
+        else
+        {
+            $NewAddressListParams = @{
+                Name                         = $Name
+                ConditionalCompany           = $ConditionalCompany
+                ConditionalCustomAttribute1  = $ConditionalCustomAttribute1
+                ConditionalCustomAttribute10 = $ConditionalCustomAttribute10
+                ConditionalCustomAttribute11 = $ConditionalCustomAttribute11
+                ConditionalCustomAttribute12 = $ConditionalCustomAttribute12
+                ConditionalCustomAttribute13 = $ConditionalCustomAttribute13
+                ConditionalCustomAttribute14 = $ConditionalCustomAttribute14
+                ConditionalCustomAttribute15 = $ConditionalCustomAttribute15
+                ConditionalCustomAttribute2  = $ConditionalCustomAttribute2
+                ConditionalCustomAttribute3  = $ConditionalCustomAttribute3
+                ConditionalCustomAttribute4  = $ConditionalCustomAttribute4
+                ConditionalCustomAttribute5  = $ConditionalCustomAttribute5
+                ConditionalCustomAttribute6  = $ConditionalCustomAttribute6
+                ConditionalCustomAttribute7  = $ConditionalCustomAttribute7
+                ConditionalCustomAttribute8  = $ConditionalCustomAttribute8
+                ConditionalCustomAttribute9  = $ConditionalCustomAttribute9
+                ConditionalDepartment        = $ConditionalDepartment
+                ConditionalStateOrProvince   = $ConditionalStateOrProvince
+                DisplayName                  = $DisplayName
+                IncludedRecipients           = $IncludedRecipients
+                Confirm                      = $false
+            }
+        }
         New-AddressList @NewAddressListParams
     }
     #Address List exists but shouldn't
@@ -494,6 +439,45 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentAddressListConfig.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Address List '$($Name)' already exists. Updating settings"
+        if ($RecipientFilter)
+        {
+            Write-Verbose -Message "You can't use RecipientFilter and precanned filters at the same time. All precanned filters will be ignored."
+            $SetAddressListParams = @{
+                Identity        = $Name
+                Name            = $Name
+                RecipientFilter = $RecipientFilter
+                Confirm         = $false
+            }
+        }
+        else
+        {
+            $SetAddressListParams = @{
+                Identity                     = $Name
+                Name                         = $Name
+                ConditionalCompany           = $ConditionalCompany
+                ConditionalCustomAttribute1  = $ConditionalCustomAttribute1
+                ConditionalCustomAttribute10 = $ConditionalCustomAttribute10
+                ConditionalCustomAttribute11 = $ConditionalCustomAttribute11
+                ConditionalCustomAttribute12 = $ConditionalCustomAttribute12
+                ConditionalCustomAttribute13 = $ConditionalCustomAttribute13
+                ConditionalCustomAttribute14 = $ConditionalCustomAttribute14
+                ConditionalCustomAttribute15 = $ConditionalCustomAttribute15
+                ConditionalCustomAttribute2  = $ConditionalCustomAttribute2
+                ConditionalCustomAttribute3  = $ConditionalCustomAttribute3
+                ConditionalCustomAttribute4  = $ConditionalCustomAttribute4
+                ConditionalCustomAttribute5  = $ConditionalCustomAttribute5
+                ConditionalCustomAttribute6  = $ConditionalCustomAttribute6
+                ConditionalCustomAttribute7  = $ConditionalCustomAttribute7
+                ConditionalCustomAttribute8  = $ConditionalCustomAttribute8
+                ConditionalCustomAttribute9  = $ConditionalCustomAttribute9
+                ConditionalDepartment        = $ConditionalDepartment
+                ConditionalStateOrProvince   = $ConditionalStateOrProvince
+                DisplayName                  = $DisplayName
+                IncludedRecipients           = $IncludedRecipients
+                RecipientFilter              = $RecipientFilter
+                Confirm                      = $false
+            }
+        }
         Write-Verbose -Message "Setting Address List '$($Name)' with values: $(Convert-M365DscHashtableToString -Hashtable $SetAddressListParams)"
         Set-AddressList @SetAddressListParams
     }
@@ -653,7 +637,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -764,26 +748,14 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }

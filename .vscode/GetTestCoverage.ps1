@@ -7,11 +7,11 @@ param(
     [Parameter(Mandatory = $true)]
     [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-            -ChildPath "..\Stubs\Microsoft365.psm1" `
+            -ChildPath '..\Stubs\Microsoft365.psm1' `
             -Resolve)
 )
 
-if ($UnitTestFilePath.EndsWith("Tests.ps1"))
+if ($UnitTestFilePath.EndsWith('Tests.ps1'))
 {
 
     $pesterParameters = @{

@@ -2,31 +2,28 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath '..\..\Unit' `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath '\Stubs\Microsoft365.psm1' `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath '\Stubs\Generic.psm1' `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\UnitTestHelper.psm1" `
+        -ChildPath '\UnitTestHelper.psm1' `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "IntuneWifiConfigurationPolicyAndroidOpenSourceProject" -GenericStubModule $GenericStubPath
+    -DscResource 'IntuneWifiConfigurationPolicyAndroidOpenSourceProject' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
 
-            $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
-
-            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-            }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
@@ -47,33 +44,38 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credential"
+                return 'Credentials'
+            }
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
             }
         }
+
         # Test contexts
-        Context -Name "The IntuneWifiConfigurationPolicyAndroidOpenSourceProject should exist but it DOES NOT" -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidOpenSourceProject should exist but it DOES NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                        ConnectAutomatically = $True
-                        ConnectWhenNetworkNameIsHidden = $True
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        Id = "FakeStringValue"
-                        NetworkName = "FakeStringValue"
-                        PreSharedKey = "FakeStringValue"
-                        PreSharedKeyIsSet = $True
-                        Ssid = "FakeStringValue"
-                        WiFiSecurityType = "open"
+                    ConnectAutomatically           = $True
+                    ConnectWhenNetworkNameIsHidden = $True
+                    Description                    = 'FakeStringValue'
+                    DisplayName                    = 'FakeStringValue'
+                    Id                             = 'FakeStringValue'
+                    NetworkName                    = 'FakeStringValue'
+                    PreSharedKey                   = 'FakeStringValue'
+                    PreSharedKeyIsSet              = $True
+                    Ssid                           = 'FakeStringValue'
+                    WiFiSecurityType               = 'open'
 
-                    Ensure                        = "Present"
-                    Credential                    = $Credential;
+                    Ensure                         = 'Present'
+                    Credential                     = $Credential
                 }
 
                 Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
                     return $null
                 }
             }
-            It "Should return Values from the Get method" {
+            It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
             It 'Should return false from the Test method' {
@@ -85,46 +87,46 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "The IntuneWifiConfigurationPolicyAndroidOpenSourceProject exists but it SHOULD NOT" -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidOpenSourceProject exists but it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                        ConnectAutomatically = $True
-                        ConnectWhenNetworkNameIsHidden = $True
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        Id = "FakeStringValue"
-                        NetworkName = "FakeStringValue"
-                        PreSharedKey = "FakeStringValue"
-                        PreSharedKeyIsSet = $True
-                        Ssid = "FakeStringValue"
-                        WiFiSecurityType = "open"
+                    ConnectAutomatically           = $True
+                    ConnectWhenNetworkNameIsHidden = $True
+                    Description                    = 'FakeStringValue'
+                    DisplayName                    = 'FakeStringValue'
+                    Id                             = 'FakeStringValue'
+                    NetworkName                    = 'FakeStringValue'
+                    PreSharedKey                   = 'FakeStringValue'
+                    PreSharedKeyIsSet              = $True
+                    Ssid                           = 'FakeStringValue'
+                    WiFiSecurityType               = 'open'
 
-                    Ensure                        = "Absent"
-                    Credential                    = $Credential;
+                    Ensure                         = 'Absent'
+                    Credential                     = $Credential
                 }
 
                 Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
                     return @{
-                        AdditionalProperties =@{
-                            '@odata.type' = "#microsoft.graph.aospDeviceOwnerWifiConfiguration"
-                            NetworkName = "FakeStringValue"
-                            WiFiSecurityType = "open"
-                            ConnectAutomatically = $True
-                            PreSharedKey = "FakeStringValue"
+                        AdditionalProperties = @{
+                            '@odata.type'                  = '#microsoft.graph.aospDeviceOwnerWifiConfiguration'
+                            NetworkName                    = 'FakeStringValue'
+                            WiFiSecurityType               = 'open'
+                            ConnectAutomatically           = $True
+                            PreSharedKey                   = 'FakeStringValue'
                             ConnectWhenNetworkNameIsHidden = $True
-                            Ssid = "FakeStringValue"
-                            PreSharedKeyIsSet = $True
+                            Ssid                           = 'FakeStringValue'
+                            PreSharedKeyIsSet              = $True
 
                         }
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        Id = "FakeStringValue"
+                        Description          = 'FakeStringValue'
+                        DisplayName          = 'FakeStringValue'
+                        Id                   = 'FakeStringValue'
 
                     }
                 }
             }
 
-            It "Should return Values from the Get method" {
+            It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
@@ -137,40 +139,40 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Should -Invoke -CommandName Remove-MgDeviceManagementDeviceConfiguration -Exactly 1
             }
         }
-        Context -Name "The IntuneWifiConfigurationPolicyAndroidOpenSourceProject Exists and Values are already in the desired state" -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidOpenSourceProject Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                        ConnectAutomatically = $True
-                        ConnectWhenNetworkNameIsHidden = $True
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        Id = "FakeStringValue"
-                        NetworkName = "FakeStringValue"
-                        PreSharedKey = "FakeStringValue"
-                        PreSharedKeyIsSet = $True
-                        Ssid = "FakeStringValue"
-                        WiFiSecurityType = "open"
+                    ConnectAutomatically           = $True
+                    ConnectWhenNetworkNameIsHidden = $True
+                    Description                    = 'FakeStringValue'
+                    DisplayName                    = 'FakeStringValue'
+                    Id                             = 'FakeStringValue'
+                    NetworkName                    = 'FakeStringValue'
+                    PreSharedKey                   = 'FakeStringValue'
+                    PreSharedKeyIsSet              = $True
+                    Ssid                           = 'FakeStringValue'
+                    WiFiSecurityType               = 'open'
 
-                    Ensure                        = "Present"
-                    Credential                    = $Credential;
+                    Ensure                         = 'Present'
+                    Credential                     = $Credential
                 }
 
                 Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
                     return @{
-                        AdditionalProperties =@{
-                            '@odata.type' = "#microsoft.graph.aospDeviceOwnerWifiConfiguration"
-                            NetworkName = "FakeStringValue"
-                            WiFiSecurityType = "open"
-                            ConnectAutomatically = $True
-                            PreSharedKey = "FakeStringValue"
+                        AdditionalProperties = @{
+                            '@odata.type'                  = '#microsoft.graph.aospDeviceOwnerWifiConfiguration'
+                            NetworkName                    = 'FakeStringValue'
+                            WiFiSecurityType               = 'open'
+                            ConnectAutomatically           = $True
+                            PreSharedKey                   = 'FakeStringValue'
                             ConnectWhenNetworkNameIsHidden = $True
-                            Ssid = "FakeStringValue"
-                            PreSharedKeyIsSet = $True
+                            Ssid                           = 'FakeStringValue'
+                            PreSharedKeyIsSet              = $True
 
                         }
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        Id = "FakeStringValue"
+                        Description          = 'FakeStringValue'
+                        DisplayName          = 'FakeStringValue'
+                        Id                   = 'FakeStringValue'
 
                     }
                 }
@@ -182,43 +184,43 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "The IntuneWifiConfigurationPolicyAndroidOpenSourceProject exists and values are NOT in the desired state" -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidOpenSourceProject exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                        ConnectAutomatically = $True
-                        ConnectWhenNetworkNameIsHidden = $True
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        Id = "FakeStringValue"
-                        NetworkName = "FakeStringValue"
-                        PreSharedKey = "FakeStringValue"
-                        PreSharedKeyIsSet = $True
-                        Ssid = "FakeStringValue"
-                        WiFiSecurityType = "open"
+                    ConnectAutomatically           = $True
+                    ConnectWhenNetworkNameIsHidden = $True
+                    Description                    = 'FakeStringValue'
+                    DisplayName                    = 'FakeStringValue'
+                    Id                             = 'FakeStringValue'
+                    NetworkName                    = 'FakeStringValue'
+                    PreSharedKey                   = 'FakeStringValue'
+                    PreSharedKeyIsSet              = $True
+                    Ssid                           = 'FakeStringValue'
+                    WiFiSecurityType               = 'open'
 
-                    Ensure                = "Present"
-                    Credential            = $Credential;
+                    Ensure                         = 'Present'
+                    Credential                     = $Credential
                 }
 
                 Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
                     return @{
-                        AdditionalProperties =@{
-                            Ssid = "FakeStringValue"
-                            NetworkName = "FakeStringValue"
-                            WiFiSecurityType = "open"
-                            PreSharedKey = "FakeStringValue"
-                            '@odata.type' = "#microsoft.graph.aospDeviceOwnerWifiConfiguration"
+                        AdditionalProperties = @{
+                            Ssid             = 'FakeStringValue'
+                            NetworkName      = 'FakeStringValue'
+                            WiFiSecurityType = 'open'
+                            PreSharedKey     = 'FakeStringValue'
+                            '@odata.type'    = '#microsoft.graph.aospDeviceOwnerWifiConfiguration'
 
                         }
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        Id = "FakeStringValue"
+                        Description          = 'FakeStringValue'
+                        DisplayName          = 'FakeStringValue'
+                        Id                   = 'FakeStringValue'
 
                     }
                 }
             }
 
-            It "Should return Values from the Get method" {
+            It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
@@ -226,13 +228,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Should call the Set method" {
+            It 'Should call the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Update-MgDeviceManagementDeviceConfiguration -Exactly 1
             }
         }
 
-        Context -Name "ReverseDSC Tests" -Fixture {
+        Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $testParams = @{
                     Credential = $Credential
@@ -240,26 +242,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
                     return @{
-                        AdditionalProperties =@{
-                            '@odata.type' = "#microsoft.graph.aospDeviceOwnerWifiConfiguration"
-                            NetworkName = "FakeStringValue"
-                            WiFiSecurityType = "open"
-                            ConnectAutomatically = $True
-                            PreSharedKey = "FakeStringValue"
+                        AdditionalProperties = @{
+                            '@odata.type'                  = '#microsoft.graph.aospDeviceOwnerWifiConfiguration'
+                            NetworkName                    = 'FakeStringValue'
+                            WiFiSecurityType               = 'open'
+                            ConnectAutomatically           = $True
+                            PreSharedKey                   = 'FakeStringValue'
                             ConnectWhenNetworkNameIsHidden = $True
-                            Ssid = "FakeStringValue"
-                            PreSharedKeyIsSet = $True
+                            Ssid                           = 'FakeStringValue'
+                            PreSharedKeyIsSet              = $True
 
                         }
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        Id = "FakeStringValue"
+                        Description          = 'FakeStringValue'
+                        DisplayName          = 'FakeStringValue'
+                        Id                   = 'FakeStringValue'
 
                     }
                 }
             }
-            It "Should Reverse Engineer resource from the Export method" {
-                Export-TargetResource @testParams
+            It 'Should Reverse Engineer resource from the Export method' {
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }

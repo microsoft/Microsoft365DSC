@@ -129,6 +129,11 @@ function Get-TargetResource
         $ApplyWaterMarkingText,
 
         [Parameter()]
+        [ValidateSet('File, Email', 'Site, UnifiedGroup', 'PurviewAssets', 'Teamwork', 'SchematizedData')]
+        [System.String[]]
+        $ContentType,
+
+        [Parameter()]
         [System.String]
         $EncryptionAipTemplateScopes,
 
@@ -139,6 +144,10 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $EncryptionDoNotForward,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionEncryptOnly,
 
         [Parameter()]
         [System.Boolean]
@@ -189,13 +198,38 @@ function Get-TargetResource
         $SiteAndGroupProtectionEnabled,
 
         [Parameter()]
-        [ValidateSet('Public', 'Private')]
+        [ValidateSet('Public', 'Private', 'Unspecified')]
         [System.String]
         $SiteAndGroupProtectionPrivacy,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
+        [ValidateSet('ExternalUserAndGuestSharing', 'ExternalUserSharingOnly', 'ExistingExternalUserSharingOnly', 'Disabled')]
+        [System.String]
+        $SiteAndGroupExternalSharingControlType,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Getting configuration of Sensitivity Label for $Name"
@@ -215,8 +249,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -231,7 +265,7 @@ function Get-TargetResource
         try
         {
             $label = Get-Label -Identity $Name -ErrorAction SilentlyContinue `
-                -IncludeDetailedLabelActions $true
+                -IncludeDetailedLabelActions
         }
         catch
         {
@@ -248,7 +282,7 @@ function Get-TargetResource
             $parentLabelID = $null
             if ($null -ne $label.ParentId)
             {
-                $parentLabel = Get-Label -Identity $label.ParentId -ErrorAction SilentlyContinue
+                $parentLabel = Get-Label -Identity $label.ParentId -IncludeDetailedLabelActions -ErrorAction 'SilentlyContinue'
                 $parentLabelID = $parentLabel.Name
             }
             if ($null -ne $label.LocaleSettings)
@@ -259,28 +293,174 @@ function Get-TargetResource
             {
                 $advancedSettingsValue = Convert-StringToAdvancedSettings -AdvancedSettings $label.Settings
             }
-            if ($null -ne $label.EncryptionRightsDefinitions)
-            {
-                $EncryptionRightsDefinitionsValue = Convert-EncryptionRightDefinition -RightsDefinition $label.EncryptionRightsDefinitions
-            }
             Write-Verbose "Found existing Sensitivity Label $($Name)"
 
-            $ApplyContentMarkingFooterTextValue = $null
-            if ($null -ne $label.ApplyContentMarkingFooterText)
+            [Array]$labelActions = $label.LabelActions
+            $actions = @()
+            foreach ($labelAction in $labelActions)
             {
-                $ApplyContentMarkingFooterTextValue = $label.ApplyContentMarkingFooterText.Replace('$', '`$')
+                $action = ConvertFrom-Json ($labelAction | Out-String)
+                $actions += $action
+            }
+
+            $encryption = ($actions | Where-Object -FilterScript { $_.Type -eq 'encrypt' }).Settings
+            $header = ($actions | Where-Object -FilterScript { $_.Type -eq 'applycontentmarking' -and $_.Subtype -eq 'header' }).Settings
+            $footer = ($actions | Where-Object -FilterScript { $_.Type -eq 'applycontentmarking' -and $_.Subtype -eq 'footer' }).Settings
+            $watermark = ($actions | Where-Object -FilterScript { $_.Type -eq 'applywatermarking' }).Settings
+            $protectgroup = ($actions | Where-Object -FilterScript { $_.Type -eq 'protectgroup' }).Settings
+            $protectsite = ($actions | Where-Object -FilterScript { $_.Type -eq 'protectsite' }).Settings
+
+            $ApplyContentMarkingFooterTextValue = $null
+            $footerText = ($footer | Where-Object -FilterScript { $_.Key -eq 'text' }).Value
+            if ([System.String]::IsNullOrEmpty($footerText) -eq $false)
+            {
+                $ApplyContentMarkingFooterTextValue = $footerText.Replace('$', '`$')
             }
 
             $ApplyContentMarkingHeaderTextValue = $null
-            if ($null -ne $label.ApplyContentMarkingHeaderText)
+            $headerText = ($header | Where-Object -FilterScript { $_.Key -eq 'text' }).Value
+            if ([System.String]::IsNullOrEmpty($headerText) -eq $false)
             {
-                $ApplyContentMarkingHeaderTextValue = $label.ApplyContentMarkingHeaderText.Replace('$', '`$')
+                $ApplyContentMarkingHeaderTextValue = $headerText.Replace('$', '`$')
             }
 
             $ApplyWaterMarkingTextValue = $null
-            if ($null -ne $label.ApplyWaterMarkingText)
+            $watermarkText = ($watermark | Where-Object -FilterScript { $_.Key -eq 'text' }).Value
+            if ([System.String]::IsNullOrEmpty($watermarkText) -eq $false)
             {
-                $ApplyWaterMarkingTextValue = $label.ApplyWaterMarkingText.Replace('$', '`$')
+                $ApplyWaterMarkingTextValue = $watermarkText.Replace('$', '`$')
+            }
+
+            $currentContentType = @()
+            switch -Regex ($label.ContentType)
+            {
+                'File, Email'
+                {
+                    $currentContentType += 'File, Email'
+                }
+                'Site, UnifiedGroup'
+                {
+                    $currentContentType += 'Site, UnifiedGroup'
+                }
+                'PurviewAssets'
+                {
+                    $currentContentType += 'PurviewAssets'
+                }
+                'Teamwork'
+                {
+                    $currentContentType += 'Teamwork'
+                }
+                'SchematizedData'
+                {
+                    $currentContentType += 'SchematizedData'
+                }
+            }
+
+            # Encryption
+            $entry = $encryption | Where-Object -FilterScript { $_.Key -eq 'disabled' }
+            if ($null -ne $entry)
+            {
+                $encryptionEnabledValue = -not [Boolean]::Parse($entry.Value)
+            }
+
+            $entry = $encryption | Where-Object -FilterScript { $_.Key -eq 'contentexpiredondateindaysornever' }
+            if ($null -ne $entry)
+            {
+                $contentExpiredOnDateValue = $entry.Value
+            }
+
+            $entry = $encryption | Where-Object -FilterScript { $_.Key -eq 'protectiontype' }
+            if ($null -ne $entry)
+            {
+                $protectionTypeValue = $entry.Value
+            }
+
+            $entry = $encryption | Where-Object -FilterScript { $_.Key -eq 'offlineaccessdays' }
+            if ($null -ne $entry)
+            {
+                $offlineAccessDaysValue = $entry.Value
+            }
+
+            $entry = $encryption | Where-Object -FilterScript { $_.Key -eq 'rightsdefinitions' }
+            if ($null -ne $entry)
+            {
+                $EncryptionRightsDefinitionsValue = Convert-EncryptionRightDefinition -RightsDefinition $entry.Value
+            }
+
+            $entry = $encryption | Where-Object -FilterScript { $_.Key -eq 'donotforward' }
+            if ($null -ne $entry)
+            {
+                $encryptionDoNotForwardValue = [Boolean]::Parse($entry.Value)
+            }
+
+            $entry = $encryption | Where-Object -FilterScript { $_.Key -eq 'encryptonly' }
+            if ($null -ne $entry)
+            {
+                $encryptionEncryptOnlyValue = [Boolean]::Parse($entry.Value)
+            }
+
+            $entry = $encryption | Where-Object -FilterScript { $_.Key -eq 'promptuser' }
+            if ($null -ne $entry)
+            {
+                $encryptionPromptUserValue = [Boolean]::Parse($entry.Value)
+            }
+
+            # Watermark
+            $entry = $watermark | Where-Object -FilterScript { $_.Key -eq 'disabled' }
+            if ($null -ne $entry)
+            {
+                $watermarkEnabledValue = -not [Boolean]::Parse($entry.Value)
+            }
+
+            # Watermark Footer
+            $entry = $footer | Where-Object -FilterScript { $_.Key -eq 'disabled' }
+            if ($null -ne $entry)
+            {
+                $footerEnabledValue = -not [Boolean]::Parse($entry.Value)
+            }
+
+            # Watermark Header
+            $entry = $header | Where-Object -FilterScript { $_.Key -eq 'disabled' }
+            if ($null -ne $entry)
+            {
+                $headerEnabledValue = -not [Boolean]::Parse($entry.Value)
+            }
+
+            # Site and Group
+            $entry = $protectgroup | Where-Object -FilterScript { $_.Key -eq 'disabled' }
+            if ($null -ne $entry)
+            {
+                $siteAndGroupEnabledValue = -not [Boolean]::Parse($entry.Value)
+            }
+
+            $entry = $protectgroup | Where-Object -FilterScript { $_.Key -eq 'allowaccesstoguestusers' }
+            if ($null -ne $entry)
+            {
+                $siteAndGroupAccessToGuestUsersValue = -not [Boolean]::Parse($entry.Value)
+            }
+
+            $entry = $protectgroup | Where-Object -FilterScript { $_.Key -eq 'allowemailfromguestusers' }
+            if ($null -ne $entry)
+            {
+                $siteAndGroupAllowEmailFromGuestUsers = -not [Boolean]::Parse($entry.Value)
+            }
+
+            $entry = $protectsite | Where-Object -FilterScript { $_.Key -eq 'allowfullaccess' }
+            if ($null -ne $entry)
+            {
+                $siteAndGroupAllowFullAccess = [Boolean]::Parse($entry.Value)
+            }
+
+            $entry = $protectsite | Where-Object -FilterScript { $_.Key -eq 'allowlimitedaccess' }
+            if ($null -ne $entry)
+            {
+                $siteAndGroupAllowLimitedAccess = [Boolean]::Parse($entry.Value)
+            }
+
+            $entry = $protectsite | Where-Object -FilterScript { $_.Key -eq 'blockaccess' }
+            if ($null -ne $entry)
+            {
+                $siteAndGroupBlockAccess = [Boolean]::Parse($entry.Value)
             }
 
             $result = @{
@@ -294,43 +474,52 @@ function Get-TargetResource
                 Tooltip                                        = $label.Tooltip
                 Disabled                                       = $label.Disabled
                 Credential                                     = $Credential
+                ApplicationId                                  = $ApplicationId
+                TenantId                                       = $TenantId
+                CertificateThumbprint                          = $CertificateThumbprint
+                CertificatePath                                = $CertificatePath
+                CertificatePassword                            = $CertificatePassword
                 Ensure                                         = 'Present'
-                ApplyContentMarkingFooterAlignment             = $label.ApplyContentMarkingFooterAlignment
-                ApplyContentMarkingFooterEnabled               = $label.ApplyContentMarkingFooterEnabled
-                ApplyContentMarkingFooterFontColor             = $label.ApplyContentMarkingFooterFontColor
-                ApplyContentMarkingFooterFontName              = $label.ApplyContentMarkingFooterFontName
-                ApplyContentMarkingFooterFontSize              = $label.ApplyContentMarkingFooterFontSize
-                ApplyContentMarkingFooterMargin                = $label.ApplyContentMarkingFooterMargin
+                ApplyContentMarkingFooterAlignment             = ($footer | Where-Object { $_.Key -eq 'alignment' }).Value
+                ApplyContentMarkingFooterEnabled               = $footerEnabledValue
+                ApplyContentMarkingFooterFontColor             = ($footer | Where-Object { $_.Key -eq 'fontcolor' }).Value
+                #ApplyContentMarkingFooterFontName              = 'N/A'
+                ApplyContentMarkingFooterFontSize              = ($footer | Where-Object { $_.Key -eq 'fontsize' }).Value
+                ApplyContentMarkingFooterMargin                = ($footer | Where-Object { $_.Key -eq 'margin' }).Value
                 ApplyContentMarkingFooterText                  = $ApplyContentMarkingFooterTextValue
-                ApplyContentMarkingHeaderAlignment             = $label.ApplyContentMarkingHeaderAlignment
-                ApplyContentMarkingHeaderEnabled               = $label.ApplyContentMarkingHeaderEnabled
-                ApplyContentMarkingHeaderFontColor             = $label.ApplyContentMarkingHeaderFontColor
-                ApplyContentMarkingHeaderFontName              = $label.ApplyContentMarkingHeaderFontName
-                ApplyContentMarkingHeaderFontSize              = $label.ApplyContentMarkingHeaderFontSize
-                ApplyContentMarkingHeaderMargin                = $label.ApplyContentMarkingHeaderMargin
+                ApplyContentMarkingHeaderAlignment             = ($header | Where-Object { $_.Key -eq 'alignment' }).Value
+                ApplyContentMarkingHeaderEnabled               = $headerEnabledValue
+                ApplyContentMarkingHeaderFontColor             = ($header | Where-Object { $_.Key -eq 'fontcolor' }).Value
+                #ApplyContentMarkingHeaderFontName              = 'N/A'
+                ApplyContentMarkingHeaderFontSize              = ($header | Where-Object { $_.Key -eq 'fontsize' }).Value
+                ApplyContentMarkingHeaderMargin                = ($header | Where-Object { $_.Key -eq 'margin' }).Value
+                #TODO ADD HEADER PLACEMENT?
                 ApplyContentMarkingHeaderText                  = $ApplyContentMarkingHeaderTextValue
-                ApplyWaterMarkingEnabled                       = $label.ApplyWaterMarkingEnabled
-                ApplyWaterMarkingFontColor                     = $label.ApplyWaterMarkingFontColor
-                ApplyWaterMarkingFontName                      = $label.ApplyWaterMarkingFontName
-                ApplyWaterMarkingFontSize                      = $label.ApplyWaterMarkingFontSize
-                ApplyWaterMarkingLayout                        = $label.ApplyWaterMarkingLayout
+                ApplyWaterMarkingEnabled                       = $watermarkEnabledValue
+                ApplyWaterMarkingFontColor                     = ($watermark | Where-Object { $_.Key -eq 'fontcolor' }).Value
+                #ApplyWaterMarkingFontName                      = 'N/A'
+                ApplyWaterMarkingFontSize                      = ($watermark | Where-Object { $_.Key -eq 'fontsize' }).Value
+                ApplyWaterMarkingLayout                        = ($watermark | Where-Object { $_.Key -eq 'layout' }).Value
                 ApplyWaterMarkingText                          = $ApplyWaterMarkingTextValue
-                EncryptionAipTemplateScopes                    = $label.EncryptionAipTemplateScopes
-                EncryptionContentExpiredOnDateInDaysOrNever    = $label.EncryptionContentExpiredOnDateInDaysOrNever
-                EncryptionDoNotForward                         = $label.EncryptionDoNotForward
-                EncryptionEnabled                              = $label.EncryptionEnabled
-                EncryptionOfflineAccessDays                    = $label.EncryptionOfflineAccessDays
-                EncryptionPromptUser                           = $label.EncryptionPromptUser
-                EncryptionProtectionType                       = $label.EncryptionProtectionType
+                ContentType                                    = $currentContentType
+                #EncryptionAipTemplateScopes                    = $label.EncryptionAipTemplateScopes
+                EncryptionContentExpiredOnDateInDaysOrNever    = $contentExpiredOnDateValue
+                EncryptionDoNotForward                         = $encryptionDoNotForwardValue
+                EncryptionEncryptOnly                          = $encryptionEncryptOnlyValue
+                EncryptionEnabled                              = $encryptionEnabledValue
+                EncryptionOfflineAccessDays                    = $offlineAccessDaysValue
+                EncryptionPromptUser                           = $encryptionPromptUserValue
+                EncryptionProtectionType                       = $protectionTypeValue
                 EncryptionRightsDefinitions                    = $EncryptionRightsDefinitionsValue
-                EncryptionRightsUrl                            = $label.EncryptionRightsUrl
-                SiteAndGroupProtectionAllowAccessToGuestUsers  = $label.SiteAndGroupProtectionAllowAccessToGuestUsers
-                SiteAndGroupProtectionAllowEmailFromGuestUsers = $label.SiteAndGroupProtectionAllowEmailFromGuestUsers
-                SiteAndGroupProtectionAllowFullAccess          = $label.SiteAndGroupProtectionAllowFullAccess
-                SiteAndGroupProtectionAllowLimitedAccess       = $label.SiteAndGroupProtectionAllowLimitedAccess
-                SiteAndGroupProtectionBlockAccess              = $label.SiteAndGroupProtectionBlockAccess
-                SiteAndGroupProtectionEnabled                  = $label.SiteAndGroupProtectionEnabled
-                SiteAndGroupProtectionPrivacy                  = $label.SiteAndGroupProtectionPrivacy
+                EncryptionRightsUrl                            = ($encryption | Where-Object { $_.Key -eq 'doublekeyencryptionurl' }).Value
+                SiteAndGroupProtectionAllowAccessToGuestUsers  = $siteAndGroupAccessToGuestUsersValue
+                SiteAndGroupProtectionAllowEmailFromGuestUsers = $siteAndGroupAllowEmailFromGuestUsers
+                SiteAndGroupProtectionPrivacy                  = ($protectgroup | Where-Object { $_.Key -eq 'privacy' }).Value
+                SiteAndGroupProtectionAllowFullAccess          = $siteAndGroupAllowFullAccess
+                SiteAndGroupProtectionAllowLimitedAccess       = $siteAndGroupAllowLimitedAccess
+                SiteAndGroupProtectionBlockAccess              = $siteAndGroupBlockAccess
+                SiteAndGroupProtectionEnabled                  = $siteAndGroupEnabledValue
+                SiteAndGroupExternalSharingControlType         = ($protectsite | Where-Object { $_.Key -eq 'externalsharingcontroltype' }).Value
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -339,26 +528,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -493,6 +668,11 @@ function Set-TargetResource
         $ApplyWaterMarkingText,
 
         [Parameter()]
+        [ValidateSet('File, Email', 'Site, UnifiedGroup', 'PurviewAssets', 'Teamwork', 'SchematizedData')]
+        [System.String[]]
+        $ContentType,
+
+        [Parameter()]
         [System.String]
         $EncryptionAipTemplateScopes,
 
@@ -503,6 +683,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $EncryptionDoNotForward,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionEncryptOnly,
 
         [Parameter()]
         [System.Boolean]
@@ -527,7 +711,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $EncryptionRightsUrl,
-
 
         [Parameter()]
         [System.Boolean]
@@ -554,14 +737,38 @@ function Set-TargetResource
         $SiteAndGroupProtectionEnabled,
 
         [Parameter()]
-        [ValidateSet('Public', 'Private')]
+        [ValidateSet('Public', 'Private', 'Unspecified')]
         [System.String]
         $SiteAndGroupProtectionPrivacy,
 
+        [Parameter()]
+        [ValidateSet('ExternalUserAndGuestSharing', 'ExternalUserSharingOnly', 'ExistingExternalUserSharingOnly', 'Disabled')]
+        [System.String]
+        $SiteAndGroupExternalSharingControlType,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting configuration of Sensitivity label for $Name"
@@ -570,8 +777,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -583,40 +790,74 @@ function Set-TargetResource
 
     $label = Get-TargetResource @PSBoundParameters
 
-    if ($PSBoundParameters.ContainsKey("Disabled"))
+    foreach ($param in @('Disabled', 'ApplyContentMarkingFooterFontName', 'ApplyContentMarkingHeaderFontName', 'ApplyWaterMarkingFontName', 'EncryptionAipTemplateScopes'))
     {
-        Write-Verbose -Message "The Disabled parameter is no longer available and will be deprecated."
+        if ($PSBoundParameters.ContainsKey($param))
+        {
+            Write-Verbose -Message "The $param parameter is deprecated and will not be used."
+        }
     }
 
+    if (($SiteAndGroupProtectionAllowFullAccess -and $SiteAndGroupProtectionAllowLimitedAccess) -or `
+        ($SiteAndGroupProtectionAllowFullAccess -and $SiteAndGroupProtectionBlockAccess) -or `
+        ($SiteAndGroupProtectionBlockAccess -and $SiteAndGroupProtectionAllowLimitedAccess))
+    {
+        throw '[ERROR] Only one of these values can be set to true: SiteAndGroupProtectionAllowFullAccess, SiteAndGroupProtectionAllowLimitedAccess, SiteAndGroupProtectionBlockAccess'
+    }
+
+    if ($PSBoundParameters.ContainsKey('EncryptionProtectionType') -and `
+        ($EncryptionProtectionType -ne 'UserDefined' -and `
+            ($PSBoundParameters.ContainsKey('EncryptionDoNotForward') -or `
+                    $PSBoundParameters.ContainsKey('EncryptionEncryptOnly') -or `
+                    $PSBoundParameters.ContainsKey('EncryptionPromptUser'))))
+    {
+        Write-Warning -Message "You have specified EncryptionDoNotForward, EncryptionEncryptOnly or EncryptionPromptUser, but EncryptionProtectionType isn't set to UserDefined."
+    }
 
     if (('Present' -eq $Ensure) -and ('Absent' -eq $label.Ensure))
     {
         Write-Verbose -Message "Label {$Name} doesn't already exist, creating it from the Set-TargetResource function."
-        $CreationParams = $PSBoundParameters
+        $CreationParams = ([Hashtable]$PSBoundParameters).Clone()
 
-        if ($PSBoundParameters.ContainsKey("AdvancedSettings"))
+        if ($PSBoundParameters.ContainsKey('AdvancedSettings'))
         {
             $advanced = Convert-CIMToAdvancedSettings $AdvancedSettings
-            $CreationParams["AdvancedSettings"] = $advanced
+            $CreationParams['AdvancedSettings'] = $advanced
         }
 
-        if ($PSBoundParameters.ContainsKey("LocaleSettings"))
+        if ($PSBoundParameters.ContainsKey('LocaleSettings'))
         {
             $locale = Convert-CIMToLocaleSettings $LocaleSettings
-            $CreationParams["LocaleSettings"] = $locale
+            $CreationParams['LocaleSettings'] = $locale
         }
 
-        $CreationParams.Remove("Credential")
-        $CreationParams.Remove("Ensure")
-        $CreationParams.Remove("Priority")
-        $CreationParams.Remove("Disabled")
+        if ($CreationParams.ContainsKey('SiteAndGroupExternalSharingControlType'))
+        {
+            $CreationParams.SiteExternalSharingControlType = $CreationParams.SiteAndGroupExternalSharingControlType
+            $CreationParams.Remove('SiteAndGroupExternalSharingControlType')
+        }
+
+        $CreationParams.Remove('Priority') | Out-Null
+        $CreationParams.Remove('Disabled') | Out-Null
+
+        # Remove authentication parameters
+        $CreationParams.Remove('Ensure') | Out-Null
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('ApplicationId') | Out-Null
+        $CreationParams.Remove('TenantId') | Out-Null
+        $CreationParams.Remove('CertificatePath') | Out-Null
+        $CreationParams.Remove('CertificatePassword') | Out-Null
+        $CreationParams.Remove('CertificateThumbprint') | Out-Null
+        $CreationParams.Remove('ManagedIdentity') | Out-Null
+        $CreationParams.Remove('ApplicationSecret') | Out-Null
 
         try
         {
             Write-Verbose -Message "Creating Label {$Name}"
             New-Label @CreationParams
+
             ## Can't set priority until label created
-            if ($PSBoundParameters.ContainsKey("Priority"))
+            if ($PSBoundParameters.ContainsKey('Priority'))
             {
                 Start-Sleep 5
                 Write-Verbose -Message "Updating the priority for newly created label {$Name}"
@@ -625,7 +866,7 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Warning "New-Label is not available in tenant $($Credential.UserName.Split('@')[0])"
+            Write-Warning "New-Label is not available in tenant $($Credential.UserName.Split('@')[1]): $_"
         }
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $label.Ensure))
@@ -633,23 +874,32 @@ function Set-TargetResource
         Write-Verbose -Message "Label {$Name} already exist, updating it from the Set-TargetResource function."
         $SetParams = $PSBoundParameters
 
-        if ($PSBoundParameters.ContainsKey("AdvancedSettings"))
+        if ($PSBoundParameters.ContainsKey('AdvancedSettings'))
         {
-            $advanced = Convert-CIMToAdvancedSettings  $AdvancedSettings
-            $SetParams["AdvancedSettings"] = $advanced
+            $advanced = Convert-CIMToAdvancedSettings $AdvancedSettings
+            $SetParams['AdvancedSettings'] = $advanced
         }
 
-        if ($PSBoundParameters.ContainsKey("LocaleSettings"))
+        if ($PSBoundParameters.ContainsKey('LocaleSettings'))
         {
             $locale = Convert-CIMToLocaleSettings $LocaleSettings
-            $SetParams["LocaleSettings"] = $locale
+            $SetParams['LocaleSettings'] = $locale
         }
 
         #Remove unused parameters for Set-Label cmdlet
-        $SetParams.Remove("Credential")
-        $SetParams.Remove("Ensure")
-        $SetParams.Remove("Name")
-        $SetParams.Remove("Disabled")
+        $SetParams.Remove('Name') | Out-Null
+        $SetParams.Remove('Disabled') | Out-Null
+
+        # Remove authentication parameters
+        $SetParams.Remove('Ensure') | Out-Null
+        $SetParams.Remove('Credential') | Out-Null
+        $SetParams.Remove('ApplicationId') | Out-Null
+        $SetParams.Remove('TenantId') | Out-Null
+        $SetParams.Remove('CertificatePath') | Out-Null
+        $SetParams.Remove('CertificatePassword') | Out-Null
+        $SetParams.Remove('CertificateThumbprint') | Out-Null
+        $SetParams.Remove('ManagedIdentity') | Out-Null
+        $SetParams.Remove('ApplicationSecret') | Out-Null
 
         try
         {
@@ -657,7 +907,7 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Warning "Set-Label is not available in tenant $($Credential.UserName.Split('@')[0])"
+            Write-Warning "Set-Label is not available in tenant $($Credential.UserName.Split('@')[1]): $_"
         }
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $label.Ensure))
@@ -672,10 +922,11 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Warning "Remove-Label is not available in tenant $($Credential.UserName.Split('@')[0])"
+            Write-Warning "Remove-Label is not available in tenant $($Credential.UserName.Split('@')[1]): $_"
         }
     }
 }
+
 function Test-TargetResource
 {
     [CmdletBinding()]
@@ -807,6 +1058,11 @@ function Test-TargetResource
         $ApplyWaterMarkingText,
 
         [Parameter()]
+        [ValidateSet('File, Email', 'Site, UnifiedGroup', 'PurviewAssets', 'Teamwork', 'SchematizedData')]
+        [System.String[]]
+        $ContentType,
+
+        [Parameter()]
         [System.String]
         $EncryptionAipTemplateScopes,
 
@@ -817,6 +1073,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $EncryptionDoNotForward,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionEncryptOnly,
 
         [Parameter()]
         [System.Boolean]
@@ -867,20 +1127,45 @@ function Test-TargetResource
         $SiteAndGroupProtectionEnabled,
 
         [Parameter()]
-        [ValidateSet('Public', 'Private')]
+        [ValidateSet('Public', 'Private', 'Unspecified')]
         [System.String]
         $SiteAndGroupProtectionPrivacy,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
+        [ValidateSet('ExternalUserAndGuestSharing', 'ExternalUserSharingOnly', 'ExistingExternalUserSharingOnly', 'Disabled')]
+        [System.String]
+        $SiteAndGroupExternalSharingControlType,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -889,18 +1174,36 @@ function Test-TargetResource
 
     Write-Verbose -Message "Testing configuration of Sensitivity label for $Name"
 
+    foreach ($param in @('Disabled', 'ApplyContentMarkingFooterFontName', 'ApplyContentMarkingHeaderFontName', 'ApplyWaterMarkingFontName', 'EncryptionAipTemplateScopes'))
+    {
+        if ($PSBoundParameters.ContainsKey($param))
+        {
+            Write-Verbose -Message "The $param parameter is deprecated and will not be used."
+        }
+    }
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('AdvancedSettings') | Out-Null
     $ValuesToCheck.Remove('LocaleSettings') | Out-Null
     $ValuesToCheck.Remove('Disabled') | Out-Null
+    $ValuesToCheck.Remove('EncryptionAipTemplateScopes') | Out-Null
+
+    # Remove authentication parameters
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     if ($null -ne $AdvancedSettings -and $null -ne $CurrentValues.AdvancedSettings)
     {
+        Write-Verbose -Message 'Testing AdvancedSettings'
         $TestAdvancedSettings = Test-AdvancedSettings -DesiredProperty $AdvancedSettings -CurrentProperty $CurrentValues.AdvancedSettings
         if ($false -eq $TestAdvancedSettings)
         {
@@ -910,6 +1213,7 @@ function Test-TargetResource
 
     if ($null -ne $LocaleSettings -and $null -ne $CurrentValues.LocaleSettings)
     {
+        Write-Verbose -Message 'Testing LocaleSettings'
         $localeSettingsSame = Test-LocaleSettings -DesiredProperty $LocaleSettings -CurrentProperty $CurrentValues.LocaleSettings
         if ($false -eq $localeSettingsSame)
         {
@@ -932,9 +1236,29 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters `
@@ -944,8 +1268,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -956,7 +1280,7 @@ function Export-TargetResource
     {
         [array]$labels = Get-Label -ErrorAction Stop
 
-        $dscContent = ""
+        $dscContent = ''
         $i = 1
         if ($labels.Length -eq 0)
         {
@@ -970,11 +1294,7 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($labels.Count)] $($label.Name)" -NoNewline
 
-            $Params = @{
-                Name               = $label.Name
-                Credential = $Credential
-            }
-            $Results = Get-TargetResource @Params
+            $Results = Get-TargetResource @PSBoundParameters -Name $label.Name
 
             if ($null -ne $Results.AdvancedSettings)
             {
@@ -994,11 +1314,11 @@ function Export-TargetResource
                 -Credential $Credential
             if ($null -ne $Results.AdvancedSettings)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AdvancedSettings"
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AdvancedSettings'
             }
             if ($null -ne $Results.LocaleSettings)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "LocaleSettings"
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'LocaleSettings'
             }
 
             Write-Host $Global:M365DSCEmojiGreenCheckMark
@@ -1011,27 +1331,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
     return $dscContent
 }
@@ -1040,10 +1347,12 @@ function Convert-JSONToLocaleSettings
 {
     [CmdletBinding()]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance[]])]
-    Param(
+    param
+    (
         [parameter(Mandatory = $true)]
         $JSONLocalSettings
     )
+
     $localeSettings = $JSONLocalSettings | ConvertFrom-Json
 
     $entries = @()
@@ -1057,15 +1366,14 @@ function Convert-JSONToLocaleSettings
         {
             $entry = @{
                 Key   = $setting.Key
-                Value = $setting.Value
+                Value = $setting.Value -replace "`r"
             }
             $settings += $entry
         }
-        $result.Add("LabelSettings", $settings)
+        $result.Add('LabelSettings', $settings)
         $settings = @()
         $entries += $result
         $result = @{ }
-
     }
     return $entries
 }
@@ -1074,37 +1382,41 @@ function Convert-StringToAdvancedSettings
 {
     [CmdletBinding()]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance[]])]
-    Param(
+    param
+    (
         [parameter(Mandatory = $true)]
         [System.String[]]
         $AdvancedSettings
     )
+
     $settings = @()
     foreach ($setting in $AdvancedSettings)
     {
-        $settingString = $setting.Replace("[", "").Replace("]", "")
-        $settingKey = $settingString.Split(",")[0]
+        $settingString = $setting.Replace('[', '').Replace(']', '')
+        $settingKey = $settingString.Split(',')[0]
 
-        if ($settingKey -ne 'displayname')
+        if ($settingKey -notin @('displayname', 'contenttype', 'tooltip'))
         {
-            $startPos = $settingString.IndexOf(",", 0) + 1
+            $startPos = $settingString.IndexOf(',', 0) + 1
             $valueString = $settingString.Substring($startPos, $settingString.Length - $startPos).Trim()
-            $values = $valueString.Split(",")
+            $values = $valueString.Split(',')
 
             $entry = @{
                 Key   = $settingKey
-                Value = $values
+                Value = $values.Trim()
             }
             $settings += $entry
         }
     }
     return $settings
 }
+
 function Convert-CIMToAdvancedSettings
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    Param(
+    param
+    (
         [parameter(Mandatory = $true)]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $AdvancedSettings
@@ -1113,11 +1425,11 @@ function Convert-CIMToAdvancedSettings
     $entry = @{ }
     foreach ($obj in $AdvancedSettings)
     {
-        $settingsValues = ""
+        $settingsValues = ''
         foreach ($objVal in $obj.Value)
         {
             $settingsValues += $objVal
-            $settingsValues += ","
+            $settingsValues += ','
         }
         $entry[$obj.Key] = $settingsValues.Substring(0, ($settingsValues.Length - 1))
     }
@@ -1129,7 +1441,8 @@ function Convert-EncryptionRightDefinition
 {
     [CmdletBinding()]
     [OutputType([System.String])]
-    Param(
+    param
+    (
         [parameter(Mandatory = $true)]
         [System.String]
         $RightsDefinition
@@ -1140,7 +1453,7 @@ function Convert-EncryptionRightDefinition
     {
         $StringContent += "$($right.Identity):$($right.Rights);"
     }
-    if ($StringContent.EndsWith(";"))
+    if ($StringContent.EndsWith(';'))
     {
         $StringContent = $StringContent.Substring(0, ($StringContent.Length - 1))
     }
@@ -1152,11 +1465,13 @@ function Convert-CIMToLocaleSettings
 {
     [CmdletBinding()]
     [OutputType([System.Collections.ArrayList])]
-    Param(
+    param
+    (
         [parameter(Mandatory = $true)]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $localeSettings
     )
+
     $entry = [System.Collections.ArrayList]@()
     foreach ($localset in $localeSettings)
     {
@@ -1172,7 +1487,7 @@ function Convert-CIMToLocaleSettings
             }
             $settings += $settingEntry
         }
-        $localeEntries.Add("Settings", $settings)
+        $localeEntries.Add('Settings', $settings)
         [void]$entry.Add(($localeEntries | ConvertTo-Json))
         $localeEntries = @{ }
         $settings = @( )
@@ -1185,7 +1500,8 @@ function Test-AdvancedSettings
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-    param(
+    param
+    (
         [Parameter (Mandatory = $true)]
         $DesiredProperty,
 
@@ -1193,21 +1509,71 @@ function Test-AdvancedSettings
         $CurrentProperty
     )
 
+    $driftedSetting = @()
     $foundSettings = $true
     foreach ($desiredSetting in $DesiredProperty)
     {
         $foundKey = $CurrentProperty | Where-Object { $_.Key -eq $desiredSetting.Key }
         if ($null -ne $foundKey)
         {
-            if ($foundKey.Value.ToString() -ne $desiredSetting.Value.ToString())
+            if ($desiredSetting.Value -is [Array])
             {
-                $foundSettings = $false
-                break;
+                if ($foundKey.Value -is [Array])
+                {
+                    $diff = Compare-Object -ReferenceObject $foundKey.Value -DifferenceObject $desiredSetting.Value
+                    if ($diff.Count -ne 0)
+                    {
+                        $foundSettings = $false
+                        $driftedSetting += $desiredSetting.Key
+                    }
+                }
+                else
+                {
+                    if ($desiredSetting.Value.Count -ne 1 -or `
+                            $foundKey.Value.ToString() -ne $desiredSetting.Value[0].ToString())
+                    {
+                        $foundSettings = $false
+                        $driftedSetting += $desiredSetting.Key
+                    }
+                }
             }
+            else
+            {
+                if ($foundKey.Value -is [Array])
+                {
+                    if ($foundKey.Value.Count -ne 1 -or `
+                            $foundKey.Value[0].ToString() -ne $desiredSetting.Value.ToString())
+                    {
+                        $foundSettings = $false
+                        $driftedSetting += $desiredSetting.Key
+                    }
+                }
+                else
+                {
+                    if ($foundKey.Value.ToString() -ne $desiredSetting.Value.ToString())
+                    {
+                        $foundSettings = $false
+                        $driftedSetting += $desiredSetting.Key
+                    }
+                }
+            }
+        }
+        else
+        {
+            $foundSettings = $false
+            $driftedSetting += $desiredSetting.Key
         }
     }
 
-    Write-Verbose -Message "Test AdvancedSettings  returns $foundSettings"
+    if ($foundSettings -eq $false)
+    {
+        New-M365DSCLogEntry -Message "AdvancedSettings for label $Name do not match: $($driftedSetting -join ', ')" `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+    }
+
+    Write-Verbose -Message "Test AdvancedSettings returns $foundSettings"
     return $foundSettings
 }
 
@@ -1215,13 +1581,16 @@ function Test-LocaleSettings
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-    param(
+    param
+    (
         [Parameter (Mandatory = $true)]
         $DesiredProperty,
+
         [Parameter (Mandatory = $true)]
         $CurrentProperty
     )
 
+    $driftedSetting = @()
     $foundSettings = $true
     foreach ($desiredSetting in $DesiredProperty)
     {
@@ -1230,22 +1599,45 @@ function Test-LocaleSettings
         {
             if ($null -ne $foundKey)
             {
-                $myLabel = $foundKey.Settings | Where-Object { $_.Key -eq $setting.Key -and $_.Value -eq $setting.Value }
+                if ($setting.Value -is [Array])
+                {
+                    if ($setting.Value.Count -eq 1)
+                    {
+                        $myLabel = $foundKey.LabelSettings | Where-Object { $_.Key -eq $setting.Key -and $_.Value -eq $setting.Value[0] }
+                    }
+                    else
+                    {
+                        $foundSettings = $false
+                        $driftedSetting += "$($desiredSetting.localeKey) ($($setting.Key))"
+                    }
+                }
+                else
+                {
+                    $myLabel = $foundKey.LabelSettings | Where-Object { $_.Key -eq $setting.Key -and $_.Value -eq $setting.Value }
+                }
 
                 if ($null -eq $myLabel)
                 {
                     $foundSettings = $false
-                    break;
+                    $driftedSetting += "$($desiredSetting.localeKey) ($($setting.Key))"
                 }
             }
             else
             {
                 $foundSettings = $false
-                break;
-
+                $driftedSetting += "$($desiredSetting.localeKey) ($($setting.Key))"
             }
         }
     }
+
+    if ($foundSettings -eq $false)
+    {
+        New-M365DSCLogEntry -Message "LocaleSettings for label $Name do not match: $($driftedSetting -join ', ')" `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+    }
+
     Write-Verbose -Message "Test LocaleSettings returns $foundSettings"
     return $foundSettings
 }
@@ -1269,7 +1661,7 @@ function ConvertTo-AdvancedSettingsString
         $StringContent += "                    Value = '$($advancedSetting.Value.Replace("'", "''"))'`r`n"
         $StringContent += "                }`r`n"
     }
-    $StringContent += "            )"
+    $StringContent += '            )'
     return $StringContent
 }
 
@@ -1301,7 +1693,7 @@ function ConvertTo-LocaleSettingsString
         $StringContent += "                    )`r`n"
         $StringContent += "                }`r`n"
     }
-    $StringContent += "            )"
+    $StringContent += '            )'
     return $StringContent
 }
 

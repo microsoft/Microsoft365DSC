@@ -33,6 +33,14 @@ Configuration Master
     Node Localhost
     {
         #region AAD
+        AADAdministrativeUnit AADAdministrativeUnit
+        {
+            Credential           = $GlobalAdmin;
+            DisplayName          = "M365DSC Integration";
+            Ensure               = "Present";
+            Visibility           = 'HiddenMembership'
+        }
+
         AADApplication 'DSCApp1'
         {
             DisplayName               = "App1"
@@ -554,7 +562,7 @@ Configuration Master
             SCCaseHoldPolicy DemoCaseHoldPolicy
             {
                 Case                 = "Integration Case"
-                ExchangeLocation     = "John.Smith@$Domain"
+                ExchangeLocation     = @("John.Smith@$Domain")
                 Name                 = "Integration Hold"
                 PublicFolderLocation = "All"
                 Comment              = "This is a test for integration"
@@ -648,11 +656,12 @@ Configuration Master
 
             SCRetentionCompliancePolicy RCPolicy
             {
-                Name             = "MyRCPolicy"
-                Comment          = "Test Policy"
-                ExchangeLocation = @()
-                Ensure           = "Present"
-                Credential       = $GlobalAdmin
+                Name                 = "MyRCPolicy"
+                Comment              = "Test Policy"
+                RestrictiveRetention = $False;
+                Enabled              = $True
+                Ensure               = "Present"
+                Credential           = $GlobalAdmin
             }
 
             SCRetentionComplianceRule RCRule
@@ -861,13 +870,14 @@ Configuration Master
 
         TeamsChannelsPolicy IntegrationChannelPolicy
         {
-            AllowOrgWideTeamCreation    = $True
-            AllowPrivateChannelCreation = $True
-            AllowPrivateTeamDiscovery   = $True
-            Description                 = $null
-            Identity                    = "Integration Channel Policy"
-            Ensure                      = "Present"
-            Credential                  = $GlobalAdmin
+            AllowChannelSharingToExternalUser             = $True;
+            AllowOrgWideTeamCreation                      = $True;
+            AllowPrivateChannelCreation                   = $True;
+            AllowSharedChannelCreation                    = $True;
+            AllowUserToParticipateInExternalSharedChannel = $True;
+            Identity                                      = "Integration Channel Policy"
+            Ensure                                        = "Present"
+            Credential                                    = $GlobalAdmin
         }
 
         TeamsEmergencyCallingPolicy EmergencyCallingPolicy
@@ -907,31 +917,6 @@ Configuration Master
             Identity                       = "Integration Test"
             Ensure                         = "Present"
             Credential                     = $GlobalAdmin
-        }
-
-        TeamsMeetingPolicy DemoMeetingPolicy
-        {
-            AllowAnonymousUsersToStartMeeting          = $False
-            AllowChannelMeetingScheduling              = $True
-            AllowCloudRecording                        = $True
-            AllowExternalParticipantGiveRequestControl = $False
-            AllowIPVideo                               = $True
-            AllowMeetNow                               = $True
-            AllowOutlookAddIn                          = $True
-            AllowParticipantGiveRequestControl         = $True
-            AllowPowerPointSharing                     = $True
-            AllowPrivateMeetingScheduling              = $True
-            AllowSharedNotes                           = $True
-            AllowTranscription                         = $False
-            AllowPSTNUsersToBypassLobby                = $true
-            AllowWhiteboard                            = $True
-            AutoAdmittedUsers                          = "Everyone"
-            Description                                = "Integration Meeting Policy"
-            Identity                                   = "Integration Meeting Policy"
-            MediaBitRateKb                             = 50000
-            ScreenSharingMode                          = "EntireScreen"
-            Ensure                                     = "Present"
-            Credential                                 = $GlobalAdmin
         }
 
         TeamsTeam TeamAlpha

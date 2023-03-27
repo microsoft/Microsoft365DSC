@@ -35,7 +35,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            $Global:PartialExportFileName = "c:\TestPath"
+            $Global:PartialExportFileName = 'c:\TestPath'
 
             Mock -CommandName Save-M365DSCPartialExport -MockWith {
             }
@@ -56,9 +56,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $stringAsStream.Position = 0
                 $hash = (Get-FileHash -InputStream $stringAsStream).Hash
 
-                $hashAsGuid = "{0}-{1}-{2}-{3}-{4}" -f $hash.Substring(0, 8), $hash.Substring(8, 4), $hash.Substring(12, 4), $hash.Substring(16, 4), $hash.Substring(20, 12)
+                $hashAsGuid = '{0}-{1}-{2}-{3}-{4}' -f $hash.Substring(0, 8), $hash.Substring(8, 4), $hash.Substring(12, 4), $hash.Substring(16, 4), $hash.Substring(20, 12)
 
                 return $hashAsGuid
+            }
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
             }
         }
 
@@ -81,7 +85,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Invoke-WebRequest -MockWith {
-                    if ($Uri -match "https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration")
+                    if ($Uri -match 'https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration')
                     {
                         $tenantid = (New-HashFromTenantName -TenantName $Matches[1])
                         $returnval = '{{"token_endpoint":"https://login.windows.net/{0}/oauth2/token"}}' -f $tenantid
@@ -114,7 +118,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should enable the isolation settings and create a rule in Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "Set-PowerAppTenantIsolationPolicy" -Exactly 1
+                Should -Invoke -CommandName 'Set-PowerAppTenantIsolationPolicy' -Exactly 1
             }
         }
 
@@ -136,7 +140,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Invoke-WebRequest -MockWith {
-                    if ($Uri -match "https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration")
+                    if ($Uri -match 'https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration')
                     {
                         $tenantid = (New-HashFromTenantName -TenantName $Matches[1])
                         $returnval = '{{"token_endpoint":"https://login.windows.net/{0}/oauth2/token"}}' -f $tenantid
@@ -198,7 +202,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Invoke-WebRequest -MockWith {
-                    if ($Uri -match "https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration")
+                    if ($Uri -match 'https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration')
                     {
                         $tenantid = (New-HashFromTenantName -TenantName $Matches[1])
                         $returnval = '{{"token_endpoint":"https://login.windows.net/{0}/oauth2/token"}}' -f $tenantid
@@ -240,11 +244,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            $global:M365DSCTenantId = ""
+            $global:M365DSCTenantId = ''
             It 'Should enable the isolation settings and create a rule in Set method' {
                 Set-TargetResource @testParams
                 $global:M365DSCTenantId | Should -Be (New-HashFromTenantName -TenantName 'contoso.onmicrosoft.com')
-                Should -Invoke -CommandName "Set-PowerAppTenantIsolationPolicy" -Exactly 1
+                Should -Invoke -CommandName 'Set-PowerAppTenantIsolationPolicy' -Exactly 1
             }
         }
 
@@ -267,7 +271,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Invoke-WebRequest -MockWith {
-                    if ($Uri -match "https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration")
+                    if ($Uri -match 'https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration')
                     {
                         $tenantid = (New-HashFromTenantName -TenantName $Matches[1])
                         $returnval = '{{"token_endpoint":"https://login.windows.net/{0}/oauth2/token"}}' -f $tenantid
@@ -309,11 +313,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            $global:M365DSCTenantIds = ""
+            $global:M365DSCTenantIds = ''
             It 'Should add a rule in Set method' {
                 Set-TargetResource @testParams
                 $global:M365DSCTenantIds.Count | Should -Be 2
-                Should -Invoke -CommandName "Set-PowerAppTenantIsolationPolicy" -Exactly 1
+                Should -Invoke -CommandName 'Set-PowerAppTenantIsolationPolicy' -Exactly 1
             }
         }
 
@@ -336,7 +340,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Invoke-WebRequest -MockWith {
-                    if ($Uri -match "https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration")
+                    if ($Uri -match 'https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration')
                     {
                         $tenantid = (New-HashFromTenantName -TenantName $Matches[1])
                         $returnval = '{{"token_endpoint":"https://login.windows.net/{0}/oauth2/token"}}' -f $tenantid
@@ -398,7 +402,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Invoke-WebRequest -MockWith {
-                    if ($Uri -match "https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration")
+                    if ($Uri -match 'https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration')
                     {
                         $tenantid = (New-HashFromTenantName -TenantName $Matches[1])
                         $returnval = '{{"token_endpoint":"https://login.windows.net/{0}/oauth2/token"}}' -f $tenantid
@@ -448,11 +452,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            $global:M365DSCTenantIds = ""
+            $global:M365DSCTenantIds = ''
             It 'Should remove a rule in Set method' {
                 Set-TargetResource @testParams
                 $global:M365DSCTenantIds.Count | Should -Be 1
-                Should -Invoke -CommandName "Set-PowerAppTenantIsolationPolicy" -Exactly 1
+                Should -Invoke -CommandName 'Set-PowerAppTenantIsolationPolicy' -Exactly 1
             }
         }
 
@@ -475,7 +479,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Invoke-WebRequest -MockWith {
-                    if ($Uri -match "https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration")
+                    if ($Uri -match 'https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration')
                     {
                         $tenantid = (New-HashFromTenantName -TenantName $Matches[1])
                         $returnval = '{{"token_endpoint":"https://login.windows.net/{0}/oauth2/token"}}' -f $tenantid
@@ -520,12 +524,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
+                $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
                 }
 
                 Mock -CommandName Invoke-WebRequest -MockWith {
-                    if ($Uri -match "https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration")
+                    if ($Uri -match 'https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration')
                     {
                         $tenantid = (New-HashFromTenantName -TenantName $Matches[1])
                         $returnval = '{{"token_endpoint":"https://login.windows.net/{0}/oauth2/token"}}' -f $tenantid
@@ -566,7 +572,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should Reverse Engineer resource from the Export method' {
-                Export-TargetResource @testParams
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     } #inmodulescope

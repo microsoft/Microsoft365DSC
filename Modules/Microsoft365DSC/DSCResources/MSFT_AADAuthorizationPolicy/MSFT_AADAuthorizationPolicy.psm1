@@ -107,20 +107,37 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $nullReturn = @{
+        IsSingleInstance = 'Yes'
+    }
+
     try
     {
         $Policy = Get-MgPolicyAuthorizationPolicy -ErrorAction Stop
     }
     catch
     {
-        Write-Verbose -Message "Couldn't find existing authorization policy"
-        throw "Cannot retrieve authorization policy, $($_.Exception.Message)"
+        $message = 'Could not find existing authorization policy'
+
+        New-M365DSCLogEntry -Message $message `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $nullReturn
     }
 
     if ($null -eq $Policy)
     {
-        Write-Verbose -Message 'Existing Authorization Policy were not found'
-        throw 'authorization policy was not found'
+        $message = 'Existing Authorization Policy was not found'
+
+        New-M365DSCLogEntry -Message $message `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $nullReturn
     }
     else
     {
@@ -342,29 +359,13 @@ function Set-TargetResource
     }
     catch
     {
-        $Message = $_
-        try
-        {
-            Write-Verbose -Message $Message
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         Write-Verbose -Message "Set-Targetresource: Failed change policy $DisplayName"
-        Write-Verbose -Message $_
     }
     Write-Verbose -Message "Set-Targetresource: finished processing Policy $Displayname"
 }
@@ -529,47 +530,51 @@ function Export-TargetResource
 
     try
     {
-        $results = Get-TargetResource -IsSingleInstance 'Yes' @PSBoundParameters
         $dscContent = ''
 
-        Write-Host "`r`n" -NoNewline
-        Write-Host "    |---[1/1] $($results.DisplayName)" -NoNewline
-        $results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $results
-        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $results `
-            -Credential $Credential
-        Save-M365DSCPartialExport -Content $currentDSCBlock `
-            -FileName $Global:PartialExportFileName
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        $params = @{
+            IsSingleInstance      = 'Yes'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity
+        }
+        $Results = Get-TargetResource @Params
+
+        if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
+        {
+            Write-Host "`r`n" -NoNewline
+            Write-Host "    |---[1/1] $($results.DisplayName)" -NoNewline
+            $results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $results
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $results `
+                -Credential $Credential
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host $Global:M365DSCEmojiRedX
+        }
 
         return $currentDSCBlock
     }
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }

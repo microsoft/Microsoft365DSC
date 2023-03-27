@@ -21,6 +21,10 @@ function Get-TargetResource
         $TargetAddressDomains = @(),
 
         [Parameter()]
+        [System.String]
+        $TargetSharingEpr,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -97,6 +101,7 @@ function Get-TargetResource
                 DiscoveryEndpoint     = $IntraOrganizationConnector.DiscoveryEndpoint.ToString()
                 Enabled               = $IntraOrganizationConnector.Enabled
                 TargetAddressDomains  = $IntraOrganizationConnector.TargetAddressDomains
+                TargetSharingEpr      = $IntraOrganizationConnector.TargetSharingEpr
                 Credential            = $Credential
                 Ensure                = 'Present'
                 ApplicationId         = $ApplicationId
@@ -114,26 +119,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -158,6 +149,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $TargetAddressDomains = @(),
+
+        [Parameter()]
+        [System.String]
+        $TargetSharingEpr,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -219,7 +214,7 @@ function Set-TargetResource
     $IntraOrganizationConnectorParams.Remove('CertificateThumbprint') | Out-Null
     $IntraOrganizationConnectorParams.Remove('CertificatePath') | Out-Null
     $IntraOrganizationConnectorParams.Remove('CertificatePassword') | Out-Null
-    $IntraOrganizationConnectorParams.Remove('Managedidentity') | Out-Null
+    $IntraOrganizationConnectorParams.Remove('ManagedIdentity') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($null -eq $IntraOrganizationConnector))
     {
@@ -261,6 +256,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $TargetAddressDomains = @(),
+
+        [Parameter()]
+        [System.String]
+        $TargetSharingEpr,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -321,7 +320,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -430,26 +429,14 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }

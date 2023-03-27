@@ -1,0 +1,38 @@
+﻿{
+    "resourceName": "AADEntitlementManagementAccessPackage",
+    "description": "This resource configures an A A D Entitlement Management Access Package.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "EntitlementManagement.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "EntitlementManagement.Read.All"
+                    },
+                    {
+                        "name": "EntitlementManagement.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "EntitlementManagement.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "EntitlementManagement.Read.All"
+                    },
+                    {
+                        "name": "EntitlementManagement.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -4,26 +4,51 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **DisplayName** | Key | String | Display Name of the Channel Tab. ||
-| **TeamName** | Required | String | Display Name of the Team. ||
-| **ChannelName** | Required | String | Display Name of the Channel. ||
-| **TeamId** | Write | String | Unique Id of the Team of the instance on the source tenant. ||
-| **TeamsApp** | Write | String | Id of the Teams App associated with the custom tab. ||
-| **SortOrderIndex** | Write | UInt32 | Index of the sort order for the custom tab. ||
-| **WebSiteUrl** | Write | String | Url of the website linked to the Channel Tab. ||
-| **ContentUrl** | Write | String | Url of the content linked to the Channel Tab. ||
-| **RemoveUrl** | Write | String | Url of the location used to remove the app. ||
-| **EntityId** | Write | String | Id of the Entity linked to the Channel Tab. ||
-| **Ensure** | Write | String | Present ensures the Tab exists, absent ensures it is removed. |Present, Absent|
-| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
-| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
-| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
+| **DisplayName** | Key | String | Display Name of the Channel Tab. | |
+| **TeamName** | Key | String | Display Name of the Team. | |
+| **ChannelName** | Key | String | Display Name of the Channel. | |
+| **TeamId** | Write | String | Unique Id of the Team of the instance on the source tenant. | |
+| **TeamsApp** | Write | String | Id of the Teams App associated with the custom tab. | |
+| **SortOrderIndex** | Write | UInt32 | Index of the sort order for the custom tab. | |
+| **WebSiteUrl** | Write | String | Url of the website linked to the Channel Tab. | |
+| **ContentUrl** | Write | String | Url of the content linked to the Channel Tab. | |
+| **RemoveUrl** | Write | String | Url of the location used to remove the app. | |
+| **EntityId** | Write | String | Id of the Entity linked to the Channel Tab. | |
+| **Ensure** | Write | String | Present ensures the Tab exists, absent ensures it is removed. | `Present`, `Absent` |
+| **Credential** | Write | PSCredential | Credentials of the Teams Admin | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 
-# TeamsChannelTab
-
-### Description
+## Description
 
 This resource configures a new Custom tab in a Channel.
+
+## Permissions
+
+### Microsoft Graph
+
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
+
+#### Delegated permissions
+
+- **Read**
+
+    - ChannelSettings.Read.All, Group.Read.All
+
+- **Update**
+
+    - Channel.Delete.All, ChannelSettings.Read.All, TeamsTab.Create, TeamsTab.ReadWrite.All
+
+#### Application permissions
+
+- **Read**
+
+    - ChannelSettings.Read.All, Group.Read.All
+
+- **Update**
+
+    - Channel.Delete.All, ChannelSettings.Read.All, TeamsTab.Create, TeamsTab.ReadWrite.All
 
 ## Examples
 

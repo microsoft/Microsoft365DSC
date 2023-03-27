@@ -1,0 +1,16 @@
+﻿{
+    "resourceName": "TeamsShiftsPolicy",
+    "description": "This resource configures an This resource allows you to create a new TeamsShiftPolicy instance and set it\u0027s properties..",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        }
+    }
+}

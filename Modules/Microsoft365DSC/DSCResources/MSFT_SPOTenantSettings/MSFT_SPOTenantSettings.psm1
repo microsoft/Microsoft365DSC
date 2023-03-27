@@ -97,6 +97,10 @@ function Get-TargetResource
         $IsFluidEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $CommentsOnSitePagesDisabled,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -190,6 +194,7 @@ function Get-TargetResource
             MarkNewFilesSensitiveByDefault                = $SPOTenantSettings.MarkNewFilesSensitiveByDefault
             ConditionalAccessPolicy                       = $SPOTenantSettings.ConditionalAccessPolicy
             DisabledWebPartIds                            = $SPOTenantSettings.DisabledWebPartIds
+            CommentsOnSitePagesDisabled                   = $SPOTenantSettings.CommentsOnSitePagesDisabled
             Credential                                    = $Credential
             ApplicationId                                 = $ApplicationId
             TenantId                                      = $TenantId
@@ -203,30 +208,17 @@ function Get-TargetResource
     }
     catch
     {
-        if ($error[0].Exception.Message -like 'No connection available')
+        if ($_.Exception.Message -like 'No connection available')
         {
             Write-Verbose -Message 'Make sure that you are connected to your SPOService'
         }
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -323,6 +315,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Guid[]]
         $DisabledWebPartIds,
+
+        [Parameter()]
+        [System.Boolean]
+        $CommentsOnSitePagesDisabled,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -497,6 +493,10 @@ function Test-TargetResource
         $DisabledWebPartIds,
 
         [Parameter()]
+        [System.Boolean]
+        $CommentsOnSitePagesDisabled,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -578,7 +578,8 @@ function Test-TargetResource
             'HideDefaultThemes', `
             'MarkNewFilesSensitiveByDefault', `
             'ConditionalAccessPolicy', `
-            'DisabledWebPartIds'
+            'DisabledWebPartIds', `
+            'CommentsOnSitePagesDisabled'
     )
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
@@ -678,26 +679,13 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+
+        New-M365DSCLogEntry -Message "Error during Export:" `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }

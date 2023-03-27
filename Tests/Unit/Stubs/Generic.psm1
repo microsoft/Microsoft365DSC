@@ -33,24 +33,6 @@ function New-MgGroup
     )
 }
 
-function Get-MgGroup
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $GroupId,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.Boolean]
-        $All
-    )
-}
-
 function New-MgGroupOwnerByRef
 {
 
@@ -63,20 +45,6 @@ function New-MgGroupOwnerByRef
         [Parameter()]
         [System.Object]
         $BodyParameter
-    )
-}
-
-function Get-MgServicePrincipal
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $ServicePrincipalId,
-
-        [Parameter()]
-        [System.String]
-        $Filter
     )
 }
 function Confirm-M365DSCDependencies
@@ -303,20 +271,6 @@ function Update-MgRoleManagementDirectoryRoleDefinition
     )
 }
 
-function Get-MgRoleManagementDirectoryRoleDefinition
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $UnifiedRoleDefinitionId,
-
-        [Parameter()]
-        [System.String]
-        $Filter
-    )
-}
-
 function Remove-MgRoleManagementDirectoryRoleDefinition
 {
     [CmdletBinding()]
@@ -402,9 +356,9 @@ function New-M365DSCConnection
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
-        [ValidateSet("ExchangeOnline", 'Intune', `
-                "SecurityComplianceCenter", "MSOnline", "PnP", "PowerPlatforms", `
-                "MicrosoftTeams", "MicrosoftGraph")]
+        [ValidateSet('ExchangeOnline', 'Intune', `
+                'SecurityComplianceCenter', 'MSOnline', 'PnP', 'PowerPlatforms', `
+                'MicrosoftTeams', 'MicrosoftGraph')]
         [System.String]
         $Workload,
 
@@ -422,8 +376,8 @@ function New-M365DSCConnection
 
         [Parameter()]
         [System.String]
-        [ValidateSet("v1.0", "beta")]
-        $ProfileName = "v1.0"
+        [ValidateSet('v1.0', 'beta')]
+        $ProfileName = 'v1.0'
     )
 }
 
@@ -545,17 +499,21 @@ function New-M365DSCLogEntry
     [CmdletBinding()]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Error,
+        $Source,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Message,
 
         [Parameter()]
-        [System.String]
-        $Source,
+        [System.Object]
+        $Exception,
+
+        [Parameter()]
+        [PSCredential]
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -1231,91 +1189,6 @@ function Update-MGPlannerPlan
     )
 }
 
-function Get-MGPlannerTask
-{
-    [CmdletBinding()]
-    Param(
-        [Parameter()]
-        [System.String]
-        $PlannerTaskId
-    )
-}
-
-function New-MGPlannerTask
-{
-    [CmdletBinding()]
-    Param(
-        [Parameter()]
-        [System.String]
-        $PlanId,
-
-        [Parameter()]
-        [System.String]
-        $Title,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $StartDateTime,
-
-        [Parameter()]
-        [System.String]
-        $CompletedDateTime,
-
-        [Parameter()]
-        [ValidateRange(0, 100)]
-        [System.Uint32]
-        $PercentComplete,
-
-        [Parameter()]
-        [ValidateRange(0, 10)]
-        [System.UInt32]
-        $Priority
-    )
-}
-
-function Update-MGPlannerTask
-{
-    [CmdletBinding()]
-    Param(
-        [Parameter()]
-        [System.String]
-        $PlanId,
-
-        [Parameter()]
-        [System.String]
-        $Title,
-
-        [Parameter()]
-        [System.String]
-        $TaskId,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $StartDateTime,
-
-        [Parameter()]
-        [System.String]
-        $CompletedDateTime,
-
-        [Parameter()]
-        [ValidateRange(0, 100)]
-        [System.Uint32]
-        $PercentComplete,
-
-        [Parameter()]
-        [ValidateRange(0, 10)]
-        [System.UInt32]
-        $Priority
-    )
-}
 
 function Get-MgPlannerPlanBucket
 {

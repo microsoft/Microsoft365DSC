@@ -117,7 +117,7 @@ function Get-TargetResource
 
     try
     {
-        $roleAssignment = Get-ManagementRoleAssignment -Identity $Name -ErrorAction Stop
+        $roleAssignment = Get-ManagementRoleAssignment -Identity $Name -ErrorAction SilentlyContinue
 
         if ($null -eq $roleAssignment)
         {
@@ -126,12 +126,27 @@ function Get-TargetResource
         }
         else
         {
+            $RecipientAdministrativeUnitScopeValue = $null
+            if ($roleAssignment.RecipientWriteScope -eq 'AdministrativeUnit')
+            {
+                $adminUnit = Get-AdministrativeUnit -Identity $roleAssignment.CustomRecipientWriteScope
+
+                if ($RecipientAdministrativeUnitScope -eq $adminUnit.Name)
+                {
+                    $RecipientAdministrativeUnitScopeValue = $RecipientAdministrativeUnitScope
+                }
+                else
+                {
+                    $RecipientAdministrativeUnitScopeValue = $adminUnit.DisplayName
+                }
+            }
+
             $result = @{
                 Name                             = $roleAssignment.Name
                 CustomRecipientWriteScope        = $roleAssignment.CustomRecipientWriteScope
                 CustomResourceScope              = $roleAssignment.CustomResourceScope
                 ExclusiveRecipientWriteScope     = $roleAssignment.ExclusiveRecipientWriteScope
-                RecipientAdministrativeUnitScope = $roleAssignment.RecipientAdministrativeUnitScope
+                RecipientAdministrativeUnitScope = $RecipientAdministrativeUnitScopeValue
                 RecipientOrganizationalUnitScope = $roleAssignment.RecipientOrganizationalUnitScope
                 RecipientRelativeWriteScope      = $roleAssignment.RecipientRelativeWriteScope
                 Role                             = $roleAssignment.Role
@@ -145,7 +160,7 @@ function Get-TargetResource
                 TenantId                         = $TenantId
             }
 
-            if ($roleAssignment.RoleAssigneeType -eq 'SecurityGroup')
+            if ($roleAssignment.RoleAssigneeType -eq 'SecurityGroup' -or $roleAssignment.RoleAssigneeType -eq 'RoleGroup')
             {
                 $result.Add('SecurityGroup', $roleAssignment.RoleAssignee)
             }
@@ -168,26 +183,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -279,7 +280,6 @@ function Set-TargetResource
         [Switch]
         $ManagedIdentity
     )
-
     Write-Verbose -Message "Setting Management Role Assignment for $Name"
 
     $currentManagementRoleConfig = Get-TargetResource @PSBoundParameters
@@ -299,7 +299,7 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $NewManagementRoleParams = $PSBoundParameters
+    $NewManagementRoleParams = ([Hashtable]$PSBoundParameters).Clone()
     $NewManagementRoleParams.Remove('Ensure') | Out-Null
     $NewManagementRoleParams.Remove('Credential') | Out-Null
     $NewManagementRoleParams.Remove('ApplicationId') | Out-Null
@@ -307,21 +307,32 @@ function Set-TargetResource
     $NewManagementRoleParams.Remove('CertificateThumbprint') | Out-Null
     $NewManagementRoleParams.Remove('CertificatePath') | Out-Null
     $NewManagementRoleParams.Remove('CertificatePassword') | Out-Null
-    $NewManagementRoleParams.Remove('Managedidentity') | Out-Null
+    $NewManagementRoleParams.Remove('ManagedIdentity') | Out-Null
+
+    # If the RecipientAdministrativeUnitScope parameter is provided, then retrieve its ID by Name
+    if (-not [System.String]::IsNullOrEmpty($RecipientAdministrativeUnitScope))
+    {
+        $NewManagementRoleParams.Remove("CustomRecipientWriteScope") | Out-Null
+        $adminUnit = Get-AdministrativeUnit -Identity $RecipientAdministrativeUnitScope -ErrorAction SilentlyContinue
+        if ($null -eq $adminUnit)
+        {
+            $adminUnit = Get-AdministrativeUnit | Where-Object -FilterScript {$_.DisplayName -eq $RecipientAdministrativeUnitScope}
+        }
+        $NewManagementRoleParams.RecipientAdministrativeUnitScope = $adminUnit.Name
+    }
 
     # CASE: Management Role doesn't exist but should;
     if ($Ensure -eq 'Present' -and $currentManagementRoleConfig.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Management Role Assignment'$($Name)' does not exist but it should. Create and configure it."
         # Create Management Role
-        New-ManagementRoleAssignment @NewManagementRoleParams
-
+        New-ManagementRoleAssignment @NewManagementRoleParams | Out-Null
     }
     # CASE: Management Role exists but it shouldn't;
     elseif ($Ensure -eq 'Absent' -and $currentManagementRoleConfig.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Management Role Assignment'$($Name)' exists but it shouldn't. Remove it."
-        Remove-ManagementRoleAssignment -Identity $Name -Confirm:$false -Force
+        Remove-ManagementRoleAssignment -Identity $Name -Confirm:$false -Force | Out-Null
     }
     # CASE: Management Role exists and it should, but has different values than the desired ones
     elseif ($Ensure -eq 'Present' -and $currentManagementRoleConfig.Ensure -eq 'Present')
@@ -334,8 +345,35 @@ function Set-TargetResource
         $NewManagementRoleParams.Remove('Computer') | Out-Null
         $NewManagementRoleParams.Remove('App') | Out-Null
         $NewManagementRoleParams.Remove('Policy') | Out-Null
-        Set-ManagementRoleAssignment @NewManagementRoleParams
+        $NewManagementRoleParams.Remove('SecurityGroup') | Out-Null
+        Set-ManagementRoleAssignment @NewManagementRoleParams | Out-Null
     }
+
+    # Wait for the permission to be applied
+    $testResults = $false
+    $retries = 12
+    $count = 1
+    do
+    {
+        Write-Verbose -Message "Testing to ensure changes were applied."
+        $testResults = Test-TargetResource @PSBoundParameters
+        if (-not $testResults)
+        {
+            Write-Verbose -Message "Test-TargetResource returned $false. Waiting for a total of $(($count * 10).ToString()) out of $(($retries * 10).ToString())"
+            Start-Sleep -Seconds 10
+        }
+        $retries--
+        $count++
+    } while (-not $testResults -and $retries -gt 0)
+
+    # Need to force reconnect to Exchange for the new permissions to kick in.
+    if ($null -ne $Global:MSCloudLoginConnectionProfile.ExchangeOnline)
+    {
+        Write-Verbose -Message "Waiting for 20 seconds for new permissions to be effective."
+        Start-Sleep 20
+        Write-Verbose -Message "Disconnecting from Exchange Online"
+        $Global:MSCloudLoginConnectionProfile.ExchangeOnline.Disconnect()
+     }
 }
 
 function Test-TargetResource
@@ -446,13 +484,19 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('User') | Out-Null
+    $ValuesToCheck.Remove('Role') | Out-Null
+    $ValuesToCheck.Remove('Computer') | Out-Null
+    $ValuesToCheck.Remove('App') | Out-Null
+    $ValuesToCheck.Remove('Policy') | Out-Null
+    $ValuesToCheck.Remove('SecurityGroup') | Out-Null
     $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -517,7 +561,8 @@ function Export-TargetResource
     try
     {
         [array]$roleAssignments = Get-ManagementRoleAssignment | Where-Object -FilterScript { $_.RoleAssigneeType -eq 'ServicePrincipal' -or `
-                $_.RoleAssigneeType -eq 'User' -or $_.RoleAssigneeType -eq 'RoleAssignmentPolicy' -or $_.RoleAssigneeType -eq 'SecurityGroup' }
+                $_.RoleAssigneeType -eq 'User' -or $_.RoleAssigneeType -eq 'RoleAssignmentPolicy' -or $_.RoleAssigneeType -eq 'SecurityGroup' `
+                -or $_.RoleAssigneeType -eq 'RoleGroup'}
 
         $dscContent = ''
 
@@ -563,27 +608,14 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Host $Global:M365DSCEmojiRedX
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }

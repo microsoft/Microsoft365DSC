@@ -2,13 +2,698 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit, AADConditionalAccessPolicy, AADEntitlementManagementAccessPackage,
+  AADEntitlementManagementAccessPackageAssignmentPolicy, AADEntitlementManagementAccessPackageCatalog,
+  AADEntitlementManagementAccessPackageCatalogResource, AADEntitlementManagementAccessPackageCatalogResource,
+  AADEntitlementManagementConnectedOrganization, AADRoleSetting,
+  IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator, IntuneDeviceConfigurationPolicyAndroidDeviceOwner,
+  IntuneDeviceConfigurationPolicyAndroidOpenSourceProject, IntuneDeviceConfigurationPolicyMacOS,
+  IntuneDeviceConfigurationPolicyiOS, IntuneExploitProtectionPolicyWindows10SettingCatalog,
+  IntuneWifiConfigurationPolicyAndroidDeviceAdministrator, IntuneWifiConfigurationPolicyAndroidEntrepriseDeviceOwner,
+  IntuneWifiConfigurationPolicyAndroidEntrepriseWorkProfile, IntuneWifiConfigurationPolicyAndroidForWork,
+  IntuneWifiConfigurationPolicyAndroidOpenSourceProject, IntuneWifiConfigurationPolicyIOS,
+  IntuneWifiConfigurationPolicyMacOS, IntuneWifiConfigurationPolicyWindows10,
+  IntuneWindowUpdateForBusinessRingUpdateProfileWindows10, IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10,
+  IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled, IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
+  * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
+* EXOIRMConfiguration
+  * [BREAKING CHANGE] Renamed unused Identity parameter to IsSingleInstance
+    FIXES [#2969](https://github.com/microsoft/Microsoft365DSC/issues/2969)
+* EXOPerimeterConfiguration
+  * [BREAKING CHANGE] Renamed unused Identity parameter to IsSingleInstance
+    FIXES [#2969](https://github.com/microsoft/Microsoft365DSC/issues/2969)
+* EXOResourceConfiguration
+  * [BREAKING CHANGE] Renamed unused Identity parameter to IsSingleInstance
+    FIXES [#2969](https://github.com/microsoft/Microsoft365DSC/issues/2969)
+* IntuneAntivirusPolicyWindows10SettingCatalog, IntuneASRRulesPolicyWindows10,
+  IntuneAppProtectionPolicyiOS, IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager,
+  IntuneSettingCatalogASRRulesPolicyWindows10,
+  * [BREAKING CHANGE] Setting Identity as Key parameter and DisplayName as Required
+* IntuneWindowsAutopilotDeploymentProfileAzureADJoined
+  * Initial release
+    FIXES [#2605](https://github.com/microsoft/Microsoft365DSC/issues/2605)
+* IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined
+  * Initial release
+    FIXES [#2605](https://github.com/microsoft/Microsoft365DSC/issues/2605)
+* DRG
+  * Various fixes
+    * Cleanup generated code
+    * Fix AdditionalProperties complex constructor
+    * Fix Read privileges in settings file
+* MISC
+  * Added a QA check to test for the presence of a Key parameter and fixes
+    resources where this was not the case.
+    FIXES [#2925](https://github.com/microsoft/Microsoft365DSC/issues/2925)
+
+# 1.23.322.1
+
+* AADRoleSetting
+  * Added CertificateThumbPrint and ApplicationId to the output of the Get method
+* EXODistributionGroup
+  * Fixed an error where the name wasn't properly escaped in the Filter
+  FIXES [#3044](https://github.com/microsoft/Microsoft365DSC/issues/3044)
+* EXORoleAssignmentPolicy
+  * Fix issue with IsDefault parameter
+    FIXES [#2977](https://github.com/microsoft/Microsoft365DSC/issues/2977)
+* IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10
+  * Initial Release
+    FIXES [#2832](https://github.com/microsoft/Microsoft365DSC/issues/2832)
+* IntuneDeviceConfigurationEndpointProtectionPolicyWindows10
+  * Initial release
+    FIXES [#2834](https://github.com/microsoft/Microsoft365DSC/issues/2834)
+* IntuneDeviceConfigurationIdentityProtectionPolicyWindows10
+  * Initial release
+    FIXES [#2831](https://github.com/microsoft/Microsoft365DSC/issues/2831)
+* SCDLPCompliancePolicy
+  * Added support or Endpoint, On-Premises, PowerBI and ThirdPartyApps locations and exceptions.
+    FIXES [#3023](https://github.com/microsoft/Microsoft365DSC/issues/3023)
+* SCSensitivityLabel
+  * Added ContentType parameter, so you can specify where to apply the label.
+    FIXES [#2992](https://github.com/microsoft/Microsoft365DSC/issues/2992)
+  * Updated the resource to use and apply the correct parameters from the LabelActions
+    property.
+    FIXES [#3035](https://github.com/microsoft/Microsoft365DSC/issues/3035)
+  * Deprecated all FontName properties, since these are no longer configurable.
+    FIXES [#3035](https://github.com/microsoft/Microsoft365DSC/issues/3035)
+  * Fixed the collection of new and set parameters to ensure the correct values are passed to the New/Set cmdlets.
+    FIXES [#3050](https://github.com/microsoft/Microsoft365DSC/issues/3050)
+* MISC
+  * Added QA test that checks for existence of an example for each resource.
+  * Amended output for Convert-M365DscHashtableToString to show each value on a new line
+    Fixes[#2980](https://github.com/microsoft/Microsoft365DSC/issues/2980)
+* DRG
+  * Various fixes:
+    * Remove invalid character from description in schema.mof
+    * Add Id as key in schema.mof
+    * Add DisplayName as Required in schema.mof
+    * Fix issue with nested CIM array from test unit
+    * Remove Select-MgProfile from module
+    * Add DisplayName as Mandatory in module
+    * Fix issue with AdditionalProperties for nested objects from module
+    * Fix Ensure default value
+
+# 1.23.315.2
+
+* EXORoleGroup
+  * Fixes an issue with the Export process where the name of the role wasn't properly set causing errors.
+
+# 1.23.315.1
+
+* AADConditionalAccessPolicy
+  * Handle Named Location "Multifactor authentication trusted IPs"
+    Fixed [#2974](https://github.com/microsoft/Microsoft365DSC/issues/2974)
+  * Export and handle guest and external users.
+    Fixed [#2965](https://github.com/microsoft/Microsoft365DSC/issues/2965)
+* AADEntitlementManagementConnectedOrganization
+  * Initial release
+* EXOOrganizationConfig
+  * Add support for the MessageRecallEnabled parameter.
+    FIXES [#2978](https://github.com/microsoft/Microsoft365DSC/issues/2978)
+* EXORoleAssignmentPolicy
+  * Allow description and role change at the same time.
+    FIXES [#2977](https://github.com/microsoft/Microsoft365DSC/issues/2977)
+* EXORoleGroup
+  * Initial release
+* EXOTransportConfig
+  * Ensures the ExternalDsnDefaultLanguage property is correctly escaped.
+    FIXES [#2970](https://github.com/microsoft/Microsoft365DSC/issues/2970)
+* IntuneAppProtectionPolicyiOS
+  * Amended MinimumWipeOSVersion case
+    FIXES [#3000](https://github.com/microsoft/Microsoft365DSC/issues/3000)
+* PPTenantIsolationSettings
+  * Fixes the export of the Rules block which wasn't properly formatted.
+    FIXES [#2979](https://github.com/microsoft/Microsoft365DSC/issues/2979)
+* SPOTenantSettings
+  * Add support for the CommentsOnSitePagesDisabled parameter.
+* MISC
+  * Added checks in New-M365DSCConnection to ensure beta MSGraph profile is correctly set when requested
+    FIXES [#2942](https://github.com/microsoft/Microsoft365DSC/issues/2942)
+  * Added all Certificate related property to the returned values of the Get-TargetResource function
+    across all Security & Compliance resources.
+    FIXES [#2989](https://github.com/microsoft/Microsoft365DSC/issues/2989)
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 1.23.0.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.156.
+
+# 1.23.308.1
+
+* AADAdministrativeUnit
+  * Fixed general issues caused by improper handling of nested CIMInstances
+    FIXES #2775, #2776, #2786
+  * Updated validation of properties in schema to assist usage
+* AADServicePrincipal
+  * Change Write-Error to Write-Verbose to make sure the Test method will continue
+    FIXES [#2961](https://github.com/microsoft/Microsoft365DSC/issues/2961)
+* EXOManagementRoleAssignment
+  * Added delays before disconnecting from EXO to ensure new permissions are applied.
+    FIXES [#2523](https://github.com/microsoft/Microsoft365DSC/issues/2523)
+* O365AdminAuditLogConfig
+  * Added support for ManagedIdentity.
+  * Fixed the Get-TargetResource method to return all authentication parameters.
+* DRG
+  * Fixed the default settings for the Ensure parameter.
+* MISC
+  * Updated logic for drift detection to be case insensitive.
+    FIXES [#2873](https://github.com/microsoft/Microsoft365DSC/issues/2873)
+  * Changed the -Platform parameter for Connect-M365Tenant to -Workload in 2 remaining places.
+    FIXES [#2921](https://github.com/microsoft/Microsoft365DSC/issues/2921)
+  * Added QA test to validate if used permissions in Settings.json files
+    actually exist.
+  * Added application credential support to Assert-M365DSCBlueprint
+    FIXES [#1792](https://github.com/microsoft/Microsoft365DSC/pull/1792)
+  * Updated/added various examples
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 5.0.0
+
+# 1.23.301.1
+
+* IntuneDeviceEnrollmentConfigurationWindows10
+  * Fix settings.json
+    FIXES [#2930](https://github.com/microsoft/Microsoft365DSC/issues/2930)
+* O365OrgSettings
+  * Adds support for Cortana enabling.
+* SCLabelPolicy
+  * Added more detailed logging
+  * Converting the GUIDs of all defaultlabel settings in the AdvancedSettings
+    parameters to the actual label name, since the GUID is different per
+    environment
+    FIXES [#2840](https://github.com/microsoft/Microsoft365DSC/issues/2840)
+  * Fixed issue where the Test method resulted in False on any existing policy
+    FIXES [#2948](https://github.com/microsoft/Microsoft365DSC/issues/2948)
+* SCSensitivityLabel
+  * Added more detailed logging
+  * Fixed issue where the Test method always tested false when the LocaleSettings
+    property was used
+    FIXES [#2949](https://github.com/microsoft/Microsoft365DSC/issues/2949)
+  * Fixes issues around Test-TargetResource always returning False when encryption parameters are used.
+    FIXES [#2683](https://github.com/microsoft/Microsoft365DSC/issues/2683)
+* SPOUserProfileProperty
+  * Fixes the required API permissions in the documentation.
+    FIXES [#2798](https://github.com/microsoft/Microsoft365DSC/issues/2798)
+* TeamsOnlineVoiceUser
+  * Fix issue where the cmdlet Get-CsOnlineVoiceUser is now deprecated.
+* MISC
+  * Updated unit tests
+  * Added quality check tests
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.22.0
+  * Updated MSCloudLoginAssistant to version 1.0.105
+  * Updated ReverseDSC to version 2.0.0.14
+
+# 1.23.222.1
+
+* TeamsOnlineVoiceUser
+  * Fix issue where the cmdlet Get-CsOnlineVoiceUser is now deprecated.
+
+# 1.23.222.1
+
+* AADEntitlementManagementAccessPackageAssignmentPolicy
+  * Initial release
+* IntuneDeviceEnrollmentConfigurationWindows10
+  * Initial release
+    FIXES [#2829](https://github.com/microsoft/Microsoft365DSC/issues/2829)
+* IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
+  * Initial release.
+    FIXES [#2658](https://github.com/microsoft/Microsoft365DSC/issues/2658)
+* IntuneWindowUpdateForBusinessRingUpdateProfileWindows10
+  * Initial release.
+    FIXES [#2657](https://github.com/microsoft/Microsoft365DSC/issues/2657)
+* PPPowerAppsEnvironment
+  * Added all the latest location return from Get-AdminPowerAppEnvironmentLocations
+* TeamsChannelTab
+  * Updated key parameters to prevent detected duplicates
+    FIXES [#2897](https://github.com/microsoft/Microsoft365DSC/issues/2897)
+* DRG
+  * Various fixes
+* MISC
+  * Updated Tasks.Read and Tasks.ReadWrite Permissions for Planner Plans and Planner Buckets
+    FIXES [#2866](https://github.com/microsoft/Microsoft365DSC/issues/2866)
+  * Fixed Permissions Scopes for AADAuthorizationPolicy and AADSecurityDefaults
+
+# 1.23.215.1
+
+* EXOIRMConfiguration
+  * Fixed issue where the export did not the correct type for RMSOnlineKeySharingLocation
+    FIXES [#2890](https://github.com/microsoft/Microsoft365DSC/issues/2890)
+* IntuneRoleAssignment
+  * Fixed issue where the export did not the correct type for ScopeType
+    FIXES [#2889](https://github.com/microsoft/Microsoft365DSC/issues/2889)
+* O365OrgSettings
+  * Initial Release.
+* TeamsChannelTab
+  * Updated key parameters to prevent detected duplicates
+    FIXES [#2897](https://github.com/microsoft/Microsoft365DSC/issues/2897)
+* MISC
+  * Updated required permissions of several resources
+    FIXES [#2866](https://github.com/microsoft/Microsoft365DSC/issues/2866)
+  * Added filter to Update-M365DSCAzureAdApplication to be more specific.
+    FIXES [2565](https://github.com/microsoft/Microsoft365DSC/issues/2565)
+  * Fixed the JSON conversion depth for the New-M365DSCConfigurationToJSON cmdlet.
+    FIXES [#2891](https://github.com/microsoft/Microsoft365DSC/issues/2891)
+  * Added new ParameterSet for Export-M365DSConfiguration
+    FIXES [[#2802](https://github.com/microsoft/Microsoft365DSC/issues/2802)]
+
+# 1.23.208.1
+
+* TeamsTenantTrustedIPAddress
+  * Initial Release.
+
+# 1.23.201.1
+
+* IntuneDeviceCompliancePolicyWindows10
+  * Updated example
+* IntuneDeviceConfigurationPolicyWindows10
+  * Updated example
+* PlannerTask
+  * Fixed issue where Attachments Uri weren't properly exiting single quotes.
+    FIXES [#2822](https://github.com/microsoft/Microsoft365DSC/issues/2822)
+* PPPowerAppsEnvironment
+  * Adds support for Developer SKU and fix for Teams SKU
+    FIXES [#2821](https://github.com/microsoft/Microsoft365DSC/issues/2821)
+* SCProtectionAlert
+  * Support for certificate based auth
+  * Fix removal of alert
+  * Added additional supported values for ThreatType, Severity & AggregationType
+    FIXES [#2793](https://github.com/microsoft/Microsoft365DSC/issues/2793)
+* TeamsTenantNetworkRegion
+  * Initial Release.
+* TeamsTenantNetworkSite
+  * Initial Release.
+* TeamsTenantNetworkSubnet
+  * Initial Release.
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.21.0
+  * Updated MicrosoftTeams to version 4.9.3
+* MISC
+  * Corrected Ensure parameter logic for many resources.
+    Removed requirement for Ensure=Present only.
+    FIXES [#2718](https://github.com/microsoft/Microsoft365DSC/issues/2718)
+  * Updated documentation to reflect new authentication possibilities
+    FIXES [#2863](https://github.com/microsoft/Microsoft365DSC/issues/2863)
+
+# 1.23.125.1
+
+* TeamsAudioConferencingPolicy
+  * Initial Release.
+* TeamsCallHoldPolicy
+  * Initial Release.
+* TeamsCallParkPolicy
+  * Initial Release.
+* TeamsComplianceRecordingPolicy
+  * Initial Release.
+* TeamsCortanaPolicy
+  * Initial Release.
+* TeamsEnhancedEncryptionPolicy
+  * Initial Release.
+* TeamsMobilityPolicy
+  * Initial Release.
+* TeamsNetworkRoamingPolicy
+  * Initial Release.
+* TeamsTranslationRule
+  * Initial Release.
+* TeamsUnassignedNumberTreatment
+  * Initial Release.
+* TeamsVDIPolicy
+  * Initial Release.
+* TeamsWorkloadPolicy
+  * Initial Release.
+* DRG
+  * Added CIM constructor in Get-TargetResource
+  * Improved management of AdditionalProperties
+  * Improved datetime and dateoffset management
+  * Fixed UnitTest
+  * Generate Stubs if required
+  * Fixes #2819
+* IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled
+  * Initial Release
+  * Fixes #2604
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.155.
+* Planner
+  * Fixed api-permissions on PlannerBucket and PlannerPlan.
+    FIXES [#2843](https://github.com/microsoft/Microsoft365DSC/issues/2843)
+
+# 1.23.118.1
+
+* IntuneAppConfigurationPolicy
+  * Fixes issue where the Test method fails when the policy does not exist yet
+    and the Assignments parameter is used.
+    FIXES [#2768](https://github.com/microsoft/Microsoft365DSC/issues/2768)
+* IntuneDeviceAndAppManagementAssignmentFilter
+  * Fixes issue where the code did not check for the DisplayName when the ID could not
+    be found.
+    FIXES [#2788](https://github.com/microsoft/Microsoft365DSC/issues/2788)
+* IntuneDeviceConfigurationPolicyMacOS
+  * Corrected copy/paste issue while implementing previous fix.
+    FIXES [#2731](https://github.com/microsoft/Microsoft365DSC/issues/2731)
+* IntuneRoleDefinition
+  * Fixes issue where the code did not check for the DisplayName when the ID could not
+    be found.
+    FIXES [#2771](https://github.com/microsoft/Microsoft365DSC/issues/2771)
+  * Updated logging logic to include more details and add Current/Target values in the
+    Test method.
+* PlannerTask
+  * Refactored to leverage the official cmdlets instead of using the legacy GraphHandlers.
+    FIXES [#2767](https://github.com/microsoft/Microsoft365DSC/issues/2767)
+  * Changed Export-TargetResource to call Get-M365DSCExportContentForResource
+    to simplify/conform + variables for authentication are added correctly
+    FIXES [#2784](https://github.com/microsoft/Microsoft365DSC/issues/2784)
+* SCRetentionCompliancePolicy
+  * Fixes an issue where the SkypeLocation was trying to be converted to a string when it was an array.
+    FIXES [#2789](https://github.com/microsoft/Microsoft365DSC/issues/2789)
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.20.0
+  * Updated MSCloudLoginAssistant to version 1.0.103
+
+# 1.23.111.1
+
+* AADAdministrativeUnit
+  * Marks DisplayName as a mandatory key and removed the visibility parameter from being evaluated since it is always returned as null.
+  FIXES [#2704](https://github.com/microsoft/Microsoft365DSC/issues/2704)
+* AADConditionalAccessPolicy
+  * Removed the extra Microsoft Graph profile switching call which was causing performance issue.
+    FIXES [#2688](https://github.com/microsoft/Microsoft365DSC/issues/2688)
+* TeamsFederationConfiguration
+  * Add parameters: TreatDiscoveredPartnersAsUnverified, SharedSipAddressSpace, RestrictTeamsConsumerToExternalUserProfiles.
+* TeamsFeedbackPolicy
+  * Initial Release
+* TeamsGroupPolicyAssignment
+  * Initial Release
+* MISC
+  * Adds Service Principal (Thumbprint and Secret) support to the Power Apps workload.
+  * Refactored the way we are switching Microsoft Graph Profiles across all resources.
+* DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 3.1.0
+  * Updated MSCloudLoginAssistant to version 1.0.102
+
+# 1.23.104.1
+
+* EXODistributionGroup
+  * Changed the logic retrieving the group Type in the Get-TargetResource.
+    FIXES [#2709](https://github.com/microsoft/Microsoft365DSC/issues/2709)
+* EXOManagementRoleAssignment
+  * Modified logic to handle the RecipientOrganizationUnitScope parameter by display name.
+    FIXES [#2708](https://github.com/microsoft/Microsoft365DSC/issues/2708)
+* IntuneASRRulesPolicyWindows10
+  * Corrects possible values for parameter OfficeCommunicationAppsLaunchChildProcess
+    FIXES [#2730](https://github.com/microsoft/Microsoft365DSC/issues/2730)
+* IntuneDeviceConfigurationPolicyMacOS
+  * Fixes issue where parameter UpdateDelayPolicy wasn't handled as an array
+    FIXES [#2731](https://github.com/microsoft/Microsoft365DSC/issues/2731)
+* IntuneDeviceConfigurationPolicyWindows10
+  * Fixed incorrect type of EdgeEnterpriseModeSiteListLocation parameter in the
+    resource schema definition
+    FIXES [#2732](https://github.com/microsoft/Microsoft365DSC/issues/2732)
+* SCRetentionCompliancePolicy
+  * Forces changes to existing policies to be applied.
+    FIXES [#2719](https://github.com/microsoft/Microsoft365DSC/issues/2719)
+  * Handles wait when the associated policy has pending changes.
+    FIXES [#2728](https://github.com/microsoft/Microsoft365DSC/issues/2728)
+* SCRetentionComplianceRule
+  * Handles wait when the associated policy has pending changes.
+    FIXES [#2728](https://github.com/microsoft/Microsoft365DSC/issues/2728)
+* TeamsEmergencyCallingPolicy
+  * Fixes issue where CertificateThumbprint wasn't working because Credential was set to mandatory by the Test-TargetResource function.
+    FIXES [#2710](https://github.com/microsoft/Microsoft365DSC/issues/2710)
+* TeamsEmergencyCallingRoutingPolicy
+  * Fixes issue where CertificateThumbprint wasn't working because Credential was set to mandatory by the Test-TargetResource function.
+    FIXES [#2710](https://github.com/microsoft/Microsoft365DSC/issues/2710)
+* TeamsIPPhonePolicy
+  * Added descriptions to the resource parameters
+  * Limited possible parameter values where required
+    FIXES [#2722](https://github.com/microsoft/Microsoft365DSC/issues/2722)
+* TeamsMeetingPolicy
+  * Deprecating RecordingStorageMode parameter, which is no longer available.
+    FIXES [#2723](https://github.com/microsoft/Microsoft365DSC/issues/2723)
+* TeamsShiftsPolicy
+  * Added descriptions to the resource parameters
+  * Limited possible parameter values where required
+    FIXES [#2722](https://github.com/microsoft/Microsoft365DSC/issues/2722)
+* TeamsFilesPolicy
+  * Added descriptions to the resource parameters
+  * Limited possible parameter values where required
+    FIXES [#2722](https://github.com/microsoft/Microsoft365DSC/issues/2722)
+* DRG
+  * Various fixes for Graph and Intune resources automation
+  * Migrated to new schema including description
+  * Added support to generate parameter descriptions automatically from schema
+    FIXES [#2720](https://github.com/microsoft/Microsoft365DSC/issues/2720)
+* MISC
+  * Fixes an issue where OrderedDictionary values weren't properly expanded in a delta report
+    FIXES [#2715](https://github.com/microsoft/Microsoft365DSC/issues/2715)
+  * Updated website generation code to checkout correct commit
+
+# 1.22.1221.1
+
+* AADGroup
+  * Extraction no longer exports Distribution List or mail enabled security list since these are not supported by the Microsoft Graph API.
+    FIXES [#2587](https://github.com/microsoft/Microsoft365DSC/issues/2587)
+* EXOMailContact
+  * Ensures all results are returned from the Export scenario. Currently limited at 1,000 results.
+    FIXES [#2672](https://github.com/microsoft/Microsoft365DSC/issues/2672)
+    FIXES [#2673](https://github.com/microsoft/Microsoft365DSC/issues/2672)
+* EXOManagementRoleAssignment
+  * Force refresh permissions after the Set-TargetResource is called to ensure the correct cmdlets are loaded in the session.
+    FIXES [#2523](https://github.com/microsoft/Microsoft365DSC/issues/2523)
+* SCSensitivityLabel
+  * Removed the EncryptionAipTemplateScopes parameter from being evaluated in the Test and removed it from the update scenario in the Set.
+    FIXES [#2205](https://github.com/microsoft/Microsoft365DSC/issues/2205)
+* SCProtectionAlert
+  * Initial Release
+* TeamsFilesPolicy
+  * Initial Release
+* TeamsIPPhonePolicy
+  * Initial Release
+* TeamsShiftsPolicy
+  * Initial Release
+* MISC
+  * Fixed a typo in the reporting logic that caused issue evaluating certain resources in the NEw-M365DSCDelaaReport function
+    FIXES [#2685](https://github.com/microsoft/Microsoft365DSC/issues/2685)
+  * Added support for the ExcludedProperties parameter in the Assert-M365DSCBlueprint function.
+    FIXES [#2671](https://github.com/microsoft/Microsoft365DSC/issues/2671)
+  * Updated Get-M365DSCCompiledPermissionList to output all permissions consistently.
+    It can now also be used as input for Update-M365DscAzureAdApplication.
+  * Fixes issue where the wrong parameter is being passed to the Erro log function.
+    FIXES [#2682](https://github.com/microsoft/Microsoft365DSC/issues/2682)
+  * Updated automatic website documentation generation
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.19.0;
+  * Updated MSCloudLoginAssistant to version 1.0.101;
+
+# 1.22.1214.1
+
+* AADEntitlementManagementAccessPackageCatalogResource
+  * Fixes an issue where if no access resource were defined, an error was thrown trying to save the partial content.
+    FIXES [#2654](https://github.com/microsoft/Microsoft365DSC/issues/2654)
+* AADGroup
+  * Fixes an issue where licenses aren't properly assigned when no existing licenses exist.
+    FIXES [#2597](https://github.com/microsoft/Microsoft365DSC/issues/2597)
+  * Fixes an issue where if a dirft is detected and the Members parameter was omitted, all existing members were removed.
+    FIXES [#2481](https://github.com/microsoft/Microsoft365DSC/issues/2481)
+* AADServicePrincipal
+  * Fixes an issue where the service principals weren't created or updated when using ApplicationSecret to authenticate.
+    FIXES [#2615](https://github.com/microsoft/Microsoft365DSC/issues/2615)
+* AADUser
+  * Fixes an issue where provided password wa never honored.
+    FIXES [#2599](https://github.com/microsoft/Microsoft365DSC/issues/2599)
+  * Added support for the PasswordPolicies property.
+    FIXES [#2598](https://github.com/microsoft/Microsoft365DSC/issues/2598)
+* PlannerBucket & PlannerPlan
+  * Changed invalid permissions in the setting.json files.
+    FIXES [#2629](https://github.com/microsoft/Microsoft365DSC/issues/2629)
+* SCRetentionComplianceRule
+  * Fixed an Issue where properties weren't properly set at creation, causing drifts to be detected.
+    FIXES [#2471](https://github.com/microsoft/Microsoft365DSC/issues/2471)
+* SCSensitivityLabel
+  * Adds the -IncludeDetailed LAbelActions switch when retrieving instances to get all advanced parameters from the Get-TargetResource function.
+* SPOTenantCdnEnabled
+  * Fixed an issue where the export wasn't returning anything if the CDN was not enabled.
+    FIXES [#2466](https://github.com/microsoft/Microsoft365DSC/issues/2466)
+* SPOUserProfileProperty
+  * Removed multi-threading to align with other resources.
+  * Fixed an issue where we were contacting Microsoft Graph to retrieve users without authenticating to it.
+    FIXES [#2643](https://github.com/microsoft/Microsoft365DSC/issues/2643)
+* TeamsChannel
+  * Fixes an issue where channels weren't created if a non-existing GroupId was specified.
+    FIXES [#2622](https://github.com/microsoft/Microsoft365DSC/issues/2622)
+* TeamsUpdateManagementPolicy
+  * Fixed error with the export that wasn't properly returning the UpdateTimeOfDay if not in short time string format.
+    FIXES [#2639](https://github.com/microsoft/Microsoft365DSC/issues/2639)
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.100;
+    FIXES [#2484](https://github.com/microsoft/Microsoft365DSC/issues/2484)
+* MISC
+  * Added support for the ExcludedProperties parameter in the New-M365DSCDeltaReport function.
+    FIXES [#2444](https://github.com/microsoft/Microsoft365DSC/issues/2444)
+
+# 1.22.1207.1
+
+* IntuneRoleAssignment
+  * Add support for ScopeType enabling the use of AllLicensedUser/AllDevice as Scope
+* TeamsChannelsPolicy
+  * Renamed the AllowPrivateTeamsDiscovery parameter to EnablePrivateTeamDiscovery.
+* TeamsChannelTab
+  * Added support for Credential and refactored to call into the Microsoft Graph PowerShell SDK directly.
+* TeamsMeetingPolicy
+  * Added support for several new properties:
+    * AllowAnnotations
+    * AllowAnonymousUsersToJoinMeeting
+    * AllowMeetingCoach
+    * AllowMeetingRegistration
+    * AllowNetworkConfigurationSettingsLookup
+    * AllowWatermarkForCameraVideo
+    * AllowWatermarkForScreenSharing
+    * NewMeetingRecordingExpirationDays
+    * AllowCartCaptionsScheduling
+    * AllowDocumentCollaboration
+    * AllowedStreamingMediaInput
+    * BlockedAnonymousJoinClientTypes
+    * ChannelRecordingDownload
+    * ExplicitRecordingConsent
+    * ForceStreamingAttendeeMode
+    * InfoShownInReportMode
+    * LiveInterpretationEnabledType
+    * LiveStreamingMode
+    * MeetingInviteLanguages
+    * QnAEngagementMode
+    * RoomPeopleNameUserOverride
+* SPOBrowserIdleSignout
+  * Fixed incorrect Ensure parameter being added to the Export
+    FIXES [#2619](https://github.com/microsoft/Microsoft365DSC/issues/2619)
+* SPOSiteAuditSettings
+  * Fixed incorrect Ensure parameter being added to the Export
+    FIXES [#2619](https://github.com/microsoft/Microsoft365DSC/issues/2619)
+* MISC
+  * Standardized and improved logging across all resources.
+  * Improved error handling in creating output when permissions are not correct.
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.18.0;
+
+# 1.22.1130.1
+
+* SCRetentionCompliancePolicy
+  * Fixed an issue with the Update logic in the Set-TargetResource
+    FIXES [#2600](https://github.com/microsoft/Microsoft365DSC/issues/2600)
+
+# 1.22.1123.1
+
+* IntuneDeviceConfigurationPolicyWindows10
+  * Fixed issue when creating this resource if property DefenderDetectedMalwareActions was not present, it'd still be created but with errors.
+    FIXES [#2581](https://github.com/microsoft/Microsoft365DSC/issues/2581)
+* AADUser
+  * Fixed issue with license assignment
+    FIXES [#2556](https://github.com/microsoft/Microsoft365DSC/issues/2556)
+* EXOOrganizationRelationship
+  * Add 'None' as supported value for MailboxMoveCapability
+    FIXES [#2570](https://github.com/microsoft/Microsoft365DSC/issues/2570)
+* IntuneRoleDefinition
+  * Initial Release
+  * Manage Intune Role definition
+* IntuneRoleAssignment
+  * Initial Release
+  * Manage Intune Role assignment
+* O365AdminAuditLogConfig
+  * Updated settings.json to include permissions.
+    FIXES [#2517](https://github.com/microsoft/Microsoft365DSC/issues/2517)
+* O365OrgCustomizationSetting
+  * Updated settings.json to include permissions.
+    FIXES [#2517](https://github.com/microsoft/Microsoft365DSC/issues/2517)
+* SCDLPCompliancePolicy
+  * Fixes an issue where the Exchange Location and Exception where not sent back in a correct format during Export.
+    FIXES [#2545](https://github.com/microsoft/Microsoft365DSC/issues/2545)
+* SCRetentionCompliancePolicy
+  * Fixes issue with the TeamsChannelLocation and TeamsChatsLocation parameters that were improperly returned by the Get- function.
+    FIXES [#2472](https://github.com/microsoft/Microsoft365DSC/issues/2472)
+* SCRetentionComplianceRule
+  * Fixes issue with Teams Policy where the RetentionDurationDisplayHint and ExpirationDateOption parameters weren't returned by the Get- function.
+    FIXES [#2472](https://github.com/microsoft/Microsoft365DSC/issues/2472)
+* TeamsFederationConfiguration
+  * Fixes an issue where the extraction of allowed domain and blocked domain wasn't in the proper format.
+    FIXES [#2576](https://github.com/microsoft/Microsoft365DSC/issues/2576)
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.17.0;
+  * Updated MSCloudLoginAssistant to version 1.0.98;
+* MISC
+  * Removed Test-M365DSCDependenciesForNewVersions from export functions. This will improve export speed.
+  * New Parameter `ValidateOnly` for Update-M365DSCDependencies to check if all dependencies are installed.
+    FIXES [2519](https://github.com/microsoft/Microsoft365DSC/issues/2519)
+  * Fixed incorrect usage of Write-Information cmdLet
+  * Fixed typos for permissions in settings.json
+    FIXES [2553](https://github.com/microsoft/Microsoft365DSC/issues/2553)
+
+# 1.22.1116.1
+
+* AADApplication
+  * Deprecated the Oauth2RequirePostResponse parameter as it was causing issues for the New function.
+    FIXES [#2276](https://github.com/microsoft/Microsoft365DSC/issues/2276)
+* AADEntitlementManagementAccessPackage
+  * Initial Release.
+* EXOManagementRoleAssignment
+  * Added support for RoleGroup Role Assignees
+    Fixes [#2524](https://github.com/microsoft/Microsoft365DSC/issues/2524)
+* SCRetentionCompliancePolicy
+  * Fixes the Location parameters to be a string array instead of an object array.
+    FIXES [#2503](https://github.com/microsoft/Microsoft365DSC/issues/2503)
+* MISC
+  * Added Application based authentication to Microsoft Teams resources;
+  * Added support for Service Principal Auth for the Planner resources;
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.16.0;
+  * Updated Microsoft.Teams to version 4.9.1;
+  * Updated PnP.PowerShell to version 1.12.0;
+
+# 1.22.1109.1
+
+* EXODataClassification
+  * FIXES [#2487](https://github.com/microsoft/Microsoft365DSC/issues/2487)
+* EXOHostedOutboundSpamFilterPolicy
+  * Add support to create and remove Hosted Outbound Spam Filter Policies
+  * FIXES [#2492](https://github.com/microsoft/Microsoft365DSC/issues/2492)
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * FIXES [#2463](https://github.com/microsoft/Microsoft365DSC/issues/2463)
+  * Returns all type of policies from the template family: endpointSecurityAntivirus
+* MISC
+  * Fixes and issue with ManagedIdentity Parameter not being not removed correctly in a parameterset.
+    * FIXES [#2464](https://github.com/microsoft/Microsoft365DSC/issues/2464)
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to version 1.15.0;
+
+# 1.22.1102.1
+
+* AADAdministrativeUnit
+  * Initial Release.
+* AADEntitlementManagementAccessPackageCatalogResource
+  * Initial release;
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 4.9.0;
+  * Updated MSCloudLoginAssistant to version 1.0.97;
+
+# 1.22.1026.2
+
+* MISC
+  * Fixes an issue with the export where the ApplicationSecret was throwing an empty string error when trying to authenticate with Certificate thumbprint.
+    * FIXES [#2455](https://github.com/microsoft/Microsoft365DSC/issues/2455)
+
+# 1.22.1026.1
+
+* AADEntitlementManagementAccessPackageCatalog
+  * Initial release;
+* EXOIntraOrganizationConnector
+  * Add TargetSharingEpr parameter
+* EXOOwaMailboxPolicy
+  * Add 10 new parameters
+* EXOTransportRule
+  * Add new parmeters: ApplyRightsProtectionCustomizationTemplate, Quarantine, RecipientAddressType, RemoveRMSAttachmentEncryption
+  * Deprecated parameters: ExceptIfMessageContainsAllDataClassifications, IncidentReportOriginalMail,MessageContainsAllDataClassifications
 * TeamsDialInConferencingTenantSettings
   * Initial release;
     Fixes [#2426](https://github.com/microsoft/Microsoft365DSC/issues/2426)
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.0.96;
 * MISC
-  * Add support for ManagedIdentity to the SPo and OD resources.
+  * Add support for ManagedIdentity to the SPO and OD resources.
+  * Fixed and issue with Export and ApplicationSecret where it wasn't properly converting to a PSCredential.
+    * FIXES [#2447](https://github.com/microsoft/Microsoft365DSC/issues/2447)
 
 # 1.22.1019.1
 

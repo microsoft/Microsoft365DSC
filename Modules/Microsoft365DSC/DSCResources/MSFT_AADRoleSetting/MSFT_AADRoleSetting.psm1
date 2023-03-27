@@ -8,7 +8,7 @@ function Get-TargetResource
         [System.String]
         $Id,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Displayname,
 
@@ -199,9 +199,6 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
 
-    Select-MgProfile -Name 'beta'
-    $MaximumFunctionCount = 32000
-
     Write-Verbose -Message 'Getting configuration of Role'
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -352,30 +349,23 @@ function Get-TargetResource
             EligibleAssignmentAssigneeNotificationAdditionalRecipient = [System.String[]]$EligibleAssignmentAssigneeNotificationAdditionalRecipient
             EligibleAssignmentAssigneeNotificationOnlyCritical        = $EligibleAssignmentAssigneeNotificationOnlyCritical
             Ensure                                                    = 'Present'
-            Managedidentity                                           = $ManagedIdentity.IsPresent
+            ApplicationId                                             = $ApplicationId
             TenantId                                                  = $TenantId
+            CertificateThumbprint                                     = $CertificateThumbprint
+            Credential                                                = $Credential
+            ManagedIdentity                                           = $ManagedIdentity.IsPresent
         }
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -389,7 +379,7 @@ function Set-TargetResource
         [System.String]
         $Id,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Displayname,
 
@@ -1069,8 +1059,6 @@ function Set-TargetResource
                     -UnifiedRoleManagementPolicyRuleId $role.id `
                     -BodyParameter $params `
                     -ErrorAction Stop
-
-
             }
             catch
             {
@@ -1091,7 +1079,7 @@ function Test-TargetResource
         [System.String]
         $Id,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Displayname,
 
@@ -1351,9 +1339,6 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
 
-    Select-MgProfile -Name 'beta'
-    $MaximumFunctionCount = 32000
-
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -1389,6 +1374,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($roles.Count)] $($role.DisplayName)" -NoNewline
             $Params = @{
                 Id                    = $role.Id
+                DisplayName           = $role.DisplayName
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
@@ -1420,24 +1406,14 @@ function Export-TargetResource
 
     catch
     {
-        Write-Host $_
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }

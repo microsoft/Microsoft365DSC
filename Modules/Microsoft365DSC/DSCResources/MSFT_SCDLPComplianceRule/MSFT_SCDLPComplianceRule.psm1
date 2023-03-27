@@ -13,7 +13,7 @@ function Get-TargetResource
         $Policy,
 
         [Parameter()]
-        [ValidateSet("InOrganization", "NotInOrganization", "None")]
+        [ValidateSet('InOrganization', 'NotInOrganization', 'None')]
         [System.String[]]
         $AccessScope,
 
@@ -22,7 +22,7 @@ function Get-TargetResource
         $BlockAccess,
 
         [Parameter()]
-        [ValidateSet("All", "PerUser")]
+        [ValidateSet('All', 'PerUser')]
         [System.String]
         $BlockAccessScope,
 
@@ -55,12 +55,12 @@ function Get-TargetResource
         $GenerateIncidentReport,
 
         [Parameter()]
-        [ValidateSet("All", "Default", "DetectionDetails", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title", "RetentionLabel", "SensitivityLabel")]
+        [ValidateSet('All', 'Default', 'DetectionDetails', 'Detections', 'DocumentAuthor', 'DocumentLastModifier', 'MatchedItem', 'OriginalContent', 'RulesMatched', 'Service', 'Severity', 'Title', 'RetentionLabel', 'SensitivityLabel')]
         [System.String[]]
         $IncidentReportContent,
 
         [Parameter()]
-        [ValidateSet("FalsePositive", "WithoutJustification", "WithJustification")]
+        [ValidateSet('FalsePositive', 'WithoutJustification', 'WithJustification')]
         [System.String[]]
         $NotifyAllowOverride,
 
@@ -77,12 +77,12 @@ function Get-TargetResource
         $NotifyUser,
 
         [Parameter()]
-        [ValidateSet("Low", "Medium", "High", "None")]
+        [ValidateSet('Low', 'Medium', 'High', 'None')]
         [System.String]
         $ReportSeverityLevel,
 
         [Parameter()]
-        [ValidateSet("Ignore", "RetryThenBlock")]
+        [ValidateSet('Ignore', 'RetryThenBlock')]
         [System.String]
         $RuleErrorAction,
 
@@ -147,9 +147,29 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Getting configuration of DLPCompliancePolicy for $Name"
@@ -169,8 +189,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -261,12 +281,18 @@ function Get-TargetResource
                 AnyOfRecipientAddressMatchesPatterns        = $AnyOfRecipientAddressMatchesPatterns
                 ContentExtensionMatchesWords                = $ContentExtensionMatchesWords
                 ExceptIfContentExtensionMatchesWords        = $ExceptIfContentExtensionMatchesWords
+                Credential                                  = $Credential
+                ApplicationId                               = $ApplicationId
+                TenantId                                    = $TenantId
+                CertificateThumbprint                       = $CertificateThumbprint
+                CertificatePath                             = $CertificatePath
+                CertificatePassword                         = $CertificatePassword
             }
 
             $paramsToRemove = @()
             foreach ($paramName in $result.Keys)
             {
-                if ($null -eq $result[$paramName] -or "" -eq $result[$paramName] -or @() -eq $result[$paramName])
+                if ($null -eq $result[$paramName] -or '' -eq $result[$paramName] -or @() -eq $result[$paramName])
                 {
                     $paramsToRemove += $paramName
                 }
@@ -283,26 +309,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -321,7 +333,7 @@ function Set-TargetResource
         $Policy,
 
         [Parameter()]
-        [ValidateSet("InOrganization", "NotInOrganization", "None")]
+        [ValidateSet('InOrganization', 'NotInOrganization', 'None')]
         [System.String[]]
         $AccessScope,
 
@@ -330,7 +342,7 @@ function Set-TargetResource
         $BlockAccess,
 
         [Parameter()]
-        [ValidateSet("All", "PerUser")]
+        [ValidateSet('All', 'PerUser')]
         [System.String]
         $BlockAccessScope,
 
@@ -363,12 +375,12 @@ function Set-TargetResource
         $GenerateIncidentReport,
 
         [Parameter()]
-        [ValidateSet("All", "Default", "DetectionDetails", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title", "RetentionLabel", "SensitivityLabel")]
+        [ValidateSet('All', 'Default', 'DetectionDetails', 'Detections', 'DocumentAuthor', 'DocumentLastModifier', 'MatchedItem', 'OriginalContent', 'RulesMatched', 'Service', 'Severity', 'Title', 'RetentionLabel', 'SensitivityLabel')]
         [System.String[]]
         $IncidentReportContent,
 
         [Parameter()]
-        [ValidateSet("FalsePositive", "WithoutJustification", "WithJustification")]
+        [ValidateSet('FalsePositive', 'WithoutJustification', 'WithJustification')]
         [System.String[]]
         $NotifyAllowOverride,
 
@@ -385,12 +397,12 @@ function Set-TargetResource
         $NotifyUser,
 
         [Parameter()]
-        [ValidateSet("Low", "Medium", "High", "None")]
+        [ValidateSet('Low', 'Medium', 'High', 'None')]
         [System.String]
         $ReportSeverityLevel,
 
         [Parameter()]
-        [ValidateSet("Ignore", "RetryThenBlock")]
+        [ValidateSet('Ignore', 'RetryThenBlock')]
         [System.String]
         $RuleErrorAction,
 
@@ -455,9 +467,29 @@ function Set-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting configuration of DLPComplianceRule for $Name"
@@ -466,8 +498,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -517,8 +549,8 @@ function Set-TargetResource
             $CreationParams.ExceptIfContentContainsSensitiveInformation = $value
         }
 
-        $CreationParams.Remove("Credential")
-        $CreationParams.Remove("Ensure")
+        $CreationParams.Remove('Credential')
+        $CreationParams.Remove('Ensure')
 
         Write-Verbose -Message "Calling New-DLPComplianceRule with Values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
         New-DLPComplianceRule @CreationParams
@@ -562,11 +594,11 @@ function Set-TargetResource
             $UpdateParams.ExceptIfContentContainsSensitiveInformation = $value
         }
 
-        $UpdateParams.Remove("Credential") | Out-Null
-        $UpdateParams.Remove("Ensure") | Out-Null
-        $UpdateParams.Remove("Name") | Out-Null
-        $UpdateParams.Remove("Policy") | Out-Null
-        $UpdateParams.Add("Identity", $Name)
+        $UpdateParams.Remove('Credential') | Out-Null
+        $UpdateParams.Remove('Ensure') | Out-Null
+        $UpdateParams.Remove('Name') | Out-Null
+        $UpdateParams.Remove('Policy') | Out-Null
+        $UpdateParams.Add('Identity', $Name)
 
         Write-Verbose "Updating Rule with values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParams)"
         Set-DLPComplianceRule @UpdateParams
@@ -593,7 +625,7 @@ function Test-TargetResource
         $Policy,
 
         [Parameter()]
-        [ValidateSet("InOrganization", "NotInOrganization", "None")]
+        [ValidateSet('InOrganization', 'NotInOrganization', 'None')]
         [System.String[]]
         $AccessScope,
 
@@ -602,7 +634,7 @@ function Test-TargetResource
         $BlockAccess,
 
         [Parameter()]
-        [ValidateSet("All", "PerUser")]
+        [ValidateSet('All', 'PerUser')]
         [System.String]
         $BlockAccessScope,
 
@@ -635,12 +667,12 @@ function Test-TargetResource
         $GenerateIncidentReport,
 
         [Parameter()]
-        [ValidateSet("All", "Default", "DetectionDetails", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title", "RetentionLabel", "SensitivityLabel")]
+        [ValidateSet('All', 'Default', 'DetectionDetails', 'Detections', 'DocumentAuthor', 'DocumentLastModifier', 'MatchedItem', 'OriginalContent', 'RulesMatched', 'Service', 'Severity', 'Title', 'RetentionLabel', 'SensitivityLabel')]
         [System.String[]]
         $IncidentReportContent,
 
         [Parameter()]
-        [ValidateSet("FalsePositive", "WithoutJustification", "WithJustification")]
+        [ValidateSet('FalsePositive', 'WithoutJustification', 'WithJustification')]
         [System.String[]]
         $NotifyAllowOverride,
 
@@ -657,12 +689,12 @@ function Test-TargetResource
         $NotifyUser,
 
         [Parameter()]
-        [ValidateSet("Low", "Medium", "High", "None")]
+        [ValidateSet('Low', 'Medium', 'High', 'None')]
         [System.String]
         $ReportSeverityLevel,
 
         [Parameter()]
-        [ValidateSet("Ignore", "RetryThenBlock")]
+        [ValidateSet('Ignore', 'RetryThenBlock')]
         [System.String]
         $RuleErrorAction,
 
@@ -727,16 +759,36 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -815,9 +867,29 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
@@ -828,8 +900,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -841,7 +913,7 @@ function Export-TargetResource
         [array]$rules = Get-DLPComplianceRule -ErrorAction Stop | Where-Object { $_.Mode -ne 'PendingDeletion' }
 
         $i = 1
-        $dscContent = ""
+        $dscContent = ''
         if ($rules.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
@@ -853,12 +925,10 @@ function Export-TargetResource
         foreach ($rule in $rules)
         {
             Write-Host "    |---[$i/$($rules.Length)] $($rule.Name)" -NoNewline
-            $Params = @{
-                Name               = $rule.name
-                Policy             = $rule.ParentPolicyName
-                Credential = $Credential
-            }
-            $Results = Get-TargetResource @Params
+
+            $Results = Get-TargetResource @PSBoundParameters `
+                -Name   $rule.name `
+                -Policy $rule.ParentPolicyName
 
             $IsCIMArray = $false
             $IsSitCIMArray = $false
@@ -907,11 +977,11 @@ function Export-TargetResource
 
             if ($null -ne $Results.ContentContainsSensitiveInformation )
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation" -IsCIMArray $IsSitCIMArray
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ContentContainsSensitiveInformation' -IsCIMArray $IsSitCIMArray
             }
             if ($null -ne $Results.ExceptIfContentContainsSensitiveInformation )
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ExceptIfContentContainsSensitiveInformation" -IsCIMArray $IsCIMArray
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ExceptIfContentContainsSensitiveInformation' -IsCIMArray $IsCIMArray
             }
             $dscContent += $currentDSCBlock
 
@@ -926,26 +996,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            { $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message "Error during Export:" `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 function ConvertTo-SCDLPSensitiveInformationStringGroup
@@ -958,7 +1016,7 @@ function ConvertTo-SCDLPSensitiveInformationStringGroup
         [System.Object[]]
         $InformationArray
     )
-    $result = ""
+    $result = ''
 
     foreach ($SensitiveInformationHash in $InformationArray)
     {
@@ -975,7 +1033,7 @@ function ConvertTo-SCDLPSensitiveInformationStringGroup
             $StringContent += "                name = '$($group.name.Replace("'", "''"))'`r`n"
             if ($null -ne $group.sensitivetypes)
             {
-                $StringContent += "                SensitiveInformation = @("
+                $StringContent += '                SensitiveInformation = @('
                 foreach ($sit in $group.sensitivetypes)
                 {
                     $StringContent += "            MSFT_SCDLPSensitiveInformation`r`n            {`r`n"
@@ -1016,7 +1074,7 @@ function ConvertTo-SCDLPSensitiveInformationStringGroup
             }
             if ($null -ne $group.labels)
             {
-                $StringContent += "                labels = @("
+                $StringContent += '                labels = @('
                 foreach ($label in $group.labels)
                 {
                     $StringContent += "            MSFT_SCDLPLabel`r`n            {`r`n"
@@ -1051,9 +1109,9 @@ function ConvertTo-SCDLPSensitiveInformationString
         [System.Object[]]
         $InformationArray
     )
-    $result = ""
+    $result = ''
     $StringContent = "MSFT_SCDLPContainsSensitiveInformation`r`n            {`r`n"
-    $StringContent += "                SensitiveInformation = "
+    $StringContent += '                SensitiveInformation = '
     $StringContent += "@(`r`n"
     $result += $StringContent
     foreach ($SensitiveInformationHash in $InformationArray)
@@ -1095,7 +1153,7 @@ function ConvertTo-SCDLPSensitiveInformationString
         $StringContent += "            }`r`n"
         $result += $StringContent
     }
-    $result += "            )"
+    $result += '            )'
     $result += "            }`r`n"
     return $result
 }
@@ -1122,32 +1180,32 @@ function Get-SCDLPSensitiveInformation
 
         if ($null -ne $item.id)
         {
-            $result.Add("id", $item.id)
+            $result.Add('id', $item.id)
         }
 
         if ($null -ne $item.maxconfidence)
         {
-            $result.Add("maxconfidence", $item.maxconfidence)
+            $result.Add('maxconfidence', $item.maxconfidence)
         }
 
         if ($null -ne $item.minconfidence)
         {
-            $result.Add("minconfidence", $item.minconfidence)
+            $result.Add('minconfidence', $item.minconfidence)
         }
 
         if ($null -ne $item.classifiertype)
         {
-            $result.Add("classifiertype", $item.classifiertype)
+            $result.Add('classifiertype', $item.classifiertype)
         }
 
         if ($null -ne $item.mincount)
         {
-            $result.Add("mincount", $item.mincount)
+            $result.Add('mincount', $item.mincount)
         }
 
         if ($null -ne $item.maxcount)
         {
-            $result.Add("maxcount", $item.maxcount)
+            $result.Add('maxcount', $item.maxcount)
         }
         $returnValue += $result
     }
@@ -1180,7 +1238,7 @@ function Get-SCDLPSensitiveInformationGroups
         }
         if ($null -ne $group.operator)
         {
-            $myGroup.Add("operator", $group.operator)
+            $myGroup.Add('operator', $group.operator)
         }
         $sits = @()
         foreach ($item in $group.SensitiveInformation)
@@ -1191,38 +1249,38 @@ function Get-SCDLPSensitiveInformationGroups
 
             if ($null -ne $item.id)
             {
-                $sit.Add("id", $item.id)
+                $sit.Add('id', $item.id)
             }
 
             if ($null -ne $item.maxconfidence)
             {
-                $sit.Add("maxconfidence", $item.maxconfidence)
+                $sit.Add('maxconfidence', $item.maxconfidence)
             }
 
             if ($null -ne $item.minconfidence)
             {
-                $sit.Add("minconfidence", $item.minconfidence)
+                $sit.Add('minconfidence', $item.minconfidence)
             }
 
             if ($null -ne $item.classifiertype)
             {
-                $sit.Add("classifiertype", $item.classifiertype)
+                $sit.Add('classifiertype', $item.classifiertype)
             }
 
             if ($null -ne $item.mincount)
             {
-                $sit.Add("mincount", $item.mincount)
+                $sit.Add('mincount', $item.mincount)
             }
 
             if ($null -ne $item.maxcount)
             {
-                $sit.Add("maxcount", $item.maxcount)
+                $sit.Add('maxcount', $item.maxcount)
             }
             $sits += $sit
         }
         if ($sits.Length -gt 0)
         {
-            $myGroup.Add("sensitivetypes", $sits)
+            $myGroup.Add('sensitivetypes', $sits)
         }
         $labels = @()
         foreach ($item in $group.labels)
@@ -1233,22 +1291,22 @@ function Get-SCDLPSensitiveInformationGroups
 
             if ($null -ne $item.id)
             {
-                $label.Add("id", $item.id)
+                $label.Add('id', $item.id)
             }
 
             if ($null -ne $item.type)
             {
-                $label.Add("type", $item.type)
+                $label.Add('type', $item.type)
             }
             $labels += $label
         }
         if ($labels.Length -gt 0)
         {
-            $myGroup.Add("labels", $labels)
+            $myGroup.Add('labels', $labels)
         }
         $groups += $myGroup
     }
-    $result.Add("groups", $groups)
+    $result.Add('groups', $groups)
     $returnValue += $result
     return $returnValue
 }
@@ -1276,7 +1334,7 @@ function Test-ContainsSensitiveInformation
         if ($null -ne $matchingExistingRule)
         {
             Write-Verbose -Message "Sensitive Information Action {$($sit.name)} was found"
-            $propertiesTocheck = @("id", "maxconfidence", "minconfidence", "classifiertype", "mincount", "maxcount")
+            $propertiesTocheck = @('id', 'maxconfidence', 'minconfidence', 'classifiertype', 'mincount', 'maxcount')
 
             foreach ($property in $propertiesToCheck)
             {
@@ -1328,7 +1386,7 @@ function Test-ContainsSensitiveInformationLabels
         if ($null -ne $matchingExistingRule)
         {
             Write-Verbose -Message "Sensitive Information label {$($sit.name)} was found"
-            $propertiesTocheck = @("id", "type")
+            $propertiesTocheck = @('id', 'type')
 
             foreach ($property in $propertiesToCheck)
             {
@@ -1409,7 +1467,7 @@ function Test-ContainsSensitiveInformationGroups
             return $false
         }
 
-        if ($null -ne  $group.sensitivetypes)
+        if ($null -ne $group.sensitivetypes)
         {
             $desiredState = Test-ContainsSensitiveInformation -targetValues $group.sensitivetypes `
                 -sourceValues $matchingExistingGroup.sensitivetypes
@@ -1419,7 +1477,7 @@ function Test-ContainsSensitiveInformationGroups
             }
         }
 
-        if ($null -ne  $group.labels)
+        if ($null -ne $group.labels)
         {
             $desiredState = Test-ContainsSensitiveInformationLabels -targetValues $group.labels `
                 -sourceValues $matchingExistingGroup.labels

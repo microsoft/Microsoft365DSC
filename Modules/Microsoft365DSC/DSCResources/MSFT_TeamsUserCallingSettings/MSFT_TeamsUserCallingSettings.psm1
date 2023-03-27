@@ -10,7 +10,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Ring","Mute","Banner")]
+        [ValidateSet('Ring', 'Mute', 'Banner')]
         $GroupNotificationOverride,
 
         [Parameter()]
@@ -35,7 +35,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Group","MyDelegates","SingleTarget","Voicemail")]
+        [ValidateSet('Group', 'MyDelegates', 'SingleTarget', 'Voicemail')]
         $UnansweredTargetType,
 
         [Parameter()]
@@ -44,12 +44,12 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Immediate","Simultaneous")]
+        [ValidateSet('Immediate', 'Simultaneous')]
         $ForwardingType,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Group","MyDelegates","SingleTarget","Voicemail")]
+        [ValidateSet('Group', 'MyDelegates', 'SingleTarget', 'Voicemail')]
         $ForwardingTargetType,
 
         [Parameter()]
@@ -57,9 +57,9 @@ function Get-TargetResource
         $ForwardingTarget,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -75,8 +75,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -84,7 +84,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -115,26 +115,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -150,7 +136,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Ring","Mute","Banner")]
+        [ValidateSet('Ring', 'Mute', 'Banner')]
         $GroupNotificationOverride,
 
         [Parameter()]
@@ -175,7 +161,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Group","MyDelegates","SingleTarget","Voicemail")]
+        [ValidateSet('Group', 'MyDelegates', 'SingleTarget', 'Voicemail')]
         $UnansweredTargetType,
 
         [Parameter()]
@@ -184,12 +170,12 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Immediate","Simultaneous")]
+        [ValidateSet('Immediate', 'Simultaneous')]
         $ForwardingType,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Group","MyDelegates","SingleTarget","Voicemail")]
+        [ValidateSet('Group', 'MyDelegates', 'SingleTarget', 'Voicemail')]
         $ForwardingTargetType,
 
         [Parameter()]
@@ -197,23 +183,23 @@ function Set-TargetResource
         $ForwardingTarget,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $Credential
     )
 
-    Write-Verbose -Message "Setting Teams User Calling Settings"
+    Write-Verbose -Message 'Setting Teams User Calling Settings'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -226,40 +212,25 @@ function Set-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     $SetParameters = $PSBoundParameters
-    $SetParameters.Remove("Ensure") | Out-Null
-    $SetParameters.Remove("Credential") | Out-Null
+    $SetParameters.Remove('Ensure') | Out-Null
+    $SetParameters.Remove('Credential') | Out-Null
 
     try
     {
         if ($CallGroupOrder -ne $CurrentValues.CallGroupOrder -or $CallGroupTargets -ne $CurrentValues.CallGroupTargets)
         {
             Set-CsUserCallingSettings -Identity $Identity -CallGroupOrder $CallGroupOrder -CallGroupTargets $CallGroupTargets
-            $SetParameters.Remove("CallGroupOrder") | Out-Null
+            $SetParameters.Remove('CallGroupOrder') | Out-Null
         }
         Set-CsUserCallingSettings @SetParameters
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
     }
 }
 
@@ -275,7 +246,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Ring","Mute","Banner")]
+        [ValidateSet('Ring', 'Mute', 'Banner')]
         $GroupNotificationOverride,
 
         [Parameter()]
@@ -300,7 +271,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Group","MyDelegates","SingleTarget","Voicemail")]
+        [ValidateSet('Group', 'MyDelegates', 'SingleTarget', 'Voicemail')]
         $UnansweredTargetType,
 
         [Parameter()]
@@ -309,12 +280,12 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Immediate","Simultaneous")]
+        [ValidateSet('Immediate', 'Simultaneous')]
         $ForwardingType,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Group","MyDelegates","SingleTarget","Voicemail")]
+        [ValidateSet('Group', 'MyDelegates', 'SingleTarget', 'Voicemail')]
         $ForwardingTargetType,
 
         [Parameter()]
@@ -322,9 +293,9 @@ function Test-TargetResource
         $ForwardingTarget,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -334,8 +305,8 @@ function Test-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -382,8 +353,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -392,7 +363,7 @@ function Export-TargetResource
 
     try
     {
-        $allUsers = Get-MgUser -All -Select 'UserPrincipalName'
+        $allUsers = Get-MgUser -All -Property 'UserPrincipalName'
         $i = 1
         Write-Host "`r`n" -NoNewline
         $dscContent = [System.Text.StringBuilder]::New()
@@ -427,27 +398,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message "Error during Export:" `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

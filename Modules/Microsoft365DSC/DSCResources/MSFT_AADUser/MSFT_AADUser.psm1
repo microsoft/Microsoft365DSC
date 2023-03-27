@@ -62,6 +62,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $PasswordPolicies,
+
+        [Parameter()]
+        [System.String]
         $PhoneNumber,
 
         [Parameter()]
@@ -163,7 +167,7 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
-        $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType')
+        $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
         $user = Get-MgUser -UserId $UserPrincipalName -Property $propertiesToRetrieve -ErrorAction SilentlyContinue
         if ($null -eq $user)
         {
@@ -188,7 +192,7 @@ function Get-TargetResource
         $rolesValue = @()
         foreach ($assignedRole in $assignedRoles)
         {
-            $currentRoleInfo =  Get-MgRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $assignedRole.RoleDefinitionId
+            $currentRoleInfo = Get-MgRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $assignedRole.RoleDefinitionId
             $rolesValue += $currentRoleInfo.DisplayName
         }
 
@@ -207,6 +211,7 @@ function Get-TargetResource
             MobilePhone           = $user.Mobile
             Office                = $user.OfficeLocation
             PasswordNeverExpires  = $passwordNeverExpires
+            PasswordPolicies      = $user.PasswordPolicies
             PhoneNumber           = $user.TelephoneNumber
             PostalCode            = $user.PostalCode
             PreferredLanguage     = $user.PreferredLanguage
@@ -226,26 +231,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -310,6 +301,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $PasswordNeverExpires = $false,
+
+        [Parameter()]
+        [System.String]
+        $PasswordPolicies,
 
         [Parameter()]
         [System.String]
@@ -449,10 +444,10 @@ function Set-TargetResource
             {
                 $currentLicenses = @()
             }
-            $licenseDifferences  = Compare-Object -ReferenceObject $LicenseAssignment -DifferenceObject $currentLicenses
-            if ($licensesDifferences.Length -gt 0)
+            [Array]$licenseDifferences = Compare-Object -ReferenceObject $LicenseAssignment -DifferenceObject $currentLicenses
+            if ($licenseDifferences.Length -gt 0)
             {
-                $licenses = @{AddLicenses = @(); RemoveLicenses = @();}
+                $licenses = @{AddLicenses = @(); RemoveLicenses = @(); }
 
                 $SubscribedSku = Get-MgSubscribedSku
                 foreach ($licenseSkuPart in $LicenseAssignment)
@@ -481,6 +476,43 @@ function Set-TargetResource
         }
         #endregion
 
+        if ($null -ne $Password)
+        {
+            $passwordValue = $Password.GetNetworkCredential().Password
+        }
+        else
+        {
+            try
+            {
+                # This only works in PowerShell 5.1
+                $passwordValue = [System.Web.Security.Membership]::GeneratePassword(30, 2)
+            }
+            catch
+            {
+                $TokenSet = @{
+                    U = [Char[]]'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+                    L = [Char[]]'abcdefghijklmnopqrstuvwxyz'
+                    N = [Char[]]'0123456789'
+                    S = [Char[]]'!"#$%&''()*+,-./:;<=>?@[\]^_`{|}~'
+                }
+
+                $Upper = Get-Random -Count 5 -InputObject $TokenSet.U
+                $Lower = Get-Random -Count 5 -InputObject $TokenSet.L
+                $Number = Get-Random -Count 5 -InputObject $TokenSet.N
+                $Special = Get-Random -Count 5 -InputObject $TokenSet.S
+
+                $StringSet = $Upper + $Lower + $Number + $Special
+
+                $stringPassword = (Get-Random -Count 15 -InputObject $StringSet) -join ''
+                $passwordValue = ConvertTo-SecureString $stringPassword -AsPlainText -Force
+            }
+        }
+
+        $PasswordProfile = @{
+            Password = $passwordValue
+        }
+        $CreationParams.Add('PasswordProfile', $PasswordProfile)
+
         if ($user.UserPrincipalName)
         {
             Write-Verbose -Message "Updating Office 365 User $UserPrincipalName Information"
@@ -491,10 +523,6 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Creating Office 365 User $UserPrincipalName"
             $CreationParams.Add('AccountEnabled', $true)
-            $PasswordProfile = @{
-                Password = 'TempP@ss'
-            }
-            $CreationParams.Add('PasswordProfile', $PasswordProfile)
             $CreationParams.Add('MailNickName', $UserPrincipalName.Split('@')[0])
             Write-Verbose -Message "Creating new user with values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
             $user = New-MgUser @CreationParams
@@ -503,34 +531,20 @@ function Set-TargetResource
         #region Assign Licenses
         try
         {
-            if ($licensesDifferences.Length -gt 0)
+            if ($licenseDifferences.Length -gt 0)
             {
                 Write-Verbose -Message "Updating License assignments with values: $(Convert-M365DscHashtableToString -Hashtable $licenses)"
-                Set-MgUserLicense -UserId $user.Id -AddLicenses $licenses.AddLicenses -RemoveLicenses $licenses.RemoveLicenses
+                Set-MgUserLicense -UserId $user.UserPrincipalName -AddLicenses $licenses.AddLicenses -RemoveLicenses $licenses.RemoveLicenses
             }
         }
         catch
         {
-            try
-            {
-                Write-Verbose -Message $_
-                $tenantIdValue = ''
-                if (-not [System.String]::IsNullOrEmpty($TenantId))
-                {
-                    $tenantIdValue = $TenantId
-                }
-                elseif ($null -ne $Credential)
-                {
-                    $tenantIdValue = $Credential.UserName.Split('@')[1]
-                }
-                Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                    -TenantId $tenantIdValue
-            }
-            catch
-            {
-                Write-Verbose -Message $_
-            }
+            New-M365DSCLogEntry -Message 'Error updating data:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
             return $nullReturn
         }
         #endregion
@@ -544,9 +558,13 @@ function Set-TargetResource
                 $currentRoles = @()
             }
 
-            $diffRoles = Compare-Object -ReferenceObject $Roles -DifferenceObject $currentRoles
-            Write-Verbose -Message "Current Roles: $($currentRoles -join ',')"
-            Write-Verbose -Message "Desired Roles: $($Roles -join ',')"
+            [Array]$diffRoles = Compare-Object -ReferenceObject $Roles -DifferenceObject $currentRoles
+
+            if ($diffRoles.Length -gt 0)
+            {
+                Write-Verbose -Message "Current Roles: $($currentRoles -join ',')"
+                Write-Verbose -Message "Desired Roles: $($Roles -join ',')"
+            }
 
             foreach ($roleDifference in $diffRoles)
             {
@@ -566,8 +584,8 @@ function Set-TargetResource
                 {
                     Write-Verbose -Message "Creating role assignment for user {$($user.UserPrincipalName) for role {$($roleDifference.InputObject)}"
                     New-MgRoleManagementDirectoryRoleAssignment -PrincipalId $userId `
-                                                                -RoleDefinitionId $roleDefinitionId `
-                                                                -DirectoryScopeId '/' | Out-Null
+                        -RoleDefinitionId $roleDefinitionId `
+                        -DirectoryScopeId '/' | Out-Null
                 }
             }
         }
@@ -636,6 +654,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $PasswordNeverExpires = $false,
+
+        [Parameter()]
+        [System.String]
+        $PasswordPolicies,
 
         [Parameter()]
         [System.String]
@@ -747,7 +769,7 @@ function Test-TargetResource
             'StreetAddress', `
             'Title', `
             'UserType',
-            'Roles')
+        'Roles')
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -839,7 +861,7 @@ function Export-TargetResource
                         -Results $Results `
                         -Credential $Credential
 
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Password"
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Password'
                     $dscContent.Append($currentDSCBlock) | Out-Null
 
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -853,26 +875,14 @@ function Export-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }

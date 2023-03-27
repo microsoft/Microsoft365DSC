@@ -164,22 +164,15 @@ function Get-TargetResource
         $results.Add('Assignments', $assignmentResult)
 
         return $results
-
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullResult
     }
 }
@@ -394,7 +387,6 @@ function Set-TargetResource
                     -Targets $assignmentsHash
             }
         }
-
     }
     elseif ($Ensure -eq 'Absent' -and $currentCategory.Ensure -eq 'Present')
     {
@@ -845,18 +837,13 @@ function Export-TargetResource
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }
@@ -865,22 +852,23 @@ function Get-DevicePlatformRestrictionSetting
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param(
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.Collections.Hashtable]
         $Properties
     )
 
-    $results=@{}
+    $results = @{}
 
-    if($null -ne $Properties.platformType)
+    if ($null -ne $Properties.platformType)
     {
-        $keyName=($Properties.platformType).Substring(0,1).toUpper()+($Properties.platformType).substring(1,$Properties.platformType.length-1)+'Restriction'
-        $keyValue=[Hashtable]::new($Properties.platformRestriction)
-        $hash=@{}
-        foreach($key in $keyValue.Keys)
+        $keyName = ($Properties.platformType).Substring(0,1).toUpper()+($Properties.platformType).substring(1,$Properties.platformType.length-1)+'Restriction'
+        $keyValue = [Hashtable]::new($Properties.platformRestriction)
+        $hash = @{}
+        foreach ($key in $keyValue.Keys)
         {
-            if($null -ne $keyValue.$key)
+            if ($null -ne $keyValue.$key)
             {
                 switch -Wildcard ($keyValue.$key.getType().name)
                 {
@@ -949,11 +937,9 @@ function Get-DevicePlatformRestrictionSetting
 
             #$results.add($keyName,[Hashtable]::new($platformRestrictions.$key))
         }
-
     }
 
     return $results
-
 }
 
 function Update-DeviceConfigurationPolicyAssignments
@@ -1513,4 +1499,5 @@ function Convert-M365DSCDRGComplexTypeToHashtable
     }
     return [hashtable]$results
 }
+
 Export-ModuleMember -Function *-TargetResource

@@ -2,35 +2,48 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-    -ChildPath "..\..\Unit" `
+    -ChildPath '..\..\Unit' `
     -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -ChildPath '\Stubs\Microsoft365.psm1' `
         -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\Stubs\Generic.psm1" `
+        -ChildPath '\Stubs\Generic.psm1' `
         -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\UnitTestHelper.psm1" `
+        -ChildPath '\UnitTestHelper.psm1' `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "PlannerTask" -GenericStubModule $GenericStubPath
+    -DscResource 'PlannerTask' -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         BeforeAll {
-            $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $secpasswd = ConvertTo-SecureString 'Pass@word1' -AsPlainText -Force
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Save-M365DSCPartialExport -MockWith {
             }
+
             Mock -CommandName Connect-Graph -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
+                return 'Credentials'
+            }
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
+            }
+
+            Mock -CommandName Get-MgUser -MockWith {
+                return @{
+                    UserPrincipalName = 'john.smith@contoso.com'
+                    Id                = '12345-12345-12345-12345-12345'
+                }
             }
         }
 
@@ -38,222 +51,248 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When the Task doesn't exist but it should" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    PlanId          = "1234567890"
-                    Title           = "Contoso Task"
+                    PlanId          = '1234567890'
+                    Title           = 'Contoso Task'
                     Priority        = 5
+                    Bucket          = '1234'
                     PercentComplete = 75
-                    StartDateTime   = "2020-06-09"
-                    Ensure          = "Present"
+                    StartDateTime   = '2020-06-09'
+                    DueDateTime     = '2020-06-10'
+                    AssignedUsers   = @('john.smith@contoso.com')
+                    Ensure          = 'Present'
                     Credential      = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {
                     return $null
                 }
-                try
-                {
-                    Add-Type -TypeDefinition @"
-                        public class PlannerTaskObject
-                        {
-                            public string Title {get;set;}
-                            public string PlanId {get;set;}
-                            public string TaskId {
-                                get{ return "12345"; }
-                                set{}
-                            }
-                            public string Notes {get;set;}
-                            public string BucketId {
-                                get{ return "Bucket12345"; }
-                                set{}
-                            }
-                            public string ETag {get;set;}
-                            public string[] Assignments {get;set;}
-                            public System.Collections.Hashtable[] Attachments {get;set;}
-                            public System.Collections.Hashtable[] Checklist {get;set;}
-                            public string StartDateTime {
-                                get{ return "2020-06-09"; }
-                                set{}
-                            }
-                            public string DueDateTime {get;set;}
-                            public string[] Categories {get;set;}
-                            public string CompletedDateTime {get;set;}
-                            public int PercentComplete {
-                                get{ return 75; }
-                                set{}
-                            }
-                            public int Priority {
-                                get { return 5; }
-                                set {}
-                            }
-                            public string ConversationThreadId {get;set;}
-                            public string OrderHint {get;set;}
-                            public void Create(System.Management.Automation.PSCredential Credential){}
-                            public void Update(System.Management.Automation.PSCredential Credential){}
-                            public string GetTaskCategoryNameByColor(string ColorName){return "";}
-                            public string GetTaskColorNameByCategory(string CategoryName){return "";}
-                            public void PopulateById(System.Management.Automation.PSCredential Credential, string TaskId){}
-                            public void UpdateDetails(System.Management.Automation.PSCredential Credential){}
-                            public void Delete(System.Management.Automation.PSCredential Credential, string TaskId){}
-                        }
-"@
-                }
-                catch
-                {
-                    throw $_
+
+                Mock -CommandName Get-MgPlannerTaskDetail -MockWith {
+                    return $null
                 }
             }
 
-            It "Should return absent from the Get method" {
+            It 'Should return absent from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Should create the Task in the Set method" {
+            It 'Should create the Task in the Set method' {
                 Set-TargetResource @testParams
             }
         }
 
-        Context -Name "Task exists and is NOT in the Desired State" -Fixture {
+        Context -Name 'Task exists and is NOT in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    PlanId          = "1234567890"
-                    TaskId          = "12345"
-                    Title           = "Contoso Task"
+                    PlanId          = '1234567890'
+                    TaskId          = '12345'
+                    Title           = 'Contoso Task'
                     Priority        = 4
+                    AssignedUsers   = @('john.smith@contoso.com')
                     PercentComplete = 75
-                    StartDateTime   = "2020-06-09"
-                    Ensure          = "Present"
+                    Categories      = @('Pink')
+                    StartDateTime   = '2020-06-09'
+                    DueDateTime     = '2020-06-10'
+                    Ensure          = 'Present'
                     Credential      = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {
                     return @{
-                        PlanId          = "1234567890"
-                        Title           = "Contoso Task"
-                        Id              = "12345"
+                        PlanId          = '1234567890'
+                        Title           = 'Contoso Task'
+                        Id              = '12345'
                         Priority        = 5
                         PercentComplete = 75
-                        StartDateTime   = "2020-06-09"
+                        StartDateTime   = '2020-06-09'
+                    }
+                }
+
+                Mock -CommandName Get-MgPlannerTaskDetail -MockWith {
+                    return @{
+                        CheckList = @()
                     }
                 }
             }
 
-            It "Should return Present from the Get method" {
+            It 'Should return Present from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $False
             }
 
-            It "Should update the settings from the Set method" {
+            It 'Should update the settings from the Set method' {
                 Set-TargetResource @testParams
             }
         }
 
-        Context -Name "Task exists and is IN the Desired State" -Fixture {
+        Context -Name 'Task exists and is IN the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    PlanId          = "1234567890"
-                    Title           = "Contoso Task"
-                    TaskId          = "12345"
+                    PlanId          = '1234567890'
+                    Title           = 'Contoso Task'
+                    TaskId          = '12345'
                     Priority        = 5
+                    AssignedUsers   = @('john.smith@contoso.com')
                     PercentComplete = 75
-                    StartDateTime   = "2020-06-09"
+                    Categories      = @('Pink')
+                    StartDateTime   = '2020-06-09'
+                    DueDateTime     = '2020-06-10'
                     Bucket          = 'Bucket12345'
-                    Ensure          = "Present"
+                    Ensure          = 'Present'
                     Credential      = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {
                     return @{
-                        PlanId          = "1234567890"
-                        Title           = "Contoso Task"
+                        PlanId          = '1234567890'
+                        Title           = 'Contoso Task'
                         Priority        = 5
-                        Id              = "12345"
+                        Id              = '12345'
                         PercentComplete = 75
-                        StartDateTime   = "2020-06-09"
+                        StartDateTime   = '2020-06-09'
+                        DueDateTime     = '2020-06-10'
                         BucketId        = 'Bucket12345'
+                        Assignments     = @{
+                            AdditionalProperties = @{
+                                'john.smith@contoso.com' = @{}
+                            }
+                        }
+                        AppliedCategories = @{
+                            AdditionalProperties = @{
+                                Category1 = $true
+                            }
+                        }
+                    }
+                }
+
+                Mock -CommandName Get-MgPlannerTaskDetail -MockWith {
+                    return @{
+                        CheckList = @()
                     }
                 }
             }
 
-            It "Should return Present from the Get method" {
+            It 'Should return Present from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It "Should return true from the Set method" {
+            It 'Should return true from the Set method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
 
-        Context -Name "Task exists but it should not" -Fixture {
+        Context -Name 'Task exists but it should not' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    PlanId          = "1234567890"
-                    Title           = "Contoso Task"
-                    TaskId          = "12345"
+                    PlanId          = '1234567890'
+                    Title           = 'Contoso Task'
+                    TaskId          = '12345'
                     Priority        = 5
+                    AssignedUsers   = @('john.smith@contoso.com')
                     PercentComplete = 75
-                    StartDateTime   = "2020-06-09"
-                    Ensure          = "Absent"
+                    Categories      = @('Pink')
+                    StartDateTime   = '2020-06-09'
+                    DueDateTime     = '2020-06-10'
+                    Ensure          = 'Absent'
                     Credential      = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {
                     return @{
-                        PlanId          = "1234567890"
-                        Title           = "Contoso Task"
-                        Id              = "12345"
+                        PlanId          = '1234567890'
+                        Title           = 'Contoso Task'
                         Priority        = 5
+                        Id              = '12345'
                         PercentComplete = 75
-                        StartDateTime   = "2020-06-09"
+                        StartDateTime   = '2020-06-09'
+                        DueDateTime     = '2020-06-10'
+                        BucketId        = 'Bucket12345'
+                        Assignments     = @{
+                            AdditionalProperties = @{
+                                'john.smith@contoso.com' = @{}
+                            }
+                        }
+                        AppliedCategories = @{
+                            AdditionalProperties = @{
+                                Category1 = $true
+                            }
+                        }
+                    }
+                }
+
+                Mock -CommandName Get-MgPlannerTaskDetail -MockWith {
+                    return @{
+                        CheckList = @()
                     }
                 }
             }
 
-            It "Should return Present from the Get method" {
+            It 'Should return Present from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It "Should return false from the Set method" {
+            It 'Should return false from the Set method' {
                 Test-TargetResource @testParams | Should -Be $False
             }
         }
 
-        Context -Name "Task is need to be part of a Bucket by ID and is in Desired State" -Fixture {
+        Context -Name 'Task is need to be part of a Bucket by ID and is in Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    PlanId          = "1234567890"
-                    TaskId          = "12345"
-                    Title           = "Contoso Task"
-                    Bucket          = "Bucket12345"
+                    PlanId          = '1234567890'
+                    TaskId          = '12345'
+                    Title           = 'Contoso Task'
+                    Bucket          = 'Bucket12345'
                     Priority        = 5
+                    AssignedUsers   = @('john.smith@contoso.com')
                     PercentComplete = 75
-                    StartDateTime   = "2020-06-09"
-                    Ensure          = "Present"
+                    Categories      = @('Pink')
+                    StartDateTime   = '2020-06-09'
+                    DueDateTime     = '2020-06-10'
+                    Ensure          = 'Present'
                     Credential      = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {
                     return @{
-                        PlanId          = "1234567890"
-                        Title           = "Contoso Task"
-                        BucketId        = "Bucket12345"
-                        Id              = "12345"
+                        PlanId          = '1234567890'
+                        Title           = 'Contoso Task'
                         Priority        = 5
+                        Id              = '12345'
                         PercentComplete = 75
-                        StartDateTime   = "2020-06-09"
+                        StartDateTime   = '2020-06-09'
+                        DueDateTime     = '2020-06-10'
+                        BucketId        = 'Bucket12345'
+                        Assignments     = @{
+                            AdditionalProperties = @{
+                                'john.smith@contoso.com' = @{}
+                            }
+                        }
+                        AppliedCategories = @{
+                            AdditionalProperties = @{
+                                Category1 = $true
+                            }
+                        }
                     }
                 }
 
                 Mock -CommandName Get-MgPlannerPlanBucket -MockWith {
                     return @{
-                        Id   = "Bucket12345"
-                        Name = "TestBucket"
+                        Id   = 'Bucket12345'
+                        Name = 'TestBucket'
+                    }
+                }
+
+                Mock -CommandName Get-MgPlannerTaskDetail -MockWith {
+                    return @{
+                        CheckList = @()
                     }
                 }
             }
@@ -262,76 +301,94 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Bucket | Should -Be 'Bucket12345'
             }
 
-            It "Should return True from the Test method" {
+            It 'Should return True from the Test method' {
                 Test-TargetResource @testParams | Should -Be $True
             }
         }
 
 
-        Context -Name "Task is need to be part of a Bucket by Name and is NOT" -Fixture {
+        Context -Name 'Task is need to be part of a Bucket by Name and is NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    PlanId          = "1234567890"
-                    TaskId          = "12345"
-                    Title           = "Contoso Task"
-                    Bucket          = "TestBucket"
+                    PlanId          = '1234567890'
+                    TaskId          = '12345'
+                    Title           = 'Contoso Task'
+                    Bucket          = 'TestBucket'
                     Priority        = 5
+                    AssignedUsers   = @('john.smith@contoso.com')
                     PercentComplete = 75
-                    StartDateTime   = "2020-06-09"
-                    Ensure          = "Present"
+                    Categories      = @('Pink')
+                    StartDateTime   = '2020-06-09'
+                    DueDateTime     = '2020-06-10'
+                    Ensure          = 'Present'
                     Credential      = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {
                     return @{
-                        PlanId          = "1234567890"
-                        Title           = "Contoso Task"
-                        Id              = "12345"
+                        PlanId          = '1234567890'
+                        Title           = 'Contoso Task'
+                        Id              = '12345'
                         Priority        = 5
                         PercentComplete = 75
-                        StartDateTime   = "2020-06-09"
+                        StartDateTime   = '2020-06-09'
                     }
                 }
 
                 Mock -CommandName Get-MgPlannerPlanBucket -MockWith {
                     return $null
                 }
+
+                Mock -CommandName Get-MgPlannerTaskDetail -MockWith {
+                    return @{
+                        CheckList = @()
+                    }
+                }
             }
 
-            It "Should return True from the Test method" {
+            It 'Should return True from the Test method' {
                 Test-TargetResource @testParams | Should -Be $False
             }
         }
 
-        Context -Name "Task should not be part of a Bucket but it IS" -Fixture {
+        Context -Name 'Task should not be part of a Bucket but it IS' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    PlanId          = "1234567890"
-                    TaskId          = "12345"
-                    Title           = "Contoso Task"
+                    PlanId          = '1234567890'
+                    TaskId          = '12345'
+                    Title           = 'Contoso Task'
                     Priority        = 5
+                    AssignedUsers   = @('john.smith@contoso.com')
                     PercentComplete = 75
-                    StartDateTime   = "2020-06-09"
-                    Ensure          = "Present"
+                    Categories      = @('Pink')
+                    StartDateTime   = '2020-06-09'
+                    DueDateTime     = '2020-06-10'
+                    Ensure          = 'Present'
                     Credential      = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {
                     return @{
-                        PlanId          = "1234567890"
-                        Title           = "Contoso Task"
-                        BucketId        = "Bucket12345"
-                        Id              = "12345"
+                        PlanId          = '1234567890'
+                        Title           = 'Contoso Task'
+                        BucketId        = 'Bucket12345'
+                        Id              = '12345'
                         Priority        = 5
                         PercentComplete = 75
-                        StartDateTime   = "2020-06-09"
+                        StartDateTime   = '2020-06-09'
                     }
                 }
 
                 Mock -CommandName Get-MgPlannerPlanBucket -MockWith {
                     return @{
-                        Id   = "Bucket12345"
-                        Name = "TestBucket"
+                        Id   = 'Bucket12345'
+                        Name = 'TestBucket'
+                    }
+                }
+
+                Mock -CommandName Get-MgPlannerTaskDetail -MockWith {
+                    return @{
+                        CheckList = @()
                     }
                 }
             }
@@ -340,32 +397,58 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Bucket | Should -Be 'Bucket12345'
             }
 
-            It "Should return False from the Test method" {
+            It 'Should return False from the Test method' {
                 Test-TargetResource @testParams | Should -Be $False
             }
         }
 
-        Context -Name "ReverseDSC Tests" -Fixture {
+        Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
                 }
 
-                $Global:PartialExportFileName = "PlannerTask.ps1"
-                Mock -CommandName Get-MgPlannerTask -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @(
+                        @{
+                            DisplayName = 'Contoso Group'
+                            Id          = '12345-12345-12345-12345-12345'
+                        }
+                    )
+                }
+
+                Mock -CommandName Get-MgGroupPlannerPlan -MockWith {
                     return @{
-                        PlanId          = "1234567890"
-                        Title           = "Contoso Task"
-                        Priority        = 5
-                        PercentComplete = 75
-                        StartDateTime   = "2020-06-09"
+                        Title = 'Contoso Plan'
+                        Id    = '1234567890'
+                        Owner = '12345-12345-12345-12345-12345'
+                    }
+                }
+
+                Mock -CommandName Get-MgGroupPlannerPlanTask -MockWith {
+                    return @(
+                        @{
+                            PlanId          = '1234567890'
+                            Title           = 'Contoso Task'
+                            Priority        = 5
+                            PercentComplete = 75
+                            StartDateTime   = '2020-06-09'
+                        }
+                    )
+                }
+
+                Mock -CommandName Get-MgPlannerTaskDetail -MockWith {
+                    return @{
+                        CheckList = @()
                     }
                 }
             }
 
-            It "Should Reverse Engineer resource from the Export method" {
-                Export-TargetResource @testParams
+            It 'Should Reverse Engineer resource from the Export method' {
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }

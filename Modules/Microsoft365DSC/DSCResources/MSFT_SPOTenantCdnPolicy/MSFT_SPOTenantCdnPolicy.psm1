@@ -65,14 +65,37 @@ function Get-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
+
+    $nullReturn = @{
+        CDNType = $CDNType
+    }
+
     try
     {
         $Policies = Get-PnPTenantCdnPolicies -CdnType $CDNType -ErrorAction Stop
+        if ($null -ne $Policies['ExcludeRestrictedSiteClassifications'])
+        {
+            $ExcludeRestrictedSiteClassifications = `
+                $Policies['ExcludeRestrictedSiteClassifications'].Split(',')
+        }
+        else
+        {
+            $ExcludeRestrictedSiteClassifications = $null
+        }
+        if ($null -ne $Policies['IncludeFileExtensions'])
+        {
+            $IncludeFileExtensions = `
+                $Policies['IncludeFileExtensions'].Split(',')
+        }
+        else
+        {
+            $IncludeFileExtensions = $null
+        }
 
         return @{
             CDNType                              = $CDNType
-            ExcludeRestrictedSiteClassifications = $Policies['ExcludeRestrictedSiteClassifications'].Split(',')
-            IncludeFileExtensions                = $Policies['IncludeFileExtensions'].Split(',')
+            ExcludeRestrictedSiteClassifications = $ExcludeRestrictedSiteClassifications
+            IncludeFileExtensions                = $IncludeFileExtensions
             Credential                           = $Credential
             ApplicationId                        = $ApplicationId
             TenantId                             = $TenantId
@@ -85,27 +108,13 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        throw $_
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $nullReturn
     }
 }
 
@@ -353,11 +362,12 @@ function Export-TargetResource
             Managedidentity       = $ManagedIdentity.IsPresent
             Credential            = $Credential
         }
-
-        $Results = Get-TargetResource @Params
-        Write-Host "`r`n    |---[1/2] Public" -NoNewline
         $dscContent = ''
-        if ($null -ne $Results)
+
+        Write-Host "`r`n    |---[1/2] Public" -NoNewline
+        $Results = Get-TargetResource @Params
+
+        if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
         {
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
@@ -366,8 +376,15 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
+            Save-M365DSCPartialExport -Content $dscContent `
+                -FileName $Global:PartialExportFileName
+
+            Write-Host $Global:M365DSCEmojiGreenCheckmark
         }
-        Write-Host $Global:M365DSCEmojiGreenCheckmark
+        else
+        {
+            Write-Host $Global:M365DSCEmojiRedX
+        }
 
         $Params = @{
             CdnType               = 'Private'
@@ -381,7 +398,8 @@ function Export-TargetResource
         }
         Write-Host '    |---[2/2] Private' -NoNewline
         $Results = Get-TargetResource @params
-        if ($null -ne $result)
+
+        if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
         {
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
@@ -393,8 +411,14 @@ function Export-TargetResource
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
+
+            Write-Host $Global:M365DSCEmojiGreenCheckmark
         }
-        Write-Host $Global:M365DSCEmojiGreenCheckmark
+        else
+        {
+            Write-Host $Global:M365DSCEmojiRedX
+        }
+
         return $dscContent
     }
     catch
@@ -407,26 +431,12 @@ function Export-TargetResource
         else
         {
             Write-Host $Global:M365DSCEmojiRedX
-            try
-            {
-                Write-Verbose -Message $_
-                $tenantIdValue = ''
-                if (-not [System.String]::IsNullOrEmpty($TenantId))
-                {
-                    $tenantIdValue = $TenantId
-                }
-                elseif ($null -ne $Credential)
-                {
-                    $tenantIdValue = $Credential.UserName.Split('@')[1]
-                }
-                Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                    -TenantId $tenantIdValue
-            }
-            catch
-            {
-                Write-Verbose -Message $_
-            }
+
+            New-M365DSCLogEntry -Message 'Error during Export:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
         }
         return ''
     }

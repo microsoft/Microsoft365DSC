@@ -4,41 +4,46 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **dataType** | Write | String | The type of the target assignment. |#microsoft.graph.groupAssignmentTarget, #microsoft.graph.allLicensedUsersAssignmentTarget, #microsoft.graph.allDevicesAssignmentTarget, #microsoft.graph.exclusionGroupAssignmentTarget, #microsoft.graph.configurationManagerCollectionAssignmentTarget|
-| **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. |none, include, exclude|
-| **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. ||
-| **groupId** | Write | String | The group Id that is the target of the assignment. ||
-| **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) ||
-| **DisplayName** | Key | String | Display name of the Android Device Owner device compliance policy. ||
-| **Description** | Write | String | Description of the Android Device Owner device compliance policy. ||
-| **Assignments** | Write | InstanceArray[] | Assignments of the Intune Policy. ||
-| **DeviceThreatProtectionEnabled** | Write | Boolean | DeviceThreatProtectionEnabled of the Android Device Owner device compliance policy. ||
-| **DeviceThreatProtectionRequiredSecurityLevel** | Write | String | DeviceThreatProtectionRequiredSecurityLevel of the Android Device Owner device compliance policy. ||
-| **AdvancedThreatProtectionRequiredSecurityLevel** | Write | String | AdvancedThreatProtectionRequiredSecurityLevel of the Android Device Owner device compliance policy. ||
-| **SecurityRequireSafetyNetAttestationBasicIntegrity** | Write | Boolean | SecurityRequireSafetyNetAttestationBasicIntegrity of the Android Device Owner device compliance policy. ||
-| **SecurityRequireSafetyNetAttestationCertifiedDevice** | Write | Boolean | SecurityRequireSafetyNetAttestationCertifiedDevice of the Android Device Owner device compliance policy. ||
-| **osMinimumVersion** | Write | String | osMinimumVersion of the Android Device Owner device compliance policy. ||
-| **osMaximumVersion** | Write | String | osMaximumVersion of the Android Device Owner device compliance policy. ||
-| **passwordRequired** | Write | Boolean | PasswordRequired of the Android Device Owner device compliance policy. ||
-| **passwordMinimumLength** | Write | UInt32 | PasswordMinimumLength of the Android Device Owner device compliance policy. ||
-| **PasswordRequiredType** | Write | String | PasswordRequiredType of the Android Device Owner device compliance policy. |deviceDefault, alphabetic, alphanumeric, alphanumericWithSymbols, lowSecurityBiometric, numeric, numericComplex, any|
-| **PasswordMinutesOfInactivityBeforeLock** | Write | UInt32 | PasswordMinutesOfInactivityBeforeLock of the Android Device Owner device compliance policy. ||
-| **PasswordExpirationDays** | Write | UInt32 | PasswordExpirationDays of the Android Device Owner device compliance policy. ||
-| **PasswordPreviousPasswordCountToBlock** | Write | UInt32 | PasswordPreviousPasswordCountToBlock of the Android Device Owner device compliance policy. ||
-| **StorageRequireEncryption** | Write | Boolean | StorageRequireEncryption of the Android Device Owner device compliance policy. ||
-| **SecurityRequireIntuneAppIntegrity** | Write | Boolean | SecurityRequireIntuneAppIntegrity of the Android Device Owner device compliance policy. ||
-| **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tags for this Entity instance. Inherited from deviceConfiguration ||
-| **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed |Present, Absent|
-| **Credential** | Write | PSCredential | Credentials of the Intune Admin ||
-| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
-| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
-| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. ||
-| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
-| **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. ||
+| **DisplayName** | Key | String | Display name of the Android Device Owner device compliance policy. | |
+| **Description** | Write | String | Description of the Android Device Owner device compliance policy. | |
+| **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the Intune Policy. | |
+| **DeviceThreatProtectionEnabled** | Write | Boolean | DeviceThreatProtectionEnabled of the Android Device Owner device compliance policy. | |
+| **DeviceThreatProtectionRequiredSecurityLevel** | Write | String | DeviceThreatProtectionRequiredSecurityLevel of the Android Device Owner device compliance policy. | |
+| **AdvancedThreatProtectionRequiredSecurityLevel** | Write | String | AdvancedThreatProtectionRequiredSecurityLevel of the Android Device Owner device compliance policy. | |
+| **SecurityRequireSafetyNetAttestationBasicIntegrity** | Write | Boolean | SecurityRequireSafetyNetAttestationBasicIntegrity of the Android Device Owner device compliance policy. | |
+| **SecurityRequireSafetyNetAttestationCertifiedDevice** | Write | Boolean | SecurityRequireSafetyNetAttestationCertifiedDevice of the Android Device Owner device compliance policy. | |
+| **osMinimumVersion** | Write | String | osMinimumVersion of the Android Device Owner device compliance policy. | |
+| **osMaximumVersion** | Write | String | osMaximumVersion of the Android Device Owner device compliance policy. | |
+| **passwordRequired** | Write | Boolean | PasswordRequired of the Android Device Owner device compliance policy. | |
+| **passwordMinimumLength** | Write | UInt32 | PasswordMinimumLength of the Android Device Owner device compliance policy. | |
+| **PasswordRequiredType** | Write | String | PasswordRequiredType of the Android Device Owner device compliance policy. | `deviceDefault`, `alphabetic`, `alphanumeric`, `alphanumericWithSymbols`, `lowSecurityBiometric`, `numeric`, `numericComplex`, `any` |
+| **PasswordMinutesOfInactivityBeforeLock** | Write | UInt32 | PasswordMinutesOfInactivityBeforeLock of the Android Device Owner device compliance policy. | |
+| **PasswordExpirationDays** | Write | UInt32 | PasswordExpirationDays of the Android Device Owner device compliance policy. | |
+| **PasswordPreviousPasswordCountToBlock** | Write | UInt32 | PasswordPreviousPasswordCountToBlock of the Android Device Owner device compliance policy. | |
+| **StorageRequireEncryption** | Write | Boolean | StorageRequireEncryption of the Android Device Owner device compliance policy. | |
+| **SecurityRequireIntuneAppIntegrity** | Write | Boolean | SecurityRequireIntuneAppIntegrity of the Android Device Owner device compliance policy. | |
+| **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tags for this Entity instance. Inherited from deviceConfiguration | |
+| **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed | `Present`, `Absent` |
+| **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
+| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
+| **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 
-# IntuneDeviceCompliancePolicyAndroidDeviceOwner
+### MSFT_DeviceManagementConfigurationPolicyAssignments
 
-### Description
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
+| **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
+| **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
+| **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
+
+## Description
 
 This resource configures the settings of Android Work Profile device compliance policies
 in your cloud-based organization.
@@ -162,6 +167,32 @@ Select the oldest security patch level a device can have. Devices that aren't at
 
 _By default, no date is configured._
 
+## Permissions
+
+### Microsoft Graph
+
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
+
+#### Delegated permissions
+
+- **Read**
+
+    - DeviceManagementConfiguration.Read.All
+
+- **Update**
+
+    - DeviceManagementConfiguration.ReadWrite.All
+
+#### Application permissions
+
+- **Read**
+
+    - DeviceManagementConfiguration.Read.All
+
+- **Update**
+
+    - DeviceManagementConfiguration.ReadWrite.All
+
 ## Examples
 
 ### Example 1
@@ -171,41 +202,36 @@ This example creates a new Device Compliance Policy for Android Device Owner dev
 ```powershell
 Configuration Example
 {
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [PSCredential]
         $credsGlobalAdmin
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
         IntuneDeviceCompliancePolicyAndroidDeviceOwner 'ConfigureAndroidDeviceCompliancePolicyOwner'
         {
-            Description                                        = ""
-            DisplayName                                        = "DeviceOwner"
+            DisplayName                                        = 'DeviceOwner'
+            Description                                        = ''
             DeviceThreatProtectionEnabled                      = $False
-            DeviceThreatProtectionRequiredSecurityLevel        = "unavailable"
-            AdvancedThreatProtectionRequiredSecurityLevel      = "unavailable"
+            DeviceThreatProtectionRequiredSecurityLevel        = 'unavailable'
+            AdvancedThreatProtectionRequiredSecurityLevel      = 'unavailable'
             SecurityRequireSafetyNetAttestationBasicIntegrity  = $False
             SecurityRequireSafetyNetAttestationCertifiedDevice = $False
-            OsMinimumVersion                                   = "10"
-            OsMaximumVersion                                   = "11"
-            MinAndroidSecurityPatchLevel                       = "2020-03-01"
+            OsMinimumVersion                                   = '10'
+            OsMaximumVersion                                   = '11'
             PasswordRequired                                   = $True
             PasswordMinimumLength                              = 6
-            PasswordMinimumLetterCharacters                    = 1
-            PasswordMinimumLowerCaseCharacters                 = 1
-            PasswordMinimumNonLetterCharacters                 = 2
-            PasswordMinimumNumericCharacters                   = 1
-            PasswordMinimumSymbolCharacters                    = 1
-            PasswordMinimumUpperCaseCharacters                 = 1
-            PasswordRequiredType                               = "numericComplex"
+            PasswordRequiredType                               = 'numericComplex'
             PasswordMinutesOfInactivityBeforeLock              = 5
             PasswordExpirationDays                             = 90
             PasswordPreviousPasswordCountToBlock               = 13
             StorageRequireEncryption                           = $True
-            Ensure                                             = "Present"
+            Ensure                                             = 'Present'
             Credential                                         = $credsGlobalAdmin
         }
     }
@@ -230,9 +256,9 @@ Configuration Example
     {
         IntuneDeviceCompliancePolicyAndroidDeviceOwner 'RemoveAndroidDeviceCompliancePolicyOwner'
         {
-            DisplayName          = "DeviceOwner"
-            Ensure               = "Absent"
-            Credential           = $credsGlobalAdmin
+            DisplayName = 'DeviceOwner'
+            Ensure      = 'Absent'
+            Credential  = $credsGlobalAdmin
         }
     }
 }

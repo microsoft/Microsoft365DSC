@@ -37,7 +37,7 @@ function Get-TargetResource
         $ReviewerEmail,
 
         [Parameter()]
-        [ValidateSet("Delete", "Keep", "KeepAndDelete")]
+        [ValidateSet('Delete', 'Keep', 'KeepAndDelete')]
         [System.String]
         $RetentionAction,
 
@@ -46,7 +46,7 @@ function Get-TargetResource
         $EventType,
 
         [Parameter()]
-        [ValidateSet("CreationAgeInDays", "EventAgeInDays", "ModificationAgeInDays", "TaggedAgeInDays")]
+        [ValidateSet('CreationAgeInDays', 'EventAgeInDays', 'ModificationAgeInDays', 'TaggedAgeInDays')]
         [System.String]
         $RetentionType,
 
@@ -55,9 +55,29 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Getting configuration of ComplianceTag for $Name"
@@ -76,8 +96,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -100,24 +120,29 @@ function Get-TargetResource
         {
             Write-Verbose "Found existing ComplianceTag $($Name)"
             $result = @{
-                Name               = $tagObject.Name
-                Comment            = $tagObject.Comment
-                RetentionDuration  = $tagObject.RetentionDuration
-                IsRecordLabel      = $tagObject.IsRecordLabel
-                Regulatory         = $tagObject.Regulatory
-                Notes              = $tagObject.Notes
-                ReviewerEmail      = $tagObject.ReviewerEmail
-                RetentionAction    = $tagObject.RetentionAction
-                EventType          = $tagObject.EventType
-                RetentionType      = $tagObject.RetentionType
-                Credential         = $Credential
-                Ensure             = 'Present'
+                Name                  = $tagObject.Name
+                Comment               = $tagObject.Comment
+                RetentionDuration     = $tagObject.RetentionDuration
+                IsRecordLabel         = $tagObject.IsRecordLabel
+                Regulatory            = $tagObject.Regulatory
+                Notes                 = $tagObject.Notes
+                ReviewerEmail         = $tagObject.ReviewerEmail
+                RetentionAction       = $tagObject.RetentionAction
+                EventType             = $tagObject.EventType
+                RetentionType         = $tagObject.RetentionType
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                Ensure                = 'Present'
             }
 
             if (-not [System.String]::IsNullOrEmpty($tagObject.FilePlanMetadata))
             {
                 $ConvertedFilePlanProperty = Get-SCFilePlanProperty $tagObject.FilePlanMetadata
-                $result.Add("FilePlanProperty", $ConvertedFilePlanProperty)
+                $result.Add('FilePlanProperty', $ConvertedFilePlanProperty)
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -126,26 +151,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -188,7 +199,7 @@ function Set-TargetResource
         $ReviewerEmail,
 
         [Parameter()]
-        [ValidateSet("Delete", "Keep", "KeepAndDelete")]
+        [ValidateSet('Delete', 'Keep', 'KeepAndDelete')]
         [System.String]
         $RetentionAction,
 
@@ -197,7 +208,7 @@ function Set-TargetResource
         $EventType,
 
         [Parameter()]
-        [ValidateSet("CreationAgeInDays", "EventAgeInDays", "ModificationAgeInDays", "TaggedAgeInDays")]
+        [ValidateSet('CreationAgeInDays', 'EventAgeInDays', 'ModificationAgeInDays', 'TaggedAgeInDays')]
         [System.String]
         $RetentionType,
 
@@ -206,9 +217,29 @@ function Set-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting configuration of ComplianceTag for $Name"
@@ -217,8 +248,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -233,13 +264,13 @@ function Set-TargetResource
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentTag.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove("Credential")
-        $CreationParams.Remove("Ensure")
+        $CreationParams.Remove('Credential')
+        $CreationParams.Remove('Ensure')
 
         #Convert File plan to JSON before Set
         if ($FilePlanProperty)
         {
-            Write-Verbose -Message "Converting FilePlan to JSON"
+            Write-Verbose -Message 'Converting FilePlan to JSON'
             $FilePlanPropertyJSON = ConvertTo-Json (Get-SCFilePlanPropertyObject $FilePlanProperty)
             $CreationParams.FilePlanProperty = $FilePlanPropertyJSON
         }
@@ -251,49 +282,49 @@ function Set-TargetResource
         $SetParams = $PSBoundParameters
 
         #Remove unused parameters for Set-ComplianceTag cmdlet
-        $SetParams.Remove("Credential")
-        $SetParams.Remove("Ensure")
-        $SetParams.Remove("Name")
-        $SetParams.Remove("IsRecordLabel")
-        $SetParams.Remove("Regulatory")
-        $SetParams.Remove("RetentionAction")
-        $SetParams.Remove("RetentionType")
+        $SetParams.Remove('Credential')
+        $SetParams.Remove('Ensure')
+        $SetParams.Remove('Name')
+        $SetParams.Remove('IsRecordLabel')
+        $SetParams.Remove('Regulatory')
+        $SetParams.Remove('RetentionAction')
+        $SetParams.Remove('RetentionType')
 
         # Once set, a label can't be removed;
         if ($SetParams.IsRecordLabel -eq $false -and $CurrentTag.IsRecordLabel -eq $true)
         {
             throw "Can't remove label on the existing Compliance Tag {$Name}. " + `
-                "You will need to delete the tag and recreate it."
+                'You will need to delete the tag and recreate it.'
         }
 
-        if ($null -ne $PsBoundParameters["Regulatory"] -and
+        if ($null -ne $PsBoundParameters['Regulatory'] -and
             $Regulatory -ne $CurrentTag.Regulatory)
         {
             throw "SPComplianceTag can't change the Regulatory property on " + `
                 "existing tags {$Name} from $Regulatory to $($CurrentTag.Regulatory)." + `
-                " You will need to delete the tag and recreate it."
+                ' You will need to delete the tag and recreate it.'
         }
 
         if ($RetentionAction -ne $CurrentTag.RetentionAction)
         {
             throw "SPComplianceTag can't change the RetentionAction property on " + `
                 "existing tags {$Name} from $RetentionAction to $($CurrentTag.RetentionAction)." + `
-                " You will need to delete the tag and recreate it."
+                ' You will need to delete the tag and recreate it.'
         }
 
         if ($RetentionType -ne $CurrentTag.RetentionType)
         {
             throw "SPComplianceTag can't change the RetentionType property on " + `
                 "existing tags {$Name} from $RetentionType to $($CurrentTag.RetentionType)." + `
-                " You will need to delete the tag and recreate it."
+                ' You will need to delete the tag and recreate it.'
         }
 
         #Convert File plan to JSON before Set
         if ($FilePlanProperty)
         {
-            Write-Verbose -Message "Converting FilePlan properties to JSON"
+            Write-Verbose -Message 'Converting FilePlan properties to JSON'
             $FilePlanPropertyJSON = ConvertTo-Json (Get-SCFilePlanPropertyObject $FilePlanProperty)
-            $SetParams["FilePlanProperty"] = $FilePlanPropertyJSON
+            $SetParams['FilePlanProperty'] = $FilePlanPropertyJSON
         }
         Set-ComplianceTag @SetParams -Identity $Name
     }
@@ -343,7 +374,7 @@ function Test-TargetResource
         $ReviewerEmail,
 
         [Parameter()]
-        [ValidateSet("Delete", "Keep", "KeepAndDelete")]
+        [ValidateSet('Delete', 'Keep', 'KeepAndDelete')]
         [System.String]
         $RetentionAction,
 
@@ -352,7 +383,7 @@ function Test-TargetResource
         $EventType,
 
         [Parameter()]
-        [ValidateSet("CreationAgeInDays", "EventAgeInDays", "ModificationAgeInDays", "TaggedAgeInDays")]
+        [ValidateSet('CreationAgeInDays', 'EventAgeInDays', 'ModificationAgeInDays', 'TaggedAgeInDays')]
         [System.String]
         $RetentionType,
 
@@ -361,16 +392,36 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -394,7 +445,7 @@ function Test-TargetResource
         return $false
     }
 
-    $ValuesToCheck.Remove("FilePlanProperty") | Out-Null
+    $ValuesToCheck.Remove('FilePlanProperty') | Out-Null
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
@@ -411,9 +462,29 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters `
@@ -422,8 +493,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -452,11 +523,7 @@ function Export-TargetResource
         foreach ($tag in $tags)
         {
             Write-Host "    |---[$i/$($totalTags)] $($tag.Name)" -NoNewline
-            $Params = @{
-                Name               = $tag.Name
-                Credential = $Credential
-            }
-            $Results = Get-TargetResource @Params
+            $Results = Get-TargetResource @PSBoundParameters -Name $tag.Name
             $Results.FilePlanProperty = Get-SCFilePlanPropertyAsString $Results.FilePlanProperty
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
@@ -467,7 +534,7 @@ function Export-TargetResource
                 -Credential $Credential
             if ($null -ne $Results.FilePlanProperty)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "FilePlanProperty"
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'FilePlanProperty'
             }
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -480,27 +547,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 
@@ -508,7 +562,8 @@ function Get-SCFilePlanPropertyObject
 {
     [CmdletBinding()]
     [OutputType([PSCustomObject])]
-    param(
+    param
+    (
         [Parameter()]
         $Properties
     )
@@ -520,12 +575,12 @@ function Get-SCFilePlanPropertyObject
 
     $result = [PSCustomObject]@{
         Settings = @(
-            @{Key = "FilePlanPropertyDepartment"; Value = $properties.FilePlanPropertyDepartment },
-            @{Key = "FilePlanPropertyCategory"; Value = $properties.FilePlanPropertyCategory },
-            @{Key = "FilePlanPropertySubcategory"; Value = $properties.FilePlanPropertySubcategory },
-            @{Key = "FilePlanPropertyCitation"; Value = $properties.FilePlanPropertyCitation },
-            @{Key = "FilePlanPropertyReferenceId"; Value = $properties.FilePlanPropertyReferenceId },
-            @{Key = "FilePlanPropertyAuthority"; Value = $properties.FilePlanPropertyAuthority }
+            @{Key = 'FilePlanPropertyDepartment'; Value = $properties.FilePlanPropertyDepartment },
+            @{Key = 'FilePlanPropertyCategory'; Value = $properties.FilePlanPropertyCategory },
+            @{Key = 'FilePlanPropertySubcategory'; Value = $properties.FilePlanPropertySubcategory },
+            @{Key = 'FilePlanPropertyCitation'; Value = $properties.FilePlanPropertyCitation },
+            @{Key = 'FilePlanPropertyReferenceId'; Value = $properties.FilePlanPropertyReferenceId },
+            @{Key = 'FilePlanPropertyAuthority'; Value = $properties.FilePlanPropertyAuthority }
         )
     }
 
@@ -536,7 +591,8 @@ function Get-SCFilePlanProperty
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [System.String]
         $Metadata
@@ -567,9 +623,9 @@ function Get-SCFilePlanPropertyAsString($params)
     $currentProperty = "MSFT_SCFilePlanProperty{`r`n"
     foreach ($key in $params.Keys)
     {
-        $currentProperty += "                " + $key + " = '" + $params[$key] + "'`r`n"
+        $currentProperty += '                ' + $key + " = '" + $params[$key] + "'`r`n"
     }
-    $currentProperty += "            }"
+    $currentProperty += '            }'
     return $currentProperty
 }
 
@@ -577,12 +633,13 @@ function Test-SCFilePlanProperties
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)] $CurrentProperty,
         [Parameter(Mandatory = $true)] $DesiredProperty
     )
 
-    Write-Verbose -Message "Comparing File Plan properties."
+    Write-Verbose -Message 'Comparing File Plan properties.'
     Write-Verbose -Message "Current: $(Convert-M365DscHashtableToString -Hashtable $CurrentProperty)"
     Write-Verbose -Message "Desired: $(Convert-M365DscHashtableToString -Hashtable $DesiredProperty)"
 

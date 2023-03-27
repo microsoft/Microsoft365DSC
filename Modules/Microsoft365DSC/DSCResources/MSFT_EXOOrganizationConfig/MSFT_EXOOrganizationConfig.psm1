@@ -352,6 +352,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $MessageRecallEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $MessageRemindersEnabled,
 
         [Parameter()]
@@ -497,8 +501,10 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
+    $nullReturn = @{
+        IsSingleInstance = 'Yes'
+    }
+
     try
     {
         $ConfigSettings = Get-OrganizationConfig -ErrorAction Stop
@@ -591,6 +597,7 @@ function Get-TargetResource
             MaskClientIpInReceivedHeadersEnabled                      = $ConfigSettings.MaskClientIpInReceivedHeadersEnabled
             MatchSenderOrganizerProperties                            = $ConfigSettings.MatchSenderOrganizerProperties
             MessageHighlightsEnabled                                  = $ConfigSettings.MessageHighlightsEnabled
+            MessageRecallEnabled                                      = $ConfigSettings.MessageRecallEnabled
             MessageRemindersEnabled                                   = $ConfigSettings.MessageRemindersEnabled
             MobileAppEducationEnabled                                 = $ConfigSettings.MobileAppEducationEnabled
             OAuth2ClientProfileEnabled                                = $ConfigSettings.OAuth2ClientProfileEnabled
@@ -647,26 +654,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -1024,6 +1017,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $MessageRecallEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $MessageRemindersEnabled,
 
         [Parameter()]
@@ -1156,9 +1153,9 @@ function Set-TargetResource
     #endregion
 
     # Warning for deprecated parameters
-    if ($PSBoundParameters.ContainsKey("AllowPlusAddressInRecipients"))
+    if ($PSBoundParameters.ContainsKey('AllowPlusAddressInRecipients'))
     {
-        Write-Warning "AllowPlusAddressInRecipients is deprecated. Please remove this parameter from your configuration. Use DisablePlusAddressInRecipients instead."
+        Write-Warning 'AllowPlusAddressInRecipients is deprecated. Please remove this parameter from your configuration. Use DisablePlusAddressInRecipients instead.'
     }
 
     if ($null -ne $EwsAllowList -and $null -ne $EwsBlockList)
@@ -1181,7 +1178,7 @@ function Set-TargetResource
     $SetValues.Remove('CertificateThumbprint') | Out-Null
     $SetValues.Remove('CertificatePath') | Out-Null
     $SetValues.Remove('CertificatePassword') | Out-Null
-    $SetValues.Remove('Managedidentity') | Out-Null
+    $SetValues.Remove('ManagedIdentity') | Out-Null
 
     # Remove deprecated parameters
     $SetValues.Remove('AllowPlusAddressInRecipients') | Out-Null
@@ -1550,6 +1547,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $MessageRecallEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $MessageRemindersEnabled,
 
         [Parameter()]
@@ -1695,7 +1696,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('Managedidentity') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -1772,41 +1773,39 @@ function Export-TargetResource
         }
 
         $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -Credential $Credential
-        $dscContent += $currentDSCBlock
-        Save-M365DSCPartialExport -Content $currentDSCBlock `
-            -FileName $Global:PartialExportFileName
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+
+        if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
+        {
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host $Global:M365DSCEmojiRedX
+        }
+
         return $dscContent
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        Write-Host $Global:M365DSCEmojiRedX
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return ''
     }
 }

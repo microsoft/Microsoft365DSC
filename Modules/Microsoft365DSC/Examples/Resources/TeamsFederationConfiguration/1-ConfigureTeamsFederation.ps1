@@ -15,12 +15,17 @@ Configuration Example
     {
         TeamsFederationConfiguration 'FederationConfiguration'
         {
-            Identity                  = "Global"
-            AllowFederatedUsers       = $True
-            AllowPublicUsers          = $True
-            AllowTeamsConsumer        = $False
-            AllowTeamsConsumerInbound = $False
-            Credential                = $credsGlobalAdmin
+            Identity                                    = "Global";
+            AllowedDomains                              = @();
+            BlockedDomains                              = @();
+            AllowFederatedUsers                         = $True;
+            AllowPublicUsers                            = $True;
+            AllowTeamsConsumer                          = $True;
+            AllowTeamsConsumerInbound                   = $True;
+            RestrictTeamsConsumerToExternalUserProfiles = $False;
+            SharedSipAddressSpace                       = $False;
+            TreatDiscoveredPartnersAsUnverified         = $False;
+            Credential                                  = $credsGlobalAdmin
         }
     }
 }

@@ -28,7 +28,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Public", "Private", "HiddenMembership")]
+        [ValidateSet('Public', 'Private', 'HiddenMembership')]
         $Visibility,
 
         [Parameter()]
@@ -40,7 +40,7 @@ function Get-TargetResource
         $AllowGiphy,
 
         [Parameter()]
-        [ValidateSet("Strict", "Moderate")]
+        [ValidateSet('Strict', 'Moderate')]
         [System.String]
         $GiphyContentRating,
 
@@ -101,9 +101,9 @@ function Get-TargetResource
         $ShowInTeamsSearchAndSuggestions,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.String]
@@ -129,8 +129,8 @@ function Get-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -138,16 +138,16 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
 
     Write-Verbose -Message "Checking for existence of Team $DisplayName"
 
     try
     {
         ## will only return 1 instance
-        if ($PSBoundParameters.ContainsKey("GroupID"))
+        if ($PSBoundParameters.ContainsKey('GroupID'))
         {
-            Write-Verbose -Message "GroupID was specified"
+            Write-Verbose -Message 'GroupID was specified'
             $team = Get-Team -GroupId $GroupID
             if ($null -eq $team)
             {
@@ -157,10 +157,10 @@ function Get-TargetResource
         }
         else
         {
-            Write-Verbose -Message "GroupID was NOT specified"
+            Write-Verbose -Message 'GroupID was NOT specified'
             ## Can retreive multiple Teams since displayname is not unique
             # Filter on DisplayName as -DisplayName also does partial matches and will report duplicate names that are not real duplicate names
-            $team = Get-Team -DisplayName $DisplayName | Where-Object {$_.DisplayName -eq $DisplayName}
+            $team = Get-Team -DisplayName $DisplayName | Where-Object { $_.DisplayName -eq $DisplayName }
             if ($null -eq $team)
             {
                 Write-Verbose -Message "Teams with displayname $DisplayName doesn't exist"
@@ -173,7 +173,7 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Getting Team {$DisplayName} Owners"
-        [array]$Owners = Get-TeamUser -GroupId $team.GroupId | Where-Object { $_.Role -eq "owner" }
+        [array]$Owners = Get-TeamUser -GroupId $team.GroupId | Where-Object { $_.Role -eq 'owner' }
         Write-Verbose -Message "Found Team $($team.DisplayName)."
 
         $result = @{
@@ -200,43 +200,29 @@ function Get-TargetResource
             AllowCreateUpdateChannels         = $team.AllowCreateUpdateChannels
             AllowDeleteChannels               = $team.AllowDeleteChannels
             ShowInTeamsSearchAndSuggestions   = $team.ShowInTeamsSearchAndSuggestions
-            Ensure                            = "Present"
+            Ensure                            = 'Present'
         }
 
-        if ($ConnectionMode -eq "ServicePrincipal")
+        if ($ConnectionMode -eq 'ServicePrincipal')
         {
-            $result.Add("ApplicationId", $ApplicationId)
-            $result.Add("TenantId", $TenantId)
-            $result.Add("CertificateThumbprint", $CertificateThumbprint)
+            $result.Add('ApplicationId', $ApplicationId)
+            $result.Add('TenantId', $TenantId)
+            $result.Add('CertificateThumbprint', $CertificateThumbprint)
         }
         else
         {
-            $result.Add("Credential", $Credential)
+            $result.Add('Credential', $Credential)
         }
         return $result
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
 }
@@ -270,7 +256,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Public", "Private", "HiddenMembership")]
+        [ValidateSet('Public', 'Private', 'HiddenMembership')]
         $Visibility,
 
         [Parameter()]
@@ -282,7 +268,7 @@ function Set-TargetResource
         $AllowGiphy,
 
         [Parameter()]
-        [ValidateSet("Strict", "Moderate")]
+        [ValidateSet('Strict', 'Moderate')]
         [System.String]
         $GiphyContentRating,
 
@@ -343,9 +329,9 @@ function Set-TargetResource
         $ShowInTeamsSearchAndSuggestions,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.String]
@@ -370,8 +356,8 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -383,38 +369,38 @@ function Set-TargetResource
     $team = Get-TargetResource @PSBoundParameters
 
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("Ensure") | Out-Null
+    $CurrentParameters.Remove('Ensure') | Out-Null
 
-    if ($Ensure -eq "Present" -and ($team.Ensure -eq "Present"))
+    if ($Ensure -eq 'Present' -and ($team.Ensure -eq 'Present'))
     {
         ## Can't pass Owner parm into set opertaion
-        if ($CurrentParameters.ContainsKey("Owner"))
+        if ($CurrentParameters.ContainsKey('Owner'))
         {
-            $CurrentParameters.Remove("Owner") | Out-Null
+            $CurrentParameters.Remove('Owner') | Out-Null
         }
-        if (-not $CurrentParameters.ContainsKey("GroupID"))
+        if (-not $CurrentParameters.ContainsKey('GroupID'))
         {
-            $CurrentParameters.Add("GroupID", $team.GroupID)
+            $CurrentParameters.Add('GroupID', $team.GroupID)
         }
-        if ($ConnectionMode -eq 'Credential')
+        if ($ConnectionMode -eq 'Credentials')
         {
-            $CurrentParameters.Remove("Credential") | Out-Null
+            $CurrentParameters.Remove('Credential') | Out-Null
         }
         else
         {
-            $CurrentParameters.Remove("ApplicationId") | Out-Null
-            $CurrentParameters.Remove("TenantId") | Out-Null
-            $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
+            $CurrentParameters.Remove('ApplicationId') | Out-Null
+            $CurrentParameters.Remove('TenantId') | Out-Null
+            $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
         }
         Set-Team @CurrentParameters
         Write-Verbose -Message "Updating team $DisplayName"
     }
-    elseif ($Ensure -eq "Present" -and ($team.Ensure -eq "Absent"))
+    elseif ($Ensure -eq 'Present' -and ($team.Ensure -eq 'Absent'))
     {
         ## GroupID not used on New-Team cmdlet
-        if ($CurrentParameters.ContainsKey("GroupID"))
+        if ($CurrentParameters.ContainsKey('GroupID'))
         {
-            $CurrentParameters.Remove("GroupID") | Out-Null
+            $CurrentParameters.Remove('GroupID') | Out-Null
         }
         Write-Verbose -Message "Creating team $DisplayName"
         if ($null -ne $Owner)
@@ -422,11 +408,11 @@ function Set-TargetResource
             $CurrentParameters.Owner = [array](($Owner[0]).ToString())
         }
         Write-Verbose -Message "Connection mode: $ConnectionMode"
-        if ($ConnectionMode -eq "ServicePrincipal")
+        if ($ConnectionMode -eq 'ServicePrincipal')
         {
             $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
-            $group = New-MgSGroup -DisplayName $DisplayName -GroupTypes "Unified" -MailEnabled $true -SecurityEnabled $true -MailNickname $MailNickName
+            $group = New-MgSGroup -DisplayName $DisplayName -GroupTypes 'Unified' -MailEnabled $true -SecurityEnabled $true -MailNickname $MailNickName
             $currentOwner = (($CurrentParameters.Owner)[0])
 
             Write-Verbose -Message "Retrieving Group Owner {$currentOwner}"
@@ -439,7 +425,7 @@ function Set-TargetResource
             }
             catch
             {
-                Write-Verbose -Message "Adding Owner - Sleeping for 15 seconds"
+                Write-Verbose -Message 'Adding Owner - Sleeping for 15 seconds'
                 Start-Sleep -Seconds 15
                 New-MgGroupOwnerByRef -GroupId $group.Id -RefObjectId $ownerUser.ObjectId
             }
@@ -450,14 +436,14 @@ function Set-TargetResource
             }
             catch
             {
-                Write-Verbose -Message "Creating Team - Sleeping for 15 seconds"
+                Write-Verbose -Message 'Creating Team - Sleeping for 15 seconds'
                 Start-Sleep -Seconds 15
                 New-Team -GroupId $group.Id
             }
         }
         else
         {
-            Write-Verbose -Message "Using Credentials to authenticate."
+            Write-Verbose -Message 'Using Credentials to authenticate.'
             if (-not $Owner -or $Owner.Length -eq 0)
             {
                 $OwnerValue = $Credential.UserName
@@ -467,7 +453,7 @@ function Set-TargetResource
                 $OwnerValue = $Owner[0].ToString()
             }
             $CurrentParameters.Owner = [System.String]$OwnerValue
-            $CurrentParameters.Remove("Credential") | Out-Null
+            $CurrentParameters.Remove('Credential') | Out-Null
             Write-Verbose -Message "Creating team with Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentParameters)"
             $newTeam = New-Team @CurrentParameters
             Write-Verbose -Message "Team {$DisplayName} was just created."
@@ -478,7 +464,7 @@ function Set-TargetResource
             }
         }
     }
-    elseif ($Ensure -eq "Absent" -and ($team.Ensure -eq "Present"))
+    elseif ($Ensure -eq 'Absent' -and ($team.Ensure -eq 'Present'))
     {
         Write-Verbose -Message "Removing team $DisplayName"
         Remove-Team -GroupId $team.GroupId
@@ -515,7 +501,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Public", "Private", "HiddenMembership")]
+        [ValidateSet('Public', 'Private', 'HiddenMembership')]
         $Visibility,
 
         [Parameter()]
@@ -527,7 +513,7 @@ function Test-TargetResource
         $AllowGiphy,
 
         [Parameter()]
-        [ValidateSet("Strict", "Moderate")]
+        [ValidateSet('Strict', 'Moderate')]
         [System.String]
         $GiphyContentRating,
 
@@ -588,9 +574,9 @@ function Test-TargetResource
         $ShowInTeamsSearchAndSuggestions,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.String]
@@ -612,8 +598,8 @@ function Test-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -637,7 +623,7 @@ function Test-TargetResource
 
     if ($null -eq $CurrentValues.Owner)
     {
-        $ValuesToCheck.Remove("Owner") | Out-Null
+        $ValuesToCheck.Remove('Owner') | Out-Null
     }
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
@@ -678,8 +664,8 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -699,7 +685,7 @@ function Export-TargetResource
 
         $teams = Get-Team
         $i = 1
-        $dscContent = ""
+        $dscContent = ''
         Write-Host "`r`n" -NoNewline
         foreach ($team in $teams)
         {
@@ -732,27 +718,14 @@ function Export-TargetResource
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return ''
     }
 }
 

@@ -4,52 +4,59 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **dataType** | Write | String | The type of the target assignment. |#microsoft.graph.groupAssignmentTarget, #microsoft.graph.allLicensedUsersAssignmentTarget, #microsoft.graph.allDevicesAssignmentTarget, #microsoft.graph.exclusionGroupAssignmentTarget, #microsoft.graph.configurationManagerCollectionAssignmentTarget|
-| **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. |none, include, exclude|
-| **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. ||
-| **groupId** | Write | String | The group Id that is the target of the assignment. ||
-| **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) ||
-| **DisplayName** | Key | String | Display name of the Android device compliance policy. ||
-| **Description** | Write | String | Description of the Android device compliance policy. ||
-| **Assignments** | Write | InstanceArray[] | Assignments of the Intune Policy. ||
-| **PasswordRequired** | Write | Boolean | PasswordRequired of the Android device compliance policy. ||
-| **PasswordMinimumLength** | Write | UInt32 | PasswordMinimumLength of the Android device compliance policy. ||
-| **PasswordRequiredType** | Write | String | PasswordRequiredType of the Android device compliance policy. |deviceDefault, alphabetic, alphanumeric, alphanumericWithSymbols, lowSecurityBiometric, numeric, numericComplex, any|
-| **RequiredPasswordComplexity** | Write | String | RequiredPasswordComplexity of the Android device compliance policy. |none, low, medium, high|
-| **PasswordMinutesOfInactivityBeforeLock** | Write | UInt32 | PasswordMinutesOfInactivityBeforeLock of the Android device compliance policy. ||
-| **PasswordExpirationDays** | Write | UInt32 | PasswordExpirationDays of the Android device compliance policy. ||
-| **PasswordPreviousPasswordBlockCount** | Write | UInt32 | PasswordPreviousPasswordBlockCount of the Android device compliance policy. ||
-| **PasswordSignInFailureCountBeforeFactoryReset** | Write | UInt32 | PasswordSignInFailureCountBeforeFactoryReset of the Android device compliance policy. ||
-| **SecurityPreventInstallAppsFromUnknownSources** | Write | Boolean | SecurityPreventInstallAppsFromUnknownSources of the Android device compliance policy. ||
-| **SecurityDisableUsbDebugging** | Write | Boolean | SecurityDisableUsbDebugging of the Android device compliance policy. ||
-| **SecurityRequireVerifyApps** | Write | Boolean | SecurityRequireVerifyApps of the Android device compliance policy. ||
-| **DeviceThreatProtectionEnabled** | Write | Boolean | DeviceThreatProtectionEnabled of the Android device compliance policy. ||
-| **DeviceThreatProtectionRequiredSecurityLevel** | Write | String | DeviceThreatProtectionRequiredSecurityLevel of the Android device compliance policy. |unavailable, secured, low, medium, high, notSet|
-| **AdvancedThreatProtectionRequiredSecurityLevel** | Write | String | AdvancedThreatProtectionRequiredSecurityLevel of the Android device compliance policy. |unavailable, secured, low, medium, high, notSet|
-| **SecurityBlockJailbrokenDevices** | Write | Boolean | SecurityBlockJailbrokenDevices of the Android device compliance policy. ||
-| **SecurityBlockDeviceAdministratorManagedDevices** | Write | Boolean | SecurityBlockDeviceAdministratorManagedDevices of the Android device compliance policy. ||
-| **OsMinimumVersion** | Write | String | OsMinimumVersion of the Android device compliance policy. ||
-| **OsMaximumVersion** | Write | String | OsMaximumVersion of the Android device compliance policy. ||
-| **MinAndroidSecurityPatchLevel** | Write | String | MinAndroidSecurityPatchLevel of the Android device compliance policy. ||
-| **StorageRequireEncryption** | Write | Boolean | StorageRequireEncryption of the Android device compliance policy. ||
-| **SecurityRequireSafetyNetAttestationBasicIntegrity** | Write | Boolean | SecurityRequireSafetyNetAttestationBasicIntegrity of the Android device compliance policy. ||
-| **SecurityRequireSafetyNetAttestationCertifiedDevice** | Write | Boolean | SecurityRequireSafetyNetAttestationCertifiedDevice of the Android device compliance policy. ||
-| **SecurityRequireGooglePlayServices** | Write | Boolean | SecurityRequireGooglePlayServices of the Android device compliance policy. ||
-| **SecurityRequireUpToDateSecurityProviders** | Write | Boolean | SecurityRequireUpToDateSecurityProviders of the Android device compliance policy. ||
-| **SecurityRequireCompanyPortalAppIntegrity** | Write | Boolean | SecurityRequireCompanyPortalAppIntegrity of the Android device compliance policy. ||
-| **ConditionStatementId** | Write | String | ConditionStatementId of the Android device compliance policy. ||
-| **RestrictedApps** | Write | String | RestrictedApps of the Android device compliance policy. ||
-| **RoleScopeTagIds** | Write | String | RoleScopeTagIds of the Android device compliance policy. ||
-| **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. |Present, Absent|
-| **Credential** | Write | PSCredential | Credentials of the Intune Admin ||
-| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
-| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
-| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. ||
-| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
-| **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. ||
+| **DisplayName** | Key | String | Display name of the Android device compliance policy. | |
+| **Description** | Write | String | Description of the Android device compliance policy. | |
+| **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the Intune Policy. | |
+| **PasswordRequired** | Write | Boolean | PasswordRequired of the Android device compliance policy. | |
+| **PasswordMinimumLength** | Write | UInt32 | PasswordMinimumLength of the Android device compliance policy. | |
+| **PasswordRequiredType** | Write | String | PasswordRequiredType of the Android device compliance policy. | `deviceDefault`, `alphabetic`, `alphanumeric`, `alphanumericWithSymbols`, `lowSecurityBiometric`, `numeric`, `numericComplex`, `any` |
+| **RequiredPasswordComplexity** | Write | String | RequiredPasswordComplexity of the Android device compliance policy. | `none`, `low`, `medium`, `high` |
+| **PasswordMinutesOfInactivityBeforeLock** | Write | UInt32 | PasswordMinutesOfInactivityBeforeLock of the Android device compliance policy. | |
+| **PasswordExpirationDays** | Write | UInt32 | PasswordExpirationDays of the Android device compliance policy. | |
+| **PasswordPreviousPasswordBlockCount** | Write | UInt32 | PasswordPreviousPasswordBlockCount of the Android device compliance policy. | |
+| **PasswordSignInFailureCountBeforeFactoryReset** | Write | UInt32 | PasswordSignInFailureCountBeforeFactoryReset of the Android device compliance policy. | |
+| **SecurityPreventInstallAppsFromUnknownSources** | Write | Boolean | SecurityPreventInstallAppsFromUnknownSources of the Android device compliance policy. | |
+| **SecurityDisableUsbDebugging** | Write | Boolean | SecurityDisableUsbDebugging of the Android device compliance policy. | |
+| **SecurityRequireVerifyApps** | Write | Boolean | SecurityRequireVerifyApps of the Android device compliance policy. | |
+| **DeviceThreatProtectionEnabled** | Write | Boolean | DeviceThreatProtectionEnabled of the Android device compliance policy. | |
+| **DeviceThreatProtectionRequiredSecurityLevel** | Write | String | DeviceThreatProtectionRequiredSecurityLevel of the Android device compliance policy. | `unavailable`, `secured`, `low`, `medium`, `high`, `notSet` |
+| **AdvancedThreatProtectionRequiredSecurityLevel** | Write | String | AdvancedThreatProtectionRequiredSecurityLevel of the Android device compliance policy. | `unavailable`, `secured`, `low`, `medium`, `high`, `notSet` |
+| **SecurityBlockJailbrokenDevices** | Write | Boolean | SecurityBlockJailbrokenDevices of the Android device compliance policy. | |
+| **SecurityBlockDeviceAdministratorManagedDevices** | Write | Boolean | SecurityBlockDeviceAdministratorManagedDevices of the Android device compliance policy. | |
+| **OsMinimumVersion** | Write | String | OsMinimumVersion of the Android device compliance policy. | |
+| **OsMaximumVersion** | Write | String | OsMaximumVersion of the Android device compliance policy. | |
+| **MinAndroidSecurityPatchLevel** | Write | String | MinAndroidSecurityPatchLevel of the Android device compliance policy. | |
+| **StorageRequireEncryption** | Write | Boolean | StorageRequireEncryption of the Android device compliance policy. | |
+| **SecurityRequireSafetyNetAttestationBasicIntegrity** | Write | Boolean | SecurityRequireSafetyNetAttestationBasicIntegrity of the Android device compliance policy. | |
+| **SecurityRequireSafetyNetAttestationCertifiedDevice** | Write | Boolean | SecurityRequireSafetyNetAttestationCertifiedDevice of the Android device compliance policy. | |
+| **SecurityRequireGooglePlayServices** | Write | Boolean | SecurityRequireGooglePlayServices of the Android device compliance policy. | |
+| **SecurityRequireUpToDateSecurityProviders** | Write | Boolean | SecurityRequireUpToDateSecurityProviders of the Android device compliance policy. | |
+| **SecurityRequireCompanyPortalAppIntegrity** | Write | Boolean | SecurityRequireCompanyPortalAppIntegrity of the Android device compliance policy. | |
+| **ConditionStatementId** | Write | String | ConditionStatementId of the Android device compliance policy. | |
+| **RestrictedApps** | Write | String | RestrictedApps of the Android device compliance policy. | |
+| **RoleScopeTagIds** | Write | String | RoleScopeTagIds of the Android device compliance policy. | |
+| **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
+| **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
+| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
+| **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+
+### MSFT_DeviceManagementConfigurationPolicyAssignments
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
+| **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
+| **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
+| **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 # IntuneAndroidDeviceCompliancePolicy
-### Description
+## Description
 
 This resource configures the settings of Android device compliance policies
 in your cloud-based organization.
@@ -217,6 +224,32 @@ When set to Require, the following setting can be configured:
     * Number of previous passwords to prevent reuse
     Enter the number of recent passwords that can't be reused. Use this setting to restrict the user from creating previously used passwords.
 
+## Permissions
+
+### Microsoft Graph
+
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
+
+#### Delegated permissions
+
+- **Read**
+
+    - DeviceManagementConfiguration.Read.All
+
+- **Update**
+
+    - DeviceManagementConfiguration.ReadWrite.All
+
+#### Application permissions
+
+- **Read**
+
+    - DeviceManagementConfiguration.Read.All
+
+- **Update**
+
+    - DeviceManagementConfiguration.ReadWrite.All
+
 ## Examples
 
 ### Example 1
@@ -237,17 +270,17 @@ Configuration Example
     {
         IntuneDeviceCompliancePolicyAndroid 'AddDeviceCompliancePolicy'
         {
-            Description                                        = ""
+            DisplayName                                        = 'Test Policy'
+            Description                                        = ''
             DeviceThreatProtectionEnabled                      = $False
-            DeviceThreatProtectionRequiredSecurityLevel        = "unavailable"
-            DisplayName                                        = "Test Policy"
-            osMinimumVersion                                   = "7"
+            DeviceThreatProtectionRequiredSecurityLevel        = 'unavailable'
+            osMinimumVersion                                   = '7'
             PasswordExpirationDays                             = 90
             PasswordMinimumLength                              = 6
             PasswordMinutesOfInactivityBeforeLock              = 5
             PasswordPreviousPasswordBlockCount                 = 10
             PasswordRequired                                   = $True
-            PasswordRequiredType                               = "deviceDefault"
+            PasswordRequiredType                               = 'deviceDefault'
             SecurityBlockJailbrokenDevices                     = $False
             SecurityDisableUsbDebugging                        = $False
             SecurityPreventInstallAppsFromUnknownSources       = $False
@@ -258,7 +291,7 @@ Configuration Example
             SecurityRequireUpToDateSecurityProviders           = $False
             SecurityRequireVerifyApps                          = $False
             StorageRequireEncryption                           = $True
-            Ensure                                             = "Present"
+            Ensure                                             = 'Present'
             Credential                                         = $credsglobaladmin
         }
     }
@@ -283,8 +316,8 @@ Configuration Example
     {
         IntuneDeviceCompliancePolicyAndroid 'RemoveDeviceCompliancePolicyAndroid'
         {
-            DisplayName = "Test Android Device Compliance Policy"
-            Ensure      = "Absent"
+            DisplayName = 'Test Android Device Compliance Policy'
+            Ensure      = 'Absent'
             Credential  = $credsGlobalAdmin
         }
     }

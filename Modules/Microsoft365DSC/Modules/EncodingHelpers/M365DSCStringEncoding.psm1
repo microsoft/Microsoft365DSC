@@ -22,26 +22,29 @@ function Format-M365DSCString
     $InvalidCharacters = @(
         @{
             # Tilted Apostrophe
-            InvalidCharacter = "[\u2019]"
+            InvalidCharacter = '[\u2019]'
             MainReplaceBy    = "'"
             CimReplaceBy     = "''"
         },
         @{
             # Tilted Left Quotes
-            InvalidCharacter = "[\u201C]"
+            InvalidCharacter = '[\u201C]'
             MainReplaceBy    = "`""
             CimReplaceBy     = '"'
         },
         @{
             # Tilted Right Quotes
-            InvalidCharacter = "[\u201D]"
+            InvalidCharacter = '[\u201D]'
             MainReplaceBy    = "`""
             CimReplaceBy     = '"'
         }
     )
 
-    $DSCResource = Get-DscResource -Module 'Microsoft365DSC' `
-        -Name $ResourceName
+    # Cache the DSC resource to a script-scope variable.
+    # This avoids fetching the definition multiple times for the same resource, increasing overall speed.
+    if (-not ($DSCResource.Name -eq $ResourceName)) {
+        $Script:DSCResource = Get-DscResource -Module 'Microsoft365DSC' -Name $ResourceName
+    }
 
     # For each invalid character, look for an instance in the string,
     # if an instance is found,
