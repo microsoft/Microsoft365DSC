@@ -286,20 +286,6 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        [ValidateSet('Yes')]
-        $IsSingleInstance,
-
-        [Parameter()]
-        [System.String[]]
-        $GatewayIPAddresses,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
-
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
