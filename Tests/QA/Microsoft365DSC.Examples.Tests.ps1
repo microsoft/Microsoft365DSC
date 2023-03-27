@@ -16,6 +16,27 @@
         $exampleToTest += @{
             ExampleFile            = $exampleFile
             ExampleDescriptiveName = Join-Path -Path (Split-Path $exampleFile.Directory -Leaf) -ChildPath (Split-Path $exampleFile -Leaf)
+            ResourceName           = Split-Path $exampleFile.Directory -Leaf
+        }
+    }
+
+    $resourcesPath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\Modules\Microsoft365DSC\DscResources'
+
+    # If there are no Examples folder, exit.
+    if (-not (Test-Path -Path $resourcesPath))
+    {
+        return
+    }
+
+    $resourceFolders = Get-ChildItem -Path $resourcesPath -Directory
+
+    $allResources = @()
+
+    foreach ($resourceFolder in $resourceFolders)
+    {
+        $allResources += @{
+            ResourceFolder = $resourceFolder.FullName
+            ResourceName   = $resourceFolder.BaseName -replace '^MSFT_', ''
         }
     }
 }
@@ -171,5 +192,35 @@ Describe -Name 'Successfully compile examples' {
                 Remove-Item -Path 'variable:ConfigurationData' -ErrorAction 'SilentlyContinue'
             }
         } | Should -Not -Throw
+    }
+}
+
+Describe -Name 'Check examples for all resources' {
+    BeforeAll {
+        $examplesPath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\Modules\Microsoft365DSC\Examples'
+
+        # If there are no Examples folder, exit.
+        if (-not (Test-Path -Path $examplesPath))
+        {
+            return
+        }
+
+        $exampleFiles = @(Get-ChildItem -Path $examplesPath -Filter '*.ps1' -Recurse)
+
+        $exampleToTest = @()
+
+        foreach ($exampleFile in $exampleFiles)
+        {
+            $exampleToTest += @{
+                ExampleFile            = $exampleFile
+                ExampleDescriptiveName = Join-Path -Path (Split-Path $exampleFile.Directory -Leaf) -ChildPath (Split-Path $exampleFile -Leaf)
+                ResourceName           = Split-Path $exampleFile.Directory -Leaf
+            }
+        }
+    }
+
+    It "An example for '<ResourceName>' should exist" -TestCases $allResources {
+        [Array]$res = $exampleToTest | Where-Object -FilterScript { $_.ResourceName -eq $ResourceName }
+        $res.Count | Should -BeGreaterOrEqual 1
     }
 }

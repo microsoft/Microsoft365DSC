@@ -48,6 +48,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'Configuration needs updating' -Fixture {
             BeforeAll {
                 $testParams = @{
+                    IsSingleInstance                           = 'Yes'
                     AutomaticServiceUpdateEnabled              = $True
                     AzureRMSLicensingEnabled                   = $True
                     Credential                                 = $Credential
@@ -55,7 +56,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EDiscoverySuperUserEnabled                 = $True
                     EnablePdfEncryption                        = $False
                     Ensure                                     = 'Present'
-                    Identity                                   = 'Test Config'
                     InternalLicensingEnabled                   = $True
                     JournalReportDecryptionEnabled             = $True
                     LicensingLocation                          = @('https://contoso.com/_wmcs/licensing')
@@ -67,7 +67,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     TransportDecryptionSetting                 = 'Optional'
                 }
 
-                Mock -CommandName Get-IRMConfiguration  -MockWith {
+                Mock -CommandName Get-IRMConfiguration -MockWith {
                     return @{
                         AutomaticServiceUpdateEnabled              = $True
                         AzureRMSLicensingEnabled                   = $True
@@ -101,6 +101,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'Update not required.' -Fixture {
             BeforeAll {
                 $testParams = @{
+                    IsSingleInstance                           = 'Yes'
                     AutomaticServiceUpdateEnabled              = $True
                     AzureRMSLicensingEnabled                   = $True
                     Credential                                 = $Credential
@@ -108,7 +109,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EDiscoverySuperUserEnabled                 = $True
                     EnablePdfEncryption                        = $False
                     Ensure                                     = 'Present'
-                    Identity                                   = 'Test Config'
                     InternalLicensingEnabled                   = $True
                     JournalReportDecryptionEnabled             = $True
                     LicensingLocation                          = @('https://contoso.com/_wmcs/licensing')
@@ -120,7 +120,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     TransportDecryptionSetting                 = 'Optional'
                 }
 
-                Mock -CommandName Get-IRMConfiguration  -MockWith {
+                Mock -CommandName Get-IRMConfiguration -MockWith {
                     return @{
                         AutomaticServiceUpdateEnabled              = $True
                         AzureRMSLicensingEnabled                   = $True
@@ -154,7 +154,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-IRMConfiguration  -MockWith {
+                Mock -CommandName Get-IRMConfiguration -MockWith {
                     return @{
                         AutomaticServiceUpdateEnabled              = $True
                         AzureRMSLicensingEnabled                   = $True

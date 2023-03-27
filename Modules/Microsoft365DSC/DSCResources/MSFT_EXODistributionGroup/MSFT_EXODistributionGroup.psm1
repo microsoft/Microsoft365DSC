@@ -153,7 +153,7 @@ function Get-TargetResource
 
     try
     {
-        $distributionGroup = Get-DistributionGroup -Filter "Name -eq '$Name'" -ErrorAction Stop
+        $distributionGroup = Get-DistributionGroup -Filter "Name -eq ""$Name""" -ErrorAction Stop
 
         if ($null -eq $distributionGroup)
         {

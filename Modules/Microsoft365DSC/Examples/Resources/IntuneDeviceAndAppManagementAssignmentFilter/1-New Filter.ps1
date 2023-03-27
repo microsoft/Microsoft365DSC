@@ -15,12 +15,12 @@ Configuration Example
     {
         IntuneDeviceAndAppManagementAssignmentFilter 'AssignmentFilter'
         {
-            Credential           = $intuneAdmin;
-            Description          = "This is a new Filter";
-            DisplayName          = "Test Device Filter";
-            Ensure               = "Present";
-            Platform             = "windows10AndLater";
-            Rule                 = "(device.manufacturer -ne `"Microsoft Corporation`")";
+            DisplayName = 'Test Device Filter'
+            Description = 'This is a new Filter'
+            Platform    = 'windows10AndLater'
+            Rule        = "(device.manufacturer -ne `"Microsoft Corporation`")"
+            Ensure      = 'Present'
+            Credential  = $intuneAdmin
         }
     }
 }

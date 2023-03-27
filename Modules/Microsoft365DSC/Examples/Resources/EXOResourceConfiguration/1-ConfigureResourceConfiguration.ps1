@@ -18,7 +18,7 @@ Configuration Example
     {
         EXOResourceConfiguration 'ConfigureResourceConfiguration'
         {
-            Identity               = 'Global'
+            IsSingleInstance       = 'Yes'
             ResourcePropertySchema = @('Room/TV', 'Equipment/Laptop')
             Ensure                 = 'Present'
             Credential             = $credsGlobalAdmin

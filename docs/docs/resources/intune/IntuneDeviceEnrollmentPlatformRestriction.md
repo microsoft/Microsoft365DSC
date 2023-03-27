@@ -85,12 +85,12 @@ Configuration Example
     {
         IntuneDeviceEnrollmentPlatformRestriction 'DeviceEnrollmentPlatformRestriction'
         {
+            DisplayName                                  = 'My DSC Restriction'
             AndroidPersonalDeviceEnrollmentBlocked       = $False
             AndroidPlatformBlocked                       = $False
-            Description                                  = ""
-            DisplayName                                  = "My DSC Restriction"
-            iOSOSMaximumVersion                          = "11.0"
-            iOSOSMinimumVersion                          = "9.0"
+            Description                                  = ''
+            iOSOSMaximumVersion                          = '11.0'
+            iOSOSMinimumVersion                          = '9.0'
             iOSPersonalDeviceEnrollmentBlocked           = $False
             iOSPlatformBlocked                           = $False
             MacPersonalDeviceEnrollmentBlocked           = $False
@@ -99,7 +99,7 @@ Configuration Example
             WindowsMobilePlatformBlocked                 = $True
             WindowsPersonalDeviceEnrollmentBlocked       = $True
             WindowsPlatformBlocked                       = $False
-            Ensure                                       = "Present"
+            Ensure                                       = 'Present'
             Credential                                   = $credsGlobalAdmin
         }
     }
