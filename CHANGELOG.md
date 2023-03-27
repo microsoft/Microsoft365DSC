@@ -1,8 +1,11 @@
 # Change log for Microsoft365DSC
 
 
-# UNRELEASED
+# 1.23.405.1
 
+* AADGroup
+  * Changed the SecurityEnabled and MailEnabled parameters to become mandatory.
+    FIXES [#3072](https://github.com/microsoft/Microsoft365DSC/issues/3072)
 * EXOIRMConfiguration
   * [BREAKING CHANGE] Renamed unused Identity parameter to IsSingleInstance
     FIXES [#2969](https://github.com/microsoft/Microsoft365DSC/issues/2969)
