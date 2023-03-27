@@ -1,5 +1,6 @@
 # Change log for Microsoft365DSC
 
+
 # UNRELEASED
 
 * EXOIRMConfiguration
@@ -8,9 +9,37 @@
 * EXOResourceConfiguration
   * [BREAKING CHANGE] Renamed unused Identity parameter to IsSingleInstance
     FIXES [#2969](https://github.com/microsoft/Microsoft365DSC/issues/2969)
+* IntuneWindowsAutopilotDeploymentProfileAzureADJoined
+  * Initial release
+    FIXES [#2605](https://github.com/microsoft/Microsoft365DSC/issues/2605)
+* IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined
+  * Initial release
+    FIXES [#2605](https://github.com/microsoft/Microsoft365DSC/issues/2605)
+* DRG
+  * Various fixes
+    * Cleanup generated code
+    * Fix AdditionalProperties complex constructor
+    * Fix Read privileges in settings file
+
+# 1.23.322.1
+
+* AADRoleSetting
+  * Added CertificateThumbPrint and ApplicationId to the output of the Get method
+* EXODistributionGroup
+  * Fixed an error where the name wasn't properly escaped in the Filter
+  FIXES [#3044](https://github.com/microsoft/Microsoft365DSC/issues/3044)
 * EXORoleAssignmentPolicy
   * Fix issue with IsDefault parameter
     FIXES [#2977](https://github.com/microsoft/Microsoft365DSC/issues/2977)
+* IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10
+  * Initial Release
+    FIXES [#2832](https://github.com/microsoft/Microsoft365DSC/issues/2832)
+* IntuneDeviceConfigurationEndpointProtectionPolicyWindows10
+  * Initial release
+    FIXES [#2834](https://github.com/microsoft/Microsoft365DSC/issues/2834)
+* IntuneDeviceConfigurationIdentityProtectionPolicyWindows10
+  * Initial release
+    FIXES [#2831](https://github.com/microsoft/Microsoft365DSC/issues/2831)
 * SCDLPCompliancePolicy
   * Added support or Endpoint, On-Premises, PowerBI and ThirdPartyApps locations and exceptions.
     FIXES [#3023](https://github.com/microsoft/Microsoft365DSC/issues/3023)
@@ -22,15 +51,22 @@
     FIXES [#3035](https://github.com/microsoft/Microsoft365DSC/issues/3035)
   * Deprecated all FontName properties, since these are no longer configurable.
     FIXES [#3035](https://github.com/microsoft/Microsoft365DSC/issues/3035)
+  * Fixed the collection of new and set parameters to ensure the correct values are passed to the New/Set cmdlets.
+    FIXES [#3050](https://github.com/microsoft/Microsoft365DSC/issues/3050)
 * MISC
   * Added QA test that checks for existence of an example for each resource.
+  * Amended output for Convert-M365DscHashtableToString to show each value on a new line
+    Fixes[#2980](https://github.com/microsoft/Microsoft365DSC/issues/2980)
 * DRG
   * Various fixes:
-    Remove invalid character from description in schema.mof
-    Add Id as key in schema.mof
-    Fix issue with nested CIM array from test unit
-    Remove Select-MgProfile from module
-    Fix issue with AdditionalProperties for nested objects from module
+    * Remove invalid character from description in schema.mof
+    * Add Id as key in schema.mof
+    * Add DisplayName as Required in schema.mof
+    * Fix issue with nested CIM array from test unit
+    * Remove Select-MgProfile from module
+    * Add DisplayName as Mandatory in module
+    * Fix issue with AdditionalProperties for nested objects from module
+    * Fix Ensure default value
 
 # 1.23.315.2
 
