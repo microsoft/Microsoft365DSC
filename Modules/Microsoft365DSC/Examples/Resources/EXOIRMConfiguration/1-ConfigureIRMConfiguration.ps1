@@ -17,7 +17,7 @@ Configuration Example
     {
         EXOIRMConfiguration 'ConfigureIRMConfiguration'
         {
-            Identity                                   = "Global"
+            IsSingleInstance                           = 'Yes'
             AutomaticServiceUpdateEnabled              = $True
             AzureRMSLicensingEnabled                   = $True
             DecryptAttachmentForEncryptOnly            = $True
@@ -30,8 +30,8 @@ Configuration Example
             SimplifiedClientAccessDoNotForwardDisabled = $True
             SimplifiedClientAccessEnabled              = $True
             SimplifiedClientAccessEncryptOnlyDisabled  = $True
-            TransportDecryptionSetting                 = "Mandatory"
-            Ensure                                     = "Present"
+            TransportDecryptionSetting                 = 'Mandatory'
+            Ensure                                     = 'Present'
             Credential                                 = $credsGlobalAdmin
         }
     }

@@ -5,7 +5,59 @@ function Get-TargetResource
     param
     (
         #region resource generator code
-<ParameterBlock><AssignmentsParam>        #endregion
+        [Parameter()]
+        [System.Boolean]
+        $HybridAzureADJoinSkipConnectivityCheck,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DeviceNameTemplate,
+
+        [Parameter()]
+        [ValidateSet('windowsPc','surfaceHub2','holoLens','surfaceHub2S','virtualMachine','unknownFutureValue')]
+        [System.String]
+        $DeviceType,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableWhiteGlove,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $EnrollmentStatusScreenSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExtractHardwareHash,
+
+        [Parameter()]
+        [System.String]
+        $Language,
+
+        [Parameter()]
+        [System.String]
+        $ManagementServiceAppId,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $OutOfBoxExperienceSettings,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+        #endregion
 
         [Parameter()]
         [System.String]
@@ -39,9 +91,9 @@ function Get-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload '<#Workload#>' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
-            -ProfileName '<#APIVersion#>'
+            -ProfileName 'beta'
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
@@ -58,34 +110,109 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
         $nullResult.Ensure = 'Absent'
 
-        $getValue = $null<#ResourceGenerator
+        $getValue = $null
         #region resource generator code
-        $getValue = <GetCmdLetName> <getKeyIdentifier> -ErrorAction SilentlyContinue
+        $getValue = Get-MgDeviceManagementWindowAutopilotDeploymentProfile -WindowsAutopilotDeploymentProfileId $Id  -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>}"
+            Write-Verbose -Message "Could not find an Intune Windows Autopilot Deployment Profile Azure AD Hybrid Joined with Id {$Id}"
 
-            if (-Not [string]::IsNullOrEmpty($<FilterKey>))
+            if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = <GetCmdLetName> `
-<AlternativeFilter>
+                $getValue = Get-MgDeviceManagementWindowAutopilotDeploymentProfile `
+                    -Filter "DisplayName eq '$DisplayName'" `
+                    -ErrorAction SilentlyContinue
             }
         }
-        #endregionResourceGenerator#>
+        #endregion
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an <ResourceDescription> with <FilterKey> {$<FilterKey>}"
+            Write-Verbose -Message "Could not find an Intune Windows Autopilot Deployment Profile Azure AD Hybrid Joined with DisplayName {$DisplayName}"
             return $nullResult
         }
-        $<PrimaryKey> = $getValue.<PrimaryKey>
-        Write-Verbose -Message "An <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>} was found."<#ResourceGenerator
-<ComplexTypeConstructor><EnumTypeConstructor><DateTypeConstructor><TimeTypeConstructor>ResourceGenerator#>
-        $results = @{<#ResourceGenerator
-            #region resource generator code
-<HashTableMapping>            #endregionResourceGenerator#>
+        $Id = $getValue.Id
+        Write-Verbose -Message "An Intune Windows Autopilot Deployment Profile Azure AD Hybrid Joined with Id {$Id} and DisplayName {$DisplayName} was found."
+
+        #region resource generator code
+        $complexEnrollmentStatusScreenSettings = @{}
+        $complexEnrollmentStatusScreenSettings.Add('AllowDeviceUseBeforeProfileAndAppInstallComplete', $getValue.EnrollmentStatusScreenSettings.allowDeviceUseBeforeProfileAndAppInstallComplete)
+        $complexEnrollmentStatusScreenSettings.Add('AllowDeviceUseOnInstallFailure', $getValue.EnrollmentStatusScreenSettings.allowDeviceUseOnInstallFailure)
+        $complexEnrollmentStatusScreenSettings.Add('AllowLogCollectionOnInstallFailure', $getValue.EnrollmentStatusScreenSettings.allowLogCollectionOnInstallFailure)
+        $complexEnrollmentStatusScreenSettings.Add('BlockDeviceSetupRetryByUser', $getValue.EnrollmentStatusScreenSettings.blockDeviceSetupRetryByUser)
+        $complexEnrollmentStatusScreenSettings.Add('CustomErrorMessage', $getValue.EnrollmentStatusScreenSettings.customErrorMessage)
+        $complexEnrollmentStatusScreenSettings.Add('HideInstallationProgress', $getValue.EnrollmentStatusScreenSettings.hideInstallationProgress)
+        $complexEnrollmentStatusScreenSettings.Add('InstallProgressTimeoutInMinutes', $getValue.EnrollmentStatusScreenSettings.installProgressTimeoutInMinutes)
+        if ($complexEnrollmentStatusScreenSettings.values.Where({$null -ne $_}).count -eq 0)
+        {
+            $complexEnrollmentStatusScreenSettings = $null
         }
-<#ComplexTypeContent#><#AssignmentsGet#>
+
+        $complexOutOfBoxExperienceSettings = @{}
+        if ($null -ne $getValue.OutOfBoxExperienceSettings.deviceUsageType)
+        {
+            $complexOutOfBoxExperienceSettings.Add('DeviceUsageType', $getValue.OutOfBoxExperienceSettings.deviceUsageType.toString())
+        }
+        $complexOutOfBoxExperienceSettings.Add('HideEscapeLink', $getValue.OutOfBoxExperienceSettings.hideEscapeLink)
+        $complexOutOfBoxExperienceSettings.Add('HideEULA', $getValue.OutOfBoxExperienceSettings.hideEULA)
+        $complexOutOfBoxExperienceSettings.Add('HidePrivacySettings', $getValue.OutOfBoxExperienceSettings.hidePrivacySettings)
+        $complexOutOfBoxExperienceSettings.Add('SkipKeyboardSelectionPage', $getValue.OutOfBoxExperienceSettings.skipKeyboardSelectionPage)
+        if ($null -ne $getValue.OutOfBoxExperienceSettings.userType)
+        {
+            $complexOutOfBoxExperienceSettings.Add('UserType', $getValue.OutOfBoxExperienceSettings.userType.toString())
+        }
+        if ($complexOutOfBoxExperienceSettings.values.Where({$null -ne $_}).count -eq 0)
+        {
+            $complexOutOfBoxExperienceSettings = $null
+        }
+        #endregion
+
+        #region resource generator code
+        $enumDeviceType = $null
+        if ($null -ne $getValue.DeviceType)
+        {
+            $enumDeviceType = $getValue.DeviceType.ToString()
+        }
+        #endregion
+
+        $results = @{
+            #region resource generator code
+            HybridAzureADJoinSkipConnectivityCheck = $getValue.AdditionalProperties.hybridAzureADJoinSkipConnectivityCheck
+            Description                            = $getValue.Description
+            DeviceNameTemplate                     = $getValue.DeviceNameTemplate
+            DeviceType                             = $enumDeviceType
+            DisplayName                            = $getValue.DisplayName
+            EnableWhiteGlove                       = $getValue.EnableWhiteGlove
+            EnrollmentStatusScreenSettings         = $complexEnrollmentStatusScreenSettings
+            ExtractHardwareHash                    = $getValue.ExtractHardwareHash
+            Language                               = $getValue.Language
+            ManagementServiceAppId                 = $getValue.ManagementServiceAppId
+            OutOfBoxExperienceSettings             = $complexOutOfBoxExperienceSettings
+            Id                                     = $getValue.Id
+            Ensure                                 = 'Present'
+            Credential                             = $Credential
+            ApplicationId                          = $ApplicationId
+            TenantId                               = $TenantId
+            ApplicationSecret                      = $ApplicationSecret
+            CertificateThumbprint                  = $CertificateThumbprint
+            Managedidentity                        = $ManagedIdentity.IsPresent
+            #endregion
+        }
+        $assignmentsValues = Get-MgDeviceManagementWindowAutopilotDeploymentProfileAssignment -WindowsAutopilotDeploymentProfileId $Id
+        $assignmentResult = @()
+        foreach ($assignmentEntry in $AssignmentsValues)
+        {
+            $assignmentValue = @{
+                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
+                    {$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()})
+                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
+                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
+            }
+            $assignmentResult += $assignmentValue
+        }
+        $results.Add('Assignments', $assignmentResult)
+
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -106,7 +233,59 @@ function Set-TargetResource
     param
     (
         #region resource generator code
-<ParameterBlock><AssignmentsParam>        #endregion
+        [Parameter()]
+        [System.Boolean]
+        $HybridAzureADJoinSkipConnectivityCheck,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DeviceNameTemplate,
+
+        [Parameter()]
+        [ValidateSet('windowsPc','surfaceHub2','holoLens','surfaceHub2S','virtualMachine','unknownFutureValue')]
+        [System.String]
+        $DeviceType,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableWhiteGlove,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $EnrollmentStatusScreenSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExtractHardwareHash,
+
+        [Parameter()]
+        [System.String]
+        $Language,
+
+        [Parameter()]
+        [System.String]
+        $ManagementServiceAppId,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $OutOfBoxExperienceSettings,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+        #endregion
         [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -162,8 +341,9 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating an <ResourceDescription> with <FilterKey> {$DisplayName}"
-<#AssignmentsRemove#>
+        Write-Verbose -Message "Creating an Intune Windows Autopilot Deployment Profile Azure AD Hybrid Joined with DisplayName {$DisplayName}"
+        $PSBoundParameters.Remove("Assignments") | Out-Null
+
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
         $CreateParameters.Remove('Id') | Out-Null
@@ -175,15 +355,29 @@ function Set-TargetResource
             {
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
-        }<#ResourceGenerator
+        }
         #region resource generator code
-<NewDataType>        $policy = <NewCmdLetName> <#NewKeyIdentifier#>
-<#AssignmentsNew#>        #endregionResourceGenerator#>
+        $CreateParameters.Add("@odata.type", "#microsoft.graph.activeDirectoryWindowsAutopilotDeploymentProfile")
+        $policy = New-MgDeviceManagementWindowAutopilotDeploymentProfile -BodyParameter $CreateParameters
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
+        {
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+        }
+
+        if ($policy.id)
+        {
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+                -Targets $assignmentsHash `
+                -Repository 'deviceManagement/windowsAutopilotDeploymentProfiles'
+        }
+        #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}"
-<#AssignmentsRemove#>
+        Write-Verbose -Message "Updating the Intune Windows Autopilot Deployment Profile Azure AD Hybrid Joined with Id {$($currentInstance.Id)}"
+        $PSBoundParameters.Remove("Assignments") | Out-Null
+
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
@@ -196,17 +390,29 @@ function Set-TargetResource
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
-        }<#ResourceGenerator
+        }
         #region resource generator code
-<UpdateDataType>        <UpdateCmdLetName> <#UpdateKeyIdentifier#>
-<#AssignmentsUpdate#>        #endregionResourceGenerator#>
+        $UpdateParameters.Add("@odata.type", "#microsoft.graph.activeDirectoryWindowsAutopilotDeploymentProfile")
+        Update-MgDeviceManagementWindowAutopilotDeploymentProfile  `
+            -WindowsAutopilotDeploymentProfileId $currentInstance.Id `
+            -BodyParameter $UpdateParameters
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
+        {
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+        }
+        Update-DeviceConfigurationPolicyAssignment `
+            -DeviceConfigurationPolicyId $currentInstance.id `
+            -Targets $assignmentsHash `
+            -Repository 'deviceManagement/windowsAutopilotDeploymentProfiles'
+        #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}" <#ResourceGenerator
+        Write-Verbose -Message "Removing the Intune Windows Autopilot Deployment Profile Azure AD Hybrid Joined with Id {$($currentInstance.Id)}" 
         #region resource generator code
-        <RemoveCmdLetName> <#removeKeyIdentifier#>
-        #endregionResourceGenerator#>
+        Remove-MgDeviceManagementWindowAutopilotDeploymentProfile -WindowsAutopilotDeploymentProfileId $currentInstance.Id
+        #endregion
     }
 }
 
@@ -217,7 +423,59 @@ function Test-TargetResource
     param
     (
         #region resource generator code
-<ParameterBlock><AssignmentsParam>        #endregion
+        [Parameter()]
+        [System.Boolean]
+        $HybridAzureADJoinSkipConnectivityCheck,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DeviceNameTemplate,
+
+        [Parameter()]
+        [ValidateSet('windowsPc','surfaceHub2','holoLens','surfaceHub2S','virtualMachine','unknownFutureValue')]
+        [System.String]
+        $DeviceType,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableWhiteGlove,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $EnrollmentStatusScreenSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExtractHardwareHash,
+
+        [Parameter()]
+        [System.String]
+        $Language,
+
+        [Parameter()]
+        [System.String]
+        $ManagementServiceAppId,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $OutOfBoxExperienceSettings,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+        #endregion
 
         [Parameter()]
         [System.String]
@@ -261,7 +519,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>}"
+    Write-Verbose -Message "Testing configuration of the Intune Windows Autopilot Deployment Profile Azure AD Hybrid Joined with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
@@ -348,9 +606,9 @@ function Export-TargetResource
         $ManagedIdentity
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload '<#Workload#>' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName '<#APIVersion#>'
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -365,9 +623,15 @@ function Export-TargetResource
     #endregion
 
     try
-    {<#ResourceGenerator
+    {
         #region resource generator code
-<exportGetCommand>        #endregionResourceGenerator#>
+        [array]$getValue = Get-MgDeviceManagementWindowAutopilotDeploymentProfile `
+            -All `
+            -ErrorAction Stop | Where-Object `
+            -FilterScript { `
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.activeDirectoryWindowsAutopilotDeploymentProfile' `
+            }
+        #endregion
 
         $i = 1
         $dscContent = ''
@@ -381,14 +645,15 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
-            $displayedKey = $config.<PrimaryKey>
+            $displayedKey = $config.Id
             if (-not [String]::IsNullOrEmpty($config.displayName))
             {
                 $displayedKey = $config.displayName
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                <PrimaryKey>                    = $config.<PrimaryKey><RequiredKey>
+                Id                    = $config.Id
+                DisplayName           =  $config.DisplayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -401,13 +666,66 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-<#ConvertComplexToString#><#AssignmentsConvertComplexToString#>
+            if ($null -ne $Results.EnrollmentStatusScreenSettings)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.EnrollmentStatusScreenSettings `
+                    -CIMInstanceName 'MicrosoftGraphwindowsEnrollmentStatusScreenSettings'
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.EnrollmentStatusScreenSettings = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('EnrollmentStatusScreenSettings') | Out-Null
+                }
+            }
+            if ($null -ne $Results.OutOfBoxExperienceSettings)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.OutOfBoxExperienceSettings `
+                    -CIMInstanceName 'MicrosoftGraphoutOfBoxExperienceSettings'
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.OutOfBoxExperienceSettings = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('OutOfBoxExperienceSettings') | Out-Null
+                }
+            }
+            if ($Results.Assignments)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
+                if ($complexTypeStringResult)
+                {
+                    $Results.Assignments = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Assignments') | Out-Null
+                }
+            }
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-<#ConvertComplexToVariable#><#AssignmentsConvertComplexToVariable#><#TrailingCharRemoval#>
+            if ($Results.EnrollmentStatusScreenSettings)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "EnrollmentStatusScreenSettings" -isCIMArray:$False
+            }
+            if ($Results.OutOfBoxExperienceSettings)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "OutOfBoxExperienceSettings" -isCIMArray:$False
+            }
+            if ($Results.Assignments)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$true
+            }
+            #removing trailing commas and semi colons between items of an array of cim instances added by Convert-DSCStringParamToVariable
+            $currentDSCBlock = $currentDSCBlock.replace("    ,`r`n" , "    `r`n" )
+            $currentDSCBlock = $currentDSCBlock.replace("`r`n;`r`n" , "`r`n" )
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -430,7 +748,71 @@ function Export-TargetResource
     }
 }
 
-<#AssignmentsFunctions#>function Rename-M365DSCCimInstanceParameter
+function Update-DeviceConfigurationPolicyAssignment
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceConfigurationPolicyId,
+
+        [Parameter()]
+        [Array]
+        $Targets,
+
+        [Parameter()]
+        [System.String]
+        $Repository = 'deviceManagement/configurationPolicies',
+
+        [Parameter()]
+        [ValidateSet('v1.0','beta')]
+        [System.String]
+        $APIVersion = 'beta'
+    )
+    try
+    {
+        $deviceManagementPolicyAssignments = @()
+        $Uri = "https://graph.microsoft.com/$APIVersion/$Repository/$DeviceConfigurationPolicyId/assign"
+
+        foreach ($target in $targets)
+        {
+            $formattedTarget = @{"@odata.type" = $target.dataType}
+            if ($target.groupId)
+            {
+                $formattedTarget.Add('groupId',$target.groupId)
+            }
+            if ($target.collectionId)
+            {
+                $formattedTarget.Add('collectionId',$target.collectionId)
+            }
+            if ($target.deviceAndAppManagementAssignmentFilterType)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',$target.deviceAndAppManagementAssignmentFilterType)
+            }
+            if ($target.deviceAndAppManagementAssignmentFilterId)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',$target.deviceAndAppManagementAssignmentFilterId)
+            }
+            $deviceManagementPolicyAssignments += @{'target' = $formattedTarget}
+        }
+        $body = @{'assignments' = $deviceManagementPolicyAssignments} | ConvertTo-Json -Depth 20
+        #write-verbose -Message $body
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $null
+    }
+}
+
+function Rename-M365DSCCimInstanceParameter
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable],[System.Collections.Hashtable[]])]
