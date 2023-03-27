@@ -10,18 +10,20 @@
     FIXES [#2605](https://github.com/microsoft/Microsoft365DSC/issues/2605)
 * DRG
   * Various fixes
-    Cleanup generated code
-    Fix AdditionalProperties complex constructor
-    Fix Read privileges in settings file
+    * Cleanup generated code
+    * Fix AdditionalProperties complex constructor
+    * Fix Read privileges in settings file
 
 # 1.23.322.1
 
+* AADRoleSetting
+  * Added CertificateThumbPrint and ApplicationId to the output of the Get method
+* EXODistributionGroup
+  * Fixed an error where the name wasn't properly escaped in the Filter
+  FIXES [#3044](https://github.com/microsoft/Microsoft365DSC/issues/3044)
 * EXORoleAssignmentPolicy
   * Fix issue with IsDefault parameter
     FIXES [#2977](https://github.com/microsoft/Microsoft365DSC/issues/2977)
-* IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10
-  * Initial Release
-    FIXES [#2832](https://github.com/microsoft/Microsoft365DSC/issues/2832)
 * IntuneDeviceConfigurationEndpointProtectionPolicyWindows10
   * Initial release
     FIXES [#2834](https://github.com/microsoft/Microsoft365DSC/issues/2834)
@@ -50,14 +52,14 @@
     Fixes[#2980](https://github.com/microsoft/Microsoft365DSC/issues/2980)
 * DRG
   * Various fixes:
-    Remove invalid character from description in schema.mof
-    Add Id as key in schema.mof
-    Add DisplayName as Required in schema.mof
-    Fix issue with nested CIM array from test unit
-    Remove Select-MgProfile from module
-    Add DisplayName as Mandatory in module
-    Fix issue with AdditionalProperties for nested objects from module
-    Fix Ensure default value
+    * Remove invalid character from description in schema.mof
+    * Add Id as key in schema.mof
+    * Add DisplayName as Required in schema.mof
+    * Fix issue with nested CIM array from test unit
+    * Remove Select-MgProfile from module
+    * Add DisplayName as Mandatory in module
+    * Fix issue with AdditionalProperties for nested objects from module
+    * Fix Ensure default value
 
 # 1.23.315.2
 
