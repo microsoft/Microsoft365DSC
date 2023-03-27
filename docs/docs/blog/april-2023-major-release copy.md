@@ -85,3 +85,5 @@ We are removing parameters that have been deprecated from various resources as p
 
 ## TeamsGroupPolicyAssignment ([#3057](https://github.com/microsoft/Microsoft365DSC/pull/3057))
 
+## AADGroup - Added SecurityEnabled and MailEnabled as Mandatory Parameters ([#3077](https://github.com/microsoft/Microsoft365DSC/pull/3077))
+We've updated the AADGroup resource to enforce the MailEnabled and SecurityEnabled parameters as mandatory. Omitting these parameters was throwing error since they were required by the Microsoft Graph API associated with it. To update existing configurations, simply make sure that every instances of the AADGroup resource includes both the MailEnabled and SecurityEnabled parameters.
