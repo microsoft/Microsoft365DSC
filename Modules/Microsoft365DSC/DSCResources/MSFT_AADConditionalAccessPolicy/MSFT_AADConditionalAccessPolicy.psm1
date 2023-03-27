@@ -6,11 +6,11 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -639,11 +639,11 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -1490,11 +1490,11 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]

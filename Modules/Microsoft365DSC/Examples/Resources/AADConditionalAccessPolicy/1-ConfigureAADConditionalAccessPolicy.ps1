@@ -5,7 +5,8 @@ It is not meant to use as a production baseline.
 
 Configuration Example
 {
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [PSCredential]
         $credsGlobalAdmin
@@ -16,6 +17,8 @@ Configuration Example
     {
         AADConditionalAccessPolicy 'Allin-example'
         {
+            Id                                   = '4b0bb08f-85ab-4a12-a12c-06114b6ac6df'
+            DisplayName                          = 'Allin-example'
             BuiltInControls                      = @('Mfa', 'CompliantDevice', 'DomainJoinedDevice', 'ApprovedApplication', 'CompliantApplication')
             ClientAppTypes                       = @('ExchangeActiveSync', 'Browser', 'MobileAppsAndDesktopClients', 'Other')
             CloudAppSecurityIsEnabled            = $True
@@ -43,7 +46,7 @@ Configuration Example
             IncludeGuestOrExternalUserTypes      = @('b2bCollaborationGuest')
             PersistentBrowserIsEnabled           = $false
             PersistentBrowserMode                = ''
-            SignInFrequencyIsEnabled             = $True
+            SignInFrequencyIsEnabled             = $true
             SignInFrequencyType                  = 'Hours'
             SignInFrequencyValue                 = 5
             SignInRiskLevels                     = @('High', 'Medium')

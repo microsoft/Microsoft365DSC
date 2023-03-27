@@ -4,9 +4,9 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Write | String | Id of the Intune policy | |
+| **Id** | Key | String | Id of the Intune policy | |
+| **DisplayName** | Required | String | Disaply name of the Intune policy | |
 | **Description** | Write | String | Description of the Intune policy | |
-| **DisplayName** | Write | String | Disaply name of the Intune policy | |
 | **ConnectAutomatically** | Write | Boolean | If the network is in range, automatically connect. | |
 | **ConnectWhenNetworkNameIsHidden** | Write | Boolean | Don't show this Wi-Fi network on an end-user's device in the list of available networks. The SSID will not be broadcasted. | |
 | **NetworkName** | Write | String | Network name. | |
