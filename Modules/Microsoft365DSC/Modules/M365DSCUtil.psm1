@@ -2593,7 +2593,7 @@ function Test-M365DSCDependenciesForNewVersions
     foreach ($dependency in $dependencies)
     {
         
-        -Activity 'Scanning Dependencies' -PercentComplete ($i / $dependencies.Count * 100)
+        Write-Progress -Activity 'Scanning Dependencies' -PercentComplete ($i / $dependencies.Count * 100)
         try
         {
             $moduleInGallery = Find-Module $dependency.ModuleName
