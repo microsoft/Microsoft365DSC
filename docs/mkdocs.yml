@@ -5,7 +5,7 @@ nav:
       - 'Introduction': 'index.md'
       - 'What is Microsoft365DSC?': 'home/what-is-M365DSC.md'
   - Blog:
-      - 'October 2022 - Major Release': 'blog/october-2022-major-release.md'
+      - 'Blog Posts': 'blog/index.md'
   - User Guide:
       - 'Get Started':
           - 'Introduction': 'user-guide/get-started/introduction.md'

@@ -1,5 +1,5 @@
 [ClassVersion("1.0.0")]
-class MSFT_MicrosoftGraphIdentity
+class MSFT_MicrosoftGraphMember
 {
     [Write, Description("Identity of member. For users, specify a UserPrincipalName. For groups and devices, specify DisplayName")] String Identity;
     [Write, Description("Specify User, Group or Device to interpret the identity. Can be ServicePrincipal in ScopedRoleMembers"), ValueMap{"User", "Group", "Device", "ServicePrincipal"}, Values{"User", "Group", "Device", "ServicePrincipal"}] String Type;
@@ -8,7 +8,7 @@ class MSFT_MicrosoftGraphIdentity
 class MSFT_MicrosoftGraphScopedRoleMembership
 {
     [Write, Description("Name of the Azure AD Role that is assigned. See https://learn.microsoft.com/en-us/azure/active-directory/roles/admin-units-assign-roles#roles-that-can-be-assigned-with-administrative-unit-scope")] String RoleName;
-    [Write, Description("Member that is assigned the scoped role"), EmbeddedInstance("MSFT_MicrosoftGraphIdentity")] String RoleMemberInfo;
+    [Write, Description("Member that is assigned the scoped role"), EmbeddedInstance("MSFT_MicrosoftGraphMember")] String RoleMemberInfo;
     // [Write, Description("Identity of member. For users, specify a UserPrincipalName. For groups and SPNs, specify the DisplayName")] String Identity;
     // [Write, Description("Specify User, Group or ServicePrincipal to interpret the Identity")] String Type;
 };

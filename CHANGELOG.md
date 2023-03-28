@@ -2,9 +2,8 @@
 
 # UNRELEASED
 
-* AADGroup
-  * Changed the SecurityEnabled and MailEnabled parameters to become mandatory.
-    FIXES [#3072](https://github.com/microsoft/Microsoft365DSC/issues/3072)
+* AADAdministrativeUnit
+  * Fixes extraction of the Members property.
 * AADAdministrativeUnit, AADConditionalAccessPolicy, AADEntitlementManagementAccessPackage,
   AADEntitlementManagementAccessPackageAssignmentPolicy, AADEntitlementManagementAccessPackageCatalog,
   AADEntitlementManagementAccessPackageCatalogResource, AADEntitlementManagementAccessPackageCatalogResource,
@@ -23,6 +22,9 @@
   * [BREAKING CHANGE] Remove deprecated parameter Oauth2RequirePostResponse
 * AADConditionalAccessPolicy
   * [BREAKING CHANGE] Remove deprecated parameters IncludeDevices and ExcludeDevices
+* AADGroup
+  * Changed the SecurityEnabled and MailEnabled parameters to become mandatory.
+    FIXES [#3072](https://github.com/microsoft/Microsoft365DSC/issues/3072)
 * AADUser
   * [BREAKING CHANGE] Remove deprecated parameter PreferredDataLocation* EXOAntiPhishPolicy
   * [BREAKING CHANGE] Remove deprecated parameters EnableAntispoofEnforcement and
@@ -62,9 +64,21 @@
 * IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined
   * Initial release
     FIXES [#2605](https://github.com/microsoft/Microsoft365DSC/issues/2605)
+* SCLabelPolicy
+  * Fixed the collection of new and set parameters to ensure the correct values are passed to the New/Set cmdlets.
+    FIXES [#3075](https://github.com/microsoft/Microsoft365DSC/issues/3075)
 * SCSensitivityLabel
   * [BREAKING CHANGE] Remove deprecated parameters Disabled, ApplyContentMarkingFooterFontName,
     ApplyContentMarkingHeaderFontName, ApplyWaterMarkingFontName and EncryptionAipTemplateScopes
+* SCRetentionCompliancePolicy
+  * Fixed the collection of new and set parameters to ensure the correct values are passed to the New/Set cmdlets.
+    FIXES [#3075](https://github.com/microsoft/Microsoft365DSC/issues/3075)
+* SCRetentionComplianceRule
+  * Fixed the collection of new and set parameters to ensure the correct values are passed to the New/Set cmdlets.
+    FIXES [#3075](https://github.com/microsoft/Microsoft365DSC/issues/3075)
+* SPOApp
+  * Fixed issue in the Export where an error was displayed in Verbose mode when Credentials were specified
+    and the apps were not exported.
 * SPOTenantSettings
   * [BREAKING CHANGE] Remove deprecated parameter RequireAcceptingAccountMatchInvitedAccount
 * TeamsMeetingPolicy
@@ -78,6 +92,7 @@
   * Added a QA check to test for the presence of a Key parameter and fixes
     resources where this was not the case.
     FIXES [#2925](https://github.com/microsoft/Microsoft365DSC/issues/2925)
+  * Added a fix making sure that the progress bar "Scanning dependencies" is no longer displayed after the operation is completed.
 
 # 1.23.322.1
 
