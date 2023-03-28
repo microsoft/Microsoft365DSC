@@ -21,7 +21,7 @@
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 
-### MSFT_MicrosoftGraphIdentity
+### MSFT_MicrosoftGraphMember
 
 #### Parameters
 
@@ -37,7 +37,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **RoleName** | Write | String | Name of the Azure AD Role that is assigned. See https://learn.microsoft.com/en-us/azure/active-directory/roles/admin-units-assign-roles#roles-that-can-be-assigned-with-administrative-unit-scope | |
-| **RoleMemberInfo** | Write | MSFT_MicrosoftGraphIdentity | Member that is assigned the scoped role | |
+| **RoleMemberInfo** | Write | MSFT_MicrosoftGraphMember | Member that is assigned the scoped role | |
 
 
 ## Description
