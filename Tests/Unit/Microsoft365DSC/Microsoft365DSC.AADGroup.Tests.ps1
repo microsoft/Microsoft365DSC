@@ -206,6 +206,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ID              = '12345-12345-12345-12345'
                     Description     = 'Microsoft DSC Group'
                     SecurityEnabled = $True
+                    MailEnabled     = $True
                     GroupTypes      = @()
                     MailNickname    = 'M365DSC'
                     MemberOf        = 'DSCMemberOfGroup'
@@ -224,6 +225,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ID              = '12345-12345-12345-12345'
                         Description     = 'Microsoft DSC Group'
                         SecurityEnabled = $True
+                        MailEnabled     = $true
                         MailNickname    = 'M365DSC'
                         GroupTypes      = @()
                     }
@@ -243,7 +245,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description     = 'Microsoft DSC MemberOf Group'
                         SecurityEnabled = $True
                         GroupTypes      = @()
-                        MailEnabled     = $False
+                        MailEnabled     = $True
                         MailNickname    = 'M365DSCM'
                     }
                     # Set-TargetResource expects data-type of answer to contain 'group'
@@ -270,6 +272,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ID                 = '12345-12345-12345-12345'
                     Description        = 'Microsoft DSC Group'
                     SecurityEnabled    = $True
+                    MailEnabled        = $True
                     GroupTypes         = @()
                     MailNickname       = 'M365DSC'
                     IsAssignableToRole = $true
@@ -289,6 +292,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ID                 = '12345-12345-12345-12345'
                         Description        = 'Microsoft DSC Group'
                         SecurityEnabled    = $True
+                        MailEnabled        = $true
                         GroupTypes         = @()
                         MailNickname       = 'M365DSC'
                         IsAssignableToRole = $true
@@ -369,6 +373,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ID              = '12345-12345-12345-12345'
                     Description     = 'Microsoft DSC Group'
                     SecurityEnabled = $True
+                    MailEnabled     = $true
                     GroupTypes      = @()
                     MailNickname    = 'M365DSC'
                     MemberOf        = 'DSCMemberOfGroup'
@@ -386,6 +391,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ID              = '12345-12345-12345-12345'
                         Description     = 'Microsoft DSC Group'
                         SecurityEnabled = $True
+                        MailEnabled = $true
                         MailNickname    = 'M365DSC'
                         GroupTypes      = @()
                     }
@@ -396,6 +402,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ID              = '67890-67890-67890-67890'
                         Description     = 'Microsoft DSC MemberOf Group'
                         SecurityEnabled = $True
+                        MailEnabled     = $true
                         GroupTypes      = @()
                         MailNickname    = 'M365DSCM'
                     }
@@ -428,6 +435,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ID                 = '12345-12345-12345-12345'
                     Description        = 'Microsoft DSC Group'
                     SecurityEnabled    = $True
+                    MailEnabled        = $true
                     GroupTypes         = @()
                     MailNickname       = 'M365DSC'
                     IsAssignableToRole = $true
@@ -447,6 +455,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ID                 = '12345-12345-12345-12345'
                         Description        = 'Microsoft DSC Group'
                         SecurityEnabled    = $True
+                        MailEnabled        = $true
                         GroupTypes         = @()
                         MailNickname       = 'M365DSC'
                         IsAssignableToRole = $true
@@ -486,6 +495,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ID                 = '12345-12345-12345-12345'
                     Description        = 'Microsoft DSC Group'
                     SecurityEnabled    = $True
+                    MailEnabled        = $true
                     GroupTypes         = @()
                     MailNickname       = 'M365DSC'
                     IsAssignableToRole = $true
@@ -505,6 +515,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ID                 = '12345-12345-12345-12345'
                         Description        = 'Microsoft DSC Group'
                         SecurityEnabled    = $True
+                        MailEnabled        = $true
                         GroupTypes         = @()
                         MailNickname       = 'M365DSC'
                         IsAssignableToRole = $true
@@ -559,9 +570,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgGroup -MockWith {
                     return @{
-                        DisplayName  = 'Test Team'
-                        ID           = '12345-12345-12345-12345'
-                        MailNickname = 'testteam'
+                        DisplayName        = 'DSCGroup'
+                        ID                 = '12345-12345-12345-12345'
+                        Description        = 'Microsoft DSC Group'
+                        SecurityEnabled    = $True
+                        MailEnabled        = $False
+                        GroupTypes         = @("Unified")
+                        MailNickname       = 'M365DSC'
+                        IsAssignableToRole = $true
+                        Ensure             = 'Present'
                     }
                 }
             }

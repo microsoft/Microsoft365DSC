@@ -180,15 +180,23 @@ function Get-TargetResource
 
         if ($null -eq $policy)
         {
-            Write-Verbose -Message "No Endpoint Protection Policy {$Identity} was found"
-            return $nullResult
+            Write-Verbose -Message "No Endpoint Protection Policy {id: '$Identity'} was found"
+            $policy = Get-MgDeviceManagementConfigurationPolicy -Filter "name eq '$DisplayName'" -ErrorAction SilentlyContinue
+            if ($null -eq $policy)
+            {
+                Write-Verbose -Message "No Endpoint Protection Policy {displayName: '$DisplayName'} was found"
+                return $nullResult
+            }
         }
+
+        $Identity = $policy.Id
+
+        Write-Verbose -Message "Found Endpoint Protection Policy {$($policy.id):$($policy.Name)}"
 
         #Retrieve policy specific settings
         [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
             -DeviceManagementConfigurationPolicyId $Identity `
             -ErrorAction Stop
-
 
         $returnHashtable = @{}
         $returnHashtable.Add('Identity', $Identity)
@@ -200,34 +208,43 @@ function Get-TargetResource
             $addToParameters = $true
             $settingName = $setting.settingDefinitionId.Split('_') | Select-Object -Last 1
 
-            switch ($setting.'@odata.type')
+            switch ($setting.AdditionalProperties.'@odata.type')
             {
-                '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
-                {
-                    $values = @()
-                    foreach ($value in $setting.AdditionalProperties.simpleSettingCollectionValue)
-                    {
-                        $values += Get-DeviceManagementConfigurationSettingInstanceValue -Setting $value
-                    }
-                    $settingValue = $values
-                }
 
+                '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                {
+                    $settingValue = $setting.AdditionalProperties.simpleSettingValue.value
+                }
+                '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                {
+                    $settingValue = $setting.AdditionalProperties.choiceSettingValue.value.split('_') | Select-Object -Last 1
+                }
                 '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
                 {
                     $values = @()
                     foreach ($value in $setting.AdditionalProperties.groupSettingCollectionValue.children)
                     {
                         $settingName = $value.settingDefinitionId.split('_') | Select-Object -Last 1
-                        $settingValue = Get-DeviceManagementConfigurationSettingInstanceValue -Setting $value
+                        $settingValue = $value.choiceSettingValue.value.split('_') | Select-Object -Last 1
                         $returnHashtable.Add($settingName, $settingValue)
                         $addToParameters = $false
                     }
                 }
+                '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
+                {
+                    $values = @()
+                    foreach ($value in $setting.AdditionalProperties.simpleSettingCollectionValue.value)
+                    {
+                        $values += $value
+                    }
+                    $settingValue = $values
+                }
                 Default
                 {
-                    $settingValue = Get-DeviceManagementConfigurationSettingInstanceValue -Setting $setting.AdditionalProperties
+                    $settingValue = $setting.value
                 }
             }
+
             if ($addToParameters)
             {
                 $returnHashtable.Add($settingName, $settingValue)
@@ -444,8 +461,9 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating new Endpoint Protection Policy {$DisplayName}"
 
-        $settings = Format-M365DSCIntuneSettingCatalogPolicySettings `
-            -DSCParams ([System.Collections.Hashtable]$PSBoundParameters)
+        $settings = Get-IntuneSettingCatalogPolicySetting `
+            -DSCParams ([System.Collections.Hashtable]$PSBoundParameters) `
+            -TemplateId $templateReferenceId
 
         $Template = Get-MgBetaDeviceManagementConfigurationPolicyTemplate -DeviceManagementConfigurationPolicyTemplateId $templateReferenceId
         New-MgBetaDeviceManagementConfigurationPolicy `
@@ -464,19 +482,22 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating existing Endpoint Protection Policy {$($currentPolicy.DisplayName)}"
 
-        $settings = Format-M365DSCIntuneSettingCatalogPolicySettings `
-            -DSCParams ([System.Collections.Hashtable]$PSBoundParameters)
+        #format settings from PSBoundParameters for update
+        $settings = Get-IntuneSettingCatalogPolicySetting `
+            -DSCParams ([System.Collections.Hashtable]$PSBoundParameters) `
+            -TemplateId $templateReferenceId
 
         $Template = Get-MgBetaDeviceManagementConfigurationPolicyTemplate -DeviceManagementConfigurationPolicyTemplateId $templateReferenceId
         Update-MgBetaDeviceManagementConfigurationPolicy `
             -DeviceManagementConfigurationPolicyId $Identity `
             -Name $DisplayName `
             -Description $Description `
-            -TemplateReference $templateReference `
+            -TemplateReferenceId $templateReferenceId `
             -Platforms $platforms `
             -Technologies $technologies `
             -Settings $settings
 
+        #region update policy assignments
         $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
         Update-MgBetaDeviceManagementConfigurationPolicyAssignments -DeviceManagementConfigurationPolicyId $currentPolicy.Identity -Targets $assignmentsHash
 
@@ -661,6 +682,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('Identity') | Out-Null
     $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
@@ -876,36 +898,65 @@ function Export-TargetResource
         return ''
     }
 }
-
-function Get-DeviceManagementConfigurationSettingInstanceValue
+function Get-IntuneSettingCatalogPolicySetting
 {
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
+    [OutputType([System.Array])]
     param(
         [Parameter(Mandatory = 'true')]
         [System.Collections.Hashtable]
-        $Setting
+        $DSCParams,
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $TemplateId
     )
 
-    switch ($setting.'@odata.type')
-    {
-        '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-        {
-            $settingValue = $setting.choiceSettingValue.value.split('_') | Select-Object -Last 1
+    $DSCParams.Remove('Identity') | Out-Null
+    $DSCParams.Remove('DisplayName') | Out-Null
+    $DSCParams.Remove('Description') | Out-Null
 
-        }
-        '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+    #Prepare setting definitions mapping
+    $settingDefinitions = Get-MgDeviceManagementConfigurationPolicyTemplateSettingTemplate -DeviceManagementConfigurationPolicyTemplateId $TemplateId
+    $settingInstances = @()
+    foreach ($settingDefinition in $settingDefinitions.SettingInstanceTemplate)
+    {
+
+        $settingInstance = @{}
+        $settingName = $settingDefinition.SettingDefinitionId.split('_') | Select-Object -Last 1
+        $settingType =  $settingDefinition.AdditionalProperties.'@odata.type'.replace('InstanceTemplate','Instance')
+        $settingInstance.Add('settingDefinitionId', $settingDefinition.settingDefinitionId)
+        $settingInstance.Add('@odata.type', $settingType)
+        if (-Not [string]::IsNullOrEmpty($settingDefinition.settingInstanceTemplateId))
         {
-            $settingValue = $setting.simpleSettingValue.value
+            $settingInstance.Add('settingInstanceTemplateReference',@{'settingInstanceTemplateId'=$settingDefinition.settingInstanceTemplateId})
         }
-        Default
+        $settingValueName = $settingType.replace('#microsoft.graph.deviceManagementConfiguration','').replace('Instance','Value')
+        $settingValueName = $settingValueName.Substring(0,1).ToLower() + $settingValueName.Substring(1,$settingValueName.length -1 )
+        $settingValueType = $settingDefinition.AdditionalProperties."$($settingValueName)Template".'@odata.type'
+        if ($null -ne $settingValueType)
         {
-            $settingValue = $setting.value
+            $settingValueType = $settingValueType.replace('ValueTemplate','Value')
+        }
+        $settingValueTemplateId = $settingDefinition.AdditionalProperties."$($settingValueName)Template".settingValueTemplateId
+        $settingValue = Get-IntuneSettingCatalogPolicySettingInstanceValue `
+            -DSCParams $DSCParams `
+            -SettingDefinition $settingDefinition `
+            -SettingName $settingName `
+            -SettingType $settingType `
+            -SettingValueName $settingValueName `
+            -SettingValueType $settingValueType `
+            -SettingValueTemplateId $settingValueTemplateId
+        $settingInstance+=($settingValue)
+
+        $settingInstances += @{
+            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSetting'
+            'settingInstance' = $settingInstance
         }
     }
-    return $settingValue
+
+    return $settingInstances
 }
-function Convert-M365DSCParamsToSettingInstance
+function Get-IntuneSettingCatalogPolicySettingInstanceValue
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -914,21 +965,20 @@ function Convert-M365DSCParamsToSettingInstance
         [System.Collections.Hashtable]
         $DSCParams,
 
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $SettingDefinitionId,
-
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $SettingDefinitionType,
+        [Parameter()]
+        $SettingDefinition,
 
         [Parameter()]
         [System.String]
-        $GroupSettingCollectionDefinitionId,
+        $SettingType,
 
         [Parameter()]
         [System.String]
-        $SettingInstanceTemplateId,
+        $SettingName,
+
+        [Parameter()]
+        [System.String]
+        $SettingValueName,
 
         [Parameter()]
         [System.String]
@@ -939,289 +989,87 @@ function Convert-M365DSCParamsToSettingInstance
         $SettingValueTemplateId
     )
 
-    $DSCParams.Remove('Verbose') | Out-Null
-    $results = @()
-
-    foreach ($param in $DSCParams.Keys)
+    $settingValueReturn = @{}
+    switch($settingType)
     {
-        $settingDefinitionId = $SettingDefinitionId.ToLower()
-
-        $settingInstance = [ordered]@{}
-        $settingInstance.add('@odata.type', $SettingDefinitionType)
-        $settingInstance.add('settingDefinitionId', $settingDefinitionId)
-        if (-Not [string]::IsNullOrEmpty($settingInstanceTemplateId))
+        '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
         {
-            $settingInstance.add('settingInstanceTemplateReference', @{'settingInstanceTemplateId' = $SettingInstanceTemplateId })
+            $groupSettingCollectionValue = @{}
+            $groupSettingCollectionValueChildren = @()
+
+            $groupSettingCollectionDefinitionChildren = $SettingDefinition.AdditionalProperties.groupSettingCollectionValueTemplate.children
+            foreach($childDefinition in $groupSettingCollectionDefinitionChildren)
+            {
+                $childSettingName = $childDefinition.settingDefinitionId.split('_') | Select-Object -Last 1
+                $childSettingType =  $childDefinition.'@odata.type'.replace('InstanceTemplate','Instance')
+                $childSettingValueName = $childSettingType.replace('#microsoft.graph.deviceManagementConfiguration','').replace('Instance','Value')
+                $childSettingValueType = "#microsoft.graph.deviceManagementConfiguration$($childSettingValueName)"
+                $childSettingValueName = $childSettingValueName.Substring(0,1).ToLower() + $childSettingValueName.Substring(1,$childSettingValueName.length -1 )
+                $childSettingValueTemplateId = $childDefinition.$childSettingValueName.settingValueTemplateId
+                $childSettingValue = Get-IntuneSettingCatalogPolicySettingInstanceValue `
+                    -DSCParams $DSCParams `
+                    -SettingDefinition $childDefinition `
+                    -SettingName $childSettingName `
+                    -SettingType $childDefinition.'@odata.type' `
+                    -SettingValueName $childSettingValueName `
+                    -SettingValueType $childSettingValueType `
+                    -SettingValueTemplateId $childSettingValueTemplateId
+
+                $childSettingValue.add('settingDefinitionId', $childDefinition.settingDefinitionId)
+                $childSettingValue.add('@odata.type', $childSettingType )
+                $groupSettingCollectionValueChildren += $childSettingValue
+            }
+            $groupSettingCollectionValue.add('children', $groupSettingCollectionValueChildren)
+            $settingValueReturn.Add('groupSettingCollectionValue', @($groupSettingCollectionValue))
         }
-        switch ($SettingDefinitionType)
+        '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
         {
-            '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+            $values = @()
+            foreach( $key in $DSCParams.Keys)
             {
-                $choiceSettingValue = [ordered]@{}
-                $choiceSettingValue.add('children', @())
-                $choiceSettingValue.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationChoiceSettingValue')
-                if (-Not [string]::IsNullOrEmpty($settingValueTemplateId))
+                if($settingName -eq ($key.tolower()))
                 {
-                    $choiceSettingValue.add('settingValueTemplateReference', @{'settingValueTemplateId' = $SettingValueTemplateId })
+                    $values = $DSCParams[$key]
+                    break
                 }
-                $choiceSettingValue.add('value', "$settingDefinitionId`_$($DSCParams.$param)")
-                $settingInstance.add('choiceSettingValue', $choiceSettingValue)
-                $results += $settingInstance
             }
-            '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
+            $settingValueCollection = @()
+            foreach($v in $values)
             {
-                $simpleSettingCollectionValues = @()
-                foreach ($value in $DSCParams.$param)
-                {
-                    $simpleSettingCollectionValue = @{}
-                    $simpleSettingCollectionValue.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationStringSettingValue')
-                    $simpleSettingCollectionValue.add('value', $value)
-                    $simpleSettingCollectionValues += $simpleSettingCollectionValue
+                $settingValueCollection += @{
+                    value = $v
+                    '@odata.type' = $settingValueType
                 }
-                $settingInstance.add('simpleSettingCollectionValue', $simpleSettingCollectionValues)
-                $results += $settingInstance
             }
-            '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+            $settingValueReturn.Add($settingValueName, $settingValueCollection)
+        }
+        Default
+        {
+            $value = $null
+            foreach( $key in $DSCParams.Keys)
             {
-                $simpleSettingValue = @{}
-                if (-Not [string]::IsNullOrEmpty($SettingValueType))
+                if($settingName -eq ($key.tolower()))
                 {
-                    $simpleSettingValue.add('@odata.type', $SettingValueType)
+                    $value = "$($SettingDefinition.settingDefinitionId)_$($DSCParams[$key])"
+                    break
                 }
-                $simpleSettingValue.add('value', $DSCParams.$param)
-                if (-Not [string]::IsNullOrEmpty($settingValueTemplateId))
-                {
-                    $simpleSettingValue.add('settingValueTemplateReference', @{'settingValueTemplateId' = $settingValueTemplateId })
-                }
+            }
+            $settingValue = @{}
 
-                $settingInstance.add('simpleSettingValue', $simpleSettingValue)
-                $results += $settingInstance
-            }
-            '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+            if (-Not [string]::IsNullOrEmpty($settingValueType))
             {
-                $groupSettingCollectionValues = @()
-                $groupSettingCollectionValues += @{'children' = @() }
-                $settingInstance.add('groupSettingCollectionValue', $groupSettingCollectionValues)
-                $results += $settingInstance
+                $settingValue.add('@odata.type', $settingValueType)
             }
-            Default
+            if (-Not [string]::IsNullOrEmpty($settingValueTemplateId))
             {
+                $settingValue.Add('settingValueTemplateReference',@{'settingValueTemplateId'= $settingValueTemplateId})
             }
+            $settingValue.add('value', $value)
+            $settingValueReturn.Add($settingValueName, $settingValue)
         }
     }
-    return $results
+    return $settingValueReturn
 }
-function Format-M365DSCIntuneSettingCatalogPolicySettings
-{
-    [CmdletBinding()]
-    [OutputType([System.Array])]
-    param(
-        [Parameter(Mandatory = 'true')]
-        [System.Collections.Hashtable]
-        $DSCParams
-    )
-
-    $DSCParams.Remove('Identity') | Out-Null
-    $DSCParams.Remove('DisplayName') | Out-Null
-    $DSCParams.Remove('Description') | Out-Null
-
-    #Prepare setting definitions mapping
-    $settingDefinitions = @(
-        @{
-            settingName               = 'AttackSurfaceReductionOnlyExclusions'
-            settingDefinitionId       = 'device_vendor_msft_policy_config_defender_attacksurfacereductiononlyexclusions'
-            settingDefinitionType     = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
-            settingInstanceTemplateId = '9b3bc064-2726-4abf-8c70-b9cb440c2422'
-            settingValueType          = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-        }
-        @{
-            settingName               = 'EnableControlledFolderAccess'
-            settingDefinitionId       = 'device_vendor_msft_policy_config_defender_enablecontrolledfolderaccess'
-            settingDefinitionType     = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-            settingInstanceTemplateId = '88286be0-5a51-4238-bcf9-e8db1c3f0023'
-            settingValueTemplateId    = '93eb92ec-85b7-49fa-87df-09ccc59e390f'
-        }
-        @{
-            settingName               = 'ControlledFolderAccessAllowedApplications'
-            settingDefinitionId       = 'device_vendor_msft_policy_config_defender_controlledfolderaccessallowedapplications'
-            settingDefinitionType     = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
-            settingInstanceTemplateId = '7b7d300f-40cd-4708-a602-479e41b69647'
-            settingValueType          = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-        }
-        @{
-            settingName               = 'ControlledFolderAccessProtectedFolders'
-            settingDefinitionId       = 'device_vendor_msft_policy_config_defender_controlledfolderaccessprotectedfolders'
-            settingDefinitionType     = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
-            settingInstanceTemplateId = '081cae44-3f9b-46b1-8eea-f9eb2e1e3031'
-            settingValueType          = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-        }
-        @{
-            settingName               = 'AttackSurfaceReductionRules'
-            settingDefinitionId       = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-            settingDefinitionType     = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-            settingInstanceTemplateId = 'd770fcd1-62cd-4217-9b20-9ee2a12062ff'
-        }
-        @{
-            settingName                        = 'BlockAdobeReaderFromCreatingChildProcesses'
-            settingDefinitionId                = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses'
-            settingDefinitionType              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-            groupSettingCollectionDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-        }
-        @{
-            settingName                        = 'BlockExecutionOfPotentiallyObfuscatedScripts'
-            settingDefinitionId                = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockexecutionofpotentiallyobfuscatedscripts'
-            settingDefinitionType              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-            groupSettingCollectionDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-        }
-        @{
-            settingName                        = 'BlockWin32APICallsFromOfficeMacros'
-            settingDefinitionId                = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros'
-            settingDefinitionType              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-            groupSettingCollectionDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-        }
-        @{
-            settingName                        = 'BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem'
-            settingDefinitionId                = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem'
-            settingDefinitionType              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-            groupSettingCollectionDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-        }
-        @{
-            settingName                        = 'BlockExecutableFilesRunningUnlessTheyMeetPrevalenceAgeTrustedListCriterion'
-            settingDefinitionId                = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockexecutablefilesrunningunlesstheymeetprevalenceagetrustedlistcriterion'
-            settingDefinitionType              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-            groupSettingCollectionDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-        }
-        @{
-            settingName                        = 'BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent'
-            settingDefinitionId                = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockjavascriptorvbscriptfromlaunchingdownloadedexecutablecontent'
-            settingDefinitionType              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-            groupSettingCollectionDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-        }
-        @{
-            settingName                        = 'BlockOfficeCommunicationAppFromCreatingChildProcesses'
-            settingDefinitionId                = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockofficecommunicationappfromcreatingchildprocesses'
-            settingDefinitionType              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-            groupSettingCollectionDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-        }
-        @{
-            settingName                        = 'BlockAllOfficeApplicationsFromCreatingChildProcesses'
-            settingDefinitionId                = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses'
-            settingDefinitionType              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-            groupSettingCollectionDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-        }
-        @{
-            settingName                        = 'BlockUntrustedUnsignedProcessesThatRunFromUSB'
-            settingDefinitionId                = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockuntrustedunsignedprocessesthatrunfromusb'
-            settingDefinitionType              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-            groupSettingCollectionDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-        }
-        @{
-            settingName                        = 'BlockProcessCreationsFromPSExecAndWMICommands'
-            settingDefinitionId                = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockprocesscreationsfrompsexecandwmicommands'
-            settingDefinitionType              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-            groupSettingCollectionDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-        }
-        @{
-            settingName                        = 'BlockPersistenceThroughWMIEventSubscription'
-            settingDefinitionId                = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockpersistencethroughwmieventsubscription'
-            settingDefinitionType              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-            groupSettingCollectionDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-        }
-        @{
-            settingName                        = 'BlockOfficeApplicationsFromCreatingExecutableContent'
-            settingDefinitionId                = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockofficeapplicationsfromcreatingexecutablecontent'
-            settingDefinitionType              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-            groupSettingCollectionDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-        }
-        @{
-            settingName                        = 'BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses'
-            settingDefinitionId                = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockofficeapplicationsfrominjectingcodeintootherprocesses'
-            settingDefinitionType              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-            groupSettingCollectionDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-        }
-        @{
-            settingName                        = 'UseAdvancedProtectionAgainstRansomware'
-            settingDefinitionId                = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware'
-            settingDefinitionType              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-            groupSettingCollectionDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-        }
-        @{
-            settingName                        = 'BlockExecutableContentFromEmailClientAndWebmail'
-            settingDefinitionId                = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockexecutablecontentfromemailclientandwebmail'
-            settingDefinitionType              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-            groupSettingCollectionDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-        }
-        @{
-            settingName                        = 'BlockAbuseOfExploitedVulnerableSignedDrivers'
-            settingDefinitionId                = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockabuseofexploitedvulnerablesigneddrivers'
-            settingDefinitionType              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-            groupSettingCollectionDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-        }
-    )
-
-    #write-verbose -Message ( $DSCParams|out-string)
-    $settings = @()
-    foreach ($settingDefinition in $settingDefinitions)
-    {
-
-        $setting = @{}
-        $value = $DSCParams["$($settingDefinition.settingName)"]
-        if ($value)
-        {
-            if ([string]::IsNullOrEmpty($settingDefinition.groupSettingCollectionDefinitionId))
-            {
-                $setting.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationSetting')
-            }
-            $formatParams = @{}
-            $formatParams.Add('DSCParams', @{$settingDefinition.settingName = $value })
-            $formatParams.Add('settingDefinitionId', $settingDefinition.settingDefinitionId)
-            $formatParams.Add('settingDefinitionType', $settingDefinition.settingDefinitionType)
-            if (-Not [string]::IsNullOrEmpty($settingDefinition.settingInstanceTemplateId))
-            {
-                $formatParams.Add('settingInstanceTemplateId', $settingDefinition.settingInstanceTemplateId)
-            }
-            if (-Not [string]::IsNullOrEmpty($settingDefinition.settingValueTemplateId))
-            {
-                $formatParams.Add('SettingValueTemplateId', $settingDefinition.settingValueTemplateId)
-            }
-            if (-Not [string]::IsNullOrEmpty($settingDefinition.settingValueType))
-            {
-                $formatParams.Add('settingValueType', $settingDefinition.settingValueType)
-            }
-            $myFormattedSetting = Convert-M365DSCParamsToSettingInstance @formatParams
-
-            if (-Not [string]::IsNullOrEmpty($settingDefinition.groupSettingCollectionDefinitionId))
-            {
-                $mySetting = $settings.settingInstance | Where-Object -FilterScript { $_.settingDefinitionId -eq $settingDefinition.groupSettingCollectionDefinitionId }
-                if ($null -eq $mySetting)
-                {
-                    $parentSetting = @{}
-                    $parentSetting.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationSetting')
-                    $mySettingDefinition = $settingDefinitions | Where-Object -FilterScript { $_.settingDefinitionId -eq $settingDefinition.groupSettingCollectionDefinitionId }
-                    $mySettingDefinitionFormatted = Convert-M365DSCParamsToSettingInstance `
-                        -DSCParams @{$mySettingDefinition.settingName = @{} } `
-                        -SettingDefinitionId $mySettingDefinition.settingDefinitionId `
-                        -SettingDefinitionType $mySettingDefinition.settingDefinitionType `
-                        -SettingInstanceTemplateId $mySettingDefinition.settingInstanceTemplateId
-                    $parentSetting.add('settingInstance', $mySettingDefinitionFormatted)
-                    $settings += $parentSetting
-                    $mySetting = $settings.settingInstance | Where-Object -FilterScript { $_.settingDefinitionId -eq $settingDefinition.groupSettingCollectionDefinitionId }
-                }
-                $mySetting.groupSettingCollectionValue[0].children += $myFormattedSetting
-            }
-            else
-            {
-                $setting.add('settingInstance', $myFormattedSetting)
-                $settings += $setting
-            }
-
-        }
-    }
-
-    return $settings
-}
-
-
 
 
 function Get-MgBetaDeviceManagementConfigurationPolicySetting
@@ -1706,31 +1554,6 @@ function Get-M365DSCDRGSimpleObjectTypeToString
     }
     return $returnValue
 }
-
-function Get-M365DSCAdditionalProperties
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = 'true')]
-        [System.Collections.Hashtable]
-        $Properties
-    )
-
-    $results = @{'@odata.type' = '#microsoft.graph.agreement' }
-    foreach ($property in $properties.Keys)
-    {
-        if ($property -ne 'Verbose')
-        {
-            $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
-            $propertyValue = $properties.$property
-            $results.Add($propertyName, $propertyValue)
-        }
-    }
-    return $results
-}
-
 function Compare-M365DSCComplexObject
 {
     [CmdletBinding()]

@@ -45,11 +45,11 @@ function Get-TargetResource
         [System.String]
         $MembershipRuleProcessingState,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $SecurityEnabled,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $MailEnabled,
 
@@ -308,11 +308,11 @@ function Set-TargetResource
         [System.String]
         $MembershipRuleProcessingState,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $SecurityEnabled,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $MailEnabled,
 
@@ -824,11 +824,11 @@ function Test-TargetResource
         [System.String]
         $MembershipRuleProcessingState,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $SecurityEnabled,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $MailEnabled,
 
@@ -1033,6 +1033,8 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 DisplayName           = $group.DisplayName
                 MailNickName          = $group.MailNickName
+                SecurityEnabled       = $true
+                MailEnabled           = $true
                 Id                    = $group.Id
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

@@ -1032,7 +1032,7 @@ function Export-TargetResource
             if ($null -ne $Results.Members)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Members) `
-                    -CIMInstanceName MicrosoftGraphIdentity
+                    -CIMInstanceName MicrosoftGraphMember
                 $Results.Members = $complexTypeStringResult
 
                 if ([String]::IsNullOrEmpty($complexTypeStringResult))
@@ -1057,6 +1057,7 @@ function Export-TargetResource
             if ($null -ne $Results.Members)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Members' -IsCIMArray $true
+                $currentDSCBlock = $currentDSCBlock.Replace(",`r`n",'').Replace("`");`r`n", ");`r`n")
             }
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -1343,7 +1344,7 @@ function Get-M365DSCDRGComplexTypeToString
     }
 
     $CIMInstanceName = $CIMInstanceName.replace('MSFT_', '')
-    $currentProperty += "MSFT_$CIMInstanceName{`r`n"
+    $currentProperty += "MSFT_$CIMInstanceName { `r`n"
     $IndentLevel++
     $indent = ''
     for ($i = 0; $i -lt $IndentLevel ; $i++)

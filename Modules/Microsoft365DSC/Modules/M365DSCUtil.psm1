@@ -2562,6 +2562,9 @@ function Test-M365DSCDependenciesForNewVersions
         }
         $i++
     }
+    
+    # The progress bar seems to hang sometimes. Make sure it is no longer displayed.
+    Write-Progress -Activity 'Scanning Dependencies' -Completed
 }
 
 <#
@@ -2636,6 +2639,9 @@ function Update-M365DSCDependencies
         }
         $i++
     }
+    
+    # The progress bar seems to hang sometimes. Make sure it is no longer displayed.
+    Write-Progress -Activity 'Scanning Dependencies' -Completed
 
     if ($ValidateOnly)
     {
