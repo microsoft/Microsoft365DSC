@@ -22,7 +22,6 @@
 | **PasswordPolicies** | Write | String | Specifies password policies for the user. | |
 | **PhoneNumber** | Write | String | The Phone Number of the user | |
 | **PostalCode** | Write | String | The Postal Code of the user | |
-| **PreferredDataLocation** | Write | String | The Prefered location to store data of the user | |
 | **PreferredLanguage** | Write | String | The Prefered Language of the user | |
 | **State** | Write | String | Specifies the state or province where the user is located | |
 | **StreetAddress** | Write | String | Specifies the street address of the user | |

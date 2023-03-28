@@ -9,7 +9,6 @@
 | **ActivityBasedAuthenticationTimeoutInterval** | Write | String | The ActivityBasedAuthenticationTimeoutInterval parameter specifies the time span for logoff. You enter this value as a time span: hh:mm:ss where hh = hours, mm = minutes and ss = seconds. Valid values for this parameter are from 00:05:00 to 08:00:00 (5 minutes to 8 hours). The default value is 06:00:00 (6 hours). | |
 | **ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled** | Write | Boolean | The ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled parameter specifies whether to keep single sign-on enabled. The default value is $true. | |
 | **AppsForOfficeEnabled** | Write | Boolean | The AppsForOfficeEnabled parameter specifies whether to enable apps for Outlook features. By default, the parameter is set to $true. If the flag is set to $false, no new apps can be activated for any user in the organization. | |
-| **AllowPlusAddressInRecipients** | Write | Boolean | DEPRECATED | |
 | **AsyncSendEnabled** | Write | Boolean | The AsyncSendEnabled parameter specifies whether to enable or disable async send in Outlook on the web. | |
 | **AuditDisabled** | Write | Boolean | The AuditDisabled parameter specifies whether to disable or enable mailbox auditing for the organization. | |
 | **AutodiscoverPartialDirSync** | Write | Boolean | Setting this parameter to $true will cause unknown users to be redirected to the on-premises endpoint and will allow on-premises users to discover their mailbox automatically. | |
