@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Fixes extraction of the Members property.
 * AADAdministrativeUnit, AADConditionalAccessPolicy, AADEntitlementManagementAccessPackage,
   AADEntitlementManagementAccessPackageAssignmentPolicy, AADEntitlementManagementAccessPackageCatalog,
   AADEntitlementManagementAccessPackageCatalogResource, AADEntitlementManagementAccessPackageCatalogResource,
