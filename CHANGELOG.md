@@ -55,6 +55,8 @@
   IntuneAppProtectionPolicyiOS, IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager,
   IntuneSettingCatalogASRRulesPolicyWindows10,
   * [BREAKING CHANGE] Setting Identity as Key parameter and DisplayName as Required
+* IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager
+  * [BREAKING CHANGE] Fix resource
 * IntuneWindowsAutopilotDeploymentProfileAzureADJoined
   * Initial release
     FIXES [#2605](https://github.com/microsoft/Microsoft365DSC/issues/2605)
