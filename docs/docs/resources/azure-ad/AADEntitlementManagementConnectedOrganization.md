@@ -5,8 +5,8 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Id** | Key | String | The Id of the Connected organization object. | |
+| **DisplayName** | Required | String | The display name of the connected organization. | |
 | **Description** | Write | String | The description of the connected organization. | |
-| **DisplayName** | Write | String | The display name of the connected organization. | |
 | **IdentitySources** | Write | MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource[] | The identity sources in this connected organization. | |
 | **State** | Write | String | The state of a connected organization defines whether assignment policies with requestor scope type AllConfiguredConnectedOrganizationSubjects are applicable or not. | `configured`, `proposed`, `unknownFutureValue` |
 | **ExternalSponsors** | Write | StringArray[] | Collection of objectID of extenal sponsors. the sponsor can be a user or a group. | |

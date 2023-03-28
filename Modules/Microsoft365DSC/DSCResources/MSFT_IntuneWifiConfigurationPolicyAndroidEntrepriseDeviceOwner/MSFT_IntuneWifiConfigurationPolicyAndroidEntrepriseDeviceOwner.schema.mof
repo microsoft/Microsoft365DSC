@@ -11,9 +11,9 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneWifiConfigurationPolicyAndroidEntrepriseDeviceOwner")]
 class MSFT_IntuneWifiConfigurationPolicyAndroidEntrepriseDeviceOwner : OMI_BaseResource
 {
-    [Write, Description("Id of the Intune policy")] String Id;
+    [Key, Description("Id of the Intune policy")] String Id;
+    [Required, Description("Disaply name of the Intune policy")] String DisplayName;
     [Write, Description("Description of the Intune policy")] String Description;
-    [Write, Description("Disaply name of the Intune policy")] String DisplayName;
     [Write, Description("If the network is in range, automatically connect.")] Boolean ConnectAutomatically;
     [Write, Description("Don't show this Wi-Fi network on an end-user's device in the list of available networks. The SSID will not be broadcasted.")] Boolean ConnectWhenNetworkNameIsHidden;
     [Write, Description("Network name.")] String NetworkName;

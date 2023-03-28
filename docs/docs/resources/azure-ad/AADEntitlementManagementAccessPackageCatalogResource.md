@@ -4,13 +4,13 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Write | String | Id of the access package catalog resource. | |
+| **Id** | Key | String | Id of the access package catalog resource. | |
+| **DisplayName** | Required | String | The display name of the resource, such as the application name, group name or site name. | |
 | **CatalogId** | Write | String | The unique ID of the access package catalog. | |
 | **AddedBy** | Write | String | The name of the user or application that first added this resource. Read-only. | |
 | **AddedOn** | Write | String | The Timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 is 2014-01-01T00:00:00Z. Read-only. | |
 | **Attributes** | Write | MSFT_MicrosoftGraphaccesspackageresourceattribute[] | Contains information about the attributes to be collected from the requestor and sent to the resource application. | |
 | **Description** | Write | String | A description for the resource. | |
-| **DisplayName** | Write | String | The display name of the resource, such as the application name, group name or site name. | |
 | **IsPendingOnboarding** | Write | Boolean | True if the resource is not yet available for assignment. Read-only. | |
 | **OriginId** | Write | String | The unique identifier of the resource in the origin system. In the case of an Azure AD group, this is the identifier of the group. | |
 | **OriginSystem** | Write | String | The type of the resource in the origin system. | |

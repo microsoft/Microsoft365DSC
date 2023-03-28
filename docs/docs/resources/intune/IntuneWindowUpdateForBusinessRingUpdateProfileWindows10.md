@@ -4,6 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
+| **Id** | Key | String | The unique identifier for an entity. Read-only. | |
+| **DisplayName** | Required | String | Admin provided name of the device configuration. | |
 | **AllowWindows11Upgrade** | Write | Boolean | When TRUE, allows eligible Windows 10 devices to upgrade to Windows 11. When FALSE, implies the device stays on the existing operating system. Returned by default. Query parameters are not supported. | |
 | **AutomaticUpdateMode** | Write | String | The Automatic Update Mode. Possible values are: UserDefined, NotifyDownload, AutoInstallAtMaintenanceTime, AutoInstallAndRebootAtMaintenanceTime, AutoInstallAndRebootAtScheduledTime, AutoInstallAndRebootWithoutEndUserControl, WindowsDefault. UserDefined is the default value, no intent. Returned by default. Query parameters are not supported. Possible values are: userDefined, notifyDownload, autoInstallAtMaintenanceTime, autoInstallAndRebootAtMaintenanceTime, autoInstallAndRebootAtScheduledTime, autoInstallAndRebootWithoutEndUserControl, windowsDefault. | `userDefined`, `notifyDownload`, `autoInstallAtMaintenanceTime`, `autoInstallAndRebootAtMaintenanceTime`, `autoInstallAndRebootAtScheduledTime`, `autoInstallAndRebootWithoutEndUserControl`, `windowsDefault` |
 | **AutoRestartNotificationDismissal** | Write | String | Specify the method by which the auto-restart required notification is dismissed. Possible values are: NotConfigured, Automatic, User. Returned by default. Query parameters are not supported. Possible values are: notConfigured, automatic, user, unknownFutureValue. | `notConfigured`, `automatic`, `user`, `unknownFutureValue` |
@@ -39,8 +41,6 @@
 | **UserPauseAccess** | Write | String | Specifies whether to enable end userï¿½s access to pause software updates. Possible values are: NotConfigured, Enabled, Disabled. Returned by default. Query parameters are not supported. Possible values are: notConfigured, enabled, disabled. | `notConfigured`, `enabled`, `disabled` |
 | **UserWindowsUpdateScanAccess** | Write | String | Specifies whether to disable userï¿½s access to scan Windows Update. Possible values are: NotConfigured, Enabled, Disabled. Returned by default. Query parameters are not supported. Possible values are: notConfigured, enabled, disabled. | `notConfigured`, `enabled`, `disabled` |
 | **Description** | Write | String | Admin provided description of the Device Configuration. | |
-| **DisplayName** | Write | String | Admin provided name of the device configuration. | |
-| **Id** | Key | String | The unique identifier for an entity. Read-only. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |

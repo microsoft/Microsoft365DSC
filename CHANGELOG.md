@@ -1,25 +1,80 @@
 # Change log for Microsoft365DSC
 
-
 # UNRELEASED
 
+* AADAdministrativeUnit, AADConditionalAccessPolicy, AADEntitlementManagementAccessPackage,
+  AADEntitlementManagementAccessPackageAssignmentPolicy, AADEntitlementManagementAccessPackageCatalog,
+  AADEntitlementManagementAccessPackageCatalogResource, AADEntitlementManagementAccessPackageCatalogResource,
+  AADEntitlementManagementConnectedOrganization, AADRoleSetting,
+  IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator, IntuneDeviceConfigurationPolicyAndroidDeviceOwner,
+  IntuneDeviceConfigurationPolicyAndroidOpenSourceProject, IntuneDeviceConfigurationPolicyMacOS,
+  IntuneDeviceConfigurationPolicyiOS, IntuneExploitProtectionPolicyWindows10SettingCatalog,
+  IntuneWifiConfigurationPolicyAndroidDeviceAdministrator, IntuneWifiConfigurationPolicyAndroidEntrepriseDeviceOwner,
+  IntuneWifiConfigurationPolicyAndroidEntrepriseWorkProfile, IntuneWifiConfigurationPolicyAndroidForWork,
+  IntuneWifiConfigurationPolicyAndroidOpenSourceProject, IntuneWifiConfigurationPolicyIOS,
+  IntuneWifiConfigurationPolicyMacOS, IntuneWifiConfigurationPolicyWindows10,
+  IntuneWindowUpdateForBusinessRingUpdateProfileWindows10, IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10,
+  IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled, IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
+  * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
+* AADApplication
+  * [BREAKING CHANGE] Remove deprecated parameter Oauth2RequirePostResponse
+* AADConditionalAccessPolicy
+  * [BREAKING CHANGE] Remove deprecated parameters IncludeDevices and ExcludeDevices
+* AADUser
+  * [BREAKING CHANGE] Remove deprecated parameter PreferredDataLocation* EXOAntiPhishPolicy
+  * [BREAKING CHANGE] Remove deprecated parameters EnableAntispoofEnforcement and
+    TargetedDomainProtectionAction
+* EXOHostedContentFilterPolicy
+  * [BREAKING CHANGE] Remove deprecated parameters EndUserSpamNotificationCustomFromAddress
+    and EndUserSpamNotificationCustomFromName
 * EXOIRMConfiguration
+  * [BREAKING CHANGE] Renamed unused Identity parameter to IsSingleInstance
+    FIXES [#2969](https://github.com/microsoft/Microsoft365DSC/issues/2969)
+* EXOMalwareFilterPolicy
+  * [BREAKING CHANGE] Remove deprecated parameters Action, CustomAlertText,
+    EnableExternalSenderNotifications and EnableInternalSenderNotifications
+* EXOOrganizationConfig
+  * [BREAKING CHANGE] Remove deprecated parameters AllowPlusAddressInRecipients
+* EXOPerimeterConfiguration
   * [BREAKING CHANGE] Renamed unused Identity parameter to IsSingleInstance
     FIXES [#2969](https://github.com/microsoft/Microsoft365DSC/issues/2969)
 * EXOResourceConfiguration
   * [BREAKING CHANGE] Renamed unused Identity parameter to IsSingleInstance
     FIXES [#2969](https://github.com/microsoft/Microsoft365DSC/issues/2969)
+* EXOSaveLinksPolicy
+  * [BREAKING CHANGE] Remove deprecated parameters DoNotAllowClickThrough,
+    DoNotTrackUserClicks and IsEnabled
+* EXOSharedMailbox
+  * [BREAKING CHANGE] Remove deprecated parameter Aliases
+* EXOTransportRule
+  * [BREAKING CHANGE] Remove deprecated parameter ExceptIfMessageContainsAllDataClassifications,
+    IncidentReportOriginalMail and MessageContainsAllDataClassifications
+* IntuneAntivirusPolicyWindows10SettingCatalog, IntuneASRRulesPolicyWindows10,
+  IntuneAppProtectionPolicyiOS, IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager,
+  IntuneSettingCatalogASRRulesPolicyWindows10,
+  * [BREAKING CHANGE] Setting Identity as Key parameter and DisplayName as Required
 * IntuneWindowsAutopilotDeploymentProfileAzureADJoined
   * Initial release
     FIXES [#2605](https://github.com/microsoft/Microsoft365DSC/issues/2605)
 * IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined
   * Initial release
     FIXES [#2605](https://github.com/microsoft/Microsoft365DSC/issues/2605)
+* SCSensitivityLabel
+  * [BREAKING CHANGE] Remove deprecated parameters Disabled, ApplyContentMarkingFooterFontName,
+    ApplyContentMarkingHeaderFontName, ApplyWaterMarkingFontName and EncryptionAipTemplateScopes
+* SPOTenantSettings
+  * [BREAKING CHANGE] Remove deprecated parameter RequireAcceptingAccountMatchInvitedAccount
+* TeamsMeetingPolicy
+  * [BREAKING CHANGE] Remove deprecated parameter RecordingStorageMode
 * DRG
   * Various fixes
     * Cleanup generated code
     * Fix AdditionalProperties complex constructor
     * Fix Read privileges in settings file
+* MISC
+  * Added a QA check to test for the presence of a Key parameter and fixes
+    resources where this was not the case.
+    FIXES [#2925](https://github.com/microsoft/Microsoft365DSC/issues/2925)
 
 # 1.23.322.1
 

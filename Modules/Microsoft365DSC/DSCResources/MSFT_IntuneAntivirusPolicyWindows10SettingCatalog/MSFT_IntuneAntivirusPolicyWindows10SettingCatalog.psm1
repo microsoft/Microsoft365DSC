@@ -8,7 +8,7 @@ function Get-TargetResource
         [System.String]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -478,7 +478,7 @@ function Set-TargetResource
         [System.String]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -904,7 +904,7 @@ function Test-TargetResource
         [System.String]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -1277,7 +1277,7 @@ function Test-TargetResource
                 {
                     Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
                     $testResult = $false
-                    break;
+                    break
                 }
                 $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
                 $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
@@ -1290,7 +1290,7 @@ function Test-TargetResource
                 {
                     Write-Verbose -Message "Configuration drift: {$($assignment.dataType)} not found"
                     $testResult = $false
-                    break;
+                    break
                 }
                 $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
                 $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
@@ -1299,7 +1299,7 @@ function Test-TargetResource
             if (-not $testResult)
             {
                 $testResult = $false
-                break;
+                break
             }
 
         }
@@ -1407,6 +1407,7 @@ function Export-TargetResource
 
             $params = @{
                 Identity              = $policy.id
+                DisplayName           = $policy.Name
                 TemplateId            = $policy.templateReference.templateId
                 Ensure                = 'Present'
                 Credential            = $Credential
@@ -1471,7 +1472,7 @@ function Export-TargetResource
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
