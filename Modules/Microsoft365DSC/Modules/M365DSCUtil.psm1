@@ -3089,7 +3089,7 @@ function Get-M365DSCExportContentForResource
     {
         $instanceName += "-$primaryKey"
     }
-    $content = "        $ResourceName '$instanceName'`r`n"
+    $content = "        $ResourceName `"$instanceName`"`r`n"
     $content += "        {`r`n"
     $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath
     # Test for both Credentials and CredentialsWithApplicationId
