@@ -1033,6 +1033,8 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 DisplayName           = $group.DisplayName
                 MailNickName          = $group.MailNickName
+                SecurityEnabled       = $true
+                MailEnabled           = $true
                 Id                    = $group.Id
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
