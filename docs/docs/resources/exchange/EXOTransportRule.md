@@ -82,7 +82,6 @@
 | **ExceptIfManagerAddresses** | Write | StringArray[] | The ExceptIfManagerAddresses parameter specifies the users (managers) for the ExceptIfManagerForEvaluatedUser parameter. | |
 | **ExceptIfManagerForEvaluatedUser** | Write | String | The ExceptIfManagerForEvaluatedUser parameter specifies an exception that looks for users in the Manager attribute of senders or recipients. | |
 | **ExceptIfMessageTypeMatches** | Write | String | The ExceptIfMessageTypeMatches parameter specifies an exception that looks for messages of the specified type. | `OOF`, `AutoForward`, `Encrypted`, `Calendaring`, `PermissionControlled`, `Voicemail`, `Signed`, `ApprovalRequest`, `ReadReceipt` |
-| **ExceptIfMessageContainsAllDataClassifications** | Write | StringArray[] | DEPRECATED | |
 | **ExceptIfMessageContainsDataClassifications** | Write | StringArray[] | The ExceptIfMessageContainsDataClassifications parameter specifies an exception that looks for sensitive information types in the body of messages, and in any attachments. | |
 | **ExceptIfMessageSizeOver** | Write | String | The ExceptIfMessageSizeOver parameter specifies an exception that looks for messages larger than the specified size.  | |
 | **ExceptIfRecipientADAttributeContainsWords** | Write | StringArray[] | The ExceptIfRecipientADAttributeContainsWords parameter specifies an exception that looks for words in the Active Directory attributes of recipients. | |
@@ -122,10 +121,8 @@
 | **HeaderMatchesMessageHeader** | Write | String | The HeaderMatchesMessageHeader parameter specifies the name of header field in the message header when searching for the text patterns specified by the HeaderMatchesPatterns parameter. | |
 | **HeaderMatchesPatterns** | Write | StringArray[] | The HeaderMatchesPatterns parameter specifies a condition that looks for text patterns in a header field by using regular expressions.  | |
 | **IncidentReportContent** | Write | StringArray[] | The IncidentReportContent parameter specifies the message properties that are included in the incident report that's generated when a message violates a DLP policy.  | |
-| **IncidentReportOriginalMail** | Write | String | DEPRECATED | |
 | **ManagerAddresses** | Write | StringArray[] | The ManagerAddresses parameter specifies the users (managers) for the ExceptIfManagerForEvaluatedUser parameter. | |
 | **ManagerForEvaluatedUser** | Write | String | The ManagerForEvaluatedUser parameter specifies a condition that looks for users in the Manager attribute of senders or recipients. | `Recipient`, `Sender` |
-| **MessageContainsAllDataClassifications** | Write | StringArray[] | DEPRECATED | |
 | **MessageContainsDataClassifications** | Write | StringArray[] | The MessageContainsDataClassifications parameter specifies a condition that looks for sensitive information types in the body of messages, and in any attachments. | |
 | **MessageSizeOver** | Write | String | The MessageSizeOver parameter specifies a condition that looks for messages larger than the specified size. The size includes the message and all attachments. | |
 | **MessageTypeMatches** | Write | String | The MessageTypeMatches parameter specifies a condition that looks for messages of the specified type. | `OOF`, `AutoForward`, `Encrypted`, `Calendaring`, `PermissionControlled`, `Voicemail`, `Signed`, `ApprovalRequest`, `ReadReceipt` |

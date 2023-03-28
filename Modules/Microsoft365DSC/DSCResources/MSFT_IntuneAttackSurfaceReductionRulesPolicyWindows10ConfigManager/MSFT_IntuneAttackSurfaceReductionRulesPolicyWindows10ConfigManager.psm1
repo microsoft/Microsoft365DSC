@@ -4,11 +4,11 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $True)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -122,7 +122,7 @@ function Get-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
-        [Parameter(Mandatory = $True)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = $true,
@@ -267,11 +267,11 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = $True)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -385,7 +385,7 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
-        [Parameter(Mandatory = $True)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = $true,
@@ -494,11 +494,11 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter(Mandatory = $True)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -612,7 +612,7 @@ function Test-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
-        [Parameter(Mandatory = $True)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = $true,
@@ -665,6 +665,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('Identity') | Out-Null
 
     $testResult = $true
     if ([Array]$Assignments.count -ne $CurrentValues.Assignments.count)
@@ -684,7 +685,7 @@ function Test-TargetResource
                 {
                     Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
                     $testResult = $false
-                    break;
+                    break
                 }
                 $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
                 $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
@@ -697,7 +698,7 @@ function Test-TargetResource
                 {
                     Write-Verbose -Message "Configuration drift: {$($assignment.dataType)} not found"
                     $testResult = $false
-                    break;
+                    break
                 }
                 $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
                 $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
@@ -706,7 +707,7 @@ function Test-TargetResource
             if (-not $testResult)
             {
                 $testResult = $false
-                break;
+                break
             }
 
         }
@@ -802,6 +803,7 @@ function Export-TargetResource
 
             $params = @{
                 Identity              = $policy.id
+                DisplayName           = $policy.Name
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -1236,7 +1238,7 @@ function Get-MgBetaDeviceManagementConfigurationPolicySetting
         $configurationPolicySettings = @()
 
         $Uri = "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/$DeviceManagementConfigurationPolicyId/settings"
-        $results = Invoke-MgGraphRequest -Method GET  -Uri $Uri -ErrorAction Stop
+        $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
         $configurationPolicySettings += $results.value.settingInstance
         while ($results.'@odata.nextLink')
         {
@@ -1274,7 +1276,7 @@ function Get-MgBetaDeviceManagementConfigurationPolicyAssignments
         $configurationPolicyAssignments = @()
 
         $Uri = "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/$DeviceManagementConfigurationPolicyId/assignments"
-        $results = Invoke-MgGraphRequest -Method GET  -Uri $Uri -ErrorAction Stop
+        $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
         foreach ($result in $results.value.target)
         {
             $configurationPolicyAssignments += @{
@@ -1389,7 +1391,7 @@ function Get-MgBetaDeviceManagementConfigurationSettingDefinition
     try
     {
         $Uri = "https://graph.microsoft.com/beta/deviceManagement/ConfigurationSettings/$($Identity.tolower())"
-        $configurationPolicySetting = Invoke-MgGraphRequest -Method GET  -Uri $Uri -ErrorAction Stop
+        $configurationPolicySetting = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
         return $configurationPolicySetting
     }
     catch

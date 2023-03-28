@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("EXOPerimeterConfiguration")]
 class MSFT_EXOPerimeterConfiguration : OMI_BaseResource
 {
-    [Write, Description("The Identity parameter specifies the Perimeter Configuration policy that you want to modify.")] String Identity;
+    [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
     [Write, Description("Use the GatewayIPAddresses parameter to create or modify a list of gateway server IP addresses to add to IP safelists.")] String GatewayIPAddresses[];
     [Write, Description("Specifies if this Outbound connector should exist."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;

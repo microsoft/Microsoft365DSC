@@ -74,10 +74,6 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $PreferredDataLocation,
-
-        [Parameter()]
-        [System.String]
         $PreferredLanguage,
 
         [Parameter()]
@@ -316,10 +312,6 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $PreferredDataLocation,
-
-        [Parameter()]
-        [System.String]
         $PreferredLanguage,
 
         [Parameter()]
@@ -372,12 +364,6 @@ function Set-TargetResource
         [Switch]
         $ManagedIdentity
     )
-
-    # PreferredDataLocation is no longer an accepted value;
-    if (![System.String]::IsNullOrEmpty($PreferredDataLocation))
-    {
-        Write-Warning '[DEPRECATED] Property PreferredDataLocation is no longer supported by resource AADUser'
-    }
 
     Write-Verbose -Message "Setting configuration of Office 365 User $UserPrincipalName"
 
@@ -666,10 +652,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $PostalCode,
-
-        [Parameter()]
-        [System.String]
-        $PreferredDataLocation,
 
         [Parameter()]
         [System.String]

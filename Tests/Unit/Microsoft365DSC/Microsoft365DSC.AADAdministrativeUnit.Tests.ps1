@@ -81,7 +81,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id          = 'FakeStringValue1'
                     Members     = @(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
-                            Type = 'User'
+                            Type     = 'User'
                             Identity = 'john.smith@contoso.com'
                         } -ClientOnly)
                     )
@@ -126,7 +126,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id          = 'FakeStringValue2'
                     Members     = @(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
-                            Type = 'User'
+                            Type     = 'User'
                             Identity = 'john.smith@contoso.com'
                         } -ClientOnly)
                     )
@@ -165,10 +165,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The AU Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Description       = 'DSCAU'
-                    DisplayName       = 'DSCAU'
-                    Id                = 'DSCAU'
-                    Members           = @(
+                    Description                   = 'DSCAU'
+                    DisplayName                   = 'DSCAU'
+                    Id                            = 'DSCAU'
+                    Members                       = @(
                                     (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
                             Identity = 'John.Doe@mytenant.com'
                             Type     = 'User'
@@ -176,7 +176,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                     ScopedRoleMembers             = @(
                                 (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
-                            RoleName = 'User Administrator'
+                            RoleName       = 'User Administrator'
                             RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
                                     Identity = 'John.Doe@mytenant.com'
                                     Type     = 'User'
@@ -185,10 +185,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             #Type     = 'User'
                         } -ClientOnly)
                     )
-                    Visibility        = 'Public'
-                    MembershipType    = 'Assigned'
+                    Visibility                    = 'Public'
+                    MembershipType                = 'Assigned'
                     # MembershipRule and -ProcessingState params are only used when MembershipType is Dynamic
-                    MembershipRule = 'Canada'
+                    MembershipRule                = 'Canada'
                     MembershipRuleProcessingState = 'On'
                     Ensure                        = 'Present'
                     Credential                    = $Credential
@@ -198,10 +198,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
                     return @{
-                        Description       = 'DSCAU'
-                        DisplayName       = 'DSCAU'
-                        Id                = 'DSCAU'
-                        Visibility        = 'Public'
+                        Description          = 'DSCAU'
+                        DisplayName          = 'DSCAU'
+                        Id                   = 'DSCAU'
+                        Visibility           = 'Public'
                         AdditionalProperties = @{
                             membershipType                = 'Assigned'
                             membershipRule                = 'Canada'
@@ -221,18 +221,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDirectoryAdministrativeUnitMember -MockWith {
                     return @(@{
-                        Id = '1234567890'
-                    })
+                            Id = '1234567890'
+                        })
                 }
 
                 Mock -CommandName Get-MgDirectoryAdministrativeUnitScopedRoleMember -MockWith {
                     return @(@{
-                        RoleId         = '12345-67890'
-                        RoleMemberInfo = @{
-                            DisplayName = 'John Doe'
-                            Id          = '1234567890'
-                        }
-                    })
+                            RoleId         = '12345-67890'
+                            RoleMemberInfo = @{
+                                DisplayName = 'John Doe'
+                                Id          = '1234567890'
+                            }
+                        })
                 }
 
                 Mock -CommandName Get-MgDirectoryRole -MockWith {
@@ -269,9 +269,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
                             RoleName       = 'User Administrator'
                             RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
-                                Identity = 'John.Doe@mytenant.com'
-                                Type     = 'User'
-                            } -ClientOnly)
+                                    Identity = 'John.Doe@mytenant.com'
+                                    Type     = 'User'
+                                } -ClientOnly)
                             #Identity = 'John.Doe@mytenant.com'
                             #Type     = 'User'
                         } -ClientOnly)
@@ -284,10 +284,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
                     return [pscustomobject]@{
-                        Description       = 'DSCAU2'
-                        DisplayName       = 'DSCAU2'
-                        Id                = 'DSCAU2'
-                        Visibility        = 'Public'
+                        Description = 'DSCAU2'
+                        DisplayName = 'DSCAU2'
+                        Id          = 'DSCAU2'
+                        Visibility  = 'Public'
                     }
                 }
 
@@ -360,9 +360,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
                             RoleName       = 'User Administrator'
                             RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
-                                Identity = 'John.Doe@mytenant.com'
-                                Type     = 'User'
-                            } -ClientOnly)
+                                    Identity = 'John.Doe@mytenant.com'
+                                    Type     = 'User'
+                                } -ClientOnly)
                             #Identity = 'John.Doe@mytenant.com'
                             #Type     = 'User'
                         } -ClientOnly)
@@ -374,10 +374,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
                     return [pscustomobject]@{
-                        Description       = 'DSCAU'
-                        DisplayName       = 'DSCAU'
-                        Id                = 'DSCAU'
-                        Visibility        = 'Public'
+                        Description = 'DSCAU'
+                        DisplayName = 'DSCAU'
+                        Id          = 'DSCAU'
+                        Visibility  = 'Public'
                     }
                 }
 
@@ -438,10 +438,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
                     return @{
-                        Description       = 'ExportDSCAU'
-                        DisplayName       = 'ExportDSCAU'
-                        Id                = 'ExportDSCAU'
-                        Visibility        = 'Public'
+                        Description = 'ExportDSCAU'
+                        DisplayName = 'ExportDSCAU'
+                        Id          = 'ExportDSCAU'
+                        Visibility  = 'Public'
                     }
                 }
 
@@ -461,22 +461,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDirectoryAdministrativeUnitScopedRoleMember -MockWith {
                     return @([pscustomobject]@{
-                        RoleId         = '12345-67890'
-                        RoleMemberInfo = @{
-                            DisplayName = 'John Doe'
-                            Id          = '1234567890'
-                        }
-                    },
-                    [pscustomobject]@{
-                        RoleId         = '09876-54321'
-                        RoleMemberInfo = @{
-                            DisplayName = 'FakeRoleGroup'
-                            Id          = '0987654321'
-                        }
-                    })
+                            RoleId         = '12345-67890'
+                            RoleMemberInfo = @{
+                                DisplayName = 'John Doe'
+                                Id          = '1234567890'
+                            }
+                        },
+                        [pscustomobject]@{
+                            RoleId         = '09876-54321'
+                            RoleMemberInfo = @{
+                                DisplayName = 'FakeRoleGroup'
+                                Id          = '0987654321'
+                            }
+                        })
                 }
 
-                Mock -CommandName Invoke-MgGraphRequest -ParameterFilter {$Uri -match '1234567890$'} -MockWith {
+                Mock -CommandName Invoke-MgGraphRequest -ParameterFilter { $Uri -match '1234567890$' } -MockWith {
                     return [pscustomobject]@{
                         '@odata.type'     = '#microsoft.graph.user'
                         DisplayName       = 'John Doe'
@@ -485,22 +485,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Invoke-MgGraphRequest -ParameterFilter {$Uri -match '0987654321$'} -MockWith {
+                Mock -CommandName Invoke-MgGraphRequest -ParameterFilter { $Uri -match '0987654321$' } -MockWith {
                     return [pscustomobject]@{
-                        '@odata.type'     = '#microsoft.graph.group'
-                        DisplayName       = 'FakeRoleGroup'
-                        Id                = '0987654321'
+                        '@odata.type' = '#microsoft.graph.group'
+                        DisplayName   = 'FakeRoleGroup'
+                        Id            = '0987654321'
                     }
                 }
 
-                Mock -CommandName Get-MgDirectoryRole -ParameterFilter {$DirectoryRoleId -eq '12345-67890'} -MockWith {
+                Mock -CommandName Get-MgDirectoryRole -ParameterFilter { $DirectoryRoleId -eq '12345-67890' } -MockWith {
                     return [pscustomobject]@{
                         Id          = '12345-67890'
                         DisplayName = 'DSC User Administrator'
                     }
                 }
 
-                Mock -CommandName Get-MgDirectoryRole -ParameterFilter {$DirectoryRoleId -eq '09876-54321'} -MockWith {
+                Mock -CommandName Get-MgDirectoryRole -ParameterFilter { $DirectoryRoleId -eq '09876-54321' } -MockWith {
                     return [pscustomobject]@{
                         Id          = '09876-54321'
                         DisplayName = 'DSC Groups Administrator'

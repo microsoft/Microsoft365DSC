@@ -51,7 +51,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential         = $Credential
                     Ensure             = 'Present'
                     GatewayIPAddresses = @('127.0.0.1')
-                    Identity           = 'Tenant Perimeter Settings'
+                    IsSingleInstance   = 'Yes'
                 }
 
                 Mock -CommandName Get-PerimeterConfig -MockWith {
@@ -80,7 +80,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential         = $Credential
                     Ensure             = 'Present'
                     GatewayIPAddresses = @('127.0.0.1')
-                    Identity           = 'Tenant Perimeter Settings'
+                    IsSingleInstance   = 'Yes'
                 }
 
                 Mock -CommandName Get-PerimeterConfig -MockWith {

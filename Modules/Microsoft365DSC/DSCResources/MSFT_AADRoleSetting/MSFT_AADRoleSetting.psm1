@@ -8,7 +8,7 @@ function Get-TargetResource
         [System.String]
         $Id,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Displayname,
 
@@ -378,7 +378,7 @@ function Set-TargetResource
         [System.String]
         $Id,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Displayname,
 
@@ -1058,8 +1058,6 @@ function Set-TargetResource
                     -UnifiedRoleManagementPolicyRuleId $role.id `
                     -BodyParameter $params `
                     -ErrorAction Stop
-
-
             }
             catch
             {
@@ -1080,7 +1078,7 @@ function Test-TargetResource
         [System.String]
         $Id,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Displayname,
 
@@ -1374,6 +1372,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($roles.Count)] $($role.DisplayName)" -NoNewline
             $Params = @{
                 Id                    = $role.Id
+                DisplayName           = $role.DisplayName
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint

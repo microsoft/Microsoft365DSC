@@ -4,11 +4,11 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -228,10 +228,10 @@ function Get-TargetResource
         [System.String]
         $CustomBrowserProtocol,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -433,11 +433,11 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -657,10 +657,10 @@ function Set-TargetResource
         [System.String]
         $CustomBrowserProtocol,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -811,11 +811,11 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -1035,10 +1035,10 @@ function Test-TargetResource
         [System.String]
         $CustomBrowserProtocol,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -1084,7 +1084,7 @@ function Test-TargetResource
 
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    $ValuesToCheck.remove('Identity')
+    $ValuesToCheck.Remove('Identity')
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -1162,6 +1162,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($policies.Count)] $($policy.displayName)" -NoNewline
             $params = @{
                 Identity              = $policy.id
+                DisplayName           = $policy.DisplayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationID         = $ApplicationId

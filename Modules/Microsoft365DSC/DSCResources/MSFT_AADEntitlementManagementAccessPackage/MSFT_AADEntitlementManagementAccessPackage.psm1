@@ -5,9 +5,13 @@ function Get-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -16,10 +20,6 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [System.Boolean]
@@ -44,13 +44,12 @@ function Get-TargetResource
         [Parameter()]
         [System.String[]]
         $IncompatibleGroups,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -204,9 +203,13 @@ function Set-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -215,10 +218,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [System.Boolean]
@@ -243,13 +242,12 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $IncompatibleGroups,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -465,7 +463,7 @@ function Set-TargetResource
         {
             Remove-MgBetaEntitlementManagementAccessPackageIncompatibleAccessPackageByRef `
                 -AccessPackageId $currentInstance.Id `
-                -AccessPackageId1  $incompatibleAccessPackage
+                -AccessPackageId1 $incompatibleAccessPackage
         }
         #endregion
 
@@ -502,7 +500,7 @@ function Set-TargetResource
         {
             Remove-MgBetaEntitlementManagementAccessPackageIncompatibleGroupByRef `
                 -AccessPackageId $currentInstance.Id `
-                -GroupId  $incompatibleGroup
+                -GroupId $incompatibleGroup
         }
         #endregion
 
@@ -654,8 +652,6 @@ function Set-TargetResource
                 -AccessPackageId $currentInstance.Id  `
                 -AccessPackageResourceRoleScopeId $currentRoleScope.Id
         }
-
-        #endregion
         #endregion
 
     }
@@ -666,7 +662,6 @@ function Set-TargetResource
         #region resource generator code
         Remove-MgBetaEntitlementManagementAccessPackage -AccessPackageId $currentInstance.Id
         #endregion
-
     }
 }
 
@@ -677,9 +672,13 @@ function Test-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -688,10 +687,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [System.Boolean]
@@ -716,13 +711,12 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $IncompatibleGroups,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -898,7 +892,8 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                id                    = $config.id
+                Id                    = $config.id
+                DisplayName           = $config.displayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId

@@ -63,15 +63,6 @@ function Get-TargetResource
         $EnableRegionBlockList = $false,
 
         [Parameter()]
-        [ValidatePattern("^$|^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")]
-        [System.String]
-        $EndUserSpamNotificationCustomFromAddress,
-
-        [Parameter()]
-        [System.String]
-        $EndUserSpamNotificationCustomFromName,
-
-        [Parameter()]
         [System.String]
         $EndUserSpamNotificationCustomSubject,
 
@@ -472,15 +463,6 @@ function Set-TargetResource
         $EnableRegionBlockList = $false,
 
         [Parameter()]
-        [ValidatePattern("^$|^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")]
-        [System.String]
-        $EndUserSpamNotificationCustomFromAddress,
-
-        [Parameter()]
-        [System.String]
-        $EndUserSpamNotificationCustomFromName,
-
-        [Parameter()]
         [System.String]
         $EndUserSpamNotificationCustomSubject,
 
@@ -722,17 +704,6 @@ function Set-TargetResource
     $HostedContentFilterPolicyParams.Remove('CertificatePassword') | Out-Null
     $HostedContentFilterPolicyParams.Remove('ManagedIdentity') | Out-Null
 
-    if ($HostedContentFilterPolicyParams.Contains('EndUserSpamNotificationCustomFromAddress'))
-    {
-        $HostedContentFilterPolicyParams.Remove('EndUserSpamNotificationCustomFromAddress') | Out-Null
-        Write-Verbose -Message 'The EndUserSpamNotificationCustomFromAddress parameter is no longer available and will be deprecated.'
-    }
-    if ($HostedContentFilterPolicyParams.Contains('EndUserSpamNotificationCustomFromName'))
-    {
-        $HostedContentFilterPolicyParams.Remove('EndUserSpamNotificationCustomFromName') | Out-Null
-        Write-Verbose -Message 'The EndUserSpamNotificationCustomFromName parameter is no longer available and will be deprecated.'
-    }
-
     if (('Present' -eq $Ensure ) -and ($null -eq $HostedContentFilterPolicy))
     {
         $HostedContentFilterPolicyParams += @{
@@ -830,15 +801,6 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $EnableRegionBlockList = $false,
-
-        [Parameter()]
-        [ValidatePattern("^$|^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")]
-        [System.String]
-        $EndUserSpamNotificationCustomFromAddress,
-
-        [Parameter()]
-        [System.String]
-        $EndUserSpamNotificationCustomFromName,
 
         [Parameter()]
         [System.String]
@@ -1070,8 +1032,6 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('EndUserSpamNotificationCustomFromAddress') | Out-Null
-    $ValuesToCheck.Remove('EndUserSpamNotificationCustomFromName') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null

@@ -8,6 +8,10 @@ function Get-TargetResource
         [System.String]
         $Id,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
         [Parameter()]
         [System.String]
         $AccessPackageId,
@@ -23,10 +27,6 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [System.Int32]
@@ -318,6 +318,10 @@ function Set-TargetResource
         [System.String]
         $Id,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
         [Parameter()]
         [System.String]
         $AccessPackageId,
@@ -333,10 +337,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [System.Int32]
@@ -484,6 +484,10 @@ function Test-TargetResource
         [System.String]
         $Id,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
         [Parameter()]
         [System.String]
         $AccessPackageId,
@@ -499,10 +503,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [System.Int32]
@@ -699,6 +699,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
                 id                    = $config.id
+                DisplayName           = $config.displayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId

@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **DisplayName** | Key | String | DisplayName of the AAD CA Policy | |
-| **Id** | Write | String | Specifies the GUID for the Policy. | |
+| **Id** | Key | String | Specifies the GUID for the Policy. | |
+| **DisplayName** | Required | String | DisplayName of the AAD CA Policy | |
 | **State** | Write | String | Specifies the State of the Policy. | `disabled`, `enabled`, `enabledForReportingButNotEnforced` |
 | **IncludeApplications** | Write | StringArray[] | Cloud Apps in scope of the Policy. | |
 | **ExcludeApplications** | Write | StringArray[] | Cloud Apps out of scope of the Policy. | |
@@ -26,8 +26,6 @@
 | **ExcludePlatforms** | Write | StringArray[] | Client Device Platforms out of scope of the Policy. | |
 | **IncludeLocations** | Write | StringArray[] | AAD Named Locations in scope of the Policy. | |
 | **ExcludeLocations** | Write | StringArray[] | AAD Named Locations out of scope of the Policy. | |
-| **IncludeDevices** | Write | StringArray[] | Client Device Compliance states in scope of the Policy. | |
-| **ExcludeDevices** | Write | StringArray[] | Client Device Compliance states out of scope of the Policy. | |
 | **DeviceFilterMode** | Write | String | Client Device Filter mode of the Policy. | `include`, `exclude` |
 | **DeviceFilterRule** | Write | String | Client Device Filter rule of the Policy. | |
 | **UserRiskLevels** | Write | StringArray[] | AAD Identity Protection User Risk Levels in scope of the Policy. | |
@@ -93,7 +91,8 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [PSCredential]
         $credsGlobalAdmin
@@ -104,43 +103,42 @@ Configuration Example
     {
         AADConditionalAccessPolicy 'Allin-example'
         {
-            BuiltInControls                         = @("Mfa", "CompliantDevice", "DomainJoinedDevice", "ApprovedApplication", "CompliantApplication")
-            ClientAppTypes                          = @("ExchangeActiveSync", "Browser", "MobileAppsAndDesktopClients", "Other")
-            CloudAppSecurityIsEnabled               = $True
-            CloudAppSecurityType                    = "MonitorOnly"
-            DisplayName                             = "Allin-example"
-            ExcludeApplications                     = @("803ee9ca-3f7f-4824-bd6e-0b99d720c35c", "00000012-0000-0000-c000-000000000000", "00000007-0000-0000-c000-000000000000", "Office365")
-            ExcludeDevices                          = @("Compliant", "DomainJoined")
-            ExcludeGroups                           = @()
-            ExcludeLocations                        = @("Blocked Countries")
-            ExcludePlatforms                        = @("Windows", "WindowsPhone", "MacOS")
-            ExcludeRoles                            = @("Company Administrator", "Application Administrator", "Application Developer", "Cloud Application Administrator", "Cloud Device Administrator")
-            ExcludeUsers                            = @("admin@contoso.com", "AAdmin@contoso.com", "CAAdmin@contoso.com", "AllanD@contoso.com", "AlexW@contoso.com", "GuestsOrExternalUsers")
-            ExcludeExternalTenantsMembers           = @();
-            ExcludeExternalTenantsMembershipKind    = "all";
-            ExcludeGuestOrExternalUserTypes         = @("internalGuest","b2bCollaborationMember");
-            GrantControlOperator                    = "OR"
-            IncludeApplications                     = @("All")
-            IncludeDevices                          = @("All")
-            IncludeGroups                           = @()
-            IncludeLocations                        = @("AllTrusted")
-            IncludePlatforms                        = @("Android", "IOS")
-            IncludeRoles                            = @("Compliance Administrator")
-            IncludeUserActions                      = @()
-            IncludeUsers                            = @("Alexw@contoso.com")
-            IncludeExternalTenantsMembers           = @("11111111-1111-1111-1111-111111111111");
-            IncludeExternalTenantsMembershipKind    = "enumerated";
-            IncludeGuestOrExternalUserTypes         = @("b2bCollaborationGuest");
-            PersistentBrowserIsEnabled              = $false
-            PersistentBrowserMode                   = ""
-            SignInFrequencyIsEnabled                = $True
-            SignInFrequencyType                     = "Hours"
-            SignInFrequencyValue                    = 5
-            SignInRiskLevels                        = @("High", "Medium")
-            State                                   = "disabled"
-            UserRiskLevels                          = @("High", "Medium")
-            Ensure                                  = "Present"
-            Credential                              = $credsGlobalAdmin
+            Id                                   = '4b0bb08f-85ab-4a12-a12c-06114b6ac6df'
+            DisplayName                          = 'Allin-example'
+            BuiltInControls                      = @('Mfa', 'CompliantDevice', 'DomainJoinedDevice', 'ApprovedApplication', 'CompliantApplication')
+            ClientAppTypes                       = @('ExchangeActiveSync', 'Browser', 'MobileAppsAndDesktopClients', 'Other')
+            CloudAppSecurityIsEnabled            = $True
+            CloudAppSecurityType                 = 'MonitorOnly'
+            ExcludeApplications                  = @('803ee9ca-3f7f-4824-bd6e-0b99d720c35c', '00000012-0000-0000-c000-000000000000', '00000007-0000-0000-c000-000000000000', 'Office365')
+            ExcludeGroups                        = @()
+            ExcludeLocations                     = @('Blocked Countries')
+            ExcludePlatforms                     = @('Windows', 'WindowsPhone', 'MacOS')
+            ExcludeRoles                         = @('Company Administrator', 'Application Administrator', 'Application Developer', 'Cloud Application Administrator', 'Cloud Device Administrator')
+            ExcludeUsers                         = @('admin@contoso.com', 'AAdmin@contoso.com', 'CAAdmin@contoso.com', 'AllanD@contoso.com', 'AlexW@contoso.com', 'GuestsOrExternalUsers')
+            ExcludeExternalTenantsMembers        = @()
+            ExcludeExternalTenantsMembershipKind = 'all'
+            ExcludeGuestOrExternalUserTypes      = @('internalGuest', 'b2bCollaborationMember')
+            GrantControlOperator                 = 'OR'
+            IncludeApplications                  = @('All')
+            IncludeGroups                        = @()
+            IncludeLocations                     = @('AllTrusted')
+            IncludePlatforms                     = @('Android', 'IOS')
+            IncludeRoles                         = @('Compliance Administrator')
+            IncludeUserActions                   = @()
+            IncludeUsers                         = @('Alexw@contoso.com')
+            IncludeExternalTenantsMembers        = @('11111111-1111-1111-1111-111111111111')
+            IncludeExternalTenantsMembershipKind = 'enumerated'
+            IncludeGuestOrExternalUserTypes      = @('b2bCollaborationGuest')
+            PersistentBrowserIsEnabled           = $false
+            PersistentBrowserMode                = ''
+            SignInFrequencyIsEnabled             = $true
+            SignInFrequencyType                  = 'Hours'
+            SignInFrequencyValue                 = 5
+            SignInRiskLevels                     = @('High', 'Medium')
+            State                                = 'disabled'
+            UserRiskLevels                       = @('High', 'Medium')
+            Ensure                               = 'Present'
+            Credential                           = $credsGlobalAdmin
         }
     }
 }

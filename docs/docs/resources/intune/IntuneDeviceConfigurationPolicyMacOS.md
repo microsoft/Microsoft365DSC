@@ -4,9 +4,9 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Write | String | | |
+| **Id** | Key | String | | |
+| **DisplayName** | Required | String | | |
 | **Description** | Write | String | | |
-| **DisplayName** | Write | String | | |
 | **AddingGameCenterFriendsBlocked** | Write | Boolean | | |
 | **AirDropBlocked** | Write | Boolean | | |
 | **AppleWatchBlockAutoUnlock** | Write | Boolean | Blocks users from unlocking their Mac with Apple Watch. | |

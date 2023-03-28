@@ -21,11 +21,6 @@ function Get-TargetResource
         [System.Boolean]
         $Enabled = $true,
 
-        # Deprecated
-        [Parameter()]
-        [System.Boolean]
-        $EnableAntispoofEnforcement = $true,
-
         [Parameter()]
         [System.Boolean]
         $EnableFirstContactSafetyTips = $true,
@@ -121,12 +116,6 @@ function Get-TargetResource
         [Parameter()]
         [System.String[]]
         $TargetedDomainActionRecipients = @(),
-
-        # Deprecated
-        [Parameter()]
-        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
-        [System.String]
-        $TargetedDomainProtectionAction = 'NoAction',
 
         [Parameter()]
         [System.String[]]
@@ -316,11 +305,6 @@ function Set-TargetResource
         [System.Boolean]
         $Enabled = $true,
 
-        # Deprecated
-        [Parameter()]
-        [System.Boolean]
-        $EnableAntispoofEnforcement = $true,
-
         [Parameter()]
         [System.Boolean]
         $EnableFirstContactSafetyTips = $true,
@@ -417,12 +401,6 @@ function Set-TargetResource
         [System.String[]]
         $TargetedDomainActionRecipients = @(),
 
-        # Deprecated
-        [Parameter()]
-        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
-        [System.String]
-        $TargetedDomainProtectionAction = 'NoAction',
-
         [Parameter()]
         [System.String[]]
         $TargetedDomainsToProtect = @(),
@@ -476,18 +454,6 @@ function Set-TargetResource
         [Switch]
         $ManagedIdentity
     )
-
-    if ($EnableAntispoofEnforcement)
-    {
-        Write-Verbose -Message ('The EnableAntispoofEnforcement parameter is now deprecated. ' + `
-                'It will be removed in the next major release. Please update your configuraton.')
-    }
-
-    if ($TargetedDomainProtectionAction)
-    {
-        Write-Verbose -Message ('The TargetedDomainProtectionAction parameter is now deprecated. ' + `
-                'It will be removed in the next major release. Please update your configuraton.')
-    }
 
     Write-Verbose -Message "Setting configuration of AntiPhishPolicy for $Identity"
 
@@ -562,11 +528,6 @@ function Test-TargetResource
         [System.Boolean]
         $Enabled = $true,
 
-        # Deprecated
-        [Parameter()]
-        [System.Boolean]
-        $EnableAntispoofEnforcement = $true,
-
         [Parameter()]
         [System.Boolean]
         $EnableFirstContactSafetyTips = $true,
@@ -662,12 +623,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $TargetedDomainActionRecipients = @(),
-
-        # Deprecated
-        [Parameter()]
-        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
-        [System.String]
-        $TargetedDomainProtectionAction = 'NoAction',
 
         [Parameter()]
         [System.String[]]

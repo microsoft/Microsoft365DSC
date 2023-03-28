@@ -5,9 +5,13 @@ function Get-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -30,10 +34,6 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
         [System.Boolean]
         $IsPendingOnboarding,
 
@@ -52,13 +52,12 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $Url,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -152,6 +151,7 @@ function Get-TargetResource
             }
             $hashAttributes += $hashAttribute
         }
+
         $results = [ordered]@{
             Id                    = $Id
             CatalogId             = $CatalogId
@@ -174,7 +174,6 @@ function Get-TargetResource
             ManagedIdentity       = $ManagedIdentity.IsPresent
         }
 
-
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -195,9 +194,13 @@ function Set-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -220,10 +223,6 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
         [System.Boolean]
         $IsPendingOnboarding,
 
@@ -242,13 +241,12 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Url,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -351,7 +349,6 @@ function Set-TargetResource
         New-MgBetaEntitlementManagementAccessPackageResourceRequest @resourceRequest
 
         #endregion
-
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -394,7 +391,6 @@ function Set-TargetResource
         New-MgBetaEntitlementManagementAccessPackageResourceRequest @resourceRequest
 
         #endregion
-
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -426,7 +422,6 @@ function Set-TargetResource
         $resource = Rename-M365DSCCimInstanceParameter -Properties $resource `
             -Mapping $mapping
 
-
         #region resource generator code
         $resourceRequest = @{
             CatalogId             = $CatalogId
@@ -447,9 +442,13 @@ function Test-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -472,10 +471,6 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
         [System.Boolean]
         $IsPendingOnboarding,
 
@@ -494,13 +489,12 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Url,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -577,6 +571,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('AddedBy') | Out-Null
     $ValuesToCheck.Remove('AddedOn') | Out-Null
     $ValuesToCheck.Remove('IsPendingOnboarding') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -687,7 +682,8 @@ function Export-TargetResource
                 Write-Host "        |---[$j/$($resources.Count)] $($resource.DisplayName)" -NoNewline
 
                 $params = @{
-                    id                    = $resource.id
+                    Id                    = $resource.id
+                    DisplayName           = $resource.displayName
                     CatalogId             = $catalogId
                     Ensure                = 'Present'
                     Credential            = $Credential

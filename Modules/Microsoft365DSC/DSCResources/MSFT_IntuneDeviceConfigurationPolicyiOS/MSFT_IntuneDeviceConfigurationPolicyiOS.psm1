@@ -5,17 +5,17 @@ function Get-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [System.Boolean]
@@ -771,17 +771,15 @@ function Get-TargetResource
         [System.Boolean]
         $WifiPowerOnForced,
 
-
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -852,9 +850,7 @@ function Get-TargetResource
                     -and $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration' `
             }
         }
-
         #endregion
-
 
         if ($null -eq $getValue)
         {
@@ -864,7 +860,6 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found something with id {$id}"
         $results = @{
-
             #region resource generator code
             Id                                             = $getValue.Id
             Description                                    = $getValue.Description
@@ -1044,7 +1039,6 @@ function Get-TargetResource
             WiFiConnectToAllowedNetworksOnlyForced         = $getValue.AdditionalProperties.wiFiConnectToAllowedNetworksOnlyForced
             WifiPowerOnForced                              = $getValue.AdditionalProperties.wifiPowerOnForced
             Managedidentity                                = $ManagedIdentity.IsPresent
-
             Ensure                                         = 'Present'
             Credential                                     = $Credential
             ApplicationId                                  = $ApplicationId
@@ -1066,7 +1060,6 @@ function Get-TargetResource
         $results.Add('MediaContentRatingUnitedKingdom', $getValue.additionalProperties.mediaContentRatingUnitedKingdom)
         $results.Add('MediaContentRatingUnitedStates', $getValue.additionalProperties.mediaContentRatingUnitedStates)
         $results.Add('NetworkUsageRules', $getValue.additionalProperties.networkUsageRules)
-
 
         $returnAssignments = @()
         $returnAssignments += Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $getValue.Id
@@ -1104,17 +1097,17 @@ function Set-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [System.Boolean]
@@ -1870,17 +1863,15 @@ function Set-TargetResource
         [System.Boolean]
         $WifiPowerOnForced,
 
-
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -1938,7 +1929,6 @@ function Set-TargetResource
     $PSBoundParameters.Remove('TenantId') | Out-Null
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
 
-
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating {$DisplayName}"
@@ -1982,9 +1972,7 @@ function Set-TargetResource
             Update-DeviceConfigurationPolicyAssignments -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash
         }
-
         #endregion
-
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -2024,9 +2012,7 @@ function Set-TargetResource
         }
         Update-DeviceConfigurationPolicyAssignments -DeviceConfigurationPolicyId $currentInstance.id `
             -Targets $assignmentsHash
-
         #endregion
-
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -2045,17 +2031,17 @@ function Test-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
 
         [Parameter()]
         [System.Boolean]
@@ -2811,17 +2797,15 @@ function Test-TargetResource
         [System.Boolean]
         $WifiPowerOnForced,
 
-
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -2888,11 +2872,10 @@ function Test-TargetResource
             if (-Not $testResult)
             {
                 $testResult = $false
-                break;
+                break
             }
 
             $ValuesToCheck.Remove($key) | Out-Null
-
         }
     }
 
@@ -2900,9 +2883,10 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
 
-    #Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    #Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
     #Convert any DateTime to String
     foreach ($key in $ValuesToCheck.Keys)
@@ -2975,7 +2959,6 @@ function Export-TargetResource
 
     try
     {
-
         #region resource generator code
         [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
             -ErrorAction Stop -All:$true | Where-Object `
@@ -2998,7 +2981,8 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($getValue.Count)] $($config.displayName)" -NoNewline
             $params = @{
-                id                    = $config.id
+                Id                    = $config.id
+                DisplayName           = $config.DisplayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId

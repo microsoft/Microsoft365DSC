@@ -4,9 +4,13 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -22,17 +26,13 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
         [System.Boolean]
         $IsExternallyVisible,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -149,10 +149,13 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -168,17 +171,13 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
         [System.Boolean]
         $IsExternallyVisible,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -285,10 +284,13 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -304,17 +306,13 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
         [System.Boolean]
         $IsExternallyVisible,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -454,7 +452,8 @@ function Export-TargetResource
 
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                id                    = $config.id
+                Id                    = $config.id
+                DisplayName           = $config.displayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
