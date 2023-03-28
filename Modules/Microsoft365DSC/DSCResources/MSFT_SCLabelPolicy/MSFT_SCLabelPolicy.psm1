@@ -327,7 +327,6 @@ function Set-TargetResource
             $CreationParams['AdvancedSettings'] = $advanced
         }
         #Remove parameters not used in New-LabelPolicy
-        $CreationParams.Remove('Credential') | Out-Null
         $CreationParams.Remove('Ensure') | Out-Null
         $CreationParams.Remove('AddLabels') | Out-Null
         $CreationParams.Remove('AddExchangeLocation') | Out-Null
@@ -339,6 +338,17 @@ function Set-TargetResource
         $CreationParams.Remove('RemoveExchangeLocationException') | Out-Null
         $CreationParams.Remove('RemoveModernGroupLocation') | Out-Null
         $CreationParams.Remove('RemoveModernGroupLocationException') | Out-Null
+
+        # Remove authentication parameters
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('ApplicationId') | Out-Null
+        $CreationParams.Remove('TenantId') | Out-Null
+        $CreationParams.Remove('CertificatePath') | Out-Null
+        $CreationParams.Remove('CertificatePassword') | Out-Null
+        $CreationParams.Remove('CertificateThumbprint') | Out-Null
+        $CreationParams.Remove('ManagedIdentity') | Out-Null
+        $CreationParams.Remove('ApplicationSecret') | Out-Null
+
         Write-Verbose "Creating new Sensitivity label policy '$Name'."
 
         try
@@ -360,7 +370,6 @@ function Set-TargetResource
                 $SetParams['AdvancedSettings'] = $advanced
             }
             #Remove unused parameters for Set-Label cmdlet
-            $SetParams.Remove('Credential') | Out-Null
             $SetParams.Remove('Ensure') | Out-Null
             $SetParams.Remove('Name') | Out-Null
             $SetParams.Remove('ExchangeLocationException') | Out-Null
@@ -368,6 +377,16 @@ function Set-TargetResource
             $SetParams.Remove('ExchangeLocation') | Out-Null
             $SetParams.Remove('ModernGroupLocation') | Out-Null
             $SetParams.Remove('ModernGroupLocationException') | Out-Null
+
+            # Remove authentication parameters
+            $SetParams.Remove('Credential') | Out-Null
+            $SetParams.Remove('ApplicationId') | Out-Null
+            $SetParams.Remove('TenantId') | Out-Null
+            $SetParams.Remove('CertificatePath') | Out-Null
+            $SetParams.Remove('CertificatePassword') | Out-Null
+            $SetParams.Remove('CertificateThumbprint') | Out-Null
+            $SetParams.Remove('ManagedIdentity') | Out-Null
+            $SetParams.Remove('ApplicationSecret') | Out-Null
 
             Set-LabelPolicy @SetParams -Identity $Name
         }
@@ -386,7 +405,6 @@ function Set-TargetResource
             $SetParams['AdvancedSettings'] = $advanced
         }
         #Remove unused parameters for Set-Label cmdlet
-        $SetParams.Remove('Credential') | Out-Null
         $SetParams.Remove('Ensure') | Out-Null
         $SetParams.Remove('Name') | Out-Null
         $SetParams.Remove('ExchangeLocationException') | Out-Null
@@ -394,6 +412,16 @@ function Set-TargetResource
         $SetParams.Remove('ExchangeLocation') | Out-Null
         $SetParams.Remove('ModernGroupLocation') | Out-Null
         $SetParams.Remove('ModernGroupLocationException') | Out-Null
+
+        # Remove authentication parameters
+        $SetParams.Remove('Credential') | Out-Null
+        $SetParams.Remove('ApplicationId') | Out-Null
+        $SetParams.Remove('TenantId') | Out-Null
+        $SetParams.Remove('CertificatePath') | Out-Null
+        $SetParams.Remove('CertificatePassword') | Out-Null
+        $SetParams.Remove('CertificateThumbprint') | Out-Null
+        $SetParams.Remove('ManagedIdentity') | Out-Null
+        $SetParams.Remove('ApplicationSecret') | Out-Null
 
         try
         {
@@ -543,7 +571,6 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('AddLabels') | Out-Null
     $ValuesToCheck.Remove('AddExchangeLocation') | Out-Null
     $ValuesToCheck.Remove('AddExchangeLocationException') | Out-Null
@@ -554,6 +581,16 @@ function Test-TargetResource
     $ValuesToCheck.Remove('RemoveExchangeLocationException') | Out-Null
     $ValuesToCheck.Remove('RemoveModernGroupLocation') | Out-Null
     $ValuesToCheck.Remove('RemoveModernGroupLocationException') | Out-Null
+
+    # Remove authentication parameters
+    $ValuesToCheck.Remove('Credential') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     if ($null -ne $AdvancedSettings)
     {

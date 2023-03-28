@@ -554,7 +554,7 @@ function Start-M365DSCConfigurationExtract
                 }
                 'ApplicationSecret'
                 {
-                    $applicationSecretValue = New-Object System.Management.Automation.PSCredential ('ApplicationSecret', (ConvertTo-SecureString $ApplicationSecret -AsPlainText -Force));
+                    $applicationSecretValue = New-Object System.Management.Automation.PSCredential ('ApplicationSecret', (ConvertTo-SecureString $ApplicationSecret -AsPlainText -Force))
                     $parameters.Add('ApplicationSecret', $applicationSecretValue)
                 }
                 { $_ -in 'Credentials', 'CredentialsWithApplicationId' }
@@ -743,7 +743,7 @@ function Start-M365DSCConfigurationExtract
                 $Components.Contains('SPOApp')) -or
             $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains('SPO')))
         {
-            if ($ConnectionMode -eq 'credential')
+            if ($AuthMethods -Contains 'Credentials')
             {
                 $filesToDownload = Get-AllSPOPackages -Credential $Credential
             }
