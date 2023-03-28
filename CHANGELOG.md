@@ -22,6 +22,9 @@
   * [BREAKING CHANGE] Remove deprecated parameter Oauth2RequirePostResponse
 * AADConditionalAccessPolicy
   * [BREAKING CHANGE] Remove deprecated parameters IncludeDevices and ExcludeDevices
+* AADGroup
+  * Changed the SecurityEnabled and MailEnabled parameters to become mandatory.
+    FIXES [#3072](https://github.com/microsoft/Microsoft365DSC/issues/3072)
 * AADUser
   * [BREAKING CHANGE] Remove deprecated parameter PreferredDataLocation* EXOAntiPhishPolicy
   * [BREAKING CHANGE] Remove deprecated parameters EnableAntispoofEnforcement and
