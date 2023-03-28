@@ -49,14 +49,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure     = 'Present'
                     Credential = $Credential
                     Identity   = 'contoso.com'
-                }
-
-                Mock -CommandName Get-MgDomain -MockWith {
-                    return @{
-                        Name       = 'different.contoso.com'
-                        IsVerified = $true
-                    }
-                }
 
                 Mock -CommandName Get-AcceptedDomain -MockWith {
                     return @{
@@ -108,13 +100,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         OutboundOnly    = $false
                     }
                 }
-
-                Mock -CommandName Get-MgDomain -MockWith {
-                    return @{
-                        Name       = 'contoso.com'
-                        IsVerified = $true
-                    }
-                }
             }
 
             It 'Should return Absent from the Get method' {
@@ -131,14 +116,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     OutboundOnly   = $false
                     Credential     = $Credential
                     Identity       = 'contoso.com'
-                }
-
-                Mock -CommandName Get-MgDomain -MockWith {
-                    return @{
-                        Name       = 'contoso.com'
-                        IsVerified = $true
-                    }
-
                 }
 
                 Mock -CommandName Get-AcceptedDomain -MockWith {
@@ -167,14 +144,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure     = 'Present'
                     Credential = $Credential
                     Identity   = 'contoso.com'
-                }
-
-                Mock -CommandName Get-MgDomain -MockWith {
-                    return @{
-                        Name       = 'contoso.com'
-                        IsVerified = $true
-                    }
-
                 }
 
                 Mock -CommandName Get-AcceptedDomain -MockWith {

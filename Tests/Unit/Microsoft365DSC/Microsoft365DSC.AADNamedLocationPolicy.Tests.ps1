@@ -32,13 +32,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName Update-MgIdentityConditionalAccessNamedLocation -MockWith {
-            }
-
             Mock -CommandName Remove-MgIdentityConditionalAccessNamedLocation -MockWith {
-            }
-
-            Mock -CommandName New-MgIdentityConditionalAccessNamedLocation -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {

@@ -290,7 +290,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgTeam -MockWith {
+                Mock -CommandName Get-MgBetaTeam -MockWith {
                     return @{
                         Id          = '12345-12345-12345-12345-12345'
                         DisplayName = 'Contoso Team'

@@ -142,7 +142,7 @@ function Get-TargetResource
 
     try
     {
-        $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration' }
+        $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration' }
 
         if ($null -eq $config)
         {
@@ -332,14 +332,14 @@ function Set-TargetResource
 
         $AdditionalProperties = Get-M365DSCIntuneDeviceEnrollmentPlatformRestrictionAdditionalProperties -Properties $PSBoundParameters
 
-        New-MgDeviceManagementDeviceEnrollmentConfiguration -DisplayName $DisplayName `
+        New-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DisplayName $DisplayName `
             -Description $Description `
             -AdditionalProperties $AdditionalProperties
     }
     elseif ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Device Enrollment Platform Restriction {$DisplayName}"
-        $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
+        $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
         | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration' }
         $AdditionalProperties = Get-M365DSCIntuneDeviceEnrollmentPlatformRestrictionAdditionalProperties -Properties $PSBoundParameters
         $bodyParameters = @{
@@ -348,17 +348,17 @@ function Set-TargetResource
         }
         $bodyParameters += $AdditionalProperties
 
-        Update-MgDeviceManagementDeviceEnrollmentConfiguration `
+        Update-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
             -BodyParameter $bodyParameters `
             -DeviceEnrollmentConfigurationId $config.id
     }
     elseif ($Ensure -eq 'Absent' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Device Enrollment Platform Restriction {$DisplayName}"
-        $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
+        $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
         | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration' }
 
-        Remove-MgDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $config.id
+        Remove-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $config.id
     }
 }
 
@@ -570,7 +570,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$configs = Get-MgDeviceManagementDeviceEnrollmentConfiguration -All:$true -Filter $Filter -ErrorAction Stop `
+        [array]$configs = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -All:$true -Filter $Filter -ErrorAction Stop `
         | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration' }
         $i = 1
         $dscContent = ''
