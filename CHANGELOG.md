@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# 1.23.405.1
+# UNRELEASED
 
 * AADGroup
   * Changed the SecurityEnabled and MailEnabled parameters to become mandatory.
