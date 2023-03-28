@@ -83,7 +83,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName = 'FakeStringValue1'
                     Id          = 'FakeStringValue1'
                     Members     = @(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
                             Type     = 'User'
                             Identity = 'john.smith@contoso.com'
                         } -ClientOnly)
@@ -128,7 +128,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName = 'FakeStringValue2'
                     Id          = 'FakeStringValue2'
                     Members     = @(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
                             Type     = 'User'
                             Identity = 'john.smith@contoso.com'
                         } -ClientOnly)
@@ -172,7 +172,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                   = 'DSCAU'
                     Id                            = 'DSCAU'
                     Members                       = @(
-                                    (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
+                                    (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
                             Identity = 'John.Doe@mytenant.com'
                             Type     = 'User'
                         } -ClientOnly)
@@ -180,7 +180,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ScopedRoleMembers             = @(
                                 (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
                             RoleName       = 'User Administrator'
-                            RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
+                            RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
                                     Identity = 'John.Doe@mytenant.com'
                                     Type     = 'User'
                                 } -ClientOnly)
@@ -263,7 +263,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName       = 'DSCAU2'
                     Id                = 'DSCAU2'
                     Members           = @(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
                             Identity = 'John.Doe@mytenant.com'
                             Type     = 'User'
                         } -ClientOnly)
@@ -271,7 +271,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ScopedRoleMembers = @(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
                             RoleName       = 'User Administrator'
-                            RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
+                            RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
                                     Identity = 'John.Doe@mytenant.com'
                                     Type     = 'User'
                                 } -ClientOnly)
@@ -354,7 +354,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName       = 'DSCAU'
                     Id                = 'DSCAU'
                     Members           = @(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
                             Identity = 'John.Doe@mytenant.com'
                             Type     = 'User'
                         } -ClientOnly)
@@ -362,7 +362,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ScopedRoleMembers = @(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
                             RoleName       = 'User Administrator'
-                            RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphIdentity -Property @{
+                            RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
                                     Identity = 'John.Doe@mytenant.com'
                                     Type     = 'User'
                                 } -ClientOnly)
