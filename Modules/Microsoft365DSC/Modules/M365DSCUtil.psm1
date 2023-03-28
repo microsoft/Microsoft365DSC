@@ -2592,7 +2592,6 @@ function Test-M365DSCDependenciesForNewVersions
 
     foreach ($dependency in $dependencies)
     {
-        
         Write-Progress -Activity 'Scanning Dependencies' -PercentComplete ($i / $dependencies.Count * 100)
         try
         {
