@@ -36,6 +36,9 @@ We have modified the logic of all the resources below to ensure we have a primar
 * IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled
 * IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
 
+## Removed the Identity Parameters from EXOIRMConfiguration, EXOResourceConfiguraton & IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows 10
+The Identity parameter, which was the primary key for the resources listed, has been replaced by the IsSingleInstance parameter. This is because there could only ever be one instance of these resources on the tenants and in order to align with other tenant-wide resources, the IsSingleInstance parameter needs to be present. This parameter only ever accepts a value of 'Yes' and its sole purpose is to ensure there isn't more than one instance of the given resource per configuration file.
+
 ## IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager ([#3003](https://github.com/microsoft/Microsoft365DSC/pull/3003))
 As part of this release, we are changing the DisplayName parameter to be required. Current configurations should make sure to include this parameter to avoid any conflicts when upgrading.
 
@@ -82,8 +85,6 @@ We are removing parameters that have been deprecated from various resources as p
   * RequireAcceptingAccountMatchInvitedAccount
 * TeamsMeetingPolicy
   * RecordingStorageMode
-
-## TeamsGroupPolicyAssignment ([#3057](https://github.com/microsoft/Microsoft365DSC/pull/3057))
 
 ## AADGroup - Added SecurityEnabled and MailEnabled as Mandatory Parameters ([#3077](https://github.com/microsoft/Microsoft365DSC/pull/3077))
 We've updated the AADGroup resource to enforce the MailEnabled and SecurityEnabled parameters as mandatory. Omitting these parameters was throwing an error since they were required by the Microsoft Graph API associated with it. To update existing configurations, simply make sure that every instances of the AADGroup resource includes both the MailEnabled and SecurityEnabled parameters.
