@@ -89,6 +89,7 @@
   * Added a QA check to test for the presence of a Key parameter and fixes
     resources where this was not the case.
     FIXES [#2925](https://github.com/microsoft/Microsoft365DSC/issues/2925)
+  * Added a fix making sure that the progress bar "Scanning dependencies" is no longer displayed after the operation is completed.
 
 # 1.23.322.1
 
