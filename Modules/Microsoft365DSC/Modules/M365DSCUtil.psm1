@@ -855,8 +855,13 @@ function Test-M365DSCParameterState
 
     if ($returnValue -eq $false)
     {
+        $currentInstanceName = Get-M365DSCCurrentResourceInstanceNameFromLogs -ResourceName $Source
+        if ([System.String]::IsNullOrEMpty($currentInstanceName))
+        {
+            $currentInstanceName = $Source
+        }
         $EventMessage = "<M365DSCEvent>`r`n"
-        $EventMessage += "    <ConfigurationDrift Source=`"$Source`">`r`n"
+        $EventMessage += "    <ConfigurationDrift Source=`"$Source`" InstanceName=`"$currentInstanceName`">`r`n"
 
         $EventMessage += "        <ParametersNotInDesiredState>`r`n"
         foreach ($key in $DriftedParameters.Keys)
@@ -905,7 +910,7 @@ function Test-M365DSCParameterState
         $EventMessage += '</M365DSCEvent>'
 
         Add-M365DSCEvent -Message $EventMessage -EventType 'Drift' -EntryType 'Warning' `
-            -EventID 1 -Source $Source
+            -EventID 1 -Source $currentInstanceName
     }
 
     #region Telemetry
@@ -2614,7 +2619,7 @@ function Test-M365DSCDependenciesForNewVersions
         }
         $i++
     }
-    
+
     # The progress bar seems to hang sometimes. Make sure it is no longer displayed.
     Write-Progress -Activity 'Scanning Dependencies' -Completed
 }
@@ -2691,7 +2696,7 @@ function Update-M365DSCDependencies
         }
         $i++
     }
-    
+
     # The progress bar seems to hang sometimes. Make sure it is no longer displayed.
     Write-Progress -Activity 'Scanning Dependencies' -Completed
 

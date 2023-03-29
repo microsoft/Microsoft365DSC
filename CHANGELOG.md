@@ -97,7 +97,8 @@
   * Major changes to the export process where resource instances will now be assigned a meaningful nam
     that will follow the ResourceName-PrimaryKey convention.
   * Added a fix making sure that the progress bar "Scanning dependencies" is no longer displayed after the operation is completed.
-
+  * Changed configuration drift reporting to event log to include the instance name as the source.
+    FIXES [#2981](https://github.com/microsoft/Microsoft365DSC/issues/2981)
 
 # 1.23.322.1
 
