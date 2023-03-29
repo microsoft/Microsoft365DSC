@@ -855,8 +855,13 @@ function Test-M365DSCParameterState
 
     if ($returnValue -eq $false)
     {
+        $currentInstanceName = Get-M365DSCCurrentResourceInstanceNameFromLogs -ResourceName $Source
+        if ([System.String]::IsNullOrEMpty($currentInstanceName))
+        {
+            $currentInstanceName = $Source
+        }
         $EventMessage = "<M365DSCEvent>`r`n"
-        $EventMessage += "    <ConfigurationDrift Source=`"$Source`">`r`n"
+        $EventMessage += "    <ConfigurationDrift Source=`"$Source`" InstanceName=`"$currentInstanceName`">`r`n"
 
         $EventMessage += "        <ParametersNotInDesiredState>`r`n"
         foreach ($key in $DriftedParameters.Keys)
@@ -905,7 +910,7 @@ function Test-M365DSCParameterState
         $EventMessage += '</M365DSCEvent>'
 
         Add-M365DSCEvent -Message $EventMessage -EventType 'Drift' -EntryType 'Warning' `
-            -EventID 1 -Source $Source
+            -EventID 1 -Source $currentInstanceName
     }
 
     #region Telemetry
@@ -2983,7 +2988,34 @@ function Get-M365DSCExportContentForResource
     # Ensure the string properties are properly formatted;
     $Results = Format-M365DSCString -Properties $Results `
         -ResourceName $ResourceName
-    $content = "        $ResourceName " + (New-Guid).ToString() + "`r`n"
+
+    $primaryKey = ""
+    if ($Results.ContainsKey('IsSingleInstance'))
+    {
+        $primaryKey = ""
+    }
+    elseif ($Results.ContainsKey('DisplayName'))
+    {
+        $primaryKey = $Results.DisplayName
+    }
+    elseif ($Results.ContainsKey('Identity'))
+    {
+        $primaryKey = $Results.Identity
+    }
+    elseif ($Results.ContainsKey('Id'))
+    {
+        $primaryKey = $Results.Id
+    }
+    elseif ($Results.ContainsKey('Name'))
+    {
+        $primaryKey = $Results.Name
+    }
+    $instanceName = $ResourceName
+    if (-not [System.String]::IsNullOrEmpty($primaryKey))
+    {
+        $instanceName += "-$primaryKey"
+    }
+    $content = "        $ResourceName `"$instanceName`"`r`n"
     $content += "        {`r`n"
     $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath
     # Test for both Credentials and CredentialsWithApplicationId

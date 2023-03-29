@@ -1,6 +1,6 @@
 # Microsoft365DSC – October 2022 Major Release (version 1.22.1005.1)
 
-As defined by our [Breaking Changes Policy](https://microsoft365dsc.com/concepts/breaking-changes/), twice a year we allow for breaking changes to be deployed as part of a release. Our next major release, scheduled to go out on April 5th 2023, will include several breaking changes and will be labeled version 1.23.405.1. This article provides details on the breaking changes that will be included as part of our April 2023 Major release.
+As defined by our [Breaking Changes Policy](https://microsoft365dsc.com/concepts/breaking-changes/), twice a year we allow for breaking changes to be deployed as part of a release. Our next major release, scheduled to go out on April 5th 2023, will include several breaking changes and will be labeled version 1.23.405.1. This article provides details on the breaking changes and other important updates that will be included as part of our April 2023 Major release.
 
 ## IntuneDeviceEntollmentPlatformRestriction ([#2431](https://github.com/microsoft/Microsoft365DSC/pull/2431))
 As part of the April 2023 major release, this resource is being re-written almost entirely to account for new properties. The recommendation is to stop using old instances of it and start fresh by using this new updated version. One option would be to use the **Export-M365DSCConfiguration** cmdlet and target only this resource. Then, replace the existing instances in your configurations with the newly extracted content.
@@ -88,3 +88,56 @@ We are removing parameters that have been deprecated from various resources as p
 
 ## AADGroup - Added SecurityEnabled and MailEnabled as Mandatory Parameters ([#3077](https://github.com/microsoft/Microsoft365DSC/pull/3077))
 We've updated the AADGroup resource to enforce the MailEnabled and SecurityEnabled parameters as mandatory. Omitting these parameters was throwing an error since they were required by the Microsoft Graph API associated with it. To update existing configurations, simply make sure that every instances of the AADGroup resource includes both the MailEnabled and SecurityEnabled parameters.
+
+## Export - Resource Instance Logical Naming ([#3087](https://github.com/microsoft/Microsoft365DSC/pull/3087))
+In order to make it easier for folks to follow the execution process of the Start-DSCConfiguration cmdlet and to keep the exported configuration files cleaner, we've changed the extraction logic to provide meaningful names to the extracted components. In the past, every instance extracted used to be assigned a GUID as its instance name. Starting with this release, extracted resources will be named based on the following logic:
+
+<ul>
+ <li>If the resource implements the **IsSingleInstance** property, the resource instance's will simply take the resource's name. E.g.,
+ ```
+  SPOTenantSettings 'SPOTenantSettings'
+  {
+      ...
+  }
+ ```
+ </li>
+ <li>Otherwise, the resource will always be named following the "[ResourceName]-[PrimaryKey]" pattern. E.g.,
+ ```
+  TeamsMeetingPolicy 'TeamsMeetingPolicy-MyPolicy'
+  {
+      DisplayName = 'MyPolicy'
+      ...
+  }
+  ```
+  The primary key will always give priority to the following properties in order:
+  * DisplayName
+  * Identity
+  * Id
+  * Name
+  This means that if a resource instance defines both DisplayName and Id, that the DisplayName value will be used to name the instance.
+ </li>
+ </ul>
+
+## Logging Improvements to Include the Instance Name ([#3091](https://github.com/microsoft/Microsoft365DSC/pull/3091))
+Starting with this version of M365DSC, drift events logged in Event Viewer will include the Instance name as their source instead of just the full resource's name.
+![image](https://raw.githubusercontent.com/microsoft/Microsoft365DSC/Dev/docs/docs/Images/April2023MR-EventViewer.png)
+In addition to this, the M365DSCEvent XML content will now include an additional property for the ConfigurationDrift element that will be named **InstanceName** and will contain the resource's instance name. E.g.,
+
+```
+<M365DSCEvent>
+    <ConfigurationDrift Source="MSFT_AADNamedLocationPolicy" InstanceName="HibouChou">
+        <ParametersNotInDesiredState>
+            <Param Name="IpRanges"><CurrentValue>192.226.137.107/12</CurrentValue><DesiredValue>192.226.137.106/12</DesiredValue></Param>
+        </ParametersNotInDesiredState>
+    </ConfigurationDrift>
+    <DesiredValues>
+        <Param Name ="OdataType">#microsoft.graph.ipNamedLocation</Param>
+        <Param Name ="DisplayName">Nik's Laptop</Param>
+        <Param Name ="IpRanges">192.226.137.106/12</Param>
+        <Param Name ="IsTrusted">True</Param>
+        <Param Name ="Ensure">Present</Param>
+        <Param Name ="Credential">System.Management.Automation.PSCredential</Param>
+        <Param Name ="Verbose">True</Param>
+    </DesiredValues>
+</M365DSCEvent>
+```
