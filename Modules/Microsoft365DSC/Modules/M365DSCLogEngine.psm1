@@ -675,6 +675,45 @@ function Assert-M365DSCIsNonInteractiveShell
     return $true
 }
 
+<#
+.Description
+This function retrieves the name of the last resource instance being processed in the log files.
+
+.Functionality
+Private
+#>
+function Get-M365DSCCurrentResourceInstanceNameFromLogs
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter()]
+        [System.String]
+        $ResourceName
+    )
+
+    try
+    {
+        $allEvents = Get-WinEvent -LogName "Microsoft-windows-dsc/operational" -MaxEvents 25
+        foreach ($event in $allEvents)
+        {
+            $message = $event.Message
+            $stringToFind = "Resource execution sequence :: [$ResourceName]"
+            $start = $message.IndexOf($stringToFind)
+            if ($start -ge 0)
+            {
+                $end = $message.IndexOf(".", $start)
+                return $message.Substring($start + 31, $end-($start + 31))
+            }
+        }
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+    }
+    return $null
+}
+
 Export-ModuleMember -Function @(
     'Add-M365DSCEvent',
     'Export-M365DSCDiagnosticData',
