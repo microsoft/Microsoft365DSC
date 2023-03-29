@@ -49,6 +49,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgBetaDeviceManagementWindowAutopilotDeploymentProfileAssignment -MockWith {
             }
 
+            Mock -CommandName Write-Host -MockWith {
+            }
         }
         # Test contexts
         Context -Name "The IntuneWindowsAutopilotDeploymentProfileAzureADJoined should exist but it DOES NOT" -Fixture {

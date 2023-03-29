@@ -50,29 +50,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignment -MockWith {
-                return @{
-                    Id       = '12345-12345-12345-12345-12345'
-                    SettingInstanceTemplate = @{
-                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-                        settingInstanceTemplateId = 'd770fcd1-62cd-4217-9b20-9ee2a12062ff'
-                        AdditionalProperties = @{
-                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstanceTemplate'
-                            groupSettingCollectionValueTemplate = @{
-                                children =@(
-                                    @{
-                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                        settingInstanceTemplateId ='999c8d1b-9f4e-49b7-824d-001c5c7d0182'
-                                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware'
-                                        choiceSettingValueTemplate = @{
-                                            settingValueTemplateId = 'a212472c-c5cc-43dd-898d-d35286a408e5'
-                                        }
-                                    }
-                                )
-                            }
-                        }
-                    }
-                }
+            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignments -MockWith {
+                return $null
             }
 
             # Mock Write-Host to hide output during the tests
@@ -189,18 +168,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'When the instance already exists and IS in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Assignments = @(
-                        (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
-                            DataType                                   = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                            CollectionId                               = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                        } -ClientOnly)
-                    )
                     Credential  = $Credential
                     Description = 'My Test Description'
                     DisplayName = 'My Test'
                     Ensure      = 'Present'
                     Identity    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
-                    useadvancedprotectionagainstransomware = "block"
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {

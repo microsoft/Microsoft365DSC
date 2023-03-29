@@ -222,7 +222,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-BetaDeviceManagementWindowAutopilotDeploymentProfile -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementWindowAutopilotDeploymentProfile -MockWith {
                     return @{
                         AdditionalProperties = @{
                             hybridAzureADJoinSkipConnectivityCheck = $True

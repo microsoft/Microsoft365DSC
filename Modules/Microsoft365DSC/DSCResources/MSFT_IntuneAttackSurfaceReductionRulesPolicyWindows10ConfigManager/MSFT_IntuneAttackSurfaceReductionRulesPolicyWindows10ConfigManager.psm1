@@ -492,7 +492,7 @@ function Set-TargetResource
             -DeviceManagementConfigurationPolicyId $Identity `
             -Name $DisplayName `
             -Description $Description `
-            -TemplateReferenceId $templateReferenceId `
+            -TemplateReference $Template `
             -Platforms $platforms `
             -Technologies $technologies `
             -Settings $settings
@@ -699,31 +699,34 @@ function Test-TargetResource
     {
         foreach ($assignment in $CurrentValues.Assignments)
         {
-            #GroupId Assignment
-            if (-not [String]::IsNullOrEmpty($assignment.groupId))
+            if ($null -ne $Assignment)
             {
-                $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.groupId -eq $assignment.groupId }
-                if (-not $source)
+                #GroupId Assignment
+                if (-not [String]::IsNullOrEmpty($assignment.groupId))
                 {
-                    Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
-                    $testResult = $false
-                    break
+                    $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.groupId -eq $assignment.groupId }
+                    if (-not $source)
+                    {
+                        Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
+                        $testResult = $false
+                        break
+                    }
+                    $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
+                    $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
                 }
-                $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-                $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
-            }
-            #AllDevices/AllUsers assignment
-            else
-            {
-                $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.dataType -eq $assignment.dataType }
-                if (-not $source)
+                #AllDevices/AllUsers assignment
+                else
                 {
-                    Write-Verbose -Message "Configuration drift: {$($assignment.dataType)} not found"
-                    $testResult = $false
-                    break
+                    $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.dataType -eq $assignment.dataType }
+                    if (-not $source)
+                    {
+                        Write-Verbose -Message "Configuration drift: {$($assignment.dataType)} not found"
+                        $testResult = $false
+                        break
+                    }
+                    $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
+                    $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
                 }
-                $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-                $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
             }
 
             if (-not $testResult)
