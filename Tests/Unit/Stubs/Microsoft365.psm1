@@ -22480,6 +22480,10 @@ function New-MgBetaEntitlementManagementAccessPackageAssignmentPolicy
         $DisplayName,
 
         [Parameter()]
+        [PSObject]
+        $CustomExtensionStageSettings,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
@@ -22585,8 +22589,8 @@ function New-MgBetaEntitlementManagementAccessPackageCatalog
         $IsExternallyVisible,
 
         [Parameter()]
-        [System.String]
-        $CatalogStatus,
+        [PSObject]
+        $AccessPackageCustomWorkflowExtensions,
 
         [Parameter()]
         [System.DateTime]
@@ -22655,6 +22659,10 @@ function New-MgBetaEntitlementManagementAccessPackageCatalog
         [Parameter()]
         [PSObject]
         $CustomAccessPackageWorkflowExtensions,
+
+        [Parameter()]
+        [System.String]
+        $CatalogStatus,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -23699,6 +23707,10 @@ function Set-MgBetaEntitlementManagementAccessPackageAssignmentPolicy
         $DisplayName,
 
         [Parameter()]
+        [PSObject]
+        $CustomExtensionStageSettings,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
@@ -23923,6 +23935,10 @@ function Update-MgBetaEntitlementManagementAccessPackageCatalog
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $IsExternallyVisible,
+
+        [Parameter()]
+        [PSObject]
+        $AccessPackageCustomWorkflowExtensions,
 
         [Parameter()]
         [System.DateTime]
@@ -24731,6 +24747,241 @@ function Update-MgDeviceManagementRoleDefinition
 }
 #endregion
 #region MicrosoftGraph
+function Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.String]
+        $DeviceEnrollmentConfigurationId,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgBetaDeviceManagementWindowAutopilotDeploymentProfile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.String]
+        $WindowsAutopilotDeploymentProfileId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgBetaDeviceManagementWindowAutopilotDeploymentProfileAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $WindowsAutopilotDeploymentProfileAssignmentId,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.String]
+        $WindowsAutopilotDeploymentProfileId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
 function Get-MgBetaDeviceManagementWindowFeatureUpdateProfile
 {
     [CmdletBinding()]
@@ -24889,6 +25140,192 @@ function Get-MgBetaDeviceManagementWindowFeatureUpdateProfileAssignment
         $HttpPipelineAppend
     )
 }
+function New-MgBetaDeviceManagementDeviceEnrollmentConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $Assignments,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $Priority,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Version,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $DeviceEnrollmentConfigurationType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function New-MgBetaDeviceManagementWindowAutopilotDeploymentProfile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ExtractHardwareHash,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $Assignments,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $ManagementServiceAppId,
+
+        [Parameter()]
+        [PSObject]
+        $EnrollmentStatusScreenSettings,
+
+        [Parameter()]
+        [System.String]
+        $DeviceNameTemplate,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $EnableWhiteGlove,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [PSObject]
+        $DeviceType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $AssignedDevices,
+
+        [Parameter()]
+        [PSObject]
+        $OutOfBoxExperienceSettings,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Language,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
 function New-MgBetaDeviceManagementWindowFeatureUpdateProfile
 {
     [CmdletBinding()]
@@ -24974,6 +25411,104 @@ function New-MgBetaDeviceManagementWindowFeatureUpdateProfile
         $HttpPipelineAppend
     )
 }
+function Remove-MgBetaDeviceManagementDeviceEnrollmentConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $DeviceEnrollmentConfigurationId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgBetaDeviceManagementWindowAutopilotDeploymentProfile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $WindowsAutopilotDeploymentProfileId,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
 function Remove-MgBetaDeviceManagementWindowFeatureUpdateProfile
 {
     [CmdletBinding()]
@@ -25013,6 +25548,208 @@ function Remove-MgBetaDeviceManagementWindowFeatureUpdateProfile
         [Parameter()]
         [System.String]
         $WindowsFeatureUpdateProfileId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgBetaDeviceManagementDeviceEnrollmentConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $Assignments,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $Priority,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Version,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.String]
+        $DeviceEnrollmentConfigurationId,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $DeviceEnrollmentConfigurationType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgBetaDeviceManagementWindowAutopilotDeploymentProfile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ExtractHardwareHash,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $Assignments,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $ManagementServiceAppId,
+
+        [Parameter()]
+        [PSObject]
+        $EnrollmentStatusScreenSettings,
+
+        [Parameter()]
+        [System.String]
+        $DeviceNameTemplate,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $EnableWhiteGlove,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [PSObject]
+        $DeviceType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $AssignedDevices,
+
+        [Parameter()]
+        [PSObject]
+        $OutOfBoxExperienceSettings,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Language,
+
+        [Parameter()]
+        [System.String]
+        $WindowsAutopilotDeploymentProfileId,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -30370,16 +31107,16 @@ function Update-MgPolicyAuthorizationPolicy
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AllowUserConsentForRiskyApps,
+
+        [Parameter()]
         [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
         [System.String]
         $GuestUserRoleId,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -30408,6 +31145,10 @@ function Update-MgPolicyAuthorizationPolicy
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $AllowEmailVerifiedUsersToJoinOrganization,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
 
         [Parameter()]
         [System.DateTime]
@@ -36550,6 +37291,10 @@ function New-Label
 
         [Parameter()]
         [System.Object]
+        $TeamsChannelSharedWithPrivateTeamsOnly,
+
+        [Parameter()]
+        [System.Object]
         $TeamsEndToEndEncryptionEnabled,
 
         [Parameter()]
@@ -36567,6 +37312,10 @@ function New-Label
         [Parameter()]
         [System.Object]
         $EncryptionContentExpiredOnDateInDaysOrNever,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyWaterMarkingFontColor,
 
         [Parameter()]
         [System.Object]
@@ -36742,6 +37491,10 @@ function New-Label
 
         [Parameter()]
         [System.Object]
+        $TeamsChannelSharedWithSameLabelOnly,
+
+        [Parameter()]
+        [System.Object]
         $SiteAndGroupProtectionPrivacy,
 
         [Parameter()]
@@ -36751,6 +37504,10 @@ function New-Label
         [Parameter()]
         [System.Object]
         $ApplyContentMarkingFooterText,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsChannelProtectionEnabled,
 
         [Parameter()]
         [System.Object]
@@ -36778,7 +37535,7 @@ function New-Label
 
         [Parameter()]
         [System.Object]
-        $ApplyWaterMarkingFontColor,
+        $TeamsChannelSharedWithExternalTenants,
 
         [Parameter()]
         [System.Object]
@@ -36795,6 +37552,10 @@ function New-Label
         [Parameter()]
         [System.Object]
         $ApplyWaterMarkingEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsAllowPrivateTeamsToBeDiscoverableUsingSearch,
 
         [Parameter()]
         [System.Object]
@@ -39538,6 +40299,10 @@ function Set-Label
 
         [Parameter()]
         [System.Object]
+        $TeamsChannelSharedWithPrivateTeamsOnly,
+
+        [Parameter()]
+        [System.Object]
         $TeamsEndToEndEncryptionEnabled,
 
         [Parameter()]
@@ -39559,6 +40324,10 @@ function Set-Label
         [Parameter()]
         [System.Object]
         $EncryptionContentExpiredOnDateInDaysOrNever,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyWaterMarkingFontColor,
 
         [Parameter()]
         [System.Object]
@@ -39734,6 +40503,10 @@ function Set-Label
 
         [Parameter()]
         [System.Object]
+        $TeamsChannelSharedWithSameLabelOnly,
+
+        [Parameter()]
+        [System.Object]
         $SiteAndGroupProtectionPrivacy,
 
         [Parameter()]
@@ -39743,6 +40516,10 @@ function Set-Label
         [Parameter()]
         [System.Object]
         $ApplyContentMarkingFooterText,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsChannelProtectionEnabled,
 
         [Parameter()]
         [System.Object]
@@ -39762,7 +40539,7 @@ function Set-Label
 
         [Parameter()]
         [System.Object]
-        $ApplyWaterMarkingFontColor,
+        $TeamsChannelSharedWithExternalTenants,
 
         [Parameter()]
         [System.Object]
@@ -39779,6 +40556,10 @@ function Set-Label
         [Parameter()]
         [System.Object]
         $ApplyWaterMarkingEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsAllowPrivateTeamsToBeDiscoverableUsingSearch,
 
         [Parameter()]
         [System.Object]

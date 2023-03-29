@@ -1693,12 +1693,6 @@ function New-M365DSCConnection
                 -CertificatePath $InboundParameters.CertificatePath `
                 -SkipModuleReload $Global:CurrentModeIsExport
 
-            #2942 - check correct profile applied
-            if (($ProfileName -ne $global:MSCloudLoginConnectionProfile.MicrosoftGraph.ProfileName) -and ($Workload -eq 'MicrosoftGraph') )
-            {
-                Select-MgProfile -Name $ProfileName
-            }
-
             $data.Add('ConnectionType', 'ServicePrincipalWithPath')
             $data.Add('Tenant', $InboundParameters.TenantId)
             Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
@@ -1757,12 +1751,6 @@ function New-M365DSCConnection
                     -SkipModuleReload $Global:CurrentModeIsExport
             }
 
-            #2942 - check correct profile applied
-            if (($ProfileName -ne $global:MSCloudLoginConnectionProfile.MicrosoftGraph.ProfileName) -and ($Workload -eq 'MicrosoftGraph') )
-            {
-                Select-MgProfile-Name $ProfileName
-            }
-
             $data.Add('ConnectionType', 'Credential')
             try
             {
@@ -1810,11 +1798,6 @@ function New-M365DSCConnection
                 -ApplicationSecret $InboundParameters.ApplicationSecret `
                 -SkipModuleReload $Global:CurrentModeIsExport
 
-            #2942 - check correct profile applied
-            if (($ProfileName -ne $global:MSCloudLoginConnectionProfile.MicrosoftGraph.ProfileName) -and ($Workload -eq 'MicrosoftGraph') )
-            {
-                Select-MgProfile -Name $ProfileName
-            }
 
             $data.Add('ConnectionType', 'ServicePrincipalWithSecret')
             $data.Add('Tenant', $InboundParameters.TenantId)
@@ -1830,11 +1813,6 @@ function New-M365DSCConnection
                 -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
 
-            #2942 - check correct profile applied
-            if (($ProfileName -ne $global:MSCloudLoginConnectionProfile.MicrosoftGraph.ProfileName) -and ($Workload -eq 'MicrosoftGraph') )
-            {
-                Select-MgProfile -Name $ProfileName
-            }
 
             $data.Add('ConnectionType', 'ServicePrincipalWithSecret')
             $data.Add('Tenant', $InboundParameters.TenantId)
@@ -1852,12 +1830,6 @@ function New-M365DSCConnection
             -SkipModuleReload $Global:CurrentModeIsExport `
             -Url $Url
 
-        #2942 - check correct profile applied
-        if (($ProfileName -ne $global:MSCloudLoginConnectionProfile.MicrosoftGraph.ProfileName) -and ($Workload -eq 'MicrosoftGraph') )
-        {
-            Select-MgProfile -Name $ProfileName
-        }
-
         $data.Add('ConnectionType', 'ServicePrincipalWithThumbprint')
         $data.Add('Tenant', $InboundParameters.TenantId)
         Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
@@ -1873,11 +1845,6 @@ function New-M365DSCConnection
             -TenantId $InboundParameters.TenantId `
             -SkipModuleReload $Global:CurrentModeIsExport
 
-        #2942 - check correct profile applied
-        if (($ProfileName -ne $global:MSCloudLoginConnectionProfile.MicrosoftGraph.ProfileName) -and ($Workload -eq 'MicrosoftGraph') )
-        {
-            Select-MgProfile -Name $ProfileName
-        }
 
         $data.Add('ConnectionType', 'ManagedIdentity')
         $data.Add('Tenant', $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.TenantId)
@@ -2562,7 +2529,7 @@ function Test-M365DSCDependenciesForNewVersions
         }
         $i++
     }
-    
+
     # The progress bar seems to hang sometimes. Make sure it is no longer displayed.
     Write-Progress -Activity 'Scanning Dependencies' -Completed
 }
@@ -2639,7 +2606,7 @@ function Update-M365DSCDependencies
         }
         $i++
     }
-    
+
     # The progress bar seems to hang sometimes. Make sure it is no longer displayed.
     Write-Progress -Activity 'Scanning Dependencies' -Completed
 
