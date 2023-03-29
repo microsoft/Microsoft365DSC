@@ -1,6 +1,6 @@
 # Microsoft365DSC – October 2022 Major Release (version 1.22.1005.1)
 
-As defined by our [Breaking Changes Policy](https://microsoft365dsc.com/concepts/breaking-changes/), twice a year we allow for breaking changes to be deployed as part of a release. Our next major release, scheduled to go out on April 5th 2023, will include several breaking changes and will be labeled version 1.23.405.1. This article provides details on the breaking changes that will be included as part of our April 2023 Major release.
+As defined by our [Breaking Changes Policy](https://microsoft365dsc.com/concepts/breaking-changes/), twice a year we allow for breaking changes to be deployed as part of a release. Our next major release, scheduled to go out on April 5th 2023, will include several breaking changes and will be labeled version 1.23.405.1. This article provides details on the breaking changes and other important updates that will be included as part of our April 2023 Major release.
 
 ## IntuneDeviceEntollmentPlatformRestriction ([#2431](https://github.com/microsoft/Microsoft365DSC/pull/2431))
 As part of the April 2023 major release, this resource is being re-written almost entirely to account for new properties. The recommendation is to stop using old instances of it and start fresh by using this new updated version. One option would be to use the **Export-M365DSCConfiguration** cmdlet and target only this resource. Then, replace the existing instances in your configurations with the newly extracted content.
