@@ -836,11 +836,11 @@ function Get-TargetResource
         $getValue = $null
 
         #region resource generator code
-        $getValue = Get-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $id
+        $getValue = Get-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $id -ErrorAction SilentlyContinue
 
         if (-not $getValue)
         {
-            $getValue = Get-MgDeviceManagementDeviceConfiguration -Filter "DisplayName eq '$Displayname'" | Where-Object `
+            $getValue = Get-MgDeviceManagementDeviceConfiguration -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration' `
             }
