@@ -25,6 +25,8 @@
 * AADGroup
   * Changed the SecurityEnabled and MailEnabled parameters to become mandatory.
     FIXES [#3072](https://github.com/microsoft/Microsoft365DSC/issues/3072)
+  * Stopped GroupTypes defaulting to 'Unified' to allow creation of Security groups.
+    FIXES [#3073](https://github.com/microsoft/Microsoft365DSC/issues/3073)
 * AADUser
   * [BREAKING CHANGE] Remove deprecated parameter PreferredDataLocation* EXOAntiPhishPolicy
   * [BREAKING CHANGE] Remove deprecated parameters EnableAntispoofEnforcement and
