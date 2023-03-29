@@ -181,7 +181,7 @@ function Get-TargetResource
         if ($null -eq $policy)
         {
             Write-Verbose -Message "No Endpoint Protection Policy {id: '$Identity'} was found"
-            $policy = Get-MgDeviceManagementConfigurationPolicy -Filter "name eq '$DisplayName'" -ErrorAction SilentlyContinue
+            $policy = Get-MgBetaDeviceManagementConfigurationPolicy -Filter "name eq '$DisplayName'" -ErrorAction SilentlyContinue
             if ($null -eq $policy)
             {
                 Write-Verbose -Message "No Endpoint Protection Policy {displayName: '$DisplayName'} was found"
@@ -916,7 +916,7 @@ function Get-IntuneSettingCatalogPolicySetting
     $DSCParams.Remove('Description') | Out-Null
 
     #Prepare setting definitions mapping
-    $settingDefinitions = Get-MgDeviceManagementConfigurationPolicyTemplateSettingTemplate -DeviceManagementConfigurationPolicyTemplateId $TemplateId
+    $settingDefinitions = Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate -DeviceManagementConfigurationPolicyTemplateId $TemplateId
     $settingInstances = @()
     foreach ($settingDefinition in $settingDefinitions.SettingInstanceTemplate)
     {

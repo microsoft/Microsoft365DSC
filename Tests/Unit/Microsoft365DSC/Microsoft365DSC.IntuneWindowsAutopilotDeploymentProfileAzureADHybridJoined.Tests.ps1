@@ -49,6 +49,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgBetaDeviceManagementWindowAutopilotDeploymentProfileAssignment -MockWith {
             }
 
+            Mock -CommandName Write-Host -MockWith {
+            }
+
         }
         # Test contexts
         Context -Name "The IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined should exist but it DOES NOT" -Fixture {
@@ -219,7 +222,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName GetBetaDeviceManagementWindowAutopilotDeploymentProfile -MockWith {
+                Mock -CommandName Get-BetaDeviceManagementWindowAutopilotDeploymentProfile -MockWith {
                     return @{
                         AdditionalProperties = @{
                             hybridAzureADJoinSkipConnectivityCheck = $True
