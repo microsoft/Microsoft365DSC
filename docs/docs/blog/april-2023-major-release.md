@@ -88,3 +88,56 @@ We are removing parameters that have been deprecated from various resources as p
 
 ## AADGroup - Added SecurityEnabled and MailEnabled as Mandatory Parameters ([#3077](https://github.com/microsoft/Microsoft365DSC/pull/3077))
 We've updated the AADGroup resource to enforce the MailEnabled and SecurityEnabled parameters as mandatory. Omitting these parameters was throwing an error since they were required by the Microsoft Graph API associated with it. To update existing configurations, simply make sure that every instances of the AADGroup resource includes both the MailEnabled and SecurityEnabled parameters.
+
+## Export - Resource Instance Logical Naming ([#3087](https://github.com/microsoft/Microsoft365DSC/pull/3087))
+In order to make it easier for folks to follow the execution process of the Start-DSCConfiguration cmdlet and to keep the exported configuration files cleaner, we've changed the extraction logic to provide meaningful names to the extracted components. In the past, every instance extracted used to be assigned a GUID as its instance name. Starting with this release, extracted resources will be named based on the following logic:
+
+<ul>
+ <li>If the resource implements the **IsSingleInstance** property, the resource instance's will simply take the resource's name. E.g.,
+ ```
+  SPOTenantSettings 'SPOTenantSettings'
+  {
+      ...
+  }
+ ```
+ </li>
+ <li>Otherwise, the resource will always be named following the "[ResourceName]-[PrimaryKey]" pattern. E.g.,
+ ```
+  TeamsMeetingPolicy 'TeamsMeetingPolicy-MyPolicy'
+  {
+      DisplayName = 'MyPolicy'
+      ...
+  }
+  ```
+  The primary key will always give priority to the following properties in order:
+  * DisplayName
+  * Identity
+  * Id
+  * Name
+  This means that if a resource instance defines both DisplayName and Id, that the DisplayName value will be used to name the instance.
+ </li>
+ </ul>
+
+## Logging Improvements to Include the Instance Name ([#3091](https://github.com/microsoft/Microsoft365DSC/pull/3091))
+Starting with this version of M365DSC, drift events logged in Event Viewer will include the Instance name as their source instead of just the full resource's name.
+![image](https://raw.githubusercontent.com/microsoft/Microsoft365DSC/Dev/docs/docs/Images/April2023MR-EventViewer.png)
+In addition to this, the M365DSCEvent XML content will now include an additional property for the ConfigurationDrift element that will be named **InstanceName** and will contain the resource's instance name. E.g.,
+
+```
+<M365DSCEvent>
+    <ConfigurationDrift Source="MSFT_AADNamedLocationPolicy" InstanceName="HibouChou">
+        <ParametersNotInDesiredState>
+            <Param Name="IpRanges"><CurrentValue>192.226.137.107/12</CurrentValue><DesiredValue>192.226.137.106/12</DesiredValue></Param>
+        </ParametersNotInDesiredState>
+    </ConfigurationDrift>
+    <DesiredValues>
+        <Param Name ="OdataType">#microsoft.graph.ipNamedLocation</Param>
+        <Param Name ="DisplayName">Nik's Laptop</Param>
+        <Param Name ="IpRanges">192.226.137.106/12</Param>
+        <Param Name ="IsTrusted">True</Param>
+        <Param Name ="Ensure">Present</Param>
+        <Param Name ="Credential">System.Management.Automation.PSCredential</Param>
+        <Param Name ="Verbose">True</Param>
+    </DesiredValues>
+</M365DSCEvent>
+```
