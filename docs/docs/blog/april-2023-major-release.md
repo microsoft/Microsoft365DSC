@@ -122,7 +122,7 @@ In addition to this, the M365DSCEvent XML content will now include an additional
 
 ```
 <M365DSCEvent>
-    <ConfigurationDrift Source="MSFT_AADNamedLocationPolicy" InstanceName="HibouChou">
+    <ConfigurationDrift Source="MSFT_AADNamedLocationPolicy" InstanceName="[AADNamedLocationPolicy]HibouChou">
         <ParametersNotInDesiredState>
             <Param Name="IpRanges"><CurrentValue>192.226.137.107/12</CurrentValue><DesiredValue>192.226.137.106/12</DesiredValue></Param>
         </ParametersNotInDesiredState>
