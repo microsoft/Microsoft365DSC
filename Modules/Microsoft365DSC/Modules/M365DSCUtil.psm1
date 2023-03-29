@@ -861,7 +861,7 @@ function Test-M365DSCParameterState
             $currentInstanceName = $Source
         }
         $EventMessage = "<M365DSCEvent>`r`n"
-        $EventMessage += "    <ConfigurationDrift Source=`"$Source`">`r`n"
+        $EventMessage += "    <ConfigurationDrift Source=`"$Source`" InstanceName=`"$currentInstanceName`">`r`n"
 
         $EventMessage += "        <ParametersNotInDesiredState>`r`n"
         foreach ($key in $DriftedParameters.Keys)

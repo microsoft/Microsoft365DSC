@@ -691,14 +691,13 @@ function Get-M365DSCCurrentResourceInstanceNameFromLogs
         [System.String]
         $ResourceName
     )
-
     try
     {
-        $allEvents = Get-WinEvent -LogName "Microsoft-windows-dsc/operational" -MaxEvents 25
+        $allEvents = Get-WinEvent -LogName "Microsoft-windows-dsc/operational" -MaxEvents 10
         foreach ($event in $allEvents)
         {
             $message = $event.Message
-            $stringToFind = "Resource execution sequence :: [$ResourceName]"
+            $stringToFind = "Resource execution sequence :: [$($ResourceName.Split('_')[1])]"
             $start = $message.IndexOf($stringToFind)
             if ($start -ge 0)
             {
@@ -717,6 +716,7 @@ function Get-M365DSCCurrentResourceInstanceNameFromLogs
 Export-ModuleMember -Function @(
     'Add-M365DSCEvent',
     'Export-M365DSCDiagnosticData',
+    'Get-M365DSCCurrentResourceInstanceNameFromLogs',
     'New-M365DSCLogEntry',
     'Get-M365DSCNotificationEndPointRegistration',
     'New-M365DSCNotificationEndPointRegistration',
