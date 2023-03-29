@@ -14,46 +14,47 @@ Configuration Example
 
     Import-DscResource -ModuleName Microsoft365DSC
 
-Configuration Example
-{
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $credsGlobalAdmin
-    )
-
-    Import-DscResource -ModuleName Microsoft365DSC
-
-    node localhost
+    Configuration Example
     {
-        AADGroup 'TestGroup'
+        param
+        (
+            [Parameter(Mandatory = $true)]
+            [PSCredential]
+            $credsGlobalAdmin
+        )
+
+        Import-DscResource -ModuleName Microsoft365DSC
+
+        node localhost
         {
-            DisplayName                   = 'TestGroup'
-            MailNickname                  = 'TestGroup'
-            SecurityEnabled               = $true
-            MailEnabled                   = $false
-            IsAssignableToRole            = $true
-            Ensure                        = "Present"
-            Credential                    = $credsGlobalAdmin
-        }
-        AADAdministrativeUnit 'TestUnit'
-        {
-            DisplayName                   = 'Test-Unit'
-            ScopedRoleMembers             = @(
-                MSFT_MicrosoftGraphScopedRoleMembership
-                {
-                    RoleName = "User Administrator"
-                    RoleMemberInfo = MSFT_MicrosoftGraphIdentity
+            AADGroup 'TestGroup'
+            {
+                DisplayName                   = 'TestGroup'
+                MailNickname                  = 'TestGroup'
+                SecurityEnabled               = $true
+                MailEnabled                   = $false
+                IsAssignableToRole            = $true
+                Ensure                        = "Present"
+                Credential                    = $credsGlobalAdmin
+            }
+            AADAdministrativeUnit 'TestUnit'
+            {
+                DisplayName                   = 'Test-Unit'
+                ScopedRoleMembers             = @(
+                    MSFT_MicrosoftGraphScopedRoleMembership
                     {
-                        Identity = "TestGroup"
-                        Type = "Group"
+                        RoleName = "User Administrator"
+                        RoleMemberInfo = MSFT_MicrosoftGraphIdentity
+                        {
+                            Identity = "TestGroup"
+                            Type = "Group"
+                        }
                     }
-                }
-            )
-            Ensure                        = 'Present'
-            Credential                    = $credsGlobalAdmin
-            DependsOn                     = "[AADGroup]TestGroup"
+                )
+                Ensure                        = 'Present'
+                Credential                    = $credsGlobalAdmin
+                DependsOn                     = "[AADGroup]TestGroup"
+            }
         }
     }
 }
