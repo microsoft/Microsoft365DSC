@@ -14,17 +14,6 @@ Configuration Example
 
     Import-DscResource -ModuleName Microsoft365DSC
 
-Configuration Example
-{
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $credsGlobalAdmin
-    )
-
-    Import-DscResource -ModuleName Microsoft365DSC
-
     node localhost
     {
         AADGroup 'TestGroup'
