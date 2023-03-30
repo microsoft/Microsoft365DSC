@@ -939,7 +939,6 @@ function Test-M365DSCParameterState
         Add-M365DSCEvent -Message $EventMessage.ToString() -EventType 'NonDrift' -EntryType 'Information' `
             -EventID 2 -Source $Source
     }
-    $Global:M365DSCIncludeNonDriftsInEventLog | Out-File 'C:\dsc\result.txt'
 
     #region Telemetry
     Add-M365DSCTelemetryEvent -Data $data
