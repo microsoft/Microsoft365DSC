@@ -34,7 +34,7 @@ Configuration Example
                 MSFT_MicrosoftGraphScopedRoleMembership
                 {
                     RoleName = "User Administrator"
-                    RoleMemberInfo = MSFT_MicrosoftGraphIdentity
+                    RoleMemberInfo = MSFT_MicrosoftGraphMember
                     {
                         Identity = "TestGroup"
                         Type = "Group"
