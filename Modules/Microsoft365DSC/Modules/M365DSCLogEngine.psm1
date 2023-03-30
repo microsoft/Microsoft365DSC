@@ -180,7 +180,7 @@ function Add-M365DSCEvent
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Drift', 'Error', 'Warning')]
+        [ValidateSet('Drift', 'Error', 'Warning', 'NonDrift')]
         $EventType,
 
         [Parameter()]
@@ -448,7 +448,7 @@ function New-M365DSCNotificationEndPointRegistration
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Drift', 'Error', 'Warning')]
+        [ValidateSet('Drift', 'Error', 'Warning', 'NonDrift')]
         $EventType
     )
 
@@ -498,7 +498,7 @@ function Remove-M365DSCNotificationEndPointRegistration
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Drift', 'Error', 'Warning')]
+        [ValidateSet('Drift', 'Error', 'Warning', 'NonDrift')]
         $EventType
     )
 
@@ -550,7 +550,7 @@ function Get-M365DSCNotificationEndPointRegistration
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Drift', 'Error', 'Warning')]
+        [ValidateSet('Drift', 'Error', 'Warning', 'NonDrift')]
         $EventType
     )
 
@@ -606,7 +606,7 @@ function Send-M365DSCNotificationEndPointMessage
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Drift', 'Error', 'Warning')]
+        [ValidateSet('Drift', 'Error', 'Warning', 'NonDrift')]
         $EventType
     )
 
@@ -677,48 +677,63 @@ function Assert-M365DSCIsNonInteractiveShell
 
 <#
 .Description
-This function retrieves the name of the last resource instance being processed in the log files.
+This function configures the option for logging events into the Event Log.
+
+.Parameter IncludeNonDrifted
+Determines whether or not we should log information about resource's instances that don't have drifts.
 
 .Functionality
-Private
+Public
 #>
-function Get-M365DSCCurrentResourceInstanceNameFromLogs
+function Set-M365DSCLoggingOption
 {
     [CmdletBinding()]
-    [OutputType([System.String])]
     param(
         [Parameter()]
-        [System.String]
-        $ResourceName
+        [System.Boolean]
+        $IncludeNonDrifted
     )
+
+    if ($null -ne $IncludeNonDrifted)
+    {
+        [System.Environment]::SetEnvironmentVariable('M365DSCEventLogIncludeNonDrifted', $IncludeNonDrifted, `
+                [System.EnvironmentVariableTarget]::Machine)
+    }
+}
+
+<#
+.Description
+This function returns information about the option for logging events into the Event Log.
+
+.Functionality
+Public
+#>
+function Get-M365DSCLoggingOption
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
     try
     {
-        $allEvents = Get-WinEvent -LogName "Microsoft-windows-dsc/operational" -MaxEvents 10
-        foreach ($event in $allEvents)
-        {
-            $message = $event.Message
-            $stringToFind = "Resource execution sequence :: [$($ResourceName.Split('_')[1])]"
-            $start = $message.IndexOf($stringToFind)
-            if ($start -ge 0)
-            {
-                $end = $message.IndexOf(".", $start)
-                return $message.Substring($start + 31, $end-($start + 31))
-            }
+        return @{
+            IncludeNonDrifted = [Boolean]([System.Environment]::GetEnvironmentVariable('M365DSCEventLogIncludeNonDrifted', `
+                    [System.EnvironmentVariableTarget]::Machine))
         }
     }
     catch
     {
-        Write-Verbose -Message $_
+        throw $_
     }
-    return $null
 }
 
 Export-ModuleMember -Function @(
     'Add-M365DSCEvent',
     'Export-M365DSCDiagnosticData',
-    'Get-M365DSCCurrentResourceInstanceNameFromLogs',
+    'Get-M365DSCLoggingOption',
     'New-M365DSCLogEntry',
     'Get-M365DSCNotificationEndPointRegistration',
     'New-M365DSCNotificationEndPointRegistration',
-    'Remove-M365DSCNotificationEndPointRegistration'
+    'Remove-M365DSCNotificationEndPointRegistration',
+    'Set-M365DSCLoggingOption'
 )

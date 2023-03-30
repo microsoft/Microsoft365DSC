@@ -2,18 +2,6 @@
 This example is used to test new resources and showcase the usage of new resources being worked on.
 It is not meant to use as a production baseline.
 #>
-
-Configuration Example
-{
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $credsGlobalAdmin
-    )
-
-    Import-DscResource -ModuleName Microsoft365DSC
-
 Configuration Example
 {
     param
@@ -39,12 +27,13 @@ Configuration Example
         }
         AADAdministrativeUnit 'TestUnit'
         {
+            ID                            = 'Test-Unit'
             DisplayName                   = 'Test-Unit'
             ScopedRoleMembers             = @(
                 MSFT_MicrosoftGraphScopedRoleMembership
                 {
                     RoleName = "User Administrator"
-                    RoleMemberInfo = MSFT_MicrosoftGraphIdentity
+                    RoleMemberInfo = MSFT_MicrosoftGraphMember
                     {
                         Identity = "TestGroup"
                         Type = "Group"
