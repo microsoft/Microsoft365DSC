@@ -2,6 +2,7 @@
 This example is used to test new resources and showcase the usage of new resources being worked on.
 It is not meant to use as a production baseline.
 #>
+
 Configuration Example
 {
     param
@@ -17,6 +18,7 @@ Configuration Example
     {
         AADGroup 'TestGroup'
         {
+            Id                            = '4b8bbe0f-2d9c-4a82-9f40-9e1717987102'
             DisplayName                   = 'TestGroup'
             MailNickname                  = 'TestGroup'
             SecurityEnabled               = $true
