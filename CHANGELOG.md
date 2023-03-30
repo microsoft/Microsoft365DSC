@@ -99,6 +99,8 @@
   * Added a fix making sure that the progress bar "Scanning dependencies" is no longer displayed after the operation is completed.
   * Added a new Set-M365DSCLoggingOption function to enable logging information about non-drifted resources in Event Viewer.
     FIXES [#2981](https://github.com/microsoft/Microsoft365DSC/issues/2981)
+* DEPENDENCIES
+  * Updated MicrosoftTeams dependency to version 5.1.0.
 
 # 1.23.322.1
 
