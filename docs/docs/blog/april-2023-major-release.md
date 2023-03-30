@@ -115,7 +115,7 @@ In order to make it easier for folks to follow the execution process of the Star
   * Name
   This means that if a resource instance defines both DisplayName and Id, that the DisplayName value will be used to name the instance.
 
-## Logging Improvements to Include Non-Drifted Resource Instances ([#3091](https://github.com/microsoft/Microsoft365DSC/pull/3091))
+## Logging Improvements for Non-Drifted Resource Instances ([#3090](https://github.com/microsoft/Microsoft365DSC/pull/3099))
 Starting with this version of M365DSC, users can decide to also include informaton about resources that don't have any detected drifts in them by setting the logging settings with the new Set-M365DSCLoggingOption. E.g.,
 
 ```
