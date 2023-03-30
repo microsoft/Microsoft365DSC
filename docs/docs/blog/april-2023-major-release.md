@@ -45,46 +45,75 @@ As part of this release, we are changing the DisplayName parameter to be require
 ## Removal of Deprecated Parameters ([#3040](https://github.com/microsoft/Microsoft365DSC/pull/3040))
 We are removing parameters that have been deprecated from various resources as part of this major update. As a reminder, parameters that become deprecated on Microsoft 365 are being marked as deprecated in Microsoft365DSC until the next major release. In the past, using these parameters would have resulted in a warning letting the users know that they are using a deprecated parameter and that it would simply be ignored. Starting with this release, using these deprecated parameters will generate an error. It is recommended to scan existing configurations and remove deprecated parameters. The following resources have deprecated parameters that have been removed as part of this release, along with the parameters that have been removed:
 
-* AADApplication
-  * Oauth2RequirePostResponse
-* AADConditionalAccessPolicy
-  * IncludeDevices
-  * ExcludeDevices
-* AADUser
-  * PreferredDataLocation
-* EXOAntiPhishPolicy
-  * EnableAntispoofEnforcement
-  * TargetedDomainProtectionAction
-* EXOHostedContentFilterPolicy
-  * EndUserSpamNotificationCustomFromAddress
-  * EndUserSpamNotificationCustomFromName
-* EXOMalwareFilterPolicy
-  * Action
-  * CustomAlertText
-  * EnableExternalSenderNotifications
-  * EnableInternalSenderNotifications
-* EXOOrganizationConfig
-  * AllowPlusAddressInRecipients
-* EXOSaveLinksPolicy
-  * DoNotAllowClickThrough
-  * DoNotTrackUserClicks
-  * IsEnabled
-* EXOSharedMailbox
-  * Aliases
-* EXOTransportRule
-  * ExceptIfMessageContainsAllDataClassifications
-  * IncidentReportOriginalMail
-  * MessageContainsAllDataClassifications
-* SCSensitivityLabel
-  * Disabled
-  * ApplyContentMarkingFooterFontName
-  * ApplyContentMarkingHeaderFontName
-  * ApplyWaterMarkingFontName
-  * EncryptionAipTemplateScopes
-* SPOTenantSettings
-  * RequireAcceptingAccountMatchInvitedAccount
-* TeamsMeetingPolicy
-  * RecordingStorageMode
+<ul>
+ <li>AADApplication
+  <ul>
+   <li>Oauth2RequirePostResponse</li>
+  </ul>
+ </li>
+ <li>AADConditionalAccessPolicy
+  <ul>
+  <li>IncludeDevices</li>
+  <li>ExcludeDevices</li>
+   </ul></li>
+ <li>AADUser
+  <ul>
+  <li>PreferredDataLocation</li>
+   </ul></li>
+ <li>EXOAntiPhishPolicy
+  <ul>
+  <li>EnableAntispoofEnforcement</li>
+  <li>TargetedDomainProtectionAction</li>
+   </ul></li>
+ <li>EXOHostedContentFilterPolicy
+  <ul>
+  <li>EndUserSpamNotificationCustomFromAddress</li>
+  <li>EndUserSpamNotificationCustomFromName</li>
+   </ul></li>
+ <li>EXOMalwareFilterPolicy
+  <ul>
+  <li>Action</li>
+  <li>CustomAlertText</li>
+  <li>EnableExternalSenderNotifications</li>
+  <li>EnableInternalSenderNotifications</li>
+   </ul></li>
+ <li>EXOOrganizationConfig
+  <ul>
+  <li>AllowPlusAddressInRecipients</li>
+  </ul>
+ <li>EXOSaveLinksPolicy
+  <ul>
+ <li>DoNotAllowClickThrough</li>
+  <li>DoNotTrackUserClicks</li>
+  <li>IsEnabled</li>
+   </ul></li>
+ <li>EXOSharedMailbox
+  <ul>
+  <li>Aliases</li>
+   </ul></li>
+ <li>EXOTransportRule
+  <ul>
+  <li>ExceptIfMessageContainsAllDataClassifications</li>
+  <li>IncidentReportOriginalMail</li>
+  <li>MessageContainsAllDataClassifications</li>
+   </ul></li>
+ <li>SCSensitivityLabel
+  <ul>
+  <li>Disabled
+  <li>ApplyContentMarkingFooterFontName</li>
+  <li>ApplyContentMarkingHeaderFontName</li>
+  <li>ApplyWaterMarkingFontName</li>
+  <li>EncryptionAipTemplateScopes</li>
+   </ul></li>
+ <li>SPOTenantSettings
+  <ul>
+  <li>RequireAcceptingAccountMatchInvitedAccount</li>
+   </ul></li>
+ <li>TeamsMeetingPolicy
+  <ul>
+   <li>RecordingStorageMode</li>
+  </ul></li>
+  </ul>
 
 ## AADGroup - Added SecurityEnabled and MailEnabled as Mandatory Parameters ([#3077](https://github.com/microsoft/Microsoft365DSC/pull/3077))
 We've updated the AADGroup resource to enforce the MailEnabled and SecurityEnabled parameters as mandatory. Omitting these parameters was throwing an error since they were required by the Microsoft Graph API associated with it. To update existing configurations, simply make sure that every instances of the AADGroup resource includes both the MailEnabled and SecurityEnabled parameters.
