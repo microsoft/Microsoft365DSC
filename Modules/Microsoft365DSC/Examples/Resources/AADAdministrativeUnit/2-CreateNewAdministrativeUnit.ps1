@@ -18,6 +18,7 @@ Configuration Example
     {
         AADGroup 'TestGroup'
         {
+            Id                            = '4b8bbe0f-2d9c-4a82-9f40-9e1717987102'
             DisplayName                   = 'TestGroup'
             MailNickname                  = 'TestGroup'
             SecurityEnabled               = $true
