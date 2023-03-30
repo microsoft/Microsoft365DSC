@@ -49,7 +49,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure     = 'Present'
                     Credential = $Credential
                     Identity   = 'contoso.com'
-
+                }
                 Mock -CommandName Get-AcceptedDomain -MockWith {
                     return @{
                         DomainType      = 'Authoritative'
