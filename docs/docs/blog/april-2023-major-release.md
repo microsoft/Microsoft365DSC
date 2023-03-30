@@ -6,7 +6,7 @@ As defined by our [Breaking Changes Policy](https://microsoft365dsc.com/concepts
 As part of the April 2023 major release, this resource is being re-written almost entirely to account for new properties. The recommendation is to stop using old instances of it and start fresh by using this new updated version. One option would be to use the **Export-M365DSCConfiguration** cmdlet and target only this resource. Then, replace the existing instances in your configurations with the newly extracted content.
 
 ## Primary Keys of Multiple Resources ([#2968](https://github.com/microsoft/Microsoft365DSC/pull/2968))
-We have modified the logic of all the resources below to ensure we have a primary key defined. In most cases we have makred the Identity or DisplayName properties as now being mandatory. While we don't believe this change will have a major impact on most existing configuration since they probably alreadfy defined these properties, there is a small chance that customers omitted to include them. The recomendation in this case is to ensure you add the new required properties to your resources. Resources impacted are:
+We have modified the logic of all the resources below to ensure we have a primary key defined. In most cases we have marked the Identity or DisplayName properties as now being mandatory. While we don't believe this change will have a major impact on most existing configuration since they probably alreadfy defined these properties, there is a small chance that customers omitted to include them. The recomendation in this case is to ensure you add the new required properties to your resources. Resources impacted are:
 
 * AADAdministrativeUnit
 * AADConditionalAccessPolicy
