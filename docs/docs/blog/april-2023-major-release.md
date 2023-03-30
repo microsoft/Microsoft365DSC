@@ -2,11 +2,11 @@
 
 As defined by our [Breaking Changes Policy](https://microsoft365dsc.com/concepts/breaking-changes/), twice a year we allow for breaking changes to be deployed as part of a release. Our next major release, scheduled to go out on April 5th 2023, will include several breaking changes and will be labeled version 1.23.405.1. This article provides details on the breaking changes and other important updates that will be included as part of our April 2023 Major release.
 
-## IntuneDeviceEntollmentPlatformRestriction ([#2431](https://github.com/microsoft/Microsoft365DSC/pull/2431))
+## IntuneDeviceEnrollmentPlatformRestriction ([#2431](https://github.com/microsoft/Microsoft365DSC/pull/2431))
 As part of the April 2023 major release, this resource is being re-written almost entirely to account for new properties. The recommendation is to stop using old instances of it and start fresh by using this new updated version. One option would be to use the **Export-M365DSCConfiguration** cmdlet and target only this resource. Then, replace the existing instances in your configurations with the newly extracted content.
 
 ## Primary Keys of Multiple Resources ([#2968](https://github.com/microsoft/Microsoft365DSC/pull/2968))
-We have modified the logic of all the resources below to ensure we have a primary key defined. In most cases we have makred the Identity or DisplayName properties as now being mandatory. While we don't believe this change will have a major impact on most existing configuration since they probably alreadfy defined these properties, there is a small chance that customers omitted to include them. The recomendation in this case is to ensure you add the new required properties to your resources. Resources impacted are:
+We have modified the logic of all the resources below to ensure we have a primary key defined. In most cases we have marked the Identity or DisplayName properties as now being mandatory. While we don't believe this change will have a major impact on most existing configuration since they probably alreadfy defined these properties, there is a small chance that customers omitted to include them. The recomendation in this case is to ensure you add the new required properties to your resources. Resources impacted are:
 
 * AADAdministrativeUnit
 * AADConditionalAccessPolicy
@@ -115,26 +115,11 @@ In order to make it easier for folks to follow the execution process of the Star
   * Name
   This means that if a resource instance defines both DisplayName and Id, that the DisplayName value will be used to name the instance.
 
-## Logging Improvements to Include the Instance Name ([#3091](https://github.com/microsoft/Microsoft365DSC/pull/3091))
-Starting with this version of M365DSC, drift events logged in Event Viewer will include the Instance name as their source instead of just the full resource's name.
-![image](https://raw.githubusercontent.com/microsoft/Microsoft365DSC/Dev/docs/docs/Images/April2023MR-EventViewer.png)
-In addition to this, the M365DSCEvent XML content will now include an additional property for the ConfigurationDrift element that will be named **InstanceName** and will contain the resource's instance name. E.g.,
+## Logging Improvements for Non-Drifted Resource Instances ([#3090](https://github.com/microsoft/Microsoft365DSC/pull/3099))
+Starting with this version of M365DSC, users can decide to also include informaton about resources that don't have any detected drifts in them by setting the logging settings with the new Set-M365DSCLoggingOption. E.g.,
 
 ```
-<M365DSCEvent>
-    <ConfigurationDrift Source="MSFT_AADNamedLocationPolicy" InstanceName="[AADNamedLocationPolicy]HibouChou">
-        <ParametersNotInDesiredState>
-            <Param Name="IpRanges"><CurrentValue>192.226.137.107/12</CurrentValue><DesiredValue>192.226.137.106/12</DesiredValue></Param>
-        </ParametersNotInDesiredState>
-    </ConfigurationDrift>
-    <DesiredValues>
-        <Param Name ="OdataType">#microsoft.graph.ipNamedLocation</Param>
-        <Param Name ="DisplayName">Nik's Laptop</Param>
-        <Param Name ="IpRanges">192.226.137.106/12</Param>
-        <Param Name ="IsTrusted">True</Param>
-        <Param Name ="Ensure">Present</Param>
-        <Param Name ="Credential">System.Management.Automation.PSCredential</Param>
-        <Param Name ="Verbose">True</Param>
-    </DesiredValues>
-</M365DSCEvent>
+Set-M365DSCLoggingOption -IncludeNonDrifted $True
 ```
+These events will be reported as Information entries having an Event ID of 2.
+![image](https://raw.githubusercontent.com/microsoft/Microsoft365DSC/Dev/docs/docs/Images/April2023MR-EventViewer.png)

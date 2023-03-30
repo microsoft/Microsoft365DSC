@@ -853,17 +853,23 @@ function Test-M365DSCParameterState
         }
     }
 
+    $includeNonDriftsInformation = $false
+    try
+    {
+        $includeNonDriftsInformation = [System.Environment]::GetEnvironmentVariable('M365DSCEventLogIncludeNonDrifted', `
+            [System.EnvironmentVariableTarget]::Machine)
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+    }
     if ($returnValue -eq $false)
     {
-        $currentInstanceName = Get-M365DSCCurrentResourceInstanceNameFromLogs -ResourceName $Source
-        if ([System.String]::IsNullOrEMpty($currentInstanceName))
-        {
-            $currentInstanceName = $Source
-        }
-        $EventMessage = "<M365DSCEvent>`r`n"
-        $EventMessage += "    <ConfigurationDrift Source=`"$Source`" InstanceName=`"$currentInstanceName`">`r`n"
+        $EventMessage = [System.Text.StringBuilder]::New()
+        $EventMessage.Append("<M365DSCEvent>`r`n") | Out-Null
+        $EventMessage.Append("    <ConfigurationDrift Source=`"$Source`">`r`n") | Out-Null
 
-        $EventMessage += "        <ParametersNotInDesiredState>`r`n"
+        $EventMessage.Append("        <ParametersNotInDesiredState>`r`n") | Out-Null
         foreach ($key in $DriftedParameters.Keys)
         {
             Write-Verbose -Message "Detected Drifted Parameter [$Source]$key"
@@ -885,7 +891,7 @@ function Test-M365DSCParameterState
             $driftedData.Add('Tenant', $TenantName)
             Add-M365DSCTelemetryEvent -Type 'DriftInfo' -Data $driftedData
             #endregion
-            $EventMessage += "            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n"
+            $EventMessage.Append("            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n") | Out-Null
         }
 
         #region Telemetry
@@ -894,9 +900,9 @@ function Test-M365DSCParameterState
         $data.Add('Tenant', $TenantName)
         #endregion
 
-        $EventMessage += "        </ParametersNotInDesiredState>`r`n"
-        $EventMessage += "    </ConfigurationDrift>`r`n"
-        $EventMessage += "    <DesiredValues>`r`n"
+        $EventMessage.Append("        </ParametersNotInDesiredState>`r`n") | Out-Null
+        $EventMessage.Append("    </ConfigurationDrift>`r`n") | Out-Null
+        $EventMessage.Append("    <DesiredValues>`r`n") | Out-Null
         foreach ($Key in $DesiredValues.Keys)
         {
             $Value = $DesiredValues.$Key
@@ -904,13 +910,34 @@ function Test-M365DSCParameterState
             {
                 $Value = "`$null"
             }
-            $EventMessage += "        <Param Name =`"$key`">$Value</Param>`r`n"
+            $EventMessage.Append("        <Param Name =`"$key`">$Value</Param>`r`n") | Out-Null
         }
-        $EventMessage += "    </DesiredValues>`r`n"
-        $EventMessage += '</M365DSCEvent>'
+        $EventMessage.Append("    </DesiredValues>`r`n") | Out-Null
+        $EventMessage.Append('</M365DSCEvent>') | Out-Null
 
-        Add-M365DSCEvent -Message $EventMessage -EventType 'Drift' -EntryType 'Warning' `
-            -EventID 1 -Source $currentInstanceName
+        Add-M365DSCEvent -Message $EventMessage.ToString() -EventType 'Drift' -EntryType 'Warning' `
+            -EventID 1 -Source $Source
+    }
+    elseif ($includeNonDriftsInformation -eq $true)
+    {
+        # Include details about non-drifted resources.
+        $EventMessage = [System.Text.StringBuilder]::New()
+        $EventMessage.Append("<M365DSCEvent>`r`n") | Out-Null
+        $EventMessage.Append("    <ConfigurationDrift Source=`"$Source`" />`r`n") | Out-Null
+        $EventMessage.Append("    <DesiredValues>`r`n") | Out-Null
+        foreach ($Key in $DesiredValues.Keys)
+        {
+            $Value = $DesiredValues.$Key
+            if ([System.String]::IsNullOrEmpty($Value))
+            {
+                $Value = "`$null"
+            }
+            $EventMessage.Append("        <Param Name =`"$key`">$Value</Param>`r`n") | Out-Null
+        }
+        $EventMessage.Append("    </DesiredValues>`r`n") | Out-Null
+        $EventMessage.Append('</M365DSCEvent>') | Out-Null
+        Add-M365DSCEvent -Message $EventMessage.ToString() -EventType 'NonDrift' -EntryType 'Information' `
+            -EventID 2 -Source $Source
     }
 
     #region Telemetry

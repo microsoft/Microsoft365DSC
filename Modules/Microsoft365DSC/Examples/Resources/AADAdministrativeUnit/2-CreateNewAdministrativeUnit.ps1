@@ -14,7 +14,7 @@ Configuration Example
 
     Import-DscResource -ModuleName Microsoft365DSC
 
-    Configuration Example
+    node localhost
     {
         param
         (
@@ -27,21 +27,24 @@ Configuration Example
 
         node localhost
         {
-            AADGroup 'TestGroup'
-            {
-                DisplayName                   = 'TestGroup'
-                MailNickname                  = 'TestGroup'
-                SecurityEnabled               = $true
-                MailEnabled                   = $false
-                IsAssignableToRole            = $true
-                Ensure                        = "Present"
-                Credential                    = $credsGlobalAdmin
-            }
-            AADAdministrativeUnit 'TestUnit'
-            {
-                DisplayName                   = 'Test-Unit'
-                ScopedRoleMembers             = @(
-                    MSFT_MicrosoftGraphScopedRoleMembership
+            Id                            = '4b8bbe0f-2d9c-4a82-9f40-9e1717987102'
+            DisplayName                   = 'TestGroup'
+            MailNickname                  = 'TestGroup'
+            SecurityEnabled               = $true
+            MailEnabled                   = $false
+            IsAssignableToRole            = $true
+            Ensure                        = "Present"
+            Credential                    = $credsGlobalAdmin
+        }
+        AADAdministrativeUnit 'TestUnit'
+        {
+            ID                            = 'Test-Unit'
+            DisplayName                   = 'Test-Unit'
+            ScopedRoleMembers             = @(
+                MSFT_MicrosoftGraphScopedRoleMembership
+                {
+                    RoleName = "User Administrator"
+                    RoleMemberInfo = MSFT_MicrosoftGraphMember
                     {
                         RoleName = "User Administrator"
                         RoleMemberInfo = MSFT_MicrosoftGraphIdentity
