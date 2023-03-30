@@ -15,7 +15,8 @@ Configuration Example
     {
         IntuneDeviceConfigurationPolicyiOS 'ConfigureDeviceConfigurationPolicyiOS'
         {
-            DisplayName                                    = "iOS DSC Policy"
+            Id                                             = '901c99e3-6429-4f02-851f-54b49a53f103'
+            DisplayName                                    = 'iOS DSC Policy'
             AccountBlockModification                       = $False
             ActivationLockAllowWhenSupervised              = $False
             AirDropBlocked                                 = $False
@@ -30,7 +31,7 @@ Configuration Example
             AppStoreBlockUIAppInstallation                 = $False
             AppStoreRequirePassword                        = $False
             AppsVisibilityList                             = @()
-            AppsVisibilityListType                         = "none"
+            AppsVisibilityListType                         = 'none'
             BluetoothBlockModification                     = $True
             CameraBlocked                                  = $False
             CellularBlockDataRoaming                       = $False
@@ -39,11 +40,11 @@ Configuration Example
             CellularBlockVoiceRoaming                      = $False
             CertificatesBlockUntrustedTlsCertificates      = $False
             ClassroomAppBlockRemoteScreenObservation       = $False
-            CompliantAppListType                           = "none"
+            CompliantAppListType                           = 'none'
             CompliantAppsList                              = @()
             ConfigurationProfileBlockChanges               = $False
             DefinitionLookupBlocked                        = $False
-            Description                                    = "iOS Device Restriction Policy"
+            Description                                    = 'iOS Device Restriction Policy'
             DeviceBlockEnableRestrictions                  = $True
             DeviceBlockEraseContentAndSettings             = $False
             DeviceBlockNameModification                    = $False
@@ -97,7 +98,7 @@ Configuration Example
             LockScreenBlockNotificationView                = $False
             LockScreenBlockPassbook                        = $False
             LockScreenBlockTodayView                       = $False
-            MediaContentRatingApps                         = "allAllowed"
+            MediaContentRatingApps                         = 'allAllowed'
             messagesBlocked                                = $False
             NotificationsBlockSettingsModification         = $False
             PasscodeBlockFingerprintUnlock                 = $False
@@ -105,13 +106,13 @@ Configuration Example
             PasscodeBlockSimple                            = $True
             PasscodeMinimumLength                          = 4
             PasscodeRequired                               = $True
-            PasscodeRequiredType                           = "deviceDefault"
+            PasscodeRequiredType                           = 'deviceDefault'
             PodcastsBlocked                                = $False
             SafariBlockAutofill                            = $False
             SafariBlocked                                  = $False
             SafariBlockJavaScript                          = $False
             SafariBlockPopups                              = $False
-            SafariCookieSettings                           = "browserDefault"
+            SafariCookieSettings                           = 'browserDefault'
             SafariManagedDomains                           = @()
             SafariPasswordAutoFillDomains                  = @()
             SafariRequireFraudWarning                      = $False

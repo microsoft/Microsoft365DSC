@@ -4,9 +4,10 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.Boolean]
@@ -134,14 +135,14 @@ function Get-TargetResource
     try
     {
         $IRMConfiguration = Get-IRMConfiguration -ErrorAction Stop
-        
+
         $RMSOnlineKeySharingLocationValue = $null
         if ($IRMConfiguration.RMSOnlineKeySharingLocation)
         {
             $RMSOnlineKeySharingLocationValue = $IRMConfiguration.RMSOnlineKeySharingLocation.ToString()
         }
         $result = @{
-            Identity                                   = $IRMConfiguration.Identity
+            IsSingleInstance                           = 'Yes'
             AutomaticServiceUpdateEnabled              = $IRMConfiguration.AutomaticServiceUpdateEnabled
             AzureRMSLicensingEnabled                   = $IRMConfiguration.AzureRMSLicensingEnabled
             DecryptAttachmentForEncryptOnly            = $IRMConfiguration.DecryptAttachmentForEncryptOnly
@@ -188,9 +189,10 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.Boolean]
@@ -312,7 +314,7 @@ function Set-TargetResource
     $IRMConfigurationParams.Remove('CertificatePath') | Out-Null
     $IRMConfigurationParams.Remove('CertificatePassword') | Out-Null
     $IRMConfigurationParams.Remove('ManagedIdentity') | Out-Null
-    $IRMConfigurationParams.Remove('Identity') | Out-Null
+    $IRMConfigurationParams.Remove('IsSingleInstance') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($Null -ne $IRMConfigurationParams))
     {
@@ -329,9 +331,10 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.Boolean]
@@ -466,19 +469,6 @@ function Export-TargetResource
     param
     (
         [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String[]]
-        $ResourcePropertySchema,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -529,7 +519,7 @@ function Export-TargetResource
         Write-Host "    |---[1/1] $($IRMConfiguration.Identity)" -NoNewline
 
         $Params = @{
-            Identity              = $IRMConfiguration.Identity
+            IsSingleInstance      = 'Yes'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId

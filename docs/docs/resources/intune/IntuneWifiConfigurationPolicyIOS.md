@@ -4,9 +4,9 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Write | String | Id of the Intune policy. | |
+| **Id** | Key | String | Id of the Intune policy. | |
+| **DisplayName** | Required | String | Display name of the Intune policy. | |
 | **Description** | Write | String | Description of the Intune policy. | |
-| **DisplayName** | Write | String | Display name of the Intune policy. | |
 | **ConnectAutomatically** | Write | Boolean | Connect automatically | |
 | **ConnectWhenNetworkNameIsHidden** | Write | Boolean | Connect when network name is hidden | |
 | **DisableMacAddressRandomization** | Write | Boolean | Disable the MAC address randomization. | |
@@ -70,4 +70,47 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
     - DeviceManagementConfiguration.ReadWrite.All
 
+## Examples
+
+### Example 1
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsGlobalAdmin
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneWifiConfigurationPolicyIOS 'myWifiConfigIOSPolicy'
+        {
+            Id                             = '8e809b9e-0032-40b7-b263-e6029daf8e9c'
+            DisplayName                    = 'ios wifi'
+            Assignments                    = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments {
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                }
+            )
+            ConnectAutomatically           = $True
+            ConnectWhenNetworkNameIsHidden = $True
+            DisableMacAddressRandomization = $True
+            NetworkName                    = 'aaaaa'
+            ProxyAutomaticConfigurationUrl = 'THSCP.local'
+            ProxySettings                  = 'automatic'
+            Ssid                           = 'aaaaa'
+            WiFiSecurityType               = 'wpaPersonal'
+            Ensure                         = 'Present'
+            Credential                     = $credsGlobalAdmin
+        }
+    }
+}
+```
 

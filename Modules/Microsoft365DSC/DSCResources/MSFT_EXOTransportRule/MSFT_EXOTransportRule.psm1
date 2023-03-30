@@ -325,11 +325,6 @@ function Get-TargetResource
         [System.String]
         $ExceptIfMessageTypeMatches,
 
-        #DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfMessageContainsAllDataClassifications = @(),
-
         [Parameter()]
         [System.String[]]
         $ExceptIfMessageContainsDataClassifications = @(),
@@ -490,11 +485,6 @@ function Get-TargetResource
         [System.String[]]
         $IncidentReportContent = @(),
 
-        #DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $IncidentReportOriginalMail,
-
         [Parameter()]
         [System.String[]]
         $ManagerAddresses = @(),
@@ -503,11 +493,6 @@ function Get-TargetResource
         [ValidateSet('Recipient', 'Sender')]
         [System.String]
         $ManagerForEvaluatedUser,
-
-        #DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $MessageContainsAllDataClassifications,
 
         [Parameter()]
         [System.String[]]
@@ -874,8 +859,6 @@ function Get-TargetResource
             ExceptIfManagerAddresses                     = $TransportRule.ExceptIfManagerAddresses
             ExceptIfManagerForEvaluatedUser              = $TransportRule.ExceptIfManagerForEvaluatedUser
             ExceptIfMessageTypeMatches                   = $TransportRule.ExceptIfMessageTypeMatches
-            #DEPRECATED
-            #ExceptIfMessageContainsAllDataClassifications = $TransportRule.ExceptIfMessageContainsAllDataClassifications
             ExceptIfMessageContainsDataClassifications   = $TransportRule.ExceptIfMessageContainsDataClassifications
             ExceptIfMessageSizeOver                      = $TransportRule.ExceptIfMessageSizeOver
             ExceptIfRecipientADAttributeContainsWords    = $TransportRule.ExceptIfRecipientADAttributeContainsWords
@@ -915,12 +898,8 @@ function Get-TargetResource
             HeaderMatchesMessageHeader                   = $TransportRule.HeaderMatchesMessageHeader
             HeaderMatchesPatterns                        = $TransportRule.HeaderMatchesPatterns
             IncidentReportContent                        = $TransportRule.IncidentReportContent
-            #DEPRECATED
-            #IncidentReportOriginalMail                    = $TransportRule.IncidentReportOriginalMail
             ManagerAddresses                             = $TransportRule.ManagerAddresses
             ManagerForEvaluatedUser                      = $TransportRule.ManagerForEvaluatedUser
-            #DEPRECATED
-            #MessageContainsAllDataClassifications         = $TransportRule.MessageContainsAllDataClassifications
             MessageContainsDataClassifications           = $MessageContainsDataClassificationsValue
             MessageSizeOver                              = $TransportRule.MessageSizeOver
             MessageTypeMatches                           = $TransportRule.MessageTypeMatches
@@ -1321,11 +1300,6 @@ function Set-TargetResource
         [System.String]
         $ExceptIfMessageTypeMatches,
 
-        #DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfMessageContainsAllDataClassifications = @(),
-
         [Parameter()]
         [System.String[]]
         $ExceptIfMessageContainsDataClassifications = @(),
@@ -1486,11 +1460,6 @@ function Set-TargetResource
         [System.String[]]
         $IncidentReportContent = @(),
 
-        #DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $IncidentReportOriginalMail,
-
         [Parameter()]
         [System.String[]]
         $ManagerAddresses = @(),
@@ -1499,11 +1468,6 @@ function Set-TargetResource
         [ValidateSet('Recipient', 'Sender')]
         [System.String]
         $ManagerForEvaluatedUser,
-
-        #DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $MessageContainsAllDataClassifications,
 
         [Parameter()]
         [System.String[]]
@@ -1762,20 +1726,6 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    # Warning for deprecated parameters
-    if ($PSBoundParameters.ContainsKey('ExceptIfMessageContainsAllDataClassifications'))
-    {
-        Write-Warning 'ExceptIfMessageContainsAllDataClassifications is deprecated. Please remove this parameter from your configuration.'
-    }
-    if ($PSBoundParameters.ContainsKey('IncidentReportOriginalMail'))
-    {
-        Write-Warning 'IncidentReportOriginalMail is deprecated. Please remove this parameter from your configuration.'
-    }
-    if ($PSBoundParameters.ContainsKey('MessageContainsAllDataClassifications'))
-    {
-        Write-Warning 'MessageContainsAllDataClassifications is deprecated. Please remove this parameter from your configuration.'
-    }
-
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' -InboundParameters $PSBoundParameters
 
     $NewTransportRuleParams = [System.Collections.Hashtable]($PSBoundParameters)
@@ -1788,14 +1738,6 @@ function Set-TargetResource
     $NewTransportRuleParams.Remove('CertificatePath') | Out-Null
     $NewTransportRuleParams.Remove('CertificatePassword') | Out-Null
     $NewTransportRuleParams.Remove('ManagedIdentity') | Out-Null
-
-    # Remove deprecated parameters
-    #DEPRECATED
-    $NewTransportRuleParams.Remove('ExceptIfMessageContainsAllDataClassifications') | Out-Null
-    #DEPRECATED
-    $NewTransportRuleParams.Remove('IncidentReportOriginalMail') | Out-Null
-    #DEPRECATED
-    $NewTransportRuleParams.Remove('MessageContainsAllDataClassifications') | Out-Null
 
     $SetTransportRuleParams = $NewTransportRuleParams.Clone()
     $SetTransportRuleParams.Add('Identity', $Name)
@@ -2151,11 +2093,6 @@ function Test-TargetResource
         [System.String]
         $ExceptIfMessageTypeMatches,
 
-        #DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfMessageContainsAllDataClassifications = @(),
-
         [Parameter()]
         [System.String[]]
         $ExceptIfMessageContainsDataClassifications = @(),
@@ -2316,11 +2253,6 @@ function Test-TargetResource
         [System.String[]]
         $IncidentReportContent = @(),
 
-        #DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $IncidentReportOriginalMail,
-
         [Parameter()]
         [System.String[]]
         $ManagerAddresses = @(),
@@ -2329,11 +2261,6 @@ function Test-TargetResource
         [ValidateSet('Recipient', 'Sender')]
         [System.String]
         $ManagerForEvaluatedUser,
-
-        #DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $MessageContainsAllDataClassifications,
 
         [Parameter()]
         [System.String[]]

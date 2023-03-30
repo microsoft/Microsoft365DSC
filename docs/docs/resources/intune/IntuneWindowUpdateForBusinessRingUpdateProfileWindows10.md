@@ -4,6 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
+| **Id** | Key | String | The unique identifier for an entity. Read-only. | |
+| **DisplayName** | Required | String | Admin provided name of the device configuration. | |
 | **AllowWindows11Upgrade** | Write | Boolean | When TRUE, allows eligible Windows 10 devices to upgrade to Windows 11. When FALSE, implies the device stays on the existing operating system. Returned by default. Query parameters are not supported. | |
 | **AutomaticUpdateMode** | Write | String | The Automatic Update Mode. Possible values are: UserDefined, NotifyDownload, AutoInstallAtMaintenanceTime, AutoInstallAndRebootAtMaintenanceTime, AutoInstallAndRebootAtScheduledTime, AutoInstallAndRebootWithoutEndUserControl, WindowsDefault. UserDefined is the default value, no intent. Returned by default. Query parameters are not supported. Possible values are: userDefined, notifyDownload, autoInstallAtMaintenanceTime, autoInstallAndRebootAtMaintenanceTime, autoInstallAndRebootAtScheduledTime, autoInstallAndRebootWithoutEndUserControl, windowsDefault. | `userDefined`, `notifyDownload`, `autoInstallAtMaintenanceTime`, `autoInstallAndRebootAtMaintenanceTime`, `autoInstallAndRebootAtScheduledTime`, `autoInstallAndRebootWithoutEndUserControl`, `windowsDefault` |
 | **AutoRestartNotificationDismissal** | Write | String | Specify the method by which the auto-restart required notification is dismissed. Possible values are: NotConfigured, Automatic, User. Returned by default. Query parameters are not supported. Possible values are: notConfigured, automatic, user, unknownFutureValue. | `notConfigured`, `automatic`, `user`, `unknownFutureValue` |
@@ -39,8 +41,6 @@
 | **UserPauseAccess** | Write | String | Specifies whether to enable end userï¿½s access to pause software updates. Possible values are: NotConfigured, Enabled, Disabled. Returned by default. Query parameters are not supported. Possible values are: notConfigured, enabled, disabled. | `notConfigured`, `enabled`, `disabled` |
 | **UserWindowsUpdateScanAccess** | Write | String | Specifies whether to disable userï¿½s access to scan Windows Update. Possible values are: NotConfigured, Enabled, Disabled. Returned by default. Query parameters are not supported. Possible values are: notConfigured, enabled, disabled. | `notConfigured`, `enabled`, `disabled` |
 | **Description** | Write | String | Admin provided description of the Device Configuration. | |
-| **DisplayName** | Write | String | Admin provided name of the device configuration. | |
-| **Id** | Key | String | The unique identifier for an entity. Read-only. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
@@ -105,4 +105,70 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
     - DeviceManagementConfiguration.ReadWrite.All
 
+## Examples
+
+### Example 1
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneWindowUpdateForBusinessRingUpdateProfileWindows10 'Example'
+        {
+            Id                                  = 'f2a9a546-6087-45b9-81da-59994e79dfd2'
+            DisplayName                         = 'WUfB Ring'
+            AllowWindows11Upgrade               = $False
+            Assignments                         = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments {
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType                                   = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                }
+            )
+            AutomaticUpdateMode                 = 'autoInstallAtMaintenanceTime'
+            AutoRestartNotificationDismissal    = 'notConfigured'
+            BusinessReadyUpdatesOnly            = 'userDefined'
+            DeadlineForFeatureUpdatesInDays     = 1
+            DeadlineForQualityUpdatesInDays     = 2
+            DeadlineGracePeriodInDays           = 3
+            DeliveryOptimizationMode            = 'userDefined'
+            Description                         = ''
+            DriversExcluded                     = $False
+            FeatureUpdatesDeferralPeriodInDays  = 0
+            FeatureUpdatesPaused                = $False
+            FeatureUpdatesPauseExpiryDateTime   = '0001-01-01T00:00:00.0000000+00:00'
+            FeatureUpdatesRollbackStartDateTime = '0001-01-01T00:00:00.0000000+00:00'
+            FeatureUpdatesRollbackWindowInDays  = 10
+            InstallationSchedule = MSFT_MicrosoftGraphwindowsUpdateInstallScheduleType {
+                ActiveHoursStart = '08:00:00'
+                ActiveHoursEnd   = '17:00:00'
+                odataType        = '#microsoft.graph.windowsUpdateActiveHoursInstall'
+            }
+            MicrosoftUpdateServiceAllowed       = $True
+            PostponeRebootUntilAfterDeadline    = $False
+            PrereleaseFeatures                  = 'userDefined'
+            QualityUpdatesDeferralPeriodInDays  = 0
+            QualityUpdatesPaused                = $False
+            QualityUpdatesPauseExpiryDateTime   = '0001-01-01T00:00:00.0000000+00:00'
+            QualityUpdatesRollbackStartDateTime = '0001-01-01T00:00:00.0000000+00:00'
+            SkipChecksBeforeRestart             = $False
+            UpdateNotificationLevel             = 'defaultNotifications'
+            UserPauseAccess                     = 'enabled'
+            UserWindowsUpdateScanAccess         = 'enabled'
+            Ensure                              = 'Present'
+            Credential                          = $Credscredential
+        }
+    }
+}
+```
 

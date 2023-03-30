@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **DisplayName** | Key | String | DisplayName of the Administrative Unit | |
-| **Id** | Write | String | Object-Id of the Administrative Unit | |
+| **Id** | Key | String | Object-Id of the Administrative Unit | |
+| **DisplayName** | Required | String | DisplayName of the Administrative Unit | |
 | **Description** | Write | String | Description of the Administrative Unit | |
 | **Visibility** | Write | String | Visibility of the Administrative Unit. Specify HiddenMembership if members of the AU are hidden | |
 | **MembershipType** | Write | String | Specify membership type. Possible values are Assigned and Dynamic. Note that the functionality is currently in preview. | |
@@ -21,7 +21,7 @@
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 
-### MSFT_MicrosoftGraphIdentity
+### MSFT_MicrosoftGraphMember
 
 #### Parameters
 
@@ -37,7 +37,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **RoleName** | Write | String | Name of the Azure AD Role that is assigned. See https://learn.microsoft.com/en-us/azure/active-directory/roles/admin-units-assign-roles#roles-that-can-be-assigned-with-administrative-unit-scope | |
-| **RoleMemberInfo** | Write | MSFT_MicrosoftGraphIdentity | Member that is assigned the scoped role | |
+| **RoleMemberInfo** | Write | MSFT_MicrosoftGraphMember | Member that is assigned the scoped role | |
 
 
 ## Description
@@ -93,12 +93,75 @@ Configuration Example
     {
         AADAdministrativeUnit 'TestUnit'
         {
+            Id                            = '49a843c7-e80c-4bae-8819-825656a108f2'
             DisplayName                   = 'Test-Unit'
             MembershipRule                = "(user.country -eq `"Canada`")"
             MembershipRuleProcessingState = 'On'
             MembershipType                = 'Dynamic'
             Ensure                        = 'Present'
             Credential                    = $credsGlobalAdmin
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsGlobalAdmin
+    )
+
+    Import-DscResource -ModuleName Microsoft365DSC
+
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsGlobalAdmin
+    )
+
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        AADGroup 'TestGroup'
+        {
+            DisplayName                   = 'TestGroup'
+            MailNickname                  = 'TestGroup'
+            SecurityEnabled               = $true
+            MailEnabled                   = $false
+            IsAssignableToRole            = $true
+            Ensure                        = "Present"
+            Credential                    = $credsGlobalAdmin
+        }
+        AADAdministrativeUnit 'TestUnit'
+        {
+            DisplayName                   = 'Test-Unit'
+            ScopedRoleMembers             = @(
+                MSFT_MicrosoftGraphScopedRoleMembership
+                {
+                    RoleName = "User Administrator"
+                    RoleMemberInfo = MSFT_MicrosoftGraphIdentity
+                    {
+                        Identity = "TestGroup"
+                        Type = "Group"
+                    }
+                }
+            )
+            Ensure                        = 'Present'
+            Credential                    = $credsGlobalAdmin
+            DependsOn                     = "[AADGroup]TestGroup"
         }
     }
 }
