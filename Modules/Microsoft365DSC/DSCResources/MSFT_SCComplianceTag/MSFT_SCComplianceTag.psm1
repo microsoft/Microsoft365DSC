@@ -120,18 +120,23 @@ function Get-TargetResource
         {
             Write-Verbose "Found existing ComplianceTag $($Name)"
             $result = @{
-                Name              = $tagObject.Name
-                Comment           = $tagObject.Comment
-                RetentionDuration = $tagObject.RetentionDuration
-                IsRecordLabel     = $tagObject.IsRecordLabel
-                Regulatory        = $tagObject.Regulatory
-                Notes             = $tagObject.Notes
-                ReviewerEmail     = $tagObject.ReviewerEmail
-                RetentionAction   = $tagObject.RetentionAction
-                EventType         = $tagObject.EventType
-                RetentionType     = $tagObject.RetentionType
-                Credential        = $Credential
-                Ensure            = 'Present'
+                Name                  = $tagObject.Name
+                Comment               = $tagObject.Comment
+                RetentionDuration     = $tagObject.RetentionDuration
+                IsRecordLabel         = $tagObject.IsRecordLabel
+                Regulatory            = $tagObject.Regulatory
+                Notes                 = $tagObject.Notes
+                ReviewerEmail         = $tagObject.ReviewerEmail
+                RetentionAction       = $tagObject.RetentionAction
+                EventType             = $tagObject.EventType
+                RetentionType         = $tagObject.RetentionType
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                Ensure                = 'Present'
             }
 
             if (-not [System.String]::IsNullOrEmpty($tagObject.FilePlanMetadata))
