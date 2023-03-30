@@ -99,6 +99,8 @@
   * Added a fix making sure that the progress bar "Scanning dependencies" is no longer displayed after the operation is completed.
   * Changed configuration drift reporting to event log to include the instance name as the source.
     FIXES [#2981](https://github.com/microsoft/Microsoft365DSC/issues/2981)
+  * Changed Get-MgDeviceManagementDeviceConfiguration to use the cmdlet switches rather than filtering output once returned.
+    Fixes #3082
 
 # 1.23.322.1
 
