@@ -16,16 +16,7 @@ Configuration Example
 
     node localhost
     {
-        param
-        (
-            [Parameter(Mandatory = $true)]
-            [PSCredential]
-            $credsGlobalAdmin
-        )
-
-        Import-DscResource -ModuleName Microsoft365DSC
-
-        node localhost
+        AADGroup 'TestGroup'
         {
             Id                            = '4b8bbe0f-2d9c-4a82-9f40-9e1717987102'
             DisplayName                   = 'TestGroup'
@@ -46,18 +37,14 @@ Configuration Example
                     RoleName = "User Administrator"
                     RoleMemberInfo = MSFT_MicrosoftGraphMember
                     {
-                        RoleName = "User Administrator"
-                        RoleMemberInfo = MSFT_MicrosoftGraphIdentity
-                        {
-                            Identity = "TestGroup"
-                            Type = "Group"
-                        }
+                        Identity = "TestGroup"
+                        Type = "Group"
                     }
-                )
-                Ensure                        = 'Present'
-                Credential                    = $credsGlobalAdmin
-                DependsOn                     = "[AADGroup]TestGroup"
-            }
+                }
+            )
+            Ensure                        = 'Present'
+            Credential                    = $credsGlobalAdmin
+            DependsOn                     = "[AADGroup]TestGroup"
         }
     }
 }
