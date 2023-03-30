@@ -29,6 +29,7 @@ Configuration Example
         }
         AADAdministrativeUnit 'TestUnit'
         {
+            ID                            = 'Test-Unit'
             DisplayName                   = 'Test-Unit'
             ScopedRoleMembers             = @(
                 MSFT_MicrosoftGraphScopedRoleMembership
