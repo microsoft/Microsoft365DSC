@@ -34,7 +34,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $GroupTypes = @('Unified'),
+        $GroupTypes,
 
         [Parameter()]
         [System.String]
@@ -401,10 +401,6 @@ function Set-TargetResource
     {
         Write-Verbose -Message 'Cannot set mailenabled to false if GroupTypes is set to Unified when creating group.'
         throw 'Cannot set mailenabled to false if GroupTypes is set to Unified when creating a group.'
-    }
-    if (-not $GroupTypes -and $currentParameters.GroupTypes -eq $null)
-    {
-        $currentParameters.Add('GroupTypes', @('Unified'))
     }
 
     $currentValuesToCheck = @()
