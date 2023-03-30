@@ -115,26 +115,11 @@ In order to make it easier for folks to follow the execution process of the Star
   * Name
   This means that if a resource instance defines both DisplayName and Id, that the DisplayName value will be used to name the instance.
 
-## Logging Improvements to Include the Instance Name ([#3091](https://github.com/microsoft/Microsoft365DSC/pull/3091))
-Starting with this version of M365DSC, drift events logged in Event Viewer will include the Instance name as their source instead of just the full resource's name.
-![image](https://raw.githubusercontent.com/microsoft/Microsoft365DSC/Dev/docs/docs/Images/April2023MR-EventViewer.png)
-In addition to this, the M365DSCEvent XML content will now include an additional property for the ConfigurationDrift element that will be named **InstanceName** and will contain the resource's instance name. E.g.,
+## Logging Improvements to Include Non-Drifted Resource Instances ([#3091](https://github.com/microsoft/Microsoft365DSC/pull/3091))
+Starting with this version of M365DSC, users can decide to also include informaton about resources that don't have any detected drifts in them by setting the logging settings with the new Set-M365DSCLoggingOption. E.g.,
 
 ```
-<M365DSCEvent>
-    <ConfigurationDrift Source="MSFT_AADNamedLocationPolicy" InstanceName="[AADNamedLocationPolicy]HibouChou">
-        <ParametersNotInDesiredState>
-            <Param Name="IpRanges"><CurrentValue>192.226.137.107/12</CurrentValue><DesiredValue>192.226.137.106/12</DesiredValue></Param>
-        </ParametersNotInDesiredState>
-    </ConfigurationDrift>
-    <DesiredValues>
-        <Param Name ="OdataType">#microsoft.graph.ipNamedLocation</Param>
-        <Param Name ="DisplayName">Nik's Laptop</Param>
-        <Param Name ="IpRanges">192.226.137.106/12</Param>
-        <Param Name ="IsTrusted">True</Param>
-        <Param Name ="Ensure">Present</Param>
-        <Param Name ="Credential">System.Management.Automation.PSCredential</Param>
-        <Param Name ="Verbose">True</Param>
-    </DesiredValues>
-</M365DSCEvent>
+Set-M365DSCLoggingOption -IncludeNonDrifted $True
 ```
+These events will be reported as Information entries having an Event ID of 2.
+![image](https://raw.githubusercontent.com/microsoft/Microsoft365DSC/Dev/docs/docs/Images/April2023MR-EventViewer.png)
