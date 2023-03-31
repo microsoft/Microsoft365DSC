@@ -105,6 +105,9 @@
     FIXES [#3066](https://github.com/microsoft/Microsoft365DSC/issues/3066)
 * TeamsMeetingPolicy
   * [BREAKING CHANGE] Remove deprecated parameter RecordingStorageMode
+* TeamsUpdateManagementPolicy
+  * Added support for the new UseNewTeamsClient parameter.
+    FIXES [#3062](https://github.com/microsoft/Microsoft365DSC/issues/3062)
 * DRG
   * Various fixes
     * Cleanup generated code
