@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource 'IntuneWifiConfigurationPolicyAndroidEntrepriseWorkProfile' -GenericStubModule $GenericStubPath
+    -DscResource 'IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -53,7 +53,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts
-        Context -Name 'The IntuneWifiConfigurationPolicyAndroidEntrepriseWorkProfile should exist but it DOES NOT' -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner should exist but it DOES NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
                     ConnectAutomatically           = $True
@@ -62,6 +62,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                    = 'FakeStringValue'
                     Id                             = 'FakeStringValue'
                     NetworkName                    = 'FakeStringValue'
+                    PreSharedKey                   = 'FakeStringValue'
+                    PreSharedKeyIsSet              = $True
+                    ProxyAutomaticConfigurationUrl = 'FakeStringValue'
+                    ProxyExclusionList             = 'FakeStringValue'
+                    ProxyManualAddress             = 'FakeStringValue'
+                    ProxyManualPort                = 25
+                    ProxySettings                  = 'none'
                     Ssid                           = 'FakeStringValue'
                     WiFiSecurityType               = 'open'
 
@@ -85,7 +92,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'The IntuneWifiConfigurationPolicyAndroidEntrepriseWorkProfile exists but it SHOULD NOT' -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner exists but it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
                     ConnectAutomatically           = $True
@@ -94,6 +101,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                    = 'FakeStringValue'
                     Id                             = 'FakeStringValue'
                     NetworkName                    = 'FakeStringValue'
+                    PreSharedKey                   = 'FakeStringValue'
+                    PreSharedKeyIsSet              = $True
+                    ProxyAutomaticConfigurationUrl = 'FakeStringValue'
+                    ProxyExclusionList             = 'FakeStringValue'
+                    ProxyManualAddress             = 'FakeStringValue'
+                    ProxyManualPort                = 25
+                    ProxySettings                  = 'none'
                     Ssid                           = 'FakeStringValue'
                     WiFiSecurityType               = 'open'
 
@@ -104,12 +118,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            '@odata.type'                  = '#microsoft.graph.androidWorkProfileWifiConfiguration'
                             NetworkName                    = 'FakeStringValue'
+                            '@odata.type'                  = '#microsoft.graph.androidDeviceOwnerWifiConfiguration'
+                            PreSharedKey                   = 'FakeStringValue'
                             WiFiSecurityType               = 'open'
                             ConnectAutomatically           = $True
-                            ConnectWhenNetworkNameIsHidden = $True
                             Ssid                           = 'FakeStringValue'
+                            ProxyManualAddress             = 'FakeStringValue'
+                            ProxySettings                  = 'none'
+                            ConnectWhenNetworkNameIsHidden = $True
+                            ProxyAutomaticConfigurationUrl = 'FakeStringValue'
+                            PreSharedKeyIsSet              = $True
+                            ProxyExclusionList             = 'FakeStringValue'
+                            ProxyManualPort                = 25
 
                         }
                         Description          = 'FakeStringValue'
@@ -133,7 +154,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Should -Invoke -CommandName Remove-MgBetaDeviceManagementDeviceConfiguration -Exactly 1
             }
         }
-        Context -Name 'The IntuneWifiConfigurationPolicyAndroidEntrepriseWorkProfile Exists and Values are already in the desired state' -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
                     ConnectAutomatically           = $True
@@ -142,6 +163,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                    = 'FakeStringValue'
                     Id                             = 'FakeStringValue'
                     NetworkName                    = 'FakeStringValue'
+                    PreSharedKey                   = 'FakeStringValue'
+                    PreSharedKeyIsSet              = $True
+                    ProxyAutomaticConfigurationUrl = 'FakeStringValue'
+                    ProxyExclusionList             = 'FakeStringValue'
+                    ProxyManualAddress             = 'FakeStringValue'
+                    ProxyManualPort                = 25
+                    ProxySettings                  = 'none'
                     Ssid                           = 'FakeStringValue'
                     WiFiSecurityType               = 'open'
 
@@ -152,12 +180,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            '@odata.type'                  = '#microsoft.graph.androidWorkProfileWifiConfiguration'
                             NetworkName                    = 'FakeStringValue'
+                            '@odata.type'                  = '#microsoft.graph.androidDeviceOwnerWifiConfiguration'
+                            PreSharedKey                   = 'FakeStringValue'
                             WiFiSecurityType               = 'open'
                             ConnectAutomatically           = $True
-                            ConnectWhenNetworkNameIsHidden = $True
                             Ssid                           = 'FakeStringValue'
+                            ProxyManualAddress             = 'FakeStringValue'
+                            ProxySettings                  = 'none'
+                            ConnectWhenNetworkNameIsHidden = $True
+                            ProxyAutomaticConfigurationUrl = 'FakeStringValue'
+                            PreSharedKeyIsSet              = $True
+                            ProxyExclusionList             = 'FakeStringValue'
+                            ProxyManualPort                = 25
 
                         }
                         Description          = 'FakeStringValue'
@@ -174,7 +209,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'The IntuneWifiConfigurationPolicyAndroidEntrepriseWorkProfile exists and values are NOT in the desired state' -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
                     ConnectAutomatically           = $True
@@ -183,6 +218,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                    = 'FakeStringValue'
                     Id                             = 'FakeStringValue'
                     NetworkName                    = 'FakeStringValue'
+                    PreSharedKey                   = 'FakeStringValue'
+                    PreSharedKeyIsSet              = $True
+                    ProxyAutomaticConfigurationUrl = 'FakeStringValue'
+                    ProxyExclusionList             = 'FakeStringValue'
+                    ProxyManualAddress             = 'FakeStringValue'
+                    ProxyManualPort                = 25
+                    ProxySettings                  = 'none'
                     Ssid                           = 'FakeStringValue'
                     WiFiSecurityType               = 'open'
 
@@ -193,10 +235,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            Ssid             = 'FakeStringValue'
-                            NetworkName      = 'FakeStringValue'
-                            WiFiSecurityType = 'open'
-                            '@odata.type'    = '#microsoft.graph.androidWorkProfileWifiConfiguration'
+                            '@odata.type'                  = '#microsoft.graph.androidDeviceOwnerWifiConfiguration'
+                            NetworkName                    = 'FakeStringValue'
+                            WiFiSecurityType               = 'open'
+                            ProxyExclusionList             = 'FakeStringValue'
+                            ProxyAutomaticConfigurationUrl = 'FakeStringValue'
+                            PreSharedKey                   = 'FakeStringValue'
+                            ProxyManualPort                = 7
+                            ProxySettings                  = 'none'
+                            Ssid                           = 'FakeStringValue'
+                            ProxyManualAddress             = 'FakeStringValue'
 
                         }
                         Description          = 'FakeStringValue'
@@ -223,6 +271,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
+            
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
@@ -231,12 +280,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            '@odata.type'                  = '#microsoft.graph.androidWorkProfileEnterpriseWiFiConfiguration'
                             NetworkName                    = 'FakeStringValue'
+                            '@odata.type'                  = '#microsoft.graph.androidDeviceOwnerEnterpriseWiFiConfiguration'
+                            PreSharedKey                   = 'FakeStringValue'
                             WiFiSecurityType               = 'open'
                             ConnectAutomatically           = $True
-                            ConnectWhenNetworkNameIsHidden = $True
                             Ssid                           = 'FakeStringValue'
+                            ProxyManualAddress             = 'FakeStringValue'
+                            ProxySettings                  = 'none'
+                            ConnectWhenNetworkNameIsHidden = $True
+                            ProxyAutomaticConfigurationUrl = 'FakeStringValue'
+                            PreSharedKeyIsSet              = $True
+                            ProxyExclusionList             = 'FakeStringValue'
+                            ProxyManualPort                = 25
 
                         }
                         Description          = 'FakeStringValue'

@@ -5,7 +5,8 @@ It is not meant to use as a production baseline.
 
 Configuration Example
 {
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [PSCredential]
         $credsGlobalAdmin
@@ -14,12 +15,13 @@ Configuration Example
 
     node localhost
     {
-        IntuneWifiConfigurationPolicyAndroidEntrepriseWorkProfile 'myWifiConfigAndroidWorkProfilePolicy'
+        IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile 'myWifiConfigAndroidWorkProfilePolicy'
         {
             Id                             = 'b6c59816-7f9b-4f7a-a2a2-13a29c8bc315'
             DisplayName                    = 'wifi - android BYOD'
             Assignments                    = @(
-                MSFT_DeviceManagementConfigurationPolicyAssignments {
+                MSFT_DeviceManagementConfigurationPolicyAssignments
+                {
                     deviceAndAppManagementAssignmentFilterType = 'none'
                     dataType                                   = '#microsoft.graph.allLicensedUsersAssignmentTarget'
                 }
