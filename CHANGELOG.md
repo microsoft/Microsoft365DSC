@@ -101,6 +101,8 @@
     and the apps were not exported.
 * SPOTenantSettings
   * [BREAKING CHANGE] Remove deprecated parameter RequireAcceptingAccountMatchInvitedAccount
+  * Fixes how we are extracting the DisabledWebPartIds parameter.
+    FIXES [#3066](https://github.com/microsoft/Microsoft365DSC/issues/3066)
 * TeamsMeetingPolicy
   * [BREAKING CHANGE] Remove deprecated parameter RecordingStorageMode
 * DRG
