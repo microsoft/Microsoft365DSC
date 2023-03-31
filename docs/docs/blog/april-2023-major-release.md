@@ -44,9 +44,9 @@ As part of this release, we are changing the DisplayName parameter to be require
 
 ## Corrected typos in resource names ([#3024](https://github.com/microsoft/Microsoft365DSC/pull/3024))
 Three resources had typos in their names. With this release these typos are now corrected:
-* IntuneWifiConfigurationPolicyAndroidEntrepriseDeviceOwner: Entreprise should be Enterprise
-* IntuneWifiConfigurationPolicyAndroidEntrepriseWorkProfile: Entreprise should be Enterprise
-* IntuneWindowUpdateForBusinessRingUpdateProfileWindows10: Window should be Windows
+* IntuneWifiConfigurationPolicyAndroidEntrepriseDeviceOwner: Changed Entreprise into Enterprise
+* IntuneWifiConfigurationPolicyAndroidEntrepriseWorkProfile: Changed Entreprise into Enterprise
+* IntuneWindowUpdateForBusinessRingUpdateProfileWindows10: Changed Window into Windows
 
 ## Removal of Deprecated Parameters ([#3040](https://github.com/microsoft/Microsoft365DSC/pull/3040))
 We are removing parameters that have been deprecated from various resources as part of this major update. As a reminder, parameters that become deprecated on Microsoft 365 are being marked as deprecated in Microsoft365DSC until the next major release. In the past, using these parameters would have resulted in a warning letting the users know that they are using a deprecated parameter and that it would simply be ignored. Starting with this release, using these deprecated parameters will generate an error. It is recommended to scan existing configurations and remove deprecated parameters. The following resources have deprecated parameters that have been removed as part of this release, along with the parameters that have been removed:
