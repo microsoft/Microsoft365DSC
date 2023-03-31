@@ -264,8 +264,17 @@ function Set-TargetResource
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentTag.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove('Credential')
         $CreationParams.Remove('Ensure')
+
+        # Remove authentication parameters
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('ApplicationId') | Out-Null
+        $CreationParams.Remove('TenantId') | Out-Null
+        $CreationParams.Remove('CertificatePath') | Out-Null
+        $CreationParams.Remove('CertificatePassword') | Out-Null
+        $CreationParams.Remove('CertificateThumbprint') | Out-Null
+        $CreationParams.Remove('ManagedIdentity') | Out-Null
+        $CreationParams.Remove('ApplicationSecret') | Out-Null
 
         #Convert File plan to JSON before Set
         if ($FilePlanProperty)
@@ -282,13 +291,22 @@ function Set-TargetResource
         $SetParams = $PSBoundParameters
 
         #Remove unused parameters for Set-ComplianceTag cmdlet
-        $SetParams.Remove('Credential')
         $SetParams.Remove('Ensure')
         $SetParams.Remove('Name')
         $SetParams.Remove('IsRecordLabel')
         $SetParams.Remove('Regulatory')
         $SetParams.Remove('RetentionAction')
         $SetParams.Remove('RetentionType')
+
+        # Remove authentication parameters
+        $SetParams.Remove('Credential') | Out-Null
+        $SetParams.Remove('ApplicationId') | Out-Null
+        $SetParams.Remove('TenantId') | Out-Null
+        $SetParams.Remove('CertificatePath') | Out-Null
+        $SetParams.Remove('CertificatePassword') | Out-Null
+        $SetParams.Remove('CertificateThumbprint') | Out-Null
+        $SetParams.Remove('ManagedIdentity') | Out-Null
+        $SetParams.Remove('ApplicationSecret') | Out-Null
 
         # Once set, a label can't be removed;
         if ($SetParams.IsRecordLabel -eq $false -and $CurrentTag.IsRecordLabel -eq $true)
@@ -435,7 +453,16 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
+
+    # Remove authentication parameters
     $ValuesToCheck.Remove('Credential') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestFilePlanProperties = Test-SCFilePlanProperties -CurrentProperty $CurrentValues `
         -DesiredProperty $PSBoundParameters

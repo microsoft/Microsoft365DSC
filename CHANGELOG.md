@@ -3,25 +3,18 @@
 # UNRELEASED
 
 * AADAdministrativeUnit
-  * Fixes extraction of the Members property.
-* AADAdministrativeUnit, AADConditionalAccessPolicy, AADEntitlementManagementAccessPackage,
-  AADEntitlementManagementAccessPackageAssignmentPolicy, AADEntitlementManagementAccessPackageCatalog,
-  AADEntitlementManagementAccessPackageCatalogResource, AADEntitlementManagementAccessPackageCatalogResource,
-  AADEntitlementManagementConnectedOrganization, AADRoleSetting,
-  IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator, IntuneDeviceConfigurationPolicyAndroidDeviceOwner,
-  IntuneDeviceConfigurationPolicyAndroidOpenSourceProject, IntuneDeviceConfigurationPolicyMacOS,
-  IntuneDeviceConfigurationPolicyiOS, IntuneExploitProtectionPolicyWindows10SettingCatalog,
-  IntuneWifiConfigurationPolicyAndroidDeviceAdministrator, IntuneWifiConfigurationPolicyAndroidEntrepriseDeviceOwner,
-  IntuneWifiConfigurationPolicyAndroidEntrepriseWorkProfile, IntuneWifiConfigurationPolicyAndroidForWork,
-  IntuneWifiConfigurationPolicyAndroidOpenSourceProject, IntuneWifiConfigurationPolicyIOS,
-  IntuneWifiConfigurationPolicyMacOS, IntuneWifiConfigurationPolicyWindows10,
-  IntuneWindowUpdateForBusinessRingUpdateProfileWindows10, IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10,
-  IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled, IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
+  * Fixes extraction of the Members property.
 * AADApplication
   * [BREAKING CHANGE] Remove deprecated parameter Oauth2RequirePostResponse
 * AADConditionalAccessPolicy
+  * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
   * [BREAKING CHANGE] Remove deprecated parameters IncludeDevices and ExcludeDevices
+* AADEntitlementManagementAccessPackage, AADEntitlementManagementAccessPackageAssignmentPolicy,
+  AADEntitlementManagementAccessPackageCatalog, AADEntitlementManagementAccessPackageCatalogResource,
+  AADEntitlementManagementAccessPackageCatalogResource, AADEntitlementManagementConnectedOrganization,
+  AADRoleSetting
+  * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
 * AADGroup
   * Changed the SecurityEnabled and MailEnabled parameters to become mandatory.
     FIXES [#3072](https://github.com/microsoft/Microsoft365DSC/issues/3072)
@@ -58,28 +51,48 @@
     IncidentReportOriginalMail and MessageContainsAllDataClassifications
 * IntuneAntivirusPolicyWindows10SettingCatalog, IntuneASRRulesPolicyWindows10,
   IntuneAppProtectionPolicyiOS, IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager,
-  IntuneSettingCatalogASRRulesPolicyWindows10,
+  IntuneSettingCatalogASRRulesPolicyWindows10
   * [BREAKING CHANGE] Setting Identity as Key parameter and DisplayName as Required
 * IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager
   * [BREAKING CHANGE] Fix resource
+* IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator, IntuneDeviceConfigurationPolicyAndroidDeviceOwner,
+  IntuneDeviceConfigurationPolicyAndroidOpenSourceProject, IntuneDeviceConfigurationPolicyMacOS,
+  IntuneDeviceConfigurationPolicyiOS, IntuneExploitProtectionPolicyWindows10SettingCatalog,
+  IntuneWifiConfigurationPolicyAndroidDeviceAdministrator, IntuneWifiConfigurationPolicyAndroidForWork,
+  IntuneWifiConfigurationPolicyAndroidOpenSourceProject, IntuneWifiConfigurationPolicyIOS,
+  IntuneWifiConfigurationPolicyMacOS, IntuneWifiConfigurationPolicyWindows10,
+  IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled, IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
+  * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
+* IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner
+  * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
+  * [BREAKING CHANGE] Corrected typo in resource name (Entreprise to Enterprise)
+    FIXES [#3024](https://github.com/microsoft/Microsoft365DSC/issues/3024)
+* IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile
+  * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
+  * [BREAKING CHANGE] Corrected typo in resource name (Entreprise to Enterprise)
+    FIXES [#3024](https://github.com/microsoft/Microsoft365DSC/issues/3024)
 * IntuneWindowsAutopilotDeploymentProfileAzureADJoined
   * Initial release
     FIXES [#2605](https://github.com/microsoft/Microsoft365DSC/issues/2605)
 * IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined
   * Initial release
     FIXES [#2605](https://github.com/microsoft/Microsoft365DSC/issues/2605)
-* SCLabelPolicy
+* IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10
+  * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
+  * [BREAKING CHANGE] Corrected typo in resource name (Window to Windows)
+    FIXES [#3024](https://github.com/microsoft/Microsoft365DSC/issues/3024)
+* SCAuditConfigurationPolicy, SCAutoSensitivityLabelPolicy, SCCaseHoldPolicy, SCCaseHoldRule,
+  SCComplianceCase, SCComplianceSearch, SCComplianceSearchAction, SCComplianceTag,
+  SCDeviceConditionalAccessPolicy, SCDeviceConfigurationPolicy, SCDLPComplianceRule,
+  SCFilePlanPropertyAuthority, SCFilePlanPropertyCategory, SCFilePlanPropertyCitation,
+  SCFilePlanPropertyDepartment, SCFilePlanPropertyReferenceId, SCFilePlanPropertySubCategory,
+  SCLabelPolicy, SCProtectionAlert, SCRetentionCompliancePolicy, SCRetentionComplianceRule,
+  SCRetentionEventType, SCSupervisoryReviewPolicy, SCSupervisoryReviewRule
   * Fixed the collection of new and set parameters to ensure the correct values are passed to the New/Set cmdlets.
     FIXES [#3075](https://github.com/microsoft/Microsoft365DSC/issues/3075)
 * SCSensitivityLabel
   * [BREAKING CHANGE] Remove deprecated parameters Disabled, ApplyContentMarkingFooterFontName,
     ApplyContentMarkingHeaderFontName, ApplyWaterMarkingFontName and EncryptionAipTemplateScopes
-* SCRetentionCompliancePolicy
-  * Fixed the collection of new and set parameters to ensure the correct values are passed to the New/Set cmdlets.
-    FIXES [#3075](https://github.com/microsoft/Microsoft365DSC/issues/3075)
-* SCRetentionComplianceRule
-  * Fixed the collection of new and set parameters to ensure the correct values are passed to the New/Set cmdlets.
-    FIXES [#3075](https://github.com/microsoft/Microsoft365DSC/issues/3075)
 * SPOApp
   * Fixed issue in the Export where an error was displayed in Verbose mode when Credentials were specified
     and the apps were not exported.

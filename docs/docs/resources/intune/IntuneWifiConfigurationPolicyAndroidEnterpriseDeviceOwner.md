@@ -1,4 +1,4 @@
-﻿# IntuneWifiConfigurationPolicyAndroidEntrepriseDeviceOwner
+﻿# IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner
 
 ## Parameters
 
@@ -43,7 +43,7 @@
 
 ## Description
 
-This resource configures an Intune Wifi Configuration Policy Android Entreprise Device Owner Device.
+This resource configures an Intune Wifi Configuration Policy Android Enterprise Device Owner Device.
 
 ## Permissions
 
@@ -90,7 +90,7 @@ Configuration Example
 
     node localhost
     {
-        IntuneWifiConfigurationPolicyAndroidEntrepriseDeviceOwner 'myWifiConfigAndroidDeviceOwnerPolicy'
+        IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner 'myWifiConfigAndroidDeviceOwnerPolicy'
         {
             Id                             = '7d9c4870-e07f-488a-be17-9e1beec45ac3'
             DisplayName                    = 'Wifi - androidForWork'

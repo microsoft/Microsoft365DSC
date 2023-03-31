@@ -1,4 +1,4 @@
-﻿# IntuneWindowUpdateForBusinessRingUpdateProfileWindows10
+﻿# IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10
 
 ## Parameters
 
@@ -115,7 +115,8 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [PSCredential]
         $Credscredential
@@ -124,7 +125,7 @@ Configuration Example
 
     node localhost
     {
-        IntuneWindowUpdateForBusinessRingUpdateProfileWindows10 'Example'
+        IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10 'Example'
         {
             Id                                  = 'f2a9a546-6087-45b9-81da-59994e79dfd2'
             DisplayName                         = 'WUfB Ring'
