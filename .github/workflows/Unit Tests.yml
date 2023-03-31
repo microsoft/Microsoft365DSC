@@ -19,10 +19,12 @@ jobs:
       - name: Install Modules
         shell: pwsh
         run: |
+          $VerbosePreference = 'Continue'
           $Manifest = Import-PowerShellDataFile './Modules/Microsoft365DSC/Dependencies/Manifest.psd1'
 
           foreach ($module in $Manifest.Dependencies)
           {
+            Write-Verbose -Message $($module.ModuleName)
             if ($module.AllowPreRelease)
             {
               Install-Module $module.ModuleName -AllowPreRelease -Force -Scope AllUsers
