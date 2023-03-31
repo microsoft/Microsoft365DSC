@@ -8,8 +8,8 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
 };
 
-[ClassVersion("1.0.0.0"), FriendlyName("IntuneWifiConfigurationPolicyAndroidEntrepriseDeviceOwner")]
-class MSFT_IntuneWifiConfigurationPolicyAndroidEntrepriseDeviceOwner : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner")]
+class MSFT_IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner : OMI_BaseResource
 {
     [Key, Description("Id of the Intune policy")] String Id;
     [Required, Description("Disaply name of the Intune policy")] String DisplayName;
