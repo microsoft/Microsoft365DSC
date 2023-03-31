@@ -184,7 +184,7 @@ function Get-TargetResource
             HideDefaultThemes                             = $SPOTenantSettings.HideDefaultThemes
             MarkNewFilesSensitiveByDefault                = $SPOTenantSettings.MarkNewFilesSensitiveByDefault
             ConditionalAccessPolicy                       = $SPOTenantSettings.ConditionalAccessPolicy
-            DisabledWebPartIds                            = $SPOTenantSettings.DisabledWebPartIds
+            DisabledWebPartIds                            = [String[]]$SPOTenantSettings.DisabledWebPartIds
             CommentsOnSitePagesDisabled                   = $SPOTenantSettings.CommentsOnSitePagesDisabled
             Credential                                    = $Credential
             ApplicationId                                 = $ApplicationId

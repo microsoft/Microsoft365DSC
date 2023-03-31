@@ -39,6 +39,10 @@ function Get-TargetResource
         $UpdateTimeOfDay,
 
         [Parameter()]
+        [System.Boolean]
+        $UseNewTeamsClient,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -98,6 +102,7 @@ function Get-TargetResource
             AllowPublicPreview    = $policy.AllowPublicPreview
             UpdateDayOfWeek       = $policy.UpdateDayOfWeek
             UpdateTime            = $policy.UpdateTime
+            UseNewTeamsClient     = $policy.UseNewTeamsClient
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -161,6 +166,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $UpdateTimeOfDay,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseNewTeamsClient,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -273,6 +282,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $UpdateTimeOfDay,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseNewTeamsClient,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]

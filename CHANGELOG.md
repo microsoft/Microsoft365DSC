@@ -1,13 +1,14 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-
 * AADAdministrativeUnit
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
   * Fixes extraction of the Members property.
 * AADApplication
   * [BREAKING CHANGE] Remove deprecated parameter Oauth2RequirePostResponse
 * AADConditionalAccessPolicy
+  * Add condition for empty External Guest/User include/exclude
+    FIXES [#3108](https://github.com/microsoft/Microsoft365DSC/issues/3108)
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
   * [BREAKING CHANGE] Remove deprecated parameters IncludeDevices and ExcludeDevices
 * AADEntitlementManagementAccessPackage, AADEntitlementManagementAccessPackageAssignmentPolicy,
@@ -100,8 +101,13 @@
     and the apps were not exported.
 * SPOTenantSettings
   * [BREAKING CHANGE] Remove deprecated parameter RequireAcceptingAccountMatchInvitedAccount
+  * Fixes how we are extracting the DisabledWebPartIds parameter.
+    FIXES [#3066](https://github.com/microsoft/Microsoft365DSC/issues/3066)
 * TeamsMeetingPolicy
   * [BREAKING CHANGE] Remove deprecated parameter RecordingStorageMode
+* TeamsUpdateManagementPolicy
+  * Added support for the new UseNewTeamsClient parameter.
+    FIXES [#3062](https://github.com/microsoft/Microsoft365DSC/issues/3062)
 * DRG
   * Various fixes
     * Cleanup generated code
