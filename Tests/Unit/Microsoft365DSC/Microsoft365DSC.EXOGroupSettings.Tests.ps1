@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource 'EXOMailboxSettings' -GenericStubModule $GenericStubPath
+    -DscResource 'EXOGroupSettings' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -34,34 +34,42 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+
+            Mock -CommandName Set-UnifiedGroup -MockWith {
+            }
         }
 
-        Context -Name 'Specified TimeZone is Invalid' -Fixture {
+        Context -Name "The Specified Group doesn't Exist" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName = 'Admin@contoso.com'
-                    TimeZone    = 'Non-Existing'
-                    Ensure      = 'Present'
-                    Credential  = $Credential
+                    DisplayName                            = "Test Group";
+                    AccessType                             = "Public";
+                    AlwaysSubscribeMembersToCalendarEvents = $False;
+                    AuditLogAgeLimit                       = "90.00:00:00";
+                    AutoSubscribeNewMembers                = $False;
+                    CalendarMemberReadOnly                 = $False;
+                    ConnectorsEnabled                      = $True;
+                    Credential                             = $Credential;
+                    HiddenFromAddressListsEnabled          = $True;
+                    HiddenFromExchangeClientsEnabled       = $True;
+                    InformationBarrierMode                 = "Open";
+                        Language                               = @{Name = "en-US"};
+                    MaxReceiveSize                         = "36 MB (37,748,736 bytes)";
+                    MaxSendSize                            = "35 MB (36,700,160 bytes)";
+                    ModerationEnabled                      = $False;
+                    Notes                                  = "My Notes";
+                    PrimarySmtpAddress                     = "TestGroup@contoso.com";
+                    RequireSenderAuthenticationEnabled     = $True;
+                    SubscriptionEnabled                    = $False;
                 }
 
-                Mock -CommandName Get-MailboxRegionalConfiguration -MockWith {
-                    return @{
-                        TimeZone = 'Eastern Standard Time'
-                    }
-                }
-
-                Mock -CommandName Set-MailboxRegionalConfiguration -MockWith {
+                Mock -CommandName Get-UnifiedGroup -MockWith {
                     return $null
                 }
             }
 
-            It 'Should throw an error from the Set method' {
-                { Set-TargetResource @testParams } | Should -Throw 'The specified Time Zone {Non-Existing} is not valid.'
-            }
-
-            It 'Should return the current TimeZone from the Get method' {
-                (Get-TargetResource @testParams).TimeZone | Should -Be 'Eastern Standard Time'
+            It 'Should return the current Language as null from the Get method' {
+                (Get-TargetResource @testParams).Language | Should -Be $null
             }
 
             It 'Should return False from the Test method' {
@@ -69,36 +77,117 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'Specified Parameters are all valid' -Fixture {
+        Context -Name "The Resource is already in the Desired State" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName = 'Admin@contoso.com'
-                    TimeZone    = 'Eastern Standard Time'
-                    Locale      = 'en-US'
-                    Ensure      = 'Present'
-                    Credential  = $Credential
+                    DisplayName                            = "Test Group";
+                    AccessType                             = "Public";
+                    AlwaysSubscribeMembersToCalendarEvents = $False;
+                    AuditLogAgeLimit                       = "90.00:00:00";
+                    AutoSubscribeNewMembers                = $False;
+                    CalendarMemberReadOnly                 = $False;
+                    ConnectorsEnabled                      = $True;
+                    Credential                             = $Credential;HiddenFromAddressListsEnabled          = $True;
+                    HiddenFromExchangeClientsEnabled       = $True;
+                    InformationBarrierMode                 = "Open";
+                    Language                               = "en-US";
+                    MaxReceiveSize                         = "36 MB (37,748,736 bytes)";
+                    MaxSendSize                            = "35 MB (36,700,160 bytes)";
+                    ModerationEnabled                      = $False;
+                    Notes                                  = "My Notes";
+                    PrimarySmtpAddress                     = "TestGroup@contoso.com";
+                    RequireSenderAuthenticationEnabled     = $True;
+                    SubscriptionEnabled                    = $False;
                 }
 
-                Mock -CommandName Get-MailboxRegionalConfiguration -MockWith {
+                Mock -CommandName Get-UnifiedGroup -MockWith {
                     return @{
-                        TimeZone = 'Eastern Standard Time'
-                        Language = @{
-                            Name = 'en-US'
-                        }
+                        DisplayName                            = "Test Group";
+                        AccessType                             = "Public";
+                        AlwaysSubscribeMembersToCalendarEvents = $False;
+                        AuditLogAgeLimit                       = "90.00:00:00";
+                        AutoSubscribeNewMembers                = $False;
+                        CalendarMemberReadOnly                 = $False;
+                        ConnectorsEnabled                      = $True;
+                        EmailAddresses                         = @("SMTP:TestGroup@$contoso.com","SPO:SPO_eff656f4-6163-44b5-8410-139ac8658c5d@SPO_e7a80bcf-696e-40ca-8775-a7f85fbb3ebc");
+                        HiddenFromAddressListsEnabled          = $True;
+                        HiddenFromExchangeClientsEnabled       = $True;
+                        InformationBarrierMode                 = "Open";
+                        Language                               = @{Name = "en-US"};
+                        MaxReceiveSize                         = "36 MB (37,748,736 bytes)";
+                        MaxSendSize                            = "35 MB (36,700,160 bytes)";
+                        ModerationEnabled                      = $False;
+                        Notes                                  = "My Notes";
+                        PrimarySmtpAddress                     = "TestGroup@contoso.com";
+                        RequireSenderAuthenticationEnabled     = $True;
+                        SubscriptionEnabled                    = $False;
                     }
-                }
-
-                Mock -CommandName Set-MailboxRegionalConfiguration -MockWith {
-                    return $null
                 }
             }
 
-            It 'Should call the Set method' {
-                Set-TargetResource @testParams
+            It 'Should return the current Language as en-US from the Get method' {
+                (Get-TargetResource @testParams).Language | Should -Be 'en-US'
             }
 
             It 'Should return True from the Test method' {
                 Test-TargetResource @testParams | Should -Be $True
+            }
+        }
+        Context -Name "The Resource is not in the Desired State" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName                            = "Test Group";
+                    AccessType                             = "Public";
+                    AlwaysSubscribeMembersToCalendarEvents = $False;
+                    AuditLogAgeLimit                       = "90.00:00:00";
+                    AutoSubscribeNewMembers                = $False;
+                    CalendarMemberReadOnly                 = $False;
+                    ConnectorsEnabled                      = $True;
+                    Credential                             = $Credential;HiddenFromAddressListsEnabled          = $True;
+                    HiddenFromExchangeClientsEnabled       = $True;
+                    InformationBarrierMode                 = "Open";
+                    Language                               = "en-US";
+                    MaxReceiveSize                         = "36 MB (37,748,736 bytes)";
+                    MaxSendSize                            = "35 MB (36,700,160 bytes)";
+                    ModerationEnabled                      = $False;
+                    Notes                                  = "My Notes";
+                    PrimarySmtpAddress                     = "TestGroup@contoso.com";
+                    RequireSenderAuthenticationEnabled     = $True;
+                    SubscriptionEnabled                    = $False;
+                }
+
+                Mock -CommandName Get-UnifiedGroup -MockWith {
+                    return @{
+                        DisplayName                            = "Test Group";
+                        AccessType                             = "Public";
+                        AlwaysSubscribeMembersToCalendarEvents = $False;
+                        AuditLogAgeLimit                       = "90.00:00:00";
+                        AutoSubscribeNewMembers                = $False;
+                        CalendarMemberReadOnly                 = $False;
+                        ConnectorsEnabled                      = $True;
+                        EmailAddresses                         = @("SMTP:TestGroup@$contoso.com","SPO:SPO_eff656f4-6163-44b5-8410-139ac8658c5d@SPO_e7a80bcf-696e-40ca-8775-a7f85fbb3ebc");
+                        HiddenFromAddressListsEnabled          = $True;
+                        HiddenFromExchangeClientsEnabled       = $True;
+                        InformationBarrierMode                 = "Open";
+                        Language                               = @{Name = "en-US"};
+                        MaxReceiveSize                         = "36 MB (37,748,736 bytes)";
+                        MaxSendSize                            = "35 MB (36,700,160 bytes)";
+                        ModerationEnabled                      = $True; #drift
+                        Notes                                  = "My Notes";
+                        PrimarySmtpAddress                     = "TestGroup@contoso.com";
+                        RequireSenderAuthenticationEnabled     = $True;
+                        SubscriptionEnabled                    = $False;
+                    }
+                }
+            }
+
+            It 'Should return False from the Test method' {
+                Test-TargetResource @testParams | Should -Be $False
+            }
+            It 'Should call Set-UnifiedGroup from the Set-TargetResource method' {
+
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName 'Set-UnifiedGroup' -Exactly 1
             }
         }
 
@@ -110,20 +199,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-Mailbox -MockWith {
-                    return @(
-                        @{
-                            Name = 'John.Smith'
-                        }
-                    )
-                }
-
-                Mock -CommandName Get-MailboxRegionalConfiguration -MockWith {
+                Mock -CommandName Get-UnifiedGroup -MockWith {
                     return @{
-                        TimeZone = 'Eastern Standard Time'
-                        Language = @{
-                            Name = 'en-US'
-                        }
+                        DisplayName                            = "Test Group";
+                        AccessType                             = "Public";
+                        AlwaysSubscribeMembersToCalendarEvents = $False;
+                        AuditLogAgeLimit                       = "90.00:00:00";
+                        AutoSubscribeNewMembers                = $False;
+                        CalendarMemberReadOnly                 = $False;
+                        ConnectorsEnabled                      = $True;
+                        EmailAddresses                         = @("SMTP:TestGroup@$contoso.com","SPO:SPO_eff656f4-6163-44b5-8410-139ac8658c5d@SPO_e7a80bcf-696e-40ca-8775-a7f85fbb3ebc");
+                        HiddenFromAddressListsEnabled          = $True;
+                        HiddenFromExchangeClientsEnabled       = $True;
+                        InformationBarrierMode                 = "Open";
+                        Language                               = @{Name = "en-US"};
+                        MaxReceiveSize                         = "36 MB (37,748,736 bytes)";
+                        MaxSendSize                            = "35 MB (36,700,160 bytes)";
+                        ModerationEnabled                      = $True; #drift
+                        Notes                                  = "My Notes";
+                        PrimarySmtpAddress                     = "TestGroup@contoso.com";
+                        RequireSenderAuthenticationEnabled     = $True;
+                        SubscriptionEnabled                    = $False;
                     }
                 }
             }

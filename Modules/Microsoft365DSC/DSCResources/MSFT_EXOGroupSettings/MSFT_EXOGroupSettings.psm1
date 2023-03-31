@@ -6,11 +6,16 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupDisplayName,
+        $DisplayName,
 
         [Parameter()]
         [System.String[]]
         $AcceptMessagesOnlyFromSendersOrMembers,
+
+        [Parameter()]
+        [ValidateSet('Public', 'Private')]
+        [System.String]
+        $AccessType,
 
         [Parameter()]
         [System.Boolean]
@@ -137,12 +142,17 @@ function Get-TargetResource
         $HiddenFromExchangeClientsEnabled,
 
         [Parameter()]
+        [ValidateSet("Explicit","Implicit","Open","OwnerModerated")]
         [System.String]
         $InformationBarrierMode,
 
         [Parameter()]
         [System.Boolean]
         $IsMemberAllowedToEditContent,
+
+        [Parameter()]
+        [System.String]
+        $Language,
 
         [Parameter()]
         [System.String]
@@ -157,11 +167,11 @@ function Get-TargetResource
         $MailTipTranslations,
 
         [Parameter()]
-        [System.UInt32]
+        [System.String]
         $MaxReceiveSize,
 
         [Parameter()]
-        [System.UInt32]
+        [System.String]
         $MaxSendSize,
 
         [Parameter()]
@@ -201,11 +211,6 @@ function Get-TargetResource
         $UnifiedGroupWelcomeMessageEnabled,
 
         [Parameter()]
-        [ValidateSet('Present')]
-        [System.String]
-        $Ensure = 'Present',
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -234,7 +239,7 @@ function Get-TargetResource
         $ManagedIdentity
     )
 
-    Write-Verbose -Message "Getting configuration of Office 365 Group Settings for $GroupDisplayName"
+    Write-Verbose -Message "Getting configuration of Office 365 Group Settings for $DisplayName"
 
     if ($Global:CurrentModeIsExport)
     {
@@ -261,12 +266,17 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = @{
-        GroupDisplayName = $GroupDisplayName
+        DisplayName = $DisplayName
     }
 
     try
     {
-        $group = Get-UnifiedGroup -Identity $GroupDisplayName -IncludeAllProperties -ErrorAction Stop
+        [Array]$group = Get-UnifiedGroup -Identity $DisplayName -IncludeAllProperties -ErrorAction Stop
+        if ($group.Length -gt 1)
+        {
+            Write-Warning -Message "Multiple instances of a group named {$DisplayName} was discovered which could result in inconsistencies retrieving its values."
+        }
+        $group = $group[0]
     }
     catch
     {
@@ -275,13 +285,14 @@ function Get-TargetResource
 
     if ($null -eq $group)
     {
-        Write-Verbose -Message "The specified group {$GroupDisplayName} doesn't already exist."
+        Write-Verbose -Message "The specified group {$DisplayName} doesn't already exist."
         return $nullReturn
     }
 
     $result = @{
-        GroupDisplayName                       = $GroupDisplayName
+        DisplayName                            = $DisplayName
         AcceptMessagesOnlyFromSendersOrMembers = $group.AcceptMessagesOnlyFromSendersOrMembers
+        AccessType                             = $group.AccessType
         AlwaysSubscribeMembersToCalendarEvents = $group.AlwaysSubscribeMembersToCalendarEvents
         AuditLogAgeLimit                       = $group.AuditLogAgeLimit
         AutoSubscribeNewMembers                = $group.AutoSubscribeNewMembers
@@ -315,6 +326,7 @@ function Get-TargetResource
         HiddenFromExchangeClientsEnabled       = $group.HiddenFromExchangeClientsEnabled
         InformationBarrierMode                 = $group.InformationBarrierMode
         IsMemberAllowedToEditContent           = $group.IsMemberAllowedToEditContent
+        Language                               = $group.Language.Name
         MailboxRegion                          = $group.MailboxRegion
         MailTip                                = $group.MailTip
         MailTipTranslations                    = $group.MailTipTranslations
@@ -329,7 +341,6 @@ function Get-TargetResource
         SensitivityLabelId                     = $group.SensitivityLabelId
         SubscriptionEnabled                    = $group.SubscriptionEnabled
         UnifiedGroupWelcomeMessageEnabled      = $group.UnifiedGroupWelcomeMessageEnabled
-        Ensure                                 = $Ensure
         Credential                             = $Credential
         ApplicationId                          = $ApplicationId
         TenantId                               = $TenantId
@@ -339,7 +350,7 @@ function Get-TargetResource
         ManagedIdentity                        = $ManagedIdentity
     }
 
-    Write-Verbose -Message "Found an existing instance of group '$($GroupDisplayName)'"
+    Write-Verbose -Message "Found an existing instance of group '$($DisplayName)'"
     return $result
 }
 
@@ -350,11 +361,16 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupDisplayName,
+        $DisplayName,
 
         [Parameter()]
         [System.String[]]
         $AcceptMessagesOnlyFromSendersOrMembers,
+
+        [Parameter()]
+        [ValidateSet('Public', 'Private')]
+        [System.String]
+        $AccessType,
 
         [Parameter()]
         [System.Boolean]
@@ -482,11 +498,16 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        [ValidateSet("Explicit","Implicit","Open","OwnerModerated")]
         $InformationBarrierMode,
 
         [Parameter()]
         [System.Boolean]
         $IsMemberAllowedToEditContent,
+
+        [Parameter()]
+        [System.String]
+        $Language,
 
         [Parameter()]
         [System.String]
@@ -501,11 +522,11 @@ function Set-TargetResource
         $MailTipTranslations,
 
         [Parameter()]
-        [System.UInt32]
+        [System.String]
         $MaxReceiveSize,
 
         [Parameter()]
-        [System.UInt32]
+        [System.String]
         $MaxSendSize,
 
         [Parameter()]
@@ -545,11 +566,6 @@ function Set-TargetResource
         $UnifiedGroupWelcomeMessageEnabled,
 
         [Parameter()]
-        [ValidateSet('Present')]
-        [System.String]
-        $Ensure = 'Present',
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -578,7 +594,7 @@ function Set-TargetResource
         $ManagedIdentity
     )
 
-    Write-Verbose -Message "Setting configuration of Office 365 Mailbox Settings for $DisplayName"
+    Write-Verbose -Message "Setting configuration of Office 365 group Settings for $DisplayName"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -594,19 +610,23 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $currentMailbox = Get-TargetResource @PSBoundParameters
+    $UpdateParameters = ([Hashtable]$PSBoundParameters).Clone()
+    $UpdateParameters.Add("Identity", $DisplayName)
+    $UpdateParameters.Remove("DisplayName") | Out-Null
+    $UpdateParameters.Remove("Credential") | Out-Null
+    $UpdateParameters.Remove("ApplicationId") | Out-Null
+    $UpdateParameters.Remove("TenantId") | Out-Null
+    $UpdateParameters.Remove("CertificateThumbprint") | Out-Null
+    $UpdateParameters.Remove("CertificatePath") | Out-Null
+    $UpdateParameters.Remove("CertificatePassword") | Out-Null
+    $UpdateParameters.Remove("ManagedIdentity") | Out-Null
 
-    $AllowedTimeZones = (Get-ChildItem 'HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Time zones' | `
-            ForEach-Object { Get-ItemProperty $_.PSPath }).PSChildName
-
-    if ($AllowedTimeZones.Contains($TimeZone) -eq $false)
+    # Cannot use PrimarySmtpAddress and EmailAddresses at the same time. If both are present, then give priority to PrimarySmtpAddress.
+    if ($UpdateParameters.ContainsKey("PrimarySmtpAddress") -and $null -ne $UpdateParameters.PrimarySmtpAddress)
     {
-        throw "The specified Time Zone {$($TimeZone)} is not valid."
+        $UpdateParameters.Remove("EmailAddresses")
     }
-
-    Set-MailboxRegionalConfiguration -Identity $DisplayName `
-        -Language $Locale `
-        -TimeZone $TimeZone
+    Set-UnifiedGroup @UpdateParameters
 }
 
 function Test-TargetResource
@@ -617,11 +637,16 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupDisplayName,
+        $DisplayName,
 
         [Parameter()]
         [System.String[]]
         $AcceptMessagesOnlyFromSendersOrMembers,
+
+        [Parameter()]
+        [ValidateSet('Public', 'Private')]
+        [System.String]
+        $AccessType,
 
         [Parameter()]
         [System.Boolean]
@@ -749,11 +774,16 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        [ValidateSet("Explicit","Implicit","Open","OwnerModerated")]
         $InformationBarrierMode,
 
         [Parameter()]
         [System.Boolean]
         $IsMemberAllowedToEditContent,
+
+        [Parameter()]
+        [System.String]
+        $Language,
 
         [Parameter()]
         [System.String]
@@ -768,11 +798,11 @@ function Test-TargetResource
         $MailTipTranslations,
 
         [Parameter()]
-        [System.UInt32]
+        [System.String]
         $MaxReceiveSize,
 
         [Parameter()]
-        [System.UInt32]
+        [System.String]
         $MaxSendSize,
 
         [Parameter()]
@@ -810,11 +840,6 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $UnifiedGroupWelcomeMessageEnabled,
-
-        [Parameter()]
-        [ValidateSet('Present')]
-        [System.String]
-        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -856,19 +881,17 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Office 365 Mailbox Settings for $DisplayName"
+    Write-Verbose -Message "Testing configuration of Office 365 Group Settings for $DisplayName"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-
+    $ValuesToCheck = $PSBoundParameters
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @('DisplayName', `
-            'TimeZone', `
-            'Locale')
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -945,7 +968,7 @@ function Export-TargetResource
         {
             $Params = @{
                 Credential            = $Credential
-                GroupDisplayName      = $groupName
+                DisplayName           = $groupName
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint

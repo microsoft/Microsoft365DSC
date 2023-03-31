@@ -1,5 +1,5 @@
 ﻿{
-    "resourceName": "EXOMailboxSettings",
+    "resourceName": "EXOGroupSettings",
     "description": "",
     "permissions": {
         "graph": {

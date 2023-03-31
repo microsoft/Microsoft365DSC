@@ -1,6 +1,6 @@
-# EXO MailboxSettings
+# EXOGroupSettings
 
 ## Description
 
-This resource configures settings on Mailboxes
-such as the Regional settings and its timezone.
+This resource configures settings on groups
+such as the custom attributes and language.
