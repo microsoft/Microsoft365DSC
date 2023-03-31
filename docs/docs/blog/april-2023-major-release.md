@@ -1,4 +1,4 @@
-# Microsoft365DSC – October 2022 Major Release (version 1.22.1005.1)
+# Microsoft365DSC – April 2023 Major Release (version 1.22.405.1)
 
 As defined by our [Breaking Changes Policy](https://microsoft365dsc.com/concepts/breaking-changes/), twice a year we allow for breaking changes to be deployed as part of a release. Our next major release, scheduled to go out on April 5th 2023, will include several breaking changes and will be labeled version 1.23.405.1. This article provides details on the breaking changes and other important updates that will be included as part of our April 2023 Major release.
 
