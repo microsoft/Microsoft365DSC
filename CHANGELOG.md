@@ -25,6 +25,9 @@
   * [BREAKING CHANGE] Remove deprecated parameter PreferredDataLocation* EXOAntiPhishPolicy
   * [BREAKING CHANGE] Remove deprecated parameters EnableAntispoofEnforcement and
     TargetedDomainProtectionAction
+* EXOGroupSettings
+  * Initial Release
+    FIXES [#3089](https://github.com/microsoft/Microsoft365DSC/issues/3089)
 * EXOHostedContentFilterPolicy
   * [BREAKING CHANGE] Remove deprecated parameters EndUserSpamNotificationCustomFromAddress
     and EndUserSpamNotificationCustomFromName
