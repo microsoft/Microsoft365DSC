@@ -40,6 +40,8 @@ This function does not generate any output.
 | CertificatePath | False | String |  |  |  |
 | CreateSelfSignedCertificate | False | SwitchParameter |  |  |  |
 | AdminConsent | False | SwitchParameter |  |  |  |
+| Message | True | String |  |  |  |
+| Type | False | String | Info | Error, Warning, Info |  |
 
 ## Examples
 
