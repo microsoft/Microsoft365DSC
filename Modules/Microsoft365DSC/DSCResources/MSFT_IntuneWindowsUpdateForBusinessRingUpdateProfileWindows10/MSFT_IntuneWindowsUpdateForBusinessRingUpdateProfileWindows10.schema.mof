@@ -17,8 +17,8 @@ class MSFT_MicrosoftGraphWindowsUpdateInstallScheduleType
     [Write, Description("The type of the entity."), ValueMap{"#microsoft.graph.windowsUpdateActiveHoursInstall","#microsoft.graph.windowsUpdateScheduledInstall"}, Values{"#microsoft.graph.windowsUpdateActiveHoursInstall","#microsoft.graph.windowsUpdateScheduledInstall"}] String odataType;
 };
 
-[ClassVersion("1.0.0.0"), FriendlyName("IntuneWindowUpdateForBusinessRingUpdateProfileWindows10")]
-class MSFT_IntuneWindowUpdateForBusinessRingUpdateProfileWindows10 : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10")]
+class MSFT_IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10 : OMI_BaseResource
 {
     [Key, Description("The unique identifier for an entity. Read-only.")] String Id;
     [Required, Description("Admin provided name of the device configuration.")] String DisplayName;

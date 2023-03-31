@@ -1,4 +1,4 @@
-﻿# IntuneWifiConfigurationPolicyAndroidEntrepriseWorkProfile
+﻿# IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile
 
 ## Parameters
 
@@ -36,7 +36,7 @@
 
 ## Description
 
-This resource configures an Intune Wifi Configuration Policy Android Entreprise Work Profile Device.
+This resource configures an Intune Wifi Configuration Policy Android Enterprise Work Profile Device.
 
 ## Permissions
 
@@ -83,7 +83,7 @@ Configuration Example
 
     node localhost
     {
-        IntuneWifiConfigurationPolicyAndroidEntrepriseWorkProfile 'myWifiConfigAndroidWorkProfilePolicy'
+        IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile 'myWifiConfigAndroidWorkProfilePolicy'
         {
             Id                             = 'b6c59816-7f9b-4f7a-a2a2-13a29c8bc315'
             DisplayName                    = 'wifi - android BYOD'

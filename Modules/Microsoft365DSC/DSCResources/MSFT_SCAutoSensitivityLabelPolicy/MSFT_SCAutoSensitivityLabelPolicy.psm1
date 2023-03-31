@@ -382,7 +382,6 @@ function Set-TargetResource
         $CreationParams = $PSBoundParameters
 
         #Remove parameters not used in New-LabelPolicy
-        $CreationParams.Remove('Credential') | Out-Null
         $CreationParams.Remove('Ensure') | Out-Null
         $CreationParams.Remove('AddExchangeLocation') | Out-Null
         $CreationParams.Remove('AddOneDriveLocation') | Out-Null
@@ -394,6 +393,16 @@ function Set-TargetResource
         $CreationParams.Remove('RemoveOneDriveLocationException') | Out-Null
         $CreationParams.Remove('RemoveSharePointLocation') | Out-Null
         $CreationParams.Remove('RemoveSharePointLocationException') | Out-Null
+
+        # Remove authentication parameters
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('ApplicationId') | Out-Null
+        $CreationParams.Remove('TenantId') | Out-Null
+        $CreationParams.Remove('CertificatePath') | Out-Null
+        $CreationParams.Remove('CertificatePassword') | Out-Null
+        $CreationParams.Remove('CertificateThumbprint') | Out-Null
+        $CreationParams.Remove('ManagedIdentity') | Out-Null
+        $CreationParams.Remove('ApplicationSecret') | Out-Null
 
         Write-Verbose "Creating new Auto Sensitivity label policy $Name."
 
@@ -409,8 +418,8 @@ function Set-TargetResource
         {
             Start-Sleep 5
             $SetParams = $PSBoundParameters
+
             #Remove unused parameters for Set-Label cmdlet
-            $SetParams.Remove('Credential') | Out-Null
             $SetParams.Remove('Ensure') | Out-Null
             $SetParams.Remove('Name') | Out-Null
             $SetParams.Remove('ExchangeLocationException') | Out-Null
@@ -419,6 +428,17 @@ function Set-TargetResource
             $SetParams.Remove('OneDriveLocationException') | Out-Null
             $SetParams.Remove('SharePointLocation') | Out-Null
             $SetParams.Remove('SharePointLocationException') | Out-Null
+
+            # Remove authentication parameters
+            $SetParams.Remove('Credential') | Out-Null
+            $SetParams.Remove('ApplicationId') | Out-Null
+            $SetParams.Remove('TenantId') | Out-Null
+            $SetParams.Remove('CertificatePath') | Out-Null
+            $SetParams.Remove('CertificatePassword') | Out-Null
+            $SetParams.Remove('CertificateThumbprint') | Out-Null
+            $SetParams.Remove('ManagedIdentity') | Out-Null
+            $SetParams.Remove('ApplicationSecret') | Out-Null
+
             Set-AutoSensitivityLabelPolicy @SetParams -Identity $Name
         }
         catch
@@ -429,8 +449,8 @@ function Set-TargetResource
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
         $SetParams = $PSBoundParameters
+
         #Remove unused parameters for Set-Label cmdlet
-        $SetParams.Remove('Credential') | Out-Null
         $SetParams.Remove('Ensure') | Out-Null
         $SetParams.Remove('Name') | Out-Null
         $SetParams.Remove('ExchangeLocationException') | Out-Null
@@ -439,6 +459,17 @@ function Set-TargetResource
         $SetParams.Remove('OneDriveLocationException') | Out-Null
         $SetParams.Remove('SharePointLocation') | Out-Null
         $SetParams.Remove('SharePointLocationException') | Out-Null
+
+        # Remove authentication parameters
+        $SetParams.Remove('Credential') | Out-Null
+        $SetParams.Remove('ApplicationId') | Out-Null
+        $SetParams.Remove('TenantId') | Out-Null
+        $SetParams.Remove('CertificatePath') | Out-Null
+        $SetParams.Remove('CertificatePassword') | Out-Null
+        $SetParams.Remove('CertificateThumbprint') | Out-Null
+        $SetParams.Remove('ManagedIdentity') | Out-Null
+        $SetParams.Remove('ApplicationSecret') | Out-Null
+
         try
         {
             Set-AutoSensitivityLabelPolicy @SetParams -Identity $Name
@@ -463,6 +494,7 @@ function Set-TargetResource
         }
     }
 }
+
 function Test-TargetResource
 {
     [CmdletBinding()]
@@ -611,6 +643,16 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
 
+    # Remove authentication parameters
+    $ValuesToCheck.Remove('Credential') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+
     if ($null -ne $RemoveExchangeLocation -or $null -ne $AddExchangeLocation -or $null -ne $ExchangeLocation)
     {
         $configData = New-PolicyData -configData $ExchangeLocation -currentData $CurrentValues.ExchangeLocation `
@@ -644,7 +686,6 @@ function Test-TargetResource
             return $false
         }
     }
-
 
     if ($null -ne $RemoveSharePointLocation -or $null -ne $AddSharePointLocation -or $null -ne $SharePointLocation)
     {
@@ -714,7 +755,6 @@ function Test-TargetResource
         }
     }
 
-
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
@@ -757,6 +797,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
@@ -841,7 +882,7 @@ function New-PolicyData
     [System.Collections.ArrayList]$desiredData = @()
     foreach ($currItem in $currentData)
     {
-        if (!$desiredData.Contains($currItem))
+        if (-not $desiredData.Contains($currItem))
         {
             $desiredData.add($currItem) | Out-Null
         }
@@ -849,7 +890,7 @@ function New-PolicyData
 
     foreach ($currItem in $configData)
     {
-        if (!$desiredData.Contains("$curritem"))
+        if (-not $desiredData.Contains("$curritem"))
         {
             $desiredData.add($currItem) | Out-Null
         }
@@ -862,7 +903,7 @@ function New-PolicyData
 
     foreach ($currItem in $additionalData)
     {
-        if (!$desiredData.Contains("$curritem"))
+        if (-not $desiredData.Contains("$curritem"))
         {
             $desiredData.add($currItem) | Out-Null
         }
