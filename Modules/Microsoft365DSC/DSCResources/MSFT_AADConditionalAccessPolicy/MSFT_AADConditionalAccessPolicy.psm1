@@ -1125,7 +1125,8 @@ function Set-TargetResource
             }
         }
         Write-Verbose -Message 'Set-Targetresource: process includeGuestsOrExternalUsers'
-        if($IncludeGuestOrExternalUserTypes){
+        if ($IncludeGuestOrExternalUserTypes.Count -ne 0)
+        {
             $includeGuestsOrExternalUsers = @{}
             [string]$IncludeGuestOrExternalUserTypes = $IncludeGuestOrExternalUserTypes -join ','
             $includeGuestsOrExternalUsers.Add('guestOrExternalUserTypes', $IncludeGuestOrExternalUserTypes)
@@ -1147,7 +1148,8 @@ function Set-TargetResource
             $conditions.Users.Add('includeGuestsOrExternalUsers', $includeGuestsOrExternalUsers)
         }
         Write-Verbose -Message 'Set-Targetresource: process excludeGuestsOrExternalUsers'
-        if($ExcludeGuestOrExternalUserTypes){
+        if ($ExcludeGuestOrExternalUserTypes.Count -ne 0)
+        {
             $excludeGuestsOrExternalUsers = @{}
             [string]$ExcludeGuestOrExternalUserTypes = $ExcludeGuestOrExternalUserTypes -join ','
             $excludeGuestsOrExternalUsers.Add('guestOrExternalUserTypes', $ExcludeGuestOrExternalUserTypes)
