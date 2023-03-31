@@ -65,7 +65,11 @@ function Get-AcceptedDomain
     param(
         [Parameter()]
         [System.Object]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize
     )
 }
 function Get-ActiveSyncDevice
@@ -567,7 +571,11 @@ function Get-InboundConnector
     param(
         [Parameter()]
         [System.Object]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize
     )
 }
 function Get-IntraOrganizationConnector
@@ -1010,6 +1018,10 @@ function Get-OutboundConnector
         $Identity,
 
         [Parameter()]
+        [System.Object]
+        $ResultSize,
+
+        [Parameter()]
         [System.Boolean]
         $IsTransportRuleScoped
     )
@@ -1081,7 +1093,11 @@ function Get-RemoteDomain
     param(
         [Parameter()]
         [System.Object]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize
     )
 }
 function Get-ResourceConfig
@@ -1260,6 +1276,39 @@ function Get-TransportRule
         [Parameter()]
         [System.Object]
         $Identity
+    )
+}
+function Get-UnifiedGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $SortBy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeSoftDeletedGroups,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeAllProperties,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize,
+
+        [Parameter()]
+        [System.String]
+        $Anr
     )
 }
 function Get-User
@@ -3974,6 +4023,10 @@ function New-QuarantinePolicy
         [Parameter()]
         [System.Object]
         $MultiLanguageSetting,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $EndUserSpamNotificationFrequency,
 
         [Parameter()]
         [System.Int32]
@@ -10452,6 +10505,10 @@ function Set-QuarantinePolicy
         $MultiLanguageSetting,
 
         [Parameter()]
+        [System.TimeSpan]
+        $EndUserSpamNotificationFrequency,
+
+        [Parameter()]
         [System.Int32]
         $QuarantineRetentionDays,
 
@@ -11715,6 +11772,231 @@ function Set-TransportRule
         $ExceptIfHeaderContainsMessageHeader
     )
 }
+function Set-UnifiedGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $EmailAddresses,
+
+        [Parameter()]
+        [System.Object]
+        $AcceptMessagesOnlyFromSendersOrMembers,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute12,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute10,
+
+        [Parameter()]
+        [System.Globalization.CultureInfo]
+        $Language,
+
+        [Parameter()]
+        [System.Object]
+        $IsMemberAllowedToEditContent,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute8,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute5,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UnifiedGroupWelcomeMessageEnabled,
+
+        [Parameter()]
+        [System.String]
+        $MailTip,
+
+        [Parameter()]
+        [System.Object]
+        $ModeratedBy,
+
+        [Parameter()]
+        [System.Object]
+        $PrimarySmtpAddress,
+
+        [Parameter()]
+        [System.String]
+        $Classification,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AutoSubscribeNewMembers,
+
+        [Parameter()]
+        [System.Object]
+        $AuditLogAgeLimit,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $HiddenFromExchangeClientsEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $MaxReceiveSize,
+
+        [Parameter()]
+        [System.Object]
+        $ExtensionCustomAttribute5,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute15,
+
+        [Parameter()]
+        [System.Object]
+        $RejectMessagesFromSendersOrMembers,
+
+        [Parameter()]
+        [System.String]
+        $Alias,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute1,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SubscriptionEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceUpgrade,
+
+        [Parameter()]
+        [System.Object]
+        $AccessType,
+
+        [Parameter()]
+        [System.String]
+        $MailboxRegion,
+
+        [Parameter()]
+        [System.Object]
+        $GrantSendOnBehalfTo,
+
+        [Parameter()]
+        [System.Object]
+        $ExtensionCustomAttribute1,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute14,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireSenderAuthenticationEnabled,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute9,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute6,
+
+        [Parameter()]
+        [System.Object]
+        $DataEncryptionPolicy,
+
+        [Parameter()]
+        [System.Object]
+        $ExtensionCustomAttribute4,
+
+        [Parameter()]
+        [System.Object]
+        $SensitivityLabelId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AlwaysSubscribeMembersToCalendarEvents,
+
+        [Parameter()]
+        [System.Object]
+        $ExtensionCustomAttribute2,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute13,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute2,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $CalendarMemberReadOnly,
+
+        [Parameter()]
+        [System.Object]
+        $InformationBarrierMode,
+
+        [Parameter()]
+        [System.Object]
+        $MaxSendSize,
+
+        [Parameter()]
+        [System.Object]
+        $MailTipTranslations,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute7,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute4,
+
+        [Parameter()]
+        [System.Object]
+        $ExtensionCustomAttribute3,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ConnectorsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ModerationEnabled,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute3,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute11,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $HiddenFromAddressListsEnabled
+    )
+}
 function Set-User
 {
     [CmdletBinding()]
@@ -11938,6 +12220,7 @@ function Update-RoleGroupMember
     )
 }
 #endregion
+
 #region MicrosoftGraph
 function Get-MgApplication
 {

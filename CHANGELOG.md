@@ -25,6 +25,9 @@
   * [BREAKING CHANGE] Remove deprecated parameter PreferredDataLocation* EXOAntiPhishPolicy
   * [BREAKING CHANGE] Remove deprecated parameters EnableAntispoofEnforcement and
     TargetedDomainProtectionAction
+* EXOGroupSettings
+  * Initial Release
+    FIXES [#3089](https://github.com/microsoft/Microsoft365DSC/issues/3089)
 * EXOHostedContentFilterPolicy
   * [BREAKING CHANGE] Remove deprecated parameters EndUserSpamNotificationCustomFromAddress
     and EndUserSpamNotificationCustomFromName
@@ -34,6 +37,10 @@
 * EXOMalwareFilterPolicy
   * [BREAKING CHANGE] Remove deprecated parameters Action, CustomAlertText,
     EnableExternalSenderNotifications and EnableInternalSenderNotifications
+* EXOManagementRoleAssignment
+  * Use Microsoft Graph to retrieve administrative units. This fixes the issue where a soft
+    deleted AU was present while a new one got created with the same name.
+    FIXES [#3064](https://github.com/microsoft/Microsoft365DSC/issues/3064)
 * EXOOrganizationConfig
   * [BREAKING CHANGE] Remove deprecated parameters AllowPlusAddressInRecipients
   * [BREAKING CHANGE] Renamed unused Identity parameter to IsSingleInstance
