@@ -23,7 +23,14 @@ jobs:
 
           foreach ($module in $Manifest.Dependencies)
           {
-            Install-Module $module.ModuleName -RequiredVersion $module.RequiredVersion -Force -Scope AllUsers
+            if ($module.AllowPreRelease)
+            {
+              Install-Module $module.ModuleName -AllowPreRelease -Force -Scope AllUsers
+            }
+            else
+            {
+              Install-Module $module.ModuleName -RequiredVersion $module.RequiredVersion -Force -Scope AllUsers
+            }
             Import-Module $module.ModuleName -Force
           }
 
