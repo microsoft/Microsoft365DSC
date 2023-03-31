@@ -1,7 +1,9 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-
+* AADConditionalAccessPolicy
+  * Add condition for empty External Guest/User include/exclude
+    FIXES [#3108](https://github.com/microsoft/Microsoft365DSC/issues/3108)
 * AADAdministrativeUnit
   * Fixes extraction of the Members property.
 * AADAdministrativeUnit, AADConditionalAccessPolicy, AADEntitlementManagementAccessPackage,
