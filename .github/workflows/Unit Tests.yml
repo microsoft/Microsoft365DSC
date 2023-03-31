@@ -23,7 +23,7 @@ jobs:
 
           foreach ($module in $Manifest.Dependencies)
           {
-            Install-Module $module.ModuleName -Force -Scope AllUsers
+            Install-Module $module.ModuleName -RequiredVersion $module.RequiredVersion -Force -Scope AllUsers
             Import-Module $module.ModuleName -Force
           }
 
