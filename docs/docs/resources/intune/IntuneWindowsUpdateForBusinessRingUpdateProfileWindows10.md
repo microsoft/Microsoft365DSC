@@ -77,7 +77,7 @@
 
 ## Description
 
-Intune Window Update For Business Ring Update Profile for Windows10
+Intune Windows Update For Business Ring Update Profile for Windows 10
 
 ## Permissions
 
@@ -115,8 +115,7 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
-    param
-    (
+    param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
         $Credscredential
@@ -131,7 +130,8 @@ Configuration Example
             DisplayName                         = 'WUfB Ring'
             AllowWindows11Upgrade               = $False
             Assignments                         = @(
-                MSFT_DeviceManagementConfigurationPolicyAssignments {
+                MSFT_DeviceManagementConfigurationPolicyAssignments
+                {
                     deviceAndAppManagementAssignmentFilterType = 'none'
                     dataType                                   = '#microsoft.graph.allLicensedUsersAssignmentTarget'
                 }
