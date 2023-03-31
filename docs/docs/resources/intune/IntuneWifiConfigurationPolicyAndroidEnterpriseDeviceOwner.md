@@ -1,17 +1,24 @@
-﻿# IntuneWifiConfigurationPolicyAndroidEntrepriseWorkProfile
+﻿# IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner
 
 ## Parameters
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Key | String | Id of the Intune policy. | |
-| **DisplayName** | Required | String | Display name of the Intune policy. | |
-| **Description** | Write | String | Description of the Intune policy. | |
-| **ConnectAutomatically** | Write | Boolean | Connect automatically. | |
-| **ConnectWhenNetworkNameIsHidden** | Write | Boolean | Connect when network name is hidden. | |
+| **Id** | Key | String | Id of the Intune policy | |
+| **DisplayName** | Required | String | Disaply name of the Intune policy | |
+| **Description** | Write | String | Description of the Intune policy | |
+| **ConnectAutomatically** | Write | Boolean | If the network is in range, automatically connect. | |
+| **ConnectWhenNetworkNameIsHidden** | Write | Boolean | Don't show this Wi-Fi network on an end-user's device in the list of available networks. The SSID will not be broadcasted. | |
 | **NetworkName** | Write | String | Network name. | |
-| **Ssid** | Write | String | SSID. | |
-| **WiFiSecurityType** | Write | String | Wi-Fi security. | `open`, `wpaEnterprise`, `wpa2Enterprise` |
+| **PreSharedKey** | Write | String | Pre shared key. | |
+| **PreSharedKeyIsSet** | Write | Boolean | Pre shared key is set. | |
+| **ProxyAutomaticConfigurationUrl** | Write | String | URL of the automatic proxy. | |
+| **ProxyExclusionList** | Write | String | Exclusion list of the proxy. | |
+| **ProxyManualAddress** | Write | String | Address of the proxy. | |
+| **ProxyManualPort** | Write | UInt32 | Port of the proxy. | |
+| **ProxySettings** | Write | String | Proxy setting type. | `none`, `manual`, `automatic` |
+| **Ssid** | Write | String | Service Set Identifier. The name of the Wi-Fi connection. | |
+| **WiFiSecurityType** | Write | String | Type of Wi-Fi profile. | `open`, `wep`, `wpaPersonal`, `wpaEnterprise` |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
@@ -36,7 +43,7 @@
 
 ## Description
 
-This resource configures an Intune Wifi Configuration Policy Android Entreprise Work Profile Device.
+This resource configures an Intune Wifi Configuration Policy Android Enterprise Device Owner Device.
 
 ## Permissions
 
@@ -74,7 +81,8 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [PSCredential]
         $credsGlobalAdmin
@@ -83,21 +91,23 @@ Configuration Example
 
     node localhost
     {
-        IntuneWifiConfigurationPolicyAndroidEntrepriseWorkProfile 'myWifiConfigAndroidWorkProfilePolicy'
+        IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner 'myWifiConfigAndroidDeviceOwnerPolicy'
         {
-            Id                             = 'b6c59816-7f9b-4f7a-a2a2-13a29c8bc315'
-            DisplayName                    = 'wifi - android BYOD'
+            Id                             = '7d9c4870-e07f-488a-be17-9e1beec45ac3'
+            DisplayName                    = 'Wifi - androidForWork'
             Assignments                    = @(
-                MSFT_DeviceManagementConfigurationPolicyAssignments {
+                MSFT_DeviceManagementConfigurationPolicyAssignments
+                {
                     deviceAndAppManagementAssignmentFilterType = 'none'
                     dataType                                   = '#microsoft.graph.allLicensedUsersAssignmentTarget'
                 }
             )
             ConnectAutomatically           = $False
             ConnectWhenNetworkNameIsHidden = $False
-            NetworkName                    = 'f8b79489-84fc-4434-b964-2a18dfe08f88'
-            Ssid                           = 'MySSID'
-            WiFiSecurityType               = 'open'
+            NetworkName                    = 'myNetwork'
+            PreSharedKeyIsSet              = $True
+            ProxySettings                  = 'none'
+            Ssid                           = 'MySSID - 3'
             Ensure                         = 'Present'
             Credential                     = $credsGlobalAdmin
         }

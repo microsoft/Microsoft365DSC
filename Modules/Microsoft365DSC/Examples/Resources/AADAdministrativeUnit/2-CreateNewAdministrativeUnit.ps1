@@ -14,21 +14,11 @@ Configuration Example
 
     Import-DscResource -ModuleName Microsoft365DSC
 
-Configuration Example
-{
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $credsGlobalAdmin
-    )
-
-    Import-DscResource -ModuleName Microsoft365DSC
-
     node localhost
     {
         AADGroup 'TestGroup'
         {
+            Id                            = '4b8bbe0f-2d9c-4a82-9f40-9e1717987102'
             DisplayName                   = 'TestGroup'
             MailNickname                  = 'TestGroup'
             SecurityEnabled               = $true
@@ -39,12 +29,13 @@ Configuration Example
         }
         AADAdministrativeUnit 'TestUnit'
         {
+            ID                            = 'Test-Unit'
             DisplayName                   = 'Test-Unit'
             ScopedRoleMembers             = @(
                 MSFT_MicrosoftGraphScopedRoleMembership
                 {
                     RoleName = "User Administrator"
-                    RoleMemberInfo = MSFT_MicrosoftGraphIdentity
+                    RoleMemberInfo = MSFT_MicrosoftGraphMember
                     {
                         Identity = "TestGroup"
                         Type = "Group"

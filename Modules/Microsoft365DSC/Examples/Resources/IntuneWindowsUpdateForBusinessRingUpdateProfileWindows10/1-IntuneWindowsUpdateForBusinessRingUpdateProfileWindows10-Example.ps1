@@ -14,13 +14,14 @@ Configuration Example
 
     node localhost
     {
-        IntuneWindowUpdateForBusinessRingUpdateProfileWindows10 'Example'
+        IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10 'Example'
         {
             Id                                  = 'f2a9a546-6087-45b9-81da-59994e79dfd2'
             DisplayName                         = 'WUfB Ring'
             AllowWindows11Upgrade               = $False
             Assignments                         = @(
-                MSFT_DeviceManagementConfigurationPolicyAssignments {
+                MSFT_DeviceManagementConfigurationPolicyAssignments
+                {
                     deviceAndAppManagementAssignmentFilterType = 'none'
                     dataType                                   = '#microsoft.graph.allLicensedUsersAssignmentTarget'
                 }

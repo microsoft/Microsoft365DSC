@@ -13,79 +13,17 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
       - name: Install Modules
         shell: pwsh
         run: |
-          $Dependencies = @(
-            @{
-                ModuleName      = 'DSCParser'
-            },
-            @{
-                ModuleName      = 'ExchangeOnlineManagement'
-            },
-            @{
-                ModuleName      = 'Microsoft.Graph.Applications'
-            },
-            @{
-                ModuleName      = 'Microsoft.Graph.Authentication'
-            },
-            @{
-                ModuleName      = 'Microsoft.Graph.DeviceManagement'
-            },
-            @{
-                ModuleName      = 'Microsoft.Graph.DeviceManagement.Administration'
-            },
-            @{
-                ModuleName      = 'Microsoft.Graph.DeviceManagement.Enrolment'
-            },
-            @{
-                ModuleName      = 'Microsoft.Graph.Devices.CorporateManagement'
-            },
-            @{
-                ModuleName      = 'Microsoft.Graph.Groups'
-            },
-            @{
-                ModuleName      = 'Microsoft.Graph.Identity.DirectoryManagement'
-            },
-            @{
-                ModuleName      = 'Microsoft.Graph.Identity.Governance'
-            },
-            @{
-                ModuleName      = 'Microsoft.Graph.Identity.SignIns'
-            },
-            @{
-                ModuleName      = 'Microsoft.Graph.Planner'
-            },
-            @{
-                ModuleName      = 'Microsoft.Graph.Teams'
-            },
-            @{
-                ModuleName      = 'Microsoft.Graph.Users'
-            },
-            @{
-                ModuleName      = 'Microsoft.Graph.Users.Actions'
-            },
-            @{
-                ModuleName      = 'Microsoft.PowerApps.Administration.PowerShell'
-            },
-            @{
-                ModuleName      = 'MicrosoftTeams'
-            },
-            @{
-                ModuleName      = "MSCloudLoginAssistant"
-            },
-            @{
-                ModuleName      = 'PnP.PowerShell'
-            },
-            @{
-                ModuleName      = 'ReverseDSC'
-            }
-          )
+          $Manifest = Import-PowerShellDataFile './Modules/Microsoft365DSC/Dependencies/Manifest.psd1'
 
-          foreach ($module in $Dependencies)
+          foreach ($module in $Manifest.Dependencies)
           {
-            Install-Module $module.ModuleName -Force -Scope AllUsers
+            Install-Module $module.ModuleName -RequiredVersion $module.RequiredVersion -Force -Scope AllUsers
             Import-Module $module.ModuleName -Force
           }
 
