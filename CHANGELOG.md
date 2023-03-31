@@ -1,15 +1,14 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-* AADConditionalAccessPolicy
-  * Add condition for empty External Guest/User include/exclude
-    FIXES [#3108](https://github.com/microsoft/Microsoft365DSC/issues/3108)
 * AADAdministrativeUnit
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
   * Fixes extraction of the Members property.
 * AADApplication
   * [BREAKING CHANGE] Remove deprecated parameter Oauth2RequirePostResponse
 * AADConditionalAccessPolicy
+  * Add condition for empty External Guest/User include/exclude
+    FIXES [#3108](https://github.com/microsoft/Microsoft365DSC/issues/3108)
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
   * [BREAKING CHANGE] Remove deprecated parameters IncludeDevices and ExcludeDevices
 * AADEntitlementManagementAccessPackage, AADEntitlementManagementAccessPackageAssignmentPolicy,
