@@ -99,9 +99,9 @@
   * Fixed issue in the Export where an error was displayed in Verbose mode when Credentials were specified
     and the apps were not exported.
 * SPOTenantSettings
+  * [BREAKING CHANGE] Remove deprecated parameter RequireAcceptingAccountMatchInvitedAccount
   * Fixes how we are extracting the DisabledWebPartIds parameter.
     FIXES [#3066](https://github.com/microsoft/Microsoft365DSC/issues/3066)
-  * [BREAKING CHANGE] Remove deprecated parameter RequireAcceptingAccountMatchInvitedAccount
 * TeamsMeetingPolicy
   * [BREAKING CHANGE] Remove deprecated parameter RecordingStorageMode
 * DRG
