@@ -1590,15 +1590,15 @@ function Get-ComplexTypeConstructorToString
         if ($isNested)
         {
             $valuePrefix=$ParentPropertyValuePath
-            if ($null -eq $valuePrefix)
-            {
+            #if ($null -eq $valuePrefix)
+            #{
                 $propRoot=$ParentPropertyName.replace("my","")
                 $valuePrefix="current$propRoot."
-                if ($property.IsRootProperty -eq $false -and -not $IsNested)
-                {
-                    $valuePrefix += "AdditionalProperties."
-                }
-            }
+                #if ($property.IsRootProperty -eq $false -and -not $IsNested)
+                #{
+                #    $valuePrefix += "AdditionalProperties."
+                #}
+            #}
         }
         $iterationPropertyName="current$propertyName"
         $complexString.appendLine($spacing + "`$$returnPropertyName" + " = @()") | Out-Null
@@ -1621,6 +1621,8 @@ function Get-ComplexTypeConstructorToString
         if ($Property.IsArray)
         {
             $valuePrefix = "$iterationPropertyName."
+            $referencePrefix = "$iterationPropertyName."
+            write-host -ForegroundColor Yellow ($valuePrefix)
         }
         if ($isNested -and -not $Property.IsArray)
         {
@@ -1767,6 +1769,7 @@ function Get-ComplexTypeConstructorToString
                 }
                 else
                 {
+                    write-host ("Add - $valuePrefix")
                     if ($isNested)
                     {
                         $complexString.appendLine($spacing + "`$$tempPropertyName.Add('" +  $nestedPropertyName + "', `$$valuePrefix$AssignedPropertyName)" ) | Out-Null
