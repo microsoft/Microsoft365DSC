@@ -1,6 +1,11 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+* IntuneDeviceConfigurationPolicyWindows10
+  * [BREAKING CHANGE] Added complex parameters as embedded CIM (DefenderDetectedMalwareActions, EdgeHomeButtonConfiguration, EdgeSearchEngine, NetworkProxyServer, Windows10AppsForceUpdateSchedule)
+  * Resource regenerated with DRG
+  * FIXES[#2867](https://github.com/microsoft/Microsoft365DSC/issues/2867)
+  * FIXES[#2868](https://github.com/microsoft/Microsoft365DSC/issues/2868)
 * AADAdministrativeUnit
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
   * Fixes extraction of the Members property.
