@@ -1,6 +1,9 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+
+* IntuneDeviceConfigurationNetworkBoundaryPolicyWindows10
+  * Initial release
 * AADAdministrativeUnit
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
   * Fixes extraction of the Members property.
