@@ -1,5 +1,5 @@
 
-# IntuneDeviceEnrollmentConfigurationWindows10
+# IntuneDeviceEnrollmentStatusPageWindows10
 
 ## Description
 
