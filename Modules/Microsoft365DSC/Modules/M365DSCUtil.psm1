@@ -170,7 +170,7 @@ function Convert-M365DscHashtableToString
     }
 
     [array]::Sort($values)
-    return ($values -join '; ')
+    return ($values -join "`r`n")
 }
 
 <#
@@ -853,12 +853,23 @@ function Test-M365DSCParameterState
         }
     }
 
+    $includeNonDriftsInformation = $false
+    try
+    {
+        $includeNonDriftsInformation = [System.Environment]::GetEnvironmentVariable('M365DSCEventLogIncludeNonDrifted', `
+            [System.EnvironmentVariableTarget]::Machine)
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+    }
     if ($returnValue -eq $false)
     {
-        $EventMessage = "<M365DSCEvent>`r`n"
-        $EventMessage += "    <ConfigurationDrift Source=`"$Source`">`r`n"
+        $EventMessage = [System.Text.StringBuilder]::New()
+        $EventMessage.Append("<M365DSCEvent>`r`n") | Out-Null
+        $EventMessage.Append("    <ConfigurationDrift Source=`"$Source`">`r`n") | Out-Null
 
-        $EventMessage += "        <ParametersNotInDesiredState>`r`n"
+        $EventMessage.Append("        <ParametersNotInDesiredState>`r`n") | Out-Null
         foreach ($key in $DriftedParameters.Keys)
         {
             Write-Verbose -Message "Detected Drifted Parameter [$Source]$key"
@@ -880,7 +891,7 @@ function Test-M365DSCParameterState
             $driftedData.Add('Tenant', $TenantName)
             Add-M365DSCTelemetryEvent -Type 'DriftInfo' -Data $driftedData
             #endregion
-            $EventMessage += "            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n"
+            $EventMessage.Append("            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n") | Out-Null
         }
 
         #region Telemetry
@@ -889,9 +900,9 @@ function Test-M365DSCParameterState
         $data.Add('Tenant', $TenantName)
         #endregion
 
-        $EventMessage += "        </ParametersNotInDesiredState>`r`n"
-        $EventMessage += "    </ConfigurationDrift>`r`n"
-        $EventMessage += "    <DesiredValues>`r`n"
+        $EventMessage.Append("        </ParametersNotInDesiredState>`r`n") | Out-Null
+        $EventMessage.Append("    </ConfigurationDrift>`r`n") | Out-Null
+        $EventMessage.Append("    <DesiredValues>`r`n") | Out-Null
         foreach ($Key in $DesiredValues.Keys)
         {
             $Value = $DesiredValues.$Key
@@ -899,13 +910,34 @@ function Test-M365DSCParameterState
             {
                 $Value = "`$null"
             }
-            $EventMessage += "        <Param Name =`"$key`">$Value</Param>`r`n"
+            $EventMessage.Append("        <Param Name =`"$key`">$Value</Param>`r`n") | Out-Null
         }
-        $EventMessage += "    </DesiredValues>`r`n"
-        $EventMessage += '</M365DSCEvent>'
+        $EventMessage.Append("    </DesiredValues>`r`n") | Out-Null
+        $EventMessage.Append('</M365DSCEvent>') | Out-Null
 
-        Add-M365DSCEvent -Message $EventMessage -EventType 'Drift' -EntryType 'Warning' `
+        Add-M365DSCEvent -Message $EventMessage.ToString() -EventType 'Drift' -EntryType 'Warning' `
             -EventID 1 -Source $Source
+    }
+    elseif ($includeNonDriftsInformation -eq $true)
+    {
+        # Include details about non-drifted resources.
+        $EventMessage = [System.Text.StringBuilder]::New()
+        $EventMessage.Append("<M365DSCEvent>`r`n") | Out-Null
+        $EventMessage.Append("    <ConfigurationDrift Source=`"$Source`" />`r`n") | Out-Null
+        $EventMessage.Append("    <DesiredValues>`r`n") | Out-Null
+        foreach ($Key in $DesiredValues.Keys)
+        {
+            $Value = $DesiredValues.$Key
+            if ([System.String]::IsNullOrEmpty($Value))
+            {
+                $Value = "`$null"
+            }
+            $EventMessage.Append("        <Param Name =`"$key`">$Value</Param>`r`n") | Out-Null
+        }
+        $EventMessage.Append("    </DesiredValues>`r`n") | Out-Null
+        $EventMessage.Append('</M365DSCEvent>') | Out-Null
+        Add-M365DSCEvent -Message $EventMessage.ToString() -EventType 'NonDrift' -EntryType 'Information' `
+            -EventID 2 -Source $Source
     }
 
     #region Telemetry
@@ -2614,6 +2646,9 @@ function Test-M365DSCDependenciesForNewVersions
         }
         $i++
     }
+
+    # The progress bar seems to hang sometimes. Make sure it is no longer displayed.
+    Write-Progress -Activity 'Scanning Dependencies' -Completed
 }
 
 <#
@@ -2688,6 +2723,9 @@ function Update-M365DSCDependencies
         }
         $i++
     }
+
+    # The progress bar seems to hang sometimes. Make sure it is no longer displayed.
+    Write-Progress -Activity 'Scanning Dependencies' -Completed
 
     if ($ValidateOnly)
     {
@@ -3062,7 +3100,34 @@ function Get-M365DSCExportContentForResource
     # Ensure the string properties are properly formatted;
     $Results = Format-M365DSCString -Properties $Results `
         -ResourceName $ResourceName
-    $content = "        $ResourceName " + (New-Guid).ToString() + "`r`n"
+
+    $primaryKey = ""
+    if ($Results.ContainsKey('IsSingleInstance'))
+    {
+        $primaryKey = ""
+    }
+    elseif ($Results.ContainsKey('DisplayName'))
+    {
+        $primaryKey = $Results.DisplayName
+    }
+    elseif ($Results.ContainsKey('Identity'))
+    {
+        $primaryKey = $Results.Identity
+    }
+    elseif ($Results.ContainsKey('Id'))
+    {
+        $primaryKey = $Results.Id
+    }
+    elseif ($Results.ContainsKey('Name'))
+    {
+        $primaryKey = $Results.Name
+    }
+    $instanceName = $ResourceName
+    if (-not [System.String]::IsNullOrEmpty($primaryKey))
+    {
+        $instanceName += "-$primaryKey"
+    }
+    $content = "        $ResourceName `"$instanceName`"`r`n"
     $content += "        {`r`n"
     $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath
     # Test for both Credentials and CredentialsWithApplicationId

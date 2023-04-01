@@ -15,7 +15,11 @@ function New-M365DSCStubFiles
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.Collections.Hashtable[]]
+        $Workloads
     )
 
     if ($null -eq $Credential)
@@ -41,27 +45,31 @@ function New-M365DSCStubFiles
     $Content = ''
     $folderPath = Join-Path $PSScriptRoot -ChildPath '../DSCResources'
     Write-Host $FolderPath
-    $workloads = @(
-        @{Name = 'ExchangeOnline'; ModuleName = 'ExchangeOnlineManagement'; CommandName = 'Get-Mailbox' },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Applications'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Authentication'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement.Administration'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement.Enrolment'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Devices.CorporateManagement'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Groups'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.DirectoryManagement'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.Governance'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.Signins'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Planner'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Teams'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Users'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Users.Actions';},
-        @{Name = 'SecurityComplianceCenter'; ModuleName = 'ExchangeOnlineManagement'; CommandName = 'Get-Label' },
-        @{Name = 'PnP'; ModuleName = 'PnP.PowerShell'; },
-        @{Name = 'PowerPlatforms'; ModuleName = 'Microsoft.PowerApps.Administration.PowerShell'; },
-        @{Name = 'MicrosoftTeams'; ModuleName = 'MicrosoftTeams'; }
-    )
+    if ($null -eq $Workloads)
+    {
+        $workloads = @(
+            @{Name = 'ExchangeOnline'; ModuleName = 'ExchangeOnlineManagement'; CommandName = 'Get-Mailbox' },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Applications'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Authentication'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement.Administration'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement.Enrolment'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Devices.CorporateManagement'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Groups'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.DirectoryManagement'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.Governance'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.Signins'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Planner'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Teams'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Users'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Users.Actions';},
+            @{Name = 'SecurityComplianceCenter'; ModuleName = 'ExchangeOnlineManagement'; CommandName = 'Get-Label' },
+            @{Name = 'PnP'; ModuleName = 'PnP.PowerShell'; },
+            @{Name = 'PowerPlatforms'; ModuleName = 'Microsoft.PowerApps.Administration.PowerShell'; },
+            @{Name = 'MicrosoftTeams'; ModuleName = 'MicrosoftTeams'; }
+        )
+    }
+
     foreach ($Module in $workloads)
     {
         Write-Host "Connecting to {$($Module.Name)}"

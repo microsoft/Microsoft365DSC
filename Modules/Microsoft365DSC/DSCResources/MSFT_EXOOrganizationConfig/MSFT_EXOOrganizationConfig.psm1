@@ -26,11 +26,6 @@ function Get-TargetResource
         [System.Boolean]
         $AppsForOfficeEnabled,
 
-        # DEPRECATED
-        [Parameter()]
-        [System.Boolean]
-        $AllowPlusAddressInRecipients,
-
         [Parameter()]
         [System.Boolean]
         $AsyncSendEnabled,
@@ -691,11 +686,6 @@ function Set-TargetResource
         [System.Boolean]
         $AppsForOfficeEnabled,
 
-        # DEPRECATED
-        [Parameter()]
-        [System.Boolean]
-        $AllowPlusAddressInRecipients,
-
         [Parameter()]
         [System.Boolean]
         $AsyncSendEnabled,
@@ -1152,12 +1142,6 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    # Warning for deprecated parameters
-    if ($PSBoundParameters.ContainsKey('AllowPlusAddressInRecipients'))
-    {
-        Write-Warning 'AllowPlusAddressInRecipients is deprecated. Please remove this parameter from your configuration. Use DisablePlusAddressInRecipients instead.'
-    }
-
     if ($null -ne $EwsAllowList -and $null -ne $EwsBlockList)
     {
         throw "You can't specify both EWSAllowList and EWSBlockList properties."
@@ -1179,9 +1163,6 @@ function Set-TargetResource
     $SetValues.Remove('CertificatePath') | Out-Null
     $SetValues.Remove('CertificatePassword') | Out-Null
     $SetValues.Remove('ManagedIdentity') | Out-Null
-
-    # Remove deprecated parameters
-    $SetValues.Remove('AllowPlusAddressInRecipients') | Out-Null
 
     $isAutoExpandingArchiveEnabled = Get-OrganizationConfig | Select-Object -Property AutoExpandingArchiveEnabled
 
@@ -1220,11 +1201,6 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AppsForOfficeEnabled,
-
-        # DEPRECATED
-        [Parameter()]
-        [System.Boolean]
-        $AllowPlusAddressInRecipients,
 
         [Parameter()]
         [System.Boolean]

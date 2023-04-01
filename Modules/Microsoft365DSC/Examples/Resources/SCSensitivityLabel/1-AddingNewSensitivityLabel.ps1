@@ -16,67 +16,64 @@ Configuration Example
     {
         SCSensitivityLabel 'ConfigureSensitivityLabel'
         {
-            Name                                           = "DemoLabel"
-            Comment                                        = "Demo Label comment"
-            ToolTip                                        = "Demo tool tip"
-            DisplayName                                    = "Demo Label"
-            ApplyContentMarkingFooterAlignment             = "Center"
+            Name                                           = 'DemoLabel'
+            Comment                                        = 'Demo Label comment'
+            ToolTip                                        = 'Demo tool tip'
+            DisplayName                                    = 'Demo Label'
+            ApplyContentMarkingFooterAlignment             = 'Center'
             ApplyContentMarkingFooterEnabled               = $true
-            ApplyContentMarkingFooterFontColor             = "#FF0000"
-            ApplyContentMarkingFooterFontName              = "calibri"
+            ApplyContentMarkingFooterFontColor             = '#FF0000'
             ApplyContentMarkingFooterFontSize              = 10
             ApplyContentMarkingFooterMargin                = 5
-            ApplyContentMarkingFooterText                  = "Demo footer text"
-            ApplyContentMarkingHeaderAlignment             = "Center"
+            ApplyContentMarkingFooterText                  = 'Demo footer text'
+            ApplyContentMarkingHeaderAlignment             = 'Center'
             ApplyContentMarkingHeaderEnabled               = $true
-            ApplyContentMarkingHeaderFontColor             = "#FF0000"
-            ApplyContentMarkingHeaderFontName              = "calibri"
+            ApplyContentMarkingHeaderFontColor             = '#FF0000'
             ApplyContentMarkingHeaderFontSize              = 10
             ApplyContentMarkingHeaderMargin                = 5
-            ApplyContentMarkingHeaderText                  = "demo header text"
+            ApplyContentMarkingHeaderText                  = 'demo header text'
             ApplyWaterMarkingEnabled                       = $true
-            ApplyWaterMarkingFontColor                     = "#FF0000"
-            ApplyWaterMarkingFontName                      = "calibri"
+            ApplyWaterMarkingFontColor                     = '#FF0000'
             ApplyWaterMarkingFontSize                      = 10
-            ApplyWaterMarkingLayout                        = "Diagonal"
-            ApplyWaterMarkingText                          = "demo watermark"
+            ApplyWaterMarkingLayout                        = 'Diagonal'
+            ApplyWaterMarkingText                          = 'demo watermark'
             SiteAndGroupProtectionAllowAccessToGuestUsers  = $true
             SiteAndGroupProtectionAllowEmailFromGuestUsers = $true
             SiteAndGroupProtectionAllowFullAccess          = $true
             SiteAndGroupProtectionAllowLimitedAccess       = $true
             SiteAndGroupProtectionBlockAccess              = $true
             SiteAndGroupProtectionEnabled                  = $true
-            SiteAndGroupProtectionPrivacy                  = "Private"
+            SiteAndGroupProtectionPrivacy                  = 'Private'
             LocaleSettings                                 = @(
                 MSFT_SCLabelLocaleSettings
                 {
-                    LocaleKey = "DisplayName"
-                    LabelSettings  = @(
+                    LocaleKey     = 'DisplayName'
+                    LabelSettings = @(
                         MSFT_SCLabelSetting
                         {
-                            Key   = "en-us"
-                            Value = "English Display Names"
+                            Key   = 'en-us'
+                            Value = 'English Display Names'
                         }
                         MSFT_SCLabelSetting
                         {
-                            Key   = "fr-fr"
+                            Key   = 'fr-fr'
                             Value = "Nom da'ffichage francais"
                         }
                     )
                 }
                 MSFT_SCLabelLocaleSettings
                 {
-                    LocaleKey = "StopColor"
-                    LabelSettings  = @(
+                    LocaleKey     = 'StopColor'
+                    LabelSettings = @(
                         MSFT_SCLabelSetting
                         {
-                            Key   = "en-us"
-                            Value = "RedGreen"
+                            Key   = 'en-us'
+                            Value = 'RedGreen'
                         }
                         MSFT_SCLabelSetting
                         {
-                            Key   = "fr-fr"
-                            Value = "Rouge"
+                            Key   = 'fr-fr'
+                            Value = 'Rouge'
                         }
                     )
                 }
@@ -84,17 +81,17 @@ Configuration Example
             AdvancedSettings                               = @(
                 MSFT_SCLabelSetting
                 {
-                    Key   = "AllowedLevel"
-                    Value = @("Sensitive", "Classified")
+                    Key   = 'AllowedLevel'
+                    Value = @('Sensitive', 'Classified')
                 }
                 MSFT_SCLabelSetting
                 {
-                    Key   = "LabelStatus"
-                    Value = "Enabled"
+                    Key   = 'LabelStatus'
+                    Value = 'Enabled'
                 }
             )
-            ParentId                                       = "Personal"
-            Ensure                                         = "Present"
+            ParentId                                       = 'Personal'
+            Ensure                                         = 'Present'
             Credential                                     = $credsGlobalAdmin
         }
     }

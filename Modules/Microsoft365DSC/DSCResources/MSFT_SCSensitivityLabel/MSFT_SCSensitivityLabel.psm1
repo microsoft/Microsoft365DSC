@@ -37,10 +37,6 @@ function Get-TargetResource
         $Tooltip,
 
         [Parameter()]
-        [System.Boolean]
-        $Disabled,
-
-        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -57,10 +53,6 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $ApplyContentMarkingFooterFontColor,
-
-        [Parameter()]
-        [System.String]
-        $ApplyContentMarkingFooterFontName,
 
         [Parameter()]
         [System.Int32]
@@ -88,10 +80,6 @@ function Get-TargetResource
         $ApplyContentMarkingHeaderFontColor,
 
         [Parameter()]
-        [System.String]
-        $ApplyContentMarkingHeaderFontName,
-
-        [Parameter()]
         [System.Int32]
         $ApplyContentMarkingHeaderFontSize,
 
@@ -112,10 +100,6 @@ function Get-TargetResource
         $ApplyWaterMarkingFontColor,
 
         [Parameter()]
-        [System.String]
-        $ApplyWaterMarkingFontName,
-
-        [Parameter()]
         [System.Int32]
         $ApplyWaterMarkingFontSize,
 
@@ -132,10 +116,6 @@ function Get-TargetResource
         [ValidateSet('File, Email', 'Site, UnifiedGroup', 'PurviewAssets', 'Teamwork', 'SchematizedData')]
         [System.String[]]
         $ContentType,
-
-        [Parameter()]
-        [System.String]
-        $EncryptionAipTemplateScopes,
 
         [Parameter()]
         [System.String]
@@ -387,6 +367,24 @@ function Get-TargetResource
                 $EncryptionRightsDefinitionsValue = Convert-EncryptionRightDefinition -RightsDefinition $entry.Value
             }
 
+            $entry = $encryption | Where-Object -FilterScript { $_.Key -eq 'donotforward' }
+            if ($null -ne $entry)
+            {
+                $encryptionDoNotForwardValue = [Boolean]::Parse($entry.Value)
+            }
+
+            $entry = $encryption | Where-Object -FilterScript { $_.Key -eq 'encryptonly' }
+            if ($null -ne $entry)
+            {
+                $encryptionEncryptOnlyValue = [Boolean]::Parse($entry.Value)
+            }
+
+            $entry = $encryption | Where-Object -FilterScript { $_.Key -eq 'promptuser' }
+            if ($null -ne $entry)
+            {
+                $encryptionPromptUserValue = [Boolean]::Parse($entry.Value)
+            }
+
             # Watermark
             $entry = $watermark | Where-Object -FilterScript { $_.Key -eq 'disabled' }
             if ($null -ne $entry)
@@ -430,19 +428,19 @@ function Get-TargetResource
             $entry = $protectsite | Where-Object -FilterScript { $_.Key -eq 'allowfullaccess' }
             if ($null -ne $entry)
             {
-                $siteAndGroupAllowFullAccess = -not [Boolean]::Parse($entry.Value)
+                $siteAndGroupAllowFullAccess = [Boolean]::Parse($entry.Value)
             }
 
             $entry = $protectsite | Where-Object -FilterScript { $_.Key -eq 'allowlimitedaccess' }
             if ($null -ne $entry)
             {
-                $siteAndGroupAllowLimitedAccess = -not [Boolean]::Parse($entry.Value)
+                $siteAndGroupAllowLimitedAccess = [Boolean]::Parse($entry.Value)
             }
 
             $entry = $protectsite | Where-Object -FilterScript { $_.Key -eq 'blockaccess' }
             if ($null -ne $entry)
             {
-                $siteAndGroupBlockAccess = -not [Boolean]::Parse($entry.Value)
+                $siteAndGroupBlockAccess = [Boolean]::Parse($entry.Value)
             }
 
             $result = @{
@@ -454,7 +452,6 @@ function Get-TargetResource
                 LocaleSettings                                 = $localeSettingsValue
                 Priority                                       = $label.Priority
                 Tooltip                                        = $label.Tooltip
-                Disabled                                       = $label.Disabled
                 Credential                                     = $Credential
                 ApplicationId                                  = $ApplicationId
                 TenantId                                       = $TenantId
@@ -465,32 +462,28 @@ function Get-TargetResource
                 ApplyContentMarkingFooterAlignment             = ($footer | Where-Object { $_.Key -eq 'alignment' }).Value
                 ApplyContentMarkingFooterEnabled               = $footerEnabledValue
                 ApplyContentMarkingFooterFontColor             = ($footer | Where-Object { $_.Key -eq 'fontcolor' }).Value
-                #ApplyContentMarkingFooterFontName              = 'N/A'
                 ApplyContentMarkingFooterFontSize              = ($footer | Where-Object { $_.Key -eq 'fontsize' }).Value
                 ApplyContentMarkingFooterMargin                = ($footer | Where-Object { $_.Key -eq 'margin' }).Value
                 ApplyContentMarkingFooterText                  = $ApplyContentMarkingFooterTextValue
                 ApplyContentMarkingHeaderAlignment             = ($header | Where-Object { $_.Key -eq 'alignment' }).Value
                 ApplyContentMarkingHeaderEnabled               = $headerEnabledValue
                 ApplyContentMarkingHeaderFontColor             = ($header | Where-Object { $_.Key -eq 'fontcolor' }).Value
-                #ApplyContentMarkingHeaderFontName              = 'N/A'
                 ApplyContentMarkingHeaderFontSize              = ($header | Where-Object { $_.Key -eq 'fontsize' }).Value
                 ApplyContentMarkingHeaderMargin                = ($header | Where-Object { $_.Key -eq 'margin' }).Value
                 #TODO ADD HEADER PLACEMENT?
                 ApplyContentMarkingHeaderText                  = $ApplyContentMarkingHeaderTextValue
                 ApplyWaterMarkingEnabled                       = $watermarkEnabledValue
                 ApplyWaterMarkingFontColor                     = ($watermark | Where-Object { $_.Key -eq 'fontcolor' }).Value
-                #ApplyWaterMarkingFontName                      = 'N/A'
                 ApplyWaterMarkingFontSize                      = ($watermark | Where-Object { $_.Key -eq 'fontsize' }).Value
                 ApplyWaterMarkingLayout                        = ($watermark | Where-Object { $_.Key -eq 'layout' }).Value
                 ApplyWaterMarkingText                          = $ApplyWaterMarkingTextValue
                 ContentType                                    = $currentContentType
-                #EncryptionAipTemplateScopes                    = $label.EncryptionAipTemplateScopes
                 EncryptionContentExpiredOnDateInDaysOrNever    = $contentExpiredOnDateValue
-                EncryptionDoNotForward                         = ($encryption | Where-Object { $_.Key -eq 'donotforward' }).Value
-                EncryptionEncryptOnly                          = ($encryption | Where-Object { $_.Key -eq 'encryptonly' }).Value
+                EncryptionDoNotForward                         = $encryptionDoNotForwardValue
+                EncryptionEncryptOnly                          = $encryptionEncryptOnlyValue
                 EncryptionEnabled                              = $encryptionEnabledValue
                 EncryptionOfflineAccessDays                    = $offlineAccessDaysValue
-                EncryptionPromptUser                           = ($encryption | Where-Object { $_.Key -eq 'promptuser' }).Value
+                EncryptionPromptUser                           = $encryptionPromptUserValue
                 EncryptionProtectionType                       = $protectionTypeValue
                 EncryptionRightsDefinitions                    = $EncryptionRightsDefinitionsValue
                 EncryptionRightsUrl                            = ($encryption | Where-Object { $_.Key -eq 'doublekeyencryptionurl' }).Value
@@ -558,10 +551,6 @@ function Set-TargetResource
         $Tooltip,
 
         [Parameter()]
-        [System.Boolean]
-        $Disabled,
-
-        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -578,10 +567,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $ApplyContentMarkingFooterFontColor,
-
-        [Parameter()]
-        [System.String]
-        $ApplyContentMarkingFooterFontName,
 
         [Parameter()]
         [System.Int32]
@@ -609,10 +594,6 @@ function Set-TargetResource
         $ApplyContentMarkingHeaderFontColor,
 
         [Parameter()]
-        [System.String]
-        $ApplyContentMarkingHeaderFontName,
-
-        [Parameter()]
         [System.Int32]
         $ApplyContentMarkingHeaderFontSize,
 
@@ -633,10 +614,6 @@ function Set-TargetResource
         $ApplyWaterMarkingFontColor,
 
         [Parameter()]
-        [System.String]
-        $ApplyWaterMarkingFontName,
-
-        [Parameter()]
         [System.Int32]
         $ApplyWaterMarkingFontSize,
 
@@ -653,10 +630,6 @@ function Set-TargetResource
         [ValidateSet('File, Email', 'Site, UnifiedGroup', 'PurviewAssets', 'Teamwork', 'SchematizedData')]
         [System.String[]]
         $ContentType,
-
-        [Parameter()]
-        [System.String]
-        $EncryptionAipTemplateScopes,
 
         [Parameter()]
         [System.String]
@@ -772,14 +745,6 @@ function Set-TargetResource
 
     $label = Get-TargetResource @PSBoundParameters
 
-    foreach ($param in @('Disabled', 'ApplyContentMarkingFooterFontName', 'ApplyContentMarkingHeaderFontName', 'ApplyWaterMarkingFontName', 'EncryptionAipTemplateScopes'))
-    {
-        if ($PSBoundParameters.ContainsKey($param))
-        {
-            Write-Verbose -Message "The $param parameter is deprecated and will not be used."
-        }
-    }
-
     if (($SiteAndGroupProtectionAllowFullAccess -and $SiteAndGroupProtectionAllowLimitedAccess) -or `
         ($SiteAndGroupProtectionAllowFullAccess -and $SiteAndGroupProtectionBlockAccess) -or `
         ($SiteAndGroupProtectionBlockAccess -and $SiteAndGroupProtectionAllowLimitedAccess))
@@ -819,10 +784,18 @@ function Set-TargetResource
             $CreationParams.Remove('SiteAndGroupExternalSharingControlType')
         }
 
-        $CreationParams.Remove('Credential') | Out-Null
-        $CreationParams.Remove('Ensure') | Out-Null
         $CreationParams.Remove('Priority') | Out-Null
-        $CreationParams.Remove('Disabled') | Out-Null
+
+        # Remove authentication parameters
+        $CreationParams.Remove('Ensure') | Out-Null
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('ApplicationId') | Out-Null
+        $CreationParams.Remove('TenantId') | Out-Null
+        $CreationParams.Remove('CertificatePath') | Out-Null
+        $CreationParams.Remove('CertificatePassword') | Out-Null
+        $CreationParams.Remove('CertificateThumbprint') | Out-Null
+        $CreationParams.Remove('ManagedIdentity') | Out-Null
+        $CreationParams.Remove('ApplicationSecret') | Out-Null
 
         try
         {
@@ -860,10 +833,18 @@ function Set-TargetResource
         }
 
         #Remove unused parameters for Set-Label cmdlet
-        $SetParams.Remove('Credential') | Out-Null
-        $SetParams.Remove('Ensure') | Out-Null
         $SetParams.Remove('Name') | Out-Null
-        $SetParams.Remove('Disabled') | Out-Null
+
+        # Remove authentication parameters
+        $SetParams.Remove('Ensure') | Out-Null
+        $SetParams.Remove('Credential') | Out-Null
+        $SetParams.Remove('ApplicationId') | Out-Null
+        $SetParams.Remove('TenantId') | Out-Null
+        $SetParams.Remove('CertificatePath') | Out-Null
+        $SetParams.Remove('CertificatePassword') | Out-Null
+        $SetParams.Remove('CertificateThumbprint') | Out-Null
+        $SetParams.Remove('ManagedIdentity') | Out-Null
+        $SetParams.Remove('ApplicationSecret') | Out-Null
 
         try
         {
@@ -930,10 +911,6 @@ function Test-TargetResource
         $Tooltip,
 
         [Parameter()]
-        [System.Boolean]
-        $Disabled,
-
-        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -950,10 +927,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $ApplyContentMarkingFooterFontColor,
-
-        [Parameter()]
-        [System.String]
-        $ApplyContentMarkingFooterFontName,
 
         [Parameter()]
         [System.Int32]
@@ -981,10 +954,6 @@ function Test-TargetResource
         $ApplyContentMarkingHeaderFontColor,
 
         [Parameter()]
-        [System.String]
-        $ApplyContentMarkingHeaderFontName,
-
-        [Parameter()]
         [System.Int32]
         $ApplyContentMarkingHeaderFontSize,
 
@@ -1005,10 +974,6 @@ function Test-TargetResource
         $ApplyWaterMarkingFontColor,
 
         [Parameter()]
-        [System.String]
-        $ApplyWaterMarkingFontName,
-
-        [Parameter()]
         [System.Int32]
         $ApplyWaterMarkingFontSize,
 
@@ -1025,10 +990,6 @@ function Test-TargetResource
         [ValidateSet('File, Email', 'Site, UnifiedGroup', 'PurviewAssets', 'Teamwork', 'SchematizedData')]
         [System.String[]]
         $ContentType,
-
-        [Parameter()]
-        [System.String]
-        $EncryptionAipTemplateScopes,
 
         [Parameter()]
         [System.String]
@@ -1138,24 +1099,22 @@ function Test-TargetResource
 
     Write-Verbose -Message "Testing configuration of Sensitivity label for $Name"
 
-    foreach ($param in @('Disabled', 'ApplyContentMarkingFooterFontName', 'ApplyContentMarkingHeaderFontName', 'ApplyWaterMarkingFontName', 'EncryptionAipTemplateScopes'))
-    {
-        if ($PSBoundParameters.ContainsKey($param))
-        {
-            Write-Verbose -Message "The $param parameter is deprecated and will not be used."
-        }
-    }
-
     $CurrentValues = Get-TargetResource @PSBoundParameters
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('AdvancedSettings') | Out-Null
     $ValuesToCheck.Remove('LocaleSettings') | Out-Null
-    $ValuesToCheck.Remove('Disabled') | Out-Null
-    $ValuesToCheck.Remove('EncryptionAipTemplateScopes') | Out-Null
+
+    # Remove authentication parameters
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     if ($null -ne $AdvancedSettings -and $null -ne $CurrentValues.AdvancedSettings)
     {

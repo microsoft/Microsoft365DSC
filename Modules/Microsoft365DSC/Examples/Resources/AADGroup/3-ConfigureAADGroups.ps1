@@ -19,6 +19,7 @@ Configuration Example
             DisplayName        = "DSCGroup"
             Description        = "Microsoft DSC Group"
             SecurityEnabled    = $True
+            MailEnabled        = $False
             GroupTypes         = @()
             MailNickname       = "M365DSCG"
             Ensure             = "Present"
@@ -29,6 +30,7 @@ Configuration Example
             DisplayName        = "DSCMemberGroup"
             Description        = "Microsoft DSC Editor"
             SecurityEnabled    = $True
+            MailEnabled        = $False
             GroupTypes         = @()
             MailNickname       = "M365DSCMG"
             Ensure             = "Present"

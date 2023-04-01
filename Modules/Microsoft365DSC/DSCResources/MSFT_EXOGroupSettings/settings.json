@@ -1,0 +1,24 @@
+﻿{
+    "resourceName": "EXOGroupSettings",
+    "description": "",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        },
+        "exchange": {
+            "requiredroles": [
+                "User Options",
+                "View-Only Recipients",
+                "Mail Recipients"
+            ],
+            "requiredrolegroups": "Organization Management"
+        }
+    }
+}
