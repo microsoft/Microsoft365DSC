@@ -23,7 +23,7 @@ Configuration Example
                     dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
                 }
             );
-            ConfigDeviceHealthMonitoringScope = "bootPerformance,windowsUpdates";
+            ConfigDeviceHealthMonitoringScope = @("bootPerformance","windowsUpdates");
             Credential                        = $Credscredential;
             DisplayName                       = "Health Monitoring Configuration";
             Ensure                            = "Present";
