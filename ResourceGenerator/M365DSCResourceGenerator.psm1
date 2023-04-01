@@ -1622,7 +1622,6 @@ function Get-ComplexTypeConstructorToString
         {
             $valuePrefix = "$iterationPropertyName."
             $referencePrefix = "$iterationPropertyName."
-            write-host -ForegroundColor Yellow ($valuePrefix)
         }
         if ($isNested -and -not $Property.IsArray)
         {
@@ -1769,7 +1768,6 @@ function Get-ComplexTypeConstructorToString
                 }
                 else
                 {
-                    write-host ("Add - $valuePrefix")
                     if ($isNested)
                     {
                         $complexString.appendLine($spacing + "`$$tempPropertyName.Add('" +  $nestedPropertyName + "', `$$valuePrefix$AssignedPropertyName)" ) | Out-Null
