@@ -1,11 +1,20 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+
 * IntuneDeviceConfigurationPolicyWindows10
   * [BREAKING CHANGE] Added complex parameters as embedded CIM (DefenderDetectedMalwareActions, EdgeHomeButtonConfiguration, EdgeSearchEngine, NetworkProxyServer, Windows10AppsForceUpdateSchedule)
   * Resource regenerated with DRG
   * FIXES[#2867](https://github.com/microsoft/Microsoft365DSC/issues/2867)
   * FIXES[#2868](https://github.com/microsoft/Microsoft365DSC/issues/2868)
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * [BREAKING CHANGE] Renamed resource IntuneDeviceEnrollmentConfigurationWindows10 to IntuneDeviceEnrollmentStatusPageWindows10
+  * Added support for property Assignments.
+  * Added support for property Priority
+  * FIXES [#2933](https://github.com/microsoft/Microsoft365DSC/issues/2933)
+* IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10
+  * Initial Release
+    FIXES [#2830](https://github.com/microsoft/Microsoft365DSC/issues/2830)
 * AADAdministrativeUnit
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
   * Fixes extraction of the Members property.

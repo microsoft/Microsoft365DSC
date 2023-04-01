@@ -1,5 +1,5 @@
 {
-    "resourceName": "IntuneDeviceEnrollmentConfigurationWindows10",
+    "resourceName": "IntuneDeviceEnrollmentStatusPageWindows10",
     "description": "This resource configures an Intune Device Enrollment Status Page Configuration for Windows10.",
     "permissions": {
         "graph": {
