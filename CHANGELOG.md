@@ -1,6 +1,11 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * [BREAKING CHANGE] Renamed resource IntuneDeviceEnrollmentConfigurationWindows10 to IntuneDeviceEnrollmentStatusPageWindows10
+  * Added support for property Assignments.
+  * Added support for property Priority
+  * FIXES [#2933](https://github.com/microsoft/Microsoft365DSC/issues/2933)
 * AADAdministrativeUnit
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
   * Fixes extraction of the Members property.
