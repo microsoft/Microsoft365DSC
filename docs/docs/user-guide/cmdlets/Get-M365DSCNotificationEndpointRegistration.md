@@ -13,6 +13,6 @@ This function does not generate any output.
 | Parameter | Required | DataType | Default Value | Allowed Values | Description |
 | --- | --- | --- | --- | --- | --- |
 | Url | False | String |  |  | Represents the Url of the endpoint to be contacted when events are detected. |
-| EventType | False | String |  | Drift, Error, Warning | Represents the type of events that need to be reported to the endpoint. |
+| EventType | False | String |  | Drift, Error, Warning, NonDrift | Represents the type of events that need to be reported to the endpoint. |
 
 

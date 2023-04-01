@@ -201,8 +201,6 @@ function New-M365DSCResource
         }
         $parameterInformation = $parameterInformation | Where-Object -FilterScript {$_.Name -notin $ParametersToSkip}
 
-
-
         $script:DiscoveredComplexTypes = @()
 
         [Array]$CimInstances = $parameterInformation | Where-Object -FilterScript { $_.IsComplexType }

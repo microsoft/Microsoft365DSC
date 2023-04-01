@@ -26,8 +26,6 @@
 | **ExcludePlatforms** | Write | StringArray[] | Client Device Platforms out of scope of the Policy. | |
 | **IncludeLocations** | Write | StringArray[] | AAD Named Locations in scope of the Policy. | |
 | **ExcludeLocations** | Write | StringArray[] | AAD Named Locations out of scope of the Policy. | |
-| **IncludeDevices** | Write | StringArray[] | Client Device Compliance states in scope of the Policy. | |
-| **ExcludeDevices** | Write | StringArray[] | Client Device Compliance states out of scope of the Policy. | |
 | **DeviceFilterMode** | Write | String | Client Device Filter mode of the Policy. | `include`, `exclude` |
 | **DeviceFilterRule** | Write | String | Client Device Filter rule of the Policy. | |
 | **UserRiskLevels** | Write | StringArray[] | AAD Identity Protection User Risk Levels in scope of the Policy. | |
@@ -93,7 +91,8 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [PSCredential]
         $credsGlobalAdmin
@@ -108,10 +107,9 @@ Configuration Example
             DisplayName                          = 'Allin-example'
             BuiltInControls                      = @('Mfa', 'CompliantDevice', 'DomainJoinedDevice', 'ApprovedApplication', 'CompliantApplication')
             ClientAppTypes                       = @('ExchangeActiveSync', 'Browser', 'MobileAppsAndDesktopClients', 'Other')
-            CloudAppSecurityIsEnabled            = $true
+            CloudAppSecurityIsEnabled            = $True
             CloudAppSecurityType                 = 'MonitorOnly'
             ExcludeApplications                  = @('803ee9ca-3f7f-4824-bd6e-0b99d720c35c', '00000012-0000-0000-c000-000000000000', '00000007-0000-0000-c000-000000000000', 'Office365')
-            ExcludeDevices                       = @('Compliant', 'DomainJoined')
             ExcludeGroups                        = @()
             ExcludeLocations                     = @('Blocked Countries')
             ExcludePlatforms                     = @('Windows', 'WindowsPhone', 'MacOS')
@@ -122,7 +120,6 @@ Configuration Example
             ExcludeGuestOrExternalUserTypes      = @('internalGuest', 'b2bCollaborationMember')
             GrantControlOperator                 = 'OR'
             IncludeApplications                  = @('All')
-            IncludeDevices                       = @('All')
             IncludeGroups                        = @()
             IncludeLocations                     = @('AllTrusted')
             IncludePlatforms                     = @('Android', 'IOS')

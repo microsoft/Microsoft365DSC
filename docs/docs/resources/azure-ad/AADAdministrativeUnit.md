@@ -21,7 +21,7 @@
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 
-### MSFT_MicrosoftGraphIdentity
+### MSFT_MicrosoftGraphMember
 
 #### Parameters
 
@@ -37,7 +37,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **RoleName** | Write | String | Name of the Azure AD Role that is assigned. See https://learn.microsoft.com/en-us/azure/active-directory/roles/admin-units-assign-roles#roles-that-can-be-assigned-with-administrative-unit-scope | |
-| **RoleMemberInfo** | Write | MSFT_MicrosoftGraphIdentity | Member that is assigned the scoped role | |
+| **RoleMemberInfo** | Write | MSFT_MicrosoftGraphMember | Member that is assigned the scoped role | |
 
 
 ## Description
@@ -100,6 +100,59 @@ Configuration Example
             MembershipType                = 'Dynamic'
             Ensure                        = 'Present'
             Credential                    = $credsGlobalAdmin
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsGlobalAdmin
+    )
+
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        AADGroup 'TestGroup'
+        {
+            Id                            = '4b8bbe0f-2d9c-4a82-9f40-9e1717987102'
+            DisplayName                   = 'TestGroup'
+            MailNickname                  = 'TestGroup'
+            SecurityEnabled               = $true
+            MailEnabled                   = $false
+            IsAssignableToRole            = $true
+            Ensure                        = "Present"
+            Credential                    = $credsGlobalAdmin
+        }
+        AADAdministrativeUnit 'TestUnit'
+        {
+            ID                            = 'Test-Unit'
+            DisplayName                   = 'Test-Unit'
+            ScopedRoleMembers             = @(
+                MSFT_MicrosoftGraphScopedRoleMembership
+                {
+                    RoleName = "User Administrator"
+                    RoleMemberInfo = MSFT_MicrosoftGraphMember
+                    {
+                        Identity = "TestGroup"
+                        Type = "Group"
+                    }
+                }
+            )
+            Ensure                        = 'Present'
+            Credential                    = $credsGlobalAdmin
+            DependsOn                     = "[AADGroup]TestGroup"
         }
     }
 }

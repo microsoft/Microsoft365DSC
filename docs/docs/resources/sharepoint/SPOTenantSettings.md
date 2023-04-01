@@ -10,7 +10,6 @@
 | **SearchResolveExactEmailOrUPN** | Write | Boolean | Removes the search capability from People Picker. Note, recently resolved names will still appear in the list until browser cache is cleared or expired. | |
 | **OfficeClientADALDisabled** | Write | Boolean | When set to true this will disable the ability to use Modern Authentication that leverages ADAL across the tenant. | |
 | **LegacyAuthProtocolsEnabled** | Write | Boolean | Setting this parameter prevents Office clients using non-modern authentication protocols from accessing SharePoint Online resources. | |
-| **RequireAcceptingAccountMatchInvitedAccount** | Write | Boolean | DEPRECATED | |
 | **SignInAccelerationDomain** | Write | String | Specifies the home realm discovery value to be sent to Azure Active Directory (AAD) during the user sign-in process. | |
 | **UsePersistentCookiesForExplorerView** | Write | Boolean | Lets SharePoint issue a special cookie that will allow this feature to work even when Keep Me Signed In is not selected. | |
 | **UserVoiceForFeedbackEnabled** | Write | Boolean | Allow feedback via UserVoice. | |

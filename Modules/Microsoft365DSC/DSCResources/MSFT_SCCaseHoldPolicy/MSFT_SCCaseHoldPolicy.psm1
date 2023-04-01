@@ -221,17 +221,36 @@ function Set-TargetResource
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentPolicy.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove('Credential')
         $CreationParams.Remove('Ensure')
+
+        # Remove authentication parameters
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('ApplicationId') | Out-Null
+        $CreationParams.Remove('TenantId') | Out-Null
+        $CreationParams.Remove('CertificatePath') | Out-Null
+        $CreationParams.Remove('CertificatePassword') | Out-Null
+        $CreationParams.Remove('CertificateThumbprint') | Out-Null
+        $CreationParams.Remove('ManagedIdentity') | Out-Null
+        $CreationParams.Remove('ApplicationSecret') | Out-Null
+
         New-CaseHoldPolicy @CreationParams
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove('Credential')
         $CreationParams.Remove('Ensure')
         $CreationParams.Remove('Name')
         $CreationParams.Remove('Case')
+
+        # Remove authentication parameters
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('ApplicationId') | Out-Null
+        $CreationParams.Remove('TenantId') | Out-Null
+        $CreationParams.Remove('CertificatePath') | Out-Null
+        $CreationParams.Remove('CertificatePassword') | Out-Null
+        $CreationParams.Remove('CertificateThumbprint') | Out-Null
+        $CreationParams.Remove('ManagedIdentity') | Out-Null
+        $CreationParams.Remove('ApplicationSecret') | Out-Null
 
         $policy = Get-CaseHoldPolicy -Identity $Name -Case $Case
         $CreationParams.Add('Identity', $policy.Name)
@@ -242,14 +261,14 @@ function Set-TargetResource
                 $null -ne $SharePointLocation)
         {
             $ToBeRemoved = $CurrentPolicy.SharePointLocation | `
-                Where-Object { $SharePointLocation -NotContains $_ }
+                    Where-Object { $SharePointLocation -NotContains $_ }
             if ($null -ne $ToBeRemoved)
             {
                 $CreationParams.Add('RemoveSharePointLocation', $ToBeRemoved)
             }
 
             $ToBeAdded = $SharePointLocation | `
-                Where-Object { $CurrentPolicy.SharePointLocation -NotContains $_ }
+                    Where-Object { $CurrentPolicy.SharePointLocation -NotContains $_ }
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add('AddSharePointLocation', $ToBeAdded)
@@ -264,14 +283,14 @@ function Set-TargetResource
                 $null -ne $ExchangeLocation)
         {
             $ToBeRemoved = $CurrentPolicy.ExchangeLocation | `
-                Where-Object { $ExchangeLocation -NotContains $_ }
+                    Where-Object { $ExchangeLocation -NotContains $_ }
             if ($null -ne $ToBeRemoved)
             {
                 $CreationParams.Add('RemoveExchangeLocation', $ToBeRemoved)
             }
 
             $ToBeAdded = $ExchangeLocation | `
-                Where-Object { $CurrentPolicy.ExchangeLocation -NotContains $_ }
+                    Where-Object { $CurrentPolicy.ExchangeLocation -NotContains $_ }
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add('AddExchangeLocation', $ToBeAdded)
@@ -286,14 +305,14 @@ function Set-TargetResource
                 $null -ne $PublicFolderLocation)
         {
             $ToBeRemoved = $CurrentPolicy.PublicFolderLocation | `
-                Where-Object { $PublicFolderLocation -NotContains $_ }
+                    Where-Object { $PublicFolderLocation -NotContains $_ }
             if ($null -ne $ToBeRemoved)
             {
                 $CreationParams.Add('RemovePublicFolderLocation', $ToBeRemoved)
             }
 
             $ToBeAdded = $PublicFolderLocation | `
-                Where-Object { $CurrentPolicy.PublicFolderLocation -NotContains $_ }
+                    Where-Object { $CurrentPolicy.PublicFolderLocation -NotContains $_ }
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add('AddPublicFolderLocation', $ToBeAdded)
@@ -393,7 +412,16 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
+
+    # Remove authentication parameters
     $ValuesToCheck.Remove('Credential') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -502,7 +530,7 @@ function Export-TargetResource
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `

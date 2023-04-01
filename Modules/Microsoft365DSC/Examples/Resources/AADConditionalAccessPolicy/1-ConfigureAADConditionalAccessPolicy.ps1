@@ -5,7 +5,8 @@ It is not meant to use as a production baseline.
 
 Configuration Example
 {
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [PSCredential]
         $credsGlobalAdmin
@@ -20,10 +21,9 @@ Configuration Example
             DisplayName                          = 'Allin-example'
             BuiltInControls                      = @('Mfa', 'CompliantDevice', 'DomainJoinedDevice', 'ApprovedApplication', 'CompliantApplication')
             ClientAppTypes                       = @('ExchangeActiveSync', 'Browser', 'MobileAppsAndDesktopClients', 'Other')
-            CloudAppSecurityIsEnabled            = $true
+            CloudAppSecurityIsEnabled            = $True
             CloudAppSecurityType                 = 'MonitorOnly'
             ExcludeApplications                  = @('803ee9ca-3f7f-4824-bd6e-0b99d720c35c', '00000012-0000-0000-c000-000000000000', '00000007-0000-0000-c000-000000000000', 'Office365')
-            ExcludeDevices                       = @('Compliant', 'DomainJoined')
             ExcludeGroups                        = @()
             ExcludeLocations                     = @('Blocked Countries')
             ExcludePlatforms                     = @('Windows', 'WindowsPhone', 'MacOS')
@@ -34,7 +34,6 @@ Configuration Example
             ExcludeGuestOrExternalUserTypes      = @('internalGuest', 'b2bCollaborationMember')
             GrantControlOperator                 = 'OR'
             IncludeApplications                  = @('All')
-            IncludeDevices                       = @('All')
             IncludeGroups                        = @()
             IncludeLocations                     = @('AllTrusted')
             IncludePlatforms                     = @('Android', 'IOS')
