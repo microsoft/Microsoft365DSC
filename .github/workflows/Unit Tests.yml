@@ -24,7 +24,7 @@ jobs:
 
           foreach ($module in $Manifest.Dependencies)
           {
-            Write-Verbose -Message $($module.ModuleName)
+            Write-Verbose -Message "Installing module: $($module.ModuleName)"
             if ($module.AllowPreRelease)
             {
               Install-Module $module.ModuleName -AllowPreRelease -Force -Scope AllUsers
