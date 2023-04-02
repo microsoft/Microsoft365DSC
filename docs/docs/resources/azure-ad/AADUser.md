@@ -11,7 +11,7 @@
 | **Roles** | Write | StringArray[] | The list of Azure Active Directory roles assigned to the user. | |
 | **UsageLocation** | Write | String | The country code the user will be assigned to | |
 | **LicenseAssignment** | Write | StringArray[] | The account SKU Id for the license to be assigned to the user | |
-| **Password** | Write | PSCredential | The password for the account. The parameter is a PSCredential object, but only the Password component will be used | |
+| **Password** | Write | PSCredential | The password for the account. The parameter is a PSCredential object, but only the Password component will be used. Property will only be used when creating the user and not on subsequent updates. If password is not supplied for a new resource a new random password will be generated. | |
 | **City** | Write | String | The City name of the user | |
 | **Country** | Write | String | The Country name of the user | |
 | **Department** | Write | String | The Department name of the user | |
