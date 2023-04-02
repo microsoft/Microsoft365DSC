@@ -2,6 +2,11 @@
 
 # UNRELEASED
 
+* IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10
+  * Initial Release
+    FIXES [#2830](https://github.com/microsoft/Microsoft365DSC/issues/2830)
+* IntuneDeviceConfigurationNetworkBoundaryPolicyWindows10
+  * Initial release
 * IntuneDeviceConfigurationPolicyWindows10
   * [BREAKING CHANGE] Added complex parameters as embedded CIM (DefenderDetectedMalwareActions, EdgeHomeButtonConfiguration, EdgeSearchEngine, NetworkProxyServer, Windows10AppsForceUpdateSchedule)
   * Resource regenerated with DRG
@@ -12,9 +17,6 @@
   * Added support for property Assignments.
   * Added support for property Priority
   * FIXES [#2933](https://github.com/microsoft/Microsoft365DSC/issues/2933)
-* IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10
-  * Initial Release
-    FIXES [#2830](https://github.com/microsoft/Microsoft365DSC/issues/2830)
 * AADAdministrativeUnit
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
   * Fixes extraction of the Members property.
