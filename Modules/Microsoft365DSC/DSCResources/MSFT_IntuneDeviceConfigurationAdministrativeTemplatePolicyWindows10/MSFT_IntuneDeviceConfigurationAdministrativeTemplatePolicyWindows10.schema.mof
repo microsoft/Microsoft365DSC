@@ -55,7 +55,7 @@ class MSFT_IntuneGroupPolicyDefinitionValuePresentationValueKeyValuePair
 class MSFT_IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10 : OMI_BaseResource
 {
     [Write, Description("User provided description for the resource object.")] String Description;
-    [Write, Description("User provided name for the resource object.")] String DisplayName;
+    [Required, Description("User provided name for the resource object.")] String DisplayName;
     [Write, Description("Type of definitions configured for this policy. Possible values are: unknown, custom, builtIn, mixed, unknownFutureValue."), ValueMap{"unknown","custom","builtIn","mixed","unknownFutureValue"}, Values{"unknown","custom","builtIn","mixed","unknownFutureValue"}] String PolicyConfigurationIngestionType;
     [Key, Description("The unique identifier for an entity. Read-only.")] String Id;
     [Write, Description("The list of enabled or disabled group policy definition values for the configuration."), EmbeddedInstance("MSFT_IntuneGroupPolicyDefinitionValue")] String DefinitionValues[];
