@@ -21,31 +21,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
             $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
-
-
-            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
-            }
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
-
             }
 
             Mock -CommandName Get-PSSession -MockWith {
-
             }
 
             Mock -CommandName Remove-PSSession -MockWith {
-
             }
 
             Mock -CommandName Update-MgApplication -MockWith {
-
             }
 
             Mock -CommandName Remove-MgApplication -MockWith {
-
             }
 
             Mock -CommandName New-MgApplication -MockWith {
@@ -75,18 +65,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The application should exist but it does not' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName               = 'App1'
-                    AvailableToOtherTenants   = $false
-                    GroupMembershipClaims     = '0'
-                    Homepage                  = 'https://app.contoso.com'
-                    IdentifierUris            = 'https://app.contoso.com'
-                    KnownClientApplications   = ''
-                    LogoutURL                 = 'https://app.contoso.com/logout'
-                    Oauth2RequirePostResponse = $false
-                    PublicClient              = $false
-                    ReplyURLs                 = @('https://app.contoso.com')
-                    Ensure                    = 'Present'
-                    Credential                = $Credential
+                    DisplayName             = 'App1'
+                    AvailableToOtherTenants = $false
+                    GroupMembershipClaims   = '0'
+                    Homepage                = 'https://app.contoso.com'
+                    IdentifierUris          = 'https://app.contoso.com'
+                    KnownClientApplications = ''
+                    LogoutURL               = 'https://app.contoso.com/logout'
+                    PublicClient            = $false
+                    ReplyURLs               = @('https://app.contoso.com')
+                    Ensure                  = 'Present'
+                    Credential              = $Credential
                 }
 
                 Mock -CommandName Get-MgApplication -MockWith {
@@ -110,19 +99,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The application exists but it should not' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ObjectId                  = '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
-                    DisplayName               = 'App1'
-                    AvailableToOtherTenants   = $false
-                    GroupMembershipClaims     = '0'
-                    Homepage                  = 'https://app.contoso.com'
-                    IdentifierUris            = 'https://app.contoso.com'
-                    KnownClientApplications   = ''
-                    LogoutURL                 = 'https://app.contoso.com/logout'
-                    Oauth2RequirePostResponse = $false
-                    PublicClient              = $false
-                    ReplyURLs                 = 'https://app.contoso.com'
-                    Ensure                    = 'Absent'
-                    Credential                = $Credential
+                    ObjectId                = '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
+                    DisplayName             = 'App1'
+                    AvailableToOtherTenants = $false
+                    GroupMembershipClaims   = '0'
+                    Homepage                = 'https://app.contoso.com'
+                    IdentifierUris          = 'https://app.contoso.com'
+                    KnownClientApplications = ''
+                    LogoutURL               = 'https://app.contoso.com/logout'
+                    PublicClient            = $false
+                    ReplyURLs               = 'https://app.contoso.com'
+                    Ensure                  = 'Absent'
+                    Credential              = $Credential
                 }
 
                 Mock -CommandName Get-MgApplication -MockWith {
@@ -160,18 +148,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The app exists and values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName               = 'App1'
-                    AvailableToOtherTenants   = $false
-                    GroupMembershipClaims     = '0'
-                    Homepage                  = 'https://app.contoso.com'
-                    IdentifierUris            = 'https://app.contoso.com'
-                    KnownClientApplications   = ''
-                    LogoutURL                 = 'https://app.contoso.com/logout'
-                    Oauth2RequirePostResponse = $false
-                    PublicClient              = $false
-                    ReplyURLs                 = 'https://app.contoso.com'
-                    Ensure                    = 'Present'
-                    Credential                = $Credential
+                    DisplayName             = 'App1'
+                    AvailableToOtherTenants = $false
+                    GroupMembershipClaims   = '0'
+                    Homepage                = 'https://app.contoso.com'
+                    IdentifierUris          = 'https://app.contoso.com'
+                    KnownClientApplications = ''
+                    LogoutURL               = 'https://app.contoso.com/logout'
+                    PublicClient            = $false
+                    ReplyURLs               = 'https://app.contoso.com'
+                    Ensure                  = 'Present'
+                    Credential              = $Credential
                 }
 
                 Mock -CommandName Get-MgApplication -MockWith {
@@ -208,18 +195,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'Values are not in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName               = 'App1'
-                    AvailableToOtherTenants   = $false
-                    GroupMembershipClaims     = '0'
-                    Homepage                  = 'https://app1.contoso.com' #drift
-                    IdentifierUris            = 'https://app.contoso.com'
-                    KnownClientApplications   = ''
-                    LogoutURL                 = 'https://app.contoso.com/logout'
-                    Oauth2RequirePostResponse = $false
-                    PublicClient              = $false
-                    ReplyURLs                 = 'https://app.contoso.com'
-                    Ensure                    = 'Present'
-                    Credential                = $Credential
+                    DisplayName             = 'App1'
+                    AvailableToOtherTenants = $false
+                    GroupMembershipClaims   = '0'
+                    Homepage                = 'https://app1.contoso.com' #drift
+                    IdentifierUris          = 'https://app.contoso.com'
+                    KnownClientApplications = ''
+                    LogoutURL               = 'https://app.contoso.com/logout'
+                    PublicClient            = $false
+                    ReplyURLs               = 'https://app.contoso.com'
+                    Ensure                  = 'Present'
+                    Credential              = $Credential
                 }
 
                 Mock -CommandName Get-MgApplication -MockWith {
@@ -257,36 +243,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'Assigning Permissions to a new Application' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName               = 'App1'
-                    AvailableToOtherTenants   = $false
-                    GroupMembershipClaims     = '0'
-                    IdentifierUris            = 'https://app.contoso.com'
-                    KnownClientApplications   = ''
-                    LogoutURL                 = 'https://app.contoso.com/logout'
-                    Oauth2RequirePostResponse = $false
-                    PublicClient              = $false
-                    ReplyURLs                 = 'https://app.contoso.com'
-                    Permissions               = @(New-CimInstance -ClassName MSFT_AADApplicationPermission -Property @{
+                    DisplayName             = 'App1'
+                    AvailableToOtherTenants = $false
+                    GroupMembershipClaims   = '0'
+                    IdentifierUris          = 'https://app.contoso.com'
+                    KnownClientApplications = ''
+                    LogoutURL               = 'https://app.contoso.com/logout'
+                    PublicClient            = $false
+                    ReplyURLs               = 'https://app.contoso.com'
+                    Permissions             = @(New-CimInstance -ClassName MSFT_AADApplicationPermission -Property @{
                             Name                = 'User.Read'
                             Type                = 'Delegated'
                             SourceAPI           = 'Microsoft Graph'
                             AdminConsentGranted = $false
-                        } -ClientOnly;
+                        } -ClientOnly
                         New-CimInstance -ClassName MSFT_AADApplicationPermission -Property @{
                             Name                = 'User.ReadWrite.All'
                             type                = 'Delegated'
                             SourceAPI           = 'Microsoft Graph'
                             AdminConsentGranted = $True
-                        } -ClientOnly;
+                        } -ClientOnly
                         New-CimInstance -ClassName MSFT_AADApplicationPermission -Property @{
                             Name                = 'User.Read.All'
                             type                = 'AppOnly'
                             SourceAPI           = 'Microsoft Graph'
                             AdminConsentGranted = $True
-                        } -ClientOnly;
+                        } -ClientOnly
                     )
-                    Ensure                    = 'Present'
-                    Credential                = $Credential
+                    Ensure                  = 'Present'
+                    Credential              = $Credential
                 }
 
                 Mock -CommandName Get-MgApplication -MockWith {
@@ -312,6 +297,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
                 }
@@ -334,7 +320,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should reverse engineer resource from the export method' {
-                Export-TargetResource @testParams
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }

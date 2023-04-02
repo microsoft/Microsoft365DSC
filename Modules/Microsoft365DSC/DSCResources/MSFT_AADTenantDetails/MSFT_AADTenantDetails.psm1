@@ -65,13 +65,11 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = @{
-        Credential = $Credential
+        IsSingleInstance = 'Yes'
     }
 
     try
     {
-        $CurrentParameters = $PSBoundParameters
-
         $AADTenantDetails = Get-MgOrganization -ErrorAction 'SilentlyContinue'
 
         if ($null -eq $AADTenantDetails)
@@ -106,7 +104,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return @{}
+        return $nullReturn
     }
 }
 
@@ -295,7 +293,6 @@ function Test-TargetResource
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
-
 }
 
 function Export-TargetResource
@@ -357,21 +354,30 @@ function Export-TargetResource
             ApplicationSecret                    = $ApplicationSecret
             TenantId                             = $TenantId
             CertificateThumbprint                = $CertificateThumbprint
-            Managedidentity                      = $ManagedIdentity.IsPresent
+            ManagedIdentity                      = $ManagedIdentity.IsPresent
             IsSingleInstance                     = 'Yes'
         }
         $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode -Results $Results
-        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -Credential $Credential
-        $dscContent += $currentDSCBlock
 
-        Save-M365DSCPartialExport -Content $currentDSCBlock `
-            -FileName $Global:PartialExportFileName
+        if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
+        {
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode -Results $Results
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
+            $dscContent += $currentDSCBlock
 
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host $Global:M365DSCEmojiRedX
+        }
+
         return $dscContent
     }
     catch

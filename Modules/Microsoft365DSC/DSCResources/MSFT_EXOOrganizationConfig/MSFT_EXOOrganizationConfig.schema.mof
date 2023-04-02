@@ -6,7 +6,6 @@ class MSFT_EXOOrganizationConfig : OMI_BaseResource
     [Write, Description("The ActivityBasedAuthenticationTimeoutInterval parameter specifies the time span for logoff. You enter this value as a time span: hh:mm:ss where hh = hours, mm = minutes and ss = seconds. Valid values for this parameter are from 00:05:00 to 08:00:00 (5 minutes to 8 hours). The default value is 06:00:00 (6 hours).")] String ActivityBasedAuthenticationTimeoutInterval;
     [Write, Description("The ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled parameter specifies whether to keep single sign-on enabled. The default value is $true.")] Boolean ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled;
     [Write, Description("The AppsForOfficeEnabled parameter specifies whether to enable apps for Outlook features. By default, the parameter is set to $true. If the flag is set to $false, no new apps can be activated for any user in the organization.")] Boolean AppsForOfficeEnabled;
-    [Write, Description("DEPRECATED")] Boolean AllowPlusAddressInRecipients;
     [Write, Description("The AsyncSendEnabled parameter specifies whether to enable or disable async send in Outlook on the web.")] Boolean AsyncSendEnabled;
     [Write, Description("The AuditDisabled parameter specifies whether to disable or enable mailbox auditing for the organization.")] Boolean AuditDisabled;
     [Write, Description("Setting this parameter to $true will cause unknown users to be redirected to the on-premises endpoint and will allow on-premises users to discover their mailbox automatically.")] Boolean AutodiscoverPartialDirSync;
@@ -85,6 +84,7 @@ class MSFT_EXOOrganizationConfig : OMI_BaseResource
     [Write, Description("No description available for MaskClientIpInReceivedHeadersEnabled.")] Boolean MaskClientIpInReceivedHeadersEnabled;
     [Write, Description("No description available for MatchSenderOrganizerProperties.")] Boolean MatchSenderOrganizerProperties;
     [Write, Description("No description available for MessageHighlightsEnabled.")] Boolean MessageHighlightsEnabled;
+    [Write, Description("The MessageRecallEnabled parameter enables or disables the message recall feature in the organization.")] Boolean MessageRecallEnabled;
     [Write, Description("The MessageRemindersEnabled parameter enables or disables the message reminders feature in the organization.")] Boolean MessageRemindersEnabled;
     [Write, Description("The MobileAppEducationEnabled specifies whether to show or hide the Outlook for iOS and Android education reminder in Outlook on the web.")] Boolean MobileAppEducationEnabled;
     [Write, Description("The OAuth2ClientProfileEnabled parameter enables or disables modern authentication in the Exchange organization.")] Boolean OAuth2ClientProfileEnabled;

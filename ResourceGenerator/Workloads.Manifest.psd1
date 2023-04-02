@@ -25,7 +25,7 @@
             }
         },
         @{
-            ResourceName             = 'IntuneWifiConfigurationPolicyAndroidEntrepriseDeviceOwner'
+            ResourceName             = 'IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner'
             CmdletNoun               = 'MgDeviceManagementDeviceConfiguration'
             APIVersion               = 'beta'
             SelectionFilter          = @{

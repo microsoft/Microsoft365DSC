@@ -22,15 +22,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
-
-            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
-                return @{}
-            }
-
-            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-            }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
@@ -389,13 +382,39 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
+                }
+
+                                Mock -CommandName Get-ComplianceSearchAction -MockWith {
+                    return @{
+                        IncludeSharePointDocumentVersions   = $False
+                        Action                              = 'Export'
+                        SearchName                          = 'Test Search'
+                        FileTypeExclusionsForUnindexedItems = $null
+                        IncludeCredential                   = $False
+                        Retry                               = $False
+                        ActionScope                         = 'IndexedItemsOnly'
+                        EnableDedupe                        = $False
+                        Results                             = 'Container url:
+                                https://gabwedisccan.blob.core.windows.net/267bbbb1-2630-41ba-d56b-08d73612df43;
+                                SAS token: <Specify -IncludeCredential parameter to show the SAS token>;
+                                Scenario: RetentionReports; Scope: IndexedItemsOnly; Scope details:
+                                AllUnindexed; Max unindexed size: 0; File type exclusions for unindexed: <null>;
+                                Total sources: 0; Include SharePoint versions: False; Enable dedupe: False;
+                                Reference action: "<null>"; Region: ; Started sources: 1; Succeeded sources: 1;
+                                Failed sources: 0; Total estimated bytes: 259,252; Total estimated items: 3;
+                                Total transferred bytes: 259,252; Total transferred items: 3; Progress: 100.00
+                                %; Completed time: 2019-09-10 5:18:34 PM; Duration: 00:00:16.6967563; Export
+                                status: Completed'
+                    }
                 }
             }
 
             It 'Should Reverse Engineer resource from the Export method' {
-                Export-TargetResource @testParams
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }

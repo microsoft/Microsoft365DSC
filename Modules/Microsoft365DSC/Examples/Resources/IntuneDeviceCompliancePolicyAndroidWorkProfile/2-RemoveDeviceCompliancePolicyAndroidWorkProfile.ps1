@@ -15,8 +15,8 @@ Configuration Example
     {
         IntuneDeviceCompliancePolicyAndroidWorkProfile 'RemoveDeviceCompliancePolicyAndroidWorkProfile'
         {
-            DisplayName = "Test Android Work Profile Device Compliance Policy"
-            Ensure      = "Absent"
+            DisplayName = 'Test Android Work Profile Device Compliance Policy'
+            Ensure      = 'Absent'
             Credential  = $credsGlobalAdmin
         }
     }

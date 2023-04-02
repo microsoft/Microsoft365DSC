@@ -5,7 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Id** | Key | String | Specifies the RoleId. | |
-| **Displayname** | Write | String | RuleDefinition Displayname | |
+| **Displayname** | Required | String | RuleDefinition Displayname | |
 | **ActivationMaxDuration** | Write | String | Activation maximum duration (hours). | |
 | **ActivationReqJustification** | Write | Boolean | Require justification on activation (True/False) | |
 | **ActivationReqTicket** | Write | Boolean | Require ticket information on activation (True/False) | |
@@ -68,21 +68,21 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - None
+    - Group.Read.All, RoleManagement.Read.Directory, RoleManagementPolicy.Read.Directory, User.Read.All
 
 - **Update**
 
-    - None
+    - Group.Read.All, RoleManagementPolicy.Read.Directory, User.Read.All
 
 #### Application permissions
 
 - **Read**
 
-    - User.Read.All, Group.Read.All, Directory.Read.All, RoleManagement.Read.Directory
+    - Group.Read.All, RoleManagement.Read.Directory, RoleManagementPolicy.Read.Directory, User.Read.All
 
 - **Update**
 
-    - User.ReadWrite.All, Group.ReadWrite.All, Directory.ReadWrite.All, RoleManagement.ReadWrite.Directory
+    - Group.Read.All, RoleManagementPolicy.Read.Directory, User.Read.All
 
 ## Examples
 

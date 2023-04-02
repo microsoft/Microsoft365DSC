@@ -6,11 +6,11 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -55,6 +55,34 @@ function Get-TargetResource
         [System.String[]]
         $ExcludeRoles,
 
+        [Parameter()]
+        [System.String[]]
+        [validateSet('none', 'internalGuest', 'b2bCollaborationGuest', 'b2bCollaborationMember', 'b2bDirectConnectUser', 'otherExternalUser', 'serviceProvider', 'unknownFutureValue')]
+        $IncludeGuestOrExternalUserTypes,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
+        $IncludeExternalTenantsMembershipKind,
+
+        [Parameter()]
+        [System.String[]]
+        $IncludeExternalTenantsMembers,
+
+        [Parameter()]
+        [System.String[]]
+        [validateSet('none', 'internalGuest', 'b2bCollaborationGuest', 'b2bCollaborationMember', 'b2bDirectConnectUser', 'otherExternalUser', 'serviceProvider', 'unknownFutureValue')]
+        $ExcludeGuestOrExternalUserTypes,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
+        $ExcludeExternalTenantsMembershipKind,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludeExternalTenantsMembers,
+
         #ConditionalAccessPlatformCondition
         [Parameter()]
         [System.String[]]
@@ -72,17 +100,6 @@ function Get-TargetResource
         [Parameter()]
         [System.String[]]
         $ExcludeLocations,
-
-        #ConditionalAccessDevicesCondition
-        #DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $IncludeDevices,
-
-        #DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $ExcludeDevices,
 
         [Parameter()]
         [ValidateSet('include', 'exclude')]
@@ -447,6 +464,10 @@ function Get-TargetResource
                     {
                         $IncludeLocations += $IncludeLocationGUID
                     }
+                    elseif ($IncludeLocationGUID -eq '00000000-0000-0000-0000-000000000000')
+                    {
+                        $IncludeLocations += 'Multifactor authentication trusted IPs'
+                    }
                     elseif ($null -eq $Locationlookup[$IncludeLocationGUID])
                     {
                         $message = "Couldn't find Location $IncludeLocationGUID , couldn't add to policy $PolicyDisplayName"
@@ -470,6 +491,10 @@ function Get-TargetResource
                     if ($ExcludeLocationGUID -in 'All', 'AllTrusted')
                     {
                         $ExcludeLocations += $ExcludeLocationGUID
+                    }
+                    elseif ($IncludeLocationGUID -eq '00000000-0000-0000-0000-000000000000')
+                    {
+                        $IncludeLocations += 'Multifactor authentication trusted IPs'
                     }
                     elseif ($null -eq $Locationlookup[$ExcludeLocationGUID])
                     {
@@ -510,6 +535,14 @@ function Get-TargetResource
         {
             $PersistentBrowserMode = $null
         }
+        if ($Policy.Conditions.Users.IncludeGuestsOrExternalUsers.GuestOrExternalUserTypes)
+        {
+            [Array]$IncludeGuestOrExternalUserTypes = ($Policy.Conditions.Users.IncludeGuestsOrExternalUsers.GuestOrExternalUserTypes).Split(',')
+        }
+        if ($Policy.Conditions.Users.ExcludeGuestsOrExternalUsers.GuestOrExternalUserTypes)
+        {
+            [Array]$ExcludeGuestOrExternalUserTypes = ($Policy.Conditions.Users.ExcludeGuestsOrExternalUsers.GuestOrExternalUserTypes).Split(',')
+        }
 
         $termsOfUseName = $null
         if ($Policy.GrantControls.TermsOfUse)
@@ -537,6 +570,13 @@ function Get-TargetResource
             ExcludeGroups                            = $ExcludeGroups
             IncludeRoles                             = $IncludeRoles
             ExcludeRoles                             = $ExcludeRoles
+            IncludeGuestOrExternalUserTypes          = [System.String[]]$IncludeGuestOrExternalUserTypes
+            IncludeExternalTenantsMembershipKind     = [System.String]$Policy.Conditions.Users.IncludeGuestsOrExternalUsers.ExternalTenants.MembershipKind
+            IncludeExternalTenantsMembers            = [System.String[]](@() + $Policy.Conditions.Users.IncludeGuestsOrExternalUsers.ExternalTenants.AdditionalProperties.members)
+
+            ExcludeGuestOrExternalUserTypes          = [System.String[]]$ExcludeGuestOrExternalUserTypes
+            ExcludeExternalTenantsMembershipKind     = [System.String]$Policy.Conditions.Users.ExcludeGuestsOrExternalUsers.ExternalTenants.MembershipKind
+            ExcludeExternalTenantsMembers            = [System.String[]](@() + $Policy.Conditions.Users.ExcludeGuestsOrExternalUsers.ExternalTenants.AdditionalProperties.members)
 
             IncludePlatforms                         = [System.String[]](@() + $Policy.Conditions.Platforms.IncludePlatforms)
             #no translation needed, return empty string array if undefined
@@ -544,9 +584,6 @@ function Get-TargetResource
             #no translation needed, return empty string array if undefined
             IncludeLocations                         = $IncludeLocations
             ExcludeLocations                         = $ExcludeLocations
-
-            IncludeDevices                           = [System.String[]](@() + $Policy.Conditions.Devices.IncludeDevices)
-            ExcludeDevices                           = [System.String[]](@() + $Policy.Conditions.Devices.ExcludeDevices)
 
             #no translation needed, return empty string array if undefined
             DeviceFilterMode                         = [System.String]$Policy.Conditions.Devices.DeviceFilter.Mode
@@ -602,11 +639,11 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -651,6 +688,34 @@ function Set-TargetResource
         [System.String[]]
         $ExcludeRoles,
 
+        [Parameter()]
+        [System.String[]]
+        [validateSet('none', 'internalGuest', 'b2bCollaborationGuest', 'b2bCollaborationMember', 'b2bDirectConnectUser', 'otherExternalUser', 'serviceProvider', 'unknownFutureValue')]
+        $IncludeGuestOrExternalUserTypes,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
+        $IncludeExternalTenantsMembershipKind,
+
+        [Parameter()]
+        [System.String[]]
+        $IncludeExternalTenantsMembers,
+
+        [Parameter()]
+        [System.String[]]
+        [validateSet('none', 'internalGuest', 'b2bCollaborationGuest', 'b2bCollaborationMember', 'b2bDirectConnectUser', 'otherExternalUser', 'serviceProvider', 'unknownFutureValue')]
+        $ExcludeGuestOrExternalUserTypes,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
+        $ExcludeExternalTenantsMembershipKind,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludeExternalTenantsMembers,
+
         #ConditionalAccessPlatformCondition
         [Parameter()]
         [System.String[]]
@@ -668,17 +733,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $ExcludeLocations,
-
-        #ConditionalAccessDevicesCondition
-        #DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $IncludeDevices,
-
-        #DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $ExcludeDevices,
 
         [Parameter()]
         [ValidateSet('include', 'exclude')]
@@ -1070,6 +1124,52 @@ function Set-TargetResource
                 }
             }
         }
+        Write-Verbose -Message 'Set-Targetresource: process includeGuestsOrExternalUsers'
+        if ($IncludeGuestOrExternalUserTypes.Count -ne 0)
+        {
+            $includeGuestsOrExternalUsers = @{}
+            [string]$IncludeGuestOrExternalUserTypes = $IncludeGuestOrExternalUserTypes -join ','
+            $includeGuestsOrExternalUsers.Add('guestOrExternalUserTypes', $IncludeGuestOrExternalUserTypes)
+            $externalTenants = @{}
+            if ($IncludeExternalTenantsMembershipKind -eq 'All')
+            {
+                $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessAllExternalTenants')
+            }
+            elseif ($IncludeExternalTenantsMembershipKind -eq 'enumerated')
+            {
+                $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessEnumeratedExternalTenants')
+            }
+            $externalTenants.Add('membershipKind', $IncludeExternalTenantsMembershipKind)
+            if ($IncludeExternalTenantsMembers)
+            {
+                $externalTenants.Add('members', $IncludeExternalTenantsMembers)
+            }
+            $includeGuestsOrExternalUsers.Add('externalTenants', $externalTenants)
+            $conditions.Users.Add('includeGuestsOrExternalUsers', $includeGuestsOrExternalUsers)
+        }
+        Write-Verbose -Message 'Set-Targetresource: process excludeGuestsOrExternalUsers'
+        if ($ExcludeGuestOrExternalUserTypes.Count -ne 0)
+        {
+            $excludeGuestsOrExternalUsers = @{}
+            [string]$ExcludeGuestOrExternalUserTypes = $ExcludeGuestOrExternalUserTypes -join ','
+            $excludeGuestsOrExternalUsers.Add('guestOrExternalUserTypes', $ExcludeGuestOrExternalUserTypes)
+            $externalTenants = @{}
+            if ($ExcludeExternalTenantsMembershipKind -eq 'All')
+            {
+                $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessAllExternalTenants')
+            }
+            elseif ($ExcludeExternalTenantsMembershipKind -eq 'enumerated')
+            {
+                $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessEnumeratedExternalTenants')
+            }
+            $externalTenants.Add('membershipKind', $ExcludeExternalTenantsMembershipKind)
+            if ($ExcludeExternalTenantsMembers)
+            {
+                $externalTenants.Add('members', $ExcludeExternalTenantsMembers)
+            }
+            $excludeGuestsOrExternalUsers.Add('externalTenants', $externalTenants)
+            $conditions.Users.Add('excludeGuestsOrExternalUsers', $excludeGuestsOrExternalUsers)
+        }
         Write-Verbose -Message 'Set-Targetresource: process platform condition'
         if ($IncludePlatforms -or $ExcludePlatforms)
         {
@@ -1129,6 +1229,10 @@ function Set-TargetResource
                     {
                         $conditions.Locations.IncludeLocations += $IncludeLocation
                     }
+                    elseif ($IncludeLocation -eq 'Multifactor authentication trusted IPs')
+                    {
+                        $conditions.Locations.IncludeLocations += '00000000-0000-0000-0000-000000000000'
+                    }
                     elseif ($null -eq $LocationLookup[$IncludeLocation])
                     {
                         $message = "Couldn't find Location $IncludeLocation , couldn't add to policy $DisplayName"
@@ -1151,6 +1255,10 @@ function Set-TargetResource
                     {
                         $conditions.Locations.ExcludeLocations += $ExcludeLocation
                     }
+                    elseif ($ExcludeLocation -eq 'Multifactor authentication trusted IPs')
+                    {
+                        $conditions.Locations.ExcludeLocations += '00000000-0000-0000-0000-000000000000'
+                    }
                     elseif ($null -eq $LocationLookup[$ExcludeLocation])
                     {
                         $message = "Couldn't find Location $ExcludeLocation , couldn't add to policy $DisplayName"
@@ -1165,12 +1273,6 @@ function Set-TargetResource
                     }
                 }
             }
-        }
-
-        #DEPRECATED
-        if ($IncludeDevices -or $ExcludeDevices)
-        {
-            Write-Verbose -Message 'IncludeDevices and ExcludeDevices parameters are deprecated. These settings will not be applied. Instead, use the DeviceFilterMode and DeviceFilterRule parameters.'
         }
 
         Write-Verbose -Message 'Set-Targetresource: process device filter'
@@ -1384,11 +1486,11 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -1433,6 +1535,34 @@ function Test-TargetResource
         [System.String[]]
         $ExcludeRoles,
 
+        [Parameter()]
+        [System.String[]]
+        [validateSet('none', 'internalGuest', 'b2bCollaborationGuest', 'b2bCollaborationMember', 'b2bDirectConnectUser', 'otherExternalUser', 'serviceProvider', 'unknownFutureValue')]
+        $IncludeGuestOrExternalUserTypes,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
+        $IncludeExternalTenantsMembershipKind,
+
+        [Parameter()]
+        [System.String[]]
+        $IncludeExternalTenantsMembers,
+
+        [Parameter()]
+        [System.String[]]
+        [validateSet('none', 'internalGuest', 'b2bCollaborationGuest', 'b2bCollaborationMember', 'b2bDirectConnectUser', 'otherExternalUser', 'serviceProvider', 'unknownFutureValue')]
+        $ExcludeGuestOrExternalUserTypes,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
+        $ExcludeExternalTenantsMembershipKind,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludeExternalTenantsMembers,
+
         #ConditionalAccessPlatformCondition
         [Parameter()]
         [System.String[]]
@@ -1450,17 +1580,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $ExcludeLocations,
-
-        #ConditionalAccessDevicesCondition
-        #DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $IncludeDevices,
-
-        #DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $ExcludeDevices,
 
         [Parameter()]
         [ValidateSet('include', 'exclude')]
@@ -1669,19 +1788,6 @@ function Export-TargetResource
                     Managedidentity       = $ManagedIdentity.IsPresent
                 }
                 $Results = Get-TargetResource @Params
-
-                #DEPRECATED
-                if ($Results.IncludeDevices)
-                {
-                    Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The Include Devices parameter is deprecated. Instead use the Device Filter Mode and Device Filter Rule parameters in the portal."
-                    $Results.Remove('IncludeDevices') | Out-Null
-                }
-                #DEPRECATED
-                if ($Results.ExcludeDevices)
-                {
-                    Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The Exclude Devices parameter is deprecated. Instead use the Device Filter Mode and Device Filter Rule parameters in the portal."
-                    $Results.Remove('ExcludeDevices') | Out-Null
-                }
 
                 if ([System.String]::IsNullOrEmpty($Results.DeviceFilterMode))
                 {

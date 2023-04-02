@@ -22,11 +22,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         BeforeAll {
 
             $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
-
-            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-            }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
@@ -97,7 +94,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
-                    return 'Credential'
+                    return 'Credentials'
                 }
 
                 Mock -CommandName Get-MgGroup -MockWith {
@@ -132,7 +129,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
-                    return 'Credential'
+                    return 'Credentials'
                 }
 
                 Mock -CommandName Get-MgGroup -MockWith {
@@ -175,7 +172,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
-                    return 'Credential'
+                    return 'Credentials'
                 }
 
                 Mock -CommandName Get-MgGroup -MockWith {
@@ -209,6 +206,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ID              = '12345-12345-12345-12345'
                     Description     = 'Microsoft DSC Group'
                     SecurityEnabled = $True
+                    MailEnabled     = $True
                     GroupTypes      = @()
                     MailNickname    = 'M365DSC'
                     MemberOf        = 'DSCMemberOfGroup'
@@ -218,7 +216,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
-                    return 'Credential'
+                    return 'Credentials'
                 }
 
                 Mock -CommandName Get-MgGroup -ParameterFilter { $Id -eq '12345-12345-12345-12345' -or $Filter -eq "DisplayName eq 'DSCGroup'" } -MockWith {
@@ -227,6 +225,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ID              = '12345-12345-12345-12345'
                         Description     = 'Microsoft DSC Group'
                         SecurityEnabled = $True
+                        MailEnabled     = $true
                         MailNickname    = 'M365DSC'
                         GroupTypes      = @()
                     }
@@ -246,7 +245,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description     = 'Microsoft DSC MemberOf Group'
                         SecurityEnabled = $True
                         GroupTypes      = @()
-                        MailEnabled     = $False
+                        MailEnabled     = $True
                         MailNickname    = 'M365DSCM'
                     }
                     # Set-TargetResource expects data-type of answer to contain 'group'
@@ -273,6 +272,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ID                 = '12345-12345-12345-12345'
                     Description        = 'Microsoft DSC Group'
                     SecurityEnabled    = $True
+                    MailEnabled        = $True
                     GroupTypes         = @()
                     MailNickname       = 'M365DSC'
                     IsAssignableToRole = $true
@@ -283,7 +283,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
-                    return 'Credential'
+                    return 'Credentials'
                 }
 
                 Mock -CommandName Get-MgGroup -MockWith {
@@ -292,6 +292,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ID                 = '12345-12345-12345-12345'
                         Description        = 'Microsoft DSC Group'
                         SecurityEnabled    = $True
+                        MailEnabled        = $true
                         GroupTypes         = @()
                         MailNickname       = 'M365DSC'
                         IsAssignableToRole = $true
@@ -333,7 +334,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
-                    return 'Credential'
+                    return 'Credentials'
                 }
 
                 Mock -CommandName Get-MgGroup -MockWith {
@@ -372,6 +373,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ID              = '12345-12345-12345-12345'
                     Description     = 'Microsoft DSC Group'
                     SecurityEnabled = $True
+                    MailEnabled     = $true
                     GroupTypes      = @()
                     MailNickname    = 'M365DSC'
                     MemberOf        = 'DSCMemberOfGroup'
@@ -381,7 +383,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
-                    return 'Credential'
+                    return 'Credentials'
                 }
                 Mock -CommandName Get-MgGroup -ParameterFilter { $Id -eq '12345-12345-12345-12345' -or $Filter -eq "DisplayName eq 'DSCGroup'" } -MockWith {
                     return @{
@@ -389,6 +391,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ID              = '12345-12345-12345-12345'
                         Description     = 'Microsoft DSC Group'
                         SecurityEnabled = $True
+                        MailEnabled = $true
                         MailNickname    = 'M365DSC'
                         GroupTypes      = @()
                     }
@@ -399,6 +402,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ID              = '67890-67890-67890-67890'
                         Description     = 'Microsoft DSC MemberOf Group'
                         SecurityEnabled = $True
+                        MailEnabled     = $true
                         GroupTypes      = @()
                         MailNickname    = 'M365DSCM'
                     }
@@ -431,6 +435,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ID                 = '12345-12345-12345-12345'
                     Description        = 'Microsoft DSC Group'
                     SecurityEnabled    = $True
+                    MailEnabled        = $true
                     GroupTypes         = @()
                     MailNickname       = 'M365DSC'
                     IsAssignableToRole = $true
@@ -441,7 +446,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
-                    return 'Credential'
+                    return 'Credentials'
                 }
 
                 Mock -CommandName Get-MgGroup -MockWith {
@@ -450,6 +455,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ID                 = '12345-12345-12345-12345'
                         Description        = 'Microsoft DSC Group'
                         SecurityEnabled    = $True
+                        MailEnabled        = $true
                         GroupTypes         = @()
                         MailNickname       = 'M365DSC'
                         IsAssignableToRole = $true
@@ -489,6 +495,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ID                 = '12345-12345-12345-12345'
                     Description        = 'Microsoft DSC Group'
                     SecurityEnabled    = $True
+                    MailEnabled        = $true
                     GroupTypes         = @()
                     MailNickname       = 'M365DSC'
                     IsAssignableToRole = $true
@@ -499,7 +506,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
-                    return 'Credential'
+                    return 'Credentials'
                 }
 
                 Mock -CommandName Get-MgGroup -MockWith {
@@ -508,6 +515,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ID                 = '12345-12345-12345-12345'
                         Description        = 'Microsoft DSC Group'
                         SecurityEnabled    = $True
+                        MailEnabled        = $true
                         GroupTypes         = @()
                         MailNickname       = 'M365DSC'
                         IsAssignableToRole = $true
@@ -551,23 +559,32 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
-                    return 'Credential'
+                    return 'Credentials'
                 }
 
                 Mock -CommandName Get-MgGroup -MockWith {
                     return @{
-                        DisplayName = 'Test Team'
-                        ID          = '12345-12345-12345-12345'
+                        DisplayName        = 'DSCGroup'
+                        ID                 = '12345-12345-12345-12345'
+                        Description        = 'Microsoft DSC Group'
+                        SecurityEnabled    = $True
+                        MailEnabled        = $False
+                        GroupTypes         = @("Unified")
+                        MailNickname       = 'M365DSC'
+                        IsAssignableToRole = $true
+                        Ensure             = 'Present'
                     }
                 }
             }
             It 'Should Reverse Engineer resource from the Export method' {
-                Export-TargetResource @testParams
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }

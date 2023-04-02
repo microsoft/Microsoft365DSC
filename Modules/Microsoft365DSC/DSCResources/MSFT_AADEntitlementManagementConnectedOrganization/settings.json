@@ -1,0 +1,45 @@
+{
+    "resourceName": "AADEntitlementManagementConnectedOrganization",
+    "description": "This resource configures an Azure AD Entitlement Management Connected Organization.",
+    "permissions":    {
+    "graph":  {
+                  "delegated":  {
+                                    "read":  [
+                                                 {
+                                                    "name":  "EntitlementManagement.Read.All"
+                                                 },
+                                                 {
+                                                    "name":  "EntitlementManagement.ReadWrite.All"
+                                                 }
+                                             ],
+                                    "update":  [
+                                                   {
+                                                        "name":  "EntitlementManagement.ReadWrite.All"
+                                                   },
+                                                   {
+                                                        "name":  "Directory.Read.All"
+                                                   }
+                                               ]
+                                },
+                  "application":  {
+                                      "read":  [
+                                                   {
+                                                       "name":  "EntitlementManagement.Read.All"
+                                                   },
+                                                   {
+                                                       "name":  "EntitlementManagement.ReadWrite.All"
+                                                   }
+                                               ],
+                                      "update":  [
+                                                    {
+                                                       "name":  "EntitlementManagement.ReadWrite.All"
+                                                    },
+                                                    {
+                                                       "name":  "Directory.Read.All"
+                                                    }
+                                                 ]
+                                  }
+              }
+}
+
+}

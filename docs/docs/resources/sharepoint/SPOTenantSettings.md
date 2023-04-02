@@ -10,7 +10,6 @@
 | **SearchResolveExactEmailOrUPN** | Write | Boolean | Removes the search capability from People Picker. Note, recently resolved names will still appear in the list until browser cache is cleared or expired. | |
 | **OfficeClientADALDisabled** | Write | Boolean | When set to true this will disable the ability to use Modern Authentication that leverages ADAL across the tenant. | |
 | **LegacyAuthProtocolsEnabled** | Write | Boolean | Setting this parameter prevents Office clients using non-modern authentication protocols from accessing SharePoint Online resources. | |
-| **RequireAcceptingAccountMatchInvitedAccount** | Write | Boolean | DEPRECATED | |
 | **SignInAccelerationDomain** | Write | String | Specifies the home realm discovery value to be sent to Azure Active Directory (AAD) during the user sign-in process. | |
 | **UsePersistentCookiesForExplorerView** | Write | Boolean | Lets SharePoint issue a special cookie that will allow this feature to work even when Keep Me Signed In is not selected. | |
 | **UserVoiceForFeedbackEnabled** | Write | Boolean | Allow feedback via UserVoice. | |
@@ -25,6 +24,7 @@
 | **MarkNewFilesSensitiveByDefault** | Write | String | Allow or block external sharing until at least one Office DLP policy scans the content of the file. | `AllowExternalSharing`, `BlockExternalSharing` |
 | **ConditionalAccessPolicy** | Write | String | Allow or Block Conditional Access Policy on the SharePoint Tenant | `AllowFullAccess`, `AllowLimitedAccess`, `BlockAccess` |
 | **DisabledWebPartIds** | Write | String | Provide GUID for the Web Parts that are to be disabled on the Sharepoint Site | |
+| **CommentsOnSitePagesDisabled** | Write | Boolean | Set to false to enable a comment section on all site pages, users who have access to the pages can leave comments. Set to true to disable this feature. | |
 | **Ensure** | Write | String | Only accepted value is 'Present'. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the account to authenticate with. | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |

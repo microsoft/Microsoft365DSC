@@ -4,7 +4,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Identity** | Write | String | The Identity parameter specifies the Perimeter Configuration policy that you want to modify. | |
+| **IsSingleInstance** | Key | String | Only valid value is 'Yes'. | `Yes` |
 | **ResourcePropertySchema** | Write | StringArray[] | The ResourcePropertySchema parameter specifies the custom resource property that you want to make available to room or equipment mailboxes. This parameter uses the syntax Room/<Text> or Equipment/<Text> where the <Text> value doesn't contain spaces. For example, Room/Whiteboard or Equipment/Van. | |
 | **Ensure** | Write | String | Specifies if this Outbound connector should exist. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
@@ -49,15 +49,16 @@ Configuration Example
         [PSCredential]
         $credsGlobalAdmin
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
         EXOResourceConfiguration 'ConfigureResourceConfiguration'
         {
-            Identity               = "Global"
-            ResourcePropertySchema = @(@{Add = "Room/TV"; Remove = "Equipment/Laptop"})
-            Ensure                 = "Present"
+            IsSingleInstance       = 'Yes'
+            ResourcePropertySchema = @('Room/TV', 'Equipment/Laptop')
+            Ensure                 = 'Present'
             Credential             = $credsGlobalAdmin
         }
     }

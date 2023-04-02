@@ -5,7 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Identity** | Key | String | Identity of the endpoint protection attack surface protection rules policy for Windows 10. | |
-| **DisplayName** | Write | String | Display name of the endpoint protection attack surface protection rules policy for Windows 10. | |
+| **DisplayName** | Required | String | Display name of the endpoint protection attack surface protection rules policy for Windows 10. | |
 | **Description** | Write | String | Description of the endpoint protection attack surface protection rules policy for Windows 10. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the endpoint protection. | |
 | **AttackSurfaceReductionOnlyExclusions** | Write | StringArray[] | Exclude files and paths from attack surface reduction rules | |
@@ -81,4 +81,42 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
     - DeviceManagementConfiguration.ReadWrite.All
 
+## Examples
+
+### Example 1
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsGlobalAdmin
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneSettingCatalogASRRulesPolicyWindows10 'myASRRulesPolicy'
+        {
+            Identity                                                                   = '80d22119-b8cf-466d-bfc5-c2dca1d90f43'
+            DisplayName                                                                = 'asr 2'
+            Assignments                                                                = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments {
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType                                   = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                })
+            attacksurfacereductiononlyexclusions                                       = @('Test 10', 'Test2', 'Test3')
+            blockabuseofexploitedvulnerablesigneddrivers                               = 'block'
+            blockexecutablefilesrunningunlesstheymeetprevalenceagetrustedlistcriterion = 'audit'
+            Description                                                                = 'Post'
+            Ensure                                                                     = 'Present'
+            Credential                                                                 = $credsGlobalAdmin
+        }
+    }
+}
+```
 

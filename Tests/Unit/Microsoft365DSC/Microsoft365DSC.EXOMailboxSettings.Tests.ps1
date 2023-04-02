@@ -22,14 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
-
-            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
-                return @{}
-            }
-
-            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-            }
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
@@ -40,33 +33,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
-            }
-        }
-
-        # Test contexts
-        Context -Name "Specified Mailbox doesn't exist" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    DisplayName = 'NonExisting@contoso.com'
-                    Ensure      = 'Present'
-                    Credential  = $Credential
-                }
-
-                Mock -CommandName Get-MailboxRegionalConfiguration -MockWith {
-                    return $null
-                }
-            }
-
-            It 'Should throw an error from the Set method' {
-                { Set-TargetResource @testParams } | Should -Throw 'The specified mailbox {NonExisting@contoso.com} does not exist.'
-            }
-
-            It 'Should return Ensure is absent from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-            }
-
-            It 'Should return False from the Test method' {
-                Test-TargetResource @testParams | Should -Be $False
             }
         }
 
@@ -131,10 +97,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Set-TargetResource @testParams
             }
 
-            It 'Should return Ensure is Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-            }
-
             It 'Should return True from the Test method' {
                 Test-TargetResource @testParams | Should -Be $True
             }
@@ -143,8 +105,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
+                }
+
+                Mock -CommandName Get-Mailbox -MockWith {
+                    return @(
+                        @{
+                            Name = 'John.Smith'
+                        }
+                    )
                 }
 
                 Mock -CommandName Get-MailboxRegionalConfiguration -MockWith {
@@ -158,7 +129,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should Reverse Engineer resource from the Export method' {
-                Export-TargetResource @testParams
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }

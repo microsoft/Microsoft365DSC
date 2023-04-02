@@ -5,8 +5,8 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **DisplayName** | Key | String | Display Name of the Channel Tab. | |
-| **TeamName** | Required | String | Display Name of the Team. | |
-| **ChannelName** | Required | String | Display Name of the Channel. | |
+| **TeamName** | Key | String | Display Name of the Team. | |
+| **ChannelName** | Key | String | Display Name of the Channel. | |
 | **TeamId** | Write | String | Unique Id of the Team of the instance on the source tenant. | |
 | **TeamsApp** | Write | String | Id of the Teams App associated with the custom tab. | |
 | **SortOrderIndex** | Write | UInt32 | Index of the sort order for the custom tab. | |
@@ -34,21 +34,21 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - ChannelSettings.Read.All
+    - ChannelSettings.Read.All, Group.Read.All
 
 - **Update**
 
-    - Channel.Delete.All, ChannelSettings.Read.All, TeamsTab.Read.All
+    - Channel.Delete.All, ChannelSettings.Read.All, TeamsTab.Create, TeamsTab.ReadWrite.All
 
 #### Application permissions
 
 - **Read**
 
-    - ChannelSettings.Read.All
+    - ChannelSettings.Read.All, Group.Read.All
 
 - **Update**
 
-    - Channel.Delete.All, ChannelSettings.Read.All, TeamsTab.ReadWrite.All
+    - Channel.Delete.All, ChannelSettings.Read.All, TeamsTab.Create, TeamsTab.ReadWrite.All
 
 ## Examples
 

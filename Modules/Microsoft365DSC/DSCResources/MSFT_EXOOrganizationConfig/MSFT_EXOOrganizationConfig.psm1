@@ -26,11 +26,6 @@ function Get-TargetResource
         [System.Boolean]
         $AppsForOfficeEnabled,
 
-        # DEPRECATED
-        [Parameter()]
-        [System.Boolean]
-        $AllowPlusAddressInRecipients,
-
         [Parameter()]
         [System.Boolean]
         $AsyncSendEnabled,
@@ -349,6 +344,10 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $MessageHighlightsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MessageRecallEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -497,8 +496,10 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
+    $nullReturn = @{
+        IsSingleInstance = 'Yes'
+    }
+
     try
     {
         $ConfigSettings = Get-OrganizationConfig -ErrorAction Stop
@@ -591,6 +592,7 @@ function Get-TargetResource
             MaskClientIpInReceivedHeadersEnabled                      = $ConfigSettings.MaskClientIpInReceivedHeadersEnabled
             MatchSenderOrganizerProperties                            = $ConfigSettings.MatchSenderOrganizerProperties
             MessageHighlightsEnabled                                  = $ConfigSettings.MessageHighlightsEnabled
+            MessageRecallEnabled                                      = $ConfigSettings.MessageRecallEnabled
             MessageRemindersEnabled                                   = $ConfigSettings.MessageRemindersEnabled
             MobileAppEducationEnabled                                 = $ConfigSettings.MobileAppEducationEnabled
             OAuth2ClientProfileEnabled                                = $ConfigSettings.OAuth2ClientProfileEnabled
@@ -683,11 +685,6 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AppsForOfficeEnabled,
-
-        # DEPRECATED
-        [Parameter()]
-        [System.Boolean]
-        $AllowPlusAddressInRecipients,
 
         [Parameter()]
         [System.Boolean]
@@ -1007,6 +1004,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $MessageHighlightsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MessageRecallEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -1141,12 +1142,6 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    # Warning for deprecated parameters
-    if ($PSBoundParameters.ContainsKey('AllowPlusAddressInRecipients'))
-    {
-        Write-Warning 'AllowPlusAddressInRecipients is deprecated. Please remove this parameter from your configuration. Use DisablePlusAddressInRecipients instead.'
-    }
-
     if ($null -ne $EwsAllowList -and $null -ne $EwsBlockList)
     {
         throw "You can't specify both EWSAllowList and EWSBlockList properties."
@@ -1168,9 +1163,6 @@ function Set-TargetResource
     $SetValues.Remove('CertificatePath') | Out-Null
     $SetValues.Remove('CertificatePassword') | Out-Null
     $SetValues.Remove('ManagedIdentity') | Out-Null
-
-    # Remove deprecated parameters
-    $SetValues.Remove('AllowPlusAddressInRecipients') | Out-Null
 
     $isAutoExpandingArchiveEnabled = Get-OrganizationConfig | Select-Object -Property AutoExpandingArchiveEnabled
 
@@ -1209,11 +1201,6 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AppsForOfficeEnabled,
-
-        # DEPRECATED
-        [Parameter()]
-        [System.Boolean]
-        $AllowPlusAddressInRecipients,
 
         [Parameter()]
         [System.Boolean]
@@ -1533,6 +1520,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $MessageHighlightsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MessageRecallEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -1758,24 +1749,34 @@ function Export-TargetResource
         }
 
         $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -Credential $Credential
-        $dscContent += $currentDSCBlock
-        Save-M365DSCPartialExport -Content $currentDSCBlock `
-            -FileName $Global:PartialExportFileName
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+
+        if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
+        {
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host $Global:M365DSCEmojiRedX
+        }
+
         return $dscContent
     }
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `

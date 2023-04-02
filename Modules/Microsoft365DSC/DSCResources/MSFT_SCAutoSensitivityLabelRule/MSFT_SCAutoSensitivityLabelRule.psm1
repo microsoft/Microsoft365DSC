@@ -324,6 +324,11 @@ function Get-TargetResource
                 SubjectMatchesPatterns                       = $PolicyRule.SubjectMatchesPatterns
                 Ensure                                       = 'Present'
                 Credential                                   = $Credential
+                ApplicationId                                = $ApplicationId
+                TenantId                                     = $TenantId
+                CertificateThumbprint                        = $CertificateThumbprint
+                CertificatePath                              = $CertificatePath
+                CertificatePassword                          = $CertificatePassword
             }
 
             $paramsToRemove = @()
@@ -632,8 +637,17 @@ function Set-TargetResource
             $CreationParams.ExceptIfContentContainsSensitiveInformation = $value
         }
 
-        $CreationParams.Remove('Credential')
         $CreationParams.Remove('Ensure')
+
+        # Remove authentication parameters
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('ApplicationId') | Out-Null
+        $CreationParams.Remove('TenantId') | Out-Null
+        $CreationParams.Remove('CertificatePath') | Out-Null
+        $CreationParams.Remove('CertificatePassword') | Out-Null
+        $CreationParams.Remove('CertificateThumbprint') | Out-Null
+        $CreationParams.Remove('ManagedIdentity') | Out-Null
+        $CreationParams.Remove('ApplicationSecret') | Out-Null
 
         Write-Verbose -Message 'Flipping the parent policy to Mode = TestWithoutNotification while we create the rule'
         $parentPolicy = Get-AutoSensitivityLabelPolicy -Identity $Policy
@@ -685,11 +699,20 @@ function Set-TargetResource
             $UpdateParams.ExceptIfContentContainsSensitiveInformation = $value
         }
 
-        $UpdateParams.Remove('Credential') | Out-Null
         $UpdateParams.Remove('Ensure') | Out-Null
         $UpdateParams.Remove('Name') | Out-Null
         $UpdateParams.Remove('Policy') | Out-Null
         $UpdateParams.Add('Identity', $Name)
+
+        # Remove authentication parameters
+        $UpdateParams.Remove('Credential') | Out-Null
+        $UpdateParams.Remove('ApplicationId') | Out-Null
+        $UpdateParams.Remove('TenantId') | Out-Null
+        $UpdateParams.Remove('CertificatePath') | Out-Null
+        $UpdateParams.Remove('CertificatePassword') | Out-Null
+        $UpdateParams.Remove('CertificateThumbprint') | Out-Null
+        $UpdateParams.Remove('ManagedIdentity') | Out-Null
+        $UpdateParams.Remove('ApplicationSecret') | Out-Null
 
         Write-Verbose -Message 'Flipping the parent policy to Mode = TestWithoutNotification while we editing the rule'
         $parentPolicy = Get-AutoSensitivityLabelPolicy -Identity $Policy
@@ -947,7 +970,16 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
+
+    # Remove authentication parameters
     $ValuesToCheck.Remove('Credential') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     #region Test Sensitive Information Type
     # For each Desired SIT check to see if there is an existing rule with the same name
@@ -1074,7 +1106,7 @@ function Export-TargetResource
 
                 $Results = Get-TargetResource @PSBoundParameters `
                     -Name $rule.name `
-                    -Policy $rule.Policy `
+                    -Policy $rule.ParentPolicyName `
                     -Workload $workload
 
                 $IsCIMArray = $false
@@ -1145,7 +1177,7 @@ function Export-TargetResource
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `

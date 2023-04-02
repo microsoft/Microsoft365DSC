@@ -21,14 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
             $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
-
-            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
-                return @{}
-            }
-
-            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-            }
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
@@ -55,6 +48,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'Configuration needs updating' -Fixture {
             BeforeAll {
                 $testParams = @{
+                    IsSingleInstance                           = 'Yes'
                     AutomaticServiceUpdateEnabled              = $True
                     AzureRMSLicensingEnabled                   = $True
                     Credential                                 = $Credential
@@ -62,7 +56,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EDiscoverySuperUserEnabled                 = $True
                     EnablePdfEncryption                        = $False
                     Ensure                                     = 'Present'
-                    Identity                                   = 'Test Config'
                     InternalLicensingEnabled                   = $True
                     JournalReportDecryptionEnabled             = $True
                     LicensingLocation                          = @('https://contoso.com/_wmcs/licensing')
@@ -74,7 +67,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     TransportDecryptionSetting                 = 'Optional'
                 }
 
-                Mock -CommandName Get-IRMConfiguration  -MockWith {
+                Mock -CommandName Get-IRMConfiguration -MockWith {
                     return @{
                         AutomaticServiceUpdateEnabled              = $True
                         AzureRMSLicensingEnabled                   = $True
@@ -108,6 +101,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'Update not required.' -Fixture {
             BeforeAll {
                 $testParams = @{
+                    IsSingleInstance                           = 'Yes'
                     AutomaticServiceUpdateEnabled              = $True
                     AzureRMSLicensingEnabled                   = $True
                     Credential                                 = $Credential
@@ -115,7 +109,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EDiscoverySuperUserEnabled                 = $True
                     EnablePdfEncryption                        = $False
                     Ensure                                     = 'Present'
-                    Identity                                   = 'Test Config'
                     InternalLicensingEnabled                   = $True
                     JournalReportDecryptionEnabled             = $True
                     LicensingLocation                          = @('https://contoso.com/_wmcs/licensing')
@@ -127,7 +120,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     TransportDecryptionSetting                 = 'Optional'
                 }
 
-                Mock -CommandName Get-IRMConfiguration  -MockWith {
+                Mock -CommandName Get-IRMConfiguration -MockWith {
                     return @{
                         AutomaticServiceUpdateEnabled              = $True
                         AzureRMSLicensingEnabled                   = $True
@@ -156,11 +149,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-IRMConfiguration  -MockWith {
+                Mock -CommandName Get-IRMConfiguration -MockWith {
                     return @{
                         AutomaticServiceUpdateEnabled              = $True
                         AzureRMSLicensingEnabled                   = $True
@@ -182,7 +176,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should Reverse Engineer resource from the Export method' {
-                Export-TargetResource @testParams
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }

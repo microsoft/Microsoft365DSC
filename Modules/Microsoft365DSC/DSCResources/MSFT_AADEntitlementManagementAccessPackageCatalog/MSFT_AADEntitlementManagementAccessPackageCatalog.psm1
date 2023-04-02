@@ -4,9 +4,13 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -22,17 +26,13 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
         [System.Boolean]
         $IsExternallyVisible,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -84,6 +84,7 @@ function Get-TargetResource
 
     $nullResult = $PSBoundParameters
     $nullResult.Ensure = 'Absent'
+
     try
     {
         $getValue = $null
@@ -114,7 +115,6 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found something with id {$id}"
         $results = [ordered]@{
-
             #region resource generator code
             Id                    = $getValue.Id
             CatalogStatus         = $getValue.CatalogStatus
@@ -150,10 +150,13 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -169,17 +172,13 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
         [System.Boolean]
         $IsExternallyVisible,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -289,10 +288,13 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -308,17 +310,13 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
         [System.Boolean]
         $IsExternallyVisible,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -373,9 +371,10 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
 
-    #Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    #Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
     if ($testResult)
     {
@@ -439,11 +438,9 @@ function Export-TargetResource
 
     try
     {
-
         #region resource generator code
         [array]$getValue = Get-MgEntitlementManagementAccessPackageCatalog -All -ErrorAction Stop
         #endregion
-
 
         $i = 1
         $dscContent = ''
@@ -455,6 +452,7 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
+
         foreach ($config in $getValue)
         {
             $displayedKey = $config.id
@@ -462,9 +460,11 @@ function Export-TargetResource
             {
                 $displayedKey = $config.displayName
             }
+
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                id                    = $config.id
+                Id                    = $config.id
+                DisplayName           = $config.displayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -484,22 +484,21 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential
 
-
-
-
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
-            $i++
+
             Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
         }
+
         return $dscContent
     }
     catch
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `

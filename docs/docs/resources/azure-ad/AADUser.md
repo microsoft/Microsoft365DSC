@@ -22,7 +22,6 @@
 | **PasswordPolicies** | Write | String | Specifies password policies for the user. | |
 | **PhoneNumber** | Write | String | The Phone Number of the user | |
 | **PostalCode** | Write | String | The Postal Code of the user | |
-| **PreferredDataLocation** | Write | String | The Prefered location to store data of the user | |
 | **PreferredLanguage** | Write | String | The Prefered Language of the user | |
 | **State** | Write | String | Specifies the state or province where the user is located | |
 | **StreetAddress** | Write | String | Specifies the street address of the user | |
@@ -50,21 +49,21 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - User.Read.All
+    - RoleManagement.Read.Directory, User.Read.All
 
 - **Update**
 
-    - Organization.Read.All, User.ReadWrite.All
+    - Organization.Read.All, RoleManagement.Read.Directory, RoleManagement.ReadWrite.Directory, User.Read.All, User.ReadWrite.All
 
 #### Application permissions
 
 - **Read**
 
-    - User.Read.All
+    - RoleManagement.Read.Directory, User.Read.All
 
 - **Update**
 
-    - Organization.Read.All, User.ReadWrite.All
+    - Organization.Read.All, RoleManagement.Read.Directory, RoleManagement.ReadWrite.Directory, User.Read.All, User.ReadWrite.All
 
 ## Examples
 

@@ -7,7 +7,7 @@ It is also very important to understand the authentication process of Microsoft3
 1. A set of credentials for a user
 2. A Service Principal by specifying parameters such as an Azure Active Directory (AD) Application ID, Tenant ID and a Secret or Certificate.
 
-Currently, each Microsoft 365 workload can support a different combination of authentication methods because of the underlying modules only supporting those methods. For example: The Security and Compliance and Microsoft Teams modules do **not** support authenticating using a Service Principal. The table in the next paragraph shows which workload uses which module and therefore supports which authentication method.
+Currently, each Microsoft 365 workload can support a different combination of authentication methods because of the underlying modules only supporting those methods. The table in the next paragraph shows which workload uses which module and therefore supports which authentication method.
 
 **Important**: The recommendation is to use Service Principal whenever possible because:
 
@@ -35,8 +35,6 @@ The following table provides an overview of what authentication methods are supp
 
 > ![Check](../../Images/check.png) = Supported / ![Cross](../../Images/cross.png) = Not supported
 
-**Note:** As you can see, while using Credentials is the least preferred option for security reasons, it is the only option that works across **most** supported workloads.
-
 We are having discussions with the various product groups that are responsible for these PowerShell modules inside of Microsoft, to have better consistency across all workloads on how to authenticate. Items in the table above marked with a asterisk (*), are workloads for which the <a href="https://github.com/microsoftgraph/msgraph-sdk-powershell" target="_blank">Microsoft Graph PowerShell SDK</a> is used to authenticate against. The plan is to update the underlying logic of every component inside of Microsoft365DSC to leverage that SDK as new APIs become available on Microsoft Graph.
 
 It is possible for a configuration to use a mix of Credentials and Service Principals to authenticate against the various workloads. For example, if you decide to keep a master configuration for all the configuration of your tenant, you could have Azure AD components use the Service Principal of an app you have created to authenticate, and further down in the configuration have your Security and Compliance components use credentials. That approach is perfectly fine, but we would recommend to try and split different workloads across different (composite) configuration files. That way the configuration becomes less complex and easier to manage.
@@ -53,6 +51,12 @@ It is also important to note that we have added logic inside of the commands tha
 ## Power Apps Permissions
 
 In order to authenticate to Power Apps using a Service Principal (Certificate Thumbprint or ApplicationSecret), you will first need to define your app as a Power App Management app. For details on how to proceed, please refer to the folloring link: <a href="https://learn.microsoft.com/en-us/power-platform/admin/powershell-create-service-principal#registering-an-admin-management-application">https://learn.microsoft.com/en-us/power-platform/admin/powershell-create-service-principal#registering-an-admin-management-application</a>
+
+Additionally, to be able to authenticate using a Certificate Thumbprint, the underlying Power Apps PowerShell module used by Microsoft365DSC requires the certificate's private key (.pfx) to be registered under the current user's certificate store at <strong>Cert:\CurrentUser\My\</strong>. Omitting to register the private key will result in Microsoft365DSC throwing the following error when trying to authenticate to the Power Platform:
+
+```
+Get-Item: Cannot find path 'Cert:\CurrentUser\My\****************************************' because it does not exist.
+```
 
 ## Microsoft Graph Permissions
 
@@ -90,7 +94,7 @@ Check out the links in the "More information" section below to learn more about 
 
 ### Determine Required Permissions
 
-In order to be able to interact with these components, you need to grant your application or the Microsoft Graph PowerShell one the proper permissions against the Microsoft Graph scope. To determine what permission what permissions are required by a given component that uses Microsoft Graph, you can use the <a href="../../cmdlets/Get-M365DSCCompiledPermissionList/" target="_blank">Get-M365DSCCompiledPermissionList</a> cmdlet and pass in the list of parameters for which you wish to grant permissions for.
+In order to be able to interact with these components, you need to grant your application or the Microsoft Graph PowerShell one the proper permissions against the Microsoft Graph scope. To determine what permissions are required by a given component that uses Microsoft Graph, you can use the <a href="../../cmdlets/Get-M365DSCCompiledPermissionList/" target="_blank">Get-M365DSCCompiledPermissionList</a> cmdlet and pass in the list of parameters for which you wish to grant permissions for.
 
 <figure markdown>
   ![Example of how to check for the required permissions](../../Images/GetRequiredGraphPermissions.png)
@@ -160,6 +164,27 @@ Use the "<a href="https://pnp.github.io/powershell/cmdlets/Register-PnPManagemen
 <a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app" target="_blank">Create a new app registration</a> in Azure AD yourself and grant the correct permissions to this app. The documentation on this website for each of the SharePoint Online resources list the permissions needed for the resource.
 
 As an alternative, you can use the "<a href="https://pnp.github.io/powershell/cmdlets/Register-PnPAzureADApp.html" target="_blank">Register-PnPAzureADApp</a>" cmdlet to have PnP PowerShell create the app registration for you and grant the correct permissions.
+
+### Using Application Secret
+
+SharePoint Online uses the legacy ACS model to authenticate using an Application Secret. In order to get started with it, you will need to register your Azure AD App against your tenant.
+
+1. Navigate to https://<yourtenant>-admin.sharepoint.com/_layouts/15/appinv.aspx.
+2. In the App Id box, type in the application id of your Azure AD App you wish to authenticate with and click on the **Lookup** button.
+3. In the App domain box, type in www.<yourtenant>.com.
+4. Leave the **Redirect URL** box empty.
+5. In the **Permission request XML** box, put in the following XML:
+```
+  <AppPermissionRequests AllowAppOnlyPolicy="true">
+    <AppPermissionRequest Scope="http://sharepoint/content/tenant" Right="FullControl" />
+  </AppPermissionRequests>
+```
+6. Click on the **Create** button.
+<a href="/Images/Step1-SPOACS.png"><img src="/Images/Step1-SPOACS.png" alt="Register a new app for SharePoint Online." /></a>
+7. On the next screen, click on the ** Trust It** button to complete the registration process.
+<a href="/Images/Step2-SPOACS.png"><img src="/Images/Step2-SPOACS.png" alt="Register a new app for SharePoint Online." /></a>
+
+You should now be able to connect to SharePoint Online using an Application Secret.
 
 ## Exchange Permissions
 

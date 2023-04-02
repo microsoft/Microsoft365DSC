@@ -5,7 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Identity** | Key | String | Identity of the endpoint protection attack surface protection rules policy for Windows 10. | |
-| **DisplayName** | Write | String | Display name of the endpoint protection attack surface protection rules policy for Windows 10. | |
+| **DisplayName** | Required | String | Display name of the endpoint protection attack surface protection rules policy for Windows 10. | |
 | **Description** | Write | String | Description of the endpoint protection attack surface protection rules policy for Windows 10. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the endpoint protection attack surface protection rules policy for Windows 10. | |
 | **AttackSurfaceReductionOnlyExclusions** | Write | StringArray[] | Exclude files and paths from attack surface reduction rules | |
@@ -82,4 +82,35 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
     - DeviceManagementConfiguration.ReadWrite.All
 
+## Examples
+
+### Example 1
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsGlobalAdmin
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager 'myASRReductionRules'
+        {
+            Identity    = 'f6d1d1bc-d78f-4a5a-8f1b-0d95a60b0bc1'
+            DisplayName = 'asr ConfigMgr'
+            Assignments = @()
+            Description = 'My revised description'
+            Ensure      = 'Present'
+            Credential  = $credsGlobalAdmin
+        }
+    }
+}
+```
 

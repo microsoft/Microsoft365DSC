@@ -147,6 +147,11 @@ function Get-TargetResource
                 SharePointLocation                    = $Search.SharePointLocation
                 SharePointLocationExclusion           = $Search.SharePointLocationExclusion
                 Credential                            = $Credential
+                ApplicationId                         = $ApplicationId
+                TenantId                              = $TenantId
+                CertificateThumbprint                 = $CertificateThumbprint
+                CertificatePath                       = $CertificatePath
+                CertificatePassword                   = $CertificatePassword
                 Ensure                                = 'Present'
             }
 
@@ -289,8 +294,17 @@ function Set-TargetResource
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentSearch.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove('Credential')
         $CreationParams.Remove('Ensure')
+
+        # Remove authentication parameters
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('ApplicationId') | Out-Null
+        $CreationParams.Remove('TenantId') | Out-Null
+        $CreationParams.Remove('CertificatePath') | Out-Null
+        $CreationParams.Remove('CertificatePassword') | Out-Null
+        $CreationParams.Remove('CertificateThumbprint') | Out-Null
+        $CreationParams.Remove('ManagedIdentity') | Out-Null
+        $CreationParams.Remove('ApplicationSecret') | Out-Null
 
         Write-Verbose "Creating new Compliance Search $Name calling the New-ComplianceSearch cmdlet."
         New-ComplianceSearch @CreationParams
@@ -299,11 +313,20 @@ function Set-TargetResource
     {
         $SetParams = $PSBoundParameters
 
-        #Remove unused parameters for Set-ComplianceTag cmdlet
-        $SetParams.Remove('Credential')
+        #Remove unused parameters for Set-ComplianceSearch cmdlet
         $SetParams.Remove('Ensure')
         $SetParams.Remove('Name')
         $SetParams.Remove('Case')
+
+        # Remove authentication parameters
+        $SetParams.Remove('Credential') | Out-Null
+        $SetParams.Remove('ApplicationId') | Out-Null
+        $SetParams.Remove('TenantId') | Out-Null
+        $SetParams.Remove('CertificatePath') | Out-Null
+        $SetParams.Remove('CertificatePassword') | Out-Null
+        $SetParams.Remove('CertificateThumbprint') | Out-Null
+        $SetParams.Remove('ManagedIdentity') | Out-Null
+        $SetParams.Remove('ApplicationSecret') | Out-Null
 
         Set-ComplianceSearch @SetParams -Identity $Name
     }
@@ -419,7 +442,16 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
+
+    # Remove authentication parameters
     $ValuesToCheck.Remove('Credential') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -550,7 +582,7 @@ function Export-TargetResource
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `

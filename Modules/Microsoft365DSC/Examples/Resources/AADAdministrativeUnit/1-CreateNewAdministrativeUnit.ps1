@@ -5,23 +5,26 @@ It is not meant to use as a production baseline.
 
 Configuration Example
 {
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsCredential
+        $credsGlobalAdmin
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
         AADAdministrativeUnit 'TestUnit'
         {
-            Credential                    = $credsCredential;
-            DisplayName                   = "Test-Unit";
-            Ensure                        = "Present";
-            MembershipRule                = "(user.country -eq `"Canada`")";
-            MembershipRuleProcessingState = "On";
-            MembershipType                = "Dynamic";
+            Id                            = '49a843c7-e80c-4bae-8819-825656a108f2'
+            DisplayName                   = 'Test-Unit'
+            MembershipRule                = "(user.country -eq `"Canada`")"
+            MembershipRuleProcessingState = 'On'
+            MembershipType                = 'Dynamic'
+            Ensure                        = 'Present'
+            Credential                    = $credsGlobalAdmin
         }
     }
 }

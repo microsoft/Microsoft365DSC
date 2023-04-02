@@ -83,9 +83,9 @@ class MSFT_MicrosoftGraphandroiddeviceownersystemupdatefreezeperiod
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceConfigurationPolicyAndroidDeviceOwner")]
 class MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceOwner : OMI_BaseResource
 {
-    [Write, Description("The Id of the policy.")] String Id;
+    [Key, Description("The Id of the policy.")] String Id;
+    [Required, Description("The display name of hte policy.")] String DisplayName;
     [Write, Description("The description of the policy.")] String Description;
-    [Write, Description("The display name of hte policy.")] String DisplayName;
     [Write, Description("Block modification of accounts. Only supported on Dedicated devices.")] Boolean AccountsBlockModification;
     [Write, Description("When allowed, users can enable the 'unknown sources' setting to install apps from sources other than the Google Play Store.")] Boolean AppsAllowInstallFromUnknownSources;
     [Write, Description("Devices check for app updates daily. The default behavior is to let device users decide. They'll be able to set their preferences in the managed Google Play app."), ValueMap{"notConfigured","userChoice","never","wiFiOnly","always"}, Values{"notConfigured","userChoice","never","wiFiOnly","always"}] String AppsAutoUpdatePolicy;

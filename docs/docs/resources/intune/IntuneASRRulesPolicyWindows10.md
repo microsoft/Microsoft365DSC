@@ -5,7 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Identity** | Key | String | Identity of the endpoint protection attack surface protection rules policy for Windows 10. | |
-| **DisplayName** | Write | String | Display name of the endpoint protection attack surface protection rules policy for Windows 10. | |
+| **DisplayName** | Required | String | Display name of the endpoint protection attack surface protection rules policy for Windows 10. | |
 | **Description** | Write | String | Description of the endpoint protection attack surface protection rules policy for Windows 10. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the Intune Policy. | |
 | **ProcessCreationType** | Write | String | This rule blocks processes created through PsExec and WMI from running. | `userDefined`, `block`, `auditMode`, `warn`, `disable` |
@@ -80,4 +80,54 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
     - DeviceManagementConfiguration.ReadWrite.All
 
+## Examples
+
+### Example 1
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsGlobalAdmin
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneASRRulesPolicyWindows10 'myASRRulesPolicy'
+        {
+            Identity                                        = '1902b7f6-ac2c-4c00-bc17-8ada967cc6a8'
+            DisplayName                                     = 'test'
+            AdditionalGuardedFolders                        = @()
+            AdobeReaderLaunchChildProcess                   = 'auditMode'
+            AdvancedRansomewareProtectionType               = 'enable'
+            Assignments                                     = @()
+            AttackSurfaceReductionExcludedPaths             = @('c:\Novo')
+            BlockPersistenceThroughWmiType                  = 'userDefined'
+            Description                                     = ''
+            EmailContentExecutionType                       = 'auditMode'
+            GuardedFoldersAllowedAppPaths                   = @()
+            GuardMyFoldersType                              = 'enable'
+            OfficeAppsExecutableContentCreationOrLaunchType = 'block'
+            OfficeAppsLaunchChildProcessType                = 'auditMode'
+            OfficeAppsOtherProcessInjectionType             = 'block'
+            OfficeCommunicationAppsLaunchChildProcess       = 'auditMode'
+            OfficeMacroCodeAllowWin32ImportsType            = 'block'
+            PreventCredentialStealingType                   = 'enable'
+            ProcessCreationType                             = 'block'
+            ScriptDownloadedPayloadExecutionType            = 'block'
+            ScriptObfuscatedMacroCodeType                   = 'block'
+            UntrustedExecutableType                         = 'block'
+            UntrustedUSBProcessType                         = 'block'
+            Ensure                                          = 'Present'
+            Credential                                      = $credsGlobalAdmin
+        }
+    }
+}
+```
 

@@ -45,11 +45,17 @@
                 "read": [
                     {
                         "name": "Sites.FullControl.All"
+                    },
+                    {
+                        "name": "User.Read.All"
                     }
                 ],
                 "update": [
                     {
                         "name": "Sites.FullControl.All"
+                    },
+                    {
+                        "name": "User.ReadWrite.All"
                     }
                 ]
             },
@@ -57,11 +63,17 @@
                 "read": [
                     {
                         "name": "Sites.FullControl.All"
+                    },
+                    {
+                        "name": "User.Read.All"
                     }
                 ],
                 "update": [
                     {
                         "name": "Sites.FullControl.All"
+                    },
+                    {
+                        "name": "User.ReadWrite.All"
                     }
                 ]
             }

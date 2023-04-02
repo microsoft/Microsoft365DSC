@@ -162,7 +162,7 @@ function New-M365DSCConfigurationToJSON
         $OutputPath
     )
 
-    $jsonContent = $ParsedContent | ConvertTo-Json
+    $jsonContent = $ParsedContent | ConvertTo-Json -Depth 25
     $jsonContent | Out-File -FilePath $OutputPath
 }
 
@@ -548,10 +548,17 @@ function Compare-M365DSCConfigurations
                 {
                     if ($propertyName -notin $filteredProperties)
                     {
+                        $destinationPropertyName = $destinationResource.Keys | Where-Object -FilterScript {$_ -eq $propertyName}
+                        if ([System.String]::IsNullOrEmpty($destinationPropertyName))
+                        {
+                            $destinationPropertyName = $propertyName
+                        }
+
                         # Needs to be a separate nested if statement otherwise the ReferenceObject an be null and it will error out;
-                        if ($destinationResource.ContainsKey($propertyName) -eq $false -or (-not [System.String]::IsNullOrEmpty($propertyName) -and
-                                $null -ne (Compare-Object -ReferenceObject ($sourceResource.$propertyName)`
-                                        -DifferenceObject ($destinationResource.$propertyName))))
+                        if ($destinationResource.ContainsKey($destinationPropertyName) -eq $false -or (-not [System.String]::IsNullOrEmpty($propertyName) -and
+                            $null -ne (Compare-Object -ReferenceObject ($sourceResource.$propertyName)`
+                            -DifferenceObject ($destinationResource.$destinationPropertyName))) -and
+                            -not ([System.String]::IsNullOrEmpty($destinationResource.$destinationPropertyName) -and [System.String]::IsNullOrEmpty($sourceResource.$propertyName)))
                         {
                             if ($null -eq $drift)
                             {
@@ -562,13 +569,13 @@ function Compare-M365DSCConfigurations
                                     Properties   = @(@{
                                             ParameterName      = $propertyName
                                             ValueInSource      = $sourceResource.$propertyName
-                                            ValueInDestination = $destinationResource.$propertyName
+                                            ValueInDestination = $destinationResource.$destinationPropertyName
                                         })
                                 }
 
-                                if ($destinationResource.Contains("_metadata_$($propertyName)"))
+                                if ($destinationResource.Contains("_metadata_$($destinationPropertyName)"))
                                 {
-                                    $Metadata = $destinationResource."_metadata_$($propertyName)"
+                                    $Metadata = $destinationResource."_metadata_$($destinationPropertyName)"
                                     $Level = $Metadata.Split('|')[0].Replace('### ', '')
                                     $Information = $Metadata.Split('|')[1]
                                     $drift.Properties[0].Add('_Metadata_Level', $Level)
@@ -580,11 +587,11 @@ function Compare-M365DSCConfigurations
                                 $newDrift = @{
                                     ParameterName      = $propertyName
                                     ValueInSource      = $sourceResource.$propertyName
-                                    ValueInDestination = $destinationResource.$propertyName
+                                    ValueInDestination = $destinationResource.$destinationPropertyName
                                 }
-                                if ($destinationResource.Contains("_metadata_$($propertyName)"))
+                                if ($destinationResource.Contains("_metadata_$($destinationPropertyName)"))
                                 {
-                                    $Metadata = $destinationResource."_metadata_$($propertyName)"
+                                    $Metadata = $destinationResource."_metadata_$($destinationPropertyName)"
                                     $Level = $Metadata.Split('|')[0].Replace('### ', '')
                                     $Information = $Metadata.Split('|')[1]
                                     $newDrift.Add('_Metadata_Level', $Level)
@@ -602,8 +609,13 @@ function Compare-M365DSCConfigurations
                 {
                     if ($propertyName -notin $filteredProperties)
                     {
+                        $sourcePropertyName = $destinationResource.Keys | Where-Object -FilterScript {$_ -eq $propertyName}
+                        if ([System.String]::IsNullOrEmpty($sourcePropertyName))
+                        {
+                            $sourcePropertyName = $propertyName
+                        }
                         if (-not [System.String]::IsNullOrEmpty($propertyName) -and
-                            -not $sourceResource.Contains($propertyName))
+                            -not $sourceResource.Contains($sourcePropertyName))
                         {
                             if ($null -eq $drift)
                             {
@@ -612,7 +624,7 @@ function Compare-M365DSCConfigurations
                                     Key          = $keyName
                                     KeyValue     = $SourceKeyValue
                                     Properties   = @(@{
-                                            ParameterName      = $propertyName
+                                            ParameterName      = $sourcePropertyName
                                             ValueInSource      = $null
                                             ValueInDestination = $destinationResource.$propertyName
                                         })
@@ -621,7 +633,7 @@ function Compare-M365DSCConfigurations
                             else
                             {
                                 $drift.Properties += @{
-                                    ParameterName      = $propertyName
+                                    ParameterName      = $sourcePropertyName
                                     ValueInSource      = $null
                                     ValueInDestination = $destinationResource.$propertyName
                                 }
@@ -786,6 +798,20 @@ function Get-M365DSCResourceKey
     elseif ($Resource.Contains('OrgWideAccount') -and $mandatoryParameters.Name.Contains('OrgWideAccount'))
     {
         return @('OrgWideAccount')
+    }
+    elseif ($mandatoryParameters.count -eq 1)
+    {
+        # returning the only mandatory parameter name
+        return @($mandatoryParameters[0].Name)
+    }
+    elseif ($mandatoryParameters.count -eq 0)
+    {
+        throw "No mandatory parameters found for $($Resource.ResourceName)"
+    }
+    else
+    {
+        # the function failed to find any key params
+        throw "Multiple mandatory parameters found for $($Resource.ResourceName) but none of them are returned by the function"
     }
 }
 
@@ -1110,11 +1136,13 @@ function New-M365DSCDeltaReport
                                 $sourceValue += "<tr><td width='100%' style='border:1px solid black; text-align:right;'>$key = $currentValue</td></tr>"
                                 $sourceValue += "</table><br/>"
                             }
-                            $sourceValue = $sourceValue.Substring(0, $sourceValue.Length -5)                            
+                            $sourceValue = $sourceValue.Substring(0, $sourceValue.Length -5)
                             $cellStyle = "vertical-align:top;"
                         }
 
-                        if ($destinationValue.GetType().Name -eq 'Object[]' -and -not [System.String]::IsNullOrEmpty($CIMType))
+                        if (-not [System.String]::IsNullOrEmpty($destinationValue) -and 
+                            $destinationValue.GetType().Name -eq 'Object[]' -and 
+                            -not [System.String]::IsNullOrEmpty($CIMType))
                         {
                             $destinationValue = ""
                             $orderedKeys = $drift.ValueInDestination.Key | Sort-Object

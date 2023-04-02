@@ -22,4 +22,58 @@ New-CsTeamsFilesPolicy [-Identity] <string> [-NativeFileEntryPoints <string>] [-
 
 ## Permissions
 
+### Microsoft Graph
+
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
+
+#### Delegated permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
+
+#### Application permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
+
+## Examples
+
+### Example 1
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        TeamsFilesPolicy 'Example'
+        {
+            Credential            = $Credscredential;
+            Ensure                = "Present";
+            Identity              = "Global";
+            NativeFileEntryPoints = "Enabled";
+            SPChannelFilesTab     = "Enabled";
+        }
+    }
+}
+```
 

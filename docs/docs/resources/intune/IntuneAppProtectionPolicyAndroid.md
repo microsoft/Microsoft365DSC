@@ -107,19 +107,19 @@ Configuration Example
     {
         IntuneAppProtectionPolicyAndroid 'ConfigureAppProtectionPolicyAndroid'
         {
-            DisplayName                             = "My DSC Android App Protection Policy"
-            AllowedDataStorageLocations             = @("sharePoint")
-            AllowedInboundDataTransferSources       = "managedApps"
-            AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn"
-            AllowedOutboundDataTransferDestinations = "managedApps"
-            Apps                                    = @("com.cisco.jabberimintune.ios","com.pervasent.boardpapers.ios","com.sharefile.mobile.intune.ios")
-            Assignments                             = @("6ee86c9f-2b3c-471d-ad38-ff4673ed723e")
+            DisplayName                             = 'My DSC Android App Protection Policy'
+            AllowedDataStorageLocations             = @('sharePoint')
+            AllowedInboundDataTransferSources       = 'managedApps'
+            AllowedOutboundClipboardSharingLevel    = 'managedAppsWithPasteIn'
+            AllowedOutboundDataTransferDestinations = 'managedApps'
+            Apps                                    = @('com.cisco.jabberimintune.ios', 'com.pervasent.boardpapers.ios', 'com.sharefile.mobile.intune.ios')
+            Assignments                             = @('6ee86c9f-2b3c-471d-ad38-ff4673ed723e')
             ContactSyncBlocked                      = $false
             DataBackupBlocked                       = $false
-            Description                             = ""
+            Description                             = ''
             DeviceComplianceRequired                = $True
             DisableAppPinIfDevicePinIsSet           = $True
-            ExcludedGroups                          = @("3eacc231-d77b-4efb-bb5f-310f68bd6198")
+            ExcludedGroups                          = @('3eacc231-d77b-4efb-bb5f-310f68bd6198')
             FingerprintBlocked                      = $False
             ManagedBrowserToOpenLinksRequired       = $True
             MaximumPinRetries                       = 5
@@ -129,7 +129,7 @@ Configuration Example
             PrintBlocked                            = $True
             SaveAsBlocked                           = $True
             SimplePinBlocked                        = $True
-            Ensure                                  = "Present"
+            Ensure                                  = 'Present'
             Credential                              = $credsGlobalAdmin
         }
     }

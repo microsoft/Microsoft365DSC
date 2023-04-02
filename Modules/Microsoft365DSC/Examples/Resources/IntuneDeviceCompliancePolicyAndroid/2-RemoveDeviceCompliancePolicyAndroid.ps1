@@ -15,8 +15,8 @@ Configuration Example
     {
         IntuneDeviceCompliancePolicyAndroid 'RemoveDeviceCompliancePolicyAndroid'
         {
-            DisplayName = "Test Android Device Compliance Policy"
-            Ensure      = "Absent"
+            DisplayName = 'Test Android Device Compliance Policy'
+            Ensure      = 'Absent'
             Credential  = $credsGlobalAdmin
         }
     }
