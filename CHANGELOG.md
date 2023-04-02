@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* IntuneDeviceEnrollmentPlatformRestriction
+  * [BREAKING CHANGE] Updated resource to manage single and default platform restriction policies
+    FIXES [#2347](https://github.com/microsoft/Microsoft365DSC/issues/2347)
 * IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10
   * Initial Release
     FIXES [#2830](https://github.com/microsoft/Microsoft365DSC/issues/2830)
