@@ -462,51 +462,58 @@ function Set-TargetResource
         }
         #endregion
 
-        if ($null -ne $Password)
-        {
-            $passwordValue = $Password.GetNetworkCredential().Password
-        }
-        else
-        {
-            try
-            {
-                # This only works in PowerShell 5.1
-                $passwordValue = [System.Web.Security.Membership]::GeneratePassword(30, 2)
-            }
-            catch
-            {
-                $TokenSet = @{
-                    U = [Char[]]'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-                    L = [Char[]]'abcdefghijklmnopqrstuvwxyz'
-                    N = [Char[]]'0123456789'
-                    S = [Char[]]'!"#$%&''()*+,-./:;<=>?@[\]^_`{|}~'
-                }
-
-                $Upper = Get-Random -Count 5 -InputObject $TokenSet.U
-                $Lower = Get-Random -Count 5 -InputObject $TokenSet.L
-                $Number = Get-Random -Count 5 -InputObject $TokenSet.N
-                $Special = Get-Random -Count 5 -InputObject $TokenSet.S
-
-                $StringSet = $Upper + $Lower + $Number + $Special
-
-                $stringPassword = (Get-Random -Count 15 -InputObject $StringSet) -join ''
-                $passwordValue = ConvertTo-SecureString $stringPassword -AsPlainText -Force
-            }
-        }
-
-        $PasswordProfile = @{
-            Password = $passwordValue
-        }
-        $CreationParams.Add('PasswordProfile', $PasswordProfile)
-
         if ($user.UserPrincipalName)
         {
             Write-Verbose -Message "Updating Office 365 User $UserPrincipalName Information"
+
+            if ($null -ne $Password)
+            {
+                Write-Verbose -Message "PasswordProfile property will not be updated"
+            }
+
             $CreationParams.Add('UserId', $UserPrincipalName)
             Update-MgUser @CreationParams
         }
         else
         {
+
+            if ($null -ne $Password)
+            {
+                $passwordValue = $Password.GetNetworkCredential().Password
+            }
+            else
+            {
+                try
+                {
+                    # This only works in PowerShell 5.1
+                    $passwordValue = [System.Web.Security.Membership]::GeneratePassword(30, 2)
+                }
+                catch
+                {
+                    $TokenSet = @{
+                        U = [Char[]]'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+                        L = [Char[]]'abcdefghijklmnopqrstuvwxyz'
+                        N = [Char[]]'0123456789'
+                        S = [Char[]]'!"#$%&''()*+,-./:;<=>?@[\]^_`{|}~'
+                    }
+
+                    $Upper = Get-Random -Count 5 -InputObject $TokenSet.U
+                    $Lower = Get-Random -Count 5 -InputObject $TokenSet.L
+                    $Number = Get-Random -Count 5 -InputObject $TokenSet.N
+                    $Special = Get-Random -Count 5 -InputObject $TokenSet.S
+
+                    $StringSet = $Upper + $Lower + $Number + $Special
+
+                    $stringPassword = (Get-Random -Count 15 -InputObject $StringSet) -join ''
+                    $passwordValue = ConvertTo-SecureString $stringPassword -AsPlainText -Force
+                }
+            }
+
+            $PasswordProfile = @{
+                Password = $passwordValue
+            }
+            $CreationParams.Add('PasswordProfile', $PasswordProfile)
+
             Write-Verbose -Message "Creating Office 365 User $UserPrincipalName"
             $CreationParams.Add('AccountEnabled', $true)
             $CreationParams.Add('MailNickName', $UserPrincipalName.Split('@')[0])
