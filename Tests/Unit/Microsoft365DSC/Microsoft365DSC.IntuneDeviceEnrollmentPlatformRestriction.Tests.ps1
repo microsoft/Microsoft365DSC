@@ -106,9 +106,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
-                        DisplayName          = 'My DSC Restriction'
-                        Description          = ''
-                        id                   = '12345-12345-12345-12345-12345'
                         AdditionalProperties = @{
                             '@odata.type'                       = '#microsoft.graph.deviceEnrollmentPlatformRestrictionConfiguration'
                             PlatformRestriction                 = @{
