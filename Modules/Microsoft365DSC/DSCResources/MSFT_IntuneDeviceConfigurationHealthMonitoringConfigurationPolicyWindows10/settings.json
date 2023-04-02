@@ -1,6 +1,6 @@
 {
-    "resourceName": "IntuneDeviceConfigurationPolicyWindows10",
-    "description": "This resource configures an Intune Device Configuration Policy for Windows10.",
+    "resourceName": "IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10",
+    "description": "This resource configures an Intune Device Configuration Health Monitoring Configuration Policy for Windows10.",
     "permissions":    {
     "graph":  {
                   "delegated":  {
