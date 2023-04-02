@@ -1125,55 +1125,51 @@ function Set-TargetResource
             }
         }
         Write-Verbose -Message 'Set-Targetresource: process includeGuestsOrExternalUsers'
-        $includeGuestsOrExternalUsers = @{}
-        [string]$IncludeGuestOrExternalUserTypes = $IncludeGuestOrExternalUserTypes -join ','
-        $includeGuestsOrExternalUsers.Add('guestOrExternalUserTypes', $IncludeGuestOrExternalUserTypes)
-        $externalTenants = @{}
-        if ($IncludeExternalTenantsMembershipKind -eq 'All')
+        if ($IncludeGuestOrExternalUserTypes.Count -ne 0)
         {
-            $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessAllExternalTenants')
+            $includeGuestsOrExternalUsers = @{}
+            [string]$IncludeGuestOrExternalUserTypes = $IncludeGuestOrExternalUserTypes -join ','
+            $includeGuestsOrExternalUsers.Add('guestOrExternalUserTypes', $IncludeGuestOrExternalUserTypes)
+            $externalTenants = @{}
+            if ($IncludeExternalTenantsMembershipKind -eq 'All')
+            {
+                $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessAllExternalTenants')
+            }
+            elseif ($IncludeExternalTenantsMembershipKind -eq 'enumerated')
+            {
+                $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessEnumeratedExternalTenants')
+            }
+            $externalTenants.Add('membershipKind', $IncludeExternalTenantsMembershipKind)
+            if ($IncludeExternalTenantsMembers)
+            {
+                $externalTenants.Add('members', $IncludeExternalTenantsMembers)
+            }
+            $includeGuestsOrExternalUsers.Add('externalTenants', $externalTenants)
+            $conditions.Users.Add('includeGuestsOrExternalUsers', $includeGuestsOrExternalUsers)
         }
-        elseif ($IncludeExternalTenantsMembershipKind -eq 'enumerated')
-        {
-            $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessEnumeratedExternalTenants')
-        }
-        else
-        {
-            $externalTenants.Add('@odata.type', '')
-        }
-        $externalTenants.Add('membershipKind', $IncludeExternalTenantsMembershipKind)
-        if ($IncludeExternalTenantsMembers)
-        {
-            $externalTenants.Add('members', $IncludeExternalTenantsMembers)
-        }
-        $includeGuestsOrExternalUsers.Add('externalTenants', $externalTenants)
-        $conditions.Users.Add('includeGuestsOrExternalUsers', $includeGuestsOrExternalUsers)
-
         Write-Verbose -Message 'Set-Targetresource: process excludeGuestsOrExternalUsers'
-        $excludeGuestsOrExternalUsers = @{}
-        [string]$ExcludeGuestOrExternalUserTypes = $ExcludeGuestOrExternalUserTypes -join ','
-        $excludeGuestsOrExternalUsers.Add('guestOrExternalUserTypes', $ExcludeGuestOrExternalUserTypes)
-        $externalTenants = @{}
-        if ($ExcludeExternalTenantsMembershipKind -eq 'All')
+        if ($ExcludeGuestOrExternalUserTypes.Count -ne 0)
         {
-            $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessAllExternalTenants')
+            $excludeGuestsOrExternalUsers = @{}
+            [string]$ExcludeGuestOrExternalUserTypes = $ExcludeGuestOrExternalUserTypes -join ','
+            $excludeGuestsOrExternalUsers.Add('guestOrExternalUserTypes', $ExcludeGuestOrExternalUserTypes)
+            $externalTenants = @{}
+            if ($ExcludeExternalTenantsMembershipKind -eq 'All')
+            {
+                $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessAllExternalTenants')
+            }
+            elseif ($ExcludeExternalTenantsMembershipKind -eq 'enumerated')
+            {
+                $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessEnumeratedExternalTenants')
+            }
+            $externalTenants.Add('membershipKind', $ExcludeExternalTenantsMembershipKind)
+            if ($ExcludeExternalTenantsMembers)
+            {
+                $externalTenants.Add('members', $ExcludeExternalTenantsMembers)
+            }
+            $excludeGuestsOrExternalUsers.Add('externalTenants', $externalTenants)
+            $conditions.Users.Add('excludeGuestsOrExternalUsers', $excludeGuestsOrExternalUsers)
         }
-        elseif ($ExcludeExternalTenantsMembershipKind -eq 'enumerated')
-        {
-            $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessEnumeratedExternalTenants')
-        }
-        else
-        {
-            $externalTenants.Add('@odata.type', '')
-        }
-        $externalTenants.Add('membershipKind', $ExcludeExternalTenantsMembershipKind)
-        if ($ExcludeExternalTenantsMembers)
-        {
-            $externalTenants.Add('members', $ExcludeExternalTenantsMembers)
-        }
-        $excludeGuestsOrExternalUsers.Add('externalTenants', $externalTenants)
-        $conditions.Users.Add('excludeGuestsOrExternalUsers', $excludeGuestsOrExternalUsers)
-
         Write-Verbose -Message 'Set-Targetresource: process platform condition'
         if ($IncludePlatforms -or $ExcludePlatforms)
         {
