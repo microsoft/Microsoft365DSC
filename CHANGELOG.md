@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Initial Release
 * IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10
   * Initial Release
     FIXES [#2830](https://github.com/microsoft/Microsoft365DSC/issues/2830)
