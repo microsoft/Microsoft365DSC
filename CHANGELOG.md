@@ -99,6 +99,8 @@
   IntuneWifiConfigurationPolicyMacOS, IntuneWifiConfigurationPolicyWindows10,
   IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled, IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
+  * Properly escapes single quotes from CIMInstances string values.
+    FIXES [#3117](https://github.com/microsoft/Microsoft365DSC/issues/3117)
 * IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
   * [BREAKING CHANGE] Corrected typo in resource name (Entreprise to Enterprise)
