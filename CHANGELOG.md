@@ -150,7 +150,7 @@
   * Added a QA check to test for the presence of a Key parameter and fixes
     resources where this was not the case.
     FIXES [#2925](https://github.com/microsoft/Microsoft365DSC/issues/2925)
-  * Major changes to the export process where resource instances will now be assigned a meaningful nam
+  * Major changes to the export process where resource instances will now be assigned a meaningful name
     that will follow the ResourceName-PrimaryKey convention.
   * Added a fix making sure that the progress bar "Scanning dependencies" is no longer displayed after the operation is completed.
   * Added a new Set-M365DSCLoggingOption function to enable logging information about non-drifted resources in Event Viewer.
