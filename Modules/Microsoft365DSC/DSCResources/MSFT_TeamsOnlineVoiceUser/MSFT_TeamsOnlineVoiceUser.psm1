@@ -72,7 +72,7 @@ function Get-TargetResource
 
         if (-not [System.String]::IsNullOrEmpty($telephoneNumberValue))
         {
-            $telephoneNumberValue = $telephoneNumberValue.Replace('tel:+','')
+            $telephoneNumberValue = $telephoneNumberValue.Replace('tel:+', '')
         }
 
         $numberAssignment = Get-CsPhoneNumberAssignment -AssignedPstnTargetId $Identity
@@ -287,7 +287,7 @@ function Export-TargetResource
     try
     {
         $i = 1
-        [array]$users = Get-CsOnlineUser -Filter {(FeatureTypes -contains 'PhoneSystem') -and (AccountEnabled -eq $True)} `
+        [array]$users = Get-CsOnlineUser -Filter { (FeatureTypes -contains 'PhoneSystem') -and (AccountEnabled -eq $True) } `
             -AccountType User `
             -ErrorAction Stop
         $dscContent = ''
@@ -322,7 +322,7 @@ function Export-TargetResource
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `

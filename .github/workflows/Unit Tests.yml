@@ -19,7 +19,6 @@ jobs:
       - name: Install Modules
         shell: pwsh
         run: |
-          $VerbosePreference = 'Continue'
           $Manifest = Import-PowerShellDataFile './Modules/Microsoft365DSC/Dependencies/Manifest.psd1'
 
           foreach ($module in $Manifest.Dependencies)
@@ -27,15 +26,23 @@ jobs:
             Write-Verbose -Message "Installing module: $($module.ModuleName)"
             if ($module.AllowPreRelease)
             {
-              Install-Module $module.ModuleName -AllowPreRelease -Force -Scope AllUsers
+              try
+              {
+                  Install-Module $module.ModuleName -AllowPreRelease -Force -Scope AllUsers
+              }
+              catch
+              {}
             }
             else
             {
-              Install-Module $module.ModuleName -RequiredVersion $module.RequiredVersion -Force -Scope AllUsers
+              try
+              {
+                Install-Module $module.ModuleName -RequiredVersion $module.RequiredVersion -Force -Scope AllUsers
+              }
+              catch
+              {}
             }
-            Import-Module $module.ModuleName -Force
           }
-
           Install-Module PSDesiredStateConfiguration -Force -Scope AllUsers
           Install-Module Pester -Force -SkipPublisherCheck -RequiredVersion 5.4.0 -Scope AllUsers
           [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);

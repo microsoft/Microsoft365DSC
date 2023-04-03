@@ -329,7 +329,7 @@ function Export-TargetResource
         $ManagedIdentity
     )
 
-   $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -367,12 +367,12 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Identity = $config.Identity
-                MaskBits = $config.MaskBits
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
+                Identity              = $config.Identity
+                MaskBits              = $config.MaskBits
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
             }
 

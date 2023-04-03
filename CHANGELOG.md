@@ -1,10 +1,17 @@
 # Change log for Microsoft365DSC
 
+# Breaking Changes (APRIL 5TH RELEASE)
+
+* TeamsGroupPolicyAssignment change of key and required parameters
+  * [BREAKING CHANGE] Setting GroupId and PolicyType as Key parameters
+    FIXES [#3054](https://github.com/microsoft/Microsoft365DSC/issues/3054)
+
 # UNRELEASED
 
 * AADAdministrativeUnit
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
   * Fixes extraction of the Members property.
+  * Fixes extraction of the ScopedRoleMembers property.
 * AADApplication
   * [BREAKING CHANGE] Remove deprecated parameter Oauth2RequirePostResponse
 * AADConditionalAccessPolicy
@@ -81,11 +88,13 @@
   IntuneWifiConfigurationPolicyMacOS, IntuneWifiConfigurationPolicyWindows10,
   IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled, IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
+  * Properly escapes single quotes from CIMInstances string values.
+    FIXES [#3117](https://github.com/microsoft/Microsoft365DSC/issues/3117)
 * IntuneDeviceConfigurationPolicyWindows10
   * [BREAKING CHANGE] Added complex parameters as embedded CIM (DefenderDetectedMalwareActions, EdgeHomeButtonConfiguration, EdgeSearchEngine, NetworkProxyServer, Windows10AppsForceUpdateSchedule)
   * Resource regenerated with DRG
-  * FIXES[#2867](https://github.com/microsoft/Microsoft365DSC/issues/2867)
-  * FIXES[#2868](https://github.com/microsoft/Microsoft365DSC/issues/2868)
+    FIXES[#2867](https://github.com/microsoft/Microsoft365DSC/issues/2867)
+    FIXES[#2868](https://github.com/microsoft/Microsoft365DSC/issues/2868)
 * IntuneDeviceEnrollmentPlatformRestriction
   * [BREAKING CHANGE] Updated resource to manage single and default platform restriction policies
     FIXES [#2347](https://github.com/microsoft/Microsoft365DSC/issues/2347)
@@ -93,7 +102,7 @@
   * [BREAKING CHANGE] Renamed resource IntuneDeviceEnrollmentConfigurationWindows10 to IntuneDeviceEnrollmentStatusPageWindows10
   * Added support for property Assignments.
   * Added support for property Priority
-  * FIXES [#2933](https://github.com/microsoft/Microsoft365DSC/issues/2933)
+    FIXES [#2933](https://github.com/microsoft/Microsoft365DSC/issues/2933)
 * IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
   * [BREAKING CHANGE] Corrected typo in resource name (Entreprise to Enterprise)
@@ -142,6 +151,7 @@
     * Fix AdditionalProperties complex constructor
     * Fix Read privileges in settings file
 * MISC
+  * Fixed an issue `New-M365DSCReportFromConfiguration` where a non existing parameter was used to retrieve the configuration.
   * Added a QA check to test for the presence of a Key parameter and fixes
     resources where this was not the case.
     FIXES [#2925](https://github.com/microsoft/Microsoft365DSC/issues/2925)
@@ -150,6 +160,9 @@
   * Added a fix making sure that the progress bar "Scanning dependencies" is no longer displayed after the operation is completed.
   * Added a new Set-M365DSCLoggingOption function to enable logging information about non-drifted resources in Event Viewer.
     FIXES [#2981](https://github.com/microsoft/Microsoft365DSC/issues/2981)
+  * Updated the Update-M365DSCModule to unload dependencies before updating them and then to reload the new versions.
+    FIXES [#3097](https://github.com/microsoft/Microsoft365DSC/issues/3097)
+  * Added a new internal function to remove the authentication parameters from the bound paramters. `Remove-M365DSCAuthenticationParameter`
 * DEPENDENCIES
   * Updated MicrosoftTeams dependency to version 5.1.0.
 
