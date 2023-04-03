@@ -234,7 +234,7 @@ function New-M365DSCStubFiles
         $Content += $StubContent
         $Content += "#endregion`r`n"
         $i++
-        Remove-Module $CurrentModuleName
+        Remove-Module $CurrentModuleName -ErrorAction SilentlyContinue
     }
     $Content | Out-File $DestinationFilePath -Encoding utf8
 }

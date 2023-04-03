@@ -178,7 +178,7 @@ function Get-TargetResource
             Managedidentity                         = $ManagedIdentity.IsPresent
             #endregion
         }
-        $assignmentsValues = Get-MgDeviceManagementDeviceEnrollmentConfigurationAssignment -DeviceEnrollmentConfigurationId $Id
+        $assignmentsValues = Get-MgBetaDeviceManagementDeviceEnrollmentConfigurationAssignment -DeviceEnrollmentConfigurationId $Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {

@@ -73,8 +73,7 @@ function Get-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
@@ -93,7 +92,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id  -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -101,7 +100,7 @@ function Get-TargetResource
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgDeviceManagementDeviceConfiguration `
+                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue
             }
@@ -148,7 +147,7 @@ function Get-TargetResource
             Managedidentity                         = $ManagedIdentity.IsPresent
             #endregion
         }
-        $assignmentsValues = Get-MgDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
+        $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {
@@ -291,7 +290,7 @@ function Set-TargetResource
         $CreateParameters.ConfigDeviceHealthMonitoringScope = [String[]]$CreateParameters.ConfigDeviceHealthMonitoringScope -join ','
         #region resource generator code
         $CreateParameters.Add("@odata.type", "#microsoft.graph.windowsHealthMonitoringConfiguration")
-        $policy = New-MgDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
+        $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
@@ -327,7 +326,7 @@ function Set-TargetResource
         $UpdateParameters.ConfigDeviceHealthMonitoringScope = [String[]]$UpdateParameters.ConfigDeviceHealthMonitoringScope -join ','
         #region resource generator code
         $UpdateParameters.Add("@odata.type", "#microsoft.graph.windowsHealthMonitoringConfiguration")
-        Update-MgDeviceManagementDeviceConfiguration  `
+        Update-MgBetaDeviceManagementDeviceConfiguration  `
             -DeviceConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
         $assignmentsHash = @()
@@ -345,7 +344,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing the Intune Device Configuration Health Monitoring Configuration Policy for Windows10 with Id {$($currentInstance.Id)}"
         #region resource generator code
-        Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
+        Remove-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
     }
 }
@@ -522,8 +521,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -540,7 +538,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
             -All `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `

@@ -36,14 +36,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Update-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
             }
 
-            Mock -CommandName Remove-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
+            Mock -CommandName Remove-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
             }
 
-            Mock Get-MgDeviceManagementDeviceEnrollmentConfigurationAssignment {
+            Mock Get-MgBetaDeviceManagementDeviceEnrollmentConfigurationAssignment {
                 return @()
             }
 
@@ -80,7 +80,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return $null
                 }
 
-                Mock -CommandName New-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
+                Mock -CommandName New-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return  @{
                         Id = 'FakeStringValue'
                         Priority = 1

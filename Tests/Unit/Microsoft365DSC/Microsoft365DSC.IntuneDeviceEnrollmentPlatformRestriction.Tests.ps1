@@ -49,8 +49,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
             }
 
-            Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfigurationAssignment -MockWith {
+            Mock -CommandName Get-MgBetaDeviceManagementDeviceEnrollmentConfigurationAssignment -MockWith {
                 return @()
+            }
+
+            Mock -CommandName Write-Host -MockWith {
             }
         }
 

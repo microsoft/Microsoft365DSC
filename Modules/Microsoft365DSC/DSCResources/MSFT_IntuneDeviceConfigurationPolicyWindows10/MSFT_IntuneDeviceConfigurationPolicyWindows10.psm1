@@ -1258,7 +1258,7 @@ function Get-TargetResource
     {
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id  -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -1266,7 +1266,7 @@ function Get-TargetResource
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgDeviceManagementDeviceConfiguration `
+                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript { `
