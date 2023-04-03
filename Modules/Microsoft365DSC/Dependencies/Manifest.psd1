@@ -11,12 +11,12 @@
             AllowPreRelease = $False
         },
         @{
-            ModuleName      = 'Microsoft.Graph.Authentication'
+            ModuleName      = 'Microsoft.Graph.Applications'
             RequiredVersion = '2.0.0'
             AllowPreRelease = $True
         },
         @{
-            ModuleName      = 'Microsoft.Graph.Applications'
+            ModuleName      = 'Microsoft.Graph.Authentication'
             RequiredVersion = '2.0.0'
             AllowPreRelease = $True
         },
