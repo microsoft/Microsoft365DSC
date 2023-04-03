@@ -29,6 +29,7 @@
 * AADAdministrativeUnit
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
   * Fixes extraction of the Members property.
+  * Fixes extraction of the ScopedRoleMembers property.
 * AADApplication
   * [BREAKING CHANGE] Remove deprecated parameter Oauth2RequirePostResponse
 * AADConditionalAccessPolicy
