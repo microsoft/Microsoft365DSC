@@ -124,11 +124,7 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity,
-
-        [Parameter()]
-        [Boolean]
-        $IsExport = $false
+        $ManagedIdentity
     )
     Write-Verbose -Message "Getting configuration of Office 365 User $UserPrincipalName"
 
@@ -166,7 +162,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $IsExport)
+        if (-not $Global:CurrentModeIsExport)
         {
             Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
             $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
@@ -369,11 +365,7 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity,
-
-        [Parameter()]
-        [Boolean]
-        $IsExport = $false
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 User $UserPrincipalName"
@@ -716,11 +708,7 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity,
-
-        [Parameter()]
-        [Boolean]
-        $IsExport = $false
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -862,7 +850,6 @@ function Export-TargetResource
                     CertificateThumbprint = $CertificateThumbprint
                     Managedidentity       = $ManagedIdentity.IsPresent
                     ApplicationSecret     = $ApplicationSecret
-                    IsExport              = $true
                 }
 
                 $Results = Get-TargetResource @Params
