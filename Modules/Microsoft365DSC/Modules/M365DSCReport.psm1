@@ -258,8 +258,6 @@ function New-M365DSCConfigurationToExcel
     $report.Range('A1:C1').Borders.Weight = -4138
     $row = 2
 
-    $parsedContent = Initialize-M365DSCReporting -ConfigurationPath $ConfigurationPath
-
     foreach ($resource in $parsedContent)
     {
         $beginRow = $row
@@ -548,7 +546,7 @@ function Compare-M365DSCConfigurations
                 {
                     if ($propertyName -notin $filteredProperties)
                     {
-                        $destinationPropertyName = $destinationResource.Keys | Where-Object -FilterScript {$_ -eq $propertyName}
+                        $destinationPropertyName = $destinationResource.Keys | Where-Object -FilterScript { $_ -eq $propertyName }
                         if ([System.String]::IsNullOrEmpty($destinationPropertyName))
                         {
                             $destinationPropertyName = $propertyName
@@ -556,8 +554,8 @@ function Compare-M365DSCConfigurations
 
                         # Needs to be a separate nested if statement otherwise the ReferenceObject an be null and it will error out;
                         if ($destinationResource.ContainsKey($destinationPropertyName) -eq $false -or (-not [System.String]::IsNullOrEmpty($propertyName) -and
-                            $null -ne (Compare-Object -ReferenceObject ($sourceResource.$propertyName)`
-                            -DifferenceObject ($destinationResource.$destinationPropertyName))) -and
+                                $null -ne (Compare-Object -ReferenceObject ($sourceResource.$propertyName)`
+                                        -DifferenceObject ($destinationResource.$destinationPropertyName))) -and
                             -not ([System.String]::IsNullOrEmpty($destinationResource.$destinationPropertyName) -and [System.String]::IsNullOrEmpty($sourceResource.$propertyName)))
                         {
                             if ($null -eq $drift)
@@ -609,7 +607,7 @@ function Compare-M365DSCConfigurations
                 {
                     if ($propertyName -notin $filteredProperties)
                     {
-                        $sourcePropertyName = $destinationResource.Keys | Where-Object -FilterScript {$_ -eq $propertyName}
+                        $sourcePropertyName = $destinationResource.Keys | Where-Object -FilterScript { $_ -eq $propertyName }
                         if ([System.String]::IsNullOrEmpty($sourcePropertyName))
                         {
                             $sourcePropertyName = $propertyName
@@ -1038,7 +1036,7 @@ function New-M365DSCDeltaReport
                 [void]$reportSB.Append("border-top:1px solid black;border-bottom:1px solid black;'>")
                 $iconPath = Get-IconPath -ResourceName $resource.ResourceName
                 [void]$reportSB.AppendLine("<img src='$iconPath' />")
-                [void]$reportSB.AppendLine('</th>');
+                [void]$reportSB.AppendLine('</th>')
                 [void]$reportSB.AppendLine("<th style='border:1px solid black;text-align:center;'>")
                 [void]$reportSB.AppendLine("<h3>$($resource.ResourceName) - $($resource.Key) = $($resource.KeyValue)</h3>")
                 [void]$reportSB.AppendLine('</th>')
@@ -1059,7 +1057,7 @@ function New-M365DSCDeltaReport
                 [void]$reportSB.Append("border-top:1px solid black;border-bottom:1px solid black;'>")
                 $iconPath = Get-IconPath -ResourceName $resource.ResourceName
                 [void]$reportSB.AppendLine("<img src='$iconPath' />")
-                [void]$reportSB.AppendLine('</th>');
+                [void]$reportSB.AppendLine('</th>')
                 [void]$reportSB.AppendLine("<th style='border:1px solid black;text-align:center;'>")
                 [void]$reportSB.AppendLine("<h3>$($resource.ResourceName) - $($resource.Key) = $($resource.KeyValue)</h3>")
                 [void]$reportSB.AppendLine('</th>')
@@ -1080,7 +1078,7 @@ function New-M365DSCDeltaReport
                 [void]$reportSB.Append("rowspan='" + ($resource.Properties.Count + 2) + "'>")
                 $iconPath = Get-IconPath -ResourceName $resource.ResourceName
                 [void]$reportSB.AppendLine("<img src='$iconPath' />")
-                [void]$reportSB.AppendLine('</th>');
+                [void]$reportSB.AppendLine('</th>')
                 [void]$reportSB.AppendLine("<th style='border:1px solid black;text-align:center;vertical-align:middle;background-color:#CCC' colspan='3'>")
                 [void]$reportSB.AppendLine("<h3>$($resource.ResourceName) - $($resource.Key) = $($resource.KeyValue)</h3>")
                 [void]$reportSB.AppendLine('</th></tr>')
@@ -1125,39 +1123,39 @@ function New-M365DSCDeltaReport
 
                         if ($sourceValue.GetType().Name -eq 'Object[]' -and -not [System.String]::IsNullOrEmpty($CIMType))
                         {
-                            $sourceValue = ""
+                            $sourceValue = ''
                             $orderedKeys = $drift.ValueInSource.Key | Sort-Object
 
                             foreach ($key in $orderedKeys)
                             {
-                                $currentValue = ($drift.ValueInSource | Where-Object -FilterScript {$_.Key -eq $key}).Value
+                                $currentValue = ($drift.ValueInSource | Where-Object -FilterScript { $_.Key -eq $key }).Value
                                 $sourceValue += "<table width='100%'>"
                                 $sourceValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;'>$CIMType</th></tr>"
                                 $sourceValue += "<tr><td width='100%' style='border:1px solid black; text-align:right;'>$key = $currentValue</td></tr>"
-                                $sourceValue += "</table><br/>"
+                                $sourceValue += '</table><br/>'
                             }
-                            $sourceValue = $sourceValue.Substring(0, $sourceValue.Length -5)
-                            $cellStyle = "vertical-align:top;"
+                            $sourceValue = $sourceValue.Substring(0, $sourceValue.Length - 5)
+                            $cellStyle = 'vertical-align:top;'
                         }
 
-                        if (-not [System.String]::IsNullOrEmpty($destinationValue) -and 
-                            $destinationValue.GetType().Name -eq 'Object[]' -and 
-                            -not [System.String]::IsNullOrEmpty($CIMType))
+                        if (-not [System.String]::IsNullOrEmpty($destinationValue) `
+                                -and $destinationValue.GetType().Name -eq 'Object[]' `
+                                -and -not [System.String]::IsNullOrEmpty($CIMType))
                         {
-                            $destinationValue = ""
+                            $destinationValue = ''
                             $orderedKeys = $drift.ValueInDestination.Key | Sort-Object
                             $CIMType = $drift.ValueInDestination[0].CimInstance
 
                             foreach ($key in $orderedKeys)
                             {
-                                $currentValue = ($drift.ValueInDestination | Where-Object -FilterScript {$_.Key -eq $key}).Value
+                                $currentValue = ($drift.ValueInDestination | Where-Object -FilterScript { $_.Key -eq $key }).Value
                                 $destinationValue += "<table width='100%'>"
                                 $destinationValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;'>$CIMType</th></tr>"
                                 $destinationValue += "<tr><td width='100%' style='border:1px solid black; text-align:right;'>$key = $currentValue</td></tr>"
-                                $destinationValue += "</table><br/>"
+                                $destinationValue += '</table><br/>'
                             }
-                            $destinationValue = $destinationValue.Substring(0, $destinationValue.Length -5)
-                            $cellDestinationStyle = "vertical-align:top;"
+                            $destinationValue = $destinationValue.Substring(0, $destinationValue.Length - 5)
+                            $cellDestinationStyle = 'vertical-align:top;'
                         }
 
                         [void]$reportSB.AppendLine('<tr>')
