@@ -653,7 +653,7 @@ function Set-TargetResource
             $node.InnerText = $currentPID
 
             # The order in which we list the properties matters. Pid is to appear right after MappingDisallowed.
-            $namespaceMgr = New-Object System.Xml.XmlNamespaceManager($SearchConfigXML.NameTable);
+            $namespaceMgr = New-Object System.Xml.XmlNamespaceManager($SearchConfigXML.NameTable)
             $namespaceMgr.AddNamespace('d3p1', 'http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration')
             $previousNode = $SearchConfigXML.SelectSingleNode('//d3p1:MappingDisallowed', $namespaceMgr)
             $previousNode.ParentNode.InsertAfter($node, $previousNode) | Out-Null

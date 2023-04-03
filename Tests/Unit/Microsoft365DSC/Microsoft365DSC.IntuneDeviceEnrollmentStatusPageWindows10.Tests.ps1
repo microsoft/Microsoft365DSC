@@ -52,7 +52,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock Update-DeviceEnrollmentConfigurationPriority {
             }
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
+            }
         }
+
         # Test contexts
         Context -Name 'The IntuneDeviceEnrollmentStatusPageWindows10 should exist but it DOES NOT' -Fixture {
             BeforeAll {
@@ -82,7 +87,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName New-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return  @{
-                        Id = 'FakeStringValue'
+                        Id       = 'FakeStringValue'
                         Priority = 1
                     }
                 }
