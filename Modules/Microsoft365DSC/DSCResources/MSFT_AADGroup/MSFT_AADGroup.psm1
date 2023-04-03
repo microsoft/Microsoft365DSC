@@ -1017,8 +1017,10 @@ function Export-TargetResource
     try
     {
         [array] $groups = Get-MgGroup -Filter $Filter -All:$true -ErrorAction Stop
-        $groups = $groups | Where-Object -FilterScript { -not ($_.MailEnabled -and ($null -eq $_.GroupTypes -or $_.GroupTypes.Length -eq 0)) -and
-            -not ($_.MailEnabled -and $_.SecurityEnabled) }
+        $groups = $groups | Where-Object -FilterScript {
+            -not ($_.MailEnabled -and ($null -eq $_.GroupTypes -or $_.GroupTypes.Length -eq 0)) -and `
+                -not ($_.MailEnabled -and $_.SecurityEnabled)
+        }
 
         $i = 1
         $dscContent = ''
