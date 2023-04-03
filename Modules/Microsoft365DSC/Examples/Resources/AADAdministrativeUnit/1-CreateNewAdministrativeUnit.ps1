@@ -18,6 +18,7 @@ Configuration Example
     {
         AADAdministrativeUnit 'TestUnit'
         {
+            Id                            = '49a843c7-e80c-4bae-8819-825656a108f2'
             DisplayName                   = 'Test-Unit'
             MembershipRule                = "(user.country -eq `"Canada`")"
             MembershipRuleProcessingState = 'On'

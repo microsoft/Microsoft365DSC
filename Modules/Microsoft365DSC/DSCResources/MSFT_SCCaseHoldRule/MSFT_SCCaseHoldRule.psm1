@@ -96,13 +96,18 @@ function Get-TargetResource
             Write-Verbose "Found existing SCCaseHoldRule $($Name)"
 
             $result = @{
-                Name              = $Rule.Name
-                Policy            = $Policy
-                Comment           = $Rule.Comment
-                Disabled          = $Rule.Disabled
-                ContentMatchQuery = $Rule.ContentMatchQuery
-                Credential        = $Credential
-                Ensure            = 'Present'
+                Name                  = $Rule.Name
+                Policy                = $Policy
+                Comment               = $Rule.Comment
+                Disabled              = $Rule.Disabled
+                ContentMatchQuery     = $Rule.ContentMatchQuery
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                Ensure                = 'Present'
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -199,8 +204,17 @@ function Set-TargetResource
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentRule.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove('Credential')
         $CreationParams.Remove('Ensure')
+
+        # Remove authentication parameters
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('ApplicationId') | Out-Null
+        $CreationParams.Remove('TenantId') | Out-Null
+        $CreationParams.Remove('CertificatePath') | Out-Null
+        $CreationParams.Remove('CertificatePassword') | Out-Null
+        $CreationParams.Remove('CertificateThumbprint') | Out-Null
+        $CreationParams.Remove('ManagedIdentity') | Out-Null
+        $CreationParams.Remove('ApplicationSecret') | Out-Null
 
         Write-Verbose "Creating new Case Hold Rule $Name calling the New-CaseHoldRule cmdlet."
         New-CaseHoldRule @CreationParams
@@ -297,7 +311,16 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
+
+    # Remove authentication parameters
     $ValuesToCheck.Remove('Credential') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -403,7 +426,7 @@ function Export-TargetResource
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `

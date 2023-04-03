@@ -1,0 +1,32 @@
+{
+    "resourceName": "IntuneDeviceConfigurationNetworkBoundaryPolicyWindows10",
+    "description": "This resource configures an Intune Device Configuration Network Boundary Policy for Windows10.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "DeviceManagementConfiguration.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementConfiguration.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "DeviceManagementConfiguration.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementConfiguration.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
+}

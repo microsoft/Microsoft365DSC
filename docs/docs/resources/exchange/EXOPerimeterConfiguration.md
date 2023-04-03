@@ -4,7 +4,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Identity** | Write | String | The Identity parameter specifies the Perimeter Configuration policy that you want to modify. | |
+| **IsSingleInstance** | Key | String | Only valid value is 'Yes'. | `Yes` |
 | **GatewayIPAddresses** | Write | StringArray[] | Use the GatewayIPAddresses parameter to create or modify a list of gateway server IP addresses to add to IP safelists. | |
 | **Ensure** | Write | String | Specifies if this Outbound connector should exist. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
@@ -55,10 +55,10 @@ Configuration Example
     {
         EXOPerimeterConfiguration 'ConfigurePerimeterConfiguration'
         {
-            Identity             = "Global"
-            GatewayIPAddresses   = "123.0.0.1"
-            Ensure               = "Present"
-            Credential           = $credsGlobalAdmin
+            IsSingleInstance   = 'Yes'
+            GatewayIPAddresses = '123.0.0.1'
+            Ensure             = 'Present'
+            Credential         = $credsGlobalAdmin
         }
     }
 }

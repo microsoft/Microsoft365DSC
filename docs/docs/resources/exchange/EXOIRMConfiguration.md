@@ -4,7 +4,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Identity** | Write | String | The Identity parameter specifies the Perimeter Configuration policy that you want to modify. | |
+| **IsSingleInstance** | Key | String | Only valid value is 'Yes'. | `Yes` |
 | **AutomaticServiceUpdateEnabled** | Write | Boolean | The AutomaticServiceUpdateEnabled parameter specifies whether to allow the automatic addition of new features within Azure Information Protection for your cloud-based organization. | |
 | **AzureRMSLicensingEnabled** | Write | Boolean | The AzureRMSLicensingEnabled parameter specifies whether the Exchange Online organization can to connect directly to Azure Rights Management. | |
 | **DecryptAttachmentForEncryptOnly** | Write | Boolean | The DecryptAttachmentForEncryptOnly parameter specifies whether mail recipients have unrestricted rights on the attachment or not for Encrypt-only mails sent using Microsoft Purview Message Encryption. | |
@@ -69,7 +69,7 @@ Configuration Example
     {
         EXOIRMConfiguration 'ConfigureIRMConfiguration'
         {
-            Identity                                   = "Global"
+            IsSingleInstance                           = 'Yes'
             AutomaticServiceUpdateEnabled              = $True
             AzureRMSLicensingEnabled                   = $True
             DecryptAttachmentForEncryptOnly            = $True
@@ -82,8 +82,8 @@ Configuration Example
             SimplifiedClientAccessDoNotForwardDisabled = $True
             SimplifiedClientAccessEnabled              = $True
             SimplifiedClientAccessEncryptOnlyDisabled  = $True
-            TransportDecryptionSetting                 = "Mandatory"
-            Ensure                                     = "Present"
+            TransportDecryptionSetting                 = 'Mandatory'
+            Ensure                                     = 'Present'
             Credential                                 = $credsGlobalAdmin
         }
     }

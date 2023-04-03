@@ -4,9 +4,9 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Write | String | Id of the Intune policy. | |
+| **Id** | Key | String | Id of the Intune policy. | |
+| **DisplayName** | Required | String | Display name of the Intune policy. | |
 | **Description** | Write | String | Description of the Intune policy. | |
-| **DisplayName** | Write | String | Display name of the Intune policy. | |
 | **ConnectAutomatically** | Write | Boolean | Connect automatically to the network. | |
 | **ConnectWhenNetworkNameIsHidden** | Write | Boolean | Define if the network should be connected if hidden. | |
 | **NetworkName** | Write | String | Define the network name. | |
@@ -66,4 +66,45 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
     - DeviceManagementConfiguration.ReadWrite.All
 
+## Examples
+
+### Example 1
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsGlobalAdmin
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneWifiConfigurationPolicyAndroidOpenSourceProject 'myWifiConfigAndroidOpensourcePolicy'
+        {
+            Id                             = 'fe0a93dc-e9cc-4d4b-8dd6-361c51c70f77'
+            DisplayName                    = 'wifi aosp'
+            Assignments                    = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments {
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                }
+            )
+            ConnectAutomatically           = $False
+            ConnectWhenNetworkNameIsHidden = $True
+            NetworkName                    = 'aaaa'
+            PreSharedKeyIsSet              = $True
+            Ssid                           = 'aaaaa'
+            WiFiSecurityType               = 'wpaPersonal'
+            Ensure                         = 'Present'
+            Credential                     = $credsGlobalAdmin
+        }
+    }
+}
+```
 

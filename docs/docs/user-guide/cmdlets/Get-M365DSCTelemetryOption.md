@@ -6,7 +6,8 @@ This function gets the configuration for the M365DSC telemetry feature
 
 ## Output
 
-This function does not generate any output.
+This function outputs information as the following type:
+**System.Collections.Hashtable**
 
 ## Parameters
 

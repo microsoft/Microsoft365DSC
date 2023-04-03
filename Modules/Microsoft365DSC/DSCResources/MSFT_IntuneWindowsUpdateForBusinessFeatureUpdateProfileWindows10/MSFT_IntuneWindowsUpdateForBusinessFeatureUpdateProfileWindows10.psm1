@@ -5,13 +5,17 @@ function Get-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Description,
+        $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
-        $DisplayName,
+        $Description,
 
         [Parameter()]
         [System.String]
@@ -20,10 +24,6 @@ function Get-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $RolloutSettings,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Id,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -176,13 +176,17 @@ function Set-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Description,
+        $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
-        $DisplayName,
+        $Description,
 
         [Parameter()]
         [System.String]
@@ -191,10 +195,6 @@ function Set-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $RolloutSettings,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Id,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -339,13 +339,17 @@ function Test-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Description,
+        $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
-        $DisplayName,
+        $Description,
 
         [Parameter()]
         [System.String]
@@ -354,10 +358,6 @@ function Test-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $RolloutSettings,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Id,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -445,6 +445,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -538,6 +539,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
                 Id                    = $config.Id
+                DisplayName           = $config.displayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId

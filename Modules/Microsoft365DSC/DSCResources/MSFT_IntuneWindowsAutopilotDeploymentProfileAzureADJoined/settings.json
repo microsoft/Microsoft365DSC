@@ -1,0 +1,32 @@
+{
+    "resourceName": "IntuneWindowsAutopilotDeploymentProfileAzureADJoined",
+    "description": "This resource configures an Intune Windows Autopilot Deployment Profile Azure AD Joined.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "DeviceManagementServiceConfig.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementServiceConfig.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "DeviceManagementServiceConfig.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementServiceConfig.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
+}

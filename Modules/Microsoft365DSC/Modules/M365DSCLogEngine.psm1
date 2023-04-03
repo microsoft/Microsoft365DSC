@@ -180,7 +180,7 @@ function Add-M365DSCEvent
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Drift', 'Error', 'Warning')]
+        [ValidateSet('Drift', 'Error', 'Warning', 'NonDrift')]
         $EventType,
 
         [Parameter()]
@@ -448,7 +448,7 @@ function New-M365DSCNotificationEndPointRegistration
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Drift', 'Error', 'Warning')]
+        [ValidateSet('Drift', 'Error', 'Warning', 'NonDrift')]
         $EventType
     )
 
@@ -498,7 +498,7 @@ function Remove-M365DSCNotificationEndPointRegistration
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Drift', 'Error', 'Warning')]
+        [ValidateSet('Drift', 'Error', 'Warning', 'NonDrift')]
         $EventType
     )
 
@@ -550,7 +550,7 @@ function Get-M365DSCNotificationEndPointRegistration
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Drift', 'Error', 'Warning')]
+        [ValidateSet('Drift', 'Error', 'Warning', 'NonDrift')]
         $EventType
     )
 
@@ -606,7 +606,7 @@ function Send-M365DSCNotificationEndPointMessage
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Drift', 'Error', 'Warning')]
+        [ValidateSet('Drift', 'Error', 'Warning', 'NonDrift')]
         $EventType
     )
 
@@ -675,11 +675,65 @@ function Assert-M365DSCIsNonInteractiveShell
     return $true
 }
 
+<#
+.Description
+This function configures the option for logging events into the Event Log.
+
+.Parameter IncludeNonDrifted
+Determines whether or not we should log information about resource's instances that don't have drifts.
+
+.Functionality
+Public
+#>
+function Set-M365DSCLoggingOption
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $IncludeNonDrifted
+    )
+
+    if ($null -ne $IncludeNonDrifted)
+    {
+        [System.Environment]::SetEnvironmentVariable('M365DSCEventLogIncludeNonDrifted', $IncludeNonDrifted, `
+                [System.EnvironmentVariableTarget]::Machine)
+    }
+}
+
+<#
+.Description
+This function returns information about the option for logging events into the Event Log.
+
+.Functionality
+Public
+#>
+function Get-M365DSCLoggingOption
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    try
+    {
+        return @{
+            IncludeNonDrifted = [Boolean]([System.Environment]::GetEnvironmentVariable('M365DSCEventLogIncludeNonDrifted', `
+                    [System.EnvironmentVariableTarget]::Machine))
+        }
+    }
+    catch
+    {
+        throw $_
+    }
+}
+
 Export-ModuleMember -Function @(
     'Add-M365DSCEvent',
     'Export-M365DSCDiagnosticData',
+    'Get-M365DSCLoggingOption',
     'New-M365DSCLogEntry',
     'Get-M365DSCNotificationEndPointRegistration',
     'New-M365DSCNotificationEndPointRegistration',
-    'Remove-M365DSCNotificationEndPointRegistration'
+    'Remove-M365DSCNotificationEndPointRegistration',
+    'Set-M365DSCLoggingOption'
 )

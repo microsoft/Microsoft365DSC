@@ -89,11 +89,16 @@ function Get-TargetResource
         {
             Write-Verbose "Found existing Device Conditional Access Policy $($Name)"
             $result = @{
-                Ensure     = 'Present'
-                Name       = $PolicyObject.Name
-                Comment    = $PolicyObject.Comment
-                Enabled    = $PolicyObject.Enabled
-                Credential = $Credential
+                Ensure                = 'Present'
+                Name                  = $PolicyObject.Name
+                Comment               = $PolicyObject.Comment
+                Enabled               = $PolicyObject.Enabled
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -182,17 +187,36 @@ function Set-TargetResource
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentPolicy.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove('Credential')
         $CreationParams.Remove('Ensure')
+
+        # Remove authentication parameters
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('ApplicationId') | Out-Null
+        $CreationParams.Remove('TenantId') | Out-Null
+        $CreationParams.Remove('CertificatePath') | Out-Null
+        $CreationParams.Remove('CertificatePassword') | Out-Null
+        $CreationParams.Remove('CertificateThumbprint') | Out-Null
+        $CreationParams.Remove('ManagedIdentity') | Out-Null
+        $CreationParams.Remove('ApplicationSecret') | Out-Null
+
         New-DeviceConditionalAccessPolicy @CreationParams
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove('Credential')
         $CreationParams.Remove('Ensure')
         $CreationParams.Remove('Name')
         $CreationParams.Add('Identity', $Name)
+
+        # Remove authentication parameters
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('ApplicationId') | Out-Null
+        $CreationParams.Remove('TenantId') | Out-Null
+        $CreationParams.Remove('CertificatePath') | Out-Null
+        $CreationParams.Remove('CertificatePassword') | Out-Null
+        $CreationParams.Remove('CertificateThumbprint') | Out-Null
+        $CreationParams.Remove('ManagedIdentity') | Out-Null
+        $CreationParams.Remove('ApplicationSecret') | Out-Null
 
         Write-Verbose "Updating Policy with values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
         Set-DeviceConditionalAccessPolicy @CreationParams
@@ -271,7 +295,16 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
+
+    # Remove authentication parameters
     $ValuesToCheck.Remove('Credential') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -367,7 +400,7 @@ function Export-TargetResource
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `

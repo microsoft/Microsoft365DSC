@@ -87,7 +87,7 @@ function Get-TargetResource
         Write-Verbose -Message "Site Design ID is $($siteDesign.Id)"
 
         $siteDesignRights = Get-PnPSiteDesignRights -Identity $siteDesign.Id -ErrorAction SilentlyContinue | `
-            Where-Object -FilterScript { $_.Rights -eq $Rights }
+                Where-Object -FilterScript { $_.Rights -eq $Rights }
 
         if ($null -eq $siteDesignRights)
         {
@@ -480,7 +480,7 @@ function Export-TargetResource
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `

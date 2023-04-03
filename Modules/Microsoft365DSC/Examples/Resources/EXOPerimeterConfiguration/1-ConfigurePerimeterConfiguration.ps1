@@ -17,10 +17,10 @@ Configuration Example
     {
         EXOPerimeterConfiguration 'ConfigurePerimeterConfiguration'
         {
-            Identity             = "Global"
-            GatewayIPAddresses   = "123.0.0.1"
-            Ensure               = "Present"
-            Credential           = $credsGlobalAdmin
+            IsSingleInstance   = 'Yes'
+            GatewayIPAddresses = '123.0.0.1'
+            Ensure             = 'Present'
+            Credential         = $credsGlobalAdmin
         }
     }
 }

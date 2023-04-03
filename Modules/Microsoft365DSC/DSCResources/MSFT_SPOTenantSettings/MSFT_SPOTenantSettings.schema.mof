@@ -7,7 +7,6 @@ class MSFT_SPOTenantSettings : OMI_BaseResource
     [Write, Description("Removes the search capability from People Picker. Note, recently resolved names will still appear in the list until browser cache is cleared or expired.")] boolean SearchResolveExactEmailOrUPN;
     [Write, Description("When set to true this will disable the ability to use Modern Authentication that leverages ADAL across the tenant.")] boolean OfficeClientADALDisabled;
     [Write, Description("Setting this parameter prevents Office clients using non-modern authentication protocols from accessing SharePoint Online resources.")] boolean LegacyAuthProtocolsEnabled;
-    [Write, Description("DEPRECATED")] boolean RequireAcceptingAccountMatchInvitedAccount;
     [Write, Description("Specifies the home realm discovery value to be sent to Azure Active Directory (AAD) during the user sign-in process.")] String SignInAccelerationDomain;
     [Write, Description("Lets SharePoint issue a special cookie that will allow this feature to work even when Keep Me Signed In is not selected.")] boolean UsePersistentCookiesForExplorerView;
     [Write, Description("Allow feedback via UserVoice.")] boolean UserVoiceForFeedbackEnabled;
@@ -22,6 +21,7 @@ class MSFT_SPOTenantSettings : OMI_BaseResource
     [Write, Description("Allow or block external sharing until at least one Office DLP policy scans the content of the file."), ValueMap{"AllowExternalSharing","BlockExternalSharing"}, Values{"AllowExternalSharing","BlockExternalSharing"}] string MarkNewFilesSensitiveByDefault;
     [Write, Description("Allow or Block Conditional Access Policy on the SharePoint Tenant"), ValueMap{"AllowFullAccess", "AllowLimitedAccess", "BlockAccess"}, Values{"AllowFullAccess", "AllowLimitedAccess", "BlockAccess"}] string ConditionalAccessPolicy;
     [Write, Description("Provide GUID for the Web Parts that are to be disabled on the Sharepoint Site")] string DisabledWebPartIds;
+    [Write, Description("Set to false to enable a comment section on all site pages, users who have access to the pages can leave comments. Set to true to disable this feature.")] boolean CommentsOnSitePagesDisabled;
     [Write, Description("Only accepted value is 'Present'."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the account to authenticate with."), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

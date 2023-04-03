@@ -4,9 +4,9 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Write | String | Id of the Intune policy. | |
+| **Id** | Key | String | Id of the Intune policy. | |
+| **DisplayName** | Required | String | Display name of the Intune policy. | |
 | **Description** | Write | String | Description of the Intune policy. | |
-| **DisplayName** | Write | String | Display name of the Intune policy. | |
 | **AppsBlockClipboardSharing** | Write | Boolean | Block clipboard sharing between apps (Samsung KNOX Standard 4.0+). | |
 | **AppsBlockCopyPaste** | Write | Boolean | Block copy and paste functionality. | |
 | **AppsBlockYouTube** | Write | Boolean | Block YouTube (Samsung KNOX Standard 4.0+). | |
@@ -121,4 +121,87 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
     - DeviceManagementConfiguration.ReadWrite.All
 
+## Examples
+
+### Example 1
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsGlobalAdmin
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator 'myAndroidDeviceAdmin'
+        {
+            Id                                       = '4feff881-d635-4e9d-bd07-d1227d1ab230'
+            DisplayName                              = 'Android device admin'
+            AppsBlockClipboardSharing                = $True
+            AppsBlockCopyPaste                       = $True
+            AppsBlockYouTube                         = $False
+            Assignments                              = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments {
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                }
+            )
+            BluetoothBlocked                         = $True
+            CameraBlocked                            = $True
+            CellularBlockDataRoaming                 = $False
+            CellularBlockMessaging                   = $False
+            CellularBlockVoiceRoaming                = $False
+            CellularBlockWiFiTethering               = $False
+            CompliantAppListType                     = 'appsInListCompliant'
+            CompliantAppsList                        = @(
+                MSFT_MicrosoftGraphAppListitem {
+                    name        = 'customApp'
+                    publisher   = 'google2'
+                    appStoreUrl = 'https://appUrl.com'
+                    appId       = 'com.custom.google.com'
+                }
+            )
+            DateAndTimeBlockChanges                  = $True
+            DeviceSharingAllowed                     = $False
+            DiagnosticDataBlockSubmission            = $False
+            FactoryResetBlocked                      = $False
+            GoogleAccountBlockAutoSync               = $False
+            GooglePlayStoreBlocked                   = $False
+            KioskModeBlockSleepButton                = $False
+            KioskModeBlockVolumeButtons              = $True
+            LocationServicesBlocked                  = $False
+            NfcBlocked                               = $False
+            PasswordBlockFingerprintUnlock           = $False
+            PasswordBlockTrustAgents                 = $False
+            PasswordRequired                         = $True
+            PasswordRequiredType                     = 'numeric'
+            PowerOffBlocked                          = $False
+            RequiredPasswordComplexity               = 'low'
+            ScreenCaptureBlocked                     = $False
+            SecurityRequireVerifyApps                = $False
+            StorageBlockGoogleBackup                 = $False
+            StorageBlockRemovableStorage             = $False
+            StorageRequireDeviceEncryption           = $False
+            StorageRequireRemovableStorageEncryption = $True
+            VoiceAssistantBlocked                    = $False
+            VoiceDialingBlocked                      = $False
+            WebBrowserBlockAutofill                  = $False
+            WebBrowserBlocked                        = $False
+            WebBrowserBlockJavaScript                = $False
+            WebBrowserBlockPopups                    = $False
+            WebBrowserCookieSettings                 = 'allowAlways'
+            WiFiBlocked                              = $False
+            Ensure                                   = 'Present'
+            Credential                               = $credsGlobalAdmin
+        }
+    }
+}
+```
 

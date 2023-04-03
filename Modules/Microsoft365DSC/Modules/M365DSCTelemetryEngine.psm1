@@ -286,6 +286,7 @@ Public
 function Get-M365DSCTelemetryOption
 {
     [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
     param()
 
     try
