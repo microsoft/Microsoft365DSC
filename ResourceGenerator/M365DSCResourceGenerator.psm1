@@ -352,13 +352,17 @@ function New-M365DSCResource
         if ($getListIdentifier -contains 'Filter')
         {
             $getAlternativeFilterString.appendline("                    -Filter `"$alternativeKey eq '`$$alternativeKey'`" ``")|out-null
-            $getAlternativeFilterString.append("                    -ErrorAction SilentlyContinue")|out-null
+            $getAlternativeFilterString.appendline("                    -ErrorAction SilentlyContinue | Where-Object ``")|out-null
+            $getAlternativeFilterString.appendline("                    -FilterScript { ``")|out-null
+            $getAlternativeFilterString.appendline("                        `$_.AdditionalProperties.'@odata.type' -eq `"`#microsoft.graph.$SelectedODataType`" ``")|out-null
+            $getAlternativeFilterString.append("                    }")|out-null
         }
         else
         {
             $getAlternativeFilterString.appendline("                    -ErrorAction SilentlyContinue | Where-Object ``")|out-null
             $getAlternativeFilterString.appendline("                    -FilterScript { ``")|out-null
             $getAlternativeFilterString.appendline("                        `$_.$alternativeKey -eq `"`$(`$$alternativeKey)`" ``")|out-null
+            $getAlternativeFilterString.appendline("                        -and `$_.AdditionalProperties.'@odata.type' -eq `"`#microsoft.graph.$SelectedODataType`" ``")|out-null
             $getAlternativeFilterString.append("                    }")|out-null
         }
         Write-TokenReplacement -Token '<AlternativeFilter>' -Value $getAlternativeFilterString.ToString() -FilePath $moduleFilePath
@@ -472,6 +476,7 @@ function New-M365DSCResource
             #removing trailing commas and semi colons between items of an array of cim instances added by Convert-DSCStringParamToVariable
             $currentDSCBlock = $currentDSCBlock.replace("    ,`r`n" , "    `r`n" )
             $currentDSCBlock = $currentDSCBlock.replace("`r`n;`r`n" , "`r`n" )
+            $currentDSCBlock = $currentDSCBlock.replace("`r`n,`r`n" , "`r`n" )
 '@
         }
         $requiredKey = ''
@@ -1586,15 +1591,15 @@ function Get-ComplexTypeConstructorToString
         if ($isNested)
         {
             $valuePrefix=$ParentPropertyValuePath
-            if ($null -eq $valuePrefix)
-            {
+            #if ($null -eq $valuePrefix)
+            #{
                 $propRoot=$ParentPropertyName.replace("my","")
                 $valuePrefix="current$propRoot."
-                if ($property.IsRootProperty -eq $false -and -not $IsNested)
-                {
-                    $valuePrefix += "AdditionalProperties."
-                }
-            }
+                #if ($property.IsRootProperty -eq $false -and -not $IsNested)
+                #{
+                #    $valuePrefix += "AdditionalProperties."
+                #}
+            #}
         }
         $iterationPropertyName="current$propertyName"
         $complexString.appendLine($spacing + "`$$returnPropertyName" + " = @()") | Out-Null
@@ -1617,6 +1622,7 @@ function Get-ComplexTypeConstructorToString
         if ($Property.IsArray)
         {
             $valuePrefix = "$iterationPropertyName."
+            $referencePrefix = "$iterationPropertyName."
         }
         if ($isNested -and -not $Property.IsArray)
         {
@@ -1678,12 +1684,27 @@ function Get-ComplexTypeConstructorToString
             if ($nestedProperty.Type -like "*.Date*")
             {
                 $nestedPropertyType=$nestedProperty.Type.split(".")|select-object -last 1
-                $complexString.appendLine($spacing + "if (`$null -ne `$$valuePrefix$AssignedPropertyName)" ) | Out-Null
+                if ($isNested)
+                {
+                    $complexString.appendLine($spacing + "if (`$null -ne `$$valuePrefix$AssignedPropertyName)" ) | Out-Null
+                }
+                else
+                {
+                    $complexString.appendLine($spacing + "if (`$null -ne `$$referencePrefix$AssignedPropertyName)" ) | Out-Null
+                }
+
                 $complexString.appendLine($spacing + "{" ) | Out-Null
                 $IndentCount ++
                 $spacing = $indent * $IndentCount
                 $AssignedPropertyName += ").ToString('$DateFormat')"
-                $complexString.appendLine($spacing + "`$$tempPropertyName.Add('" +  $nestedPropertyName + "', ([$nestedPropertyType]`$$valuePrefix$AssignedPropertyName)" ) | Out-Null
+                if ($isNested)
+                {
+                    $complexString.appendLine($spacing + "`$$tempPropertyName.Add('" +  $nestedPropertyName + "', ([$nestedPropertyType]`$$valuePrefix$AssignedPropertyName)" ) | Out-Null
+                }
+                else
+                {
+                    $complexString.appendLine($spacing + "`$$tempPropertyName.Add('" +  $nestedPropertyName + "', ([$nestedPropertyType]`$$referencePrefix$AssignedPropertyName)" ) | Out-Null
+                }
                 $IndentCount --
                 $spacing = $indent * $IndentCount
                 $complexString.appendLine($spacing + "}" ) | Out-Null
@@ -1692,12 +1713,26 @@ function Get-ComplexTypeConstructorToString
             elseif ($nestedProperty.Type -like "*.Time*")
             {
                 $nestedPropertyType=$nestedProperty.Type.split(".")|select-object -last 1
-                $complexString.appendLine($spacing + "if (`$null -ne `$$valuePrefix$AssignedPropertyName)" ) | Out-Null
+                if ($isNested)
+                {
+                    $complexString.appendLine($spacing + "if (`$null -ne `$$valuePrefix$AssignedPropertyName)" ) | Out-Null
+                }
+                else
+                {
+                    $complexString.appendLine($spacing + "if (`$null -ne `$$referencePrefix$AssignedPropertyName)" ) | Out-Null
+                }
                 $complexString.appendLine($spacing + "{" ) | Out-Null
                 $IndentCount ++
                 $spacing = $indent * $IndentCount
                 $AssignedPropertyName += ").ToString()"
-                $complexString.appendLine($spacing + "`$$tempPropertyName.Add('" +  $nestedPropertyName + "', ([$nestedPropertyType]`$$valuePrefix$AssignedPropertyName)" ) | Out-Null
+                if ($isNested)
+                {
+                    $complexString.appendLine($spacing + "`$$tempPropertyName.Add('" +  $nestedPropertyName + "', ([$nestedPropertyType]`$$valuePrefix$AssignedPropertyName)" ) | Out-Null
+                }
+                else
+                {
+                    $complexString.appendLine($spacing + "`$$tempPropertyName.Add('" +  $nestedPropertyName + "', ([$nestedPropertyType]`$$referencePrefix$AssignedPropertyName)" ) | Out-Null
+                }
                 $IndentCount --
                 $spacing = $indent * $IndentCount
                 $complexString.appendLine($spacing + "}" ) | Out-Null

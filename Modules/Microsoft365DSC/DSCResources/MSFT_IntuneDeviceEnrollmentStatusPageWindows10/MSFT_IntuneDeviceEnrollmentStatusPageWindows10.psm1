@@ -67,6 +67,14 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [System.Uint32]
+        $Priority,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
@@ -102,7 +110,7 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
-        Confirm-M365DSCDependencies
+        Confirm-M365DSCDependencies -Verbose
 
         #region Telemetry
         $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
@@ -127,9 +135,10 @@ function Get-TargetResource
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
                 $getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
+                    -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript { `
-                        $_.DisplayName -eq "$($DisplayName)" `
+                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration' `
                 }
             }
         }
@@ -156,12 +165,35 @@ function Get-TargetResource
             SelectedMobileAppIds                    = $getValue.AdditionalProperties.selectedMobileAppIds
             ShowInstallationProgress                = $getValue.AdditionalProperties.showInstallationProgress
             TrackInstallProgressForAutopilotOnly    = $getValue.AdditionalProperties.trackInstallProgressForAutopilotOnly
+            Priority                                = $getValue.Priority
             Description                             = $getValue.Description
             DisplayName                             = $getValue.DisplayName
             Id                                      = $getValue.Id
             Ensure                                  = 'Present'
+            Credential                              = $Credential
+            ApplicationId                           = $ApplicationId
+            TenantId                                = $TenantId
+            ApplicationSecret                       = $ApplicationSecret
+            CertificateThumbprint                   = $CertificateThumbprint
+            Managedidentity                         = $ManagedIdentity.IsPresent
             #endregion
         }
+        $assignmentsValues = Get-MgDeviceManagementDeviceEnrollmentConfigurationAssignment -DeviceEnrollmentConfigurationId $Id
+        $assignmentResult = @()
+        foreach ($assignmentEntry in $AssignmentsValues)
+        {
+            $assignmentValue = @{
+                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
+                    {
+                        $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()
+                    })
+                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
+                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
+            }
+            $assignmentResult += $assignmentValue
+        }
+        $results.Add('Assignments', $assignmentResult)
 
         return [System.Collections.Hashtable] $results
     }
@@ -245,6 +277,14 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [System.Uint32]
+        $Priority,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
@@ -273,6 +313,7 @@ function Set-TargetResource
         [Switch]
         $ManagedIdentity
     )
+
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -304,6 +345,8 @@ function Set-TargetResource
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
         $CreateParameters.Remove('Id') | Out-Null
+        $CreateParameters.Remove('Assignments') | Out-Null
+        $CreateParameters.Remove('Priority') | Out-Null
 
         #region resource generator code
         if ($CreateParameters.showInstallationProgress -eq $false)
@@ -326,7 +369,19 @@ function Set-TargetResource
         }
 
         $CreateParameters.Add('@odata.type', '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration')
-        $null = New-MgBetaDeviceManagementDeviceEnrollmentConfiguration -BodyParameter $CreateParameters
+        $policy = New-MgBetaDeviceManagementDeviceEnrollmentConfiguration -BodyParameter $CreateParameters
+
+        foreach ($assignment in $Assignments)
+        {
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+        }
+        Update-DeviceEnrollmentConfigurationAssignment `
+            -DeviceEnrollmentConfigurationId $policy.id `
+            -Targets $assignmentsHash
+
+        Update-DeviceEnrollmentConfigurationPriority `
+            -DeviceEnrollmentConfigurationId $policy.id `
+            -Priority $Priority
         #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -335,6 +390,8 @@ function Set-TargetResource
 
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
+        $UpdateParameters.Remove('Assignments') | Out-Null
+        $UpdateParameters.Remove('Priority') | Out-Null
 
         #region resource generator code
         if ($UpdateParameters.blockDeviceSetupRetryByUser -eq $true)
@@ -345,8 +402,24 @@ function Set-TargetResource
         }
 
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration')
-        Update-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $currentInstance.Id `
+        Update-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
+            -DeviceEnrollmentConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
+
+        if ($currentInstance.Id -notlike '*_DefaultWindows10EnrollmentCompletionPageConfiguration')
+        {
+            foreach ($assignment in $Assignments)
+            {
+                $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+            }
+            Update-DeviceEnrollmentConfigurationAssignment `
+                -DeviceEnrollmentConfigurationId $currentInstance.id `
+                -Targets $assignmentsHash
+
+            Update-DeviceEnrollmentConfigurationPriority `
+                -DeviceEnrollmentConfigurationId $currentInstance.id `
+                -Priority $Priority
+        }
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
@@ -427,6 +500,14 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [System.Uint32]
+        $Priority,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
@@ -456,6 +537,7 @@ function Test-TargetResource
         $ManagedIdentity
     )
 
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -469,7 +551,6 @@ function Test-TargetResource
     #endregion
 
     Write-Verbose -Message "Testing configuration of the Intune Device Enrollment Configuration for Windows10 with Id {$Id} and DisplayName {$DisplayName}"
-
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
@@ -614,12 +695,27 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-
+            if ($Results.Assignments)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
+                if ($complexTypeStringResult)
+                {
+                    $Results.Assignments = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Assignments') | Out-Null
+                }
+            }
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
+            if ($Results.Assignments)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
+            }
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -641,6 +737,93 @@ function Export-TargetResource
             -Credential $Credential
 
         return ''
+    }
+}
+
+function Update-DeviceEnrollmentConfigurationAssignment
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceEnrollmentConfigurationId,
+
+        [Parameter()]
+        [Array]
+        $Targets
+    )
+    try
+    {
+        $deviceManagementPolicyAssignments = @()
+        $Uri = "https://graph.microsoft.com/beta/deviceManagement/deviceEnrollmentConfigurations/$DeviceEnrollmentConfigurationId/assign"
+
+        foreach ($target in $targets)
+        {
+            $formattedTarget = @{'@odata.type' = $target.dataType }
+            if ($target.groupId)
+            {
+                $formattedTarget.Add('groupId', $target.groupId)
+            }
+            if ($target.collectionId)
+            {
+                $formattedTarget.Add('collectionId', $target.collectionId)
+            }
+            if ($target.deviceAndAppManagementAssignmentFilterType)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType', $target.deviceAndAppManagementAssignmentFilterType)
+            }
+            if ($target.deviceAndAppManagementAssignmentFilterId)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId', $target.deviceAndAppManagementAssignmentFilterId)
+            }
+            $deviceManagementPolicyAssignments += @{'target' = $formattedTarget }
+        }
+        $body = @{'enrollmentConfigurationAssignments' = $deviceManagementPolicyAssignments } | ConvertTo-Json -Depth 20
+        #write-verbose -Message $body
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating data:'
+        -Exception $_
+        -Source $($MyInvocation.MyCommand.Source)
+        -TenantId $TenantId
+        -Credential $Credential
+
+        return $null
+    }
+}
+
+function Update-DeviceEnrollmentConfigurationPriority
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceEnrollmentConfigurationId,
+
+        [Parameter(Mandatory = 'true')]
+        [System.UInt32]
+        $Priority
+    )
+    try
+    {
+        $Uri = "https://graph.microsoft.com/beta/deviceManagement/deviceEnrollmentConfigurations/$DeviceEnrollmentConfigurationId/setPriority"
+        $body = @{'priority' = $Priority } | ConvertTo-Json -Depth 20
+        #write-verbose -Message $body
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating data:'
+        -Exception $_
+        -Source $($MyInvocation.MyCommand.Source)
+        -TenantId $TenantId
+        -Credential $Credential
+
+        return $null
     }
 }
 

@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource 'IntuneDeviceEnrollmentConfigurationWindows10' -GenericStubModule $GenericStubPath
+    -DscResource 'IntuneDeviceEnrollmentStatusPageWindows10' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -36,22 +36,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Update-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
             }
 
-            Mock -CommandName New-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
-            }
-
-            Mock -CommandName Remove-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
+            Mock -CommandName Remove-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
             }
 
-            # Mock Write-Host to hide output during the tests
-            Mock -CommandName Write-Host -MockWith {
+            Mock Get-MgDeviceManagementDeviceEnrollmentConfigurationAssignment {
+                return @()
+            }
+
+            Mock Update-DeviceEnrollmentConfigurationAssignment {
+            }
+
+            Mock Update-DeviceEnrollmentConfigurationPriority {
             }
         }
         # Test contexts
-        Context -Name 'The IntuneDeviceEnrollmentConfigurationWindows10 should exist but it DOES NOT' -Fixture {
+        Context -Name 'The IntuneDeviceEnrollmentStatusPageWindows10 should exist but it DOES NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
                     Id                                      = 'FakeStringValue'
@@ -76,6 +79,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return $null
                 }
+
+                Mock -CommandName New-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
+                    return  @{
+                        Id = 'FakeStringValue'
+                        Priority = 1
+                    }
+                }
             }
             It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
@@ -89,7 +99,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'The IntuneDeviceEnrollmentConfigurationWindows10 exists but it SHOULD NOT' -Fixture {
+        Context -Name 'The IntuneDeviceEnrollmentStatusPageWindows10 exists but it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
                     Id                                      = 'FakeStringValue'
@@ -148,7 +158,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Should -Invoke -CommandName Remove-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Exactly 1
             }
         }
-        Context -Name 'The IntuneDeviceEnrollmentConfigurationWindows10 Exists and Values are already in the desired state' -Fixture {
+        Context -Name 'The IntuneDeviceEnrollmentStatusPageWindows10 Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
                     Id                                      = 'FakeStringValue'
@@ -201,7 +211,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'The IntuneDeviceEnrollmentConfigurationWindows10 exists and values are NOT in the desired state' -Fixture {
+        Context -Name 'The IntuneDeviceEnrollmentStatusPageWindows10 exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
                     Id                                      = 'FakeStringValue'

@@ -1016,7 +1016,7 @@ function Export-TargetResource
                 $complexMapping = @(
                     @{
                         Name            = 'RoleMemberInfo'
-                        CimInstanceName = 'MicrosoftGraphIdentity'
+                        CimInstanceName = 'MicrosoftGraphMember'
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.ScopedRoleMembers) `

@@ -1,6 +1,6 @@
 {
-    "resourceName": "IntuneDeviceConfigurationPolicyWindows10",
-    "description": "This resource configures an Intune Device Configuration Policy for Windows10.",
+    "resourceName": "IntuneDeviceConfigurationNetworkBoundaryPolicyWindows10",
+    "description": "This resource configures an Intune Device Configuration Network Boundary Policy for Windows10.",
     "permissions":    {
     "graph":  {
                   "delegated":  {
