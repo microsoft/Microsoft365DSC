@@ -2704,7 +2704,9 @@ function Update-M365DSCDependencies
                 if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
                 {
                     Write-Information -MessageData "Installing $($dependency.ModuleName) version {$($dependency.RequiredVersion)}"
+                    Remove-Module $dependency.ModuleName -Force -ErrorAction SilentlyContinue
                     Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force -Scope 'AllUsers'
+                    Import-Module $dependency.ModuleName -Force
                 }
                 else
                 {
