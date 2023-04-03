@@ -3983,43 +3983,43 @@ function Remove-M365DSCAuthenticationParameter
 
     if ($BoundParameters.ContainsKey('Ensure'))
     {
-        $BoundParameters.Remove('Ensure')
+        $BoundParameters.Remove('Ensure') | Out-Null
     }
     if ($BoundParameters.ContainsKey('Credential'))
     {
-        $BoundParameters.Remove('Credential')
+        $BoundParameters.Remove('Credential') | Out-Null
     }
     if ($BoundParameters.ContainsKey('ApplicationId'))
     {
-        $BoundParameters.Remove('ApplicationId')
+        $BoundParameters.Remove('ApplicationId') | Out-Null
     }
     if ($BoundParameters.ContainsKey('ApplicationSecret'))
     {
-        $BoundParameters.Remove('ApplicationSecret')
+        $BoundParameters.Remove('ApplicationSecret') | Out-Null
     }
     if ($BoundParameters.ContainsKey('TenantId'))
     {
-        $BoundParameters.Remove('TenantId')
+        $BoundParameters.Remove('TenantId') | Out-Null
     }
     if ($BoundParameters.ContainsKey('CertificatePassword'))
     {
-        $BoundParameters.Remove('CertificatePassword')
+        $BoundParameters.Remove('CertificatePassword') | Out-Null
     }
     if ($BoundParameters.ContainsKey('CertificatePath'))
     {
-        $BoundParameters.Remove('CertificatePath')
+        $BoundParameters.Remove('CertificatePath') | Out-Null
     }
     if ($BoundParameters.ContainsKey('CertificateThumbprint'))
     {
-        $BoundParameters.Remove('CertificateThumbprint')
+        $BoundParameters.Remove('CertificateThumbprint') | Out-Null
     }
     if ($BoundParameters.ContainsKey('ManagedIdentity'))
     {
-        $BoundParameters.Remove('ManagedIdentity')
+        $BoundParameters.Remove('ManagedIdentity') | Out-Null
     }
     if ($BoundParameters.ContainsKey('Verbose'))
     {
-        $BoundParameters.Remove('Verbose')
+        $BoundParameters.Remove('Verbose') | Out-Null
     }
     return $BoundParameters
 }
