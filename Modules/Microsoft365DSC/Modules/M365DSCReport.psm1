@@ -258,8 +258,6 @@ function New-M365DSCConfigurationToExcel
     $report.Range('A1:C1').Borders.Weight = -4138
     $row = 2
 
-    $parsedContent = Initialize-M365DSCReporting -ConfigurationPath $ConfigurationPath
-
     foreach ($resource in $parsedContent)
     {
         $beginRow = $row
@@ -1140,8 +1138,8 @@ function New-M365DSCDeltaReport
                             $cellStyle = "vertical-align:top;"
                         }
 
-                        if (-not [System.String]::IsNullOrEmpty($destinationValue) -and 
-                            $destinationValue.GetType().Name -eq 'Object[]' -and 
+                        if (-not [System.String]::IsNullOrEmpty($destinationValue) -and
+                            $destinationValue.GetType().Name -eq 'Object[]' -and
                             -not [System.String]::IsNullOrEmpty($CIMType))
                         {
                             $destinationValue = ""
