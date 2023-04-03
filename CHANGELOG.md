@@ -41,6 +41,8 @@
   * [BREAKING CHANGE] Remove deprecated parameter PreferredDataLocation* EXOAntiPhishPolicy
   * [BREAKING CHANGE] Remove deprecated parameters EnableAntispoofEnforcement and
     TargetedDomainProtectionAction
+  * Password property will only used with New-MgUser and ignored for updates
+    FIXES [#3093](https://github.com/microsoft/Microsoft365DSC/issues/3093)
 * EXOGroupSettings
   * Initial Release
     FIXES [#3089](https://github.com/microsoft/Microsoft365DSC/issues/3089)
