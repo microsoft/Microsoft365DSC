@@ -184,7 +184,7 @@ function Get-TargetResource
         }
         else
         {
-            $NotesValue = ""
+            $NotesValue = ''
             if (-not [System.String]::IsNullOrEmpty($taskResponse))
             {
                 $NotesValue = $taskDetailsResponse.Description
@@ -352,15 +352,15 @@ function Set-TargetResource
     $currentValues = Get-TargetResource @PSBoundParameters
 
     $setParams = ([HashTable]$PSBoundParameters).Clone()
-    $setParams.Remove("Ensure") | Out-Null
-    $setParams.Remove("Credential") | Out-Null
-    $setParams.Remove("ApplicationId") | Out-Null
-    $setParams.Remove("TenantId") | Out-Null
-    $setParams.Remove("CertificateThumbprint") | Out-Null
-    $setParams.Remove("ApplicationSecret") | Out-Null
+    $setParams.Remove('Ensure') | Out-Null
+    $setParams.Remove('Credential') | Out-Null
+    $setParams.Remove('ApplicationId') | Out-Null
+    $setParams.Remove('TenantId') | Out-Null
+    $setParams.Remove('CertificateThumbprint') | Out-Null
+    $setParams.Remove('ApplicationSecret') | Out-Null
 
     #region Assignments
-    Write-Verbose -Message "Converting Assignments into the proper format"
+    Write-Verbose -Message 'Converting Assignments into the proper format'
     $assignmentsValue = @{}
     foreach ($assignment in $setParams.AssignedUsers)
     {
@@ -369,8 +369,8 @@ function Set-TargetResource
         if ($null -ne $user)
         {
             $currentValue += @{
-                "@odata.type" = "#microsoft.graph.plannerAssignment"
-                orderHint = " !"
+                '@odata.type' = '#microsoft.graph.plannerAssignment'
+                orderHint     = ' !'
             }
             $assignmentsValue.Add($user.Id, $currentValue)
         }
@@ -391,14 +391,14 @@ function Set-TargetResource
     foreach ($checkListItem in $setParams.Checklist)
     {
         $currentValue = @{
-            "@odata.type" = "#microsoft.graph.plannerChecklistItem"
+            '@odata.type' = '#microsoft.graph.plannerChecklistItem'
             isChecked     = $checkListItem.Completed
             title         = $checkListItem.Title
         }
-        $checkListValues.Add((New-GUID).ToString(), $currentValue)
+        $checkListValues.Add((New-Guid).ToString(), $currentValue)
     }
     $DetailsValue.checklist = $checkListValues
-    $setParams.Remove("Checklist") | Out-Null
+    $setParams.Remove('Checklist') | Out-Null
     #endregion
 
     #region Attachments
@@ -406,7 +406,7 @@ function Set-TargetResource
     foreach ($attachment in $setParams.Attachments)
     {
         $currentValue = @{
-            "@odata.type" = "#microsoft.graph.plannerExternalReference"
+            '@odata.type' = '#microsoft.graph.plannerExternalReference'
             alias         = $attachment.Alias
             type          = $attachment.Type
         }
@@ -416,8 +416,8 @@ function Set-TargetResource
     $setParams.Remove('Attachments') | Out-Null
     #endregion
 
-    $setParams.Remove("Description") | Out-Null
-    $setParams.Add("Details", $DetailsValue)
+    $setParams.Remove('Description') | Out-Null
+    $setParams.Add('Details', $DetailsValue)
     $setParams.Remove('Notes') | Out-Null
 
     #region Categories
@@ -433,53 +433,53 @@ function Set-TargetResource
     {
         $categoriesValue.(GetTaskCategoryNameByColor($category)) = $true
     }
-    $setParams.Add("AppliedCategories", $categoriesValue)
-    $setParams.Remove("Categories") | Out-Null
+    $setParams.Add('AppliedCategories', $categoriesValue)
+    $setParams.Remove('Categories') | Out-Null
     #endregion
 
-    $setParams.Add("BucketId", $setParams.Bucket)
-    $setParams.Remove("Bucket") | Out-Null
+    $setParams.Add('BucketId', $setParams.Bucket)
+    $setParams.Remove('Bucket') | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
     {
-        $setParams.Remove("TaskId") | Out-Null
+        $setParams.Remove('TaskId') | Out-Null
         Write-Verbose -Message "Planner Task {$Title} doesn't already exist. Creating it with`r`n:$(Convert-M365DscHashtableToString -Hashtable $setParams)"
         $newTask = New-MgPlannerTask @setParams
     }
     elseif ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Present')
     {
         $taskId = $setParams.TaskId
-        $setParams.Remove("TaskId") | Out-Null
+        $setParams.Remove('TaskId') | Out-Null
         $details = $setParams.Details
         $setParams.Remove('Details') | Out-Null
         $setParams.Remove('Verbose') | Out-Null
 
         # Fix Casing
-        $setParams.Add("assignments", $setParams.Assignments)
-        $setParams.Remove("Assignments") | Out-Null
+        $setParams.Add('assignments', $setParams.Assignments)
+        $setParams.Remove('Assignments') | Out-Null
 
-        $setParams.Add("appliedCategories", $setParams.AppliedCategories)
-        $setParams.Remove("AppliedCategories") | Out-Null
+        $setParams.Add('appliedCategories', $setParams.AppliedCategories)
+        $setParams.Remove('AppliedCategories') | Out-Null
 
-        $setParams.Add("title", $setParams.Title)
-        $setParams.Remove("Title") | Out-Null
+        $setParams.Add('title', $setParams.Title)
+        $setParams.Remove('Title') | Out-Null
 
-        $setParams.Add("bucketId", $setParams.BucketId)
-        $setParams.Remove("BucketId") | Out-Null
+        $setParams.Add('bucketId', $setParams.BucketId)
+        $setParams.Remove('BucketId') | Out-Null
 
-        $setParams.Add("dueDateTime", [DateTime]::Parse($setParams.DueDateTime).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffK"))
-        $setParams.Remove("DueDateTime") | Out-Null
+        $setParams.Add('dueDateTime', [DateTime]::Parse($setParams.DueDateTime).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ss.fffK'))
+        $setParams.Remove('DueDateTime') | Out-Null
 
-        $setParams.Add("percentComplete", $setParams.PercentComplete)
-        $setParams.Remove("PercentComplete") | Out-Null
+        $setParams.Add('percentComplete', $setParams.PercentComplete)
+        $setParams.Remove('PercentComplete') | Out-Null
 
-        $setParams.Remove("PlanId") | Out-Null
+        $setParams.Remove('PlanId') | Out-Null
 
-        $setParams.Add("priority", $setParams.Priority)
-        $setParams.Remove("Priority") | Out-Null
+        $setParams.Add('priority', $setParams.Priority)
+        $setParams.Remove('Priority') | Out-Null
 
-        $setParams.Add("startDateTime", [DateTime]::Parse($setParams.StartDateTime).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffK"))
-        $setParams.Remove("StartDateTime") | Out-Null
+        $setParams.Add('startDateTime', [DateTime]::Parse($setParams.StartDateTime).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ss.fffK'))
+        $setParams.Remove('StartDateTime') | Out-Null
 
         Write-Verbose -Message "Planner Task {$Title} already exists, but is not in the `
             Desired State. Updating it."
@@ -500,7 +500,7 @@ function Set-TargetResource
         $Headers = @{}
         $currentTaskDetails = Get-MgPlannerTaskDetail -PlannerTaskId $taskId
         $Headers.Add('If-Match', $currentTaskDetails.AdditionalProperties.'@odata.etag')
-        $details.Remove("id") | Out-Null
+        $details.Remove('id') | Out-Null
         $JSONDetails = (ConvertTo-Json $details)
         Write-Verbose -Message "Updating Task's details with:`r`n$JSONDetails"
         Invoke-MgGraphRequest -Method PATCH `
@@ -976,70 +976,82 @@ function Get-M365DSCPlannerTasksFromPlan
     return $results
 }
 
-    function GetTaskCategoryNameByColor
+function GetTaskCategoryNameByColor
+{
+    [CmdletBinding()]
+    [OutputType([System.string])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ColorName
+    )
+    switch ($ColorName)
     {
-        [CmdletBinding()]
-        [OutputType([System.string])]
-        param(
-            [Parameter(Mandatory = $true)]
-            [System.String]
-            $ColorName
-        )
-        switch ($ColorName)
+        'Pink'
         {
-            'Pink'
-            { return 'category1'
-            }
-            'Red'
-            { return 'category2'
-            }
-            'Yellow'
-            { return 'category3'
-            }
-            'Green'
-            { return 'category4'
-            }
-            'Blue'
-            { return 'category5'
-            }
-            'Purple'
-            { return 'category6'
-            }
+            return 'category1'
         }
-        return $null
+        'Red'
+        {
+            return 'category2'
+        }
+        'Yellow'
+        {
+            return 'category3'
+        }
+        'Green'
+        {
+            return 'category4'
+        }
+        'Blue'
+        {
+            return 'category5'
+        }
+        'Purple'
+        {
+            return 'category6'
+        }
     }
+    return $null
+}
 
-    function GetTaskColorNameByCategory
+function GetTaskColorNameByCategory
+{
+    [CmdletBinding()]
+    [OutputType([System.string])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $CategoryName
+    )
+    switch ($CategoryName)
     {
-        [CmdletBinding()]
-        [OutputType([System.string])]
-        param(
-            [Parameter(Mandatory = $true)]
-            [System.String]
-            $CategoryName
-        )
-        switch ($CategoryName)
+        'category1'
         {
-            'category1'
-            { return 'Pink'
-            }
-            'category2'
-            { return 'Red'
-            }
-            'category3'
-            { return 'Yellow'
-            }
-            'category4'
-            { return 'Green'
-            }
-            'category5'
-            { return 'Blue'
-            }
-            'category6'
-            { return 'Purple'
-            }
+            return 'Pink'
         }
-        return $null
+        'category2'
+        {
+            return 'Red'
+        }
+        'category3'
+        {
+            return 'Yellow'
+        }
+        'category4'
+        {
+            return 'Green'
+        }
+        'category5'
+        {
+            return 'Blue'
+        }
+        'category6'
+        {
+            return 'Purple'
+        }
     }
+    return $null
+}
 
 Export-ModuleMember -Function *-TargetResource

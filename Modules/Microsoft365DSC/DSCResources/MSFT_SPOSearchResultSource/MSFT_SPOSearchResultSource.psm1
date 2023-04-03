@@ -128,7 +128,7 @@ function Get-TargetResource
     $nullReturn = @{
         Name     = $Name
         Protocol = $Protocol
-        Ensure   = "Absent"
+        Ensure   = 'Absent'
     }
 
     try
@@ -174,7 +174,7 @@ function Get-TargetResource
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
             Managedidentity       = $ManagedIdentity.IsPresent
-            Ensure                = "Present"
+            Ensure                = 'Present'
         }
 
         if ($null -ne $allowPartial)
