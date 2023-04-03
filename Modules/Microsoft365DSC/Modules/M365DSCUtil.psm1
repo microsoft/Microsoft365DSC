@@ -857,7 +857,7 @@ function Test-M365DSCParameterState
     try
     {
         $includeNonDriftsInformation = [System.Environment]::GetEnvironmentVariable('M365DSCEventLogIncludeNonDrifted', `
-            [System.EnvironmentVariableTarget]::Machine)
+                [System.EnvironmentVariableTarget]::Machine)
     }
     catch
     {
@@ -3103,10 +3103,10 @@ function Get-M365DSCExportContentForResource
     $Results = Format-M365DSCString -Properties $Results `
         -ResourceName $ResourceName
 
-    $primaryKey = ""
+    $primaryKey = ''
     if ($Results.ContainsKey('IsSingleInstance'))
     {
-        $primaryKey = ""
+        $primaryKey = ''
     }
     elseif ($Results.ContainsKey('DisplayName'))
     {
@@ -3964,6 +3964,65 @@ function Write-M365DSCLogEvent
     return $nullReturn
 }
 
+<#
+.Description
+This function removes the authentication parameters from the hashtable.
+
+.Functionality
+Internal
+#>
+function Remove-M365DSCAuthenticationParameter
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $BoundParameters
+    )
+
+    if ($BoundParameters.ContainsKey('Ensure'))
+    {
+        $BoundParameters.Remove('Ensure')
+    }
+    if ($BoundParameters.ContainsKey('Credential'))
+    {
+        $BoundParameters.Remove('Credential')
+    }
+    if ($BoundParameters.ContainsKey('ApplicationId'))
+    {
+        $BoundParameters.Remove('ApplicationId')
+    }
+    if ($BoundParameters.ContainsKey('ApplicationSecret'))
+    {
+        $BoundParameters.Remove('ApplicationSecret')
+    }
+    if ($BoundParameters.ContainsKey('TenantId'))
+    {
+        $BoundParameters.Remove('TenantId')
+    }
+    if ($BoundParameters.ContainsKey('CertificatePassword'))
+    {
+        $BoundParameters.Remove('CertificatePassword')
+    }
+    if ($BoundParameters.ContainsKey('CertificatePath'))
+    {
+        $BoundParameters.Remove('CertificatePath')
+    }
+    if ($BoundParameters.ContainsKey('CertificateThumbprint'))
+    {
+        $BoundParameters.Remove('CertificateThumbprint')
+    }
+    if ($BoundParameters.ContainsKey('ManagedIdentity'))
+    {
+        $BoundParameters.Remove('ManagedIdentity')
+    }
+    if ($BoundParameters.ContainsKey('Verbose'))
+    {
+        $BoundParameters.Remove('Verbose')
+    }
+    return $BoundParameters
+}
 
 Export-ModuleMember -Function @(
     'Assert-M365DSCBlueprint',
@@ -3994,6 +4053,7 @@ Export-ModuleMember -Function @(
     'New-M365DSCConnection',
     'New-M365DSCMissingResourcesExample',
     'Remove-EmptyValue',
+    'Remove-M365DSCAuthenticationParameter',
     'Remove-NullEntriesFromHashtable',
     'Set-EXOSafeAttachmentRule',
     'Set-EXOSafeLinksRule',
