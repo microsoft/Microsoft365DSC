@@ -4,15 +4,15 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $GroupDisplayName,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $GroupId,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [ValidateSet('CallingLineIdentity', 'TeamsAppSetupPolicy', 'TeamsAudioConferencingPolicy', 'TeamsCallingPolicy', 'TeamsCallParkPolicy', 'TeamsChannelsPolicy', 'TeamsComplianceRecordingPolicy', 'TenantDialPlan', 'TeamsMeetingBroadcastPolicy', 'TeamsMeetingPolicy', 'TeamsMessagingPolicy', 'TeamsShiftsPolicy', 'TeamsUpdateManagementPolicy', 'TeamsVerticalPackagePolicy')]
         [System.String]
         $PolicyType,
@@ -21,7 +21,7 @@ function Get-TargetResource
         [System.String]
         $PolicyName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Priority,
 
@@ -124,15 +124,15 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $GroupDisplayName,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $GroupId,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [ValidateSet('CallingLineIdentity', 'TeamsAppSetupPolicy', 'TeamsAudioConferencingPolicy', 'TeamsCallingPolicy', 'TeamsCallParkPolicy', 'TeamsChannelsPolicy', 'TeamsComplianceRecordingPolicy', 'TenantDialPlan', 'TeamsMeetingBroadcastPolicy', 'TeamsMeetingPolicy', 'TeamsMessagingPolicy', 'TeamsShiftsPolicy', 'TeamsUpdateManagementPolicy', 'TeamsVerticalPackagePolicy')]
         [System.String]
         $PolicyType,
@@ -141,7 +141,7 @@ function Set-TargetResource
         [System.String]
         $PolicyName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Priority,
 
@@ -267,15 +267,15 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $GroupDisplayName,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $GroupId,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [ValidateSet('CallingLineIdentity', 'TeamsAppSetupPolicy', 'TeamsAudioConferencingPolicy', 'TeamsCallingPolicy', 'TeamsCallParkPolicy', 'TeamsChannelsPolicy', 'TeamsComplianceRecordingPolicy', 'TenantDialPlan', 'TeamsMeetingBroadcastPolicy', 'TeamsMeetingPolicy', 'TeamsMessagingPolicy', 'TeamsShiftsPolicy', 'TeamsUpdateManagementPolicy', 'TeamsVerticalPackagePolicy')]
         [System.String]
         $PolicyType,
@@ -284,7 +284,7 @@ function Test-TargetResource
         [System.String]
         $PolicyName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Priority,
 
