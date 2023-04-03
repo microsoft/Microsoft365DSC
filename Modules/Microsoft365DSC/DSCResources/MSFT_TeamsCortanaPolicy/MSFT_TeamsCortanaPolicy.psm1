@@ -10,7 +10,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Disabled","PushToTalkUserOverride","WakeWordPushToTalkUserOverride")]
+        [ValidateSet('Disabled', 'PushToTalkUserOverride', 'WakeWordPushToTalkUserOverride')]
         $CortanaVoiceInvocationMode,
 
         [Parameter()]
@@ -66,14 +66,14 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found an instance with Identity {$Identity}"
         $results = @{
-            Identity                         = $instance.Identity
-            CortanaVoiceInvocationMode       = $instance.CortanaVoiceInvocationMode
-            Description                      = $instance.Description
-            Ensure                           = 'Present'
-            Credential                       = $Credential
-            ApplicationId                    = $ApplicationId
-            TenantId                         = $TenantId
-            CertificateThumbprint            = $CertificateThumbprint
+            Identity                   = $instance.Identity
+            CortanaVoiceInvocationMode = $instance.CortanaVoiceInvocationMode
+            Description                = $instance.Description
+            Ensure                     = 'Present'
+            Credential                 = $Credential
+            ApplicationId              = $ApplicationId
+            TenantId                   = $TenantId
+            CertificateThumbprint      = $CertificateThumbprint
         }
         return [System.Collections.Hashtable] $results
     }
@@ -100,7 +100,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Disabled","PushToTalkUserOverride","WakeWordPushToTalkUserOverride")]
+        [ValidateSet('Disabled', 'PushToTalkUserOverride', 'WakeWordPushToTalkUserOverride')]
         $CortanaVoiceInvocationMode,
 
         [Parameter()]
@@ -212,7 +212,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Disabled","PushToTalkUserOverride","WakeWordPushToTalkUserOverride")]
+        [ValidateSet('Disabled', 'PushToTalkUserOverride', 'WakeWordPushToTalkUserOverride')]
         $CortanaVoiceInvocationMode,
 
         [Parameter()]
@@ -319,7 +319,7 @@ function Export-TargetResource
         $ManagedIdentity
     )
 
-   $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -357,11 +357,11 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Identity = $config.Identity
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
+                Identity              = $config.Identity
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
 
             }

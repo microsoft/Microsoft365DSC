@@ -68,12 +68,13 @@ function Get-TargetResource
     {
         Write-Verbose -Message "Getting GroupPOlicyAssignment for {$GroupId}"
         $group = Find-CsGroup -SearchQuery $GroupId
-        if($group.Length -gt 1)
+        if ($group.Length -gt 1)
         {
             Write-Verbose -Message "Found $($group.Length) groups with the id {$GroupId}"
             $Group = $Group | Where-Object { $_.DisplayName -eq $GroupDisplayName }
         }
-        else{
+        else
+        {
             Write-Verbose -Message "Getting GroupPolicyAssignment for {$GroupDisplayName}"
             $Group = Find-CsGroup -SearchQuery $GroupDisplayName
             if ($group.Length -gt 1)

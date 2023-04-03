@@ -94,7 +94,7 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Found Teams Update Management Policy with Identity {$Identity}"
-        $results =  @{
+        $results = @{
             Identity              = $policy.Identity
             Description           = $policy.Description
             AllowManagedUpdates   = $policy.AllowManagedUpdates

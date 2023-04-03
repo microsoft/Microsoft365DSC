@@ -142,7 +142,7 @@ function Get-TargetResource
         $HiddenFromExchangeClientsEnabled,
 
         [Parameter()]
-        [ValidateSet("Explicit","Implicit","Open","OwnerModerated")]
+        [ValidateSet('Explicit', 'Implicit', 'Open', 'OwnerModerated')]
         [System.String]
         $InformationBarrierMode,
 
@@ -498,7 +498,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Explicit","Implicit","Open","OwnerModerated")]
+        [ValidateSet('Explicit', 'Implicit', 'Open', 'OwnerModerated')]
         $InformationBarrierMode,
 
         [Parameter()]
@@ -611,20 +611,20 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     $UpdateParameters = ([Hashtable]$PSBoundParameters).Clone()
-    $UpdateParameters.Add("Identity", $DisplayName)
-    $UpdateParameters.Remove("DisplayName") | Out-Null
-    $UpdateParameters.Remove("Credential") | Out-Null
-    $UpdateParameters.Remove("ApplicationId") | Out-Null
-    $UpdateParameters.Remove("TenantId") | Out-Null
-    $UpdateParameters.Remove("CertificateThumbprint") | Out-Null
-    $UpdateParameters.Remove("CertificatePath") | Out-Null
-    $UpdateParameters.Remove("CertificatePassword") | Out-Null
-    $UpdateParameters.Remove("ManagedIdentity") | Out-Null
+    $UpdateParameters.Add('Identity', $DisplayName)
+    $UpdateParameters.Remove('DisplayName') | Out-Null
+    $UpdateParameters.Remove('Credential') | Out-Null
+    $UpdateParameters.Remove('ApplicationId') | Out-Null
+    $UpdateParameters.Remove('TenantId') | Out-Null
+    $UpdateParameters.Remove('CertificateThumbprint') | Out-Null
+    $UpdateParameters.Remove('CertificatePath') | Out-Null
+    $UpdateParameters.Remove('CertificatePassword') | Out-Null
+    $UpdateParameters.Remove('ManagedIdentity') | Out-Null
 
     # Cannot use PrimarySmtpAddress and EmailAddresses at the same time. If both are present, then give priority to PrimarySmtpAddress.
-    if ($UpdateParameters.ContainsKey("PrimarySmtpAddress") -and $null -ne $UpdateParameters.PrimarySmtpAddress)
+    if ($UpdateParameters.ContainsKey('PrimarySmtpAddress') -and $null -ne $UpdateParameters.PrimarySmtpAddress)
     {
-        $UpdateParameters.Remove("EmailAddresses")
+        $UpdateParameters.Remove('EmailAddresses')
     }
     Set-UnifiedGroup @UpdateParameters
 }
@@ -774,7 +774,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Explicit","Implicit","Open","OwnerModerated")]
+        [ValidateSet('Explicit', 'Implicit', 'Open', 'OwnerModerated')]
         $InformationBarrierMode,
 
         [Parameter()]

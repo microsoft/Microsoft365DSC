@@ -187,7 +187,7 @@ function Get-TargetResource
             [Array]$memberOf = Get-MgGroupMemberOf -GroupId $Group.Id -All # result also used for/by AssignedToRole
             $MemberOfValues = @()
             # Note: only process security-groups that this group is a member of and not directory roles (if any)
-            foreach ($member in ($memberOf  | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.group' }))
+            foreach ($member in ($memberOf | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.group' }))
             {
                 if ($null -ne $member.AdditionalProperties.displayName)
                 {
@@ -732,15 +732,16 @@ function Set-TargetResource
             {
                 $backCurrentAssignedToRole = @()
             }
-            $assignedToRoleDiff = Compare-Object -ReferenceObject $backCurrentAssignedToRole -DifferenceObject  $desiredAssignedToRoleValue
+            $assignedToRoleDiff = Compare-Object -ReferenceObject $backCurrentAssignedToRole -DifferenceObject $desiredAssignedToRoleValue
             foreach ($diff in $assignedToRoleDiff)
             {
                 try
                 {
                     $role = Get-MgDirectoryRole -Filter "DisplayName eq '$($diff.InputObject)'"
                     # If the role hasn't been activated, we need to get the role template ID to first activate the role
-                    if ($null -eq $role) {
-                        $adminRoleTemplate = Get-MgDirectoryRoleTemplate | Where-Object {$_.DisplayName -eq $diff.InputObject}
+                    if ($null -eq $role)
+                    {
+                        $adminRoleTemplate = Get-MgDirectoryRoleTemplate | Where-Object { $_.DisplayName -eq $diff.InputObject }
                         $role = New-MgDirectoryRole -RoleTemplateId $adminRoleTemplate.Id
                     }
                 }
@@ -1016,8 +1017,8 @@ function Export-TargetResource
     try
     {
         [array] $groups = Get-MgGroup -Filter $Filter -All:$true -ErrorAction Stop
-        $groups = $groups | Where-Object -FilterScript {-not ($_.MailEnabled -and ($null -eq $_.GroupTypes -or $_.GroupTypes.Length -eq 0)) -and
-                                                        -not ($_.MailEnabled -and $_.SecurityEnabled)}
+        $groups = $groups | Where-Object -FilterScript { -not ($_.MailEnabled -and ($null -eq $_.GroupTypes -or $_.GroupTypes.Length -eq 0)) -and
+            -not ($_.MailEnabled -and $_.SecurityEnabled) }
 
         $i = 1
         $dscContent = ''
