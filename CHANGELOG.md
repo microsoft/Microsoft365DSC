@@ -162,6 +162,7 @@
     FIXES [#3097](https://github.com/microsoft/Microsoft365DSC/issues/3097)
   * Added a new internal function to remove the authentication parameters from the bound paramters. `Remove-M365DSCAuthenticationParameter`
 * DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 1.25.0.
   * Updated MicrosoftTeams dependency to version 5.1.0.
 
 # 1.23.322.1
