@@ -81,6 +81,21 @@ function Get-TargetResource
         $CortanaId = '0a0a29f9-0a25-49c7-94bf-c53c3f8fa69d'
         $CortanaEnabledValue = Get-MgServicePrincipal -Filter "appId eq '$CortanaId'" -Property 'AccountEnabled'
 
+        $MRODeviceManagerService = 'ebe0c285-db95-403f-a1a3-a793bd6d7767'
+        try
+        {
+            $servicePrincipal = Get-MgServicePrincipal -Filter "appid eq 'ebe0c285-db95-403f-a1a3-a793bd6d7767'"
+            if ($null -eq $servicePrincipal)
+            {
+                Write-Verbose -Message "Registering the MRO Device Manager Service Principal"
+                New-MgServicePrincipal -AppId 'ebe0c285-db95-403f-a1a3-a793bd6d7767' -ErrorAction Stop | Out-Null
+            }
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+
         return @{
             IsSingleInstance                           = 'Yes'
             CortanaEnabled                             = $CortanaEnabledValue.AccountEnabled
