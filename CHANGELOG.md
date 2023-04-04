@@ -1,11 +1,5 @@
 # Change log for Microsoft365DSC
 
-# Breaking Changes (APRIL 5TH RELEASE)
-
-* TeamsGroupPolicyAssignment change of key and required parameters
-  * [BREAKING CHANGE] Setting GroupId and PolicyType as Key parameters
-    FIXES [#3054](https://github.com/microsoft/Microsoft365DSC/issues/3054)
-
 # UNRELEASED
 
 * IntuneDeviceEnrollmentPlatformRestriction
@@ -32,6 +26,9 @@
   * Fixes extraction of the ScopedRoleMembers property.
 * AADApplication
   * [BREAKING CHANGE] Remove deprecated parameter Oauth2RequirePostResponse
+* AADAuthorizationPolicy
+  * Fixes an error where the authentication method wasn't recognized when doing an export using app secret.
+    FIXES [#3056](https://github.com/microsoft/Microsoft365DSC/issues/3056)
 * AADConditionalAccessPolicy
   * Add condition for empty External Guest/User include/exclude
     FIXES [#3108](https://github.com/microsoft/Microsoft365DSC/issues/3108)
@@ -138,6 +135,9 @@
   * [BREAKING CHANGE] Remove deprecated parameter RequireAcceptingAccountMatchInvitedAccount
   * Fixes how we are extracting the DisabledWebPartIds parameter.
     FIXES [#3066](https://github.com/microsoft/Microsoft365DSC/issues/3066)
+* TeamsGroupPolicyAssignment change of key and required parameters
+  * [BREAKING CHANGE] Setting GroupId and PolicyType as Key parameters
+    FIXES [#3054](https://github.com/microsoft/Microsoft365DSC/issues/3054)
 * TeamsMeetingPolicy
   * [BREAKING CHANGE] Remove deprecated parameter RecordingStorageMode
 * TeamsUpdateManagementPolicy
