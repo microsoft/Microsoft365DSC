@@ -52,6 +52,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfigurationAssignment -MockWith {
                 return @()
             }
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
+            }
         }
 
         # Test contexts
