@@ -462,7 +462,7 @@ function Set-TargetResource
         }
         #endregion
 
-        if ($user.UserPrincipalName)
+        if ($null -ne $user.UserPrincipalName)
         {
             Write-Verbose -Message "Updating Office 365 User $UserPrincipalName Information"
 
