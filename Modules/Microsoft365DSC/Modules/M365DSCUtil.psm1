@@ -1071,6 +1071,26 @@ function Export-M365DSCConfiguration
         $ApplicationId,
 
         [Parameter(ParameterSetName = 'Export')]
+        [ValidateScript({
+            $invalid = $false
+            try
+            {
+                [System.Guid]::Parse($_) | Out-Null
+                $invalid = $true
+            }
+            catch
+            {
+                $invalid = $false
+            }
+            if ($invalid)
+            {
+                throw "Please provide the tenant name (e.g., contoso.onmicrosoft.com) for TenantId instead of its GUID."
+            }
+            else
+            {
+                return $true
+            }
+        })]
         [System.String]
         $TenantId,
 
