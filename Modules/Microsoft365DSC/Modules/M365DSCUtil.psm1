@@ -3124,10 +3124,28 @@ function Get-M365DSCExportContentForResource
     {
         $primaryKey = $Results.Name
     }
+    elseif ($Results.ContainsKey('Title'))
+    {
+        $primaryKey = $Results.Title
+    }
+    elseif ($Results.ContainsKey('CdnType'))
+    {
+        $primaryKey = $Results.CdnType
+    }
+    elseif ($Results.ContainsKey('Usage'))
+    {
+        $primaryKey = $Results.Usage
+    }
+
     $instanceName = $ResourceName
     if (-not [System.String]::IsNullOrEmpty($primaryKey))
     {
         $instanceName += "-$primaryKey"
+    }
+
+    if ($Results.ContainsKey('Workload'))
+    {
+        $instanceName += "-$($Results.Workload)"
     }
     $content = "        $ResourceName `"$instanceName`"`r`n"
     $content += "        {`r`n"
