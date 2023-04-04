@@ -498,10 +498,10 @@ function Set-TargetResource
                         S = [Char[]]'!"#$%&''()*+,-./:;<=>?@[\]^_`{|}~'
                     }
 
-                    $Upper = Get-Random -Count 5 -InputObject $TokenSet.U
-                    $Lower = Get-Random -Count 5 -InputObject $TokenSet.L
-                    $Number = Get-Random -Count 5 -InputObject $TokenSet.N
-                    $Special = Get-Random -Count 5 -InputObject $TokenSet.S
+                    $Upper = Get-Random -Count 8 -InputObject $TokenSet.U
+                    $Lower = Get-Random -Count 8 -InputObject $TokenSet.L
+                    $Number = Get-Random -Count 8 -InputObject $TokenSet.N
+                    $Special = Get-Random -Count 8 -InputObject $TokenSet.S
 
                     $StringSet = $Upper + $Lower + $Number + $Special
 
