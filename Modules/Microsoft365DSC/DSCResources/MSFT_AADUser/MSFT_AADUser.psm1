@@ -505,7 +505,7 @@ function Set-TargetResource
 
                     $StringSet = $Upper + $Lower + $Number + $Special
 
-                    $stringPassword = (Get-Random -Count 15 -InputObject $StringSet) -join ''
+                    $stringPassword = (Get-Random -Count 30 -InputObject $StringSet) -join ''
                     $passwordValue = ConvertTo-SecureString $stringPassword -AsPlainText -Force
                 }
             }
