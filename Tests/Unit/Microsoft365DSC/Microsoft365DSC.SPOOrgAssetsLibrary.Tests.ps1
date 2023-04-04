@@ -53,6 +53,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'contoso'
             }
 
+            Mock -CommandName Start-Sleep -MockWith {
+            }
+
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
@@ -116,7 +119,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             decodedurl = 'sites/m365dsc/Branding'
                         }
                     }
-                    CdnType            = 'Public'
+                    CdnType = 'Public'
                 }
             }
 
@@ -161,7 +164,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             decodedurl = 'sites/m365dsc/Branding'
                         }
                     }
-                    CdnType            = 'Public'
+                    CdnType = 'Public'
                 }
             }
 
@@ -238,7 +241,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         LibraryUrl = @{
                             decodedurl = 'https://contoso.sharepoint.com/sites/m365dsc/Branding'
                         }
-                        CdnType            = 'Public'
+                        CdnType    = 'Public'
                     }
                 }
             }
