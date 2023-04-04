@@ -108,9 +108,7 @@ function Get-TargetResource
 
     try
     {
-
         $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Identity -ErrorAction silentlyContinue
-
 
         <#
         Not using the DisplayName as a key due to android profiles
@@ -125,7 +123,6 @@ function Get-TargetResource
                     $_.AdditionalProperties.'@odata.type' -like '#microsoft.graph.deviceEnrollmentPlatform*Configuration' }
         }
         #>
-
 
         if ($null -eq $config)
         {
@@ -148,7 +145,7 @@ function Get-TargetResource
             Managedidentity                   = $ManagedIdentity.IsPresent
         }
 
-        $results += get-DevicePlatformRestrictionSetting -Properties $config.AdditionalProperties
+        $results += Get-DevicePlatformRestrictionSetting -Properties $config.AdditionalProperties
         $AssignmentsValues = Get-MgDeviceManagementDeviceEnrollmentConfigurationAssignment -DeviceEnrollmentConfigurationId $config.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
@@ -984,7 +981,6 @@ function Update-DeviceConfigurationPolicyAssignments
         $body = @{'enrollmentConfigurationAssignments' = $configurationPolicyAssignments } | ConvertTo-Json -Depth 20
         #write-verbose -Message $body
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
-
     }
     catch
     {
