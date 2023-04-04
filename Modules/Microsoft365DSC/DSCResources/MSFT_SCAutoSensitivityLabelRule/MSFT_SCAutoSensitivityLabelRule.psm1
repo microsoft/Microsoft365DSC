@@ -1103,7 +1103,6 @@ function Export-TargetResource
             [Array]$workloads = $rule.Workload.Replace(' ', '').Split(',')
             foreach ($workload in $workloads)
             {
-
                 $Results = Get-TargetResource @PSBoundParameters `
                     -Name $rule.name `
                     -Policy $rule.ParentPolicyName `
