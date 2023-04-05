@@ -162,6 +162,8 @@
   * Updated the Update-M365DSCModule to unload dependencies before updating them and then to reload the new versions.
     FIXES [#3097](https://github.com/microsoft/Microsoft365DSC/issues/3097)
   * Added a new internal function to remove the authentication parameters from the bound paramters. `Remove-M365DSCAuthenticationParameter`
+  * Enforcing tenant ID to be in the tenant.onmicrosoft.com form.
+    FIXES [#3046](https://github.com/microsoft/Microsoft365DSC/issues/3046)
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 1.25.0.
   * Updated MicrosoftTeams dependency to version 5.1.0.

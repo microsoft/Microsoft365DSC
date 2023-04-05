@@ -1071,6 +1071,35 @@ function Export-M365DSCConfiguration
         $ApplicationId,
 
         [Parameter(ParameterSetName = 'Export')]
+        [ValidateScript({
+            $invalid = $false
+            try
+            {
+                [System.Guid]::Parse($_) | Out-Null
+                $invalid = $true
+            }
+            catch
+            {
+                $invalid = $false
+            }
+            if ($invalid)
+            {
+                throw "Please provide the tenant name (e.g., contoso.onmicrosoft.com) for TenantId instead of its GUID."
+            }
+            else
+            {
+                $invalid = $_ -notmatch ".onmicrosoft."
+                if (-not $invalid)
+                {
+                    return $true
+                }
+                else
+                {
+                    Write-Warning -Message "We recommend providing the TenantId property in the format of <tenant>.onmicrosoft.*"
+                }
+            }
+            return $true
+        })]
         [System.String]
         $TenantId,
 
@@ -1083,6 +1112,18 @@ function Export-M365DSCConfiguration
         $CertificateThumbprint,
 
         [Parameter(ParameterSetName = 'Export')]
+        [ValidateScript({
+            $invalid = $_.Username -notmatch ".onmicrosoft."
+            if (-not $invalid)
+            {
+                return $true
+            }
+            else
+            {
+                Write-Warning -Message "We recommend providing the username in the format of <tenant>.onmicrosoft.* for the Credential property."
+            }
+            return $true
+        })]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -1528,6 +1569,51 @@ function New-M365DSCConnection
         $Workload,
 
         [Parameter(Mandatory = $true)]
+        [ValidateScript({
+            if ($null -ne $_.Credential)
+            {
+                $invalid = $_.Credential.Username -notmatch ".onmicrosoft."
+                if (-not $invalid)
+                {
+                    return $true
+                }
+                else
+                {
+                    Write-Warning -Message "We recommend providing the username in the format of <tenant>.onmicrosoft.* for the Credential property."
+                }
+            }
+
+            if ($null -ne $_.TenantId)
+            {
+                $invalid = $false
+                try
+                {
+                    [System.Guid]::Parse($_.TenantId) | Out-Null
+                    $invalid = $true
+                }
+                catch
+                {
+                    $invalid = $false
+                }
+                if ($invalid)
+                {
+                    throw "Please provide the tenant name (e.g., contoso.onmicrosoft.com) for TenantId instead of its GUID."
+                }
+                else
+                {
+                    $invalid = $_.TenantId -notmatch ".onmicrosoft."
+                    if (-not $invalid)
+                    {
+                        return $true
+                    }
+                    else
+                    {
+                        Write-Warning -Message "We recommend providing the tenant name in format <tenant>.onmicrosoft.* for TenantId."
+                    }
+                }
+            }
+            return $true
+        })]
         [System.Collections.Hashtable]
         $InboundParameters,
 
