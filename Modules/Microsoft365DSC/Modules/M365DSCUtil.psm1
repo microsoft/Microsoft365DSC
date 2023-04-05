@@ -1095,7 +1095,7 @@ function Export-M365DSCConfiguration
                 }
                 else
                 {
-                    throw "Please provide the tenant name in format <tenant>.onmicrosoft.com for TenantId."
+                    Write-Warning -Message "We recommend providing the TenantId property in the format of <tenant>.onmicrosoft.*"
                 }
             }
             return $true
@@ -1120,7 +1120,7 @@ function Export-M365DSCConfiguration
             }
             else
             {
-                throw "Please provide a username in the format of <tenant>.onmicrosoft.com for the Credential property."
+                Write-Warning -Message "We recommend providing the username in the format of <tenant>.onmicrosoft.* for the Credential property."
             }
             return $true
         })]
@@ -1570,7 +1570,7 @@ function New-M365DSCConnection
 
         [Parameter(Mandatory = $true)]
         [ValidateScript({
-            if ($null -ne $Credential)
+            if ($null -ne $_.Credential)
             {
                 $invalid = $_.Credential.Username -notmatch ".onmicrosoft."
                 if (-not $invalid)
@@ -1579,34 +1579,37 @@ function New-M365DSCConnection
                 }
                 else
                 {
-                    throw "Please provide a username in the format of <tenant>.onmicrosoft.com for the Credential property."
+                    Write-Warning -Message "We recommend providing the username in the format of <tenant>.onmicrosoft.* for the Credential property."
                 }
             }
 
-            $invalid = $false
-            try
-            {
-                [System.Guid]::Parse($_.TenantId) | Out-Null
-                $invalid = $true
-            }
-            catch
+            if ($null -ne $_.TenantId)
             {
                 $invalid = $false
-            }
-            if ($invalid)
-            {
-                throw "Please provide the tenant name (e.g., contoso.onmicrosoft.com) for TenantId instead of its GUID."
-            }
-            else
-            {
-                $invalid = $_.TenantId -notmatch ".onmicrosoft."
-                if (-not $invalid)
+                try
                 {
-                    return $true
+                    [System.Guid]::Parse($_.TenantId) | Out-Null
+                    $invalid = $true
+                }
+                catch
+                {
+                    $invalid = $false
+                }
+                if ($invalid)
+                {
+                    throw "Please provide the tenant name (e.g., contoso.onmicrosoft.com) for TenantId instead of its GUID."
                 }
                 else
                 {
-                    throw "Please provide the tenant name in format <tenant>.onmicrosoft.com for TenantId."
+                    $invalid = $_.TenantId -notmatch ".onmicrosoft."
+                    if (-not $invalid)
+                    {
+                        return $true
+                    }
+                    else
+                    {
+                        Write-Warning -Message "We recommend providing the tenant name in format <tenant>.onmicrosoft.* for TenantId."
+                    }
                 }
             }
             return $true
