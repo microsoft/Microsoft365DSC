@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.405.1
 
 * IntuneDeviceEnrollmentPlatformRestriction
   * [BREAKING CHANGE] Updated resource to manage single and default platform restriction policies
