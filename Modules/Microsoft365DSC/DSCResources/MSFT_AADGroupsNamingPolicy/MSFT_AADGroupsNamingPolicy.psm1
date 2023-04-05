@@ -206,7 +206,7 @@ function Set-TargetResource
             {
                 $Policy.Values[$index].Value = $PrefixSuffixNamingRequirement
             }
-            $index++;
+            $index++
         }
         Write-Verbose -Message "Updating Groups Naming Policy to {$($Policy.Values -join ',')}"
         Update-MgBetaDirectorySetting -DirectorySettingId $Policy.id -Values $Policy.Values | Out-Null

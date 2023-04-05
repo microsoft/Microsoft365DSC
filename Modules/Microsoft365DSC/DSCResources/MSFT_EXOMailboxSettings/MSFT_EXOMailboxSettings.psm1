@@ -182,7 +182,7 @@ function Set-TargetResource
     $currentMailbox = Get-TargetResource @PSBoundParameters
 
     $AllowedTimeZones = (Get-ChildItem 'HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Time zones' | `
-            ForEach-Object { Get-ItemProperty $_.PSPath }).PSChildName
+                ForEach-Object { Get-ItemProperty $_.PSPath }).PSChildName
 
     if ($AllowedTimeZones.Contains($TimeZone) -eq $false)
     {

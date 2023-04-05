@@ -377,18 +377,16 @@ function Export-TargetResource
                 $result.EmergencyNumbers = ConvertTo-TeamsEmergencyNumbersString -Numbers $result.EmergencyNumbers
             }
 
-            $content = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-
-            if ($null -ne $result.EmergencyNumbers)
-            {
-                $content = Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName 'EmergencyNumbers'
-            }
-
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Result `
                 -Credential $Credential
+
+            if ($null -ne $result.EmergencyNumbers)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EmergencyNumbers'
+            }
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

@@ -632,7 +632,7 @@ function Test-TargetResource
             if (-Not $testResult)
             {
                 $testResult = $false
-                break;
+                break
             }
 
             $ValuesToCheck.Remove($key) | Out-Null
@@ -1224,7 +1224,7 @@ function Rename-M365DSCCimInstanceODataParameter
                         }
                         $clonedProperties.$key = $values
                     }
-                    break;
+                    break
                 }
                 '*hashtable[[\]]'
                 {
@@ -1239,7 +1239,7 @@ function Rename-M365DSCCimInstanceODataParameter
                         }
                         $clonedProperties.$key = $values
                     }
-                    break;
+                    break
                 }
                 '*CimInstance'
                 {
@@ -1252,7 +1252,7 @@ function Rename-M365DSCCimInstanceODataParameter
                         $CIMHash.remove('odataType')
                         $clonedProperties.$key = $CIMHash
                     }
-                    break;
+                    break
                 }
                 '*Hashtable'
                 {
@@ -1263,7 +1263,7 @@ function Rename-M365DSCCimInstanceODataParameter
                         $Properties.$key.remove('odataType')
                         $clonedProperties.$key = $Properties.$key
                     }
-                    break;
+                    break
                 }
                 Default
                 {

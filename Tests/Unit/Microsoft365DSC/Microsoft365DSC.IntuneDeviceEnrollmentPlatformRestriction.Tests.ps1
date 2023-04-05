@@ -22,11 +22,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         BeforeAll {
-            $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin@mydomain.com", $secpasswd)
+            $secpasswd = ConvertTo-SecureString 'Pass@word1' -AsPlainText -Force
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             #Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
-             #   return @{}
+            #   return @{}
             #}
 
             #Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
@@ -61,16 +61,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When the restriction doesn't already exist" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity                                     = "12345-12345-12345-12345-12345_SinglePlatformRestriction";
-                    Description                                  = "";
-                    DisplayName                                  = "My DSC Restriction";
-                    Ensure                                       = "Present"
-                    DeviceEnrollmentConfigurationType            = "singlePlatformRestriction";
-                    Credential                                   = $Credential;
-                    IosRestriction                               = (New-CimInstance -ClassName MSFT_DeviceEnrollmentPlatformRestriction -Property @{
-                        platformBlocked = $False
-                        personalDeviceEnrollmentBlocked = $False
-                    } -ClientOnly);
+                    Identity                          = '12345-12345-12345-12345-12345_SinglePlatformRestriction'
+                    Description                       = ''
+                    DisplayName                       = 'My DSC Restriction'
+                    Ensure                            = 'Present'
+                    DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
+                    Credential                        = $Credential
+                    IosRestriction                    = (New-CimInstance -ClassName MSFT_DeviceEnrollmentPlatformRestriction -Property @{
+                            platformBlocked                 = $False
+                            personalDeviceEnrollmentBlocked = $False
+                        } -ClientOnly)
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
@@ -92,78 +92,78 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "When the restriction already exists and is in the Desired State" -Fixture {
+        Context -Name 'When the restriction already exists and is in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity                                     = "12345-12345-12345-12345-12345_SinglePlatformRestriction"
-                    Description                                  = "";
-                    DisplayName                                  = "My DSC Restriction";
-                    Ensure                                       = "Present"
-                    DeviceEnrollmentConfigurationType            = "singlePlatformRestriction"
-                    Credential                                   = $Credential;
-                    IosRestriction                               = (New-CimInstance -ClassName MSFT_DeviceEnrollmentPlatformRestriction -Property @{
-                        platformBlocked = $False
-                        personalDeviceEnrollmentBlocked = $False
-                    } -ClientOnly)
+                    Identity                          = '12345-12345-12345-12345-12345_SinglePlatformRestriction'
+                    Description                       = ''
+                    DisplayName                       = 'My DSC Restriction'
+                    Ensure                            = 'Present'
+                    DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
+                    Credential                        = $Credential
+                    IosRestriction                    = (New-CimInstance -ClassName MSFT_DeviceEnrollmentPlatformRestriction -Property @{
+                            platformBlocked                 = $False
+                            personalDeviceEnrollmentBlocked = $False
+                        } -ClientOnly)
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
-                        AdditionalProperties = @{
-                            '@odata.type'                       = '#microsoft.graph.deviceEnrollmentPlatformRestrictionConfiguration'
-                            PlatformRestriction                 = @{
-                                    PersonalDeviceEnrollmentBlocked = $False;
-                                    PlatformBlocked                 = $False;
+                        AdditionalProperties              = @{
+                            '@odata.type'       = '#microsoft.graph.deviceEnrollmentPlatformRestrictionConfiguration'
+                            PlatformRestriction = @{
+                                PersonalDeviceEnrollmentBlocked = $False
+                                PlatformBlocked                 = $False
                             }
-                            platformType                        = 'ios'
+                            platformType        = 'ios'
                         }
-                        id                                      = "12345-12345-12345-12345-12345_SinglePlatformRestriction"
-                        DeviceEnrollmentConfigurationType       = "singlePlatformRestriction"
-                        Description                             = "";
-                        DisplayName                             = "My DSC Restriction";
+                        id                                = '12345-12345-12345-12345-12345_SinglePlatformRestriction'
+                        DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
+                        Description                       = ''
+                        DisplayName                       = 'My DSC Restriction'
                     }
                 }
             }
 
-            It "Should return true from the Test method" {
+            It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
 
-        Context -Name "When the restriction already exists and is NOT in the Desired State" -Fixture {
+        Context -Name 'When the restriction already exists and is NOT in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity                                     = "12345-12345-12345-12345-12345_SinglePlatformRestriction"
-                    Description                                  = "";
-                    DisplayName                                  = "My DSC Restriction";
-                    Ensure                                       = "Present"
-                    DeviceEnrollmentConfigurationType            = "singlePlatformRestriction"
-                    Credential                           = $Credential;
-                    iOSRestriction                               = (New-CimInstance -ClassName MSFT_DeviceEnrollmentPlatformRestriction -Property @{
-                        platformBlocked = $False
-                        personalDeviceEnrollmentBlocked = $False
-                    } -ClientOnly)
+                    Identity                          = '12345-12345-12345-12345-12345_SinglePlatformRestriction'
+                    Description                       = ''
+                    DisplayName                       = 'My DSC Restriction'
+                    Ensure                            = 'Present'
+                    DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
+                    Credential                        = $Credential
+                    iOSRestriction                    = (New-CimInstance -ClassName MSFT_DeviceEnrollmentPlatformRestriction -Property @{
+                            platformBlocked                 = $False
+                            personalDeviceEnrollmentBlocked = $False
+                        } -ClientOnly)
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
-                        AdditionalProperties = @{
-                            '@odata.type'                       = '#microsoft.graph.deviceEnrollmentPlatformRestrictionConfiguration'
-                            PlatformRestriction                 = @{
-                                    PersonalDeviceEnrollmentBlocked = $true; #drift
-                                    PlatformBlocked                 = $False;
+                        AdditionalProperties              = @{
+                            '@odata.type'       = '#microsoft.graph.deviceEnrollmentPlatformRestrictionConfiguration'
+                            PlatformRestriction = @{
+                                PersonalDeviceEnrollmentBlocked = $true; #drift
+                                PlatformBlocked                 = $False
                             }
-                            platformType                        = 'ios'
+                            platformType        = 'ios'
                         }
-                        id                                      = "12345-12345-12345-12345-12345_SinglePlatformRestriction"
-                        DeviceEnrollmentConfigurationType       = "singlePlatformRestriction"
-                        Description                             = "";
-                        DisplayName                             = "My DSC Restriction";
+                        id                                = '12345-12345-12345-12345-12345_SinglePlatformRestriction'
+                        DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
+                        Description                       = ''
+                        DisplayName                       = 'My DSC Restriction'
                     }
                 }
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
         }
@@ -171,32 +171,32 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'When the restriction exists and it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity                                     = "12345-12345-12345-12345-12345_SinglePlatformRestriction"
-                    Description                                  = "";
-                    DisplayName                                  = "My DSC Restriction";
-                    Ensure                                       = "Absent"
-                    DeviceEnrollmentConfigurationType            = "singlePlatformRestriction"
-                    Credential                           = $Credential;
-                    iOSRestriction                               = (New-CimInstance -ClassName MSFT_DeviceEnrollmentPlatformRestriction -Property @{
-                        platformBlocked = $False
-                        personalDeviceEnrollmentBlocked = $False
-                    } -ClientOnly)
+                    Identity                          = '12345-12345-12345-12345-12345_SinglePlatformRestriction'
+                    Description                       = ''
+                    DisplayName                       = 'My DSC Restriction'
+                    Ensure                            = 'Absent'
+                    DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
+                    Credential                        = $Credential
+                    iOSRestriction                    = (New-CimInstance -ClassName MSFT_DeviceEnrollmentPlatformRestriction -Property @{
+                            platformBlocked                 = $False
+                            personalDeviceEnrollmentBlocked = $False
+                        } -ClientOnly)
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
-                        AdditionalProperties = @{
-                            '@odata.type'            = '#microsoft.graph.deviceEnrollmentPlatformRestrictionConfiguration'
-                            PlatformRestriction       = @{
-                                PersonalDeviceEnrollmentBlocked = $False;
-                                PlatformBlocked                 = $False;
+                        AdditionalProperties              = @{
+                            '@odata.type'       = '#microsoft.graph.deviceEnrollmentPlatformRestrictionConfiguration'
+                            PlatformRestriction = @{
+                                PersonalDeviceEnrollmentBlocked = $False
+                                PlatformBlocked                 = $False
                             }
-                            platformType                        = 'ios'
+                            platformType        = 'ios'
                         }
-                        id                       = "12345-12345-12345-12345-12345_SinglePlatformRestriction"
-                        DeviceEnrollmentConfigurationType            = "singlePlatformRestriction"
-                        Description              = "";
-                        DisplayName              = "My DSC Restriction";
+                        id                                = '12345-12345-12345-12345-12345_SinglePlatformRestriction'
+                        DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
+                        Description                       = ''
+                        DisplayName                       = 'My DSC Restriction'
                     }
                 }
             }
@@ -225,18 +225,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
-                        AdditionalProperties                = @{
+                        AdditionalProperties              = @{
                             '@odata.type'       = '#microsoft.graph.deviceEnrollmentPlatformRestrictionConfiguration'
                             PlatformRestriction = @{
-                                PersonalDeviceEnrollmentBlocked = $False;
-                                PlatformBlocked                 = $False;
+                                PersonalDeviceEnrollmentBlocked = $False
+                                PlatformBlocked                 = $False
                             }
                             platformType        = 'ios'
                         }
-                        id                                  = "12345-12345-12345-12345-12345_SinglePlatformRestriction"
-                        DeviceEnrollmentConfigurationType   = "singlePlatformRestriction"
-                        Description                         = "";
-                        DisplayName                         = "My DSC Restriction";
+                        id                                = '12345-12345-12345-12345-12345_SinglePlatformRestriction'
+                        DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
+                        Description                       = ''
+                        DisplayName                       = 'My DSC Restriction'
                     }
                 }
             }

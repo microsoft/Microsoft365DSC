@@ -718,7 +718,7 @@ function Get-M365TenantId
         $TenantName
     )
 
-    if ($TenantName -notmatch ".onmicrosoft.com$")
+    if ($TenantName -notmatch '.onmicrosoft.com$')
     {
         $TenantName += '.onmicrosoft.com'
     }

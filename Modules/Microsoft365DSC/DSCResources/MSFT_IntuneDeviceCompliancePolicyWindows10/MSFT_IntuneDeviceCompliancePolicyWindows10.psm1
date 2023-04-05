@@ -771,7 +771,7 @@ function Test-TargetResource
                 {
                     Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
                     $testResult = $false
-                    break;
+                    break
                 }
 
                 $CIMAssignmentAsHash = Get-M365DSCAssignmentsAsHashtable -CIMAssignment $source
@@ -784,7 +784,7 @@ function Test-TargetResource
                 {
                     Write-Verbose -Message "Configuration drift: collectionId {$($assignment.collectionId)} not found"
                     $testResult = $false
-                    break;
+                    break
                 }
 
                 $CIMAssignmentAsHash = Get-M365DSCAssignmentsAsHashtable -CIMAssignment $source
@@ -797,7 +797,7 @@ function Test-TargetResource
                 {
                     Write-Verbose -Message "Configuration drift: {$($assignment.dataType)} not found"
                     $testResult = $false
-                    break;
+                    break
                 }
                 $CIMAssignmentAsHash = Get-M365DSCAssignmentsAsHashtable -CIMAssignment $source
             }
@@ -819,7 +819,7 @@ function Test-TargetResource
             if (-not $testResult)
             {
                 $testResult = $false
-                break;
+                break
             }
 
         }
@@ -1093,7 +1093,7 @@ function Get-MgBetaDeviceManagementPolicyAssignments
         $deviceManagementPolicyAssignments = @()
 
         $Uri = "https://graph.microsoft.com/beta/deviceManagement/$Repository/$DeviceManagementPolicyId/assignments"
-        $results = Invoke-MgGraphRequest -Method GET  -Uri $Uri -ErrorAction Stop
+        $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
         foreach ($result in $results.value.target)
         {
             $deviceManagementPolicyAssignments += @{

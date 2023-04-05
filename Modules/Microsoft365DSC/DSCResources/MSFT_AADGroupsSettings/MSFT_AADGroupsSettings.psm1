@@ -297,7 +297,7 @@ function Set-TargetResource
                 $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'UsageGuidelinesUrl' }
                 $entry.Value = $UsageGuidelinesUrl
             }
-            $index++;
+            $index++
         }
 
         Write-Verbose -Message "Updating Policy's Values with $($Policy.Values | Out-String)"

@@ -3618,7 +3618,7 @@ function Get-M365DSCDRGSimpleObjectTypeToString
             {
                 $key = 'odataType'
             }
-            $returnValue = $Space + $Key + " = '" + $Value + "'`r`n"
+            $returnValue = $Space + $Key + " = '" + $Value.Replace("'", "''") + "'`r`n"
         }
         '*.DateTime'
         {

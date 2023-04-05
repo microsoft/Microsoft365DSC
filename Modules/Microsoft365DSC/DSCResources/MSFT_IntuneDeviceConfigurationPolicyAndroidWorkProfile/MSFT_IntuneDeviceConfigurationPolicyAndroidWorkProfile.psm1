@@ -967,7 +967,7 @@ function Test-TargetResource
                 {
                     Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
                     $testResult = $false
-                    break;
+                    break
                 }
                 $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
                 $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
@@ -980,7 +980,7 @@ function Test-TargetResource
                 {
                     Write-Verbose -Message "Configuration drift: {$($assignment.dataType)} not found"
                     $testResult = $false
-                    break;
+                    break
                 }
                 $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
                 $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
@@ -989,7 +989,7 @@ function Test-TargetResource
             if (-not $testResult)
             {
                 $testResult = $false
-                break;
+                break
             }
 
         }

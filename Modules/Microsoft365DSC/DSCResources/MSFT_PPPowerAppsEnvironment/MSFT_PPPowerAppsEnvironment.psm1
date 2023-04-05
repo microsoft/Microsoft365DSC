@@ -9,7 +9,7 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('canada', 'unitedstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov','unitedarabemirates','germany','switzerland','norway','korea','southafrica')]
+        [ValidateSet('canada', 'unitedstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov', 'unitedarabemirates', 'germany', 'switzerland', 'norway', 'korea', 'southafrica')]
         $Location,
 
         [Parameter(Mandatory = $true)]
@@ -112,7 +112,7 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('canada', 'unitedstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov','unitedarabemirates','germany','switzerland','norway','korea','southafrica')]
+        [ValidateSet('canada', 'unitedstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov', 'unitedarabemirates', 'germany', 'switzerland', 'norway', 'korea', 'southafrica')]
         $Location,
 
         [Parameter(Mandatory = $true)]
@@ -207,7 +207,7 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('canada', 'unitedstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov','unitedarabemirates','germany','switzerland','norway','korea','southafrica')]
+        [ValidateSet('canada', 'unitedstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov', 'unitedarabemirates', 'germany', 'switzerland', 'norway', 'korea', 'southafrica')]
         $Location,
 
         [Parameter(Mandatory = $true)]
@@ -372,7 +372,7 @@ function Export-TargetResource
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `

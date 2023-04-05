@@ -25,7 +25,7 @@ Configuration Example
             UpdateDayOfWeek      = 1;
             UpdateTime           = "18:00";
             UpdateTimeOfDay      = "2022-05-06T18:00:00";
-            UseNewTeamsClient    = $True
+            UseNewTeamsClient    = 'MicrosoftChoice'
         }
     }
 }

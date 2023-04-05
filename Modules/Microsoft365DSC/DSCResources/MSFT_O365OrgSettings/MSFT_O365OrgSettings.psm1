@@ -170,7 +170,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Setting configuration of Office 365 Settings"
+    Write-Verbose -Message 'Setting configuration of Office 365 Settings'
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -179,7 +179,7 @@ function Set-TargetResource
     if ($M365WebEnableUsersToOpenFilesFrom3PStorage -ne $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled)
     {
         Write-Verbose -Message "Setting the Microsoft 365 On the Web setting to {$M365WebEnableUsersToOpenFilesFrom3PStorage}"
-        Update-MgservicePrincipal -ServicePrincipalId $($M365WebEnableUsersToOpenFilesFrom3PStorageValue.Id) `
+        Update-MgServicePrincipal -ServicePrincipalId $($M365WebEnableUsersToOpenFilesFrom3PStorageValue.Id) `
             -AccountEnabled:$M365WebEnableUsersToOpenFilesFrom3PStorage
     }
 
@@ -188,7 +188,7 @@ function Set-TargetResource
     if ($CortanaEnabled -ne $CortanaEnabledValue.AccountEnabled)
     {
         Write-Verbose -Message "Setting the Cortana setting to {$CortanaEnabled}"
-        Update-MgservicePrincipal -ServicePrincipalId $($CortanaEnabledValue.Id) `
+        Update-MgServicePrincipal -ServicePrincipalId $($CortanaEnabledValue.Id) `
             -AccountEnabled:$CortanaEnabled
     }
 }

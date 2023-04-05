@@ -1,12 +1,6 @@
 # Change log for Microsoft365DSC
 
-# Breaking Changes (APRIL 5TH RELEASE)
-
-* TeamsGroupPolicyAssignment change of key and required parameters
-  * [BREAKING CHANGE] Setting GroupId and PolicyType as Key parameters
-    FIXES [#3054](https://github.com/microsoft/Microsoft365DSC/issues/3054)
-
-# UNRELEASED
+# 1.23.405.1
 
 * IntuneDeviceEnrollmentPlatformRestriction
   * [BREAKING CHANGE] Updated resource to manage single and default platform restriction policies
@@ -32,6 +26,9 @@
   * Fixes extraction of the ScopedRoleMembers property.
 * AADApplication
   * [BREAKING CHANGE] Remove deprecated parameter Oauth2RequirePostResponse
+* AADAuthorizationPolicy
+  * Fixes an error where the authentication method wasn't recognized when doing an export using app secret.
+    FIXES [#3056](https://github.com/microsoft/Microsoft365DSC/issues/3056)
 * AADConditionalAccessPolicy
   * Add condition for empty External Guest/User include/exclude
     FIXES [#3108](https://github.com/microsoft/Microsoft365DSC/issues/3108)
@@ -99,6 +96,8 @@
   IntuneWifiConfigurationPolicyMacOS, IntuneWifiConfigurationPolicyWindows10,
   IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled, IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
+  * Properly escapes single quotes from CIMInstances string values.
+    FIXES [#3117](https://github.com/microsoft/Microsoft365DSC/issues/3117)
 * IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
   * [BREAKING CHANGE] Corrected typo in resource name (Entreprise to Enterprise)
@@ -148,6 +147,7 @@
     * Fix Read privileges in settings file
 * MISC
   * Fixed an issue `New-M365DSCReportFromConfiguration` where a non existing parameter was used to retrieve the configuration.
+  * Improved unit test performance
   * Added a QA check to test for the presence of a Key parameter and fixes
     resources where this was not the case.
     FIXES [#2925](https://github.com/microsoft/Microsoft365DSC/issues/2925)
@@ -159,7 +159,10 @@
   * Updated the Update-M365DSCModule to unload dependencies before updating them and then to reload the new versions.
     FIXES [#3097](https://github.com/microsoft/Microsoft365DSC/issues/3097)
   * Added a new internal function to remove the authentication parameters from the bound paramters. `Remove-M365DSCAuthenticationParameter`
+  * Enforcing tenant ID to be in the tenant.onmicrosoft.com form.
+    FIXES [#3046](https://github.com/microsoft/Microsoft365DSC/issues/3046)
 * DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 1.25.0.
   * Updated MicrosoftTeams dependency to version 5.1.0.
 
 # 1.23.322.1

@@ -10,7 +10,7 @@ function Get-TargetResource
         $AccountsBlockAddingNonMicrosoftAccountEmail,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $ActivateAppsWithVoice,
 
@@ -31,7 +31,7 @@ function Get-TargetResource
         $AppManagementPackageFamilyNamesToLaunchAfterLogOn,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blocked','allowed')]
+        [ValidateSet('notConfigured', 'blocked', 'allowed')]
         [System.String]
         $AppsAllowTrustedAppsSideloading,
 
@@ -48,7 +48,7 @@ function Get-TargetResource
         $AuthenticationPreferredAzureADTenantDomainName,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $AuthenticationWebSignIn,
 
@@ -93,7 +93,7 @@ function Get-TargetResource
         $CellularBlockVpnWhenRoaming,
 
         [Parameter()]
-        [ValidateSet('blocked','required','allowed','notConfigured')]
+        [ValidateSet('blocked', 'required', 'allowed', 'notConfigured')]
         [System.String]
         $CellularData,
 
@@ -134,7 +134,7 @@ function Get-TargetResource
         $DefenderBlockOnAccessProtection,
 
         [Parameter()]
-        [ValidateSet('notConfigured','high','highPlus','zeroTolerance')]
+        [ValidateSet('notConfigured', 'high', 'highPlus', 'zeroTolerance')]
         [System.String]
         $DefenderCloudBlockLevel,
 
@@ -171,17 +171,17 @@ function Get-TargetResource
         $DefenderFilesAndFoldersToExclude,
 
         [Parameter()]
-        [ValidateSet('userDefined','disable','monitorAllFiles','monitorIncomingFilesOnly','monitorOutgoingFilesOnly')]
+        [ValidateSet('userDefined', 'disable', 'monitorAllFiles', 'monitorIncomingFilesOnly', 'monitorOutgoingFilesOnly')]
         [System.String]
         $DefenderMonitorFileActivity,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','block','audit')]
+        [ValidateSet('deviceDefault', 'block', 'audit')]
         [System.String]
         $DefenderPotentiallyUnwantedAppAction,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderPotentiallyUnwantedAppActionSetting,
 
@@ -190,7 +190,7 @@ function Get-TargetResource
         $DefenderProcessesToExclude,
 
         [Parameter()]
-        [ValidateSet('userDefined','alwaysPrompt','promptBeforeSendingPersonalData','neverSendData','sendAllDataWithoutPrompting')]
+        [ValidateSet('userDefined', 'alwaysPrompt', 'promptBeforeSendingPersonalData', 'neverSendData', 'sendAllDataWithoutPrompting')]
         [System.String]
         $DefenderPromptForSampleSubmission,
 
@@ -243,7 +243,7 @@ function Get-TargetResource
         $DefenderScanScriptsLoadedInInternetExplorer,
 
         [Parameter()]
-        [ValidateSet('userDefined','disabled','quick','full')]
+        [ValidateSet('userDefined', 'disabled', 'quick', 'full')]
         [System.String]
         $DefenderScanType,
 
@@ -264,17 +264,17 @@ function Get-TargetResource
         $DefenderSignatureUpdateIntervalInHours,
 
         [Parameter()]
-        [ValidateSet('sendSafeSamplesAutomatically','alwaysPrompt','neverSend','sendAllSamplesAutomatically')]
+        [ValidateSet('sendSafeSamplesAutomatically', 'alwaysPrompt', 'neverSend', 'sendAllSamplesAutomatically')]
         [System.String]
         $DefenderSubmitSamplesConsentType,
 
         [Parameter()]
-        [ValidateSet('userDefined','everyday','sunday','monday','tuesday','wednesday','thursday','friday','saturday','noScheduledScan')]
+        [ValidateSet('userDefined', 'everyday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'noScheduledScan')]
         [System.String]
         $DefenderSystemScanSchedule,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blocked','allowed')]
+        [ValidateSet('notConfigured', 'blocked', 'allowed')]
         [System.String]
         $DeveloperUnlockSetting,
 
@@ -287,7 +287,7 @@ function Get-TargetResource
         $DeviceManagementBlockManualUnenroll,
 
         [Parameter()]
-        [ValidateSet('userDefined','none','basic','enhanced','full')]
+        [ValidateSet('userDefined', 'none', 'basic', 'enhanced', 'full')]
         [System.String]
         $DiagnosticsDataSubmissionMode,
 
@@ -404,7 +404,7 @@ function Get-TargetResource
         $EdgeClearBrowsingDataOnExit,
 
         [Parameter()]
-        [ValidateSet('userDefined','allow','blockThirdParty','blockAll')]
+        [ValidateSet('userDefined', 'allow', 'blockThirdParty', 'blockAll')]
         [System.String]
         $EdgeCookiePolicy,
 
@@ -417,7 +417,7 @@ function Get-TargetResource
         $EdgeEnterpriseModeSiteListLocation,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $EdgeFavoritesBarVisibility,
 
@@ -442,7 +442,7 @@ function Get-TargetResource
         $EdgeHomepageUrls,
 
         [Parameter()]
-        [ValidateSet('notConfigured','digitalSignage','normalMode','publicBrowsingSingleApp','publicBrowsingMultiApp')]
+        [ValidateSet('notConfigured', 'digitalSignage', 'normalMode', 'publicBrowsingSingleApp', 'publicBrowsingMultiApp')]
         [System.String]
         $EdgeKioskModeRestriction,
 
@@ -455,7 +455,7 @@ function Get-TargetResource
         $EdgeNewTabPageURL,
 
         [Parameter()]
-        [ValidateSet('notConfigured','startPage','newTabPage','previousPages','specificPages')]
+        [ValidateSet('notConfigured', 'startPage', 'newTabPage', 'previousPages', 'specificPages')]
         [System.String]
         $EdgeOpensWith,
 
@@ -480,7 +480,7 @@ function Get-TargetResource
         $EdgeSendIntranetTrafficToInternetExplorer,
 
         [Parameter()]
-        [ValidateSet('notConfigured','disabled','enabled','keepGoing')]
+        [ValidateSet('notConfigured', 'disabled', 'enabled', 'keepGoing')]
         [System.String]
         $EdgeShowMessageWhenOpeningInternetExplorerSites,
 
@@ -489,7 +489,7 @@ function Get-TargetResource
         $EdgeSyncFavoritesWithInternetExplorer,
 
         [Parameter()]
-        [ValidateSet('notConfigured','intranet','internet','intranetAndInternet')]
+        [ValidateSet('notConfigured', 'intranet', 'internet', 'intranetAndInternet')]
         [System.String]
         $EdgeTelemetryForMicrosoft365Analytics,
 
@@ -542,12 +542,12 @@ function Get-TargetResource
         $ExperienceBlockTaskSwitcher,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blockedWithUserOverride','blocked')]
+        [ValidateSet('notConfigured', 'blockedWithUserOverride', 'blocked')]
         [System.String]
         $ExperienceDoNotSyncBrowserSettings,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $FindMyFiles,
 
@@ -556,12 +556,12 @@ function Get-TargetResource
         $GameDvrBlocked,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $InkWorkspaceAccess,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blocked','allowed')]
+        [ValidateSet('notConfigured', 'blocked', 'allowed')]
         [System.String]
         $InkWorkspaceAccessState,
 
@@ -578,7 +578,7 @@ function Get-TargetResource
         $LocationServicesBlocked,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $LockScreenActivateAppsWithVoice,
 
@@ -627,7 +627,7 @@ function Get-TargetResource
         $MicrosoftAccountBlockSettingsSync,
 
         [Parameter()]
-        [ValidateSet('notConfigured','disabled')]
+        [ValidateSet('notConfigured', 'disabled')]
         [System.String]
         $MicrosoftAccountSignInAssistantSettings,
 
@@ -688,7 +688,7 @@ function Get-TargetResource
         $PasswordRequired,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','alphanumeric','numeric')]
+        [ValidateSet('deviceDefault', 'alphanumeric', 'numeric')]
         [System.String]
         $PasswordRequiredType,
 
@@ -709,42 +709,42 @@ function Get-TargetResource
         $PersonalizationLockScreenImageUrl,
 
         [Parameter()]
-        [ValidateSet('notConfigured','noAction','sleep','hibernate','shutdown')]
+        [ValidateSet('notConfigured', 'noAction', 'sleep', 'hibernate', 'shutdown')]
         [System.String]
         $PowerButtonActionOnBattery,
 
         [Parameter()]
-        [ValidateSet('notConfigured','noAction','sleep','hibernate','shutdown')]
+        [ValidateSet('notConfigured', 'noAction', 'sleep', 'hibernate', 'shutdown')]
         [System.String]
         $PowerButtonActionPluggedIn,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $PowerHybridSleepOnBattery,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $PowerHybridSleepPluggedIn,
 
         [Parameter()]
-        [ValidateSet('notConfigured','noAction','sleep','hibernate','shutdown')]
+        [ValidateSet('notConfigured', 'noAction', 'sleep', 'hibernate', 'shutdown')]
         [System.String]
         $PowerLidCloseActionOnBattery,
 
         [Parameter()]
-        [ValidateSet('notConfigured','noAction','sleep','hibernate','shutdown')]
+        [ValidateSet('notConfigured', 'noAction', 'sleep', 'hibernate', 'shutdown')]
         [System.String]
         $PowerLidCloseActionPluggedIn,
 
         [Parameter()]
-        [ValidateSet('notConfigured','noAction','sleep','hibernate','shutdown')]
+        [ValidateSet('notConfigured', 'noAction', 'sleep', 'hibernate', 'shutdown')]
         [System.String]
         $PowerSleepButtonActionOnBattery,
 
         [Parameter()]
-        [ValidateSet('notConfigured','noAction','sleep','hibernate','shutdown')]
+        [ValidateSet('notConfigured', 'noAction', 'sleep', 'hibernate', 'shutdown')]
         [System.String]
         $PowerSleepButtonActionPluggedIn,
 
@@ -761,7 +761,7 @@ function Get-TargetResource
         $PrinterNames,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blocked','allowed')]
+        [ValidateSet('notConfigured', 'blocked', 'allowed')]
         [System.String]
         $PrivacyAdvertisingId,
 
@@ -790,7 +790,7 @@ function Get-TargetResource
         $ResetProtectionModeBlocked,
 
         [Parameter()]
-        [ValidateSet('userDefined','strict','moderate')]
+        [ValidateSet('userDefined', 'strict', 'moderate')]
         [System.String]
         $SafeSearchFilter,
 
@@ -923,7 +923,7 @@ function Get-TargetResource
         $SharedUserAppDataAllowed,
 
         [Parameter()]
-        [ValidateSet('notConfigured','anywhere','storeOnly','recommendations','preferStore')]
+        [ValidateSet('notConfigured', 'anywhere', 'storeOnly', 'recommendations', 'preferStore')]
         [System.String]
         $SmartScreenAppInstallControl,
 
@@ -944,7 +944,7 @@ function Get-TargetResource
         $StartBlockUnpinningAppsFromTaskbar,
 
         [Parameter()]
-        [ValidateSet('userDefined','collapse','remove','disableSettingsApp')]
+        [ValidateSet('userDefined', 'collapse', 'remove', 'disableSettingsApp')]
         [System.String]
         $StartMenuAppListVisibility,
 
@@ -1009,57 +1009,57 @@ function Get-TargetResource
         $StartMenuLayoutXml,
 
         [Parameter()]
-        [ValidateSet('userDefined','fullScreen','nonFullScreen')]
+        [ValidateSet('userDefined', 'fullScreen', 'nonFullScreen')]
         [System.String]
         $StartMenuMode,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderDocuments,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderDownloads,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderFileExplorer,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderHomeGroup,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderMusic,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderNetwork,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderPersonalFolder,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderPictures,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderSettings,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderVideos,
 
@@ -1156,7 +1156,7 @@ function Get-TargetResource
         $WindowsSpotlightBlockWindowsTips,
 
         [Parameter()]
-        [ValidateSet('notConfigured','disabled','enabled')]
+        [ValidateSet('notConfigured', 'disabled', 'enabled')]
         [System.String]
         $WindowsSpotlightConfigureOnLockScreen,
 
@@ -1270,8 +1270,8 @@ function Get-TargetResource
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript { `
-                        $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.windows10GeneralConfiguration" `
-                    }
+                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10GeneralConfiguration' `
+                }
             }
         }
         #endregion
@@ -1301,7 +1301,7 @@ function Get-TargetResource
         {
             $complexDefenderDetectedMalwareActions.Add('SevereSeverity', $getValue.AdditionalProperties.defenderDetectedMalwareActions.severeSeverity.toString())
         }
-        if ($complexDefenderDetectedMalwareActions.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexDefenderDetectedMalwareActions.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexDefenderDetectedMalwareActions = $null
         }
@@ -1312,7 +1312,7 @@ function Get-TargetResource
         {
             $complexEdgeHomeButtonConfiguration.Add('odataType', $getValue.AdditionalProperties.edgeHomeButtonConfiguration.'@odata.type'.toString())
         }
-        if ($complexEdgeHomeButtonConfiguration.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexEdgeHomeButtonConfiguration.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexEdgeHomeButtonConfiguration = $null
         }
@@ -1327,7 +1327,7 @@ function Get-TargetResource
         {
             $complexEdgeSearchEngine.Add('odataType', $getValue.AdditionalProperties.edgeSearchEngine.'@odata.type'.toString())
         }
-        if ($complexEdgeSearchEngine.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexEdgeSearchEngine.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexEdgeSearchEngine = $null
         }
@@ -1336,7 +1336,7 @@ function Get-TargetResource
         $complexNetworkProxyServer.Add('Address', $getValue.AdditionalProperties.networkProxyServer.address)
         $complexNetworkProxyServer.Add('Exceptions', $getValue.AdditionalProperties.networkProxyServer.exceptions)
         $complexNetworkProxyServer.Add('UseForLocalAddresses', $getValue.AdditionalProperties.networkProxyServer.useForLocalAddresses)
-        if ($complexNetworkProxyServer.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexNetworkProxyServer.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexNetworkProxyServer = $null
         }
@@ -1351,7 +1351,7 @@ function Get-TargetResource
         {
             $complexWindows10AppsForceUpdateSchedule.Add('StartDateTime', ([DateTimeOffset]$getValue.AdditionalProperties.windows10AppsForceUpdateSchedule.startDateTime).ToString('o'))
         }
-        if ($complexWindows10AppsForceUpdateSchedule.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexWindows10AppsForceUpdateSchedule.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexWindows10AppsForceUpdateSchedule = $null
         }
@@ -1981,11 +1981,13 @@ function Get-TargetResource
         foreach ($assignmentEntry in $AssignmentsValues)
         {
             $assignmentValue = @{
-                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
                 deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
-                    {$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()})
-                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
+                    {
+                        $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()
+                    })
+                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
+                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
             }
             $assignmentResult += $assignmentValue
         }
@@ -2016,7 +2018,7 @@ function Set-TargetResource
         $AccountsBlockAddingNonMicrosoftAccountEmail,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $ActivateAppsWithVoice,
 
@@ -2037,7 +2039,7 @@ function Set-TargetResource
         $AppManagementPackageFamilyNamesToLaunchAfterLogOn,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blocked','allowed')]
+        [ValidateSet('notConfigured', 'blocked', 'allowed')]
         [System.String]
         $AppsAllowTrustedAppsSideloading,
 
@@ -2054,7 +2056,7 @@ function Set-TargetResource
         $AuthenticationPreferredAzureADTenantDomainName,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $AuthenticationWebSignIn,
 
@@ -2099,7 +2101,7 @@ function Set-TargetResource
         $CellularBlockVpnWhenRoaming,
 
         [Parameter()]
-        [ValidateSet('blocked','required','allowed','notConfigured')]
+        [ValidateSet('blocked', 'required', 'allowed', 'notConfigured')]
         [System.String]
         $CellularData,
 
@@ -2140,7 +2142,7 @@ function Set-TargetResource
         $DefenderBlockOnAccessProtection,
 
         [Parameter()]
-        [ValidateSet('notConfigured','high','highPlus','zeroTolerance')]
+        [ValidateSet('notConfigured', 'high', 'highPlus', 'zeroTolerance')]
         [System.String]
         $DefenderCloudBlockLevel,
 
@@ -2177,17 +2179,17 @@ function Set-TargetResource
         $DefenderFilesAndFoldersToExclude,
 
         [Parameter()]
-        [ValidateSet('userDefined','disable','monitorAllFiles','monitorIncomingFilesOnly','monitorOutgoingFilesOnly')]
+        [ValidateSet('userDefined', 'disable', 'monitorAllFiles', 'monitorIncomingFilesOnly', 'monitorOutgoingFilesOnly')]
         [System.String]
         $DefenderMonitorFileActivity,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','block','audit')]
+        [ValidateSet('deviceDefault', 'block', 'audit')]
         [System.String]
         $DefenderPotentiallyUnwantedAppAction,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderPotentiallyUnwantedAppActionSetting,
 
@@ -2196,7 +2198,7 @@ function Set-TargetResource
         $DefenderProcessesToExclude,
 
         [Parameter()]
-        [ValidateSet('userDefined','alwaysPrompt','promptBeforeSendingPersonalData','neverSendData','sendAllDataWithoutPrompting')]
+        [ValidateSet('userDefined', 'alwaysPrompt', 'promptBeforeSendingPersonalData', 'neverSendData', 'sendAllDataWithoutPrompting')]
         [System.String]
         $DefenderPromptForSampleSubmission,
 
@@ -2249,7 +2251,7 @@ function Set-TargetResource
         $DefenderScanScriptsLoadedInInternetExplorer,
 
         [Parameter()]
-        [ValidateSet('userDefined','disabled','quick','full')]
+        [ValidateSet('userDefined', 'disabled', 'quick', 'full')]
         [System.String]
         $DefenderScanType,
 
@@ -2270,17 +2272,17 @@ function Set-TargetResource
         $DefenderSignatureUpdateIntervalInHours,
 
         [Parameter()]
-        [ValidateSet('sendSafeSamplesAutomatically','alwaysPrompt','neverSend','sendAllSamplesAutomatically')]
+        [ValidateSet('sendSafeSamplesAutomatically', 'alwaysPrompt', 'neverSend', 'sendAllSamplesAutomatically')]
         [System.String]
         $DefenderSubmitSamplesConsentType,
 
         [Parameter()]
-        [ValidateSet('userDefined','everyday','sunday','monday','tuesday','wednesday','thursday','friday','saturday','noScheduledScan')]
+        [ValidateSet('userDefined', 'everyday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'noScheduledScan')]
         [System.String]
         $DefenderSystemScanSchedule,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blocked','allowed')]
+        [ValidateSet('notConfigured', 'blocked', 'allowed')]
         [System.String]
         $DeveloperUnlockSetting,
 
@@ -2293,7 +2295,7 @@ function Set-TargetResource
         $DeviceManagementBlockManualUnenroll,
 
         [Parameter()]
-        [ValidateSet('userDefined','none','basic','enhanced','full')]
+        [ValidateSet('userDefined', 'none', 'basic', 'enhanced', 'full')]
         [System.String]
         $DiagnosticsDataSubmissionMode,
 
@@ -2410,7 +2412,7 @@ function Set-TargetResource
         $EdgeClearBrowsingDataOnExit,
 
         [Parameter()]
-        [ValidateSet('userDefined','allow','blockThirdParty','blockAll')]
+        [ValidateSet('userDefined', 'allow', 'blockThirdParty', 'blockAll')]
         [System.String]
         $EdgeCookiePolicy,
 
@@ -2423,7 +2425,7 @@ function Set-TargetResource
         $EdgeEnterpriseModeSiteListLocation,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $EdgeFavoritesBarVisibility,
 
@@ -2448,7 +2450,7 @@ function Set-TargetResource
         $EdgeHomepageUrls,
 
         [Parameter()]
-        [ValidateSet('notConfigured','digitalSignage','normalMode','publicBrowsingSingleApp','publicBrowsingMultiApp')]
+        [ValidateSet('notConfigured', 'digitalSignage', 'normalMode', 'publicBrowsingSingleApp', 'publicBrowsingMultiApp')]
         [System.String]
         $EdgeKioskModeRestriction,
 
@@ -2461,7 +2463,7 @@ function Set-TargetResource
         $EdgeNewTabPageURL,
 
         [Parameter()]
-        [ValidateSet('notConfigured','startPage','newTabPage','previousPages','specificPages')]
+        [ValidateSet('notConfigured', 'startPage', 'newTabPage', 'previousPages', 'specificPages')]
         [System.String]
         $EdgeOpensWith,
 
@@ -2486,7 +2488,7 @@ function Set-TargetResource
         $EdgeSendIntranetTrafficToInternetExplorer,
 
         [Parameter()]
-        [ValidateSet('notConfigured','disabled','enabled','keepGoing')]
+        [ValidateSet('notConfigured', 'disabled', 'enabled', 'keepGoing')]
         [System.String]
         $EdgeShowMessageWhenOpeningInternetExplorerSites,
 
@@ -2495,7 +2497,7 @@ function Set-TargetResource
         $EdgeSyncFavoritesWithInternetExplorer,
 
         [Parameter()]
-        [ValidateSet('notConfigured','intranet','internet','intranetAndInternet')]
+        [ValidateSet('notConfigured', 'intranet', 'internet', 'intranetAndInternet')]
         [System.String]
         $EdgeTelemetryForMicrosoft365Analytics,
 
@@ -2548,12 +2550,12 @@ function Set-TargetResource
         $ExperienceBlockTaskSwitcher,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blockedWithUserOverride','blocked')]
+        [ValidateSet('notConfigured', 'blockedWithUserOverride', 'blocked')]
         [System.String]
         $ExperienceDoNotSyncBrowserSettings,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $FindMyFiles,
 
@@ -2562,12 +2564,12 @@ function Set-TargetResource
         $GameDvrBlocked,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $InkWorkspaceAccess,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blocked','allowed')]
+        [ValidateSet('notConfigured', 'blocked', 'allowed')]
         [System.String]
         $InkWorkspaceAccessState,
 
@@ -2584,7 +2586,7 @@ function Set-TargetResource
         $LocationServicesBlocked,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $LockScreenActivateAppsWithVoice,
 
@@ -2633,7 +2635,7 @@ function Set-TargetResource
         $MicrosoftAccountBlockSettingsSync,
 
         [Parameter()]
-        [ValidateSet('notConfigured','disabled')]
+        [ValidateSet('notConfigured', 'disabled')]
         [System.String]
         $MicrosoftAccountSignInAssistantSettings,
 
@@ -2694,7 +2696,7 @@ function Set-TargetResource
         $PasswordRequired,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','alphanumeric','numeric')]
+        [ValidateSet('deviceDefault', 'alphanumeric', 'numeric')]
         [System.String]
         $PasswordRequiredType,
 
@@ -2715,42 +2717,42 @@ function Set-TargetResource
         $PersonalizationLockScreenImageUrl,
 
         [Parameter()]
-        [ValidateSet('notConfigured','noAction','sleep','hibernate','shutdown')]
+        [ValidateSet('notConfigured', 'noAction', 'sleep', 'hibernate', 'shutdown')]
         [System.String]
         $PowerButtonActionOnBattery,
 
         [Parameter()]
-        [ValidateSet('notConfigured','noAction','sleep','hibernate','shutdown')]
+        [ValidateSet('notConfigured', 'noAction', 'sleep', 'hibernate', 'shutdown')]
         [System.String]
         $PowerButtonActionPluggedIn,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $PowerHybridSleepOnBattery,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $PowerHybridSleepPluggedIn,
 
         [Parameter()]
-        [ValidateSet('notConfigured','noAction','sleep','hibernate','shutdown')]
+        [ValidateSet('notConfigured', 'noAction', 'sleep', 'hibernate', 'shutdown')]
         [System.String]
         $PowerLidCloseActionOnBattery,
 
         [Parameter()]
-        [ValidateSet('notConfigured','noAction','sleep','hibernate','shutdown')]
+        [ValidateSet('notConfigured', 'noAction', 'sleep', 'hibernate', 'shutdown')]
         [System.String]
         $PowerLidCloseActionPluggedIn,
 
         [Parameter()]
-        [ValidateSet('notConfigured','noAction','sleep','hibernate','shutdown')]
+        [ValidateSet('notConfigured', 'noAction', 'sleep', 'hibernate', 'shutdown')]
         [System.String]
         $PowerSleepButtonActionOnBattery,
 
         [Parameter()]
-        [ValidateSet('notConfigured','noAction','sleep','hibernate','shutdown')]
+        [ValidateSet('notConfigured', 'noAction', 'sleep', 'hibernate', 'shutdown')]
         [System.String]
         $PowerSleepButtonActionPluggedIn,
 
@@ -2767,7 +2769,7 @@ function Set-TargetResource
         $PrinterNames,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blocked','allowed')]
+        [ValidateSet('notConfigured', 'blocked', 'allowed')]
         [System.String]
         $PrivacyAdvertisingId,
 
@@ -2796,7 +2798,7 @@ function Set-TargetResource
         $ResetProtectionModeBlocked,
 
         [Parameter()]
-        [ValidateSet('userDefined','strict','moderate')]
+        [ValidateSet('userDefined', 'strict', 'moderate')]
         [System.String]
         $SafeSearchFilter,
 
@@ -2929,7 +2931,7 @@ function Set-TargetResource
         $SharedUserAppDataAllowed,
 
         [Parameter()]
-        [ValidateSet('notConfigured','anywhere','storeOnly','recommendations','preferStore')]
+        [ValidateSet('notConfigured', 'anywhere', 'storeOnly', 'recommendations', 'preferStore')]
         [System.String]
         $SmartScreenAppInstallControl,
 
@@ -2950,7 +2952,7 @@ function Set-TargetResource
         $StartBlockUnpinningAppsFromTaskbar,
 
         [Parameter()]
-        [ValidateSet('userDefined','collapse','remove','disableSettingsApp')]
+        [ValidateSet('userDefined', 'collapse', 'remove', 'disableSettingsApp')]
         [System.String]
         $StartMenuAppListVisibility,
 
@@ -3015,57 +3017,57 @@ function Set-TargetResource
         $StartMenuLayoutXml,
 
         [Parameter()]
-        [ValidateSet('userDefined','fullScreen','nonFullScreen')]
+        [ValidateSet('userDefined', 'fullScreen', 'nonFullScreen')]
         [System.String]
         $StartMenuMode,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderDocuments,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderDownloads,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderFileExplorer,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderHomeGroup,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderMusic,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderNetwork,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderPersonalFolder,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderPictures,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderSettings,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderVideos,
 
@@ -3162,7 +3164,7 @@ function Set-TargetResource
         $WindowsSpotlightBlockWindowsTips,
 
         [Parameter()]
-        [ValidateSet('notConfigured','disabled','enabled')]
+        [ValidateSet('notConfigured', 'disabled', 'enabled')]
         [System.String]
         $WindowsSpotlightConfigureOnLockScreen,
 
@@ -3266,7 +3268,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Device Configuration Policy for Windows10 with DisplayName {$DisplayName}"
-        $PSBoundParameters.Remove("Assignments") | Out-Null
+        $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
@@ -3275,7 +3277,7 @@ function Set-TargetResource
         $keys = (([Hashtable]$CreateParameters).clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like "*cimInstance*")
+            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
             {
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
@@ -3291,7 +3293,7 @@ function Set-TargetResource
 
         if ($policy.id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/deviceConfigurations'
         }
@@ -3300,7 +3302,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Device Configuration Policy for Windows10 with Id {$($currentInstance.Id)}"
-        $PSBoundParameters.Remove("Assignments") | Out-Null
+        $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
@@ -3310,7 +3312,7 @@ function Set-TargetResource
         $keys = (([Hashtable]$UpdateParameters).clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like "*cimInstance*")
+            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
@@ -3352,7 +3354,7 @@ function Test-TargetResource
         $AccountsBlockAddingNonMicrosoftAccountEmail,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $ActivateAppsWithVoice,
 
@@ -3373,7 +3375,7 @@ function Test-TargetResource
         $AppManagementPackageFamilyNamesToLaunchAfterLogOn,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blocked','allowed')]
+        [ValidateSet('notConfigured', 'blocked', 'allowed')]
         [System.String]
         $AppsAllowTrustedAppsSideloading,
 
@@ -3390,7 +3392,7 @@ function Test-TargetResource
         $AuthenticationPreferredAzureADTenantDomainName,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $AuthenticationWebSignIn,
 
@@ -3435,7 +3437,7 @@ function Test-TargetResource
         $CellularBlockVpnWhenRoaming,
 
         [Parameter()]
-        [ValidateSet('blocked','required','allowed','notConfigured')]
+        [ValidateSet('blocked', 'required', 'allowed', 'notConfigured')]
         [System.String]
         $CellularData,
 
@@ -3476,7 +3478,7 @@ function Test-TargetResource
         $DefenderBlockOnAccessProtection,
 
         [Parameter()]
-        [ValidateSet('notConfigured','high','highPlus','zeroTolerance')]
+        [ValidateSet('notConfigured', 'high', 'highPlus', 'zeroTolerance')]
         [System.String]
         $DefenderCloudBlockLevel,
 
@@ -3513,17 +3515,17 @@ function Test-TargetResource
         $DefenderFilesAndFoldersToExclude,
 
         [Parameter()]
-        [ValidateSet('userDefined','disable','monitorAllFiles','monitorIncomingFilesOnly','monitorOutgoingFilesOnly')]
+        [ValidateSet('userDefined', 'disable', 'monitorAllFiles', 'monitorIncomingFilesOnly', 'monitorOutgoingFilesOnly')]
         [System.String]
         $DefenderMonitorFileActivity,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','block','audit')]
+        [ValidateSet('deviceDefault', 'block', 'audit')]
         [System.String]
         $DefenderPotentiallyUnwantedAppAction,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderPotentiallyUnwantedAppActionSetting,
 
@@ -3532,7 +3534,7 @@ function Test-TargetResource
         $DefenderProcessesToExclude,
 
         [Parameter()]
-        [ValidateSet('userDefined','alwaysPrompt','promptBeforeSendingPersonalData','neverSendData','sendAllDataWithoutPrompting')]
+        [ValidateSet('userDefined', 'alwaysPrompt', 'promptBeforeSendingPersonalData', 'neverSendData', 'sendAllDataWithoutPrompting')]
         [System.String]
         $DefenderPromptForSampleSubmission,
 
@@ -3585,7 +3587,7 @@ function Test-TargetResource
         $DefenderScanScriptsLoadedInInternetExplorer,
 
         [Parameter()]
-        [ValidateSet('userDefined','disabled','quick','full')]
+        [ValidateSet('userDefined', 'disabled', 'quick', 'full')]
         [System.String]
         $DefenderScanType,
 
@@ -3606,17 +3608,17 @@ function Test-TargetResource
         $DefenderSignatureUpdateIntervalInHours,
 
         [Parameter()]
-        [ValidateSet('sendSafeSamplesAutomatically','alwaysPrompt','neverSend','sendAllSamplesAutomatically')]
+        [ValidateSet('sendSafeSamplesAutomatically', 'alwaysPrompt', 'neverSend', 'sendAllSamplesAutomatically')]
         [System.String]
         $DefenderSubmitSamplesConsentType,
 
         [Parameter()]
-        [ValidateSet('userDefined','everyday','sunday','monday','tuesday','wednesday','thursday','friday','saturday','noScheduledScan')]
+        [ValidateSet('userDefined', 'everyday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'noScheduledScan')]
         [System.String]
         $DefenderSystemScanSchedule,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blocked','allowed')]
+        [ValidateSet('notConfigured', 'blocked', 'allowed')]
         [System.String]
         $DeveloperUnlockSetting,
 
@@ -3629,7 +3631,7 @@ function Test-TargetResource
         $DeviceManagementBlockManualUnenroll,
 
         [Parameter()]
-        [ValidateSet('userDefined','none','basic','enhanced','full')]
+        [ValidateSet('userDefined', 'none', 'basic', 'enhanced', 'full')]
         [System.String]
         $DiagnosticsDataSubmissionMode,
 
@@ -3746,7 +3748,7 @@ function Test-TargetResource
         $EdgeClearBrowsingDataOnExit,
 
         [Parameter()]
-        [ValidateSet('userDefined','allow','blockThirdParty','blockAll')]
+        [ValidateSet('userDefined', 'allow', 'blockThirdParty', 'blockAll')]
         [System.String]
         $EdgeCookiePolicy,
 
@@ -3759,7 +3761,7 @@ function Test-TargetResource
         $EdgeEnterpriseModeSiteListLocation,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $EdgeFavoritesBarVisibility,
 
@@ -3784,7 +3786,7 @@ function Test-TargetResource
         $EdgeHomepageUrls,
 
         [Parameter()]
-        [ValidateSet('notConfigured','digitalSignage','normalMode','publicBrowsingSingleApp','publicBrowsingMultiApp')]
+        [ValidateSet('notConfigured', 'digitalSignage', 'normalMode', 'publicBrowsingSingleApp', 'publicBrowsingMultiApp')]
         [System.String]
         $EdgeKioskModeRestriction,
 
@@ -3797,7 +3799,7 @@ function Test-TargetResource
         $EdgeNewTabPageURL,
 
         [Parameter()]
-        [ValidateSet('notConfigured','startPage','newTabPage','previousPages','specificPages')]
+        [ValidateSet('notConfigured', 'startPage', 'newTabPage', 'previousPages', 'specificPages')]
         [System.String]
         $EdgeOpensWith,
 
@@ -3822,7 +3824,7 @@ function Test-TargetResource
         $EdgeSendIntranetTrafficToInternetExplorer,
 
         [Parameter()]
-        [ValidateSet('notConfigured','disabled','enabled','keepGoing')]
+        [ValidateSet('notConfigured', 'disabled', 'enabled', 'keepGoing')]
         [System.String]
         $EdgeShowMessageWhenOpeningInternetExplorerSites,
 
@@ -3831,7 +3833,7 @@ function Test-TargetResource
         $EdgeSyncFavoritesWithInternetExplorer,
 
         [Parameter()]
-        [ValidateSet('notConfigured','intranet','internet','intranetAndInternet')]
+        [ValidateSet('notConfigured', 'intranet', 'internet', 'intranetAndInternet')]
         [System.String]
         $EdgeTelemetryForMicrosoft365Analytics,
 
@@ -3884,12 +3886,12 @@ function Test-TargetResource
         $ExperienceBlockTaskSwitcher,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blockedWithUserOverride','blocked')]
+        [ValidateSet('notConfigured', 'blockedWithUserOverride', 'blocked')]
         [System.String]
         $ExperienceDoNotSyncBrowserSettings,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $FindMyFiles,
 
@@ -3898,12 +3900,12 @@ function Test-TargetResource
         $GameDvrBlocked,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $InkWorkspaceAccess,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blocked','allowed')]
+        [ValidateSet('notConfigured', 'blocked', 'allowed')]
         [System.String]
         $InkWorkspaceAccessState,
 
@@ -3920,7 +3922,7 @@ function Test-TargetResource
         $LocationServicesBlocked,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $LockScreenActivateAppsWithVoice,
 
@@ -3969,7 +3971,7 @@ function Test-TargetResource
         $MicrosoftAccountBlockSettingsSync,
 
         [Parameter()]
-        [ValidateSet('notConfigured','disabled')]
+        [ValidateSet('notConfigured', 'disabled')]
         [System.String]
         $MicrosoftAccountSignInAssistantSettings,
 
@@ -4030,7 +4032,7 @@ function Test-TargetResource
         $PasswordRequired,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','alphanumeric','numeric')]
+        [ValidateSet('deviceDefault', 'alphanumeric', 'numeric')]
         [System.String]
         $PasswordRequiredType,
 
@@ -4051,42 +4053,42 @@ function Test-TargetResource
         $PersonalizationLockScreenImageUrl,
 
         [Parameter()]
-        [ValidateSet('notConfigured','noAction','sleep','hibernate','shutdown')]
+        [ValidateSet('notConfigured', 'noAction', 'sleep', 'hibernate', 'shutdown')]
         [System.String]
         $PowerButtonActionOnBattery,
 
         [Parameter()]
-        [ValidateSet('notConfigured','noAction','sleep','hibernate','shutdown')]
+        [ValidateSet('notConfigured', 'noAction', 'sleep', 'hibernate', 'shutdown')]
         [System.String]
         $PowerButtonActionPluggedIn,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $PowerHybridSleepOnBattery,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $PowerHybridSleepPluggedIn,
 
         [Parameter()]
-        [ValidateSet('notConfigured','noAction','sleep','hibernate','shutdown')]
+        [ValidateSet('notConfigured', 'noAction', 'sleep', 'hibernate', 'shutdown')]
         [System.String]
         $PowerLidCloseActionOnBattery,
 
         [Parameter()]
-        [ValidateSet('notConfigured','noAction','sleep','hibernate','shutdown')]
+        [ValidateSet('notConfigured', 'noAction', 'sleep', 'hibernate', 'shutdown')]
         [System.String]
         $PowerLidCloseActionPluggedIn,
 
         [Parameter()]
-        [ValidateSet('notConfigured','noAction','sleep','hibernate','shutdown')]
+        [ValidateSet('notConfigured', 'noAction', 'sleep', 'hibernate', 'shutdown')]
         [System.String]
         $PowerSleepButtonActionOnBattery,
 
         [Parameter()]
-        [ValidateSet('notConfigured','noAction','sleep','hibernate','shutdown')]
+        [ValidateSet('notConfigured', 'noAction', 'sleep', 'hibernate', 'shutdown')]
         [System.String]
         $PowerSleepButtonActionPluggedIn,
 
@@ -4103,7 +4105,7 @@ function Test-TargetResource
         $PrinterNames,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blocked','allowed')]
+        [ValidateSet('notConfigured', 'blocked', 'allowed')]
         [System.String]
         $PrivacyAdvertisingId,
 
@@ -4132,7 +4134,7 @@ function Test-TargetResource
         $ResetProtectionModeBlocked,
 
         [Parameter()]
-        [ValidateSet('userDefined','strict','moderate')]
+        [ValidateSet('userDefined', 'strict', 'moderate')]
         [System.String]
         $SafeSearchFilter,
 
@@ -4265,7 +4267,7 @@ function Test-TargetResource
         $SharedUserAppDataAllowed,
 
         [Parameter()]
-        [ValidateSet('notConfigured','anywhere','storeOnly','recommendations','preferStore')]
+        [ValidateSet('notConfigured', 'anywhere', 'storeOnly', 'recommendations', 'preferStore')]
         [System.String]
         $SmartScreenAppInstallControl,
 
@@ -4286,7 +4288,7 @@ function Test-TargetResource
         $StartBlockUnpinningAppsFromTaskbar,
 
         [Parameter()]
-        [ValidateSet('userDefined','collapse','remove','disableSettingsApp')]
+        [ValidateSet('userDefined', 'collapse', 'remove', 'disableSettingsApp')]
         [System.String]
         $StartMenuAppListVisibility,
 
@@ -4351,57 +4353,57 @@ function Test-TargetResource
         $StartMenuLayoutXml,
 
         [Parameter()]
-        [ValidateSet('userDefined','fullScreen','nonFullScreen')]
+        [ValidateSet('userDefined', 'fullScreen', 'nonFullScreen')]
         [System.String]
         $StartMenuMode,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderDocuments,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderDownloads,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderFileExplorer,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderHomeGroup,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderMusic,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderNetwork,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderPersonalFolder,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderPictures,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderSettings,
 
         [Parameter()]
-        [ValidateSet('notConfigured','hide','show')]
+        [ValidateSet('notConfigured', 'hide', 'show')]
         [System.String]
         $StartMenuPinnedFolderVideos,
 
@@ -4498,7 +4500,7 @@ function Test-TargetResource
         $WindowsSpotlightBlockWindowsTips,
 
         [Parameter()]
-        [ValidateSet('notConfigured','disabled','enabled')]
+        [ValidateSet('notConfigured', 'disabled', 'enabled')]
         [System.String]
         $WindowsSpotlightConfigureOnLockScreen,
 
@@ -4624,7 +4626,7 @@ function Test-TargetResource
         }
     }
 
-    $ValuesToCheck.remove("Id") | Out-Null
+    $ValuesToCheck.remove('Id') | Out-Null
     $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
@@ -4700,7 +4702,7 @@ function Export-TargetResource
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10GeneralConfiguration' `
-            }
+        }
         #endregion
 
         $i = 1
@@ -4723,7 +4725,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
                 Id                    = $config.Id
-                DisplayName           =  $config.DisplayName
+                DisplayName           = $config.DisplayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -4825,31 +4827,32 @@ function Export-TargetResource
                 -Credential $Credential
             if ($Results.DefenderDetectedMalwareActions)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "DefenderDetectedMalwareActions" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'DefenderDetectedMalwareActions' -IsCIMArray:$False
             }
             if ($Results.EdgeHomeButtonConfiguration)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "EdgeHomeButtonConfiguration" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EdgeHomeButtonConfiguration' -IsCIMArray:$False
             }
             if ($Results.EdgeSearchEngine)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "EdgeSearchEngine" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EdgeSearchEngine' -IsCIMArray:$False
             }
             if ($Results.NetworkProxyServer)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "NetworkProxyServer" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'NetworkProxyServer' -IsCIMArray:$False
             }
             if ($Results.Windows10AppsForceUpdateSchedule)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Windows10AppsForceUpdateSchedule" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Windows10AppsForceUpdateSchedule' -IsCIMArray:$False
             }
             if ($Results.Assignments)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
             }
             #removing trailing commas and semi colons between items of an array of cim instances added by Convert-DSCStringParamToVariable
-            $currentDSCBlock = $currentDSCBlock.replace("    ,`r`n" , "    `r`n" )
-            $currentDSCBlock = $currentDSCBlock.replace("`r`n;`r`n" , "`r`n" )
+            $currentDSCBlock = $currentDSCBlock.Replace("    ,`r`n" , "    `r`n" )
+            $currentDSCBlock = $currentDSCBlock.Replace("`r`n;`r`n" , "`r`n" )
+            $currentDSCBlock = $currentDSCBlock.Replace(",`r`n",'')
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -4890,7 +4893,7 @@ function Update-DeviceConfigurationPolicyAssignment
         $Repository = 'deviceManagement/configurationPolicies',
 
         [Parameter()]
-        [ValidateSet('v1.0','beta')]
+        [ValidateSet('v1.0', 'beta')]
         [System.String]
         $APIVersion = 'beta'
     )
@@ -4901,26 +4904,26 @@ function Update-DeviceConfigurationPolicyAssignment
 
         foreach ($target in $targets)
         {
-            $formattedTarget = @{"@odata.type" = $target.dataType}
+            $formattedTarget = @{'@odata.type' = $target.dataType }
             if ($target.groupId)
             {
-                $formattedTarget.Add('groupId',$target.groupId)
+                $formattedTarget.Add('groupId', $target.groupId)
             }
             if ($target.collectionId)
             {
-                $formattedTarget.Add('collectionId',$target.collectionId)
+                $formattedTarget.Add('collectionId', $target.collectionId)
             }
             if ($target.deviceAndAppManagementAssignmentFilterType)
             {
-                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',$target.deviceAndAppManagementAssignmentFilterType)
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType', $target.deviceAndAppManagementAssignmentFilterType)
             }
             if ($target.deviceAndAppManagementAssignmentFilterId)
             {
-                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',$target.deviceAndAppManagementAssignmentFilterId)
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId', $target.deviceAndAppManagementAssignmentFilterId)
             }
-            $deviceManagementPolicyAssignments += @{'target' = $formattedTarget}
+            $deviceManagementPolicyAssignments += @{'target' = $formattedTarget }
         }
-        $body = @{'assignments' = $deviceManagementPolicyAssignments} | ConvertTo-Json -Depth 20
+        $body = @{'assignments' = $deviceManagementPolicyAssignments } | ConvertTo-Json -Depth 20
         #write-verbose -Message $body
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
     }
@@ -4939,14 +4942,14 @@ function Update-DeviceConfigurationPolicyAssignment
 function Rename-M365DSCCimInstanceParameter
 {
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable],[System.Collections.Hashtable[]])]
+    [OutputType([System.Collections.Hashtable], [System.Collections.Hashtable[]])]
     param(
         [Parameter(Mandatory = 'true')]
         $Properties
     )
 
     $keyToRename = @{
-        "odataType" = "@odata.type"
+        'odataType' = '@odata.type'
     }
 
     $result = $Properties
@@ -4963,22 +4966,22 @@ function Rename-M365DSCCimInstanceParameter
         }
         $result = $values
 
-        return ,$result
+        return , $result
     }
     #endregion
 
     #region Single
-    if ($type -like "*Hashtable")
+    if ($type -like '*Hashtable')
     {
         $result = ([Hashtable]$Properties).clone()
     }
-    if ($type -like '*CimInstance*' -or $type -like '*Hashtable*'-or $type -like '*Object*')
+    if ($type -like '*CimInstance*' -or $type -like '*Hashtable*' -or $type -like '*Object*')
     {
         $hashProperties = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $result
         $keys = ($hashProperties.clone()).keys
         foreach ($key in $keys)
         {
-            $keyName = $key.substring(0,1).tolower()+$key.substring(1,$key.length-1)
+            $keyName = $key.substring(0, 1).tolower() + $key.substring(1, $key.length - 1)
             if ($key -in $keyToRename.Keys)
             {
                 $keyName = $keyToRename.$key
@@ -4988,7 +4991,7 @@ function Rename-M365DSCCimInstanceParameter
             if ($null -ne $property)
             {
                 $hashProperties.Remove($key)
-                $hashProperties.add($keyName,(Rename-M365DSCCimInstanceParameter $property))
+                $hashProperties.add($keyName, (Rename-M365DSCCimInstanceParameter $property))
             }
         }
         $result = $hashProperties
@@ -5000,7 +5003,7 @@ function Rename-M365DSCCimInstanceParameter
 function Get-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
-    [OutputType([hashtable],[hashtable[]])]
+    [OutputType([hashtable], [hashtable[]])]
     param(
         [Parameter()]
         $ComplexObject
@@ -5011,7 +5014,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
         return $null
     }
 
-    if ($ComplexObject.gettype().fullname -like "*[[\]]")
+    if ($ComplexObject.gettype().fullname -like '*[[\]]')
     {
         $results = @()
 
@@ -5027,7 +5030,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
         # PowerShell returns all non-captured stream output, not just the argument of the return statement.
         #An empty array is mangled into $null in the process.
         #However, an array can be preserved on return by prepending it with the array construction operator (,)
-        return ,[hashtable[]]$results
+        return , [hashtable[]]$results
     }
 
     if ($ComplexObject.getType().fullname -like '*Dictionary*')
@@ -5044,7 +5047,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
 
                 $keyType = $ComplexObject.$key.gettype().fullname
 
-                if ($keyType -like "*CimInstance*" -or $keyType -like "*Dictionary*" -or $keyType -like "Microsoft.Graph.PowerShell.Models.*"  -or $keyType -like "*[[\]]")
+                if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*' -or $keyType -like '*[[\]]')
                 {
                     $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$key
 
@@ -5061,19 +5064,19 @@ function Get-M365DSCDRGComplexTypeToHashtable
 
     $results = @{}
 
-    if ($ComplexObject.getType().Fullname -like "*hashtable")
+    if ($ComplexObject.getType().Fullname -like '*hashtable')
     {
         $keys = $ComplexObject.keys
     }
     else
     {
-        $keys = $ComplexObject | Get-Member | Where-Object -FilterScript {$_.MemberType -eq 'Property'}
+        $keys = $ComplexObject | Get-Member | Where-Object -FilterScript { $_.MemberType -eq 'Property' }
     }
 
     foreach ($key in $keys)
     {
         $keyName = $key
-        if ($ComplexObject.getType().Fullname -notlike "*hashtable")
+        if ($ComplexObject.getType().Fullname -notlike '*hashtable')
         {
             $keyName = $key.Name
         }
@@ -5081,7 +5084,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
         if ($null -ne $ComplexObject.$keyName)
         {
             $keyType = $ComplexObject.$keyName.gettype().fullname
-            if ($keyType -like "*CimInstance*" -or $keyType -like "*Dictionary*" -or $keyType -like "Microsoft.Graph.PowerShell.Models.*")
+            if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*')
             {
                 $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$keyName
 
@@ -5160,7 +5163,7 @@ function Get-M365DSCDRGComplexTypeToString
         $indent += '    '
     }
     #If ComplexObject  is an Array
-    if ($ComplexObject.GetType().FullName -like "*[[\]]")
+    if ($ComplexObject.GetType().FullName -like '*[[\]]')
     {
         $currentProperty = @()
         $IndentLevel++
@@ -5173,7 +5176,7 @@ function Get-M365DSCDRGComplexTypeToString
             }
             if ($ComplexTypeMapping)
             {
-                $splat.add('ComplexTypeMapping',$ComplexTypeMapping)
+                $splat.add('ComplexTypeMapping', $ComplexTypeMapping)
             }
 
             $currentProperty += Get-M365DSCDRGComplexTypeToString -isArray:$true @splat
@@ -5182,7 +5185,7 @@ function Get-M365DSCDRGComplexTypeToString
         # PowerShell returns all non-captured stream output, not just the argument of the return statement.
         #An empty array is mangled into $null in the process.
         #However, an array can be preserved on return by prepending it with the array construction operator (,)
-        return ,$currentProperty
+        return , $currentProperty
     }
 
     $currentProperty = ''
@@ -5192,7 +5195,7 @@ function Get-M365DSCDRGComplexTypeToString
         $currentProperty += $indent
     }
 
-    $CIMInstanceName = $CIMInstanceName.replace("MSFT_","")
+    $CIMInstanceName = $CIMInstanceName.replace('MSFT_', '')
     $currentProperty += "MSFT_$CIMInstanceName{`r`n"
     $IndentLevel++
     $indent = ''
@@ -5212,19 +5215,19 @@ function Get-M365DSCDRGComplexTypeToString
         if ($null -ne $ComplexObject.$key)
         {
             $keyNotNull++
-            if ($ComplexObject.$key.GetType().FullName -like "Microsoft.Graph.PowerShell.Models.*" -or $key -in $ComplexTypeMapping.Name)
+            if ($ComplexObject.$key.GetType().FullName -like 'Microsoft.Graph.PowerShell.Models.*' -or $key -in $ComplexTypeMapping.Name)
             {
                 $hashPropertyType = $ComplexObject[$key].GetType().Name.tolower()
 
                 $isArray = $false
-                if ($ComplexObject[$key].GetType().FullName -like "*[[\]]")
+                if ($ComplexObject[$key].GetType().FullName -like '*[[\]]')
                 {
                     $isArray = $true
                 }
                 #overwrite type if object defined in mapping complextypemapping
                 if ($key -in $ComplexTypeMapping.Name)
                 {
-                    $hashPropertyType = ([Array]($ComplexTypeMapping | Where-Object -FilterScript {$_.Name -eq $key}).CimInstanceName)[0]
+                    $hashPropertyType = ([Array]($ComplexTypeMapping | Where-Object -FilterScript { $_.Name -eq $key }).CimInstanceName)[0]
                     $hashProperty = $ComplexObject[$key]
                 }
                 else
@@ -5242,7 +5245,7 @@ function Get-M365DSCDRGComplexTypeToString
                     if ($ComplexObject.$key.count -gt 0)
                     {
                         $currentProperty += $indent + $key + ' = '
-                        $currentProperty += "@("
+                        $currentProperty += '@('
                     }
                 }
 
@@ -5251,16 +5254,16 @@ function Get-M365DSCDRGComplexTypeToString
                     $IndentLevel++
                     foreach ($item in $ComplexObject[$key])
                     {
-                        if ($ComplexObject.$key.GetType().FullName -like "Microsoft.Graph.PowerShell.Models.*")
+                        if ($ComplexObject.$key.GetType().FullName -like 'Microsoft.Graph.PowerShell.Models.*')
                         {
                             $item = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
                         }
                         $nestedPropertyString = Get-M365DSCDRGComplexTypeToString `
-                        -ComplexObject $item `
-                        -CIMInstanceName $hashPropertyType `
-                        -IndentLevel $IndentLevel `
-                        -ComplexTypeMapping $ComplexTypeMapping `
-                        -IsArray:$true
+                            -ComplexObject $item `
+                            -CIMInstanceName $hashPropertyType `
+                            -IndentLevel $IndentLevel `
+                            -ComplexTypeMapping $ComplexTypeMapping `
+                            -IsArray:$true
                         if ([string]::IsNullOrWhiteSpace($nestedPropertyString))
                         {
                             $nestedPropertyString = "@()`r`n"
@@ -5272,10 +5275,10 @@ function Get-M365DSCDRGComplexTypeToString
                 else
                 {
                     $nestedPropertyString = Get-M365DSCDRGComplexTypeToString `
-                                    -ComplexObject $hashProperty `
-                                    -CIMInstanceName $hashPropertyType `
-                                    -IndentLevel $IndentLevel `
-                                    -ComplexTypeMapping $ComplexTypeMapping
+                        -ComplexObject $hashProperty `
+                        -CIMInstanceName $hashPropertyType `
+                        -IndentLevel $IndentLevel `
+                        -ComplexTypeMapping $ComplexTypeMapping
                     if ([string]::IsNullOrWhiteSpace($nestedPropertyString))
                     {
                         $nestedPropertyString = "`$null`r`n"
@@ -5300,7 +5303,7 @@ function Get-M365DSCDRGComplexTypeToString
         }
         else
         {
-            $mappedKey = $ComplexTypeMapping | Where-Object -filterscript {$_.name -eq $key}
+            $mappedKey = $ComplexTypeMapping | Where-Object -FilterScript { $_.name -eq $key }
 
             if ($mappedKey -and $mappedKey.isRequired)
             {
@@ -5316,12 +5319,12 @@ function Get-M365DSCDRGComplexTypeToString
         }
     }
     $indent = ''
-    for ($i = 0; $i -lt $IndentLevel-1 ; $i++)
+    for ($i = 0; $i -lt $IndentLevel - 1 ; $i++)
     {
         $indent += '    '
     }
     $currentProperty += "$indent}"
-    if ($isArray  -or $IndentLevel -gt 4)
+    if ($isArray -or $IndentLevel -gt 4)
     {
         $currentProperty += "`r`n"
     }
@@ -5330,14 +5333,14 @@ function Get-M365DSCDRGComplexTypeToString
     if ($IndentLevel -eq 5)
     {
         $indent = ''
-        for ($i = 0; $i -lt $IndentLevel-2 ; $i++)
+        for ($i = 0; $i -lt $IndentLevel - 2 ; $i++)
         {
             $indent += '    '
         }
         $currentProperty += $indent
     }
 
-    $emptyCIM = $currentProperty.replace(" ","").replace("`r`n","")
+    $emptyCIM = $currentProperty.replace(' ', '').replace("`r`n", '')
     if ($emptyCIM -eq "MSFT_$CIMInstanceName{}")
     {
         $currentProperty = $null
@@ -5361,30 +5364,30 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
         [System.String]
         $Space = '                '
 
-   )
+    )
 
     $returnValue = ''
     switch -Wildcard ($Value.GetType().Fullname )
     {
-        "*.Boolean"
+        '*.Boolean'
         {
             $returnValue = $Space + $Key + " = `$" + $Value.ToString() + "`r`n"
         }
-        "*.String"
+        '*.String'
         {
             if ($key -eq '@odata.type')
             {
-                $key ='odataType'
+                $key = 'odataType'
             }
             $returnValue = $Space + $Key + " = '" + $Value + "'`r`n"
         }
-        "*.DateTime"
+        '*.DateTime'
         {
             $returnValue = $Space + $Key + " = '" + $Value + "'`r`n"
         }
-        "*[[\]]"
+        '*[[\]]'
         {
-            $returnValue = $Space + $key + " = @("
+            $returnValue = $Space + $key + ' = @('
             $whitespace = ''
             $newline = ''
             if ($Value.count -gt 1)
@@ -5393,15 +5396,15 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
                 $whitespace = $Space + '    '
                 $newline = "`r`n"
             }
-            foreach ($item in ($Value | Where-Object -FilterScript {$null -ne $_ }))
+            foreach ($item in ($Value | Where-Object -FilterScript { $null -ne $_ }))
             {
                 switch -Wildcard ($item.GetType().Fullname)
                 {
-                    "*.String"
+                    '*.String'
                     {
                         $returnValue += "$whitespace'$item'$newline"
                     }
-                    "*.DateTime"
+                    '*.DateTime'
                     {
                         $returnValue += "$whitespace'$item'$newline"
                     }
@@ -5423,7 +5426,7 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
         }
         Default
         {
-            $returnValue = $Space + $Key + " = " + $Value + "`r`n"
+            $returnValue = $Space + $Key + ' = ' + $Value + "`r`n"
         }
     }
     return $returnValue
@@ -5441,7 +5444,7 @@ function Compare-M365DSCComplexObject
     )
 
     #Comparing full objects
-    if ($null -eq  $Source  -and $null -eq $Target)
+    if ($null -eq $Source -and $null -eq $Target)
     {
         return $true
     }
@@ -5463,7 +5466,7 @@ function Compare-M365DSCComplexObject
         return $false
     }
 
-    if ($Source.getType().FullName -like "*CimInstance[[\]]" -or $Source.getType().FullName -like "*Hashtable[[\]]")
+    if ($Source.getType().FullName -like '*CimInstance[[\]]' -or $Source.getType().FullName -like '*Hashtable[[\]]')
     {
         if ($source.count -ne $target.count)
         {
@@ -5499,7 +5502,7 @@ function Compare-M365DSCComplexObject
         return $true
     }
 
-    $keys = $Source.Keys | Where-Object -FilterScript {$_ -ne "PSComputerName"}
+    $keys = $Source.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
     foreach ($key in $keys)
     {
         #Matching possible key names between Source and Target
@@ -5529,7 +5532,7 @@ function Compare-M365DSCComplexObject
         #Both keys aren't null or empty
         if (($null -ne $Source.$key) -and ($null -ne $Target.$tkey))
         {
-            if ($Source.$key.getType().FullName -like "*CimInstance*" -or $Source.$key.getType().FullName -like "*hashtable*")
+            if ($Source.$key.getType().FullName -like '*CimInstance*' -or $Source.$key.getType().FullName -like '*hashtable*')
             {
                 #Recursive call for complex object
                 $compareResult = Compare-M365DSCComplexObject `
@@ -5550,7 +5553,7 @@ function Compare-M365DSCComplexObject
 
                 #Identifying date from the current values
                 $targetType = ($Target.$tkey.getType()).Name
-                if ($targetType -like "*Date*")
+                if ($targetType -like '*Date*')
                 {
                     $compareResult = $true
                     $sourceDate = [DateTime]$Source.$key
@@ -5580,13 +5583,13 @@ function Compare-M365DSCComplexObject
 function Convert-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
-    [OutputType([hashtable],[hashtable[]])]
+    [OutputType([hashtable], [hashtable[]])]
     param(
         [Parameter(Mandatory = 'true')]
         $ComplexObject
     )
 
-    if ($ComplexObject.getType().Fullname -like "*[[\]]")
+    if ($ComplexObject.getType().Fullname -like '*[[\]]')
     {
         $results = @()
         foreach ($item in $ComplexObject)
@@ -5599,17 +5602,17 @@ function Convert-M365DSCDRGComplexTypeToHashtable
         # PowerShell returns all non-captured stream output, not just the argument of the return statement.
         #An empty array is mangled into $null in the process.
         #However, an array can be preserved on return by prepending it with the array construction operator (,)
-        return ,[hashtable[]]$results
+        return , [hashtable[]]$results
     }
     $hashComplexObject = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject
 
     if ($null -ne $hashComplexObject)
     {
         $results = $hashComplexObject.clone()
-        $keys = $hashComplexObject.Keys | Where-Object -FilterScript {$_ -ne 'PSComputerName'}
+        $keys = $hashComplexObject.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
         foreach ($key in $keys)
         {
-            if ($hashComplexObject[$key] -and $hashComplexObject[$key].getType().Fullname -like "*CimInstance*")
+            if ($hashComplexObject[$key] -and $hashComplexObject[$key].getType().Fullname -like '*CimInstance*')
             {
                 $results[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $hashComplexObject[$key]
             }
@@ -5618,7 +5621,7 @@ function Convert-M365DSCDRGComplexTypeToHashtable
                 $propertyName = $key[0].ToString().ToLower() + $key.Substring(1, $key.Length - 1)
                 $propertyValue = $results[$key]
                 $results.remove($key) | Out-Null
-                $results.add($propertyName,$propertyValue)
+                $results.add($propertyName, $propertyValue)
             }
         }
     }
