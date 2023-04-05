@@ -4,9 +4,9 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Write | String | Id of the Intune policy. | |
+| **Id** | Key | String | Id of the Intune policy. | |
+| **DisplayName** | Required | String | Display name of the Intune policy. | |
 | **Description** | Write | String | Description of the Intune policy. | |
-| **DisplayName** | Write | String | Display name of the Intune policy. | |
 | **AccountBlockModification** | Write | Boolean | Indicates whether or not to allow account modification when the device is in supervised mode. | |
 | **ActivationLockAllowWhenSupervised** | Write | Boolean | Activation Lock makes it harder for a lost or stolen device to be reactivated. | |
 | **AirDropBlocked** | Write | Boolean | Indicates whether or not to allow AirDrop when the device is in supervised mode. | |
@@ -369,6 +369,7 @@ Configuration Example
     {
         IntuneDeviceConfigurationPolicyiOS 'ConfigureDeviceConfigurationPolicyiOS'
         {
+            Id                                             = '901c99e3-6429-4f02-851f-54b49a53f103'
             DisplayName                                    = 'iOS DSC Policy'
             AccountBlockModification                       = $False
             ActivationLockAllowWhenSupervised              = $False

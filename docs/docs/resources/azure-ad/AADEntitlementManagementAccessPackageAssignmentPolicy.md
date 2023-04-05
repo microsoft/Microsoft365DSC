@@ -5,11 +5,11 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Id** | Key | String | Id of the access package assignment policy. | |
+| **DisplayName** | Required | String | The display name of the policy. | |
 | **AccessPackageId** | Write | String | Identifier of the access package. | |
 | **AccessReviewSettings** | Write | MSFT_MicrosoftGraphassignmentreviewsettings | Who must review, and how often, the assignments to the access package from this policy. This property is null if reviews are not required. | |
 | **CanExtend** | Write | Boolean | Indicates whether a user can extend the access package assignment duration after approval. | |
 | **Description** | Write | String | The description of the policy. | |
-| **DisplayName** | Write | String | The display name of the policy. | |
 | **DurationInDays** | Write | UInt32 | The number of days in which assignments from this policy last until they are expired. | |
 | **ExpirationDateTime** | Write | String | The expiration date for assignments created in this policy. The Timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 is 2014-01-01T00:00:00Z | |
 | **Questions** | Write | MSFT_MicrosoftGraphaccesspackagequestion[] | Questions that are posed to the requestor. | |

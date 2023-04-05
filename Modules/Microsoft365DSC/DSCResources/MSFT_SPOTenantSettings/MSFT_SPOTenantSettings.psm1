@@ -29,11 +29,6 @@ function Get-TargetResource
         [System.Boolean]
         $LegacyAuthProtocolsEnabled,
 
-        # DEPRECATED
-        [Parameter()]
-        [System.Boolean]
-        $RequireAcceptingAccountMatchInvitedAccount,
-
         [Parameter()]
         [System.String]
         $SignInAccelerationDomain,
@@ -153,10 +148,6 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    if ($PSBoundParameters.ContainsKey('RequireAcceptingAccountMatchInvitedAccount'))
-    {
-        Write-Warning 'RequireAcceptingAccountMatchInvitedAccount is deprecated. Please remove this parameter from your configuration.'
-    }
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = 'Absent'
 
@@ -193,7 +184,7 @@ function Get-TargetResource
             HideDefaultThemes                             = $SPOTenantSettings.HideDefaultThemes
             MarkNewFilesSensitiveByDefault                = $SPOTenantSettings.MarkNewFilesSensitiveByDefault
             ConditionalAccessPolicy                       = $SPOTenantSettings.ConditionalAccessPolicy
-            DisabledWebPartIds                            = $SPOTenantSettings.DisabledWebPartIds
+            DisabledWebPartIds                            = [String[]]$SPOTenantSettings.DisabledWebPartIds
             CommentsOnSitePagesDisabled                   = $SPOTenantSettings.CommentsOnSitePagesDisabled
             Credential                                    = $Credential
             ApplicationId                                 = $ApplicationId
@@ -252,11 +243,6 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $LegacyAuthProtocolsEnabled,
-
-        # DEPRECATED
-        [Parameter()]
-        [System.Boolean]
-        $RequireAcceptingAccountMatchInvitedAccount,
 
         [Parameter()]
         [System.String]
@@ -374,11 +360,6 @@ function Set-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters
 
-    if ($PSBoundParameters.ContainsKey('RequireAcceptingAccountMatchInvitedAccount'))
-    {
-        Write-Warning 'RequireAcceptingAccountMatchInvitedAccount is deprecated. Please remove this parameter from your configuration.'
-    }
-
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove('Credential') | Out-Null
     $CurrentParameters.Remove('IsSingleInstance') | Out-Null
@@ -429,10 +410,6 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $LegacyAuthProtocolsEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $RequireAcceptingAccountMatchInvitedAccount,
 
         [Parameter()]
         [System.String]
@@ -545,11 +522,6 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    if ($PSBoundParameters.ContainsKey('RequireAcceptingAccountMatchInvitedAccount'))
-    {
-        Write-Warning 'RequireAcceptingAccountMatchInvitedAccount is deprecated. Please remove this parameter from your configuration.'
-    }
-
     Write-Verbose -Message 'Testing configuration for SPO Tenant'
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -564,7 +536,6 @@ function Test-TargetResource
             'SearchResolveExactEmailOrUPN', `
             'OfficeClientADALDisabled', `
             'LegacyAuthProtocolsEnabled', `
-            'RequireAcceptingAccountMatchInvitedAccount', `
             'SignInAccelerationDomain', `
             'UsePersistentCookiesForExplorerView', `
             'UserVoiceForFeedbackEnabled', `
@@ -680,7 +651,7 @@ function Export-TargetResource
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `

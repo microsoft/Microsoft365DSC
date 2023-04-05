@@ -16,11 +16,6 @@ function Get-TargetResource
         [System.String]
         $Alias,
 
-        # DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $Aliases,
-
         [Parameter()]
         [System.String[]]
         $EmailAddresses,
@@ -83,16 +78,6 @@ function Get-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    # Warning for deprecated parameter
-    if ($PSBoundParameters.ContainsKey('Aliases'))
-    {
-        Write-Warning 'Aliases is deprecated. Please use EmailAddresses instead and remove Aliases from your configuration.'
-        if ($null -eq $EmailAddresses)
-        {
-            $EmailAddresses = $Aliases
-        }
-    }
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = 'Absent'
@@ -170,11 +155,6 @@ function Set-TargetResource
         [System.String]
         $Alias,
 
-        # DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $Aliases = @(),
-
         [Parameter()]
         [System.String[]]
         $EmailAddresses = @(),
@@ -241,16 +221,6 @@ function Set-TargetResource
     $CurrentParameters = $PSBoundParameters
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
-
-    # Warning for deprecated parameter
-    if ($PSBoundParameters.ContainsKey('Aliases'))
-    {
-        Write-Warning 'Aliases is deprecated. Please use EmailAddresses instead and remove Aliases from your configuration.'
-        if ($null -eq $EmailAddresses)
-        {
-            $EmailAddresses = $Aliases
-        }
-    }
 
     # CASE: Mailbox doesn't exist but should;
     if ($Ensure -eq 'Present' -and $currentMailbox.Ensure -eq 'Absent')
@@ -354,11 +324,6 @@ function Test-TargetResource
         [System.String]
         $Alias,
 
-        # DEPRECATED
-        [Parameter()]
-        [System.String[]]
-        $Aliases,
-
         [Parameter()]
         [System.String[]]
         $EmailAddresses,
@@ -407,16 +372,6 @@ function Test-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    # Warning for deprecated parameter
-    if ($PSBoundParameters.ContainsKey('Aliases'))
-    {
-        Write-Warning 'Aliases is deprecated. Please use EmailAddresses instead and remove Aliases from your configuration.'
-        if ($null -eq $EmailAddresses)
-        {
-            $EmailAddresses = $Aliases
-        }
-    }
 
     Write-Verbose -Message "Testing configuration of Office 365 Shared Mailbox $DisplayName"
 

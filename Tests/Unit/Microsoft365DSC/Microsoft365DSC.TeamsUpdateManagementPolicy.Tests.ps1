@@ -26,7 +26,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
             $DateTimeValue = [System.DateTime]::Parse("2022-12-08 6:00:00PM")
             $Global:PartialExportFileName = 'c:\TestPath'
-            
+
             Mock -CommandName Save-M365DSCPartialExport -MockWith {
             }
 
@@ -60,6 +60,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     UpdateDayOfWeek     = 1
                     UpdateTime          = '18:00'
                     UpdateTimeOfDay     = '6:00 PM'
+                    UseNewTeamsClient   = 'MicrosoftChoice'
                     Ensure              = 'Present'
                     Credential          = $Credential
                 }
@@ -94,6 +95,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     UpdateDayOfWeek     = 1
                     UpdateTime          = '18:00'
                     UpdateTimeOfDay     = '6:00 PM'
+                    UseNewTeamsClient   = 'MicrosoftChoice'
                     Ensure              = 'Present'
                     Credential          = $Credential
                 }
@@ -108,6 +110,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         UpdateDayOfWeek     = 3; #Drift
                         UpdateTime          = '18:00'
                         UpdateTimeOfDay     = $DateTimeValue
+                        UseNewTeamsClient   = 'MicrosoftChoice'
                     }
                 }
             }
@@ -138,6 +141,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     UpdateDayOfWeek     = 1
                     UpdateTime          = '18:00'
                     UpdateTimeOfDay     = '6:00 PM'
+                    UseNewTeamsClient   = 'MicrosoftChoice'
                     Ensure              = 'Present'
                     Credential          = $Credential
                 }
@@ -152,6 +156,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         UpdateDayOfWeek     = 1
                         UpdateTime          = '18:00'
                         UpdateTimeOfDay     = $DateTimeValue
+                        UseNewTeamsClient   = 'MicrosoftChoice'
                     }
                 }
             }
@@ -183,6 +188,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         UpdateDayOfWeek     = 1
                         UpdateTime          = '18:00'
                         UpdateTimeOfDay     = $DateTimeValue
+                        UseNewTeamsClient   = 'MicrosoftChoice'
                     }
                 }
             }
@@ -219,6 +225,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         UpdateDayOfWeek     = 1
                         UpdateTime          = '18:00'
                         UpdateTimeOfDay     = $DateTimeValue
+                        UseNewTeamsClient   = 'MicrosoftChoice'
                     }
                 }
             }

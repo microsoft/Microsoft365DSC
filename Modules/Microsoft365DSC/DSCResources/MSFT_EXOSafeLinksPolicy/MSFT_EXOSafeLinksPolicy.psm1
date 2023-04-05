@@ -24,19 +24,9 @@ function Get-TargetResource
         [Boolean]
         $DeliverMessageAfterScan = $false,
 
-        #DEPRECATED
-        [Parameter()]
-        [Boolean]
-        $DoNotAllowClickThrough = $true,
-
         [Parameter()]
         [System.String[]]
         $DoNotRewriteUrls = @(),
-
-        #DEPRECATED
-        [Parameter()]
-        [Boolean]
-        $DoNotTrackUserClicks = $true,
 
         [Parameter()]
         [Boolean]
@@ -61,11 +51,6 @@ function Get-TargetResource
         [Parameter()]
         [Boolean]
         $DisableUrlRewrite = $false,
-
-        #DEPRECATED
-        [Parameter()]
-        [Boolean]
-        $IsEnabled,
 
         [Parameter()]
         [Boolean]
@@ -171,19 +156,13 @@ function Get-TargetResource
                 AllowClickThrough             = $SafeLinksPolicy.AllowClickThrough
                 CustomNotificationText        = $SafeLinksPolicy.CustomNotificationText
                 DeliverMessageAfterScan       = $SafeLinksPolicy.DeliverMessageAfterScan
-                #Deprecated
-                #DoNotAllowClickThrough        = $SafeLinksPolicy.DoNotAllowClickThrough
                 DoNotRewriteUrls              = $SafeLinksPolicy.DoNotRewriteUrls
-                #Deprecated
-                #DoNotTrackUserClicks          = $SafeLinksPolicy.DoNotTrackUserClicks
                 EnableForInternalSenders      = $SafeLinksPolicy.EnableForInternalSenders
                 EnableOrganizationBranding    = $SafeLinksPolicy.EnableOrganizationBranding
                 EnableSafeLinksForTeams       = $SafeLinksPolicy.EnableSafeLinksForTeams
                 EnableSafeLinksForEmail       = $SafeLinksPolicy.EnableSafeLinksForEmail
                 EnableSafeLinksForOffice      = $SafeLinksPolicy.EnableSafeLinksForOffice
                 DisableUrlRewrite             = $SafeLinksPolicy.DisableUrlRewrite
-                #Deprecated
-                #IsEnabled                     = $SafeLinksPolicy.IsEnabled
                 ScanUrls                      = $SafeLinksPolicy.ScanUrls
                 TrackClicks                   = $SafeLinksPolicy.TrackClicks
                 UseTranslatedNotificationText = $SafeLinksPolicy.UseTranslatedNotificationText
@@ -239,19 +218,9 @@ function Set-TargetResource
         [Boolean]
         $DeliverMessageAfterScan = $false,
 
-        #DEPRECATED
-        [Parameter()]
-        [Boolean]
-        $DoNotAllowClickThrough = $true,
-
         [Parameter()]
         [System.String[]]
         $DoNotRewriteUrls = @(),
-
-        #DEPRECATED
-        [Parameter()]
-        [Boolean]
-        $DoNotTrackUserClicks = $true,
 
         [Parameter()]
         [Boolean]
@@ -276,11 +245,6 @@ function Set-TargetResource
         [Parameter()]
         [Boolean]
         $DisableUrlRewrite = $false,
-
-        #DEPRECATED
-        [Parameter()]
-        [Boolean]
-        $IsEnabled,
 
         [Parameter()]
         [Boolean]
@@ -365,29 +329,11 @@ function Set-TargetResource
         $SafeLinksPolicyParams.Remove('Identity') | Out-Null
         Write-Verbose -Message "Creating SafeLinksPolicy $($Identity)"
 
-        Write-Verbose -Message 'Property DoNotTrackUserClicks is deprecated and will be ignored.'
-        $SafeLinksPolicyParams.Remove('DoNotTrackUserClicks') | Out-Null
-
-        Write-Verbose -Message 'Property DoNotAllowClickThrough is deprecated and will be ignored.'
-        $SafeLinksPolicyParams.Remove('DoNotAllowClickThrough') | Out-Null
-
-        Write-Verbose -Message 'Property IsEnabled is deprecated and will be ignored.'
-        $SafeLinksPolicyParams.Remove('IsEnabled') | Out-Null
-
         New-SafeLinksPolicy @SafeLinksPolicyParams
     }
     elseif (('Present' -eq $Ensure ) -and ($null -ne $SafeLinksPolicy))
     {
         Write-Verbose -Message "Setting SafeLinksPolicy $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $SafeLinksPolicyParams)"
-
-        Write-Verbose -Message 'Property DoNotTrackUserClicks is deprecated and will be ignored.'
-        $SafeLinksPolicyParams.Remove('DoNotTrackUserClicks') | Out-Null
-
-        Write-Verbose -Message 'Property DoNotAllowClickThrough is deprecated and will be ignored.'
-        $SafeLinksPolicyParams.Remove('DoNotAllowClickThrough') | Out-Null
-
-        Write-Verbose -Message 'Property IsEnabled is deprecated and will be ignored.'
-        $SafeLinksPolicyParams.Remove('IsEnabled') | Out-Null
 
         Set-SafeLinksPolicy @SafeLinksPolicyParams -Confirm:$false
     }
@@ -424,19 +370,9 @@ function Test-TargetResource
         [Boolean]
         $DeliverMessageAfterScan = $false,
 
-        #DEPRECATED
-        [Parameter()]
-        [Boolean]
-        $DoNotAllowClickThrough = $true,
-
         [Parameter()]
         [System.String[]]
         $DoNotRewriteUrls = @(),
-
-        #DEPRECATED
-        [Parameter()]
-        [Boolean]
-        $DoNotTrackUserClicks = $true,
 
         [Parameter()]
         [Boolean]
@@ -461,11 +397,6 @@ function Test-TargetResource
         [Parameter()]
         [Boolean]
         $DisableUrlRewrite = $false,
-
-        #DEPRECATED
-        [Parameter()]
-        [Boolean]
-        $IsEnabled,
 
         [Parameter()]
         [Boolean]
@@ -541,11 +472,6 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
     $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
-
-    #DEPRECATED
-    $ValuesToCheck.Remove('DoNotAllowClickThrough') | Out-Null
-    $ValuesToCheck.Remove('DoNotTrackUserClicks') | Out-Null
-    $ValuesToCheck.Remove('IsEnabled') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

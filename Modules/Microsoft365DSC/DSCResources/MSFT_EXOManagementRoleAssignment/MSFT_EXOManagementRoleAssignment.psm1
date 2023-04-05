@@ -129,9 +129,11 @@ function Get-TargetResource
             $RecipientAdministrativeUnitScopeValue = $null
             if ($roleAssignment.RecipientWriteScope -eq 'AdministrativeUnit')
             {
-                $adminUnit = Get-AdministrativeUnit -Identity $roleAssignment.CustomRecipientWriteScope
+                $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                    -InboundParameters $PSBoundParameters
+                $adminUnit = Get-MgAdministrativeUnit -AdministrativeUnitId $roleAssignment.CustomRecipientWriteScope
 
-                if ($RecipientAdministrativeUnitScope -eq $adminUnit.Name)
+                if ($RecipientAdministrativeUnitScope -eq $adminUnit.Id)
                 {
                     $RecipientAdministrativeUnitScopeValue = $RecipientAdministrativeUnitScope
                 }
@@ -312,11 +314,11 @@ function Set-TargetResource
     # If the RecipientAdministrativeUnitScope parameter is provided, then retrieve its ID by Name
     if (-not [System.String]::IsNullOrEmpty($RecipientAdministrativeUnitScope))
     {
-        $NewManagementRoleParams.Remove("CustomRecipientWriteScope") | Out-Null
+        $NewManagementRoleParams.Remove('CustomRecipientWriteScope') | Out-Null
         $adminUnit = Get-AdministrativeUnit -Identity $RecipientAdministrativeUnitScope -ErrorAction SilentlyContinue
         if ($null -eq $adminUnit)
         {
-            $adminUnit = Get-AdministrativeUnit | Where-Object -FilterScript {$_.DisplayName -eq $RecipientAdministrativeUnitScope}
+            $adminUnit = Get-AdministrativeUnit | Where-Object -FilterScript { $_.DisplayName -eq $RecipientAdministrativeUnitScope }
         }
         $NewManagementRoleParams.RecipientAdministrativeUnitScope = $adminUnit.Name
     }
@@ -355,7 +357,7 @@ function Set-TargetResource
     $count = 1
     do
     {
-        Write-Verbose -Message "Testing to ensure changes were applied."
+        Write-Verbose -Message 'Testing to ensure changes were applied.'
         $testResults = Test-TargetResource @PSBoundParameters
         if (-not $testResults)
         {
@@ -369,11 +371,11 @@ function Set-TargetResource
     # Need to force reconnect to Exchange for the new permissions to kick in.
     if ($null -ne $Global:MSCloudLoginConnectionProfile.ExchangeOnline)
     {
-        Write-Verbose -Message "Waiting for 20 seconds for new permissions to be effective."
+        Write-Verbose -Message 'Waiting for 20 seconds for new permissions to be effective.'
         Start-Sleep 20
-        Write-Verbose -Message "Disconnecting from Exchange Online"
+        Write-Verbose -Message 'Disconnecting from Exchange Online'
         $Global:MSCloudLoginConnectionProfile.ExchangeOnline.Disconnect()
-     }
+    }
 }
 
 function Test-TargetResource
@@ -562,7 +564,7 @@ function Export-TargetResource
     {
         [array]$roleAssignments = Get-ManagementRoleAssignment | Where-Object -FilterScript { $_.RoleAssigneeType -eq 'ServicePrincipal' -or `
                 $_.RoleAssigneeType -eq 'User' -or $_.RoleAssigneeType -eq 'RoleAssignmentPolicy' -or $_.RoleAssigneeType -eq 'SecurityGroup' `
-                -or $_.RoleAssigneeType -eq 'RoleGroup'}
+                -or $_.RoleAssigneeType -eq 'RoleGroup' }
 
         $dscContent = ''
 

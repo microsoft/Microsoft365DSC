@@ -4,9 +4,9 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Write | String | Id of the Intune policy. | |
+| **Id** | Key | String | Id of the Intune policy. | |
+| **DisplayName** | Required | String | Display name of the Intune policy. | |
 | **Description** | Write | String | Description of the Intune policy. | |
-| **DisplayName** | Write | String | Display name of the Intune policy. | |
 | **AppsBlockInstallFromUnknownSources** | Write | Boolean | Prevent applications from unknown sources. | |
 | **BluetoothBlockConfiguration** | Write | Boolean | Prevent bluetooth configuration. | |
 | **BluetoothBlocked** | Write | Boolean | Prevents using Bluetooth on devices. | |

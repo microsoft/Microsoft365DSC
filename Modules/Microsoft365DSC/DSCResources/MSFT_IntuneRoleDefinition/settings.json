@@ -1,39 +1,38 @@
 {
     "resourceName": "IntuneRoleDefinition",
     "description": "This resource configures an Intune Role Definition.",
-    "permissions":    {
-    "graph":  {
-                  "delegated":  {
-                                    "read":  [
-                                                 {
-                                                     "name":  "DeviceManagementRBAC.Read.All"
-                                                 },
-                                                 {
-                                                     "name":  "DeviceManagementRBAC.ReadWrite.All"
-                                                 }
-                                             ],
-                                    "update":  [
-                                                   {
-                                                       "name":  "DeviceManagementRBAC.ReadWrite.All"
-                                                   }
-                                               ]
-                                },
-                  "application":  {
-                                      "read":  [
-                                                   {
-                                                       "name":  "DeviceManagementRBAC.Read.All"
-                                                   },
-                                                   {
-                                                       "name":  "DeviceManagementRBAC.ReadWrite.All"
-                                                   }
-                                               ],
-                                      "update":  [
-                                                     {
-                                                         "name":  "DeviceManagementRBAC.ReadWrite.All"
-                                                     }
-                                                 ]
-                                  }
-              }
-}
-
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "DeviceManagementRBAC.Read.All"
+                    },
+                    {
+                        "name": "DeviceManagementRBAC.ReadWrite.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementRBAC.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "DeviceManagementRBAC.Read.All"
+                    },
+                    {
+                        "name": "DeviceManagementRBAC.ReadWrite.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementRBAC.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
 }

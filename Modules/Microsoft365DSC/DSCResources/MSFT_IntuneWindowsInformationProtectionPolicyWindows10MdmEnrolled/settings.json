@@ -1,35 +1,30 @@
 {
     "resourceName": "IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled",
     "description": "This resource configures an Intune Windows Information Protection Policy for Windows10 Mdm Enrolled.",
-    "permissions":    {
-    "graph":  {
-                  "delegated":  {
-                                    "read":  [
-                                                 {
-                                                     "name":  "DeviceManagementApps.Read.All"
-                                                 },
-                                                 {
-                                                     "name":  "DeviceManagementApps.ReadWrite.All"
-                                                 }
-                                             ],
-                                    "update":  [
-
-                                               ]
-                                },
-                  "application":  {
-                                      "read":  [
-                                                   {
-                                                       "name":  "DeviceManagementApps.Read.All"
-                                                   },
-                                                   {
-                                                       "name":  "DeviceManagementApps.ReadWrite.All"
-                                                   }
-                                               ],
-                                      "update":  [
-
-                                                 ]
-                                  }
-              }
-}
-
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "DeviceManagementApps.Read.All"
+                    },
+                    {
+                        "name": "DeviceManagementApps.ReadWrite.All"
+                    }
+                ],
+                "update": []
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "DeviceManagementApps.Read.All"
+                    },
+                    {
+                        "name": "DeviceManagementApps.ReadWrite.All"
+                    }
+                ],
+                "update": []
+            }
+        }
+    }
 }

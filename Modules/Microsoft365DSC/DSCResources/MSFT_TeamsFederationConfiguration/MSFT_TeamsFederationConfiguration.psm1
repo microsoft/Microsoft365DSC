@@ -224,11 +224,12 @@ function Set-TargetResource
     $SetParams.Remove('TenantId') | Out-Null
     $SetParams.Remove('CertificateThumbprint') | Out-Null
     $SetParams.Remove('AllowedDomains') | Out-Null
-    if($allowedDomains.Length -gt 0)
+    if ($allowedDomains.Length -gt 0)
     {
         $SetParams.Add('AllowedDomainsAsAList', $AllowedDomains)
     }
-    else{
+    else
+    {
         $AllowAllKnownDomains = New-CsEdgeAllowAllKnownDomains
         $SetParams.Add('AllowedDomains', $AllowAllKnownDomains)
     }
