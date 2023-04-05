@@ -38,10 +38,6 @@ We have modified the logic of all the resources below to ensure we have a primar
 * IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled
 * IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
 
-## TeamsGroupPolicyAssignment: New Key Parameters ([3054](https://github.com/microsoft/Microsoft365DSC/issues/3054))
-
-TeamsGroupPolicyAssignment used to have the Priority as key parameter. This could cause issues due to duplicate keys. With this release the previous key is now replaced by the following three parameters: GroupId, GroupDisplayName and PolicyType. This will ensure that the resource is unique and will not cause any issues. If the GroupId is not known or no group with the given id exists, the display name will be used instead.
-
 ## Removed the Identity Parameters from EXOIRMConfiguration, EXOPerimeterConfiguration & EXOResourceConfiguraton
 
 The Identity parameter, which was the primary key for the resources listed, has been replaced by the IsSingleInstance parameter. This is because there could only ever be one instance of these resources on the tenants and in order to align with other tenant-wide resources, the IsSingleInstance parameter needs to be present. This parameter only ever accepts a value of 'Yes' and its sole purpose is to ensure there isn't more than one instance of the given resource per configuration file.
@@ -132,6 +128,10 @@ We are removing parameters that have been deprecated from various resources as p
   </ul></li>
   </ul>
 
+## TeamsGroupPolicyAssignment: New Key Parameters ([3054](https://github.com/microsoft/Microsoft365DSC/issues/3054))
+
+TeamsGroupPolicyAssignment used to have the Priority as key parameter. This could cause issues due to duplicate keys. With this release the previous key is now replaced by the following three parameters: GroupId, GroupDisplayName and PolicyType. This will ensure that the resource is unique and will not cause any issues. If the GroupId is not known or no group with the given id exists, the display name will be used instead.
+
 ## AADGroup - Added SecurityEnabled and MailEnabled as Mandatory Parameters ([#3077](https://github.com/microsoft/Microsoft365DSC/pull/3077))
 
 We've updated the AADGroup resource to enforce the MailEnabled and SecurityEnabled parameters as mandatory. Omitting these parameters was throwing an error since they were required by the Microsoft Graph API associated with it. To update existing configurations, simply make sure that every instances of the AADGroup resource includes both the MailEnabled and SecurityEnabled parameters.
@@ -176,3 +176,7 @@ Set-M365DSCLoggingOption -IncludeNonDrifted $True
 
 These events will be reported as Information entries having an Event ID of 2.
 ![image](https://raw.githubusercontent.com/microsoft/Microsoft365DSC/Dev/docs/docs/Images/April2023MR-EventViewer.png)
+
+## Enforcing Tenant ID to be in Format '.onmicrosoft.'
+
+Starting with this version, the TenantID property will no longer be accepting GUIDs or tenant names that are not in the form of '<tenant>.onmicrosoft.<extension>. Same applies for the Credential property. For example, instead of trying to connect with account **John.Smith.contoso.com**, the user should use its **John.Smith@contoso.onmicrosoft.com** credentials to authenticate to Microsoft365DSC.
