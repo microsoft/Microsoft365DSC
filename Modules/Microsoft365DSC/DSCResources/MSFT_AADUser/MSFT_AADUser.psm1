@@ -483,13 +483,12 @@ function Set-TargetResource
             }
             else
             {
-                try
+                if ($PSVersionTable.PSVersion.Major -eq 5)
                 {
-                    # This only works in PowerShell 5.
                     Add-Type -AssemblyName System.Web
                     $passwordValue = [System.Web.Security.Membership]::GeneratePassword(30, 2)
                 }
-                catch
+                else
                 {
                     $TokenSet = @{
                         U = [Char[]]'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
