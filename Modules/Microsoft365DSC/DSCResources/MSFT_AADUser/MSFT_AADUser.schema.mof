@@ -8,7 +8,7 @@ class MSFT_AADUser : OMI_BaseResource
     [Write, Description("The list of Azure Active Directory roles assigned to the user.")] String Roles[];
     [Write, Description("The country code the user will be assigned to")] String UsageLocation;
     [Write, Description("The account SKU Id for the license to be assigned to the user")] String LicenseAssignment[];
-    [Write, Description("The password for the account. The parameter is a PSCredential object, but only the Password component will be used"), EmbeddedInstance("MSFT_Credential")] String Password;
+    [Write, Description("The password for the account. The parameter is a PSCredential object, but only the Password component will be used. The password for the account. The parameter is a PSCredential object, but only the Password component will be used. If Password is not supplied for a new resource a new random password will be generated. Property will only be used when creating the user and not on subsequent updates."), EmbeddedInstance("MSFT_Credential")] String Password;
     [Write, Description("The City name of the user")] String City;
     [Write, Description("The Country name of the user")] String Country;
     [Write, Description("The Department name of the user")] String Department;
