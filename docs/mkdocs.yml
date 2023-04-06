@@ -62,6 +62,7 @@ nav:
       - 'Breaking Changes Policy': 'concepts/breaking-changes.md'
       - 'OneDrive & SharePoint Permissions': 'concepts/odsp-permissions.md'
       - 'Consent Flow': 'concepts/consent-flow.md'
+      - 'Key Parameters in DSC' : 'concepts/key-parameters.md'
   - Resources:
       - 'Overview': 'resources/overview.md'
       - 'Azure AD': 'resources/azure-ad'
