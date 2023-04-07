@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Initial Release
+      FIXES [#3068](https://github.com/microsoft/Microsoft365DSC/issues/3068)
+
 # 1.23.405.1
 
 * AADAdministrativeUnit
@@ -70,8 +76,6 @@
   * [BREAKING CHANGE] Setting Identity as Key parameter and DisplayName as Required
 * IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager
   * [BREAKING CHANGE] Fix resource
-* IntuneDeviceConfigurationCustomPolicyWindows10
-  * Initial Release
 * IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10
   * Initial Release
     FIXES [#2830](https://github.com/microsoft/Microsoft365DSC/issues/2830)

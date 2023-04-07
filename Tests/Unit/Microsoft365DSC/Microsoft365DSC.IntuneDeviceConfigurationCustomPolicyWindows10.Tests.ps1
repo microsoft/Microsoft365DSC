@@ -65,7 +65,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             odataType = "#microsoft.graph.omaSettingBase64"
                             secretReferenceValueId = "FakeStringValue"
                             value = "FakeStringValue"
-                            isReadOnly = $True
                             isEncrypted = $True
                             displayName = "FakeStringValue"
                         } -ClientOnly)
@@ -105,7 +104,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             odataType = "#microsoft.graph.omaSettingBase64"
                             secretReferenceValueId = "FakeStringValue"
                             value = "FakeStringValue"
-                            isReadOnly = $True
                             isEncrypted = $True
                             displayName = "FakeStringValue"
                         } -ClientOnly)
@@ -127,7 +125,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     '@odata.type' = "#microsoft.graph.omaSettingBase64"
                                     secretReferenceValueId = "FakeStringValue"
                                     value = "FakeStringValue"
-                                    isReadOnly = $True
                                     isEncrypted = $True
                                     displayName = "FakeStringValue"
                                 }
@@ -169,7 +166,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             odataType = "#microsoft.graph.omaSettingBase64"
                             secretReferenceValueId = "FakeStringValue"
                             value = "FakeStringValue"
-                            isReadOnly = $True
                             isEncrypted = $True
                             displayName = "FakeStringValue"
                         } -ClientOnly)
@@ -191,7 +187,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     '@odata.type' = "#microsoft.graph.omaSettingBase64"
                                     secretReferenceValueId = "FakeStringValue"
                                     value = "FakeStringValue"
-                                    isReadOnly = $True
                                     isEncrypted = $True
                                     displayName = "FakeStringValue"
                                 }
@@ -226,7 +221,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             odataType = "#microsoft.graph.omaSettingBase64"
                             secretReferenceValueId = "FakeStringValue"
                             value = "FakeStringValue"
-                            isReadOnly = $True
                             isEncrypted = $True
                             displayName = "FakeStringValue"
                         } -ClientOnly)
@@ -293,7 +287,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     '@odata.type' = "#microsoft.graph.omaSettingBase64"
                                     secretReferenceValueId = "FakeStringValue"
                                     value = "FakeStringValue"
-                                    isReadOnly = $True
                                     isEncrypted = $True
                                     displayName = "FakeStringValue"
                                 }
