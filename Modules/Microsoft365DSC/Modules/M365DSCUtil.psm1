@@ -857,7 +857,7 @@ function Test-M365DSCParameterState
     try
     {
         $includeNonDriftsInformation = [System.Environment]::GetEnvironmentVariable('M365DSCEventLogIncludeNonDrifted', `
-            [System.EnvironmentVariableTarget]::Machine)
+                [System.EnvironmentVariableTarget]::Machine)
     }
     catch
     {
@@ -1071,6 +1071,35 @@ function Export-M365DSCConfiguration
         $ApplicationId,
 
         [Parameter(ParameterSetName = 'Export')]
+        [ValidateScript({
+            $invalid = $false
+            try
+            {
+                [System.Guid]::Parse($_) | Out-Null
+                $invalid = $true
+            }
+            catch
+            {
+                $invalid = $false
+            }
+            if ($invalid)
+            {
+                throw "Please provide the tenant name (e.g., contoso.onmicrosoft.com) for TenantId instead of its GUID."
+            }
+            else
+            {
+                $invalid = $_ -notmatch ".onmicrosoft."
+                if (-not $invalid)
+                {
+                    return $true
+                }
+                else
+                {
+                    Write-Warning -Message "We recommend providing the TenantId property in the format of <tenant>.onmicrosoft.*"
+                }
+            }
+            return $true
+        })]
         [System.String]
         $TenantId,
 
@@ -1083,6 +1112,18 @@ function Export-M365DSCConfiguration
         $CertificateThumbprint,
 
         [Parameter(ParameterSetName = 'Export')]
+        [ValidateScript({
+            $invalid = $_.Username -notmatch ".onmicrosoft."
+            if (-not $invalid)
+            {
+                return $true
+            }
+            else
+            {
+                Write-Warning -Message "We recommend providing the username in the format of <tenant>.onmicrosoft.* for the Credential property."
+            }
+            return $true
+        })]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -1528,6 +1569,51 @@ function New-M365DSCConnection
         $Workload,
 
         [Parameter(Mandatory = $true)]
+        [ValidateScript({
+            if ($null -ne $_.Credential)
+            {
+                $invalid = $_.Credential.Username -notmatch ".onmicrosoft."
+                if (-not $invalid)
+                {
+                    return $true
+                }
+                else
+                {
+                    Write-Warning -Message "We recommend providing the username in the format of <tenant>.onmicrosoft.* for the Credential property."
+                }
+            }
+
+            if ($null -ne $_.TenantId)
+            {
+                $invalid = $false
+                try
+                {
+                    [System.Guid]::Parse($_.TenantId) | Out-Null
+                    $invalid = $true
+                }
+                catch
+                {
+                    $invalid = $false
+                }
+                if ($invalid)
+                {
+                    throw "Please provide the tenant name (e.g., contoso.onmicrosoft.com) for TenantId instead of its GUID."
+                }
+                else
+                {
+                    $invalid = $_.TenantId -notmatch ".onmicrosoft."
+                    if (-not $invalid)
+                    {
+                        return $true
+                    }
+                    else
+                    {
+                        Write-Warning -Message "We recommend providing the tenant name in format <tenant>.onmicrosoft.* for TenantId."
+                    }
+                }
+            }
+            return $true
+        })]
         [System.Collections.Hashtable]
         $InboundParameters,
 
@@ -2704,7 +2790,9 @@ function Update-M365DSCDependencies
                 if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
                 {
                     Write-Information -MessageData "Installing $($dependency.ModuleName) version {$($dependency.RequiredVersion)}"
+                    Remove-Module $dependency.ModuleName -Force -ErrorAction SilentlyContinue
                     Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force -Scope 'AllUsers'
+                    Import-Module $dependency.ModuleName -Force
                 }
                 else
                 {
@@ -3101,10 +3189,10 @@ function Get-M365DSCExportContentForResource
     $Results = Format-M365DSCString -Properties $Results `
         -ResourceName $ResourceName
 
-    $primaryKey = ""
+    $primaryKey = ''
     if ($Results.ContainsKey('IsSingleInstance'))
     {
-        $primaryKey = ""
+        $primaryKey = ''
     }
     elseif ($Results.ContainsKey('DisplayName'))
     {
@@ -3122,10 +3210,28 @@ function Get-M365DSCExportContentForResource
     {
         $primaryKey = $Results.Name
     }
+    elseif ($Results.ContainsKey('Title'))
+    {
+        $primaryKey = $Results.Title
+    }
+    elseif ($Results.ContainsKey('CdnType'))
+    {
+        $primaryKey = $Results.CdnType
+    }
+    elseif ($Results.ContainsKey('Usage'))
+    {
+        $primaryKey = $Results.Usage
+    }
+
     $instanceName = $ResourceName
     if (-not [System.String]::IsNullOrEmpty($primaryKey))
     {
         $instanceName += "-$primaryKey"
+    }
+
+    if ($Results.ContainsKey('Workload'))
+    {
+        $instanceName += "-$($Results.Workload)"
     }
     $content = "        $ResourceName `"$instanceName`"`r`n"
     $content += "        {`r`n"
@@ -3962,6 +4068,65 @@ function Write-M365DSCLogEvent
     return $nullReturn
 }
 
+<#
+.Description
+This function removes the authentication parameters from the hashtable.
+
+.Functionality
+Internal
+#>
+function Remove-M365DSCAuthenticationParameter
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $BoundParameters
+    )
+
+    if ($BoundParameters.ContainsKey('Ensure'))
+    {
+        $BoundParameters.Remove('Ensure') | Out-Null
+    }
+    if ($BoundParameters.ContainsKey('Credential'))
+    {
+        $BoundParameters.Remove('Credential') | Out-Null
+    }
+    if ($BoundParameters.ContainsKey('ApplicationId'))
+    {
+        $BoundParameters.Remove('ApplicationId') | Out-Null
+    }
+    if ($BoundParameters.ContainsKey('ApplicationSecret'))
+    {
+        $BoundParameters.Remove('ApplicationSecret') | Out-Null
+    }
+    if ($BoundParameters.ContainsKey('TenantId'))
+    {
+        $BoundParameters.Remove('TenantId') | Out-Null
+    }
+    if ($BoundParameters.ContainsKey('CertificatePassword'))
+    {
+        $BoundParameters.Remove('CertificatePassword') | Out-Null
+    }
+    if ($BoundParameters.ContainsKey('CertificatePath'))
+    {
+        $BoundParameters.Remove('CertificatePath') | Out-Null
+    }
+    if ($BoundParameters.ContainsKey('CertificateThumbprint'))
+    {
+        $BoundParameters.Remove('CertificateThumbprint') | Out-Null
+    }
+    if ($BoundParameters.ContainsKey('ManagedIdentity'))
+    {
+        $BoundParameters.Remove('ManagedIdentity') | Out-Null
+    }
+    if ($BoundParameters.ContainsKey('Verbose'))
+    {
+        $BoundParameters.Remove('Verbose') | Out-Null
+    }
+    return $BoundParameters
+}
 
 Export-ModuleMember -Function @(
     'Assert-M365DSCBlueprint',
@@ -3992,6 +4157,7 @@ Export-ModuleMember -Function @(
     'New-M365DSCConnection',
     'New-M365DSCMissingResourcesExample',
     'Remove-EmptyValue',
+    'Remove-M365DSCAuthenticationParameter',
     'Remove-NullEntriesFromHashtable',
     'Set-EXOSafeAttachmentRule',
     'Set-EXOSafeLinksRule',

@@ -49,7 +49,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgDeviceManagementDeviceConfigurationAssignment -MockWith {
             }
 
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
+            }
         }
+
         # Test contexts
         Context -Name 'The IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10 should exist but it DOES NOT' -Fixture {
             BeforeAll {

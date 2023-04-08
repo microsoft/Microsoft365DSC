@@ -469,12 +469,12 @@ function Set-TargetResource
             -TemplateId $templateReferenceId
 
         $createParameters = @{
-            Name = $DisplayName
-            Description = $Description
-            TemplateReference = @{templateId = $templateReferenceId}
-            Platforms = $platforms
-            Technologies = $technologies
-            Settings = $settings
+            Name              = $DisplayName
+            Description       = $Description
+            TemplateReference = @{templateId = $templateReferenceId }
+            Platforms         = $platforms
+            Technologies      = $technologies
+            Settings          = $settings
         }
         New-MgDeviceManagementConfigurationPolicy -bodyParameter $createParameters
 
@@ -933,19 +933,19 @@ function Get-IntuneSettingCatalogPolicySetting
 
         $settingInstance = @{}
         $settingName = $settingDefinition.SettingDefinitionId.split('_') | Select-Object -Last 1
-        $settingType =  $settingDefinition.AdditionalProperties.'@odata.type'.replace('InstanceTemplate','Instance')
+        $settingType = $settingDefinition.AdditionalProperties.'@odata.type'.replace('InstanceTemplate', 'Instance')
         $settingInstance.Add('settingDefinitionId', $settingDefinition.settingDefinitionId)
         $settingInstance.Add('@odata.type', $settingType)
         if (-Not [string]::IsNullOrEmpty($settingDefinition.settingInstanceTemplateId))
         {
-            $settingInstance.Add('settingInstanceTemplateReference',@{'settingInstanceTemplateId'=$settingDefinition.settingInstanceTemplateId})
+            $settingInstance.Add('settingInstanceTemplateReference', @{'settingInstanceTemplateId' = $settingDefinition.settingInstanceTemplateId })
         }
-        $settingValueName = $settingType.replace('#microsoft.graph.deviceManagementConfiguration','').replace('Instance','Value')
-        $settingValueName = $settingValueName.Substring(0,1).ToLower() + $settingValueName.Substring(1,$settingValueName.length -1 )
+        $settingValueName = $settingType.replace('#microsoft.graph.deviceManagementConfiguration', '').replace('Instance', 'Value')
+        $settingValueName = $settingValueName.Substring(0, 1).ToLower() + $settingValueName.Substring(1, $settingValueName.length - 1 )
         $settingValueType = $settingDefinition.AdditionalProperties."$($settingValueName)Template".'@odata.type'
         if ($null -ne $settingValueType)
         {
-            $settingValueType = $settingValueType.replace('ValueTemplate','Value')
+            $settingValueType = $settingValueType.replace('ValueTemplate', 'Value')
         }
         $settingValueTemplateId = $settingDefinition.AdditionalProperties."$($settingValueName)Template".settingValueTemplateId
         $settingValue = Get-IntuneSettingCatalogPolicySettingInstanceValue `
@@ -956,10 +956,10 @@ function Get-IntuneSettingCatalogPolicySetting
             -SettingValueName $settingValueName `
             -SettingValueType $settingValueType `
             -SettingValueTemplateId $settingValueTemplateId
-        $settingInstance+=($settingValue)
+        $settingInstance += ($settingValue)
 
         $settingInstances += @{
-            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSetting'
+            '@odata.type'     = '#microsoft.graph.deviceManagementConfigurationSetting'
             'settingInstance' = $settingInstance
         }
     }
@@ -1000,7 +1000,7 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
     )
 
     $settingValueReturn = @{}
-    switch($settingType)
+    switch ($settingType)
     {
         '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
         {
@@ -1008,13 +1008,13 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
             $groupSettingCollectionValueChildren = @()
 
             $groupSettingCollectionDefinitionChildren = $SettingDefinition.AdditionalProperties.groupSettingCollectionValueTemplate.children
-            foreach($childDefinition in $groupSettingCollectionDefinitionChildren)
+            foreach ($childDefinition in $groupSettingCollectionDefinitionChildren)
             {
                 $childSettingName = $childDefinition.settingDefinitionId.split('_') | Select-Object -Last 1
-                $childSettingType =  $childDefinition.'@odata.type'.replace('InstanceTemplate','Instance')
-                $childSettingValueName = $childSettingType.replace('#microsoft.graph.deviceManagementConfiguration','').replace('Instance','Value')
+                $childSettingType = $childDefinition.'@odata.type'.replace('InstanceTemplate', 'Instance')
+                $childSettingValueName = $childSettingType.replace('#microsoft.graph.deviceManagementConfiguration', '').replace('Instance', 'Value')
                 $childSettingValueType = "#microsoft.graph.deviceManagementConfiguration$($childSettingValueName)"
-                $childSettingValueName = $childSettingValueName.Substring(0,1).ToLower() + $childSettingValueName.Substring(1,$childSettingValueName.length -1 )
+                $childSettingValueName = $childSettingValueName.Substring(0, 1).ToLower() + $childSettingValueName.Substring(1, $childSettingValueName.length - 1 )
                 $childSettingValueTemplateId = $childDefinition.$childSettingValueName.settingValueTemplateId
                 $childSettingValue = Get-IntuneSettingCatalogPolicySettingInstanceValue `
                     -DSCParams $DSCParams `
@@ -1035,19 +1035,19 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
         '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
         {
             $values = @()
-            foreach( $key in $DSCParams.Keys)
+            foreach ( $key in $DSCParams.Keys)
             {
-                if($settingName -eq ($key.tolower()))
+                if ($settingName -eq ($key.tolower()))
                 {
                     $values = $DSCParams[$key]
                     break
                 }
             }
             $settingValueCollection = @()
-            foreach($v in $values)
+            foreach ($v in $values)
             {
                 $settingValueCollection += @{
-                    value = $v
+                    value         = $v
                     '@odata.type' = $settingValueType
                 }
             }
@@ -1056,9 +1056,9 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
         Default
         {
             $value = $null
-            foreach( $key in $DSCParams.Keys)
+            foreach ( $key in $DSCParams.Keys)
             {
-                if($settingName -eq ($key.tolower()))
+                if ($settingName -eq ($key.tolower()))
                 {
                     $value = "$($SettingDefinition.settingDefinitionId)_$($DSCParams[$key])"
                     break
@@ -1072,7 +1072,7 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
             }
             if (-Not [string]::IsNullOrEmpty($settingValueTemplateId))
             {
-                $settingValue.Add('settingValueTemplateReference',@{'settingValueTemplateId'= $settingValueTemplateId})
+                $settingValue.Add('settingValueTemplateReference', @{'settingValueTemplateId' = $settingValueTemplateId })
             }
             $settingValue.add('value', $value)
             $settingValueReturn.Add($settingValueName, $settingValue)

@@ -37,24 +37,20 @@ function Get-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-Write-Verbose -Message "Entering Get"
+    Write-Verbose -Message 'Get Teams Tenant Trusted IP Address settings'
     New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters | Out-Null
 
-        Write-Verbose -Message "Flag2"
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
-    Write-Verbose -Message "Flag3"
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
-        Write-Verbose -Message "Flag4"
     Add-M365DSCTelemetryEvent -Data $data
-    Write-Verbose -Message "Flag5"
     #endregion
 
     $nullResult = $PSBoundParameters
@@ -65,7 +61,7 @@ Write-Verbose -Message "Entering Get"
         $instance = Get-CsTenantTrustedIPAddress -Identity $Identity -ErrorAction SilentlyContinue
         if ($null -eq $instance)
         {
-            Write-Verbose -Message "No instances found"
+            Write-Verbose -Message 'No instances found'
             return $nullResult
         }
 
@@ -322,7 +318,7 @@ function Export-TargetResource
         $ManagedIdentity
     )
 
-   $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -360,11 +356,11 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Identity = $config.Identity
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
+                Identity              = $config.Identity
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
 
             }

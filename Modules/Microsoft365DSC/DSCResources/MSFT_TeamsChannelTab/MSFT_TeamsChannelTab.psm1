@@ -337,7 +337,7 @@ function Set-TargetResource
         $CurrentParameters.Remove('ChannelName') | Out-Null
         $CurrentParameters.Add('TeamsTabId', $tabInstance.Id)
         Write-Verbose -Message "Params: $($CurrentParameters | Out-String)"
-        Update-MgTeamChannelTab  @CurrentParameters | Out-Null
+        Update-MgTeamChannelTab @CurrentParameters | Out-Null
     }
     elseif ($Ensure -eq 'Present' -and ($tab.Ensure -eq 'Absent'))
     {

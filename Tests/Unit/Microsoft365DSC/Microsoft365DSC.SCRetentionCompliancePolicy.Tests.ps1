@@ -46,6 +46,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -CommandName Start-Sleep -MockWith {
+            }
+
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
@@ -100,31 +103,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Name                        = 'TestPolicy'
                         ExchangeLocation            = @{
-                            Name = "https://contoso.sharepoint.com/sites/demo"
+                            Name = 'https://contoso.sharepoint.com/sites/demo'
                         }
                         ExchangeLocationException   = @{
-                            Name = "https://contoso.sharepoint.com"
+                            Name = 'https://contoso.sharepoint.com'
                         }
                         OneDriveLocation            = @{
-                            Name = "https://contoso.sharepoint.com/sites/demo"
+                            Name = 'https://contoso.sharepoint.com/sites/demo'
                         }
                         OneDriveLocationException   = @{
-                            Name = "https://contoso.com"
+                            Name = 'https://contoso.com'
                         }
                         PublicFolderLocation        = @{
-                            Name = "\\contoso\PF"
+                            Name = '\\contoso\PF'
                         }
                         SkypeLocation               = @{
-                            Name = "https://contoso.sharepoint.com/sites/demo"
+                            Name = 'https://contoso.sharepoint.com/sites/demo'
                         }
                         SkypeLocationException      = @{
-                            Name = "https://contoso.sharepoint.com/"
+                            Name = 'https://contoso.sharepoint.com/'
                         }
                         SharePointLocation          = @{
-                            Name = "https://contoso.sharepoint.com/sites/demo"
+                            Name = 'https://contoso.sharepoint.com/sites/demo'
                         }
                         SharePointLocationException = @{
-                            Name = "https://contoso.com"
+                            Name = 'https://contoso.com'
                         }
                     }
                 }

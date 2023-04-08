@@ -39,7 +39,8 @@ function Get-TargetResource
         $UpdateTimeOfDay,
 
         [Parameter()]
-        [System.Boolean]
+        [ValidateSet('UserChoice', 'MicrosoftChoice', 'AdminDisabled')]
+        [System.String]
         $UseNewTeamsClient,
 
         [Parameter()]
@@ -94,7 +95,7 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Found Teams Update Management Policy with Identity {$Identity}"
-        $results =  @{
+        $results = @{
             Identity              = $policy.Identity
             Description           = $policy.Description
             AllowManagedUpdates   = $policy.AllowManagedUpdates
@@ -168,7 +169,8 @@ function Set-TargetResource
         $UpdateTimeOfDay,
 
         [Parameter()]
-        [System.Boolean]
+        [ValidateSet('UserChoice', 'MicrosoftChoice', 'AdminDisabled')]
+        [System.String]
         $UseNewTeamsClient,
 
         [Parameter()]
@@ -284,7 +286,8 @@ function Test-TargetResource
         $UpdateTimeOfDay,
 
         [Parameter()]
-        [System.Boolean]
+        [ValidateSet('UserChoice', 'MicrosoftChoice', 'AdminDisabled')]
+        [System.String]
         $UseNewTeamsClient,
 
         [Parameter()]
