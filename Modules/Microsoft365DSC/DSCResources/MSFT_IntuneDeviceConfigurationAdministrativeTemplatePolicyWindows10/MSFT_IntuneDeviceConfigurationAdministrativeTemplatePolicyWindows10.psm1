@@ -112,7 +112,6 @@ function Get-TargetResource
         {
             $enumPolicyConfigurationIngestionType = $getValue.PolicyConfigurationIngestionType.ToString()
         }
-
         #endregion
 
         #region
@@ -160,9 +159,10 @@ function Get-TargetResource
 
             $definitionValue.Add('Definition', $complexDefinition)
 
-            $presentationValues = get-MgDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue `
+            $presentationValues = Get-MgDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue `
                 -GroupPolicyConfigurationId $Id `
-                -GroupPolicyDefinitionValueId $setting.Id
+                -GroupPolicyDefinitionValueId $setting.Id `
+                -ExpandProperty 'presentation'
 
             $complexPresentationValues = @()
             foreach ($presentationValue in $presentationValues)
@@ -170,6 +170,8 @@ function Get-TargetResource
                 $complexPresentationValue = @{}
                 $complexPresentationValue.Add('odataType', $presentationValue.AdditionalProperties.'@odata.type')
                 $complexPresentationValue.Add('Id', $presentationValue.Id)
+                $complexPresentationValue.Add('presentationDefinitionId', $presentationValue.Presentation.Id)
+                $complexPresentationValue.Add('presentationDefinitionLabel', $presentationValue.Presentation.Label)
                 switch -Wildcard ($presentationValue.AdditionalProperties.'@odata.type')
                 {
                     '*.groupPolicyPresentationValueBoolean'
@@ -212,8 +214,6 @@ function Get-TargetResource
 
             $definitionValue.Add('PresentationValues', $complexPresentationValues)
             $complexDefinitionValues += $definitionValue
-
-
         }
         #endregion
 
@@ -388,17 +388,7 @@ function Set-TargetResource
 
         #Create DefinitionValues
         [Array]$targetDefinitionValues = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $DefinitionValues
-        #write-verbose ($targetDefinitionValues |convertto-json -depth 20)
-
-        <#if($null -ne $targetDefinitionValues -and $targetDefinitionValues.count -gt 0)
-        {
-            #Removing Key Definition because it is Read-Only
-            foreach($definitionValue in $targetDefinitionValues)
-            {
-                $definitionValue.remove('Definition')
-            }
-        }#>
-
+        $formattedDefinitionValuesToAdd = @()
         foreach ($definitionValue in $targetDefinitionValues)
         {
             $definitionValue = Rename-M365DSCCimInstanceParameter -Properties $definitionValue
@@ -410,19 +400,26 @@ function Set-TargetResource
             $complexPresentationValues = @()
             if ($null -ne $definitionValue.PresentationValues)
             {
-                $complexPresentationValues = [Hashtable[]]$definitionValue.PresentationValues
+                foreach ($presentationValue in [Hashtable[]]$definitionValue.PresentationValues)
+                {
+                    $value = $presentationValue.clone()
+                    $value.add('presentation@odata.bind', "https://graph.microsoft.com/beta/deviceManagement/groupPolicyDefinitions('$($definitionValue.Definition.Id)')/presentations('$($presentationValue.presentationDefinitionId)')")
+                    $value.remove('PresentationDefinitionId')
+                    $complexPresentationValues += $value
+                }
             }
             $complexDefinitionValue = @{
-                Definition         = @{Id = $definitionValue.Definition.Id }
-                Enabled            = $definitionValue.Enabled
-                ConfigurationType  = $enumConfigurationType
-                PresentationValues = $complexPresentationValues
+                id                      = $definitionValue.Id
+                'definition@odata.bind' = "https://graph.microsoft.com/beta/deviceManagement/groupPolicyDefinitions('$($definitionValue.Definition.Id)')"
+                enabled                 = $definitionValue.Enabled
+                presentationValues      = $complexPresentationValues
             }
-
-            New-MgDeviceManagementGroupPolicyConfigurationDefinitionValue `
-                -GroupPolicyConfigurationId $currentInstance.Id `
-                -BodyParameter $complexDefinitionValue
+            $formattedDefinitionValuesToAdd += $complexDefinitionValue
         }
+
+        Update-DeviceConfigurationGroupPolicyDefinitionValue `
+            -DeviceConfigurationPolicyId $policy.Id `
+            -DefinitionValueToAdd $formattedDefinitionValuesToAdd
         #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -465,8 +462,6 @@ function Set-TargetResource
         #Update DefinitionValues
         [Array]$currentDefinitionValues = $currentInstance.DefinitionValues
         [Array]$targetDefinitionValues = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $DefinitionValues
-        #write-verbose ($targetDefinitionValues |convertto-json -depth 20)
-        Write-Verbose ("currentDefinitionValues: $($currentDefinitionValues.Id.count) - targetDefinitionValues: $($targetDefinitionValues.Id.count)")
 
         $comparedDefinitionValues = Compare-Object `
             -ReferenceObject ($currentDefinitionValues.Id) `
@@ -476,7 +471,7 @@ function Set-TargetResource
         $definitionValuesToAdd = ($comparedDefinitionValues | Where-Object -FilterScript { $_.SideIndicator -eq '=>' }).InputObject
         $definitionValuesToRemove = ($comparedDefinitionValues | Where-Object -FilterScript { $_.SideIndicator -eq '<=' }).InputObject
         $definitionValuesToCheck = ($comparedDefinitionValues | Where-Object -FilterScript { $_.SideIndicator -eq '==' }).InputObject
-        Write-Verbose ("Add: $($definitionValuesToAdd.count) - Remove: $($definitionValuesToRemove.count) - Check: $($definitionValuesToCheck.count)")
+        #Write-Verbose ("Add: $($definitionValuesToAdd.count) - Remove: $($definitionValuesToRemove.count) - Check: $($definitionValuesToCheck.count)")
 
         $formattedDefinitionValuesToAdd = @()
         foreach ($definitionValueId in $definitionValuesToAdd)
@@ -491,13 +486,19 @@ function Set-TargetResource
             $complexPresentationValues = @()
             if ($null -ne $definitionValue.PresentationValues)
             {
-                $complexPresentationValues = [Hashtable[]]$definitionValue.PresentationValues
+                foreach ($presentationValue in [Hashtable[]]$definitionValue.PresentationValues)
+                {
+                    $value = $presentationValue.clone()
+                    $value.add('presentation@odata.bind', "https://graph.microsoft.com/beta/deviceManagement/groupPolicyDefinitions('$($definitionValue.Definition.Id)')/presentations('$($presentationValue.presentationDefinitionId)')")
+                    $value.remove('PresentationDefinitionId')
+                    $complexPresentationValues += $value
+                }
             }
             $complexDefinitionValue = @{
-                Definition         = @{Id = $definitionValue.Definition.Id }
-                Enabled            = $definitionValue.Enabled
-                ConfigurationType  = $enumConfigurationType
-                PresentationValues = $complexPresentationValues
+                id                      = $definitionValue.Id
+                'definition@odata.bind' = "https://graph.microsoft.com/beta/deviceManagement/groupPolicyDefinitions('$($definitionValue.Definition.Id)')"
+                enabled                 = $definitionValue.Enabled
+                presentationValues      = $complexPresentationValues
             }
             $formattedDefinitionValuesToAdd += $complexDefinitionValue
         }
@@ -515,75 +516,29 @@ function Set-TargetResource
             $complexPresentationValues = @()
             if ($null -ne $definitionValue.PresentationValues)
             {
-                $complexPresentationValues = [Hashtable[]]$definitionValue.PresentationValues
+                foreach ($presentationValue in [Hashtable[]]$definitionValue.PresentationValues)
+                {
+                    $value = $presentationValue.clone()
+                    $value.add('presentation@odata.bind', "https://graph.microsoft.com/beta/deviceManagement/groupPolicyDefinitions('$($definitionValue.Definition.Id)')/presentations('$($presentationValue.presentationDefinitionId)')")
+                    $value.remove('PresentationDefinitionId')
+                    $complexPresentationValues += $value
+                }
             }
             $complexDefinitionValue = @{
-                Definition         = @{Id = $definitionValue.Definition.Id }
-                Enabled            = $definitionValue.Enabled
-                ConfigurationType  = $enumConfigurationType
-                PresentationValues = $complexPresentationValues
+                id                      = $definitionValue.Id
+                'definition@odata.bind' = "https://graph.microsoft.com/beta/deviceManagement/groupPolicyDefinitions('$($definitionValue.Definition.Id)')"
+                enabled                 = $definitionValue.Enabled
+                presentationValues      = $complexPresentationValues
             }
             $formattedDefinitionValuesToUpdate += $complexDefinitionValue
         }
 
-        Write-Verbose( $formattedDefinitionValuesToAdd | ConvertTo-Json)
-        Write-Verbose( $formattedDefinitionValuesToUpdate | ConvertTo-Json)
         Update-DeviceConfigurationGroupPolicyDefinitionValue `
             -DeviceConfigurationPolicyId $currentInstance.Id `
             -DefinitionValueToAdd $formattedDefinitionValuesToAdd `
             -DefinitionValueToUpdate $formattedDefinitionValuesToUpdate `
             -DefinitionValueToRemove $definitionValuesToRemove
-        <#foreach ($definitionValueId in $definitionValuesToCheck)
-        {
-            $currentDefinitionValue = $currentDefinitionValues | Where-Object -FilterScript { $_.Id -eq $definitionValueId }
-            $currentDefinitionValue.remove('Definition')
-            $currentDefinitionValue = Rename-M365DSCCimInstanceParameter -Properties $currentDefinitionValue
-            $definitionValue = $targetDefinitionValues | Where-Object -FilterScript { $_.Id -eq $definitionValueId }
-            $definitionValue.remove('Definition')
-            $definitionValue = Rename-M365DSCCimInstanceParameter -Properties $definitionValue
-            $enumConfigurationType = $null
-            if ($null -ne $definitionValue.ConfigurationType)
-            {
-                $enumConfigurationType = $definitionValue.ConfigurationType.toString()
-            }
-            $complexPresentationValues = @()
-            if ($null -ne $definitionValue.PresentationValues)
-            {
-                $complexPresentationValues = [Hashtable[]]$definitionValue.PresentationValues
-            }
-            $complexDefinitionValue = @{
-                Id                 = $definitionValue.Id
-                Enabled            = $definitionValue.Enabled
-                ConfigurationType  = $enumConfigurationType
-                PresentationValues = $complexPresentationValues
-            }
 
-            $toUpdate = Compare-M365DSCComplexObject `
-                -Source $complexDefinitionValue `
-                -Target $currentDefinitionValue
-
-            If (-not $toUpdate)
-            {
-                $complexDefinitionValue.Remove('Id')
-                $complexDefinitionValue.Remove('PresentationValues')
-                Update-MgDeviceManagementGroupPolicyConfigurationDefinitionValue `
-                    -GroupPolicyConfigurationId $currentInstance.Id `
-                    -GroupPolicyDefinitionValueId $definitionValueId `
-                    -BodyParameter $complexDefinitionValue
-
-                foreach ($presentationValue in $complexPresentationValues)
-                {
-                    $presentationValueId = $presentationValue.Id
-                    $presentationValue.remove('Id')
-
-                    Update-MgDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue `
-                        -GroupPolicyConfigurationId $currentInstance.Id `
-                        -GroupPolicyDefinitionValueId $definitionValueId `
-                        -GroupPolicyPresentationValueId $presentationValueId `
-                        -BodyParameter $presentationValue
-                }
-            }
-        }#>
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -702,6 +657,19 @@ function Test-TargetResource
                 }
             }
 
+            #Removing Key Definition because it is Read-Only
+            if ($key -eq 'PresentationValues')
+            {
+                foreach ($presentationValue in $source.PresentationValues)
+                {
+                    $presentationValue.remove('presentationDefinitionLabel')
+                }
+                foreach ($presentationValue in $target.PresentationValues)
+                {
+                    $presentationValue.remove('presentationDefinitionLabel')
+                }
+            }
+
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
@@ -716,13 +684,14 @@ function Test-TargetResource
         }
     }
 
+    $ValuesToCheck.Remove('Id') | Out-Null
     $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
-    #Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    #Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
     if ($testResult)
     {
@@ -974,7 +943,6 @@ function Update-DeviceConfigurationPolicyAssignment
         $body = @{'assignments' = $deviceManagementPolicyAssignments } | ConvertTo-Json -Depth 20
         #write-verbose -Message $body
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
-
     }
     catch
     {
@@ -986,8 +954,6 @@ function Update-DeviceConfigurationPolicyAssignment
 
         return $null
     }
-
-
 }
 
 function Update-DeviceConfigurationGroupPolicyDefinitionValue
@@ -1001,31 +967,33 @@ function Update-DeviceConfigurationGroupPolicyDefinitionValue
 
         [Parameter()]
         [Array]
-        $DefinitionValueToAdd,
+        $DefinitionValueToAdd = @(),
 
         [Parameter()]
         [Array]
-        $DefinitionValueToUpdate,
+        $DefinitionValueToUpdate = @(),
 
         [Parameter()]
         [Array]
-        $DefinitionValueToRemove
+        $DefinitionValueToRemove = @()
     )
     try
     {
-        $deviceManagementPolicyAssignments = @()
-
         $Uri = "https://graph.microsoft.com/beta/deviceManagement/groupPolicyConfigurations/$DeviceConfigurationPolicyId/updateDefinitionValues"
 
+        $body = @{}
+        $DefinitionValueToRemoveIds = @()
+        if ($null -ne $DefinitionValueToRemove -and $DefinitionValueToRemove.count -gt 0)
+        {
+            $DefinitionValueToRemoveIds = $DefinitionValueToRemove
+        }
         $body = @{
-            'added' = $DefinitionValueToAdd
-            'updated' = $DefinitionValueToUpdate
-            'deletedIds' = $DefinitionValueToRemove.Id
-        } | ConvertTo-Json -Depth 20
-        write-verbose -Message ("In update")
-        write-verbose -Message $body
-        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
-
+            'added'      = $DefinitionValueToAdd
+            'updated'    = $DefinitionValueToUpdate
+            'deletedIds' = $DefinitionValueToRemoveIds
+        }
+        #Write-Verbose -Message ($body | ConvertTo-Json -Depth 20)
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body ($body | ConvertTo-Json -Depth 20) -ErrorAction Stop
     }
     catch
     {
@@ -1037,8 +1005,6 @@ function Update-DeviceConfigurationGroupPolicyDefinitionValue
 
         return $null
     }
-
-
 }
 
 function Rename-M365DSCCimInstanceParameter
@@ -1472,7 +1438,6 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
         [Parameter()]
         [System.String]
         $Space = '                '
-
     )
 
     $returnValue = ''
@@ -1700,7 +1665,6 @@ function Convert-M365DSCDRGComplexTypeToHashtable
         $ComplexObject
     )
 
-
     if ($ComplexObject.getType().Fullname -like '*[[\]]')
     {
         $results = @()
@@ -1720,7 +1684,6 @@ function Convert-M365DSCDRGComplexTypeToHashtable
 
     if ($null -ne $hashComplexObject)
     {
-
         $results = $hashComplexObject.clone()
         $keys = $hashComplexObject.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
         foreach ($key in $keys)

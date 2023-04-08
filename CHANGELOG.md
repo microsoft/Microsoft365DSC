@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+  * IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
+    * Initial release
+      FIXES [#2833](https://github.com/microsoft/Microsoft365DSC/issues/2833)
+
 # 1.23.405.1
 
 * IntuneDeviceEnrollmentPlatformRestriction

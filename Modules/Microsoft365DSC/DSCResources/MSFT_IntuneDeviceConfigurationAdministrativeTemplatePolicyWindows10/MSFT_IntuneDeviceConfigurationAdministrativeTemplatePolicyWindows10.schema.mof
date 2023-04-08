@@ -42,6 +42,8 @@ class MSFT_IntuneGroupPolicyDefinitionValuePresentationValue
     [Write, Description("A list of pairs for the associated presentation."), EmbeddedInstance("MSFT_IntuneGroupPolicyDefinitionValuePresentationValueKeyValuePair")] String KeyValuePairValues[];
     [Write, Description("A list of pairs for the associated presentation.")] String StringValues[];
     [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
+    [Write, Description("The unique identifier for presentation definition. Read-only.")] String PresentationDefinitionId;
+    [Write, Description("The label of the presentation definition. Read-only.")] String PresentationDefinitionLabel;
     [Write, Description("A value for the associated presentation."), ValueMap{"#microsoft.graph.groupPolicyPresentationValueBoolean","#microsoft.graph.groupPolicyPresentationValueDecimal","#microsoft.graph.groupPolicyPresentationValueList","#microsoft.graph.groupPolicyPresentationValueLongDecimal","#microsoft.graph.groupPolicyPresentationValueMultiText","#microsoft.graph.groupPolicyPresentationValueText"}, Values{"#microsoft.graph.groupPolicyPresentationValueBoolean","#microsoft.graph.groupPolicyPresentationValueDecimal","#microsoft.graph.groupPolicyPresentationValueList","#microsoft.graph.groupPolicyPresentationValueLongDecimal","#microsoft.graph.groupPolicyPresentationValueMultiText","#microsoft.graph.groupPolicyPresentationValueText"}] String odataType;
 };
 [ClassVersion("1.0.0.0")]
