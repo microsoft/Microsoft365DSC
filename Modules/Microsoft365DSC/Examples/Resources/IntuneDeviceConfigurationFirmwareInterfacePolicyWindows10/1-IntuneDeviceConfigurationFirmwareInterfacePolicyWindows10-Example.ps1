@@ -33,7 +33,7 @@ Configuration Example
             FrontCamera                    = "enabled";
             Id                             = "16599412-1827-4837-b2c1-da2c8260d16e";
             InfraredCamera                 = "enabled";
-            Microphone                     = "enabled";
+            Microphone                     = "notConfigured";
             MicrophonesAndSpeakers         = "enabled";
             NearFieldCommunication         = "notConfigured";
             Radios                         = "enabled";
