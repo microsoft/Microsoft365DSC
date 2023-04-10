@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneDeviceConfigurationDomainJoinPolicyWindows10
+  * Initial release
+
 # 1.23.405.1
 
 * IntuneDeviceEnrollmentPlatformRestriction
