@@ -5,7 +5,131 @@ function Get-TargetResource
     param
     (
         #region resource generator code
-<ParameterBlock><AssignmentsParam>        #endregion
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $Bluetooth,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $BootFromBuiltInNetworkAdapters,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $BootFromExternalMedia,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $Cameras,
+
+        [Parameter()]
+        [ValidateSet('notConfiguredOnly','none')]
+        [System.String]
+        $ChangeUefiSettingsPermission,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $FrontCamera,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $InfraredCamera,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $Microphone,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $MicrophonesAndSpeakers,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $NearFieldCommunication,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $Radios,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $RearCamera,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $SdCard,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $SimultaneousMultiThreading,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $UsbTypeAPort,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $VirtualizationOfCpuAndIO,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $WakeOnLAN,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $WakeOnPower,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $WiFi,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $WindowsPlatformBinaryTable,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $WirelessWideAreaNetwork,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $SupportsScopeTags,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+        #endregion
 
         [Parameter()]
         [System.String]
@@ -39,9 +163,9 @@ function Get-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload '<#Workload#>' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
-            -ProfileName '<#APIVersion#>'
+            -ProfileName 'beta'
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
@@ -58,34 +182,212 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
         $nullResult.Ensure = 'Absent'
 
-        $getValue = $null<#ResourceGenerator
+        $getValue = $null
         #region resource generator code
-        $getValue = <GetCmdLetName> <getKeyIdentifier> -ErrorAction SilentlyContinue
+        $getValue = Get-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id  -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>}"
+            Write-Verbose -Message "Could not find an Intune Device Configuration Firmware Interface Policy for Windows10 with Id {$Id}"
 
-            if (-Not [string]::IsNullOrEmpty($<FilterKey>))
+            if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = <GetCmdLetName> `
-<AlternativeFilter>
+                $getValue = Get-MgDeviceManagementDeviceConfiguration `
+                    -Filter "DisplayName eq '$DisplayName'" `
+                    -ErrorAction SilentlyContinue | Where-Object `
+                    -FilterScript { `
+                        $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.windows10DeviceFirmwareConfigurationInterface" `
+                    }
             }
         }
-        #endregionResourceGenerator#>
+        #endregion
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an <ResourceDescription> with <FilterKey> {$<FilterKey>}"
+            Write-Verbose -Message "Could not find an Intune Device Configuration Firmware Interface Policy for Windows10 with DisplayName {$DisplayName}"
             return $nullResult
         }
-        $<PrimaryKey> = $getValue.<PrimaryKey>
-        Write-Verbose -Message "An <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>} was found."<#ResourceGenerator
-<ComplexTypeConstructor><EnumTypeConstructor><DateTypeConstructor><TimeTypeConstructor>ResourceGenerator#>
-        $results = @{<#ResourceGenerator
-            #region resource generator code
-<HashTableMapping>            #endregionResourceGenerator#>
+        $Id = $getValue.Id
+        Write-Verbose -Message "An Intune Device Configuration Firmware Interface Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName} was found."
+
+        #region resource generator code
+        $enumBluetooth = $null
+        if ($null -ne $getValue.AdditionalProperties.bluetooth)
+        {
+            $enumBluetooth = $getValue.AdditionalProperties.bluetooth.ToString()
         }
-<#ComplexTypeContent#><#AssignmentsGet#>
+
+        $enumBootFromBuiltInNetworkAdapters = $null
+        if ($null -ne $getValue.AdditionalProperties.bootFromBuiltInNetworkAdapters)
+        {
+            $enumBootFromBuiltInNetworkAdapters = $getValue.AdditionalProperties.bootFromBuiltInNetworkAdapters.ToString()
+        }
+
+        $enumBootFromExternalMedia = $null
+        if ($null -ne $getValue.AdditionalProperties.bootFromExternalMedia)
+        {
+            $enumBootFromExternalMedia = $getValue.AdditionalProperties.bootFromExternalMedia.ToString()
+        }
+
+        $enumCameras = $null
+        if ($null -ne $getValue.AdditionalProperties.cameras)
+        {
+            $enumCameras = $getValue.AdditionalProperties.cameras.ToString()
+        }
+
+        $enumChangeUefiSettingsPermission = $null
+        if ($null -ne $getValue.AdditionalProperties.changeUefiSettingsPermission)
+        {
+            $enumChangeUefiSettingsPermission = $getValue.AdditionalProperties.changeUefiSettingsPermission.ToString()
+        }
+
+        $enumFrontCamera = $null
+        if ($null -ne $getValue.AdditionalProperties.frontCamera)
+        {
+            $enumFrontCamera = $getValue.AdditionalProperties.frontCamera.ToString()
+        }
+
+        $enumInfraredCamera = $null
+        if ($null -ne $getValue.AdditionalProperties.infraredCamera)
+        {
+            $enumInfraredCamera = $getValue.AdditionalProperties.infraredCamera.ToString()
+        }
+
+        $enumMicrophone = $null
+        if ($null -ne $getValue.AdditionalProperties.microphone)
+        {
+            $enumMicrophone = $getValue.AdditionalProperties.microphone.ToString()
+        }
+
+        $enumMicrophonesAndSpeakers = $null
+        if ($null -ne $getValue.AdditionalProperties.microphonesAndSpeakers)
+        {
+            $enumMicrophonesAndSpeakers = $getValue.AdditionalProperties.microphonesAndSpeakers.ToString()
+        }
+
+        $enumNearFieldCommunication = $null
+        if ($null -ne $getValue.AdditionalProperties.nearFieldCommunication)
+        {
+            $enumNearFieldCommunication = $getValue.AdditionalProperties.nearFieldCommunication.ToString()
+        }
+
+        $enumRadios = $null
+        if ($null -ne $getValue.AdditionalProperties.radios)
+        {
+            $enumRadios = $getValue.AdditionalProperties.radios.ToString()
+        }
+
+        $enumRearCamera = $null
+        if ($null -ne $getValue.AdditionalProperties.rearCamera)
+        {
+            $enumRearCamera = $getValue.AdditionalProperties.rearCamera.ToString()
+        }
+
+        $enumSdCard = $null
+        if ($null -ne $getValue.AdditionalProperties.sdCard)
+        {
+            $enumSdCard = $getValue.AdditionalProperties.sdCard.ToString()
+        }
+
+        $enumSimultaneousMultiThreading = $null
+        if ($null -ne $getValue.AdditionalProperties.simultaneousMultiThreading)
+        {
+            $enumSimultaneousMultiThreading = $getValue.AdditionalProperties.simultaneousMultiThreading.ToString()
+        }
+
+        $enumUsbTypeAPort = $null
+        if ($null -ne $getValue.AdditionalProperties.usbTypeAPort)
+        {
+            $enumUsbTypeAPort = $getValue.AdditionalProperties.usbTypeAPort.ToString()
+        }
+
+        $enumVirtualizationOfCpuAndIO = $null
+        if ($null -ne $getValue.AdditionalProperties.virtualizationOfCpuAndIO)
+        {
+            $enumVirtualizationOfCpuAndIO = $getValue.AdditionalProperties.virtualizationOfCpuAndIO.ToString()
+        }
+
+        $enumWakeOnLAN = $null
+        if ($null -ne $getValue.AdditionalProperties.wakeOnLAN)
+        {
+            $enumWakeOnLAN = $getValue.AdditionalProperties.wakeOnLAN.ToString()
+        }
+
+        $enumWakeOnPower = $null
+        if ($null -ne $getValue.AdditionalProperties.wakeOnPower)
+        {
+            $enumWakeOnPower = $getValue.AdditionalProperties.wakeOnPower.ToString()
+        }
+
+        $enumWiFi = $null
+        if ($null -ne $getValue.AdditionalProperties.wiFi)
+        {
+            $enumWiFi = $getValue.AdditionalProperties.wiFi.ToString()
+        }
+
+        $enumWindowsPlatformBinaryTable = $null
+        if ($null -ne $getValue.AdditionalProperties.windowsPlatformBinaryTable)
+        {
+            $enumWindowsPlatformBinaryTable = $getValue.AdditionalProperties.windowsPlatformBinaryTable.ToString()
+        }
+
+        $enumWirelessWideAreaNetwork = $null
+        if ($null -ne $getValue.AdditionalProperties.wirelessWideAreaNetwork)
+        {
+            $enumWirelessWideAreaNetwork = $getValue.AdditionalProperties.wirelessWideAreaNetwork.ToString()
+        }
+        #endregion
+
+        $results = @{
+            #region resource generator code
+            Bluetooth                      = $enumBluetooth
+            BootFromBuiltInNetworkAdapters = $enumBootFromBuiltInNetworkAdapters
+            BootFromExternalMedia          = $enumBootFromExternalMedia
+            Cameras                        = $enumCameras
+            ChangeUefiSettingsPermission   = $enumChangeUefiSettingsPermission
+            FrontCamera                    = $enumFrontCamera
+            InfraredCamera                 = $enumInfraredCamera
+            Microphone                     = $enumMicrophone
+            MicrophonesAndSpeakers         = $enumMicrophonesAndSpeakers
+            NearFieldCommunication         = $enumNearFieldCommunication
+            Radios                         = $enumRadios
+            RearCamera                     = $enumRearCamera
+            SdCard                         = $enumSdCard
+            SimultaneousMultiThreading     = $enumSimultaneousMultiThreading
+            UsbTypeAPort                   = $enumUsbTypeAPort
+            VirtualizationOfCpuAndIO       = $enumVirtualizationOfCpuAndIO
+            WakeOnLAN                      = $enumWakeOnLAN
+            WakeOnPower                    = $enumWakeOnPower
+            WiFi                           = $enumWiFi
+            WindowsPlatformBinaryTable     = $enumWindowsPlatformBinaryTable
+            WirelessWideAreaNetwork        = $enumWirelessWideAreaNetwork
+            Description                    = $getValue.Description
+            DisplayName                    = $getValue.DisplayName
+            SupportsScopeTags              = $getValue.SupportsScopeTags
+            Id                             = $getValue.Id
+            Ensure                         = 'Present'
+            Credential                     = $Credential
+            ApplicationId                  = $ApplicationId
+            TenantId                       = $TenantId
+            ApplicationSecret              = $ApplicationSecret
+            CertificateThumbprint          = $CertificateThumbprint
+            Managedidentity                = $ManagedIdentity.IsPresent
+            #endregion
+        }
+        $assignmentsValues = Get-MgDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
+        $assignmentResult = @()
+        foreach ($assignmentEntry in $AssignmentsValues)
+        {
+            $assignmentValue = @{
+                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
+                    {$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()})
+                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
+                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
+            }
+            $assignmentResult += $assignmentValue
+        }
+        $results.Add('Assignments', $assignmentResult)
+
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -106,7 +408,131 @@ function Set-TargetResource
     param
     (
         #region resource generator code
-<ParameterBlock><AssignmentsParam>        #endregion
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $Bluetooth,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $BootFromBuiltInNetworkAdapters,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $BootFromExternalMedia,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $Cameras,
+
+        [Parameter()]
+        [ValidateSet('notConfiguredOnly','none')]
+        [System.String]
+        $ChangeUefiSettingsPermission,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $FrontCamera,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $InfraredCamera,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $Microphone,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $MicrophonesAndSpeakers,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $NearFieldCommunication,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $Radios,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $RearCamera,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $SdCard,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $SimultaneousMultiThreading,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $UsbTypeAPort,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $VirtualizationOfCpuAndIO,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $WakeOnLAN,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $WakeOnPower,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $WiFi,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $WindowsPlatformBinaryTable,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $WirelessWideAreaNetwork,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $SupportsScopeTags,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+        #endregion
         [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -155,8 +581,9 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating an <ResourceDescription> with <FilterKey> {$DisplayName}"
-<#AssignmentsRemove#>
+        Write-Verbose -Message "Creating an Intune Device Configuration Firmware Interface Policy for Windows10 with DisplayName {$DisplayName}"
+        $PSBoundParameters.Remove("Assignments") | Out-Null
+
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
         $CreateParameters.Remove('Id') | Out-Null
@@ -168,15 +595,29 @@ function Set-TargetResource
             {
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
-        }<#ResourceGenerator
+        }
         #region resource generator code
-<NewDataType>        $policy = <NewCmdLetName> <#NewKeyIdentifier#>
-<#AssignmentsNew#>        #endregionResourceGenerator#>
+        $CreateParameters.Add("@odata.type", "#microsoft.graph.windows10DeviceFirmwareConfigurationInterface")
+        $policy = New-MgDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
+        {
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+        }
+
+        if ($policy.id)
+        {
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+                -Targets $assignmentsHash `
+                -Repository 'deviceManagement/deviceConfigurations'
+        }
+        #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}"
-<#AssignmentsRemove#>
+        Write-Verbose -Message "Updating the Intune Device Configuration Firmware Interface Policy for Windows10 with Id {$($currentInstance.Id)}"
+        $PSBoundParameters.Remove("Assignments") | Out-Null
+
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
@@ -189,17 +630,29 @@ function Set-TargetResource
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
-        }<#ResourceGenerator
+        }
         #region resource generator code
-<UpdateDataType>        <UpdateCmdLetName> <#UpdateKeyIdentifier#>
-<#AssignmentsUpdate#>        #endregionResourceGenerator#>
+        $UpdateParameters.Add("@odata.type", "#microsoft.graph.windows10DeviceFirmwareConfigurationInterface")
+        Update-MgDeviceManagementDeviceConfiguration  `
+            -DeviceConfigurationId $currentInstance.Id `
+            -BodyParameter $UpdateParameters
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
+        {
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+        }
+        Update-DeviceConfigurationPolicyAssignment `
+            -DeviceConfigurationPolicyId $currentInstance.id `
+            -Targets $assignmentsHash `
+            -Repository 'deviceManagement/deviceConfigurations'
+        #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}" <#ResourceGenerator
+        Write-Verbose -Message "Removing the Intune Device Configuration Firmware Interface Policy for Windows10 with Id {$($currentInstance.Id)}" 
         #region resource generator code
-<RemoveCmdLetName> <#removeKeyIdentifier#>
-        #endregionResourceGenerator#>
+Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
+        #endregion
     }
 }
 
@@ -210,7 +663,131 @@ function Test-TargetResource
     param
     (
         #region resource generator code
-<ParameterBlock><AssignmentsParam>        #endregion
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $Bluetooth,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $BootFromBuiltInNetworkAdapters,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $BootFromExternalMedia,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $Cameras,
+
+        [Parameter()]
+        [ValidateSet('notConfiguredOnly','none')]
+        [System.String]
+        $ChangeUefiSettingsPermission,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $FrontCamera,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $InfraredCamera,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $Microphone,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $MicrophonesAndSpeakers,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $NearFieldCommunication,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $Radios,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $RearCamera,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $SdCard,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $SimultaneousMultiThreading,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $UsbTypeAPort,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $VirtualizationOfCpuAndIO,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $WakeOnLAN,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $WakeOnPower,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $WiFi,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $WindowsPlatformBinaryTable,
+
+        [Parameter()]
+        [ValidateSet('notConfigured','enabled','disabled')]
+        [System.String]
+        $WirelessWideAreaNetwork,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $SupportsScopeTags,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+        #endregion
 
         [Parameter()]
         [System.String]
@@ -254,7 +831,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>}"
+    Write-Verbose -Message "Testing configuration of the Intune Device Configuration Firmware Interface Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
@@ -342,9 +919,9 @@ function Export-TargetResource
         $ManagedIdentity
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload '<#Workload#>' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName '<#APIVersion#>'
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -359,9 +936,15 @@ function Export-TargetResource
     #endregion
 
     try
-    {<#ResourceGenerator
+    {
         #region resource generator code
-<exportGetCommand>        #endregionResourceGenerator#>
+        [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
+            -All `
+            -ErrorAction Stop | Where-Object `
+            -FilterScript { `
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10DeviceFirmwareConfigurationInterface' `
+            }
+        #endregion
 
         $i = 1
         $dscContent = ''
@@ -375,14 +958,15 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
-            $displayedKey = $config.<PrimaryKey>
+            $displayedKey = $config.Id
             if (-not [String]::IsNullOrEmpty($config.displayName))
             {
                 $displayedKey = $config.displayName
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                <PrimaryKey> = $config.<PrimaryKey><RequiredKey>
+                Id = $config.Id
+                DisplayName           =  $config.DisplayName
                 Ensure = 'Present'
                 Credential = $Credential
                 ApplicationId = $ApplicationId
@@ -395,13 +979,28 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-<#ConvertComplexToString#><#AssignmentsConvertComplexToString#>
+            if ($Results.Assignments)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
+                if ($complexTypeStringResult)
+                {
+                    $Results.Assignments = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Assignments') | Out-Null
+                }
+            }
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-<#ConvertComplexToVariable#><#AssignmentsConvertComplexToVariable#><#TrailingCharRemoval#>
+            if ($Results.Assignments)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$true
+            }
+
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -424,7 +1023,71 @@ function Export-TargetResource
     }
 }
 
-<#AssignmentsFunctions#>function Rename-M365DSCCimInstanceParameter
+function Update-DeviceConfigurationPolicyAssignment
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceConfigurationPolicyId,
+
+        [Parameter()]
+        [Array]
+        $Targets,
+
+        [Parameter()]
+        [System.String]
+        $Repository = 'deviceManagement/configurationPolicies',
+
+        [Parameter()]
+        [ValidateSet('v1.0','beta')]
+        [System.String]
+        $APIVersion = 'beta'
+    )
+    try
+    {
+        $deviceManagementPolicyAssignments = @()
+        $Uri = "https://graph.microsoft.com/$APIVersion/$Repository/$DeviceConfigurationPolicyId/assign"
+
+        foreach ($target in $targets)
+        {
+            $formattedTarget = @{"@odata.type" = $target.dataType}
+            if ($target.groupId)
+            {
+                $formattedTarget.Add('groupId',$target.groupId)
+            }
+            if ($target.collectionId)
+            {
+                $formattedTarget.Add('collectionId',$target.collectionId)
+            }
+            if ($target.deviceAndAppManagementAssignmentFilterType)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',$target.deviceAndAppManagementAssignmentFilterType)
+            }
+            if ($target.deviceAndAppManagementAssignmentFilterId)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',$target.deviceAndAppManagementAssignmentFilterId)
+            }
+            $deviceManagementPolicyAssignments += @{'target' = $formattedTarget}
+        }
+        $body = @{'assignments' = $deviceManagementPolicyAssignments} | ConvertTo-Json -Depth 20
+        #write-verbose -Message $body
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $null
+    }
+}
+
+function Rename-M365DSCCimInstanceParameter
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable], [System.Collections.Hashtable[]])]

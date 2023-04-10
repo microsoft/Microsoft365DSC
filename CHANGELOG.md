@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+* IntuneDeviceConfigurationFirmwareInterfacePolicyWindows10
+  * Initial release
+* DRG
+  * Fixed layout and display issues in module file
+
 # 1.23.405.1
 
 * IntuneDeviceEnrollmentPlatformRestriction
