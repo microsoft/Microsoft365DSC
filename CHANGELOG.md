@@ -11,6 +11,25 @@
 
 # 1.23.405.1
 
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Initial Release
+      FIXES [#3068](https://github.com/microsoft/Microsoft365DSC/issues/3068)
+* IntuneDeviceConfigurationDomainJoinPolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationFirmwareInterfacePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationWindowsTeamPolicyWindows10
+  * Initial release
+* TeamsUpdateManagementPolicy
+  * Added support for the Forced value for the AllowPublicPreview property.
+* DRG
+  * Fixed layout and display issues in module file
+* MISC
+  * Changed Get-MgDeviceManagementDeviceConfiguration to use the cmdlet switches rather than filtering output once returned.
+    Fixes #3082
+
+# 1.23.405.0
+
 * AADAdministrativeUnit
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
   * Fixes extraction of the Members property.
@@ -79,9 +98,6 @@
   * [BREAKING CHANGE] Setting Identity as Key parameter and DisplayName as Required
 * IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager
   * [BREAKING CHANGE] Fix resource
-* IntuneDeviceConfigurationCustomPolicyWindows10
-  * Initial Release
-      FIXES [#3068](https://github.com/microsoft/Microsoft365DSC/issues/3068)
 * IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10
   * Initial Release
     FIXES [#2830](https://github.com/microsoft/Microsoft365DSC/issues/2830)
@@ -155,7 +171,6 @@
 * TeamsUpdateManagementPolicy
   * Added support for the new UseNewTeamsClient parameter.
     FIXES [#3062](https://github.com/microsoft/Microsoft365DSC/issues/3062)
-  * Added support for the Forced value for the AllowPublicPreview property.
 * DRG
   * Various fixes
     * Cleanup generated code
