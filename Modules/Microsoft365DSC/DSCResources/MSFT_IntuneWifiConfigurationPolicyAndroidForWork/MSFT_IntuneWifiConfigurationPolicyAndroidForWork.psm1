@@ -109,6 +109,7 @@ function Get-TargetResource
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidForWorkWiFiConfiguration' `
             }
+        }
 
         if (-not $getValue)
         {

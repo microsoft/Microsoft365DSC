@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* MISC
+  * Changed Get-MgDeviceManagementDeviceConfiguration to use the cmdlet switches rather than filtering output once returned.
+    Fixes #3082
+
 # 1.23.405.1
 
 * IntuneDeviceEnrollmentPlatformRestriction

@@ -142,6 +142,7 @@ function Get-TargetResource
             $getValue = Get-MgDeviceManagementDeviceConfiguration -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windowsWifiConfiguration' `
+            }
         }
 
         if (-not $getValue)

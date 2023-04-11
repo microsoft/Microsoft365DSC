@@ -145,6 +145,7 @@ function Get-TargetResource
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.aospDeviceOwnerDeviceConfiguration' `
             }
+        }
 
         if (-not $getValue)
         {
