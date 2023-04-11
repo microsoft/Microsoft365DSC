@@ -5,6 +5,8 @@
 * IntuneDeviceConfigurationCustomPolicyWindows10
   * Initial Release
       FIXES [#3068](https://github.com/microsoft/Microsoft365DSC/issues/3068)
+* TeamsUpdateManagementPolicy
+  * Added support for the Forced value for the AllowPublicPreview property.
 
 # 1.23.405.1
 
