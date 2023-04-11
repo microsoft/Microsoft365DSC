@@ -2,22 +2,22 @@
 
 # UNRELEASED
 
-* IntuneDeviceConfigurationDomainJoinPolicyWindows10
-  * Initial release
-
-# 1.23.405.1
-
 * IntuneDeviceConfigurationCustomPolicyWindows10
   * Initial Release
       FIXES [#3068](https://github.com/microsoft/Microsoft365DSC/issues/3068)
+* IntuneDeviceConfigurationDomainJoinPolicyWindows10
+  * Initial release
 * IntuneDeviceConfigurationFirmwareInterfacePolicyWindows10
   * Initial release
 * IntuneDeviceConfigurationWindowsTeamPolicyWindows10
   * Initial release
-* DRG
-  * Fixed layout and display issues in module file
 * TeamsUpdateManagementPolicy
   * Added support for the Forced value for the AllowPublicPreview property.
+* DRG
+  * Fixed layout and display issues in module file
+* MISC
+  * Changed Get-MgDeviceManagementDeviceConfiguration to use the cmdlet switches rather than filtering output once returned.
+    Fixes #3082
 
 # 1.23.405.1
 
