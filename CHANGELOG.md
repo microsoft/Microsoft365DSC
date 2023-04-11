@@ -7,6 +7,9 @@
       FIXES [#3068](https://github.com/microsoft/Microsoft365DSC/issues/3068)
 * TeamsUpdateManagementPolicy
   * Added support for the Forced value for the AllowPublicPreview property.
+* MODULES
+  * M365DSCUtil: Fixed an issue when calling Assert-M365DSCBlueprint with App credentials
+    FIXES [#3153](https://github.com/microsoft/Microsoft365DSC/issues/3153)
 
 # 1.23.405.1
 
