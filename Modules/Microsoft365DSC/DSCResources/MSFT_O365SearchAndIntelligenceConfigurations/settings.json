@@ -9,7 +9,9 @@
             },
             "application": {
                 "read": [],
-                "update": []
+                "update": [
+                    "User.ReadWrite"
+                ]
             }
         },
         "exchange": {

@@ -18,6 +18,14 @@ function Get-TargetResource
         $ItemInsightsDisabledForGroup,
 
         [Parameter()]
+        [System.Boolean]
+        $PersonInsightsIsEnabledInOrganization,
+
+        [Parameter()]
+        [System.String]
+        $PersonInsightsDisabledForGroup,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -49,12 +57,12 @@ function Get-TargetResource
 
     if ($PSBoundParameters.ContainsKey('Ensure') -and $Ensure -eq 'Absent')
     {
-        throw 'This resource is not able to remove Org Settings settings and therefore only accepts Ensure=Present.'
+        throw 'This resource is not able to remove Search and Intelligence configuration settings and therefore only accepts Ensure=Present.'
     }
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName 'v1.0'
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -75,20 +83,40 @@ function Get-TargetResource
 
     try
     {
-        $OfficeOnlineId = 'c1f33bc0-bdb4-4248-ba9b-096807ddb43e'
-        $ItemInsights
+        if ($ConnectionMode -eq 'Credentials')
+        {
+            $TenantId = $Credential.UserName.Split('@')[1]
+        }
+
+        $ItemInsights = Get-MgOrganizationSettingItemInsight -OrganizationId $TenantId
+        $itemInsightsDisabledForGroupValue = $null
+        if (-not [System.String]::IsNullOrEmpty($ItemInsights.DisabledForGroup))
+        {
+            $group = Get-MgGroup -GroupId ($ItemInsights.DisabledForGroup)
+            $itemInsightsDisabledForGroupValue = $group.DisplayName
+        }
+
+        $PersonInsights = Get-MgOrganizationSettingPersonInsight -OrganizationId $TenantId
+        $PersonInsightsDisabledForGroupValue = $null
+        if (-not [System.String]::IsNullOrEmpty($PersonInsights.DisabledForGroup))
+        {
+            $group = Get-MgGroup -GroupId ($PersonInsights.DisabledForGroup)
+            $PersonInsightsDisabledForGroupValue = $group.DisplayName
+        }
 
         return @{
-            IsSingleInstance                           = 'Yes'
-            CortanaEnabled                             = $CortanaEnabledValue.AccountEnabled
-            M365WebEnableUsersToOpenFilesFrom3PStorage = $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled
-            Ensure                                     = 'Present'
-            Credential                                 = $Credential
-            ApplicationId                              = $ApplicationId
-            TenantId                                   = $TenantId
-            ApplicationSecret                          = $ApplicationSecret
-            CertificateThumbprint                      = $CertificateThumbprint
-            Managedidentity                            = $ManagedIdentity.IsPresent
+            IsSingleInstance                      = 'Yes'
+            ItemInsightsIsEnabledInOrganization   = $ItemInsights.IsEnabledInOrganization
+            ItemInsightsDisabledForGroup          = $itemInsightsDisabledForGroupValue
+            PersonInsightsIsEnabledInOrganization = $PersonInsights.IsEnabledInOrganization
+            PersonInsightsDisabledForGroup        = $PersonInsightsDisabledForGroupValue
+            Ensure                                = 'Present'
+            Credential                            = $Credential
+            ApplicationId                         = $ApplicationId
+            TenantId                              = $TenantId
+            ApplicationSecret                     = $ApplicationSecret
+            CertificateThumbprint                 = $CertificateThumbprint
+            ManagedIdentity                       = $ManagedIdentity.IsPresent
         }
     }
     catch
@@ -122,6 +150,14 @@ function Set-TargetResource
         $ItemInsightsDisabledForGroup,
 
         [Parameter()]
+        [System.Boolean]
+        $PersonInsightsIsEnabledInOrganization,
+
+        [Parameter()]
+        [System.String]
+        $PersonInsightsDisabledForGroup,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -153,7 +189,7 @@ function Set-TargetResource
 
     if ($PSBoundParameters.ContainsKey('Ensure') -and $Ensure -eq 'Absent')
     {
-        throw 'This resource is not able to remove the Org settings and therefore only accepts Ensure=Present.'
+        throw 'This resource is not able to remove the Search And Intelligence Configuration settings and therefore only accepts Ensure=Present.'
     }
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -168,28 +204,62 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message 'Setting configuration of Office 365 Settings'
+    Write-Verbose -Message 'Setting configuration of Search and Intelligence'
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName 'v1.0'
+        -ProfileName 'beta'
 
-    $OfficeOnlineId = 'c1f33bc0-bdb4-4248-ba9b-096807ddb43e'
-    $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Get-MgServicePrincipal -Filter "appId eq '$OfficeOnlineId'" -Property 'AccountEnabled, Id'
-    if ($M365WebEnableUsersToOpenFilesFrom3PStorage -ne $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled)
+    if ($ConnectionMode -eq 'Credentials')
     {
-        Write-Verbose -Message "Setting the Microsoft 365 On the Web setting to {$M365WebEnableUsersToOpenFilesFrom3PStorage}"
-        Update-MgServicePrincipal -ServicePrincipalId $($M365WebEnableUsersToOpenFilesFrom3PStorageValue.Id) `
-            -AccountEnabled:$M365WebEnableUsersToOpenFilesFrom3PStorage
+        $TenantId = $Credential.UserName.Split('@')[1]
     }
 
-    $CortanaId = '0a0a29f9-0a25-49c7-94bf-c53c3f8fa69d'
-    $CortanaEnabledValue = Get-MgServicePrincipal -Filter "appId eq '$CortanaId'" -Property 'AccountEnabled, Id'
-    if ($CortanaEnabled -ne $CortanaEnabledValue.AccountEnabled)
-    {
-        Write-Verbose -Message "Setting the Cortana setting to {$CortanaEnabled}"
-        Update-MgServicePrincipal -ServicePrincipalId $($CortanaEnabledValue.Id) `
-            -AccountEnabled:$CortanaEnabled
+    #region Item Insights
+    $ItemInsightsUpdateParams = @{
+        OrganizationId          = $TenantId
+        IsEnabledInOrganization = $ItemInsightsIsEnabledInOrganization
     }
+    if ($PSBoundParameters.ContainsKey("ItemInsightsDisabledForGroup"))
+    {
+        $disabledForGroupValue = $null
+        try
+        {
+            $group = Get-MgGroup -Filter "DisplayName eq '$ItemInsightsDisabledForGroup'"
+            $disabledForGroupValue = $group.Id
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        $ItemInsightsUpdateParams.Add("DisabledForGroup", $disabledForGroupValue)
+    }
+    Write-Verbose -Message "Updating settings for Item Insights"
+    Update-MgOrganizationSettingItemInsight @ItemInsightsUpdateParams | Out-Null
+    #endregion
+
+    #region Person Insights
+    $PersonInsightsUpdateParams = @{
+        OrganizationId          = $TenantId
+        IsEnabledInOrganization = $ItemInsightsIsEnabledInOrganization
+    }
+    if ($PSBoundParameters.ContainsKey("PersonInsightsDisabledForGroup"))
+    {
+        $disabledForGroupValue = $null
+        try
+        {
+            $group = Get-MgGroup -Filter "DisplayName eq '$PersonInsightsDisabledForGroup'"
+            $disabledForGroupValue = $group.Id
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        $PersonInsightsUpdateParams.Add("DisabledForGroup", $disabledForGroupValue)
+    }
+
+    Write-Verbose -Message "Updating settings for Person Insights"
+    Update-MgOrganizationSettingPersonInsight @PersonInsightsUpdateParams | Out-Null
+    #endregion
 }
 
 function Test-TargetResource
@@ -210,6 +280,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $ItemInsightsDisabledForGroup,
+
+        [Parameter()]
+        [System.Boolean]
+        $PersonInsightsIsEnabledInOrganization,
+
+        [Parameter()]
+        [System.String]
+        $PersonInsightsDisabledForGroup,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -252,10 +330,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message 'Testing configuration for Org Settings.'
+    Write-Verbose -Message 'Testing configuration for Search And Intelligence Configuration Settings.'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
@@ -302,7 +380,7 @@ function Export-TargetResource
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName 'v1.0'
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

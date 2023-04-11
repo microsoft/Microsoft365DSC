@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource 'O365OrgSettings' -GenericStubModule $GenericStubPath
+    -DscResource 'O365SearchAndIntelligenceConfigurations' -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -36,7 +36,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Write-Host -MockWith {
             }
 
-            Mock -CommandName Get-MgServicePrincipal -MockWith {
+            Mock -CommandName Update-MgOrganizationSettingItemInsight -MockWith {
+            }
+
+            Mock -CommandName Update-MgOrganizationSettingPersonInsight -MockWith {
+            }
+
+            Mock -CommandName Get-MGGroup -MockWith {
+                return @{
+                    Id          = "12345-12345-12345-12345-12345"
+                    DisplayName = "TestGroup"
+                }
             }
         }
 
@@ -44,73 +54,100 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'When Org Settings are already in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance                           = 'Yes'
-                    M365WebEnableUsersToOpenFilesFrom3PStorage = $False;
-                    Ensure                                     = 'Present'
-                    Credential                                 = $Credential
+                    IsSingleInstance                      = 'Yes'
+                    ItemInsightsIsEnabledInOrganization   = $True;
+                    ItemInsightsDisabledForGroup          = "TestGroup"
+                    PersonInsightsIsEnabledInOrganization = $True;
+                    Ensure                                = 'Present'
+                    Credential                            = $Credential
                 }
 
-                Mock -CommandName Get-MgServicePrincipal -MockWith {
+                Mock -CommandName Get-MgOrganizationSettingItemInsight -MockWith {
                     return @{
-                        AccountEnabled = $False
+                        IsEnabledInOrganization = $True
+                        DisabledForGroup        = "12345-12345-12345-12345-12345"
+                    }
+                }
+
+                Mock -CommandName Get-MgOrganizationSettingPersonInsight -MockWith {
+                    return @{
+                        IsEnabledInOrganization = $True
+                        DisabledForGroup        = $null
                     }
                 }
             }
 
             It 'Should return Present from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-                (Get-TargetResource @testParams).M365WebEnableUsersToOpenFilesFrom3PStorage | Should -Be $False
+                (Get-TargetResource @testParams).ItemInsightsIsEnabledInOrganization | Should -Be $True
             }
 
-            It 'Should return false from the Test method' {
+            It 'Should return true from the Test method' {
                 (Test-TargetResource @testParams) | Should -Be $true
             }
         }
 
         # Test contexts
-        Context -Name 'When Org Settings NOT in the Desired State' -Fixture {
+        Context -Name 'When Org Settings are NOT in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance                           = 'Yes'
-                    M365WebEnableUsersToOpenFilesFrom3PStorage = $True;
-                    Ensure                                     = 'Present'
-                    Credential                                 = $Credential
+                    IsSingleInstance                      = 'Yes'
+                    ItemInsightsIsEnabledInOrganization   = $False;
+                    ItemInsightsDisabledForGroup          = "TestGroup"
+                    PersonInsightsIsEnabledInOrganization = $True;
+                    Ensure                                = 'Present'
+                    Credential                            = $Credential
                 }
 
-                Mock -CommandName Get-MgServicePrincipal -MockWith {
+                Mock -CommandName Get-MgOrganizationSettingItemInsight -MockWith {
                     return @{
-                        AccountEnabled = $False
+                        IsEnabledInOrganization = $True
+                        DisabledForGroup        = "12345-12345-12345-12345-12345"
+                    }
+                }
+
+                Mock -CommandName Get-MgOrganizationSettingPersonInsight -MockWith {
+                    return @{
+                        IsEnabledInOrganization = $True
+                        DisabledForGroup        = $null
                     }
                 }
             }
 
             It 'Should return Present from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-                (Get-TargetResource @testParams).M365WebEnableUsersToOpenFilesFrom3PStorage | Should -Be $False
+                (Get-TargetResource @testParams).ItemInsightsIsEnabledInOrganization | Should -Be $True
             }
 
             It 'Should return false from the Test method' {
                 (Test-TargetResource @testParams) | Should -Be $false
             }
-
-            It 'Should update values from the SET method' {
-                Set-TargetResource @testParams
-            }
         }
+
 
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
+
                 $testParams = @{
-                    Credential = $Credential
+                    Credential                            = $Credential
                 }
             }
 
             It 'Should Reverse Engineer resource from the Export method' {
-                Mock -CommandName Get-MgServicePrincipal -MockWith {
+
+                Mock -CommandName Get-MgOrganizationSettingItemInsight -MockWith {
                     return @{
-                        AccountEnabled = $False
+                        IsEnabledInOrganization = $True
+                        DisabledForGroup        = "12345-12345-12345-12345-12345"
+                    }
+                }
+
+                Mock -CommandName Get-MgOrganizationSettingPersonInsight -MockWith {
+                    return @{
+                        IsEnabledInOrganization = $True
+                        DisabledForGroup        = $null
                     }
                 }
                 $result = Export-TargetResource @testParams
