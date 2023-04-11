@@ -2,6 +2,11 @@
 
 # UNRELEASED
 
+* IntuneDeviceConfigurationDomainJoinPolicyWindows10
+  * Initial release
+
+# 1.23.405.1
+
 * IntuneDeviceConfigurationCustomPolicyWindows10
   * Initial Release
       FIXES [#3068](https://github.com/microsoft/Microsoft365DSC/issues/3068)
