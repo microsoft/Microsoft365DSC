@@ -582,7 +582,7 @@ function New-M365DSCResource
             $AssignmentsGet += "        }`r`n"
             $AssignmentsGet += "        `$results.Add('Assignments', `$assignmentResult)`r`n"
 
-            $AssignmentsRemove += "        `$PSBoundParameters.Remove(`"Assignments`") | Out-Null`r`n"
+            $AssignmentsRemove += "        `$BoundParameters.Remove(`"Assignments`") | Out-Null`r`n"
 
             $AssignmentsNew += "        `$assignmentsHash = @()`r`n"
             $AssignmentsNew += "        foreach (`$assignment in `$Assignments)`r`n"

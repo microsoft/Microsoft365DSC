@@ -2,15 +2,22 @@
 
 # UNRELEASED
 
-  * IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
-    * Initial release
-      FIXES [#2833](https://github.com/microsoft/Microsoft365DSC/issues/2833)
+ * IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
+   * Initial release
+     FIXES [#2833](https://github.com/microsoft/Microsoft365DSC/issues/2833)
+
+* IntuneDeviceConfigurationFirmwareInterfacePolicyWindows10
+  * Initial release
+* DRG
+  * Fixed layout and display issues in module file
 
 # 1.23.405.1
 
 * IntuneDeviceConfigurationCustomPolicyWindows10
   * Initial Release
       FIXES [#3068](https://github.com/microsoft/Microsoft365DSC/issues/3068)
+* TeamsUpdateManagementPolicy
+  * Added support for the Forced value for the AllowPublicPreview property.
 
 # 1.23.405.1
 
