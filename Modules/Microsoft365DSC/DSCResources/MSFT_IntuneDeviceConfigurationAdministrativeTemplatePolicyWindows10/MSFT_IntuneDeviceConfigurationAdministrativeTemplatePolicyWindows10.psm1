@@ -147,11 +147,6 @@ function Get-TargetResource
                 CategoryPath = $definition.CategoryPath
                 ClassType    = $enumClassType
                 DisplayName  = $definition.DisplayName
-                #ExplainText           = $definition.ExplainText
-                #GroupPolicyCategoryId = $definition.GroupPolicyCategoryId
-                #HasRelatedDefinitions = $definition.HasRelatedDefinitions
-                #MinDeviceCspVersion   = $definition.MinDeviceCspVersion
-                #MinUserCspVersion     = $definition.MinUserCspVersion
                 PolicyType   = $enumPolicyType
                 SupportedOn  = $definition.SupportedOn
                 Id           = $definition.Id
