@@ -8,7 +8,7 @@ As part of the April 2023 major release, this resource is being re-written almos
 
 ## Primary Keys of Multiple Resources ([#2968](https://github.com/microsoft/Microsoft365DSC/pull/2968))
 
-We have modified the logic of all the resources below to ensure we have a primary key defined. In most cases we have marked the Identity or DisplayName properties as now being mandatory. While we don't believe this change will have a major impact on most existing configuration since they probably already defined these properties, there is a small chance that customers omitted to include them. The recomendation in this case is to ensure you add the new required properties to your resources. Resources impacted are:
+We have modified the logic of all the resources below to ensure we have a primary key defined. In most cases we have marked the Identity or DisplayName properties as now being mandatory. While we don't believe this change will have a major impact on most existing configuration since they probably already defined these properties, there is a small chance that customers omitted to include them. The recommendation in this case is to ensure you add the new required properties to your resources. Resources impacted are:
 
 * AADAdministrativeUnit
 * AADConditionalAccessPolicy
@@ -26,8 +26,8 @@ We have modified the logic of all the resources below to ensure we have a primar
 * IntuneDeviceConfigurationPolicyiOS
 * IntuneExploitProtectionPolicyWindows10SettingCatalog
 * IntuneWifiConfigurationPolicyAndroidDeviceAdministrator
-* IntuneWifiConfigurationPolicyAndroidEntrepriseDeviceOwner
-* IntuneWifiConfigurationPolicyAndroidEntrepriseWorkProfile
+* IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner
+* IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile
 * IntuneWifiConfigurationPolicyAndroidForWork
 * IntuneWifiConfigurationPolicyAndroidOpenSourceProject
 * IntuneWifiConfigurationPolicyIOS,
@@ -125,8 +125,9 @@ We are removing parameters that have been deprecated from various resources as p
  <li>TeamsMeetingPolicy
   <ul>
    <li>RecordingStorageMode</li>
-  </ul></li>
   </ul>
+  </li>
+</ul>
 
 ## TeamsGroupPolicyAssignment: New Key Parameters ([3054](https://github.com/microsoft/Microsoft365DSC/issues/3054))
 
@@ -142,35 +143,37 @@ In order to make it easier for folks to follow the execution process of the Star
 
 1. If the resource implements the **IsSingleInstance** property, the resource instance's will simply take the resource's name. E.g.,
 
- ```powershell
-  SPOTenantSettings 'SPOTenantSettings'
-  {
-      ...
-  }
- ```
+    ```powershell
+      SPOTenantSettings 'SPOTenantSettings'
+      {
+          ...
+      }
+    ```
 
 2. Otherwise, the resource will always be named following the "[ResourceName]-[PrimaryKey]" pattern. E.g.,
 
- ```powershell
-  TeamsMeetingPolicy 'TeamsMeetingPolicy-MyPolicy'
-  {
-      DisplayName = 'MyPolicy'
-      ...
-  }
-  ```
+    ```powershell
+      TeamsMeetingPolicy 'TeamsMeetingPolicy-MyPolicy'
+      {
+          DisplayName = 'MyPolicy'
+          ...
+      }
+    ```
 
-  The primary key will always give priority to the following properties in order:
-  * DisplayName
-  * Identity
-  * Id
-  * Name
-  This means that if a resource instance defines both DisplayName and Id, that the DisplayName value will be used to name the instance.
+    The primary key will always give priority to the following properties in order:
+
+    * DisplayName
+    * Identity
+    * Id
+    * Name
+
+    This means that if a resource instance defines both DisplayName and Id, that the DisplayName value will be used to name the instance.
 
 ## Logging Improvements for Non-Drifted Resource Instances ([#3090](https://github.com/microsoft/Microsoft365DSC/pull/3099))
 
-Starting with this version of M365DSC, users can decide to also include informaton about resources that don't have any detected drifts in them by setting the logging settings with the new Set-M365DSCLoggingOption. E.g.,
+Starting with this version of M365DSC, users can decide to also include information about resources that don't have any detected drifts in them by setting the logging settings with the new Set-M365DSCLoggingOption. E.g.,
 
-```
+```powershell
 Set-M365DSCLoggingOption -IncludeNonDrifted $True
 ```
 
