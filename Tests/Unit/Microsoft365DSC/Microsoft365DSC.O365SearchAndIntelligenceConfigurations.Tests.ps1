@@ -58,7 +58,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ItemInsightsIsEnabledInOrganization   = $True;
                     ItemInsightsDisabledForGroup          = "TestGroup"
                     PersonInsightsIsEnabledInOrganization = $True;
-                    Ensure                                = 'Present'
                     Credential                            = $Credential
                 }
 
@@ -78,7 +77,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
                 (Get-TargetResource @testParams).ItemInsightsIsEnabledInOrganization | Should -Be $True
             }
 
@@ -95,7 +93,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ItemInsightsIsEnabledInOrganization   = $False;
                     ItemInsightsDisabledForGroup          = "TestGroup"
                     PersonInsightsIsEnabledInOrganization = $True;
-                    Ensure                                = 'Present'
                     Credential                            = $Credential
                 }
 
@@ -115,7 +112,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
                 (Get-TargetResource @testParams).ItemInsightsIsEnabledInOrganization | Should -Be $True
             }
 
