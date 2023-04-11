@@ -18,7 +18,6 @@ Configuration Example
         O365SearchAndIntelligenceConfigurations 'SearchAndIntelligenceConfigurations'
         {
             Credential                            = $Credscredential;
-            Ensure                                = "Present";
             IsSingleInstance                      = "Yes";
             ItemInsightsIsEnabledInOrganization   = $False;
             ItemInsightsDisabledForGroup          = "TestGroup"

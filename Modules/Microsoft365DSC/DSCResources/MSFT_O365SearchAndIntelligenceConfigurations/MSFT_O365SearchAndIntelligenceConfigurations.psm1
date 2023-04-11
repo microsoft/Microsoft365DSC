@@ -26,11 +26,6 @@ function Get-TargetResource
         $PersonInsightsDisabledForGroup,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -54,11 +49,6 @@ function Get-TargetResource
         [Switch]
         $ManagedIdentity
     )
-
-    if ($PSBoundParameters.ContainsKey('Ensure') -and $Ensure -eq 'Absent')
-    {
-        throw 'This resource is not able to remove Search and Intelligence configuration settings and therefore only accepts Ensure=Present.'
-    }
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
@@ -158,11 +148,6 @@ function Set-TargetResource
         $PersonInsightsDisabledForGroup,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -186,11 +171,6 @@ function Set-TargetResource
         [Switch]
         $ManagedIdentity
     )
-
-    if ($PSBoundParameters.ContainsKey('Ensure') -and $Ensure -eq 'Absent')
-    {
-        throw 'This resource is not able to remove the Search And Intelligence Configuration settings and therefore only accepts Ensure=Present.'
-    }
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -229,7 +209,11 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Verbose -Message $_
+            New-M365DSCLogEntry -Message 'Error retrieving data getting group' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
         }
         $ItemInsightsUpdateParams.Add("DisabledForGroup", $disabledForGroupValue)
     }
@@ -252,7 +236,11 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Verbose -Message $_
+            New-M365DSCLogEntry -Message 'Error retrieving data getting group' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
         }
         $PersonInsightsUpdateParams.Add("DisabledForGroup", $disabledForGroupValue)
     }
@@ -288,11 +276,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $PersonInsightsDisabledForGroup,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
