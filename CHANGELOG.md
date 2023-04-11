@@ -6,6 +6,9 @@
   * Initial release
 * DRG
   * Fixed layout and display issues in module file
+* MISC
+  * Changed Get-MgDeviceManagementDeviceConfiguration to use the cmdlet switches rather than filtering output once returned.
+    Fixes #3082
 
 # 1.23.405.1
 
