@@ -1,0 +1,20 @@
+﻿{
+    "resourceName": "O365SearchAndIntelligenceConfigurations",
+    "description": "",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        },
+        "exchange": {
+            "requiredroles": [],
+            "requiredrolegroups": []
+        }
+    }
+}

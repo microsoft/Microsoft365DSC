@@ -3,7 +3,9 @@
 # UNRELEASED
 
 * IntuneDeviceConfigurationFirmwareInterfacePolicyWindows10
-  * Initial release
+  * Initial release.
+* O365SearchAndIntelligenceConfigurations
+  * Initial release.
 * DRG
   * Fixed layout and display issues in module file
 
